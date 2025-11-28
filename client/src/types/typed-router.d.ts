@@ -112,6 +112,13 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       | never
     >,
+    '/chat/': RouteRecordInfo<
+      '/chat/',
+      '/chat',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
     '/dashboard/': RouteRecordInfo<
       '/dashboard/',
       '/dashboard',
@@ -194,6 +201,27 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       | never
     >,
+    '/profile/partials/update-password-form': RouteRecordInfo<
+      '/profile/partials/update-password-form',
+      '/profile/partials/update-password-form',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
+    '/profile/partials/update-profile-information-form': RouteRecordInfo<
+      '/profile/partials/update-profile-information-form',
+      '/profile/partials/update-profile-information-form',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
+    '/profile/show': RouteRecordInfo<
+      '/profile/show',
+      '/profile/show',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
     '/settings/': RouteRecordInfo<
       '/settings/',
       '/settings',
@@ -229,6 +257,13 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       | never
     >,
+    '/subscriptions/': RouteRecordInfo<
+      '/subscriptions/',
+      '/subscriptions',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
     '/sva-components/': RouteRecordInfo<
       '/sva-components/',
       '/sva-components',
@@ -239,6 +274,20 @@ declare module 'vue-router/auto-routes' {
     '/tasks/': RouteRecordInfo<
       '/tasks/',
       '/tasks',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
+    '/teams/create': RouteRecordInfo<
+      '/teams/create',
+      '/teams/create',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
+    '/teams/show': RouteRecordInfo<
+      '/teams/show',
+      '/teams/show',
       Record<never, never>,
       Record<never, never>,
       | never
@@ -341,6 +390,12 @@ declare module 'vue-router/auto-routes' {
       views:
         | never
     }
+    'src/pages/chat/index.vue': {
+      routes:
+        | '/chat/'
+      views:
+        | never
+    }
     'src/pages/dashboard/index.vue': {
       routes:
         | '/dashboard/'
@@ -413,6 +468,24 @@ declare module 'vue-router/auto-routes' {
       views:
         | never
     }
+    'src/pages/profile/partials/update-password-form.vue': {
+      routes:
+        | '/profile/partials/update-password-form'
+      views:
+        | never
+    }
+    'src/pages/profile/partials/update-profile-information-form.vue': {
+      routes:
+        | '/profile/partials/update-profile-information-form'
+      views:
+        | never
+    }
+    'src/pages/profile/show.vue': {
+      routes:
+        | '/profile/show'
+      views:
+        | never
+    }
     'src/pages/settings/index.vue': {
       routes:
         | '/settings/'
@@ -443,6 +516,12 @@ declare module 'vue-router/auto-routes' {
       views:
         | never
     }
+    'src/pages/subscriptions/index.vue': {
+      routes:
+        | '/subscriptions/'
+      views:
+        | never
+    }
     'src/pages/sva-components/index.vue': {
       routes:
         | '/sva-components/'
@@ -452,6 +531,18 @@ declare module 'vue-router/auto-routes' {
     'src/pages/tasks/index.vue': {
       routes:
         | '/tasks/'
+      views:
+        | never
+    }
+    'src/pages/teams/create.vue': {
+      routes:
+        | '/teams/create'
+      views:
+        | never
+    }
+    'src/pages/teams/show.vue': {
+      routes:
+        | '/teams/show'
       views:
         | never
     }

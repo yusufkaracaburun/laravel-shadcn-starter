@@ -8,8 +8,7 @@ import { z } from 'zod'
 
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { useAxios } from '@/composables/use-axios'
-import env from '@/utils/env'
+import { useAuthStore } from '@/stores/auth'
 
 import AuthTitle from './components/auth-title.vue'
 import GitHubButton from './components/github-button.vue'
@@ -33,29 +32,40 @@ const { handleSubmit } = useForm({
 })
 
 const router = useRouter()
-const { axiosInstance } = useAxios()
-const loading = ref(false)
+const authStore = useAuthStore()
+const loading = computed(() => authStore.loading)
 const error = ref<string | null>(null)
 
 const onSubmit = handleSubmit(async (values) => {
-  loading.value = true
   error.value = null
 
   try {
-    // Fortify routes are at root level, not under /api
-    const baseURL = env.VITE_SERVER_API_URL
-    const response = await axiosInstance.post('/register', {
+    const result = await authStore.register({
       name: `${values.firstName} ${values.lastName}`,
       email: values.email,
       password: values.password,
       password_confirmation: values.password_confirmation,
-    }, {
-      baseURL,
     })
 
-    if (response.status === 201) {
+    if (result && result.success) {
       toast.success('Account created successfully!')
-      router.push({ path: '/auth/sign-in' })
+      // Navigate immediately - router.push is async and will handle the navigation
+      // Use replace to avoid adding to history
+      await router.replace({ path: '/auth/sign-in' })
+    }
+    else {
+      // Handle errors from auth store
+      if (result?.errors) {
+        const firstError = Object.values(result.errors)[0]
+        error.value = Array.isArray(firstError) ? firstError[0] : firstError || 'Validation failed'
+      }
+      else if (result?.message) {
+        error.value = result.message
+      }
+      else {
+        error.value = 'Registration failed'
+      }
+      toast.error(error.value)
     }
   }
   catch (err) {
@@ -77,9 +87,6 @@ const onSubmit = handleSubmit(async (values) => {
       error.value = 'An error occurred during registration. Please try again.'
     }
     toast.error(error.value)
-  }
-  finally {
-    loading.value = false
   }
 })
 </script>
@@ -162,7 +169,7 @@ const onSubmit = handleSubmit(async (values) => {
 
               <UiButton type="submit" class="w-full" :disabled="loading">
                 <UiSpinner v-if="loading" class="mr-2" />
-                Create Account
+                {{ loading ? 'Creating Account...' : 'Create Account' }}
               </UiButton>
             </form>
 

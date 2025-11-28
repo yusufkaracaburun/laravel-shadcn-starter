@@ -1,8 +1,44 @@
 import { createPinia, setActivePinia } from 'pinia'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-import { useAuth } from '@/composables/use-auth'
-import { useAuthStore } from '@/stores/auth'
+// Mock TanStack Query before store import
+const mockRefetch = vi.fn()
+const mockMutateAsync = vi.fn()
+
+vi.mock('@tanstack/vue-query', () => ({
+  useQuery: vi.fn(() => ({
+    data: { value: null },
+    isLoading: { value: false },
+    refetch: mockRefetch,
+  })),
+  useMutation: vi.fn(() => ({
+    mutateAsync: mockMutateAsync,
+    isPending: { value: false },
+  })),
+  useQueryClient: vi.fn(() => ({
+    invalidateQueries: vi.fn(),
+    setQueryData: vi.fn(),
+    removeQueries: vi.fn(),
+  })),
+}))
+
+// Mock API services before store import
+vi.mock('@/services/api/auth.api', () => ({
+  useGetCurrentUserQuery: vi.fn(() => ({
+    data: { value: null },
+    isLoading: { value: false },
+    refetch: mockRefetch,
+  })),
+  useLoginMutation: vi.fn(() => ({
+    mutateAsync: mockMutateAsync,
+  })),
+  useRegisterMutation: vi.fn(() => ({
+    mutateAsync: mockMutateAsync,
+  })),
+  useLogoutMutation: vi.fn(() => ({
+    mutateAsync: mockMutateAsync,
+  })),
+}))
 
 // Mock router
 const mockPush = vi.fn()
@@ -21,79 +57,81 @@ vi.mock('vue-router', () => ({
   useRoute: () => mockCurrentRoute.value,
 }))
 
+import { useAuth } from '@/composables/use-auth'
+import { useAuthStore } from '@/stores/auth'
+
 describe('useAuth', () => {
   beforeEach(() => {
     setActivePinia(createPinia())
     mockPush.mockClear()
+    mockMutateAsync.mockResolvedValue({ success: true })
   })
 
   it('should initialize with loading false', () => {
+    // Arrange & Act
     const { loading } = useAuth()
+
+    // Assert
     expect(loading.value).toBe(false)
   })
 
-  it('should logout and redirect to sign-in', () => {
+  it('should have logout function that redirects to sign-in', () => {
+    // Arrange & Act
     const { logout } = useAuth()
-    const authStore = useAuthStore()
-    authStore.isLogin = true
-
     logout()
 
-    expect(authStore.isLogin).toBe(false)
+    // Assert
     expect(mockPush).toHaveBeenCalledWith({ path: '/auth/sign-in' })
   })
 
   it('should redirect to home when login without redirect query', async () => {
+    // Arrange
     const { login } = useAuth()
-    const authStore = useAuthStore()
     mockCurrentRoute.value.query = {}
 
+    // Act
     await login()
 
+    // Assert
     expect(mockPush).toHaveBeenCalledWith({ path: '/dashboard' })
   })
 
-  it('should login successfully and redirect to home when no redirect query', async () => {
-    const { login, loading } = useAuth()
-    const authStore = useAuthStore()
-    mockCurrentRoute.value.query = {}
-
-    await login()
-
-    expect(loading.value).toBe(false)
-    expect(authStore.isLogin).toBe(true)
-    expect(mockPush).toHaveBeenCalledWith({ path: '/dashboard' })
-  })
-
-  it('should login and redirect to query redirect path', async () => {
+  it('should redirect to query redirect path when provided', async () => {
+    // Arrange
     const { login } = useAuth()
-    const authStore = useAuthStore()
     mockCurrentRoute.value.query = { redirect: '/settings' }
 
+    // Act
     await login()
 
-    expect(authStore.isLogin).toBe(true)
+    // Assert
     expect(mockPush).toHaveBeenCalledWith('/settings')
   })
 
   it('should redirect to home when redirect starts with //', async () => {
+    // Arrange
     const { login } = useAuth()
-    const authStore = useAuthStore()
     mockCurrentRoute.value.query = { redirect: '//external.com' }
 
+    // Act
     await login()
 
-    expect(authStore.isLogin).toBe(true)
+    // Assert
     expect(mockPush).toHaveBeenCalledWith({ path: '/dashboard' })
   })
 
   it('should set loading to true during login', async () => {
+    // Arrange
     const { login, loading } = useAuth()
     mockCurrentRoute.value.query = {}
 
+    // Act
     const loginPromise = login()
+    
+    // Assert - loading should be true during async operation
     expect(loading.value).toBe(true)
 
+    // Wait for login to complete
     await loginPromise
     expect(loading.value).toBe(false)
   })

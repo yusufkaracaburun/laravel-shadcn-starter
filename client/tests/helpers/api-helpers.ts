@@ -40,6 +40,20 @@ export async function registerUser(request: APIRequestContext, data: RegisterDat
   return response
 }
 
+export async function getAuthenticatedContext(request: APIRequestContext, credentials: LoginCredentials) {
+  // First get CSRF cookie
+  await request.get(`${apiURL}/sanctum/csrf-cookie`)
+
+  // Then login
+  const loginResponse = await loginUser(request, credentials)
+  const cookies = loginResponse.headers()['set-cookie'] || []
+
+  return {
+    cookies: cookies.join('; '),
+    loginResponse,
+  }
+}
+
 export async function expectSuccessfulLogin(response: any) {
   expect(response.status()).toBe(200)
   const contentType = response.headers()['content-type'] || ''

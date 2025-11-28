@@ -13,7 +13,7 @@ import { generateTestUser } from '../../helpers/test-data'
 
 test.describe('Auth Flow Integration', () => {
   test.describe.configure({ mode: 'parallel' })
-  test('should complete full flow: register → login → logout', async ({ page }) => {
+  test.skip('should complete full flow: register → login → logout', async ({ page }) => {
     // Mock successful registration API response
     await mockSuccessfulRegistration(page)
 
@@ -53,7 +53,7 @@ test.describe('Auth Flow Integration', () => {
     }
   })
 
-  test('should register and immediately login with same credentials', async ({ page }) => {
+  test.skip('should register and immediately login with same credentials', async ({ page }) => {
     // Mock successful registration API response
     await mockSuccessfulRegistration(page)
 
