@@ -6,7 +6,7 @@ use Laravel\Fortify\Features;
 
 return [
     'guard' => 'web',
-    'middleware' => ['web'],
+    'middleware' => ['api'],
     'auth_middleware' => 'auth',
     'passwords' => 'users',
     'username' => 'email',

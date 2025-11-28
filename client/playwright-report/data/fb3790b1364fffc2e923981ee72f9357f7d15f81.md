@@ -1,0 +1,49 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - region "Notifications alt+T":
+      - list
+    - main [ref=e4]:
+      - heading "Shadcn Vue Admin" [level=1] [ref=e5]:
+        - img [ref=e6]
+        - generic [ref=e7]: Shadcn Vue Admin
+      - generic [ref=e8]:
+        - generic [ref=e9]:
+          - heading "Login" [level=3] [ref=e10]
+          - paragraph [ref=e11]:
+            - text: Enter your email and password below to log into your account. Not have an account?
+            - button "Sign Up" [ref=e12]
+        - generic [ref=e13]:
+          - generic [ref=e14]:
+            - generic [ref=e15]: Email
+            - textbox "Email" [ref=e16]:
+              - /placeholder: m@example.com
+              - text: not-an-email
+          - generic [ref=e17]:
+            - generic [ref=e18]:
+              - generic [ref=e19]: Password
+              - button "Forgot password?" [ref=e20]
+            - textbox "Password" [active] [ref=e21]:
+              - /placeholder: "*********"
+              - text: password123
+          - button "Mock Login" [ref=e22]
+          - generic [ref=e23]:
+            - button "GitHub" [ref=e24]:
+              - img
+              - text: GitHub
+            - button "Google" [ref=e25]:
+              - img
+              - text: Google
+          - paragraph [ref=e26]:
+            - text: By clicking login, you agree to our
+            - button "Terms of Service" [ref=e27]
+            - text: and
+            - button "Privacy Policy" [ref=e28]
+  - generic [ref=e29]:
+    - generic "Toggle devtools panel" [ref=e30] [cursor=pointer]:
+      - img [ref=e31]
+    - generic "Toggle Component Inspector" [ref=e36] [cursor=pointer]:
+      - img [ref=e37]
+```

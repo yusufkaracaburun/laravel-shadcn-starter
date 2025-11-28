@@ -19,10 +19,7 @@ const { login, loading } = useAuth()
       <UiCardDescription>
         Enter your email and password below to log into your account.
         Not have an account?
-        <UiButton
-          variant="link" class="px-0 text-muted-foreground"
-          @click="$router.push('/auth/sign-up')"
-        >
+        <UiButton variant="link" class="px-0 text-muted-foreground" @click="$router.push('/auth/sign-up')">
           Sign Up
         </UiButton>
       </UiCardDescription>
