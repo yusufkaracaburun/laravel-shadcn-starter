@@ -6,6 +6,26 @@ alwaysApply: false
 ---
 
 # Vue Rules for Vue Components
+
+## Component Structure (MANDATORY)
+
+All Vue components MUST follow this structure:
+
+```vue
+<template>
+  <div>
+    <h1>Hello, World!</h1>
+  </div>
+</template>
+
+<script setup lang="ts">
+// Component logic
+</script>
+
+<style scoped>
+/* Component styles */
+</style>
+```
 ## Data Test ID Attribute (MANDATORY)
 
 - Every interactive or key UI element MUST have a `data-testid` attribute to enable robust E2E and component testing.
