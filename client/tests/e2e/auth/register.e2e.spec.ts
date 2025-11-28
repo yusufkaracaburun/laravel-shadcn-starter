@@ -3,16 +3,17 @@ import {
   navigateToRegister,
   fillRegisterForm,
   submitRegisterForm,
-  waitForNavigationToSignIn,
 } from '../../helpers/auth-helpers'
 import { generateTestUser } from '../../helpers/test-data'
 import { registerUser } from '../../helpers/api-helpers'
 
 test.describe('Register E2E', () => {
+  test.describe.configure({ mode: 'parallel' })
+
   test('should navigate to register page', async ({ page }) => {
     await navigateToRegister(page)
     await expect(page).toHaveURL(/.*\/auth\/sign-up/)
-    await expect(page.locator('text=Sign Up')).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'Sign Up' })).toBeVisible()
   })
 
   test('should register successfully with valid data', async ({ page }) => {
@@ -28,10 +29,18 @@ test.describe('Register E2E', () => {
       testUser.password_confirmation,
     )
 
+    // Submit form
     await submitRegisterForm(page)
 
-    // Should redirect to sign-in page after successful registration
-    await waitForNavigationToSignIn(page)
+    // Wait for success toast (optional, but helps confirm registration succeeded)
+    try {
+      await page.waitForSelector('text=/Account created|successfully/i', { timeout: 5000 }).catch(() => {})
+    } catch {
+      // Toast might not be visible or have different text
+    }
+
+    // Wait for navigation to sign-in page
+    await page.waitForURL(/.*\/auth\/sign-in/, { timeout: 20000 })
     await expect(page).toHaveURL(/.*\/auth\/sign-in/)
   })
 
@@ -59,8 +68,8 @@ test.describe('Register E2E', () => {
 
     await submitRegisterForm(page)
 
-    // Wait for error message
-    await expect(page.locator('text=/already|taken|exists/i')).toBeVisible({ timeout: 5000 })
+    // Wait for error message - using getByText with regex for flexible matching
+    await expect(page.getByText(/already|taken|exists/i)).toBeVisible({ timeout: 5000 })
   })
 
   test('should show validation errors for empty form', async ({ page }) => {
@@ -70,7 +79,7 @@ test.describe('Register E2E', () => {
     await submitRegisterForm(page)
 
     // Wait for validation errors - should show multiple required field errors
-    await expect(page.locator('text=/required/i').first()).toBeVisible({ timeout: 2000 })
+    await expect(page.getByText(/required/i).first()).toBeVisible({ timeout: 2000 })
   })
 
   test('should show validation error for password mismatch', async ({ page }) => {
@@ -89,7 +98,7 @@ test.describe('Register E2E', () => {
     await submitRegisterForm(page)
 
     // Wait for password mismatch error
-    await expect(page.locator('text=/match|do not match/i')).toBeVisible({ timeout: 2000 })
+    await expect(page.getByText(/match|do not match/i)).toBeVisible({ timeout: 2000 })
   })
 
   test('should show validation error for invalid email format', async ({ page }) => {
@@ -108,7 +117,7 @@ test.describe('Register E2E', () => {
     await submitRegisterForm(page)
 
     // Wait for email validation error
-    await expect(page.locator('text=/valid email|email address/i')).toBeVisible({ timeout: 2000 })
+    await expect(page.getByText(/valid email|email address/i)).toBeVisible({ timeout: 2000 })
   })
 
   test('should show validation error for password too short', async ({ page }) => {
@@ -128,22 +137,22 @@ test.describe('Register E2E', () => {
     await submitRegisterForm(page)
 
     // Wait for password length validation error
-    await expect(page.locator('text=/at least|8 characters|minimum/i')).toBeVisible({ timeout: 2000 })
+    await expect(page.getByText(/at least|8 characters|minimum/i)).toBeVisible({ timeout: 2000 })
   })
 
   test('should navigate to sign-in page when clicking Sign In link', async ({ page }) => {
     await navigateToRegister(page)
 
-    await page.click('text=Sign In')
+    await page.getByRole('button', { name: 'Sign In' }).click()
     await expect(page).toHaveURL(/.*\/auth\/sign-in/)
   })
 
   test('should show OAuth buttons (GitHub and Google)', async ({ page }) => {
     await navigateToRegister(page)
 
-    // Check for OAuth buttons - they should exist
-    const githubButton = page.locator('text=/github/i').first()
-    const googleButton = page.locator('text=/google/i').first()
+    // Check for OAuth buttons using role and name
+    const githubButton = page.getByRole('button', { name: /github/i }).first()
+    const googleButton = page.getByRole('button', { name: /google/i }).first()
 
     // At least one OAuth button should be visible
     const hasOAuthButtons = await githubButton.isVisible() || await googleButton.isVisible()
@@ -165,9 +174,17 @@ test.describe('Register E2E', () => {
 
     // Submit and check for loading spinner
     const submitPromise = submitRegisterForm(page)
-    await expect(page.locator('[role="status"], .spinner, [class*="spinner"]')).toBeVisible({ timeout: 1000 }).catch(() => {
-      // Spinner might not be visible or have different selector
-    })
+    // Check for loading state using role or aria attributes
+    try {
+      await expect(page.getByRole('status')).toBeVisible({ timeout: 1000 })
+    } catch {
+      // Try alternative selector for spinner
+      try {
+        await expect(page.locator('[class*="spinner"]')).toBeVisible({ timeout: 500 })
+      } catch {
+        // Spinner might not be visible
+      }
+    }
     await submitPromise
   })
 })

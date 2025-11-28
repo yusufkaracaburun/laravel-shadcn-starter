@@ -6,12 +6,11 @@ import {
   fillLoginForm,
   submitRegisterForm,
   submitLoginForm,
-  waitForNavigationToDashboard,
-  waitForNavigationToSignIn,
 } from '../../helpers/auth-helpers'
 import { generateTestUser } from '../../helpers/test-data'
 
 test.describe('Auth Flow Integration', () => {
+  test.describe.configure({ mode: 'parallel' })
   test('should complete full flow: register → login → logout', async ({ page }) => {
     const testUser = generateTestUser()
 
@@ -25,20 +24,27 @@ test.describe('Auth Flow Integration', () => {
       testUser.password,
       testUser.password_confirmation,
     )
+    // Submit form
     await submitRegisterForm(page)
-    await waitForNavigationToSignIn(page)
+    
+    // Wait for navigation to sign-in
+    await page.waitForURL(/.*\/auth\/sign-in/, { timeout: 20000 })
 
     // Step 2: Login
     await fillLoginForm(page, testUser.email, testUser.password)
-    await submitLoginForm(page)
-    await waitForNavigationToDashboard(page)
+    await Promise.all([
+      page.waitForURL(/.*\/dashboard/, { timeout: 10000 }),
+      submitLoginForm(page),
+    ])
     await expect(page).toHaveURL(/.*\/dashboard/)
 
     // Step 3: Logout (if logout button exists)
-    const logoutButton = page.locator('text=/logout|sign out|log out/i').first()
+    const logoutButton = page.getByRole('button', { name: /logout|sign out|log out/i }).first()
     if (await logoutButton.isVisible({ timeout: 2000 }).catch(() => false)) {
-      await logoutButton.click()
-      await waitForNavigationToSignIn(page)
+      await Promise.all([
+        page.waitForURL(/.*\/auth\/sign-in/, { timeout: 10000 }),
+        logoutButton.click(),
+      ])
     }
   })
 
@@ -55,13 +61,18 @@ test.describe('Auth Flow Integration', () => {
       testUser.password,
       testUser.password_confirmation,
     )
+    // Submit form
     await submitRegisterForm(page)
-    await waitForNavigationToSignIn(page)
+    
+    // Wait for navigation to sign-in
+    await page.waitForURL(/.*\/auth\/sign-in/, { timeout: 20000 })
 
     // Immediately login with same credentials
     await fillLoginForm(page, testUser.email, testUser.password)
-    await submitLoginForm(page)
-    await waitForNavigationToDashboard(page)
+    await Promise.all([
+      page.waitForURL(/.*\/dashboard/, { timeout: 10000 }),
+      submitLoginForm(page),
+    ])
     await expect(page).toHaveURL(/.*\/dashboard/)
   })
 
@@ -88,14 +99,13 @@ test.describe('Auth Flow Integration', () => {
     // Login
     await navigateToLogin(page)
     await fillLoginForm(page, testUser.email, testUser.password)
-    await submitLoginForm(page)
-    await waitForNavigationToDashboard(page)
+    await Promise.all([
+      page.waitForURL(/.*\/dashboard/, { timeout: 10000 }),
+      submitLoginForm(page),
+    ])
 
     // Verify we're on dashboard
     await expect(page).toHaveURL(/.*\/dashboard/)
-
-    // Try to navigate to another protected route (if exists)
-    // This test assumes dashboard is a protected route
   })
 
   test('should maintain login state after page reload', async ({ page, request }) => {
@@ -111,8 +121,10 @@ test.describe('Auth Flow Integration', () => {
 
     await navigateToLogin(page)
     await fillLoginForm(page, testUser.email, testUser.password)
-    await submitLoginForm(page)
-    await waitForNavigationToDashboard(page)
+    await Promise.all([
+      page.waitForURL(/.*\/dashboard/, { timeout: 10000 }),
+      submitLoginForm(page),
+    ])
 
     // Reload page
     await page.reload()

@@ -1,0 +1,233 @@
+---
+description: Testing Pyramid guidelines for client/frontend test files only - enforces proper test structure, naming conventions, and pyramid principles for TypeScript/JavaScript tests
+globs:
+  - "tests/**/*.spec.ts"
+  - "tests/**/*.spec.js"
+  - "tests/**/*.test.ts"
+  - "tests/**/*.test.js"
+alwaysApply: false
+---
+
+# Testing Pyramid Rules for Test Files
+
+When writing or modifying test files, strictly follow the Testing Pyramid principles as defined in `@guides/testing-pyramid.md`.
+
+## Test Type Identification and Naming
+
+### File Naming Conventions (MANDATORY)
+
+- **Unit Tests**: Must use `*.unit.spec.ts` or `*.unit.test.ts` suffix
+  - Location: `tests/unit/**/*.unit.spec.ts`
+  - Example: `tests/unit/composables/use-auth.unit.spec.ts`
+
+- **Component Tests**: Must use `*.component.test.ts` suffix
+  - Location: `tests/components/**/*.component.test.ts`
+  - Example: `tests/components/ui/button.component.test.ts`
+
+- **API Tests**: Must use `*.api.spec.ts` suffix
+  - Location: `tests/api/**/*.api.spec.ts`
+  - Example: `tests/api/auth/login.api.spec.ts`
+
+- **E2E Tests**: Must use `*.e2e.spec.ts` or `*.e2e.test.ts` suffix
+  - Location: `tests/e2e/**/*.e2e.spec.ts`
+  - Example: `tests/e2e/auth/login.e2e.spec.ts`
+
+- **Integration Tests**: Must use `*.integration.spec.ts` suffix
+  - Location: `tests/integration/**/*.integration.spec.ts`
+
+- **Pact Tests**: Must use `*.pact.spec.ts` suffix
+  - Location: `tests/pact/**/*.pact.spec.ts`
+
+## Test Structure (REQUIRED)
+
+All TypeScript/JavaScript tests MUST follow this structure:
+
+```typescript
+describe('Component/Feature Name', () => {
+  describe('when condition X', () => {
+    it('should do Y', () => {
+      // Arrange
+      // Act
+      // Assert
+    })
+  })
+})
+```
+
+## Test Type Guidelines
+
+### Unit Tests (`*.unit.spec.ts`)
+
+**MUST**:
+- Test individual units of code in complete isolation
+- Run in milliseconds (very fast)
+- Have no external dependencies (mock everything external)
+- Test business logic, data transformations, edge cases
+- Use one assertion per test when possible
+- Follow AAA pattern (Arrange, Act, Assert)
+
+**MUST NOT**:
+- Test framework code
+- Test third-party libraries
+- Use real databases, file systems, or external services
+- Test implementation details (test behavior, not how)
+
+**Example**:
+```typescript
+describe('UserService', () => {
+  it('should calculate user age correctly', () => {
+    // Arrange
+    const birthDate = new Date('1990-01-01')
+    const user = new User({ birthDate })
+    
+    // Act
+    const age = user.calculateAge()
+    
+    // Assert
+    expect(age).toBe(34)
+  })
+})
+```
+
+### Component Tests (`*.component.test.ts`)
+
+**MUST**:
+- Test UI components in isolation
+- Test rendering and user interactions
+- Use appropriate testing library (Vue Test Utils, React Testing Library, etc.)
+- Test component behavior, not implementation
+- Keep tests focused on component-specific functionality
+
+**MUST NOT**:
+- Test business logic (use unit tests)
+- Test API calls (use API tests)
+- Test complete workflows (use E2E tests)
+
+### API Tests (`*.api.spec.ts`)
+
+**MUST**:
+- Test REST/GraphQL endpoints directly
+- Use real HTTP requests (no mocking of HTTP layer)
+- Test request/response handling
+- Test authentication and authorization
+- Test error handling and status codes
+- Use test databases or test API instances
+
+**MUST NOT**:
+- Mock the API layer itself
+- Test business logic details (use unit tests)
+- Test complete user workflows (use E2E tests)
+
+### E2E Tests (`*.e2e.spec.ts`)
+
+**MUST**:
+- Test complete user workflows from start to finish
+- Test only critical user journeys (5-10% of all tests)
+- Use page object models for maintainability
+- Test user-visible behavior only
+- Be independent and runnable in any order
+- Clean up test data after execution
+
+**MUST NOT**:
+- Test every possible scenario (use unit tests for edge cases)
+- Test business logic details (use unit tests)
+- Test implementation details
+- Duplicate tests from lower levels
+
+**Example**:
+```typescript
+test.describe('User Login E2E', () => {
+  test('user can login successfully', { annotations: ['@e2e'] }, async ({ page }) => {
+    await page.goto('/login')
+    await page.fill('[name="email"]', 'user@test.com')
+    await page.fill('[name="password"]', 'pass123')
+    await page.click('button[type="submit"]')
+    
+    await expect(page).toHaveURL('/dashboard')
+    await expect(page.locator('text=Welcome')).toBeVisible()
+  })
+})
+```
+
+## Testing Pyramid Distribution
+
+Maintain the pyramid shape:
+
+- **70-80%**: Unit tests (`*.unit.spec.ts`)
+- **15-20%**: Integration/API tests (`*.api.spec.ts`, `*.integration.spec.ts`)
+- **5-10%**: E2E tests (`*.e2e.spec.ts`)
+
+## Test Quality Requirements
+
+### Speed Requirements
+- Unit tests: < 1 second total execution
+- Integration/API tests: < 30 seconds total
+- E2E tests: < 5 minutes total
+
+### Independence Requirements
+- Tests MUST be independent (no dependencies between tests)
+- Tests MUST be runnable in any order
+- Tests MUST clean up after themselves
+- Tests MUST be idempotent
+
+### Readability Requirements
+- Use descriptive test names that explain what is being tested
+- Follow AAA pattern (Arrange, Act, Assert)
+- Keep tests focused (one thing per test)
+- Use clear variable names
+- Add comments for complex setup
+
+## Anti-Patterns to Avoid
+
+**DO NOT**:
+1. Create "ice cream cone" (many E2E, few unit tests)
+2. Test implementation details instead of behavior
+3. Over-mock (only mock external dependencies)
+4. Test framework code
+5. Duplicate tests at multiple levels
+6. Write slow unit tests (they should be fast)
+7. Write brittle E2E tests (test behavior, not selectors)
+
+## Test Organization
+
+Tests MUST be organized in this structure:
+
+```
+tests/
+  unit/           # Unit tests (*.unit.spec.ts)
+  components/     # Component tests (*.component.test.ts)
+  integration/    # Integration tests (*.integration.spec.ts)
+  api/            # API tests (*.api.spec.ts)
+  e2e/            # E2E tests (*.e2e.spec.ts)
+  pact/           # Pact tests (*.pact.spec.ts)
+  helpers/        # Test utilities (not tests themselves)
+  fixtures/       # Test data
+```
+
+## When Creating New Tests
+
+Before writing a test, ask:
+
+1. **What am I testing?**
+   - Business logic → Unit test
+   - Component rendering → Component test
+   - API endpoint → API test
+   - Complete workflow → E2E test
+
+2. **Is this the right level?**
+   - Can this be tested at a lower level? (Push tests down)
+   - Am I duplicating a test from another level? (Avoid duplication)
+
+3. **Is this test independent?**
+   - Can it run in any order?
+   - Does it clean up after itself?
+   - Is it idempotent?
+
+4. **Is this test maintainable?**
+   - Clear, descriptive name?
+   - Follows AAA pattern?
+   - Tests behavior, not implementation?
+
+## Reference
+
+For complete guidelines, see: `@guides/testing-pyramid.md`

@@ -8,6 +8,7 @@ import {
 import { generateLoginCredentials, generateTestUser } from '../../helpers/test-data'
 
 test.describe('Login API', () => {
+  test.describe.configure({ mode: 'parallel' })
   test('should login successfully with valid credentials', async ({ request }) => {
     // First register a user
     const testUser = generateTestUser()

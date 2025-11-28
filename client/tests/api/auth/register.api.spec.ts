@@ -7,6 +7,7 @@ import {
 import { generateTestUser } from '../../helpers/test-data'
 
 test.describe('Register API', () => {
+  test.describe.configure({ mode: 'parallel' })
   test('should register successfully with valid data', async ({ request }) => {
     const testUser = generateTestUser()
     const response = await registerUser(request, {

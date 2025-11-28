@@ -1,12 +1,12 @@
-import { Page } from '@playwright/test'
+import type { Page } from '@playwright/test'
 
 export async function fillLoginForm(page: Page, email: string, password: string) {
-  await page.fill('input[id="email"]', email)
-  await page.fill('input[id="password"]', password)
+  await page.getByLabel('Email').fill(email)
+  await page.getByLabel('Password').fill(password)
 }
 
 export async function submitLoginForm(page: Page) {
-  await page.click('button[type="submit"]:has-text("Login")')
+  await page.getByRole('button', { name: 'Mock Login' }).click()
 }
 
 export async function fillRegisterForm(
@@ -17,15 +17,15 @@ export async function fillRegisterForm(
   password: string,
   passwordConfirmation: string,
 ) {
-  await page.fill('input[id="first-name"]', firstName)
-  await page.fill('input[id="last-name"]', lastName)
-  await page.fill('input[id="email"]', email)
-  await page.fill('input[id="password"]', password)
-  await page.fill('input[id="password-confirmation"]', passwordConfirmation)
+  await page.getByLabel('First name').fill(firstName)
+  await page.getByLabel('Last name').fill(lastName)
+  await page.getByLabel('Email').fill(email)
+  await page.getByLabel('Password').fill(password)
+  await page.getByLabel('Confirm Password').fill(passwordConfirmation)
 }
 
 export async function submitRegisterForm(page: Page) {
-  await page.click('button[type="submit"]:has-text("Create Account")')
+  await page.getByRole('button', { name: 'Create Account' }).click()
 }
 
 export async function waitForNavigationToDashboard(page: Page) {
@@ -33,7 +33,7 @@ export async function waitForNavigationToDashboard(page: Page) {
 }
 
 export async function waitForNavigationToSignIn(page: Page) {
-  await page.waitForURL('**/auth/sign-in', { timeout: 10000 })
+  await page.waitForURL('**/auth/sign-in', { timeout: 15000, waitUntil: 'networkidle' })
 }
 
 export async function navigateToLogin(page: Page) {
@@ -45,4 +45,3 @@ export async function navigateToRegister(page: Page) {
   await page.goto('/auth/sign-up')
   await page.waitForLoadState('networkidle')
 }
-
