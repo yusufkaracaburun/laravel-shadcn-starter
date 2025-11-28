@@ -19,8 +19,10 @@ const { login, loading } = useAuth()
       <UiCardDescription>
         Enter your email and password below to log into your account.
         Not have an account?
-        <UiButton variant="link" class="px-0 text-muted-foreground" data-testid="login-form_signup_link"
-          @click="$router.push('/auth/sign-up')">
+        <UiButton
+          variant="link" class="px-0 text-muted-foreground" data-testid="login-form_signup_link"
+          @click="$router.push('/auth/sign-up')"
+        >
           Sign Up
         </UiButton>
       </UiCardDescription>
@@ -39,11 +41,13 @@ const { login, loading } = useAuth()
           </UiLabel>
           <ToForgotPasswordLink />
         </div>
-        <UiInput id="password" type="password" required placeholder="*********"
-          data-testid="login-form_password_input" />
+        <UiInput
+          id="password" type="password" required placeholder="*********"
+          data-testid="login-form_password_input"
+        />
       </div>
 
-      <UiButton class="w-full" @click="login" data-testid="login-form_login_button">
+      <UiButton class="w-full" data-testid="login-form_login_button" @click="login">
         <UiSpinner v-if="loading" class="mr-2" />
         Mock Login
       </UiButton>

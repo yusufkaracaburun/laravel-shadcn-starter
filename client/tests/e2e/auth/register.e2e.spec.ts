@@ -1,12 +1,13 @@
-import { test, expect } from '@playwright/test'
+import { expect, test } from '@playwright/test'
+
+import { registerUser } from '../../helpers/api-helpers'
 import {
-  navigateToRegister,
   fillRegisterForm,
-  submitRegisterForm,
   mockSuccessfulRegistration,
+  navigateToRegister,
+  submitRegisterForm,
 } from '../../helpers/auth-helpers'
 import { generateTestUser } from '../../helpers/test-data'
-import { registerUser } from '../../helpers/api-helpers'
 
 test.describe('Register E2E', () => {
   test.describe.configure({ mode: 'parallel' })
@@ -176,15 +177,16 @@ test.describe('Register E2E', () => {
     // Check for loading state using role or aria attributes
     try {
       await expect(page.getByRole('status')).toBeVisible({ timeout: 1000 })
-    } catch {
+    }
+    catch {
       // Try alternative selector for spinner
       try {
         await expect(page.locator('[class*="spinner"]')).toBeVisible({ timeout: 500 })
-      } catch {
+      }
+      catch {
         // Spinner might not be visible
       }
     }
     await submitPromise
   })
 })
-

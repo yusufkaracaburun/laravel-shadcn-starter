@@ -1,5 +1,6 @@
-import { describe, expect, it, vi, beforeEach } from 'vitest'
-import { setActivePinia, createPinia } from 'pinia'
+import { createPinia, setActivePinia } from 'pinia'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+
 import { useAuth } from '@/composables/use-auth'
 import { useAuthStore } from '@/stores/auth'
 
@@ -97,4 +98,3 @@ describe('useAuth', () => {
     expect(loading.value).toBe(false)
   })
 })
-

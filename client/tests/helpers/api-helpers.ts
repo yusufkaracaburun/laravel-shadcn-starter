@@ -1,4 +1,6 @@
-import { APIRequestContext, expect } from '@playwright/test'
+import type { APIRequestContext } from '@playwright/test'
+
+import { expect } from '@playwright/test'
 
 const apiURL = process.env.PLAYWRIGHT_TEST_API_URL || 'http://127.0.0.1:8000'
 
@@ -19,7 +21,7 @@ export async function loginUser(request: APIRequestContext, credentials: LoginCr
     data: credentials,
     headers: {
       'Content-Type': 'application/json',
-      Accept: 'application/json',
+      'Accept': 'application/json',
     },
   })
 
@@ -31,7 +33,7 @@ export async function registerUser(request: APIRequestContext, data: RegisterDat
     data,
     headers: {
       'Content-Type': 'application/json',
-      Accept: 'application/json',
+      'Accept': 'application/json',
     },
   })
 
@@ -61,4 +63,3 @@ export async function expectValidationError(response: any, expectedStatus = 422)
   expect(body).toHaveProperty('errors')
   return body
 }
-

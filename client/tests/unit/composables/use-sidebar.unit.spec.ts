@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest'
+
 import { useSidebar } from '@/composables/use-sidebar'
 
 describe('useSidebar', () => {
@@ -24,4 +25,3 @@ describe('useSidebar', () => {
     expect(dashboard?.url).toBe('/dashboard')
   })
 })
-

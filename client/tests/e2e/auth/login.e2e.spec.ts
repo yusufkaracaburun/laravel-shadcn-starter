@@ -1,12 +1,13 @@
-import { test, expect } from '@playwright/test'
+import { expect, test } from '@playwright/test'
+
+import { registerUser as registerUserAPI } from '../../helpers/api-helpers'
 import {
-  navigateToLogin,
   fillLoginForm,
+  navigateToLogin,
   submitLoginForm,
   waitForNavigationToDashboard,
 } from '../../helpers/auth-helpers'
-import { generateTestUser, generateLoginCredentials } from '../../helpers/test-data'
-import { registerUser as registerUserAPI } from '../../helpers/api-helpers'
+import { generateLoginCredentials, generateTestUser } from '../../helpers/test-data'
 
 test.describe('Login E2E', () => {
   test.describe.configure({ mode: 'parallel' })
@@ -62,11 +63,11 @@ test.describe('Login E2E', () => {
     // HTML5 validation will prevent submission, so we check if the form is invalid
     const emailInput = page.getByLabel('Email')
     const passwordInput = page.getByLabel('Password')
-    
+
     // Check HTML5 validation
     const emailValid = await emailInput.evaluate((el: HTMLInputElement) => el.validity.valid)
     const passwordValid = await passwordInput.evaluate((el: HTMLInputElement) => el.validity.valid)
-    
+
     expect(emailValid).toBe(false)
     expect(passwordValid).toBe(false)
   })
@@ -75,12 +76,12 @@ test.describe('Login E2E', () => {
     await navigateToLogin(page)
 
     await fillLoginForm(page, 'not-an-email', 'password123')
-    
+
     // Check HTML5 email validation
     const emailInput = page.getByLabel('Email')
     const emailValid = await emailInput.evaluate((el: HTMLInputElement) => el.validity.valid)
     const emailTypeMismatch = await emailInput.evaluate((el: HTMLInputElement) => el.validity.typeMismatch)
-    
+
     expect(emailValid).toBe(false)
     expect(emailTypeMismatch).toBe(true)
   })
@@ -123,15 +124,16 @@ test.describe('Login E2E', () => {
     // Check for loading state using role or aria attributes
     try {
       await expect(page.getByRole('status')).toBeVisible({ timeout: 1000 })
-    } catch {
+    }
+    catch {
       // Try alternative selector for spinner
       try {
         await expect(page.locator('[class*="spinner"]')).toBeVisible({ timeout: 500 })
-      } catch {
+      }
+      catch {
         // Spinner might not be visible
       }
     }
     await submitPromise
   })
 })
-

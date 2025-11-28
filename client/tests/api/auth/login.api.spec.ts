@@ -1,9 +1,10 @@
-import { test, expect } from '@playwright/test'
+import { expect, test } from '@playwright/test'
+
 import {
-  loginUser,
-  registerUser,
   expectSuccessfulLogin,
   expectValidationError,
+  loginUser,
+  registerUser,
 } from '../../helpers/api-helpers'
 import { generateLoginCredentials, generateTestUser } from '../../helpers/test-data'
 
@@ -63,7 +64,7 @@ test.describe('Login API', () => {
       },
       headers: {
         'Content-Type': 'application/json',
-        Accept: 'application/json',
+        'Accept': 'application/json',
       },
     })
 
@@ -77,7 +78,7 @@ test.describe('Login API', () => {
       },
       headers: {
         'Content-Type': 'application/json',
-        Accept: 'application/json',
+        'Accept': 'application/json',
       },
     })
 
@@ -131,4 +132,3 @@ test.describe('Login API', () => {
     await expectValidationError(response, 422)
   })
 })
-

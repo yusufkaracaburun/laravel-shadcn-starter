@@ -45,4 +45,3 @@ export function generateLoginCredentials(email?: string, password?: string) {
     password: password || faker.internet.password({ length: 12 }),
   }
 }
-

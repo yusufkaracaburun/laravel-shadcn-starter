@@ -1,12 +1,13 @@
-import { test, expect } from '@playwright/test'
+import { expect, test } from '@playwright/test'
+
 import {
-  navigateToRegister,
-  navigateToLogin,
-  fillRegisterForm,
   fillLoginForm,
-  submitRegisterForm,
-  submitLoginForm,
+  fillRegisterForm,
   mockSuccessfulRegistration,
+  navigateToLogin,
+  navigateToRegister,
+  submitLoginForm,
+  submitRegisterForm,
 } from '../../helpers/auth-helpers'
 import { generateTestUser } from '../../helpers/test-data'
 
@@ -144,4 +145,3 @@ test.describe('Auth Flow Integration', () => {
     expect(currentURL).toMatch(/.*\/dashboard|.*\/auth\/sign-in/)
   })
 })
-

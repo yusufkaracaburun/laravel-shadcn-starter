@@ -1,8 +1,9 @@
-import { test, expect } from '@playwright/test'
+import { expect, test } from '@playwright/test'
+
 import {
-  registerUser,
   expectSuccessfulRegistration,
   expectValidationError,
+  registerUser,
 } from '../../helpers/api-helpers'
 import { generateTestUser } from '../../helpers/test-data'
 
@@ -53,7 +54,7 @@ test.describe('Register API', () => {
       },
       headers: {
         'Content-Type': 'application/json',
-        Accept: 'application/json',
+        'Accept': 'application/json',
       },
     })
 
@@ -70,7 +71,7 @@ test.describe('Register API', () => {
       },
       headers: {
         'Content-Type': 'application/json',
-        Accept: 'application/json',
+        'Accept': 'application/json',
       },
     })
 
@@ -87,7 +88,7 @@ test.describe('Register API', () => {
       },
       headers: {
         'Content-Type': 'application/json',
-        Accept: 'application/json',
+        'Accept': 'application/json',
       },
     })
 
@@ -104,7 +105,7 @@ test.describe('Register API', () => {
       },
       headers: {
         'Content-Type': 'application/json',
-        Accept: 'application/json',
+        'Accept': 'application/json',
       },
     })
 
@@ -184,4 +185,3 @@ test.describe('Register API', () => {
     await expectValidationError(response, 422)
   })
 })
-

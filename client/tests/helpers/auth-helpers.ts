@@ -72,7 +72,8 @@ export async function mockSuccessfulRegistration(page: Page) {
           message: 'User registered successfully',
         }),
       })
-    } else {
+    }
+    else {
       await route.continue()
     }
   })

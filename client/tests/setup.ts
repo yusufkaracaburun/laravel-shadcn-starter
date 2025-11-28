@@ -1,6 +1,6 @@
 import { config } from '@vue/test-utils'
-import { beforeEach, vi } from 'vitest'
 import { createPinia, setActivePinia } from 'pinia'
+import { beforeEach, vi } from 'vitest'
 
 // Mock router
 const mockRouter = {
@@ -44,4 +44,3 @@ config.global.stubs = {
 
 // Make ref available globally for auto-imports
 global.ref = (val: any) => ({ value: val })
-

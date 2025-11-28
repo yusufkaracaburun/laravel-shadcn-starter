@@ -1,13 +1,14 @@
 <script setup lang="ts">
+import type { AxiosError } from 'axios'
+
 import { toTypedSchema } from '@vee-validate/zod'
 import { useForm } from 'vee-validate'
-import type { AxiosError } from 'axios'
 import { toast } from 'vue-sonner'
 import { z } from 'zod'
 
-import { useAxios } from '@/composables/use-axios'
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import { useAxios } from '@/composables/use-axios'
 import env from '@/utils/env'
 
 import AuthTitle from './components/auth-title.vue'
@@ -22,7 +23,7 @@ const registerSchema = toTypedSchema(z.object({
   email: z.string().email('Please enter a valid email address'),
   password: z.string().min(8, 'Password must be at least 8 characters'),
   password_confirmation: z.string().min(1, 'Please confirm your password'),
-}).refine((data) => data.password === data.password_confirmation, {
+}).refine(data => data.password === data.password_confirmation, {
   message: 'Passwords do not match',
   path: ['password_confirmation'],
 }))
@@ -58,7 +59,7 @@ const onSubmit = handleSubmit(async (values) => {
     }
   }
   catch (err) {
-    const axiosError = err as AxiosError<{ message?: string; errors?: Record<string, string[]> }>
+    const axiosError = err as AxiosError<{ message?: string, errors?: Record<string, string[]> }>
     if (axiosError.response?.status === 422) {
       const errorData = axiosError.response.data
       if (errorData?.errors) {
@@ -101,82 +102,84 @@ const onSubmit = handleSubmit(async (values) => {
           </UiCardDescription>
         </UiCardHeader>
         <UiCardContent>
-          <form @submit="onSubmit" class="grid gap-4">
-            <div class="grid grid-cols-2 gap-4">
-              <FormField v-slot="{ componentField }" name="firstName">
+          <div class="grid gap-4">
+            <form class="contents" @submit="onSubmit">
+              <div class="grid grid-cols-2 gap-4">
+                <FormField v-slot="{ componentField }" name="firstName">
+                  <FormItem>
+                    <FormLabel>First name</FormLabel>
+                    <FormControl>
+                      <Input id="first-name" placeholder="Max" v-bind="componentField" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                </FormField>
+
+                <FormField v-slot="{ componentField }" name="lastName">
+                  <FormItem>
+                    <FormLabel>Last name</FormLabel>
+                    <FormControl>
+                      <Input id="last-name" placeholder="Robinson" v-bind="componentField" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                </FormField>
+              </div>
+
+              <FormField v-slot="{ componentField }" name="email">
                 <FormItem>
-                  <FormLabel>First name</FormLabel>
+                  <FormLabel>Email</FormLabel>
                   <FormControl>
-                    <Input id="first-name" placeholder="Max" v-bind="componentField" />
+                    <Input id="email" type="email" placeholder="m@example.com" v-bind="componentField" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               </FormField>
 
-              <FormField v-slot="{ componentField }" name="lastName">
+              <FormField v-slot="{ componentField }" name="password">
                 <FormItem>
-                  <FormLabel>Last name</FormLabel>
+                  <FormLabel>Password</FormLabel>
                   <FormControl>
-                    <Input id="last-name" placeholder="Robinson" v-bind="componentField" />
+                    <Input id="password" type="password" placeholder="******" v-bind="componentField" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               </FormField>
+
+              <FormField v-slot="{ componentField }" name="password_confirmation">
+                <FormItem>
+                  <FormLabel>Confirm Password</FormLabel>
+                  <FormControl>
+                    <Input id="password-confirmation" type="password" placeholder="******" v-bind="componentField" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              </FormField>
+
+              <div v-if="error" class="text-sm text-destructive" role="alert">
+                {{ error }}
+              </div>
+
+              <UiButton type="submit" class="w-full" :disabled="loading">
+                <UiSpinner v-if="loading" class="mr-2" />
+                Create Account
+              </UiButton>
+            </form>
+
+            <UiSeparator label="Or continue with" />
+
+            <div class="flex flex-col items-center justify-between gap-4">
+              <GitHubButton />
+              <GoogleButton />
             </div>
 
-            <FormField v-slot="{ componentField }" name="email">
-              <FormItem>
-                <FormLabel>Email</FormLabel>
-                <FormControl>
-                  <Input id="email" type="email" placeholder="m@example.com" v-bind="componentField" />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            </FormField>
-
-            <FormField v-slot="{ componentField }" name="password">
-              <FormItem>
-                <FormLabel>Password</FormLabel>
-                <FormControl>
-                  <Input id="password" type="password" placeholder="******" v-bind="componentField" />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            </FormField>
-
-            <FormField v-slot="{ componentField }" name="password_confirmation">
-              <FormItem>
-                <FormLabel>Confirm Password</FormLabel>
-                <FormControl>
-                  <Input id="password-confirmation" type="password" placeholder="******" v-bind="componentField" />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            </FormField>
-
-            <div v-if="error" class="text-sm text-destructive" role="alert">
-              {{ error }}
-            </div>
-
-            <UiButton type="submit" class="w-full" :disabled="loading">
-              <UiSpinner v-if="loading" class="mr-2" />
-              Create Account
-            </UiButton>
-          </form>
-
-          <UiSeparator label="Or continue with" />
-
-          <div class="flex flex-col items-center justify-between gap-4">
-            <GitHubButton />
-            <GoogleButton />
+            <UiCardDescription>
+              By creating an account, you agree to our
+              <TermsOfServiceButton />
+              and
+              <PrivacyPolicyButton />
+            </UiCardDescription>
           </div>
-
-          <UiCardDescription>
-            By creating an account, you agree to our
-            <TermsOfServiceButton />
-            and
-            <PrivacyPolicyButton />
-          </UiCardDescription>
         </UiCardContent>
       </UiCard>
     </main>

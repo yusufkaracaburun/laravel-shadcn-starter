@@ -24,9 +24,11 @@ meta:
 <template>
   <Page title="workspace" description="workspace description" sticky>
     <template #actions>
-      <Button @click="() => toast('hello', {
-        position: 'top-center',
-      })">
+      <Button
+        @click="() => toast('hello', {
+          position: 'top-center',
+        })"
+      >
         Download
       </Button>
     </template>
