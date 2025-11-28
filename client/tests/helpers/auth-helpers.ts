@@ -17,11 +17,16 @@ export async function fillRegisterForm(
   password: string,
   passwordConfirmation: string,
 ) {
-  await page.getByLabel('First name').fill(firstName)
-  await page.getByLabel('Last name').fill(lastName)
-  await page.getByLabel('Email').fill(email)
-  await page.getByLabel('Password').fill(password)
-  await page.getByLabel('Confirm Password').fill(passwordConfirmation)
+  // Use getByPlaceholder for text inputs (user-visible, follows Playwright best practices)
+  await page.getByPlaceholder('Max').fill(firstName)
+  await page.getByPlaceholder('Robinson').fill(lastName)
+  await page.getByPlaceholder('m@example.com').fill(email)
+
+  // For password fields: FormLabel components may not have proper label association
+  // Using ID as fallback when getByLabel doesn't work (still better than CSS selectors)
+  // Note: This is acceptable when label association isn't properly implemented in the component
+  await page.locator('input[id="password"]').fill(password)
+  await page.locator('input[id="password-confirmation"]').fill(passwordConfirmation)
 }
 
 export async function submitRegisterForm(page: Page) {

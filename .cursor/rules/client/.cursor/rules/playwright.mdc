@@ -1,0 +1,37 @@
+---
+description: Playwright rules for client/frontend test files only - enforces proper test structure, naming conventions, and pyramid principles for TypeScript/JavaScript tests
+globs:
+  - "tests/**/*.spec.ts"
+  - "tests/**/*.spec.js"
+  - "tests/**/*.test.ts"
+  - "tests/**/*.test.js"
+alwaysApply: false
+---
+
+# Playwright Rules for Test Files
+
+## Locator Strategy (MANDATORY)
+
+When writing Playwright tests, always follow this locator selection strategy for stability, readability, and maintainability:
+
+1. **Prefer `getByTestId()`**  
+   - Always use `data-testid` attributes and Playwright’s `getByTestId()` (or equivalent) as your first choice for interacting with elements.
+   - Add `data-testid` to UI components for critical actions, input fields, and assertions.
+   - Example:
+     ```typescript
+     await page.getByTestId('login-form_login_button').click()
+     ```
+2. **Only if `data-testid` is not available:**  
+   - Use [Role selectors](https://playwright.dev/docs/locators#role-selector) (e.g. `getByRole()`), or accessible labels with `getByLabel`, but prefer descriptive and unique roles/labels.
+   - Example:
+     ```typescript
+     await page.getByRole('button', { name: 'Submit' }).click()
+     ```
+3. **Avoid CSS selectors for user-visible elements**  
+   - These are brittle and tie tests to implementation details. Only use for hidden/internal elements as a last resort.
+4. **Do NOT use XPath**  
+   - XPath selectors are discouraged and generally disallowed.
+5. **Maintain accessibility**  
+   - Ensure that the use of `data-testid` does not replace proper accessible labeling of UI elements.
+
+Revisit and add `data-testid` to components as needed to allow for stable Playwright tests.

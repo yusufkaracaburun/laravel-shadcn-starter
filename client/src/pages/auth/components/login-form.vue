@@ -11,15 +11,16 @@ const { login, loading } = useAuth()
 </script>
 
 <template>
-  <UiCard class="w-full max-w-sm">
+  <UiCard class="w-full max-w-sm" data-testid="login-form_container_card">
     <UiCardHeader>
-      <UiCardTitle class="text-2xl">
+      <UiCardTitle class="text-2xl" data-testid="login-form_title_heading">
         Login
       </UiCardTitle>
       <UiCardDescription>
         Enter your email and password below to log into your account.
         Not have an account?
-        <UiButton variant="link" class="px-0 text-muted-foreground" @click="$router.push('/auth/sign-up')">
+        <UiButton variant="link" class="px-0 text-muted-foreground" data-testid="login-form_signup_link"
+          @click="$router.push('/auth/sign-up')">
           Sign Up
         </UiButton>
       </UiCardDescription>
@@ -29,7 +30,7 @@ const { login, loading } = useAuth()
         <UiLabel for="email">
           Email
         </UiLabel>
-        <UiInput id="email" type="email" placeholder="m@example.com" required />
+        <UiInput id="email" type="email" placeholder="m@example.com" required data-testid="login-form_email_input" />
       </div>
       <div class="grid gap-2">
         <div class="flex items-center justify-between">
@@ -38,10 +39,11 @@ const { login, loading } = useAuth()
           </UiLabel>
           <ToForgotPasswordLink />
         </div>
-        <UiInput id="password" type="password" required placeholder="*********" />
+        <UiInput id="password" type="password" required placeholder="*********"
+          data-testid="login-form_password_input" />
       </div>
 
-      <UiButton class="w-full" @click="login">
+      <UiButton class="w-full" @click="login" data-testid="login-form_login_button">
         <UiSpinner v-if="loading" class="mr-2" />
         Mock Login
       </UiButton>

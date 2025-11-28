@@ -1,0 +1,29 @@
+---
+description: Vue rules for vue components only - enforces proper component structure, naming conventions, and best practices
+globs:
+  - "src/components/**/*.vue"
+alwaysApply: false
+---
+
+# Vue Rules for Vue Components
+## Data Test ID Attribute (MANDATORY)
+
+- Every interactive or key UI element MUST have a `data-testid` attribute to enable robust E2E and component testing.
+- The value MUST follow the convention: `data-testid="<filename>_<purpose>_<element>"`.
+  - `<filename>`: Use the kebab-case base filename (without `.vue`) for the component (e.g. `login-form`).
+  - `<purpose>`: Short description of what the test id is for (e.g. `login`, `submit`, `title`).
+  - `<element>`: Element type/role (e.g. `button`, `input`, `title`, etc.).
+  - Example: `data-testid="login-form_login_button"`
+- Place this attribute on:
+  - All key buttons, inputs, links, actions, and areas required for UI/E2E/component tests.
+  - Root/container elements when relevant for component mounting/selecting.
+- When using multi-word filenames, use kebab-case for `<filename>` (e.g. `user-profile-card`).
+- Avoid duplicating `data-testid` within the same component.
+- Update tests to use only these stable testids for element selectors.
+- Example in a Vue template:
+  ```vue
+  <UiButton data-testid="login-form_login_button">Login</UiButton>
+  ```
+- Do NOT use component implementation or CSS selectors for test automation; always prefer `data-testid`.
+
+This rule supports Playwright and all testing guidelines for E2E and component tests.

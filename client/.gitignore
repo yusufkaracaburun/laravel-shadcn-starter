@@ -7,11 +7,15 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+# Dependencies
 node_modules
+
+# Build outputs
 dist
 dist-ssr
 *.local
 
+# Stats
 stats.html
 
 # Editor directories and files
@@ -26,9 +30,27 @@ stats.html
 *.sln
 *.sw?
 
-
+# Environment variables
 .env
 .env.local
 .env.development
 .env.test
 .env.production
+
+# Testing
+# Playwright
+test-results/
+playwright-report/
+playwright/.cache/
+
+# Coverage
+coverage/
+*.lcov
+
+# Vitest
+.vitest/
+
+# Temporary files
+.tmp/
+*.tmp
+.cache/
