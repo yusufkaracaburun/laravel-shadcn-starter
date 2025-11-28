@@ -38,12 +38,12 @@ stats.html
 .env.production
 
 # Testing
-# Playwright
+# Playwright test results and reports
 test-results/
 playwright-report/
 playwright/.cache/
 
-# Coverage
+# Coverage reports
 coverage/
 *.lcov
 

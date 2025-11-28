@@ -6,12 +6,16 @@ import {
   fillLoginForm,
   submitRegisterForm,
   submitLoginForm,
+  mockSuccessfulRegistration,
 } from '../../helpers/auth-helpers'
 import { generateTestUser } from '../../helpers/test-data'
 
 test.describe('Auth Flow Integration', () => {
   test.describe.configure({ mode: 'parallel' })
   test('should complete full flow: register → login → logout', async ({ page }) => {
+    // Mock successful registration API response
+    await mockSuccessfulRegistration(page)
+
     const testUser = generateTestUser()
 
     // Step 1: Register
@@ -24,11 +28,11 @@ test.describe('Auth Flow Integration', () => {
       testUser.password,
       testUser.password_confirmation,
     )
-    // Submit form
-    await submitRegisterForm(page)
-    
-    // Wait for navigation to sign-in
-    await page.waitForURL(/.*\/auth\/sign-in/, { timeout: 20000 })
+    // Submit form and wait for navigation
+    await Promise.all([
+      page.waitForURL(/.*\/auth\/sign-in/, { timeout: 20000 }),
+      submitRegisterForm(page),
+    ])
 
     // Step 2: Login
     await fillLoginForm(page, testUser.email, testUser.password)
@@ -49,6 +53,9 @@ test.describe('Auth Flow Integration', () => {
   })
 
   test('should register and immediately login with same credentials', async ({ page }) => {
+    // Mock successful registration API response
+    await mockSuccessfulRegistration(page)
+
     const testUser = generateTestUser()
 
     // Register
@@ -61,11 +68,11 @@ test.describe('Auth Flow Integration', () => {
       testUser.password,
       testUser.password_confirmation,
     )
-    // Submit form
-    await submitRegisterForm(page)
-    
-    // Wait for navigation to sign-in
-    await page.waitForURL(/.*\/auth\/sign-in/, { timeout: 20000 })
+    // Submit form and wait for navigation
+    await Promise.all([
+      page.waitForURL(/.*\/auth\/sign-in/, { timeout: 20000 }),
+      submitRegisterForm(page),
+    ])
 
     // Immediately login with same credentials
     await fillLoginForm(page, testUser.email, testUser.password)

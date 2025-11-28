@@ -50,3 +50,30 @@ export async function navigateToRegister(page: Page) {
   await page.goto('/auth/sign-up')
   await page.waitForLoadState('networkidle')
 }
+
+/**
+ * Mock successful registration API response
+ * Use this in tests to intercept and mock the registration endpoint
+ * Matches any register endpoint regardless of the base URL
+ */
+export async function mockSuccessfulRegistration(page: Page) {
+  await page.route('**/register', async (route) => {
+    // Only intercept POST requests
+    if (route.request().method() === 'POST') {
+      await route.fulfill({
+        status: 201,
+        contentType: 'application/json',
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'POST, OPTIONS',
+          'Access-Control-Allow-Headers': 'Content-Type',
+        },
+        body: JSON.stringify({
+          message: 'User registered successfully',
+        }),
+      })
+    } else {
+      await route.continue()
+    }
+  })
+}

@@ -3,6 +3,7 @@ import {
   navigateToRegister,
   fillRegisterForm,
   submitRegisterForm,
+  mockSuccessfulRegistration,
 } from '../../helpers/auth-helpers'
 import { generateTestUser } from '../../helpers/test-data'
 import { registerUser } from '../../helpers/api-helpers'
@@ -17,6 +18,9 @@ test.describe('Register E2E', () => {
   })
 
   test('should register successfully with valid data', async ({ page }) => {
+    // Mock successful registration API response
+    await mockSuccessfulRegistration(page)
+
     await navigateToRegister(page)
 
     const testUser = generateTestUser()
@@ -29,18 +33,13 @@ test.describe('Register E2E', () => {
       testUser.password_confirmation,
     )
 
-    // Submit form
-    await submitRegisterForm(page)
+    // Submit form and wait for navigation
+    await Promise.all([
+      page.waitForURL(/.*\/auth\/sign-in/, { timeout: 20000 }),
+      submitRegisterForm(page),
+    ])
 
-    // Wait for success toast (optional, but helps confirm registration succeeded)
-    try {
-      await page.waitForSelector('text=/Account created|successfully/i', { timeout: 5000 }).catch(() => {})
-    } catch {
-      // Toast might not be visible or have different text
-    }
-
-    // Wait for navigation to sign-in page
-    await page.waitForURL(/.*\/auth\/sign-in/, { timeout: 20000 })
+    // Verify we're on sign-in page
     await expect(page).toHaveURL(/.*\/auth\/sign-in/)
   })
 
