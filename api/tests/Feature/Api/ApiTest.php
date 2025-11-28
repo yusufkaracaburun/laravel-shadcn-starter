@@ -1,0 +1,18 @@
+<?php
+
+declare(strict_types=1);
+
+test('api test endpoint returns success', function () {
+    $response = $this->getJson('/api/test');
+
+    $response->assertStatus(200);
+    $response->assertJson([
+        'message' => 'API is working!',
+    ]);
+});
+
+test('api test endpoint returns json', function () {
+    $response = $this->getJson('/api/test');
+
+    $response->assertHeader('Content-Type', 'application/json');
+});
