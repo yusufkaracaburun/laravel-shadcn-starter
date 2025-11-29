@@ -10,7 +10,8 @@ import { generateTestUser } from '../../helpers/test-data'
 test.describe('User API', () => {
   test.describe.configure({ mode: 'parallel' })
 
-  test('should get current user when authenticated with proper API Resource structure', async ({ request }) => {
+  test.describe('when authenticated', () => {
+    test('should get current user with proper API Resource structure', async ({ request }) => {
     // Arrange - Register and login first
     const testUser = generateTestUser()
     await registerUser(request, {
@@ -42,7 +43,8 @@ test.describe('User API', () => {
     // Verify UserResource structure
     expect(body.data).toHaveProperty('id')
     expect(body.data).toHaveProperty('name', testUser.name)
-    expect(body.data).toHaveProperty('email', testUser.email)
+    // Laravel lowercases emails (Fortify lowercase_usernames: true)
+    expect(body.data).toHaveProperty('email', testUser.email.toLowerCase())
     expect(body.data).toHaveProperty('current_team_id')
     expect(body.data).toHaveProperty('created_at')
     expect(body.data).toHaveProperty('updated_at')
@@ -55,19 +57,23 @@ test.describe('User API', () => {
     expect(typeof body.data.email).toBe('string')
     expect(Array.isArray(body.data.teams)).toBe(true)
     expect(body.data.currentTeam === null || typeof body.data.currentTeam === 'object').toBe(true)
+    })
   })
 
-  test('should fail to get current user when not authenticated', async ({ request }) => {
+  test.describe('when not authenticated', () => {
+    test('should fail to get current user', async ({ request }) => {
     // Act
     const response = await getCurrentUser(request)
 
-    // Assert
-    expect(response.status()).toBe(401)
-    const body = await response.json()
-    expect(body).toHaveProperty('message')
+      // Assert
+      expect(response.status()).toBe(401)
+      const body = await response.json()
+      expect(body).toHaveProperty('message')
+    })
   })
 
-  test('should return user with teams when user has teams', async ({ request }) => {
+  test.describe('when authenticated', () => {
+    test('should return user with teams when user has teams', async ({ request }) => {
     // Arrange - Register and login first
     const testUser = generateTestUser()
     await registerUser(request, {
@@ -104,5 +110,6 @@ test.describe('User API', () => {
       expect(body.data.currentTeam).toHaveProperty('created_at')
       expect(body.data.currentTeam).toHaveProperty('updated_at')
     }
+    })
   })
 })

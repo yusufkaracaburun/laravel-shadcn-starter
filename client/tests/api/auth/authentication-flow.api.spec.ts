@@ -23,7 +23,12 @@ test.describe('Authentication Flow API', () => {
     // Step 1: Get CSRF cookie
     const csrfResponse = await getCsrfCookie(request)
     expect(csrfResponse.status()).toBe(204)
-    const csrfCookies = csrfResponse.headers()['set-cookie'] || []
+    const csrfCookieHeader = csrfResponse.headers()['set-cookie']
+    const csrfCookies = Array.isArray(csrfCookieHeader) 
+      ? csrfCookieHeader 
+      : csrfCookieHeader 
+        ? [csrfCookieHeader] 
+        : []
     expect(csrfCookies.length).toBeGreaterThan(0)
     expect(csrfCookies.some(cookie => cookie.includes('XSRF-TOKEN'))).toBe(true)
 
@@ -63,7 +68,8 @@ test.describe('Authentication Flow API', () => {
     expect(userBody).toHaveProperty('data')
     expect(userBody.data).toHaveProperty('id')
     expect(userBody.data).toHaveProperty('name', testUser.name)
-    expect(userBody.data).toHaveProperty('email', testUser.email)
+    // Laravel lowercases emails (Fortify lowercase_usernames: true)
+    expect(userBody.data).toHaveProperty('email', testUser.email.toLowerCase())
     expect(userBody.data).toHaveProperty('current_team_id')
     expect(userBody.data).toHaveProperty('created_at')
     expect(userBody.data).toHaveProperty('updated_at')
@@ -168,7 +174,8 @@ test.describe('Authentication Flow API', () => {
 
     // Verify user data matches
     expect(body.data.name).toBe(testUser.name)
-    expect(body.data.email).toBe(testUser.email)
+    // Laravel lowercases emails (Fortify lowercase_usernames: true)
+    expect(body.data.email).toBe(testUser.email.toLowerCase())
   })
 
   test('unauthenticated request to current user endpoint returns 401', async ({ request }) => {

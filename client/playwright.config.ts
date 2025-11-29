@@ -28,22 +28,22 @@ export default defineConfig({
       use: { ...devices['Desktop Chrome'] },
     },
   ],
-  // webServer: [
-  //   {
-  //     command: 'npm run dev',
-  //     url: baseURL,
-  //     reuseExistingServer: true,
-  //     timeout: 10000,
-  //   },
-  //   {
-  //     command: 'cd ../api && php artisan serve',
-  //     url: apiURL,
-  //     reuseExistingServer: true,
-  //     timeout: 10000,
-  //     stdout: 'ignore',
-  //     stderr: 'pipe',
-  //   },
-  // ],
+  webServer: [
+    {
+      command: 'npm run dev',
+      url: baseURL,
+      reuseExistingServer: true,
+      timeout: 15000,
+    },
+    {
+      command: 'cd ../api && php artisan serve',
+      url: `${apiURL}/sanctum/csrf-cookie`,
+      reuseExistingServer: true,
+      timeout: 20000,
+      stdout: 'ignore',
+      stderr: 'pipe',
+    },
+  ],
   globalSetup: undefined,
   globalTeardown: undefined,
 })

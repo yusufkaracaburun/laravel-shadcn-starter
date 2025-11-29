@@ -1,6 +1,6 @@
 import type { APIRequestContext } from '@playwright/test'
-
 import { expect } from '@playwright/test'
+import process from 'node:process'
 
 const apiURL = process.env.PLAYWRIGHT_TEST_API_URL || 'http://127.0.0.1:8000'
 
@@ -16,25 +16,49 @@ export interface RegisterData {
   password_confirmation: string
 }
 
-export async function loginUser(request: APIRequestContext, credentials: LoginCredentials) {
+export async function loginUser(request: APIRequestContext, credentials: LoginCredentials, cookies?: string) {
+  // If no cookies provided, get CSRF cookies first
+  let cookieString = cookies
+  if (!cookieString) {
+    cookieString = await getCsrfCookieString(request)
+  }
+
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+  }
+
+  if (cookieString) {
+    headers.Cookie = cookieString
+  }
+
   const response = await request.post(`${apiURL}/login`, {
     data: credentials,
-    headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-    },
+    headers,
   })
 
   return response
 }
 
-export async function registerUser(request: APIRequestContext, data: RegisterData) {
+export async function registerUser(request: APIRequestContext, data: RegisterData, cookies?: string) {
+  // If no cookies provided, get CSRF cookies first
+  let cookieString = cookies
+  if (!cookieString) {
+    cookieString = await getCsrfCookieString(request)
+  }
+
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+  }
+
+  if (cookieString) {
+    headers.Cookie = cookieString
+  }
+
   const response = await request.post(`${apiURL}/register`, {
     data,
-    headers: {
-      'Content-Type': 'application/json',
-      'Accept': 'application/json',
-    },
+    headers,
   })
 
   return response
@@ -43,22 +67,54 @@ export async function registerUser(request: APIRequestContext, data: RegisterDat
 export async function getCsrfCookie(request: APIRequestContext) {
   const response = await request.get(`${apiURL}/sanctum/csrf-cookie`, {
     headers: {
-      'Accept': 'application/json',
+      Accept: 'application/json',
     },
   })
   return response
 }
 
+function extractCookieValue(cookieHeader: string | string[] | undefined): string[] {
+  let cookies: string[] = []
+  if (Array.isArray(cookieHeader)) {
+    cookies = cookieHeader
+  }
+  else if (cookieHeader) {
+    cookies = [cookieHeader]
+  }
+
+  // Extract just the cookie name=value part (before the first semicolon)
+  return cookies.map((cookie) => {
+    const match = cookie.match(/^([^;]+)/)
+    return match ? match[1].trim() : ''
+  }).filter(Boolean)
+}
+
+export async function getCsrfCookieString(request: APIRequestContext): Promise<string> {
+  const csrfResponse = await getCsrfCookie(request)
+  const csrfCookieHeader = csrfResponse.headers()['set-cookie']
+  const cookieValues = extractCookieValue(csrfCookieHeader)
+  return cookieValues.length > 0 ? cookieValues.join('; ') : ''
+}
+
 export async function getAuthenticatedContext(request: APIRequestContext, credentials: LoginCredentials) {
   // First get CSRF cookie
-  await getCsrfCookie(request)
+  const csrfResponse = await getCsrfCookie(request)
 
-  // Then login
-  const loginResponse = await loginUser(request, credentials)
-  const cookies = loginResponse.headers()['set-cookie'] || []
+  // Extract cookies from CSRF response
+  const csrfCookieHeader = csrfResponse.headers()['set-cookie']
+  const csrfCookieValues = extractCookieValue(csrfCookieHeader)
+  const csrfCookieString = csrfCookieValues.length > 0 ? csrfCookieValues.join('; ') : ''
+
+  // Then login with CSRF cookies
+  const loginResponse = await loginUser(request, credentials, csrfCookieString)
+  const loginCookieHeader = loginResponse.headers()['set-cookie']
+  const loginCookieValues = extractCookieValue(loginCookieHeader)
+
+  // Combine all cookies
+  const allCookieValues = [...csrfCookieValues, ...loginCookieValues]
 
   return {
-    cookies: cookies.join('; '),
+    cookies: allCookieValues.length > 0 ? allCookieValues.join('; ') : '',
     loginResponse,
   }
 }
@@ -82,7 +138,7 @@ export async function logoutUser(request: APIRequestContext, cookies?: string) {
 
 export async function getCurrentUser(request: APIRequestContext, cookies?: string) {
   const headers: Record<string, string> = {
-    'Accept': 'application/json',
+    Accept: 'application/json',
   }
 
   if (cookies) {
