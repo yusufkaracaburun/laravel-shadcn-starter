@@ -59,8 +59,12 @@ export const useAuthStore = defineStore('auth', () => {
     try {
       const result = await registerMutation.mutateAsync(data)
       // Mutation returns { success: boolean }
-      if (result && result.success) {
+      if (result && result.success === true) {
         return { success: true }
+      }
+      // If result exists but success is false, return it
+      if (result) {
+        return { success: false, message: result.message || 'Registration failed' }
       }
       return { success: false, message: 'Registration failed' }
     }

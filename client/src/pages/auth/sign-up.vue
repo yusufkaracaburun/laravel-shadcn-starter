@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { AxiosError } from 'axios'
 
+import { nextTick } from 'vue'
 import { toTypedSchema } from '@vee-validate/zod'
 import { useForm } from 'vee-validate'
 import { toast } from 'vue-sonner'
@@ -49,9 +50,11 @@ const onSubmit = handleSubmit(async (values) => {
 
     if (result && result.success) {
       toast.success('Account created successfully!')
-      // Navigate immediately - router.push is async and will handle the navigation
-      // Use replace to avoid adding to history
-      await router.replace({ path: '/auth/sign-in' })
+      // Navigate immediately - router.push returns a promise
+      router.push({ path: '/auth/sign-in' }).catch(() => {
+        // If navigation fails, try using window.location as fallback
+        window.location.href = '/auth/sign-in'
+      })
     }
     else {
       // Handle errors from auth store

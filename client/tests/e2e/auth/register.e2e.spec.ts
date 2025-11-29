@@ -18,7 +18,7 @@ test.describe('Register E2E', () => {
     await expect(page.getByRole('heading', { name: 'Sign Up' })).toBeVisible()
   })
 
-  test.skip('should register successfully with valid data', async ({ page }) => {
+  test('should register successfully with valid data', async ({ page }) => {
     // Mock successful registration API response
     await mockSuccessfulRegistration(page)
 
@@ -35,7 +35,7 @@ test.describe('Register E2E', () => {
     )
 
     // Submit form and wait for navigation
-    // Use Promise.all to wait for both form submission and navigation
+    // Use Promise.all to wait for both form submission and navigation simultaneously
     await Promise.all([
       page.waitForURL(/.*\/auth\/sign-in/, { timeout: 20000 }),
       submitRegisterForm(page),

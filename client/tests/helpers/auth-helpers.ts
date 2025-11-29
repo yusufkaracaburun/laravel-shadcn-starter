@@ -59,8 +59,12 @@ export async function navigateToRegister(page: Page) {
  */
 export async function mockSuccessfulRegistration(page: Page) {
   // Mock CSRF cookie endpoint (required for Sanctum) - match any URL pattern
+  // This must be set up first before other routes
   await page.route('**/sanctum/csrf-cookie', async (route) => {
-    if (route.request().method() === 'GET') {
+    const method = route.request().method()
+    const url = route.request().url()
+    
+    if (method === 'GET') {
       await route.fulfill({
         status: 204,
         headers: {

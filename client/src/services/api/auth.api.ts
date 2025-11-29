@@ -105,8 +105,14 @@ export function useRegisterMutation() {
   return useMutation<{ success: boolean }, AxiosError<{ message?: string; errors?: Record<string, string[]> }>, RegisterData>({
     mutationKey: ['register'],
     mutationFn: async (data: RegisterData) => {
-      // Get CSRF cookie first
-      await getCsrfCookie()
+      try {
+        // Get CSRF cookie first
+        await getCsrfCookie()
+      }
+      catch (error) {
+        // If CSRF cookie fails, still try to register (some setups don't require it)
+        console.warn('CSRF cookie request failed, continuing with registration:', error)
+      }
 
       // Then register
       const response = await axios.post('/register', {
