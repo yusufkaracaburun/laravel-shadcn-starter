@@ -54,6 +54,7 @@
             "@php artisan key:generate --ansi",
             "@php artisan migrate --force",
             "@php artisan optimize:clear",
+            "@php artisan optimize",
             "@php artisan boost:update"
         ],
         "dev": [

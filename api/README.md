@@ -54,6 +54,35 @@ In order to ensure that the Laravel community is welcoming to all, please review
 
 If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
 
+## Docker Deployment
+
+This application includes Docker configuration with support for multiple environments using Docker Compose profiles.
+
+### Quick Start
+
+```bash
+# From the api/ directory
+make dev      # Start development environment (SQLite, port 8000)
+make staging  # Start staging environment (MySQL + Redis, port 8001)
+make prod     # Start production environment (MySQL + Redis, port 80)
+```
+
+### Available Commands
+
+```bash
+make help              # Show all available commands
+make dev               # Start development
+make staging           # Start staging
+make prod              # Start production
+make down              # Stop all containers
+make logs              # View development logs
+make shell             # Access development container shell
+make test              # Run tests in development container
+make migrate           # Run migrations in development
+```
+
+For detailed Docker documentation, see [.deployment/README.md](.deployment/README.md).
+
 ## License
 
 The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).

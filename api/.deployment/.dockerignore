@@ -1,0 +1,77 @@
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Dependencies
+/vendor
+/node_modules
+
+# IDE
+/.fleet
+/.idea
+/.vscode
+/.nova
+/.zed
+.phpactor.json
+
+# OS
+.DS_Store
+Thumbs.db
+*.log
+
+# Laravel
+/storage/*.key
+/storage/app/*
+!/storage/app/.gitignore
+/storage/framework/cache/*
+!/storage/framework/cache/.gitignore
+/storage/framework/sessions/*
+!/storage/framework/sessions/.gitignore
+/storage/framework/testing/*
+!/storage/framework/testing/.gitignore
+/storage/framework/views/*
+!/storage/framework/views/.gitignore
+/storage/logs/*
+!/storage/logs/.gitignore
+/storage/pail
+/bootstrap/cache/*
+!/bootstrap/cache/.gitignore
+
+# Public
+/public/build
+/public/hot
+/public/storage
+!/public/storage/.gitignore
+
+# Testing
+/coverage
+/.phpunit.cache
+/phpunit.xml
+.phpunit.result.cache
+
+# Build & Cache
+.tmp/
+*.cache
+
+# Documentation
+README.md
+CHANGELOG.md
+LICENSE
+
+# Temporary files
+frankenphp
+frankenphp-worker.php
+**/caddy
+
+# Docker
+Dockerfile
+.dockerignore
+docker-compose.yml
+docker-compose.*.yml
+
