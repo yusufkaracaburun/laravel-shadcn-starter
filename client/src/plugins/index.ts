@@ -6,6 +6,7 @@ import { setupEcho } from './echo/setup'
 import { setupI18n } from './i18n/setup'
 import { setupNProgress } from './nprogress/setup'
 import { setupPinia } from './pinia/setup'
+import { setupReverbListener } from './reverb-listener/setup'
 import { setupRouter } from './router/setup'
 import { setupTanstackVueQuery } from './tanstack-vue-query/setup'
 
@@ -18,4 +19,6 @@ export function setupPlugins(app: App) {
   setupPinia(app)
   setupRouter(app)
   setupEcho(app)
+  // Setup Reverb listener after Echo and Pinia are initialized
+  setupReverbListener(app)
 }

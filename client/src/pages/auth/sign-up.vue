@@ -1,9 +1,37 @@
 <script setup lang="ts">
+import { useAuth } from '@/composables/use-auth'
+
 import AuthTitle from './components/auth-title.vue'
 import GitHubButton from './components/github-button.vue'
 import GoogleButton from './components/google-button.vue'
 import PrivacyPolicyButton from './components/privacy-policy-button.vue'
 import TermsOfServiceButton from './components/terms-of-service-button.vue'
+
+const { register, loading } = useAuth()
+
+const name = ref('')
+const email = ref('')
+const password = ref('')
+const passwordConfirmation = ref('')
+const terms = ref(false)
+
+async function handleRegister() {
+  if (!name.value || !email.value || !password.value || !passwordConfirmation.value) {
+    return
+  }
+
+  if (password.value !== passwordConfirmation.value) {
+    return
+  }
+
+  await register({
+    name: name.value,
+    email: email.value,
+    password: password.value,
+    password_confirmation: passwordConfirmation.value,
+    terms: terms.value,
+  })
+}
 </script>
 
 <template>
@@ -27,62 +55,79 @@ import TermsOfServiceButton from './components/terms-of-service-button.vue'
           </UiCardDescription>
         </UiCardHeader>
         <UiCardContent>
-          <div class="grid gap-4">
-            <div class="grid grid-cols-2 gap-4">
+          <form @submit.prevent="handleRegister">
+            <div class="grid gap-4">
               <div class="grid gap-2">
-                <UiLabel for="first-name">
-                  First name
+                <UiLabel for="name">
+                  Name
                 </UiLabel>
-                <UiInput id="first-name" placeholder="Max" required />
+                <UiInput
+                  id="name"
+                  v-model="name"
+                  placeholder="John Doe"
+                  required
+                  :disabled="loading"
+                />
               </div>
               <div class="grid gap-2">
-                <UiLabel for="last-name">
-                  Last name
+                <UiLabel for="email">
+                  Email
                 </UiLabel>
-                <UiInput id="last-name" placeholder="Robinson" required />
+                <UiInput
+                  id="email"
+                  v-model="email"
+                  type="email"
+                  placeholder="m@example.com"
+                  required
+                  :disabled="loading"
+                />
               </div>
+              <div class="grid gap-2">
+                <UiLabel for="password">
+                  Password
+                </UiLabel>
+                <UiInput
+                  id="password"
+                  v-model="password"
+                  type="password"
+                  placeholder="******"
+                  required
+                  :disabled="loading"
+                />
+              </div>
+              <div class="grid gap-2">
+                <UiLabel for="password-confirmation">
+                  Confirm Password
+                </UiLabel>
+                <UiInput
+                  id="password-confirmation"
+                  v-model="passwordConfirmation"
+                  type="password"
+                  placeholder="******"
+                  required
+                  :disabled="loading"
+                />
+              </div>
+              <UiButton type="submit" class="w-full" :disabled="loading">
+                <UiSpinner v-if="loading" class="mr-2" />
+                Create Account
+              </UiButton>
             </div>
-            <div class="grid gap-2">
-              <UiLabel for="email">
-                Email
-              </UiLabel>
-              <UiInput
-                id="email"
-                type="email"
-                placeholder="m@example.com"
-                required
-              />
-            </div>
-            <div class="grid gap-2">
-              <UiLabel for="password">
-                Password
-              </UiLabel>
-              <UiInput id="password" type="password" placeholder="******" />
-            </div>
-            <div class="grid gap-2">
-              <UiLabel for="password">
-                Confirm Password
-              </UiLabel>
-              <UiInput id="password" type="password" placeholder="******" />
-            </div>
-            <UiButton type="submit" class="w-full">
-              Create Account
-            </UiButton>
+          </form>
 
-            <UiSeparator label="Or continue with" />
+          <UiSeparator label="Or continue with" />
 
-            <div class="flex flex-col items-center justify-between gap-4">
-              <GitHubButton />
-              <GoogleButton />
-            </div>
-
-            <UiCardDescription>
-              By creating an account, you agree to our
-              <TermsOfServiceButton />
-              and
-              <PrivacyPolicyButton />
-            </UiCardDescription>
+          <div class="flex flex-col items-center justify-between gap-4">
+            <GitHubButton />
+            <GoogleButton />
           </div>
+
+          <UiCardDescription>
+            By creating an account, you agree to our
+            <TermsOfServiceButton />
+            and
+            <PrivacyPolicyButton />
+          </UiCardDescription>
         </UiCardContent>
       </UiCard>
     </main>

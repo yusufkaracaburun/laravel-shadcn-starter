@@ -29,8 +29,8 @@ test.describe('Subscriptions API', () => {
     // Act - Get subscriptions
     const response = await request.get(`${apiURL}/api/subscriptions`, {
       headers: {
-        'Accept': 'application/json',
-        'Cookie': cookies,
+        Accept: 'application/json',
+        Cookie: cookies,
       },
     })
 
@@ -59,8 +59,8 @@ test.describe('Subscriptions API', () => {
     // Act - Get available plans
     const response = await request.get(`${apiURL}/api/subscriptions/available`, {
       headers: {
-        'Accept': 'application/json',
-        'Cookie': cookies,
+        Accept: 'application/json',
+        Cookie: cookies,
       },
     })
 
@@ -88,8 +88,8 @@ test.describe('Subscriptions API', () => {
     // Act - Get invoices
     const response = await request.get(`${apiURL}/api/subscriptions/invoices`, {
       headers: {
-        'Accept': 'application/json',
-        'Cookie': cookies,
+        Accept: 'application/json',
+        Cookie: cookies,
       },
     })
 
@@ -103,7 +103,7 @@ test.describe('Subscriptions API', () => {
     // Act
     const response = await request.get(`${apiURL}/api/subscriptions`, {
       headers: {
-        'Accept': 'application/json',
+        Accept: 'application/json',
       },
     })
 
@@ -111,4 +111,3 @@ test.describe('Subscriptions API', () => {
     expect(response.status()).toBe(401)
   })
 })
-

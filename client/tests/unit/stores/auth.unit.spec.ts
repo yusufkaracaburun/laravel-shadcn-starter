@@ -1,5 +1,9 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest'
 import { createPinia, setActivePinia } from 'pinia'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
+
+import type { User } from '@/services/api/auth.api'
+
+import { useAuthStore } from '@/stores/auth'
 
 // Mock TanStack Query before any imports
 const mockRefetch = vi.fn()
@@ -39,9 +43,6 @@ vi.mock('@/services/api/auth.api', () => ({
     mutateAsync: mockMutateAsync,
   })),
 }))
-
-import { useAuthStore } from '@/stores/auth'
-import type { User } from '@/services/api/auth.api'
 
 describe('useAuthStore', () => {
   beforeEach(() => {

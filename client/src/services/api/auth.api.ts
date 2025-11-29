@@ -1,6 +1,7 @@
 import type { AxiosError } from 'axios'
-import axios from 'axios'
+
 import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query'
+import axios from 'axios'
 
 import { useAxios } from '@/composables/use-axios'
 import env from '@/utils/env'
@@ -76,7 +77,7 @@ export function useLoginMutation() {
   const queryClient = useQueryClient()
   const baseURL = env.VITE_SERVER_API_URL
 
-  return useMutation<{ success: boolean }, AxiosError<{ message?: string; errors?: Record<string, string[]> }>, LoginCredentials>({
+  return useMutation<{ success: boolean }, AxiosError<{ message?: string, errors?: Record<string, string[]> }>, LoginCredentials>({
     mutationKey: ['login'],
     mutationFn: async (credentials: LoginCredentials) => {
       // Get CSRF cookie first
@@ -102,7 +103,7 @@ export function useRegisterMutation() {
   const queryClient = useQueryClient()
   const baseURL = env.VITE_SERVER_API_URL
 
-  return useMutation<{ success: boolean }, AxiosError<{ message?: string; errors?: Record<string, string[]> }>, RegisterData>({
+  return useMutation<{ success: boolean }, AxiosError<{ message?: string, errors?: Record<string, string[]> }>, RegisterData>({
     mutationKey: ['register'],
     mutationFn: async (data: RegisterData) => {
       try {
@@ -152,4 +153,3 @@ export function useLogoutMutation() {
     },
   })
 }
-

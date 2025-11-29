@@ -63,7 +63,7 @@ export async function mockSuccessfulRegistration(page: Page) {
   await page.route('**/sanctum/csrf-cookie', async (route) => {
     const method = route.request().method()
     const url = route.request().url()
-    
+
     if (method === 'GET') {
       await route.fulfill({
         status: 204,
@@ -84,10 +84,10 @@ export async function mockSuccessfulRegistration(page: Page) {
   await page.route('**/register', async (route) => {
     const method = route.request().method()
     const url = route.request().url()
-    
+
     // Log for debugging (can be removed later)
     console.log(`[Mock] Intercepted ${method} request to ${url}`)
-    
+
     if (method === 'OPTIONS') {
       // Handle preflight requests
       await route.fulfill({

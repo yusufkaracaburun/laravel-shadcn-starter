@@ -1,6 +1,9 @@
 import { createPinia, setActivePinia } from 'pinia'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
+import { useAuth } from '@/composables/use-auth'
+import { useAuthStore } from '@/stores/auth'
+
 // Mock TanStack Query before store import
 const mockRefetch = vi.fn()
 const mockMutateAsync = vi.fn()
@@ -56,9 +59,6 @@ vi.mock('vue-router', () => ({
   }),
   useRoute: () => mockCurrentRoute.value,
 }))
-
-import { useAuth } from '@/composables/use-auth'
-import { useAuthStore } from '@/stores/auth'
 
 describe('useAuth', () => {
   beforeEach(() => {
@@ -127,7 +127,7 @@ describe('useAuth', () => {
 
     // Act
     const loginPromise = login()
-    
+
     // Assert - loading should be true during async operation
     expect(loading.value).toBe(true)
 

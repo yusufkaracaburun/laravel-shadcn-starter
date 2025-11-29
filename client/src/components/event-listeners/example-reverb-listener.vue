@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref } from 'vue'
+import { toast } from 'vue-sonner'
 
 import { useEcho } from '@/composables/use-echo'
 
@@ -9,7 +10,7 @@ const messages = ref<Array<{ message: string, timestamp: string }>>([])
 onMounted(() => {
   if (!echo) {
     console.warn('Echo is not available. Make sure Reverb is configured and running.')
-    return
+    toast.error('Echo is not available. Make sure Reverb is configured and running.')
   }
 
   // Listen to a public channel
@@ -18,6 +19,9 @@ onMounted(() => {
   // Listen for the event
   channel.listen('.example.event', (data: { message: string, timestamp: string }) => {
     messages.value.push(data)
+    toast.success('Received message:', {
+      description: h('pre', { class: 'mt-2 w-[340px] rounded-md bg-slate-950 p-4' }, h('code', { class: 'text-white' }, JSON.stringify(data, null, 2))),
+    })
   })
 })
 

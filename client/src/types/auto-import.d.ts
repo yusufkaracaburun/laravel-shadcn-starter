@@ -72,6 +72,7 @@ declare global {
   const useId: typeof import('vue').useId
   const useLink: typeof import('vue-router')['useLink']
   const useModel: typeof import('vue').useModel
+  const useReverbNotifications: typeof import('../composables/use-reverb-notifications').useReverbNotifications
   const useRoute: typeof import('vue-router').useRoute
   const useRouteHelper: typeof import('../composables/use-route-helper').useRouteHelper
   const useRouter: typeof import('vue-router').useRouter

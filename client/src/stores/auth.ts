@@ -1,10 +1,9 @@
-import { computed } from 'vue'
 import { defineStore } from 'pinia'
+import { computed } from 'vue'
 
-import type { User } from '@/services/api/auth.api'
-import { useGetCurrentUserQuery, useLoginMutation, useRegisterMutation, useLogoutMutation } from '@/services/api/auth.api'
+import type { LoginCredentials, RegisterData, User } from '@/services/api/auth.api'
 
-import type { LoginCredentials, RegisterData } from '@/services/api/auth.api'
+import { useGetCurrentUserQuery, useLoginMutation, useLogoutMutation, useRegisterMutation } from '@/services/api/auth.api'
 
 export const useAuthStore = defineStore('auth', () => {
   const loading = ref(false)

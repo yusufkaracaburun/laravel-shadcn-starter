@@ -1,7 +1,7 @@
 import type { AxiosError } from 'axios'
-import axios from 'axios'
 
 import { useMutation, useQueryClient } from '@tanstack/vue-query'
+import axios from 'axios'
 
 import env from '@/utils/env'
 
@@ -20,7 +20,7 @@ export function useOAuthRedirectMutation() {
         baseURL,
         withCredentials: true,
         maxRedirects: 0,
-        validateStatus: (status) => status >= 200 && status < 400,
+        validateStatus: status => status >= 200 && status < 400,
       })
 
       // If response has a location header or data with URL, return it
@@ -56,4 +56,3 @@ export function useRemoveOAuthConnectionMutation() {
     },
   })
 }
-

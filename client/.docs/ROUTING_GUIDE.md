@@ -150,8 +150,8 @@ const router = useRouter()
 // Navigate with query parameters
 router.push({
   name: '/users',
-  query: { 
-    page: 2, 
+  query: {
+    page: 2,
     search: 'john',
     sort: 'name'
   }
@@ -169,7 +169,7 @@ router.beforeEach((to, _from) => {
   if (to.meta.auth && !isLogin) {
     return {
       name: '/auth/sign-in',
-      query: { redirect: to.fullPath }  // Preserve destination
+      query: { redirect: to.fullPath } // Preserve destination
     }
   }
 })
@@ -177,12 +177,13 @@ router.beforeEach((to, _from) => {
 // From use-auth.ts - using the redirect
 async function login() {
   // ... login logic ...
-  
+
   const redirect = router.currentRoute.value.query.redirect as string
   if (redirect && !redirect.startsWith('//')) {
-    router.push(redirect)  // Go to original destination
-  } else {
-    router.push('/dashboard')  // Default
+    router.push(redirect) // Go to original destination
+  }
+  else {
+    router.push('/dashboard') // Default
   }
 }
 ```
@@ -257,12 +258,12 @@ Handles global navigation behavior (progress bar):
 // src/router/guard/index.ts
 function setupCommonGuard(router: Router) {
   router.beforeEach(() => {
-    nprogress.start()  // Show progress bar
+    nprogress.start() // Show progress bar
     return true
   })
-  
+
   router.afterEach(() => {
-    nprogress.done()   // Hide progress bar
+    nprogress.done() // Hide progress bar
     return true
   })
 }
@@ -354,16 +355,16 @@ import { useRouter } from 'vue-router'
 const router = useRouter()
 
 // Type-safe route navigation
-router.push({ 
-  name: '/users/[id]',  // TypeScript validates this exists
-  params: { id: '123' }  // TypeScript validates params
+router.push({
+  name: '/users/[id]', // TypeScript validates this exists
+  params: { id: '123' } // TypeScript validates params
 })
 
 // Type-safe query
 router.push({
   name: '/users',
-  query: { 
-    page: '2',  // TypeScript knows available query keys
+  query: {
+    page: '2', // TypeScript knows available query keys
     search: 'john'
   }
 })
@@ -377,11 +378,11 @@ import { useRoute } from 'vue-router'
 const route = useRoute()
 
 // TypeScript knows available params for current route
-const userId = route.params.id  // Type-safe
-const teamId = route.params.team  // Type-safe
+const userId = route.params.id // Type-safe
+const teamId = route.params.team // Type-safe
 
 // TypeScript knows available query keys
-const page = route.query.page  // Type-safe
+const page = route.query.page // Type-safe
 ```
 
 ## Navigation
@@ -399,7 +400,7 @@ router.push({ name: '/dashboard' })
 router.push('/dashboard')
 
 // Navigate with params
-router.push({ 
+router.push({
   name: '/users/[id]',
   params: { id: '123' }
 })
@@ -504,6 +505,7 @@ meta:
 
 <script setup lang="ts">
 import { useRoute } from 'vue-router'
+
 import { useGetUserQuery } from '@/services/api/user.api'
 
 const route = useRoute()
@@ -535,9 +537,9 @@ const page = computed(() => Number(route.query.page) || 1)
 function performSearch() {
   router.push({
     name: '/search',
-    query: { 
+    query: {
       q: searchQuery.value,
-      page: 1 
+      page: 1
     }
   })
 }
@@ -545,8 +547,10 @@ function performSearch() {
 
 <template>
   <div>
-    <input v-model="searchQuery" @keyup.enter="performSearch" />
-    <button @click="performSearch">Search</button>
+    <input v-model="searchQuery" @keyup.enter="performSearch">
+    <button @click="performSearch">
+      Search
+    </button>
     <p>Page: {{ page }}</p>
   </div>
 </template>
@@ -559,6 +563,7 @@ function performSearch() {
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
+
 import { useAuthStore } from '@/stores/auth'
 
 const route = useRoute()
@@ -567,7 +572,8 @@ const authStore = useAuthStore()
 const teamId = computed(() => Number(route.params.team))
 const user = computed(() => authStore.user)
 const team = computed(() => {
-  if (!user.value?.teams) return null
+  if (!user.value?.teams)
+    return null
   return user.value.teams.find(t => t.id === teamId.value) || user.value.currentTeam
 })
 </script>
@@ -587,6 +593,7 @@ const team = computed(() => {
 **Problem**: Route doesn't exist or 404 error
 
 **Solutions**:
+
 1. Check file exists in `src/pages` directory
 2. Ensure file has `.vue` extension
 3. Check file is not in excluded directory (components, layouts, etc.)
@@ -598,6 +605,7 @@ const team = computed(() => {
 **Problem**: `route.params` is empty or undefined
 
 **Solutions**:
+
 1. Ensure filename uses brackets: `[id].vue` not `id.vue`
 2. Check route name matches when navigating: `router.push({ name: '/users/[id]', params: { id: '123' } })`
 3. Verify param name matches filename: `[id].vue` → `route.params.id`
@@ -607,6 +615,7 @@ const team = computed(() => {
 **Problem**: Query params disappear on navigation
 
 **Solutions**:
+
 1. Use `router.push()` with query object, not string concatenation
 2. Check if route guard is redirecting and losing query
 3. Ensure query is included in redirect: `query: { redirect: to.fullPath }`
@@ -616,6 +625,7 @@ const team = computed(() => {
 **Problem**: Layout wrapper not showing
 
 **Solutions**:
+
 1. Check `meta.layout` is set correctly in route block
 2. Verify layout file exists in `src/layouts/`
 3. Ensure `vite-plugin-vue-layouts` is configured in `vite.config.ts`
@@ -626,6 +636,7 @@ const team = computed(() => {
 **Problem**: TypeScript errors for route names
 
 **Solutions**:
+
 1. Regenerate types: restart dev server
 2. Check `src/types/typed-router.d.ts` exists and is up to date
 3. Ensure `typed-router.d.ts` is included in `tsconfig.json`
@@ -636,6 +647,7 @@ const team = computed(() => {
 **Problem**: Protected routes accessible without login
 
 **Solutions**:
+
 1. Verify `meta.auth: true` is set in route block
 2. Check auth guard is registered: `createRouterGuard(router)`
 3. Verify auth store is properly initialized
@@ -644,38 +656,43 @@ const team = computed(() => {
 ## Best Practices
 
 1. **Use Route Names**: Prefer route names over paths for type safety
+
    ```typescript
    // ✅ Good
    router.push({ name: '/dashboard' })
-   
+
    // ⚠️ Less type-safe
    router.push('/dashboard')
    ```
 
 2. **Define Meta Early**: Put `<route>` block at top of component
+
    ```vue
    <route lang="yaml">
    meta:
      auth: true
    </route>
-   
+
    <script setup lang="ts">
    // Component code
    </script>
    ```
 
 3. **Type Query Parameters**: Cast query params to expected types
+
    ```typescript
    const page = computed(() => Number(route.query.page) || 1)
    const search = computed(() => route.query.search as string || '')
    ```
 
 4. **Use Computed for Reactive Params**: Make params reactive
+
    ```typescript
    const userId = computed(() => Number(route.params.id))
    ```
 
 5. **Preserve Query on Redirect**: Include query in redirects
+
    ```typescript
    return {
      name: '/login',
@@ -711,4 +728,3 @@ const team = computed(() => {
 - [unplugin-vue-router Documentation](https://github.com/posva/unplugin-vue-router)
 - [Vue Router Documentation](https://router.vuejs.org/)
 - [vite-plugin-vue-layouts](https://github.com/JohnCampionJr/vite-plugin-vue-layouts)
-

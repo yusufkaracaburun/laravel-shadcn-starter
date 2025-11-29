@@ -19,6 +19,7 @@ The API and client need to share **some** values (public credentials), but the A
 ### Values That Must Match
 
 These values must be **identical** in both `.env` files:
+
 - `REVERB_APP_KEY` (public key - safe to share)
 - `REVERB_HOST` (where the Reverb server is accessible)
 - `REVERB_PORT` (port the Reverb server listens on)
@@ -27,6 +28,7 @@ These values must be **identical** in both `.env` files:
 ### API-Only Values
 
 These values should **only** be in the API `.env`:
+
 - `REVERB_APP_SECRET` (private - never share with client)
 - `REVERB_APP_ID` (server-side only)
 
@@ -67,10 +69,12 @@ VITE_REVERB_SCHEME=http                         # Same as REVERB_SCHEME in api/.
 ## Quick Setup Steps
 
 1. **Generate Reverb credentials** (if not already done):
+
    ```bash
    cd api
    php artisan reverb:install
    ```
+
    This will generate and display the credentials.
 
 2. **Copy the public values to client `.env`**:
@@ -86,6 +90,7 @@ VITE_REVERB_SCHEME=http                         # Same as REVERB_SCHEME in api/.
 ## Example: Complete Configuration
 
 ### `api/.env`
+
 ```env
 BROADCAST_CONNECTION=reverb
 REVERB_APP_KEY=p4ekv8fs13h3d4ec2iy1
@@ -97,6 +102,7 @@ REVERB_SCHEME=http
 ```
 
 ### `client/.env`
+
 ```env
 VITE_REVERB_ENABLED=true
 VITE_REVERB_APP_KEY=p4ekv8fs13h3d4ec2iy1
@@ -132,7 +138,7 @@ If the client can't connect to Reverb:
 1. **Check values match**: Ensure `VITE_REVERB_APP_KEY` in client matches `REVERB_APP_KEY` in API
 2. **Check host/port**: Ensure `VITE_REVERB_HOST` and `VITE_REVERB_PORT` match where Reverb is running
 3. **Check Reverb is running**: Run `php artisan reverb:start` in the API directory
-4. **Check CORS/Allowed Origins**: 
+4. **Check CORS/Allowed Origins**:
    - Ensure the client origin is in `REVERB_ALLOWED_ORIGINS` in API `.env`
    - Or configure `allowed_origins => ['*']` in `api/config/reverb.php` for development (not recommended for production)
 
@@ -153,4 +159,3 @@ For production:
 3. **Secure secrets**: Never commit `.env` files with real credentials
 4. **Environment-specific configs**: Use different values for staging/production
 5. **Restrict allowed origins**: Never use `['*']` for `allowed_origins` in production - specify exact origins
-

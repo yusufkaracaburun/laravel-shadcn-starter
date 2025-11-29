@@ -1,5 +1,6 @@
-import { getEcho } from '@/plugins/echo/setup'
 import type Echo from 'laravel-echo'
+
+import { getEcho } from '@/plugins/echo/setup'
 
 /**
  * Composable for accessing Laravel Echo instance
@@ -19,4 +20,3 @@ import type Echo from 'laravel-echo'
 export function useEcho(): Echo | null {
   return getEcho()
 }
-

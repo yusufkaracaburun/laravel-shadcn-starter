@@ -29,8 +29,8 @@ test.describe('User API', () => {
     // Act - Get current user
     const response = await request.get(`${apiURL}/api/user/current`, {
       headers: {
-        'Accept': 'application/json',
-        'Cookie': cookies,
+        Accept: 'application/json',
+        Cookie: cookies,
       },
     })
 
@@ -47,7 +47,7 @@ test.describe('User API', () => {
     // Act
     const response = await request.get(`${apiURL}/api/user/current`, {
       headers: {
-        'Accept': 'application/json',
+        Accept: 'application/json',
       },
     })
 
@@ -89,4 +89,3 @@ test.describe('User API', () => {
     expect([200, 201, 204]).toContain(response.status())
   })
 })
-

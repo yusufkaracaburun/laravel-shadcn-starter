@@ -29,8 +29,8 @@ test.describe('Chat API', () => {
     // Act - Get chat data
     const response = await request.get(`${apiURL}/api/chat/data`, {
       headers: {
-        'Accept': 'application/json',
-        'Cookie': cookies,
+        Accept: 'application/json',
+        Cookie: cookies,
       },
     })
 
@@ -45,7 +45,7 @@ test.describe('Chat API', () => {
     // Act
     const response = await request.get(`${apiURL}/api/chat/data`, {
       headers: {
-        'Accept': 'application/json',
+        Accept: 'application/json',
       },
     })
 
@@ -53,4 +53,3 @@ test.describe('Chat API', () => {
     expect(response.status()).toBe(401)
   })
 })
-
