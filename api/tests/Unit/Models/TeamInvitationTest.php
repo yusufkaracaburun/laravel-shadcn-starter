@@ -7,13 +7,13 @@ use App\Models\User;
 use App\Models\TeamInvitation;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-test('team invitation can be created', function () {
+test('team invitation can be created', function (): void {
     // Arrange
     $user = User::factory()->create();
     $team = Team::factory()->create(['user_id' => $user->id]);
 
     // Act
-    $invitation = TeamInvitation::create([
+    $invitation = \App\Models\TeamInvitation::query()->create([
         'team_id' => $team->id,
         'email' => 'invitee@example.com',
         'role' => 'member',
@@ -26,11 +26,11 @@ test('team invitation can be created', function () {
     expect($invitation->role)->toBe('member');
 });
 
-test('team invitation has team relationship', function () {
+test('team invitation has team relationship', function (): void {
     // Arrange
     $user = User::factory()->create();
     $team = Team::factory()->create(['user_id' => $user->id]);
-    $invitation = TeamInvitation::create([
+    $invitation = \App\Models\TeamInvitation::query()->create([
         'team_id' => $team->id,
         'email' => 'invitee@example.com',
     ]);
@@ -44,7 +44,7 @@ test('team invitation has team relationship', function () {
     expect($invitation->team->id)->toBe($team->id);
 });
 
-test('team invitation has fillable attributes', function () {
+test('team invitation has fillable attributes', function (): void {
     // Arrange
     $invitation = new TeamInvitation();
 

@@ -8,12 +8,12 @@ use App\Models\OauthConnection;
 use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-test('oauth connection can be created', function () {
+test('oauth connection can be created', function (): void {
     // Arrange
     $user = User::factory()->create();
 
     // Act
-    $connection = OauthConnection::create([
+    $connection = \App\Models\OauthConnection::query()->create([
         'user_id' => $user->id,
         'provider' => 'github',
         'provider_id' => '12345',
@@ -29,10 +29,10 @@ test('oauth connection can be created', function () {
     expect($connection->token)->toBe('access-token');
 });
 
-test('oauth connection has user relationship', function () {
+test('oauth connection has user relationship', function (): void {
     // Arrange
     $user = User::factory()->create();
-    $connection = OauthConnection::create([
+    $connection = \App\Models\OauthConnection::query()->create([
         'user_id' => $user->id,
         'provider' => 'github',
         'provider_id' => '12345',
@@ -47,13 +47,13 @@ test('oauth connection has user relationship', function () {
     expect($connection->user->id)->toBe($user->id);
 });
 
-test('oauth connection data is cast to collection', function () {
+test('oauth connection data is cast to collection', function (): void {
     // Arrange
     $user = User::factory()->create();
     $data = ['name' => 'Test User', 'email' => 'test@example.com'];
 
     // Act
-    $connection = OauthConnection::create([
+    $connection = \App\Models\OauthConnection::query()->create([
         'user_id' => $user->id,
         'provider' => 'github',
         'provider_id' => '12345',
@@ -66,13 +66,13 @@ test('oauth connection data is cast to collection', function () {
     expect($connection->data->get('email'))->toBe('test@example.com');
 });
 
-test('oauth connection expires_at is cast to datetime', function () {
+test('oauth connection expires_at is cast to datetime', function (): void {
     // Arrange
     $user = User::factory()->create();
     $expiresAt = now()->addHour();
 
     // Act
-    $connection = OauthConnection::create([
+    $connection = \App\Models\OauthConnection::query()->create([
         'user_id' => $user->id,
         'provider' => 'github',
         'provider_id' => '12345',
@@ -83,12 +83,12 @@ test('oauth connection expires_at is cast to datetime', function () {
     expect($connection->expires_at)->toBeInstanceOf(CarbonImmutable::class);
 });
 
-test('oauth connection can store refresh token', function () {
+test('oauth connection can store refresh token', function (): void {
     // Arrange
     $user = User::factory()->create();
 
     // Act
-    $connection = OauthConnection::create([
+    $connection = \App\Models\OauthConnection::query()->create([
         'user_id' => $user->id,
         'provider' => 'github',
         'provider_id' => '12345',

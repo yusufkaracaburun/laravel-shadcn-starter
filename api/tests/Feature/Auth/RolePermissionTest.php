@@ -8,7 +8,7 @@ use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\PermissionRegistrar;
 
-test('user can be assigned a role', function () {
+test('user can be assigned a role', function (): void {
     // Arrange
     $user = User::factory()->create();
     $role = Role::create(['name' => 'test-role', 'guard_name' => 'web']);
@@ -21,7 +21,7 @@ test('user can be assigned a role', function () {
     expect($user->roles)->toHaveCount(1);
 });
 
-test('user can be assigned a permission', function () {
+test('user can be assigned a permission', function (): void {
     // Arrange
     $user = User::factory()->create();
     $permission = Permission::create(['name' => 'test.permission', 'guard_name' => 'web']);
@@ -34,7 +34,7 @@ test('user can be assigned a permission', function () {
     expect($user->permissions)->toHaveCount(1);
 });
 
-test('user can check permission via role', function () {
+test('user can check permission via role', function (): void {
     // Arrange
     $user = User::factory()->create();
     $role = Role::create(['name' => 'test-role', 'guard_name' => 'web']);
@@ -47,7 +47,7 @@ test('user can check permission via role', function () {
     expect($user->can('test.permission'))->toBeTrue();
 });
 
-test('user can have team-scoped role', function () {
+test('user can have team-scoped role', function (): void {
     // Arrange
     $user = User::factory()->create();
     $team = Team::factory()->create(['user_id' => $user->id]);
@@ -56,11 +56,13 @@ test('user can have team-scoped role', function () {
     // Act - Set team context via PermissionRegistrar and assign role
     $permissionRegistrar = app(PermissionRegistrar::class);
     $permissionRegistrar->setPermissionsTeamId($team->id);
+
     $user->assignRole($role);
     $permissionRegistrar->setPermissionsTeamId(null); // Reset to global context
 
     // Assert - Check with team context
     $permissionRegistrar->setPermissionsTeamId($team->id);
+
     $user->unsetRelation('roles'); // Clear cached relation
     expect($user->hasRole($role))->toBeTrue();
 
@@ -70,7 +72,7 @@ test('user can have team-scoped role', function () {
     expect($user->hasRole($role))->toBeFalse(); // Global role should not exist
 });
 
-test('user can check team-scoped permission', function () {
+test('user can check team-scoped permission', function (): void {
     // Arrange
     $user = User::factory()->create();
     $team = Team::factory()->create(['user_id' => $user->id]);
@@ -81,16 +83,18 @@ test('user can check team-scoped permission', function () {
     // Act - Set team context via PermissionRegistrar and assign role
     $permissionRegistrar = app(PermissionRegistrar::class);
     $permissionRegistrar->setPermissionsTeamId($team->id);
+
     $user->assignRole($role);
     $permissionRegistrar->setPermissionsTeamId(null);
 
     // Assert - Check with team context
     $permissionRegistrar->setPermissionsTeamId($team->id);
+
     expect($user->hasPermissionTo('teams.manage'))->toBeTrue();
     $permissionRegistrar->setPermissionsTeamId(null);
 });
 
-test('role can have multiple permissions', function () {
+test('role can have multiple permissions', function (): void {
     // Arrange
     $role = Role::create(['name' => 'admin', 'guard_name' => 'web']);
     $permission1 = Permission::create(['name' => 'users.view', 'guard_name' => 'web']);

@@ -7,12 +7,12 @@ use App\Models\LoginLink;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-test('login link can be created', function () {
+test('login link can be created', function (): void {
     // Arrange
     $user = User::factory()->create();
 
     // Act
-    $loginLink = LoginLink::create([
+    $loginLink = \App\Models\LoginLink::query()->create([
         'user_id' => $user->id,
         'token' => 'test-token-123',
         'expires_at' => now()->addMinutes(15),
@@ -25,10 +25,10 @@ test('login link can be created', function () {
     expect($loginLink->expires_at)->toBeInstanceOf(CarbonImmutable::class);
 });
 
-test('login link has user relationship', function () {
+test('login link has user relationship', function (): void {
     // Arrange
     $user = User::factory()->create();
-    $loginLink = LoginLink::create([
+    $loginLink = \App\Models\LoginLink::query()->create([
         'user_id' => $user->id,
         'token' => 'test-token',
         'expires_at' => now()->addMinutes(15),
@@ -43,13 +43,13 @@ test('login link has user relationship', function () {
     expect($loginLink->user->id)->toBe($user->id);
 });
 
-test('login link expires_at is cast to datetime', function () {
+test('login link expires_at is cast to datetime', function (): void {
     // Arrange
     $user = User::factory()->create();
     $expiresAt = now()->addMinutes(15);
 
     // Act
-    $loginLink = LoginLink::create([
+    $loginLink = \App\Models\LoginLink::query()->create([
         'user_id' => $user->id,
         'token' => 'test-token',
         'expires_at' => $expiresAt,
@@ -60,10 +60,10 @@ test('login link expires_at is cast to datetime', function () {
     expect($loginLink->expires_at->format('Y-m-d H:i:s'))->toBe($expiresAt->format('Y-m-d H:i:s'));
 });
 
-test('login link used_at is cast to datetime', function () {
+test('login link used_at is cast to datetime', function (): void {
     // Arrange
     $user = User::factory()->create();
-    $loginLink = LoginLink::create([
+    $loginLink = \App\Models\LoginLink::query()->create([
         'user_id' => $user->id,
         'token' => 'test-token',
         'expires_at' => now()->addMinutes(15),
@@ -76,15 +76,15 @@ test('login link used_at is cast to datetime', function () {
     expect($loginLink->used_at)->toBeInstanceOf(CarbonImmutable::class);
 });
 
-test('login link prunable returns expired links', function () {
+test('login link prunable returns expired links', function (): void {
     // Arrange
     $user = User::factory()->create();
-    LoginLink::create([
+    \App\Models\LoginLink::query()->create([
         'user_id' => $user->id,
         'token' => 'expired-token',
         'expires_at' => now()->subDay(),
     ]);
-    LoginLink::create([
+    \App\Models\LoginLink::query()->create([
         'user_id' => $user->id,
         'token' => 'valid-token',
         'expires_at' => now()->addMinutes(15),

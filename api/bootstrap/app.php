@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
 use App\Http\Middleware\EnsureTeamIsSet;
+use App\Http\Middleware\CacheApiResponse;
 use Illuminate\Http\Middleware\HandleCors;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Validation\ValidationException;
@@ -28,7 +29,7 @@ return Application::configure(basePath: dirname(__DIR__))
         commands: __DIR__.'/../routes/console.php',
         channels: __DIR__.'/../routes/channels.php',
         health: '/up',
-        then: function () {
+        then: function (): void {
             Route::middleware('api')
                 ->prefix('webhooks')
                 ->name('webhooks.')
@@ -52,17 +53,18 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $middleware->trustProxies(at: '*');
 
-        // Register Spatie Permission middleware aliases
+        // Register middleware aliases
         $middleware->alias([
             'role' => RoleMiddleware::class,
             'permission' => PermissionMiddleware::class,
             'role_or_permission' => RoleOrPermissionMiddleware::class,
             'team' => EnsureTeamIsSet::class,
+            'cache.response' => CacheApiResponse::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         // Report OAuth account linking exceptions with context
-        $exceptions->report(function (OAuthAccountLinkingException $e) {
+        $exceptions->report(function (OAuthAccountLinkingException $e): void {
             // Log with warning level since these are user-facing errors, not system errors
             Log::warning('OAuth account linking failed', [
                 'message' => $e->getMessage(),
@@ -71,9 +73,7 @@ return Application::configure(basePath: dirname(__DIR__))
         });
 
         // Render OAuth account linking exceptions properly
-        $exceptions->render(function (OAuthAccountLinkingException $e, $request) {
-            return $e->toResponse($request);
-        });
+        $exceptions->render(fn(OAuthAccountLinkingException $e, $request) => $e->toResponse($request));
 
         // Ignore expected exceptions from being reported (they're user-facing, not system errors)
         $exceptions->dontReport([

@@ -9,13 +9,21 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use InvalidArgumentException;
+use App\Support\Cache\TeamCache;
 use Illuminate\Http\JsonResponse;
 use App\Http\Responses\ApiResponse;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use App\Support\Cache\CacheInvalidationService;
+use App\Http\Controllers\Concerns\UsesCachedResponses;
+use App\Http\Controllers\Concerns\InvalidatesCachedModels;
 
 final class TeamController extends Controller
 {
+    use InvalidatesCachedModels;
+
+    use UsesCachedResponses;
+
     /**
      * Display a listing of the user's teams.
      *
@@ -26,11 +34,15 @@ final class TeamController extends Controller
         /** @var User $user */
         $user = Auth::user();
 
-        // Get all teams the user belongs to (both owned and member)
-        $ownedTeams = $user->ownedTeams()->get();
-        $memberTeams = $user->teams()->get();
+        $teams = $this->cachedResponse(
+            'api.teams.index',
+            function () use ($user) {
+                $ownedTeams = $user->ownedTeams()->get();
+                $memberTeams = $user->teams()->get();
 
-        $teams = $ownedTeams->merge($memberTeams)->unique('id')->values();
+                return $ownedTeams->merge($memberTeams)->unique('id')->values()->toArray();
+            }
+        );
 
         return ApiResponse::success($teams);
     }
@@ -51,7 +63,7 @@ final class TeamController extends Controller
         $user = Auth::user();
         $user->refresh(); // Ensure all attributes are loaded
 
-        $team = Team::create([
+        $team = \App\Models\Team::query()->create([
             'name' => $validated['name'],
             'user_id' => $user->id,
             'personal_team' => $validated['personal_team'] ?? false,
@@ -64,6 +76,10 @@ final class TeamController extends Controller
         if (! $user->current_team_id) {
             $user->update(['current_team_id' => $team->id]);
         }
+
+        // Invalidate caches
+        $this->invalidateAfterCreate('team', $team->id);
+        CacheInvalidationService::invalidateUser($user->id);
 
         return ApiResponse::created($team);
     }
@@ -84,7 +100,13 @@ final class TeamController extends Controller
             return ApiResponse::error('Unauthorized', Response::HTTP_FORBIDDEN);
         }
 
-        return ApiResponse::success($team);
+        $cachedTeam = TeamCache::remember(
+            $team->id,
+            "team:{$team->id}",
+            fn () => $team->load(['users', 'owner'])
+        );
+
+        return ApiResponse::success($cachedTeam);
     }
 
     /**
@@ -108,6 +130,9 @@ final class TeamController extends Controller
         ]);
 
         $team->update($validated);
+
+        // Invalidate caches
+        $this->invalidateAfterUpdate('team', $team->id);
 
         return ApiResponse::success($team);
     }
@@ -133,7 +158,12 @@ final class TeamController extends Controller
             $user->update(['current_team_id' => null]);
         }
 
+        $teamId = $team->id;
         $team->delete();
+
+        // Invalidate caches
+        $this->invalidateAfterDelete('team', $teamId);
+        CacheInvalidationService::invalidateUser($user->id);
 
         return ApiResponse::noContent();
     }
@@ -151,11 +181,22 @@ final class TeamController extends Controller
 
         /** @var User $user */
         $user = Auth::user();
+        $user->refresh();
+
+        $oldTeamId = $user->current_team_id;
 
         try {
             $user->switchTeam($validated['team_id']);
-        } catch (InvalidArgumentException $e) {
-            return ApiResponse::error($e->getMessage(), Response::HTTP_FORBIDDEN);
+        } catch (InvalidArgumentException $invalidArgumentException) {
+            return ApiResponse::error($invalidArgumentException->getMessage(), Response::HTTP_FORBIDDEN);
+        }
+
+        // Invalidate caches for both old and new team
+        if ($oldTeamId !== null) {
+            CacheInvalidationService::onTeamSwitched($user->id, $oldTeamId, $validated['team_id']);
+        } else {
+            CacheInvalidationService::invalidateUser($user->id);
+            CacheInvalidationService::invalidateTeam($validated['team_id']);
         }
 
         $user->refresh();

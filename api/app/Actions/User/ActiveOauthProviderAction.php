@@ -11,7 +11,7 @@ final class ActiveOauthProviderAction
     /**
      * @var array<string, array<int, string>>
      */
-    private const PROVIDER_CREDENTIALS = [
+    private const array PROVIDER_CREDENTIALS = [
         'github' => ['GITHUB_CLIENT_ID', 'GITHUB_CLIENT_SECRET'],
         'google' => ['GOOGLE_CLIENT_ID', 'GOOGLE_CLIENT_SECRET'],
         'x' => ['X_CLIENT_ID', 'X_CLIENT_SECRET'],

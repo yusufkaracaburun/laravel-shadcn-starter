@@ -65,9 +65,7 @@ final class RolePermissionSeeder extends Seeder
         foreach ($modules as $module => $actions) {
             foreach ($actions as $action) {
                 $name = "{$module}.{$action}";
-                $permissions[$name] = Permission::firstOrCreate(
-                    ['name' => $name, 'guard_name' => 'web']
-                );
+                $permissions[$name] = \Spatie\Permission\Models\Permission::query()->firstOrCreate(['name' => $name, 'guard_name' => 'web']);
             }
         }
 
@@ -91,10 +89,8 @@ final class RolePermissionSeeder extends Seeder
 
         $createdRoles = [];
 
-        foreach ($roles as $name => $description) {
-            $createdRoles[$name] = Role::firstOrCreate(
-                ['name' => $name, 'guard_name' => 'web']
-            );
+        foreach (array_keys($roles) as $name) {
+            $createdRoles[$name] = \Spatie\Permission\Models\Role::query()->firstOrCreate(['name' => $name, 'guard_name' => 'web']);
         }
 
         return $createdRoles;
@@ -169,14 +165,11 @@ final class RolePermissionSeeder extends Seeder
      */
     private function createAdminUser(array $roles): User
     {
-        $admin = User::firstOrCreate(
-            ['email' => 'admin@example.com'],
-            [
-                'name' => 'Admin User',
-                'password' => Hash::make('password'),
-                'email_verified_at' => now(),
-            ]
-        );
+        $admin = \App\Models\User::query()->firstOrCreate(['email' => 'admin@example.com'], [
+            'name' => 'Admin User',
+            'password' => Hash::make('password'),
+            'email_verified_at' => now(),
+        ]);
 
         // Refresh user to ensure it's loaded fresh
         $admin->refresh();
@@ -197,18 +190,10 @@ final class RolePermissionSeeder extends Seeder
      */
     private function createTeams(User $admin): array
     {
-        $teams = [];
-
-        // Create a default team owned by admin user
-        $teams[] = Team::firstOrCreate(
-            ['name' => 'Default Team'],
-            [
-                'user_id' => $admin->id,
-                'personal_team' => false,
-            ]
-        );
-
-        return $teams;
+        return [\App\Models\Team::query()->firstOrCreate(['name' => 'Default Team'], [
+            'user_id' => $admin->id,
+            'personal_team' => false,
+        ])];
     }
 
     /**
@@ -219,7 +204,7 @@ final class RolePermissionSeeder extends Seeder
      */
     private function assignTeamScopedRoles(User $admin, array $teams, array $roles): void
     {
-        if (empty($teams)) {
+        if ($teams === []) {
             return;
         }
 
@@ -239,6 +224,7 @@ final class RolePermissionSeeder extends Seeder
         if (! $admin->hasRole($roles['admin'])) {
             $admin->assignRole($roles['admin']);
         }
+
         $permissionRegistrar->setPermissionsTeamId(null); // Reset to global context
     }
 }

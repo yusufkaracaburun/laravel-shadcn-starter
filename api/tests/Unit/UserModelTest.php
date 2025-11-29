@@ -6,7 +6,7 @@ use App\Models\User;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\Hash;
 
-test('user can be created with factory', function () {
+test('user can be created with factory', function (): void {
     $user = User::factory()->create();
 
     expect($user)->toBeInstanceOf(User::class);
@@ -15,7 +15,7 @@ test('user can be created with factory', function () {
     expect($user->name)->not->toBeNull();
 });
 
-test('user password is hashed when created', function () {
+test('user password is hashed when created', function (): void {
     $password = 'password123';
     $user = User::factory()->create([
         'password' => Hash::make($password),
@@ -24,7 +24,7 @@ test('user password is hashed when created', function () {
     expect(Hash::check($password, $user->password))->toBeTrue();
 });
 
-test('user password is not visible in array', function () {
+test('user password is not visible in array', function (): void {
     $user = User::factory()->create();
 
     $userArray = $user->toArray();
@@ -33,7 +33,7 @@ test('user password is not visible in array', function () {
     expect($userArray)->not->toHaveKey('remember_token');
 });
 
-test('user email_verified_at is cast to datetime', function () {
+test('user email_verified_at is cast to datetime', function (): void {
     $user = User::factory()->create([
         'email_verified_at' => now(),
     ]);
@@ -41,8 +41,8 @@ test('user email_verified_at is cast to datetime', function () {
     expect($user->email_verified_at)->toBeInstanceOf(CarbonImmutable::class);
 });
 
-test('user can be mass assigned name, email, and password', function () {
-    $user = User::create([
+test('user can be mass assigned name, email, and password', function (): void {
+    $user = \App\Models\User::query()->create([
         'name' => 'Test User',
         'email' => 'test@example.com',
         'password' => Hash::make('password123'),
@@ -56,7 +56,7 @@ test('user can be mass assigned name, email, and password', function () {
 // Note: Model::unguard() is enabled in AppServiceProvider, so guarded attributes
 // are not enforced. This is intentional for the larasonic pattern.
 
-test('user has hidden attributes', function () {
+test('user has hidden attributes', function (): void {
     $user = new User();
 
     expect($user->getHidden())->toContain('password')
@@ -65,14 +65,14 @@ test('user has hidden attributes', function () {
         ->toContain('two_factor_secret');
 });
 
-test('user has api tokens trait', function () {
+test('user has api tokens trait', function (): void {
     $user = User::factory()->create();
 
     expect(method_exists($user, 'tokens'))->toBeTrue();
     expect(method_exists($user, 'createToken'))->toBeTrue();
 });
 
-test('user can create api token', function () {
+test('user can create api token', function (): void {
     // This test requires the personal_access_tokens table
     // For unit tests, we verify the method exists and can be called
     // The actual database interaction is tested in feature tests

@@ -5,7 +5,7 @@ declare(strict_types=1);
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 
-test('user can register with valid data', function () {
+test('user can register with valid data', function (): void {
     $response = $this->postJson('/register', [
         'name' => 'John Doe',
         'email' => 'john@example.com',
@@ -20,12 +20,12 @@ test('user can register with valid data', function () {
         'name' => 'John Doe',
     ]);
 
-    $user = User::where('email', 'john@example.com')->first();
+    $user = \App\Models\User::query()->where('email', 'john@example.com')->first();
     expect($user)->not->toBeNull();
     expect(Hash::check('password123', $user->password))->toBeTrue();
 });
 
-test('user cannot register with duplicate email', function () {
+test('user cannot register with duplicate email', function (): void {
     User::factory()->create([
         'email' => 'existing@example.com',
     ]);
@@ -41,7 +41,7 @@ test('user cannot register with duplicate email', function () {
     $response->assertJsonValidationErrors(['email']);
 });
 
-test('register requires name field', function () {
+test('register requires name field', function (): void {
     $response = $this->postJson('/register', [
         'email' => 'john@example.com',
         'password' => 'password123',
@@ -52,7 +52,7 @@ test('register requires name field', function () {
     $response->assertJsonValidationErrors(['name']);
 });
 
-test('register requires email field', function () {
+test('register requires email field', function (): void {
     $response = $this->postJson('/register', [
         'name' => 'John Doe',
         'password' => 'password123',
@@ -63,7 +63,7 @@ test('register requires email field', function () {
     $response->assertJsonValidationErrors(['email']);
 });
 
-test('register requires password field', function () {
+test('register requires password field', function (): void {
     $response = $this->postJson('/register', [
         'name' => 'John Doe',
         'email' => 'john@example.com',
@@ -74,7 +74,7 @@ test('register requires password field', function () {
     $response->assertJsonValidationErrors(['password']);
 });
 
-test('register requires password confirmation', function () {
+test('register requires password confirmation', function (): void {
     $response = $this->postJson('/register', [
         'name' => 'John Doe',
         'email' => 'john@example.com',
@@ -85,7 +85,7 @@ test('register requires password confirmation', function () {
     $response->assertJsonValidationErrors(['password']);
 });
 
-test('register requires matching password confirmation', function () {
+test('register requires matching password confirmation', function (): void {
     $response = $this->postJson('/register', [
         'name' => 'John Doe',
         'email' => 'john@example.com',
@@ -97,7 +97,7 @@ test('register requires matching password confirmation', function () {
     $response->assertJsonValidationErrors(['password']);
 });
 
-test('register requires valid email format', function () {
+test('register requires valid email format', function (): void {
     $response = $this->postJson('/register', [
         'name' => 'John Doe',
         'email' => 'invalid-email',
@@ -109,7 +109,7 @@ test('register requires valid email format', function () {
     $response->assertJsonValidationErrors(['email']);
 });
 
-test('register requires minimum password length', function () {
+test('register requires minimum password length', function (): void {
     $response = $this->postJson('/register', [
         'name' => 'John Doe',
         'email' => 'john@example.com',
@@ -121,7 +121,7 @@ test('register requires minimum password length', function () {
     $response->assertJsonValidationErrors(['password']);
 });
 
-test('registered user can login immediately', function () {
+test('registered user can login immediately', function (): void {
     $response = $this->postJson('/register', [
         'name' => 'John Doe',
         'email' => 'john@example.com',

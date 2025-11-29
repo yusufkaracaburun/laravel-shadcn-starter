@@ -10,15 +10,21 @@ use Carbon\CarbonImmutable;
 use App\Policies\TeamPolicy;
 use App\Policies\UserPolicy;
 use Illuminate\Http\Request;
+use App\Observers\RoleObserver;
+use App\Observers\TeamObserver;
+use App\Observers\UserObserver;
 use Illuminate\Support\Facades\DB;
+use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Vite;
+use App\Observers\PermissionObserver;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Cache\RateLimiting\Limit;
+use Spatie\Permission\Models\Permission;
 use Illuminate\Support\Facades\RateLimiter;
 
 final class AppServiceProvider extends ServiceProvider
@@ -28,7 +34,7 @@ final class AppServiceProvider extends ServiceProvider
      *
      * @var array<class-string, class-string>
      */
-    protected $policies = [
+    private array $policies = [
         Team::class => TeamPolicy::class,
         User::class => UserPolicy::class,
     ];
@@ -64,6 +70,7 @@ final class AppServiceProvider extends ServiceProvider
         $this->configureUrl();
         $this->configureVite();
         $this->configureRateLimiting();
+        $this->registerObservers();
     }
 
     /**
@@ -145,5 +152,16 @@ final class AppServiceProvider extends ServiceProvider
     private function configureRateLimiting(): void
     {
         RateLimiter::for('login-link', fn (Request $request): Limit => Limit::perMinute((int) config('login-link.rate_limit_attempts', 1))->by($request->email ?? $request->ip()));
+    }
+
+    /**
+     * Register model observers.
+     */
+    private function registerObservers(): void
+    {
+        User::observe(UserObserver::class);
+        Team::observe(TeamObserver::class);
+        Role::observe(RoleObserver::class);
+        Permission::observe(PermissionObserver::class);
     }
 }

@@ -2,7 +2,6 @@
 
 declare(strict_types=1);
 
-use App\Events\ExampleBroadcastEvent;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\User\OauthController;
 
