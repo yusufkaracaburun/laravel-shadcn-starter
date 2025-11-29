@@ -42,7 +42,7 @@ test('team personal_team is cast to boolean', function (): void {
     $user = User::factory()->create();
 
     // Act
-    $team = \App\Models\Team::query()->create([
+    $team = Team::query()->create([
         'user_id' => $user->id,
         'name' => 'Personal Team',
         'personal_team' => 1,

@@ -20,7 +20,7 @@ test('user can register with valid data', function (): void {
         'name' => 'John Doe',
     ]);
 
-    $user = \App\Models\User::query()->where('email', 'john@example.com')->first();
+    $user = User::query()->where('email', 'john@example.com')->first();
     expect($user)->not->toBeNull();
     expect(Hash::check('password123', $user->password))->toBeTrue();
 });

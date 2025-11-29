@@ -12,7 +12,7 @@ test('login link can be created', function (): void {
     $user = User::factory()->create();
 
     // Act
-    $loginLink = \App\Models\LoginLink::query()->create([
+    $loginLink = LoginLink::query()->create([
         'user_id' => $user->id,
         'token' => 'test-token-123',
         'expires_at' => now()->addMinutes(15),
@@ -28,7 +28,7 @@ test('login link can be created', function (): void {
 test('login link has user relationship', function (): void {
     // Arrange
     $user = User::factory()->create();
-    $loginLink = \App\Models\LoginLink::query()->create([
+    $loginLink = LoginLink::query()->create([
         'user_id' => $user->id,
         'token' => 'test-token',
         'expires_at' => now()->addMinutes(15),
@@ -49,7 +49,7 @@ test('login link expires_at is cast to datetime', function (): void {
     $expiresAt = now()->addMinutes(15);
 
     // Act
-    $loginLink = \App\Models\LoginLink::query()->create([
+    $loginLink = LoginLink::query()->create([
         'user_id' => $user->id,
         'token' => 'test-token',
         'expires_at' => $expiresAt,
@@ -63,7 +63,7 @@ test('login link expires_at is cast to datetime', function (): void {
 test('login link used_at is cast to datetime', function (): void {
     // Arrange
     $user = User::factory()->create();
-    $loginLink = \App\Models\LoginLink::query()->create([
+    $loginLink = LoginLink::query()->create([
         'user_id' => $user->id,
         'token' => 'test-token',
         'expires_at' => now()->addMinutes(15),
@@ -79,12 +79,12 @@ test('login link used_at is cast to datetime', function (): void {
 test('login link prunable returns expired links', function (): void {
     // Arrange
     $user = User::factory()->create();
-    \App\Models\LoginLink::query()->create([
+    LoginLink::query()->create([
         'user_id' => $user->id,
         'token' => 'expired-token',
         'expires_at' => now()->subDay(),
     ]);
-    \App\Models\LoginLink::query()->create([
+    LoginLink::query()->create([
         'user_id' => $user->id,
         'token' => 'valid-token',
         'expires_at' => now()->addMinutes(15),

@@ -33,9 +33,11 @@ final class TeamPolicy
         if ($team->user_id === $user->id) {
             return true;
         }
+
         if ($user->teams()->where('teams.id', $team->id)->exists()) {
             return true;
         }
+
         return $user->can('teams.view');
     }
 

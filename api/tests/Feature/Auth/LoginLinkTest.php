@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\URL;
 use App\Notifications\LoginLinkMail;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Contracts\Cache\Factory;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Notification;
 
@@ -18,7 +19,7 @@ beforeEach(function (): void {
 
     // Clear all possible rate limiter keys
     // The throttle middleware uses email or IP as the key: login-link:{email|ip}
-    $cache = app(\Illuminate\Contracts\Cache\Factory::class)->store();
+    $cache = app(Factory::class)->store();
     $prefix = config('cache.prefix', '');
 
     // Clear common keys
@@ -45,7 +46,7 @@ test('login link store creates magic link for valid email', function (): void {
     // Assert
     $response->assertRedirect('/auth/login');
 
-    expect(\App\Models\LoginLink::query()->where('user_id', $user->id)->count())->toBe(1);
+    expect(LoginLink::query()->where('user_id', $user->id)->count())->toBe(1);
     Notification::assertSentTo($user, LoginLinkMail::class);
 });
 
@@ -122,7 +123,7 @@ test('login link login authenticates user with valid token', function (): void {
     // Clear rate limiter for IP (throttle middleware uses IP for GET requests)
     RateLimiter::clear('login-link:127.0.0.1');
     $user = User::factory()->create();
-    $loginLink = \App\Models\LoginLink::query()->create([
+    $loginLink = LoginLink::query()->create([
         'user_id' => $user->id,
         'token' => 'valid-token-123',
         'expires_at' => now()->addMinutes(15),
@@ -146,7 +147,7 @@ test('login link login fails with expired token', function (): void {
     // Clear rate limiter for IP (throttle middleware uses IP for GET requests)
     RateLimiter::clear('login-link:127.0.0.1');
     $user = User::factory()->create();
-    \App\Models\LoginLink::query()->create([
+    LoginLink::query()->create([
         'user_id' => $user->id,
         'token' => 'expired-token',
         'expires_at' => now()->subMinute(),
@@ -168,7 +169,7 @@ test('login link login fails with used token', function (): void {
     // Clear rate limiter for IP (throttle middleware uses IP for GET requests)
     RateLimiter::clear('login-link:127.0.0.1');
     $user = User::factory()->create();
-    \App\Models\LoginLink::query()->create([
+    LoginLink::query()->create([
         'user_id' => $user->id,
         'token' => 'used-token',
         'expires_at' => now()->addMinutes(15),

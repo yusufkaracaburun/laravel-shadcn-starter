@@ -20,8 +20,11 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 final class ExampleBroadcastEvent implements ShouldBroadcastNow
 {
     use Dispatchable;
+
     use InteractsWithSockets;
+
     use SerializesModels;
+
     /**
      * Create a new event instance.
      */

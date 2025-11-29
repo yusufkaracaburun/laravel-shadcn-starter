@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Notification;
 test('login link mail notification uses mail channel', function (): void {
     // Arrange
     $user = User::factory()->create();
-    $loginLink = \App\Models\LoginLink::query()->create([
+    $loginLink = LoginLink::query()->create([
         'user_id' => $user->id,
         'token' => 'test-token-123',
         'expires_at' => now()->addMinutes(15),
@@ -28,7 +28,7 @@ test('login link mail notification uses mail channel', function (): void {
 test('login link mail notification has correct subject', function (): void {
     // Arrange
     $user = User::factory()->create();
-    $loginLink = \App\Models\LoginLink::query()->create([
+    $loginLink = LoginLink::query()->create([
         'user_id' => $user->id,
         'token' => 'test-token-123',
         'expires_at' => now()->addMinutes(15),
@@ -45,7 +45,7 @@ test('login link mail notification has correct subject', function (): void {
 test('login link mail notification contains login link url', function (): void {
     // Arrange
     $user = User::factory()->create();
-    $loginLink = \App\Models\LoginLink::query()->create([
+    $loginLink = LoginLink::query()->create([
         'user_id' => $user->id,
         'token' => 'test-token-123',
         'expires_at' => now()->addMinutes(15),
@@ -64,7 +64,7 @@ test('login link mail notification can be sent to user', function (): void {
     // Arrange
     Notification::fake();
     $user = User::factory()->create();
-    $loginLink = \App\Models\LoginLink::query()->create([
+    $loginLink = LoginLink::query()->create([
         'user_id' => $user->id,
         'token' => 'test-token-123',
         'expires_at' => now()->addMinutes(15),

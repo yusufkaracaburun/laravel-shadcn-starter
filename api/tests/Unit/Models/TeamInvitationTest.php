@@ -13,7 +13,7 @@ test('team invitation can be created', function (): void {
     $team = Team::factory()->create(['user_id' => $user->id]);
 
     // Act
-    $invitation = \App\Models\TeamInvitation::query()->create([
+    $invitation = TeamInvitation::query()->create([
         'team_id' => $team->id,
         'email' => 'invitee@example.com',
         'role' => 'member',
@@ -30,7 +30,7 @@ test('team invitation has team relationship', function (): void {
     // Arrange
     $user = User::factory()->create();
     $team = Team::factory()->create(['user_id' => $user->id]);
-    $invitation = \App\Models\TeamInvitation::query()->create([
+    $invitation = TeamInvitation::query()->create([
         'team_id' => $team->id,
         'email' => 'invitee@example.com',
     ]);

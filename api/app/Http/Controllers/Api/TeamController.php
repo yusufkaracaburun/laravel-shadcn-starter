@@ -63,7 +63,7 @@ final class TeamController extends Controller
         $user = Auth::user();
         $user->refresh(); // Ensure all attributes are loaded
 
-        $team = \App\Models\Team::query()->create([
+        $team = Team::query()->create([
             'name' => $validated['name'],
             'user_id' => $user->id,
             'personal_team' => $validated['personal_team'] ?? false,

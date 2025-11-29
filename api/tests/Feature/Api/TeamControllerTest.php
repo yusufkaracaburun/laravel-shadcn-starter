@@ -50,8 +50,8 @@ test('authenticated user can create a team', function (): void {
             'data' => ['id', 'name', 'personal_team', 'user_id'],
         ]);
 
-    expect(\App\Models\Team::query()->where('name', 'New Team')->exists())->toBeTrue();
-    $team = \App\Models\Team::query()->where('name', 'New Team')->first();
+    expect(Team::query()->where('name', 'New Team')->exists())->toBeTrue();
+    $team = Team::query()->where('name', 'New Team')->first();
     expect($team->user_id)->toBe($user->id);
     expect($user->teams()->where('teams.id', $team->id)->exists())->toBeTrue();
 });
@@ -121,7 +121,7 @@ test('authenticated user can delete their team', function (): void {
     // Assert
     $response->assertStatus(204);
 
-    expect(\App\Models\Team::query()->find($team->id))->toBeNull();
+    expect(Team::query()->find($team->id))->toBeNull();
 });
 
 test('authenticated user can switch current team', function (): void {

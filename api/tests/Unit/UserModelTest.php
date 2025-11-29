@@ -42,7 +42,7 @@ test('user email_verified_at is cast to datetime', function (): void {
 });
 
 test('user can be mass assigned name, email, and password', function (): void {
-    $user = \App\Models\User::query()->create([
+    $user = User::query()->create([
         'name' => 'Test User',
         'email' => 'test@example.com',
         'password' => Hash::make('password123'),

@@ -26,7 +26,7 @@ test('create new user action creates user with valid data', function (): void {
 test('create new user action validates name is required', function (): void {
     $action = new CreateNewUser();
 
-    expect(fn (): \App\Models\User => $action->create([
+    expect(fn (): User => $action->create([
         'email' => 'john@example.com',
         'password' => 'password123',
         'password_confirmation' => 'password123',
@@ -36,7 +36,7 @@ test('create new user action validates name is required', function (): void {
 test('create new user action validates email is required', function (): void {
     $action = new CreateNewUser();
 
-    expect(fn (): \App\Models\User => $action->create([
+    expect(fn (): User => $action->create([
         'name' => 'John Doe',
         'password' => 'password123',
         'password_confirmation' => 'password123',
@@ -46,7 +46,7 @@ test('create new user action validates email is required', function (): void {
 test('create new user action validates email format', function (): void {
     $action = new CreateNewUser();
 
-    expect(fn (): \App\Models\User => $action->create([
+    expect(fn (): User => $action->create([
         'name' => 'John Doe',
         'email' => 'invalid-email',
         'password' => 'password123',
@@ -59,7 +59,7 @@ test('create new user action validates email is unique', function (): void {
 
     $action = new CreateNewUser();
 
-    expect(fn (): \App\Models\User => $action->create([
+    expect(fn (): User => $action->create([
         'name' => 'John Doe',
         'email' => 'existing@example.com',
         'password' => 'password123',
@@ -70,7 +70,7 @@ test('create new user action validates email is unique', function (): void {
 test('create new user action validates password is required', function (): void {
     $action = new CreateNewUser();
 
-    expect(fn (): \App\Models\User => $action->create([
+    expect(fn (): User => $action->create([
         'name' => 'John Doe',
         'email' => 'john@example.com',
         'password_confirmation' => 'password123',
@@ -80,7 +80,7 @@ test('create new user action validates password is required', function (): void 
 test('create new user action validates password minimum length', function (): void {
     $action = new CreateNewUser();
 
-    expect(fn (): \App\Models\User => $action->create([
+    expect(fn (): User => $action->create([
         'name' => 'John Doe',
         'email' => 'john@example.com',
         'password' => 'short',
@@ -91,7 +91,7 @@ test('create new user action validates password minimum length', function (): vo
 test('create new user action validates password confirmation', function (): void {
     $action = new CreateNewUser();
 
-    expect(fn (): \App\Models\User => $action->create([
+    expect(fn (): User => $action->create([
         'name' => 'John Doe',
         'email' => 'john@example.com',
         'password' => 'password123',
@@ -102,7 +102,7 @@ test('create new user action validates password confirmation', function (): void
 test('create new user action validates name max length', function (): void {
     $action = new CreateNewUser();
 
-    expect(fn (): \App\Models\User => $action->create([
+    expect(fn (): User => $action->create([
         'name' => str_repeat('a', 256),
         'email' => 'john@example.com',
         'password' => 'password123',
@@ -113,7 +113,7 @@ test('create new user action validates name max length', function (): void {
 test('create new user action validates email max length', function (): void {
     $action = new CreateNewUser();
 
-    expect(fn (): \App\Models\User => $action->create([
+    expect(fn (): User => $action->create([
         'name' => 'John Doe',
         'email' => str_repeat('a', 250).'@example.com',
         'password' => 'password123',

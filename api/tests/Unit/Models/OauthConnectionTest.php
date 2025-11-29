@@ -13,7 +13,7 @@ test('oauth connection can be created', function (): void {
     $user = User::factory()->create();
 
     // Act
-    $connection = \App\Models\OauthConnection::query()->create([
+    $connection = OauthConnection::query()->create([
         'user_id' => $user->id,
         'provider' => 'github',
         'provider_id' => '12345',
@@ -32,7 +32,7 @@ test('oauth connection can be created', function (): void {
 test('oauth connection has user relationship', function (): void {
     // Arrange
     $user = User::factory()->create();
-    $connection = \App\Models\OauthConnection::query()->create([
+    $connection = OauthConnection::query()->create([
         'user_id' => $user->id,
         'provider' => 'github',
         'provider_id' => '12345',
@@ -53,7 +53,7 @@ test('oauth connection data is cast to collection', function (): void {
     $data = ['name' => 'Test User', 'email' => 'test@example.com'];
 
     // Act
-    $connection = \App\Models\OauthConnection::query()->create([
+    $connection = OauthConnection::query()->create([
         'user_id' => $user->id,
         'provider' => 'github',
         'provider_id' => '12345',
@@ -72,7 +72,7 @@ test('oauth connection expires_at is cast to datetime', function (): void {
     $expiresAt = now()->addHour();
 
     // Act
-    $connection = \App\Models\OauthConnection::query()->create([
+    $connection = OauthConnection::query()->create([
         'user_id' => $user->id,
         'provider' => 'github',
         'provider_id' => '12345',
@@ -88,7 +88,7 @@ test('oauth connection can store refresh token', function (): void {
     $user = User::factory()->create();
 
     // Act
-    $connection = \App\Models\OauthConnection::query()->create([
+    $connection = OauthConnection::query()->create([
         'user_id' => $user->id,
         'provider' => 'github',
         'provider_id' => '12345',

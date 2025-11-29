@@ -73,7 +73,7 @@ return Application::configure(basePath: dirname(__DIR__))
         });
 
         // Render OAuth account linking exceptions properly
-        $exceptions->render(fn(OAuthAccountLinkingException $e, $request) => $e->toResponse($request));
+        $exceptions->render(fn (OAuthAccountLinkingException $e, $request) => $e->toResponse($request));
 
         // Ignore expected exceptions from being reported (they're user-facing, not system errors)
         $exceptions->dontReport([

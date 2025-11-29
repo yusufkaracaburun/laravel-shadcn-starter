@@ -65,7 +65,7 @@ final class RolePermissionSeeder extends Seeder
         foreach ($modules as $module => $actions) {
             foreach ($actions as $action) {
                 $name = "{$module}.{$action}";
-                $permissions[$name] = \Spatie\Permission\Models\Permission::query()->firstOrCreate(['name' => $name, 'guard_name' => 'web']);
+                $permissions[$name] = Permission::query()->firstOrCreate(['name' => $name, 'guard_name' => 'web']);
             }
         }
 
@@ -90,7 +90,7 @@ final class RolePermissionSeeder extends Seeder
         $createdRoles = [];
 
         foreach (array_keys($roles) as $name) {
-            $createdRoles[$name] = \Spatie\Permission\Models\Role::query()->firstOrCreate(['name' => $name, 'guard_name' => 'web']);
+            $createdRoles[$name] = Role::query()->firstOrCreate(['name' => $name, 'guard_name' => 'web']);
         }
 
         return $createdRoles;
@@ -165,7 +165,7 @@ final class RolePermissionSeeder extends Seeder
      */
     private function createAdminUser(array $roles): User
     {
-        $admin = \App\Models\User::query()->firstOrCreate(['email' => 'admin@example.com'], [
+        $admin = User::query()->firstOrCreate(['email' => 'admin@example.com'], [
             'name' => 'Admin User',
             'password' => Hash::make('password'),
             'email_verified_at' => now(),
@@ -190,7 +190,7 @@ final class RolePermissionSeeder extends Seeder
      */
     private function createTeams(User $admin): array
     {
-        return [\App\Models\Team::query()->firstOrCreate(['name' => 'Default Team'], [
+        return [Team::query()->firstOrCreate(['name' => 'Default Team'], [
             'user_id' => $admin->id,
             'personal_team' => false,
         ])];

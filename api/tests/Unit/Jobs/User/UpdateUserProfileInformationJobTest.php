@@ -27,7 +27,7 @@ test('update user profile information job creates oauth connection', function ()
     $job->handle();
 
     // Assert
-    $connection = \App\Models\OauthConnection::query()->where('user_id', $user->id)
+    $connection = OauthConnection::query()->where('user_id', $user->id)
         ->where('provider', 'github')
         ->first();
 
@@ -40,7 +40,7 @@ test('update user profile information job creates oauth connection', function ()
 test('update user profile information job updates existing oauth connection', function (): void {
     // Arrange
     $user = User::factory()->create();
-    \App\Models\OauthConnection::query()->create([
+    OauthConnection::query()->create([
         'user_id' => $user->id,
         'provider' => 'github',
         'provider_id' => '12345',
@@ -64,7 +64,7 @@ test('update user profile information job updates existing oauth connection', fu
     $job->handle();
 
     // Assert
-    $connection = \App\Models\OauthConnection::query()->where('user_id', $user->id)
+    $connection = OauthConnection::query()->where('user_id', $user->id)
         ->where('provider', 'github')
         ->first();
 
