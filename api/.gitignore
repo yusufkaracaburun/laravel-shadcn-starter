@@ -56,6 +56,12 @@ Thumbs.db
 .tmp/
 *.cache
 
+# Test Coverage
+/coverage
+
 # Homestead
 Homestead.json
 Homestead.yaml
+**/caddy
+frankenphp
+frankenphp-worker.php

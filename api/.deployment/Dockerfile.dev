@@ -1,0 +1,67 @@
+# Development Dockerfile for Laravel API
+# Optimized for local development with hot-reloading and dev dependencies
+
+FROM dunglas/frankenphp:latest
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    git \
+    curl \
+    libpng-dev \
+    libzip-dev \
+    zip \
+    unzip \
+    libicu-dev \
+    libpq-dev \
+    sqlite3 \
+    && docker-php-ext-install \
+    pdo \
+    pdo_mysql \
+    pdo_pgsql \
+    pdo_sqlite \
+    zip \
+    gd \
+    intl \
+    opcache \
+    pcntl \
+    && docker-php-ext-enable opcache \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install Composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+# Set working directory
+WORKDIR /var/www/html
+
+# Copy composer files
+COPY composer.json composer.lock ./
+
+# Install all dependencies (including dev)
+RUN composer install --prefer-dist --no-scripts --no-autoloader
+
+# Copy application files
+COPY . .
+
+# Generate autoloader
+RUN composer dump-autoload --optimize
+
+# Create necessary directories and set permissions
+RUN mkdir -p storage/framework/{sessions,views,cache} \
+    && mkdir -p storage/logs \
+    && mkdir -p bootstrap/cache \
+    && chown -R www-data:www-data storage bootstrap/cache \
+    && chmod -R 775 storage bootstrap/cache
+
+# Set environment variables for development
+ENV APP_ENV=local
+ENV APP_DEBUG=true
+ENV SERVER_NAME=localhost:80
+ENV FRANKENPHP_CONFIG="worker /var/www/html/public/index.php"
+
+# Expose port
+EXPOSE 80
+
+# Start FrankenPHP server for development
+CMD ["frankenphp", "php-server", "-r", "public/"]
+

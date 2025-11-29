@@ -2,6 +2,7 @@ import type { App } from 'vue'
 
 import { setupAutoAnimate } from './auto-animate/setup'
 import { setupDayjs } from './dayjs/setup'
+import { setupEcho } from './echo/setup'
 import { setupI18n } from './i18n/setup'
 import { setupNProgress } from './nprogress/setup'
 import { setupPinia } from './pinia/setup'
@@ -16,4 +17,5 @@ export function setupPlugins(app: App) {
   setupI18n(app)
   setupPinia(app)
   setupRouter(app)
+  setupEcho(app)
 }

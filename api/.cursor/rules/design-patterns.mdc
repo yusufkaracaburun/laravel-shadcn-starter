@@ -1,10 +1,6 @@
 ---
-description: Design patterns guidelines for backend/API code only - enforces proper design pattern usage and structure for PHP code
-globs:
-  - "app/**/*.php"
-alwaysApply: false
+alwaysApply: true
 ---
-
 <br>
 <p align="center">
   <img src="./.github/banner.svg" height="150px" />
