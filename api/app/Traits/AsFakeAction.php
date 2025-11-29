@@ -89,4 +89,3 @@ trait AsFakeAction
 
     // @codeCoverageIgnoreEnd
 }
-

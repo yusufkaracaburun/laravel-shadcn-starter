@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Casts\AsCollection;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -37,4 +35,3 @@ final class OauthConnection extends Model
         return $this->belongsTo(User::class);
     }
 }
-

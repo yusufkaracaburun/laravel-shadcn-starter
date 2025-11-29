@@ -9,4 +9,5 @@ Route::get('/test', function () {
 });
 
 require __DIR__.'/api/users.php';
+require __DIR__.'/api/teams.php';
 require __DIR__.'/api/chat.php';

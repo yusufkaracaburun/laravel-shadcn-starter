@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-use App\Http\Responses\ApiResponse;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
+use Illuminate\Http\JsonResponse;
+use App\Http\Responses\ApiResponse;
 
 test('success response returns correct structure', function (): void {
     $response = ApiResponse::success(['test' => 'data']);
@@ -37,4 +37,3 @@ test('no content response returns correct status code', function (): void {
 
     expect($response->getStatusCode())->toBe(Response::HTTP_NO_CONTENT);
 });
-

@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-use App\Jobs\User\UpdateUserProfileInformationJob;
 use App\Models\User;
 use App\Models\OauthConnection;
 use Laravel\Socialite\Two\User as SocialiteUser;
+use App\Jobs\User\UpdateUserProfileInformationJob;
 
 test('update user profile information job creates oauth connection', function () {
     // Arrange
@@ -143,4 +143,3 @@ test('update user profile information job does not overwrite existing email veri
     $user->refresh();
     expect($user->email_verified_at->format('Y-m-d H:i:s'))->toBe($originalVerifiedAt->format('Y-m-d H:i:s'));
 });
-

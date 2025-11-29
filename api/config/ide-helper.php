@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Session\Store;
+use Illuminate\Database\Eloquent\Builder;
 
 return [
 
@@ -185,7 +185,7 @@ return [
     */
 
     'extra' => [
-        'Eloquent' => [Builder::class, \Illuminate\Database\Query\Builder::class],
+        'Eloquent' => [Builder::class, Illuminate\Database\Query\Builder::class],
         'Session' => [Store::class],
     ],
 
@@ -317,4 +317,3 @@ return [
     ],
 
 ];
-

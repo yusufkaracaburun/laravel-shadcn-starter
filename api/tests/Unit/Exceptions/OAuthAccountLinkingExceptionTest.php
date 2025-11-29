@@ -27,4 +27,3 @@ test('oauth account linking exception has constant for existing connection messa
     // Assert
     expect(OAuthAccountLinkingException::EXISTING_CONNECTION_ERROR_MESSAGE)->toBe('Please login with your existing authentication method.');
 });
-

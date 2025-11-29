@@ -23,7 +23,7 @@ final class TeamFactory extends Factory
         return [
             'name' => fake()->unique()->company(),
             'user_id' => User::factory(),
-            'personal_team' => true,
+            'personal_team' => false,
         ];
     }
 }

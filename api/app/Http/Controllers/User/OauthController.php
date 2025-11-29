@@ -77,4 +77,3 @@ final class OauthController extends Controller
         return collect($activeProviders)->contains('slug', $provider);
     }
 }
-

@@ -33,4 +33,3 @@ test('authenticated user can list all users', function (): void {
                 ->etc()
         );
 });
-

@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\Date;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Query\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\MassPrunable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -48,4 +47,3 @@ final class LoginLink extends Model
         return self::query()->where('expires_at', '<=', Date::now())->toBase();
     }
 }
-

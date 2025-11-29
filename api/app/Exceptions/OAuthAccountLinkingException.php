@@ -20,4 +20,3 @@ final class OAuthAccountLinkingException extends Exception
         return new self(self::EXISTING_CONNECTION_ERROR_MESSAGE);
     }
 }
-

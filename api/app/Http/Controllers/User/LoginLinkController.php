@@ -87,4 +87,3 @@ final class LoginLinkController extends Controller
         abort_unless(config('login-link.enabled', true), 404);
     }
 }
-

@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use Carbon\CarbonImmutable;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Laravel\Jetstream\TeamInvitation as JetstreamTeamInvitation;
 
-final class TeamInvitation extends JetstreamTeamInvitation
+final class TeamInvitation extends Model
 {
     /**
      * The attributes that are mass assignable.
@@ -18,6 +17,7 @@ final class TeamInvitation extends JetstreamTeamInvitation
     protected $fillable = [
         'email',
         'role',
+        'team_id',
     ];
 
     /**

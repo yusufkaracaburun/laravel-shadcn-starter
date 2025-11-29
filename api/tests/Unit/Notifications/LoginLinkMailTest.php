@@ -2,10 +2,9 @@
 
 declare(strict_types=1);
 
-use App\Models\LoginLink;
 use App\Models\User;
+use App\Models\LoginLink;
 use App\Notifications\LoginLinkMail;
-use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Notification;
 
 test('login link mail notification uses mail channel', function () {
@@ -77,4 +76,3 @@ test('login link mail notification can be sent to user', function () {
     // Assert
     Notification::assertSentTo($user, LoginLinkMail::class);
 });
-

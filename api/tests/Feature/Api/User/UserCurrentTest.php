@@ -31,4 +31,3 @@ test('authenticated user can access current user endpoint', function (): void {
                 ->has('extra')
         );
 });
-

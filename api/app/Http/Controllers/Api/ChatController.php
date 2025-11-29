@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
-use App\Http\Responses\ApiResponse;
 use Illuminate\Http\JsonResponse;
+use App\Http\Responses\ApiResponse;
+use App\Http\Controllers\Controller;
 
 final class ChatController extends Controller
 {
@@ -26,4 +26,3 @@ final class ChatController extends Controller
         return ApiResponse::success($data);
     }
 }
-

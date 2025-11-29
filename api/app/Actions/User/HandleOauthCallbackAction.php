@@ -112,4 +112,3 @@ final readonly class HandleOauthCallbackAction
         dispatch_sync(new UpdateUserProfileInformationJob($user, $socialiteUser, $provider));
     }
 }
-

@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-use App\Models\LoginLink;
 use App\Models\User;
+use App\Models\LoginLink;
 use Carbon\CarbonImmutable;
-use Illuminate\Support\Facades\Date;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 test('login link can be created', function () {
     // Arrange
@@ -38,7 +38,7 @@ test('login link has user relationship', function () {
     $relationship = $loginLink->user();
 
     // Assert
-    expect($relationship)->toBeInstanceOf(\Illuminate\Database\Eloquent\Relations\BelongsTo::class);
+    expect($relationship)->toBeInstanceOf(BelongsTo::class);
     expect($loginLink->user)->toBeInstanceOf(User::class);
     expect($loginLink->user->id)->toBe($user->id);
 });
@@ -98,4 +98,3 @@ test('login link prunable returns expired links', function () {
     expect($prunable->where('token', 'expired-token')->count())->toBe(1);
     expect($prunable->where('token', 'valid-token')->count())->toBe(0);
 });
-

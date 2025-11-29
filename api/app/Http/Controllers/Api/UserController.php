@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
-use App\Http\Responses\ApiResponse;
 use App\Models\User;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Http\JsonResponse;
+use App\Http\Responses\ApiResponse;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 
 final class UserController extends Controller
@@ -24,13 +24,27 @@ final class UserController extends Controller
         /** @var User $user */
         $user = Auth::user();
 
-        return ApiResponse::success($user);
+        // Ensure current_team_id is loaded by refreshing the model
+        $user->refresh();
+
+        // Load teams and current team relationships
+        $user->load(['teams', 'currentTeam', 'ownedTeams']);
+
+        // Get all teams (owned + member) for response
+        $allTeams = $user->ownedTeams->merge($user->teams)->unique('id')->values();
+
+        // Build response data - use makeVisible to ensure current_team_id is included
+        $user->makeVisible(['current_team_id']);
+        $userData = $user->toArray();
+        $userData['teams'] = $allTeams;
+        $userData['currentTeam'] = $user->currentTeam;
+
+        return ApiResponse::success($userData);
     }
 
     /**
      * Display a paginated list of users.
      *
-     * @return JsonResponse
      *
      * @authenticated
      */
@@ -102,4 +116,3 @@ final class UserController extends Controller
         return ApiResponse::noContent();
     }
 }
-

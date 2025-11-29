@@ -60,4 +60,3 @@ test('user update requires valid email format', function (): void {
     $response->assertUnprocessable()
         ->assertJsonValidationErrors(['email']);
 });
-

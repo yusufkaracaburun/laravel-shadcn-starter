@@ -33,4 +33,3 @@ return [
     */
     'expiration_minutes' => (int) env('LOGIN_LINK_EXPIRATION', 15),
 ];
-

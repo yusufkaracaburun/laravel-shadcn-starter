@@ -58,4 +58,3 @@ final class ActiveOauthProviderAction
         return true;
     }
 }
-

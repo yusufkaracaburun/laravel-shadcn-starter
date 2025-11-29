@@ -3,8 +3,9 @@
 declare(strict_types=1);
 
 use App\Models\Team;
-use App\Models\TeamInvitation;
 use App\Models\User;
+use App\Models\TeamInvitation;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 test('team invitation can be created', function () {
     // Arrange
@@ -38,7 +39,7 @@ test('team invitation has team relationship', function () {
     $relationship = $invitation->team();
 
     // Assert
-    expect($relationship)->toBeInstanceOf(\Illuminate\Database\Eloquent\Relations\BelongsTo::class);
+    expect($relationship)->toBeInstanceOf(BelongsTo::class);
     expect($invitation->team)->toBeInstanceOf(Team::class);
     expect($invitation->team->id)->toBe($team->id);
 });
@@ -54,4 +55,3 @@ test('team invitation has fillable attributes', function () {
     expect($fillable)->toContain('email')
         ->toContain('role');
 });
-

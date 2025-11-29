@@ -3,8 +3,8 @@
 declare(strict_types=1);
 
 use App\Models\User;
-use Illuminate\Testing\Fluent\AssertableJson;
 use Laravel\Sanctum\Sanctum;
+use Illuminate\Testing\Fluent\AssertableJson;
 
 test('unauthenticated users cannot delete users', function (): void {
     $user = User::factory()->create();
@@ -47,4 +47,3 @@ test('user can view specific user by id', function (): void {
                 ->etc()
         );
 });
-

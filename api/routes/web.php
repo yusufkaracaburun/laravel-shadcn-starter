@@ -14,7 +14,7 @@ Route::prefix('auth')->group(function (): void {
     // OAuth
     Route::get('/redirect/{provider}', [OauthController::class, 'redirect'])->name('oauth.redirect');
     Route::get('/callback/{provider}', [OauthController::class, 'callback'])->name('oauth.callback');
-    
+
     // Magic Link
     if (config('login-link.enabled', true)) {
         Route::middleware('throttle:login-link')->group(function (): void {

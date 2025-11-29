@@ -4,18 +4,15 @@ declare(strict_types=1);
 
 namespace App\Http\Responses;
 
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
+use Illuminate\Http\JsonResponse;
 
 final class ApiResponse
 {
     /**
      * Create a successful API response.
      *
-     * @param  mixed  $data
      * @param  array<string, mixed>  $extra
-     * @param  string  $message
-     * @param  int  $code
      */
     public static function success(
         mixed $data = null,
@@ -35,9 +32,6 @@ final class ApiResponse
     /**
      * Create an error API response.
      *
-     * @param  string  $message
-     * @param  int  $code
-     * @param  mixed  $data
      * @param  array<string, mixed>  $extra
      */
     public static function error(
@@ -58,9 +52,7 @@ final class ApiResponse
     /**
      * Create a created API response.
      *
-     * @param  mixed  $data
      * @param  array<string, mixed>  $extra
-     * @param  string  $message
      */
     public static function created(
         mixed $data = null,
@@ -78,4 +70,3 @@ final class ApiResponse
         return response()->noContent();
     }
 }
-

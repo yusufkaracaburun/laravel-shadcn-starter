@@ -4,27 +4,42 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
-use App\Actions\Fortify\CreateNewUser;
+use App\Models\Team;
 use App\Models\User;
 use Carbon\CarbonImmutable;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Date;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\RateLimiter;
-use Illuminate\Support\Facades\URL;
-use Illuminate\Support\Facades\Vite;
-use Illuminate\Cache\RateLimiting\Limit;
-use Illuminate\Http\Request;
-use Illuminate\Support\ServiceProvider;
-use Knuckles\Scribe\Extracting\ExtractedEndpointData;
 use Knuckles\Scribe\Scribe;
+use App\Policies\TeamPolicy;
+use Illuminate\Http\Request;
 use Laravel\Fortify\Fortify;
 use Laravel\Sanctum\Sanctum;
+use App\Policies\StudentPolicy;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\Date;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Vite;
+use App\Actions\Fortify\CreateNewUser;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\ServiceProvider;
+use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Support\Facades\RateLimiter;
+use Knuckles\Scribe\Extracting\ExtractedEndpointData;
 use Symfony\Component\HttpFoundation\Request as HttpFoundationRequest;
 
 final class AppServiceProvider extends ServiceProvider
 {
+    /**
+     * The policy mappings for the application.
+     *
+     * @var array<class-string, class-string>
+     */
+    protected $policies = [
+        Team::class => TeamPolicy::class,
+        // Add Student model when available:
+        // Student::class => StudentPolicy::class,
+    ];
+
     /**
      * Register any application services.
      */
@@ -40,6 +55,8 @@ final class AppServiceProvider extends ServiceProvider
     {
         Fortify::createUsersUsing(CreateNewUser::class);
 
+        $this->registerPolicies();
+
         $this->configureCommands();
         $this->configureDates();
         $this->configureModels();
@@ -47,6 +64,16 @@ final class AppServiceProvider extends ServiceProvider
         $this->configureVite();
         $this->configureRateLimiting();
         $this->configureScribeDocumentation();
+    }
+
+    /**
+     * Register the application's policies.
+     */
+    private function registerPolicies(): void
+    {
+        foreach ($this->policies as $model => $policy) {
+            Gate::policy($model, $policy);
+        }
     }
 
     /**
@@ -108,7 +135,7 @@ final class AppServiceProvider extends ServiceProvider
     private function configureRateLimiting(): void
     {
         RateLimiter::for('login', fn (Request $request) => $request->email ? Limit::perMinute(5)->by($request->email) : Limit::perMinute(5)->by($request->ip()));
-        
+
         RateLimiter::for('login-link', fn (Request $request) => Limit::perMinute((int) config('login-link.rate_limit_attempts', 1))->by($request->email ?? $request->ip()));
     }
 
@@ -129,4 +156,3 @@ final class AppServiceProvider extends ServiceProvider
         }
     }
 }
-

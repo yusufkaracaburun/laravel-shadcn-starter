@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
-use Laravel\Sanctum\Sanctum;
 
 test('user can get csrf cookie', function (): void {
     $response = $this->get('/sanctum/csrf-cookie');
@@ -72,4 +71,3 @@ test('user cannot logout when not authenticated', function (): void {
 
     $response->assertUnauthorized();
 });
-

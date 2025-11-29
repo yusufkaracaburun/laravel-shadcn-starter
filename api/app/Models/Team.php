@@ -4,17 +4,14 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use Carbon\CarbonImmutable;
 use Database\Factories\TeamFactory;
-use Laravel\Jetstream\Events\TeamCreated;
-use Laravel\Jetstream\Events\TeamDeleted;
-use Laravel\Jetstream\Events\TeamUpdated;
-use Illuminate\Database\Eloquent\Collection;
-use Laravel\Jetstream\Team as JetstreamTeam;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-final class Team extends JetstreamTeam
+final class Team extends Model
 {
     /** @use HasFactory<TeamFactory> */
     use HasFactory;
@@ -27,27 +24,39 @@ final class Team extends JetstreamTeam
     protected $fillable = [
         'name',
         'personal_team',
+        'user_id',
     ];
 
     /**
-     * The event map for the model.
+     * Get the owner of the team.
      *
-     * @var array<string, class-string>
+     * @return BelongsTo<User, covariant $this>
      */
-    protected $dispatchesEvents = [
-        'created' => TeamCreated::class,
-        'updated' => TeamUpdated::class,
-        'deleted' => TeamDeleted::class,
-    ];
+    public function owner(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 
     /**
-     * {@inheritdoc}
+     * Get all users that belong to the team.
      *
-     * @return HasMany<TeamInvitation, covariant $this>
+     * @return BelongsToMany<User>
+     */
+    public function users(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'team_user')
+            ->withPivot('role')
+            ->withTimestamps();
+    }
+
+    /**
+     * Get the team invitations.
+     *
+     * @return HasMany<TeamInvitation>
      */
     public function teamInvitations(): HasMany
     {
-        return parent::teamInvitations();
+        return $this->hasMany(TeamInvitation::class);
     }
 
     /**

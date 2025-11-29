@@ -4,10 +4,7 @@ declare(strict_types=1);
 
 use App\Models\Team;
 use App\Models\User;
-use Illuminate\Support\Facades\Event;
-use Laravel\Jetstream\Events\TeamCreated;
-use Laravel\Jetstream\Events\TeamDeleted;
-use Laravel\Jetstream\Events\TeamUpdated;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 test('team can be created with factory', function () {
     // Arrange
@@ -36,7 +33,8 @@ test('team has fillable attributes', function () {
 
     // Assert
     expect($fillable)->toContain('name')
-        ->toContain('personal_team');
+        ->toContain('personal_team')
+        ->toContain('user_id');
 });
 
 test('team personal_team is cast to boolean', function () {
@@ -55,44 +53,31 @@ test('team personal_team is cast to boolean', function () {
     expect($team->personal_team)->toBeBool();
 });
 
-test('team dispatches created event', function () {
+test('team has owner relationship', function () {
     // Arrange
-    Event::fake([TeamCreated::class]);
-    $user = User::factory()->create();
-
-    // Act
-    Team::factory()->create([
-        'user_id' => $user->id,
-    ]);
-
-    // Assert
-    Event::assertDispatched(TeamCreated::class);
-});
-
-test('team dispatches updated event', function () {
-    // Arrange
-    Event::fake([TeamUpdated::class]);
     $user = User::factory()->create();
     $team = Team::factory()->create(['user_id' => $user->id]);
 
     // Act
-    $team->update(['name' => 'Updated Team']);
+    $owner = $team->owner;
 
     // Assert
-    Event::assertDispatched(TeamUpdated::class);
+    expect($owner)->toBeInstanceOf(User::class);
+    expect($owner->id)->toBe($user->id);
 });
 
-test('team dispatches deleted event', function () {
+test('team has users relationship', function () {
     // Arrange
-    Event::fake([TeamDeleted::class]);
     $user = User::factory()->create();
     $team = Team::factory()->create(['user_id' => $user->id]);
+    $team->users()->attach($user->id, ['role' => 'member']);
 
     // Act
-    $team->delete();
+    $users = $team->users;
 
     // Assert
-    Event::assertDispatched(TeamDeleted::class);
+    expect($users)->toHaveCount(1);
+    expect($users->first()->id)->toBe($user->id);
 });
 
 test('team has team invitations relationship', function () {
@@ -104,6 +89,5 @@ test('team has team invitations relationship', function () {
     $relationship = $team->teamInvitations();
 
     // Assert
-    expect($relationship)->toBeInstanceOf(\Illuminate\Database\Eloquent\Relations\HasMany::class);
+    expect($relationship)->toBeInstanceOf(HasMany::class);
 });
-

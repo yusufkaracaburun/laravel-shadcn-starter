@@ -3,7 +3,6 @@
 declare(strict_types=1);
 
 use App\Models\User;
-use Illuminate\Support\Facades\Hash;
 use Laravel\Sanctum\Sanctum;
 use Illuminate\Testing\Fluent\AssertableJson;
 
@@ -80,4 +79,3 @@ test('user creation requires unique email', function (): void {
     $response->assertUnprocessable()
         ->assertJsonValidationErrors(['email']);
 });
-

@@ -31,4 +31,3 @@ test('authenticated user can access chat data endpoint', function (): void {
                 ->etc()
         );
 });
-

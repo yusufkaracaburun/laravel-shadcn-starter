@@ -48,4 +48,3 @@ final class UpdateUserProfileInformationJob implements ShouldQueue
         $user->save();
     }
 }
-

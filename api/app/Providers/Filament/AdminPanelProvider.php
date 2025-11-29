@@ -58,4 +58,3 @@ final class AdminPanelProvider extends PanelProvider
             ]);
     }
 }
-

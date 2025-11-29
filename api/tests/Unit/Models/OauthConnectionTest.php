@@ -2,9 +2,11 @@
 
 declare(strict_types=1);
 
-use App\Models\OauthConnection;
 use App\Models\User;
+use Carbon\CarbonImmutable;
+use App\Models\OauthConnection;
 use Illuminate\Support\Collection;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 test('oauth connection can be created', function () {
     // Arrange
@@ -40,7 +42,7 @@ test('oauth connection has user relationship', function () {
     $relationship = $connection->user();
 
     // Assert
-    expect($relationship)->toBeInstanceOf(\Illuminate\Database\Eloquent\Relations\BelongsTo::class);
+    expect($relationship)->toBeInstanceOf(BelongsTo::class);
     expect($connection->user)->toBeInstanceOf(User::class);
     expect($connection->user->id)->toBe($user->id);
 });
@@ -78,7 +80,7 @@ test('oauth connection expires_at is cast to datetime', function () {
     ]);
 
     // Assert
-    expect($connection->expires_at)->toBeInstanceOf(\Carbon\CarbonImmutable::class);
+    expect($connection->expires_at)->toBeInstanceOf(CarbonImmutable::class);
 });
 
 test('oauth connection can store refresh token', function () {
@@ -98,4 +100,3 @@ test('oauth connection can store refresh token', function () {
     expect($connection->token)->toBe('access-token');
     expect($connection->refresh_token)->toBe('refresh-token-123');
 });
-

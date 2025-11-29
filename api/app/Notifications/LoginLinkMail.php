@@ -39,4 +39,3 @@ final class LoginLinkMail extends Notification
             ->line('If you did not request this link, no action is needed.');
     }
 }
-
