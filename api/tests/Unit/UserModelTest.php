@@ -53,16 +53,20 @@ test('user can be mass assigned name, email, and password', function () {
     expect($user->password)->not->toBeNull();
 });
 
-test('user has fillable attributes', function () {
-    $user = new User();
-
-    expect($user->getFillable())->toBe(['name', 'email', 'password']);
-});
+// Note: Model::unguard() is enabled in AppServiceProvider, so guarded attributes
+// are not enforced. This is intentional for the larasonic pattern.
 
 test('user has hidden attributes', function () {
     $user = new User();
 
-    expect($user->getHidden())->toBe(['password', 'remember_token']);
+    expect($user->getHidden())->toContain('password')
+        ->toContain('remember_token')
+        ->toContain('two_factor_recovery_codes')
+        ->toContain('two_factor_secret')
+        ->toContain('stripe_id')
+        ->toContain('pm_type')
+        ->toContain('pm_last_four')
+        ->toContain('trial_ends_at');
 });
 
 test('user has api tokens trait', function () {

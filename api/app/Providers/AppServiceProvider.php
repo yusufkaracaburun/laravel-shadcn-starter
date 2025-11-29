@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Providers;
 
 use App\Actions\Fortify\CreateNewUser;
+use App\Models\User;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\App;
@@ -16,7 +17,11 @@ use Illuminate\Support\Facades\Vite;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\ServiceProvider;
+use Knuckles\Scribe\Extracting\ExtractedEndpointData;
+use Knuckles\Scribe\Scribe;
 use Laravel\Fortify\Fortify;
+use Laravel\Sanctum\Sanctum;
+use Symfony\Component\HttpFoundation\Request as HttpFoundationRequest;
 
 final class AppServiceProvider extends ServiceProvider
 {
@@ -41,6 +46,7 @@ final class AppServiceProvider extends ServiceProvider
         $this->configureUrl();
         $this->configureVite();
         $this->configureRateLimiting();
+        $this->configureScribeDocumentation();
     }
 
     /**
@@ -102,6 +108,25 @@ final class AppServiceProvider extends ServiceProvider
     private function configureRateLimiting(): void
     {
         RateLimiter::for('login', fn (Request $request) => $request->email ? Limit::perMinute(5)->by($request->email) : Limit::perMinute(5)->by($request->ip()));
+        
+        RateLimiter::for('login-link', fn (Request $request) => Limit::perMinute((int) config('login-link.rate_limit_attempts', 1))->by($request->email ?? $request->ip()));
+    }
+
+    /**
+     * Configure the application's Scribe documentation.
+     *
+     * @see https://scribe.knuckles.wtf/laravel/
+     */
+    private function configureScribeDocumentation(): void
+    {
+        if (class_exists(Scribe::class)) {
+            Scribe::beforeResponseCall(function (HttpFoundationRequest $request, ExtractedEndpointData $endpointData): void {
+                $user = User::query()->first();
+                if ($user) {
+                    Sanctum::actingAs($user, ['*']);
+                }
+            });
+        }
     }
 }
 

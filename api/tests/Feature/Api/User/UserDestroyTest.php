@@ -24,7 +24,8 @@ test('authenticated user can delete user', function (): void {
 
     $response->assertNoContent();
 
-    $this->assertDatabaseMissing('users', ['id' => $targetUser->id]);
+    // User is soft deleted, so check for deleted_at
+    $this->assertSoftDeleted('users', ['id' => $targetUser->id]);
 });
 
 test('user can view specific user by id', function (): void {
