@@ -6,7 +6,7 @@ use App\Models\Team;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-test('team can be created with factory', function () {
+test('team can be created with factory', function (): void {
     // Arrange
     $user = User::factory()->create();
 
@@ -24,7 +24,7 @@ test('team can be created with factory', function () {
     expect($team->user_id)->toBe($user->id);
 });
 
-test('team has fillable attributes', function () {
+test('team has fillable attributes', function (): void {
     // Arrange
     $team = new Team();
 
@@ -37,12 +37,12 @@ test('team has fillable attributes', function () {
         ->toContain('user_id');
 });
 
-test('team personal_team is cast to boolean', function () {
+test('team personal_team is cast to boolean', function (): void {
     // Arrange
     $user = User::factory()->create();
 
     // Act
-    $team = Team::create([
+    $team = \App\Models\Team::query()->create([
         'user_id' => $user->id,
         'name' => 'Personal Team',
         'personal_team' => 1,
@@ -53,7 +53,7 @@ test('team personal_team is cast to boolean', function () {
     expect($team->personal_team)->toBeBool();
 });
 
-test('team has owner relationship', function () {
+test('team has owner relationship', function (): void {
     // Arrange
     $user = User::factory()->create();
     $team = Team::factory()->create(['user_id' => $user->id]);
@@ -66,7 +66,7 @@ test('team has owner relationship', function () {
     expect($owner->id)->toBe($user->id);
 });
 
-test('team has users relationship', function () {
+test('team has users relationship', function (): void {
     // Arrange
     $user = User::factory()->create();
     $team = Team::factory()->create(['user_id' => $user->id]);
@@ -80,7 +80,7 @@ test('team has users relationship', function () {
     expect($users->first()->id)->toBe($user->id);
 });
 
-test('team has team invitations relationship', function () {
+test('team has team invitations relationship', function (): void {
     // Arrange
     $user = User::factory()->create();
     $team = Team::factory()->create(['user_id' => $user->id]);

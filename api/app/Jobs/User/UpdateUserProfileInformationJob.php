@@ -44,6 +44,7 @@ final class UpdateUserProfileInformationJob implements ShouldQueue
         if ($socialiteUser->getAvatar()) {
             $user->profile_photo_path = $socialiteUser->getAvatar();
         }
+
         $user->email_verified_at ??= now();
         $user->save();
     }

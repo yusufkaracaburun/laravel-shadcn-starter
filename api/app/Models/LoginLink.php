@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 final class LoginLink extends Model
 {
     use HasFactory;
+
     use MassPrunable;
 
     protected $guarded = [];

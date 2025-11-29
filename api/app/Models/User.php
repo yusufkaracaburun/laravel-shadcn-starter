@@ -11,6 +11,7 @@ use Database\Factories\UserFactory;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Support\Cache\CacheInvalidationService;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -23,8 +24,11 @@ final class User extends Authenticatable
     use HasApiTokens;
 
     use HasFactory;
+
     use HasRoles;
+
     use Notifiable;
+
     use SoftDeletes;
 
     /**
@@ -102,13 +106,20 @@ final class User extends Authenticatable
         $teamId = $team instanceof Team ? $team->id : $team;
 
         // Verify user belongs to this team
-        if (! $this->teams()->where('teams.id', $teamId)->exists() &&
-            ! $this->ownedTeams()->where('id', $teamId)->exists()) {
-            throw new InvalidArgumentException('User does not belong to this team');
-        }
+        throw_if(! $this->teams()->where('teams.id', $teamId)->exists() &&
+            ! $this->ownedTeams()->where('id', $teamId)->exists(), InvalidArgumentException::class, 'User does not belong to this team');
 
+        $oldTeamId = $this->current_team_id;
         $this->update(['current_team_id' => $teamId]);
         $this->refresh();
+
+        // Invalidate caches for both old and new team
+        if ($oldTeamId !== null) {
+            CacheInvalidationService::onTeamSwitched($this->id, $oldTeamId, $teamId);
+        } else {
+            CacheInvalidationService::invalidateUser($this->id);
+            CacheInvalidationService::invalidateTeam($teamId);
+        }
     }
 
     /**

@@ -7,7 +7,7 @@ use App\Models\OauthConnection;
 use Laravel\Socialite\Two\User as SocialiteUser;
 use App\Jobs\User\UpdateUserProfileInformationJob;
 
-test('update user profile information job creates oauth connection', function () {
+test('update user profile information job creates oauth connection', function (): void {
     // Arrange
     $user = User::factory()->create();
     $socialiteUser = new SocialiteUser();
@@ -27,7 +27,7 @@ test('update user profile information job creates oauth connection', function ()
     $job->handle();
 
     // Assert
-    $connection = OauthConnection::where('user_id', $user->id)
+    $connection = \App\Models\OauthConnection::query()->where('user_id', $user->id)
         ->where('provider', 'github')
         ->first();
 
@@ -37,10 +37,10 @@ test('update user profile information job creates oauth connection', function ()
     expect($connection->refresh_token)->toBe('refresh-token');
 });
 
-test('update user profile information job updates existing oauth connection', function () {
+test('update user profile information job updates existing oauth connection', function (): void {
     // Arrange
     $user = User::factory()->create();
-    OauthConnection::create([
+    \App\Models\OauthConnection::query()->create([
         'user_id' => $user->id,
         'provider' => 'github',
         'provider_id' => '12345',
@@ -64,14 +64,14 @@ test('update user profile information job updates existing oauth connection', fu
     $job->handle();
 
     // Assert
-    $connection = OauthConnection::where('user_id', $user->id)
+    $connection = \App\Models\OauthConnection::query()->where('user_id', $user->id)
         ->where('provider', 'github')
         ->first();
 
     expect($connection->token)->toBe('new-token');
 });
 
-test('update user profile information job sets profile photo path when avatar exists', function () {
+test('update user profile information job sets profile photo path when avatar exists', function (): void {
     // Arrange
     $user = User::factory()->create();
     $socialiteUser = new SocialiteUser();
@@ -95,7 +95,7 @@ test('update user profile information job sets profile photo path when avatar ex
     expect($user->profile_photo_path)->toBe('https://example.com/avatar.jpg');
 });
 
-test('update user profile information job verifies email when not verified', function () {
+test('update user profile information job verifies email when not verified', function (): void {
     // Arrange
     $user = User::factory()->create(['email_verified_at' => null]);
     $socialiteUser = new SocialiteUser();
@@ -119,7 +119,7 @@ test('update user profile information job verifies email when not verified', fun
     expect($user->email_verified_at)->not->toBeNull();
 });
 
-test('update user profile information job does not overwrite existing email verification', function () {
+test('update user profile information job does not overwrite existing email verification', function (): void {
     // Arrange
     $originalVerifiedAt = now()->subDay();
     $user = User::factory()->create(['email_verified_at' => $originalVerifiedAt]);

@@ -30,9 +30,13 @@ final class TeamPolicy
     public function view(User $user, Team $team): bool
     {
         // User can view if they own the team, belong to it, or have teams.view permission
-        return $team->user_id === $user->id
-            || $user->teams()->where('teams.id', $team->id)->exists()
-            || $user->can('teams.view');
+        if ($team->user_id === $user->id) {
+            return true;
+        }
+        if ($user->teams()->where('teams.id', $team->id)->exists()) {
+            return true;
+        }
+        return $user->can('teams.view');
     }
 
     /**

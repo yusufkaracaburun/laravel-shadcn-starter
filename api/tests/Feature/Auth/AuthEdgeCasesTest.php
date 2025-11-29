@@ -19,7 +19,7 @@ beforeEach(function (): void {
     }
 });
 
-test('user cannot login with empty email', function () {
+test('user cannot login with empty email', function (): void {
     // Clear rate limiter for empty email case
     // When email is empty, rate limiter uses IP only (per best practices)
     $ips = ['127.0.0.1', '::1'];
@@ -36,7 +36,7 @@ test('user cannot login with empty email', function () {
     $response->assertJsonValidationErrors(['email']);
 });
 
-test('user cannot login with empty password', function () {
+test('user cannot login with empty password', function (): void {
     $uniqueEmail = 'empty-password-'.uniqid().'@example.com';
 
     $response = $this->postJson('/login', [
@@ -48,7 +48,7 @@ test('user cannot login with empty password', function () {
     $response->assertJsonValidationErrors(['password']);
 });
 
-test('user cannot register with empty name', function () {
+test('user cannot register with empty name', function (): void {
     $response = $this->postJson('/register', [
         'name' => '',
         'email' => 'test@example.com',
@@ -60,7 +60,7 @@ test('user cannot register with empty name', function () {
     $response->assertJsonValidationErrors(['name']);
 });
 
-test('user cannot register with name exceeding max length', function () {
+test('user cannot register with name exceeding max length', function (): void {
     $response = $this->postJson('/register', [
         'name' => str_repeat('a', 256),
         'email' => 'test@example.com',
@@ -72,7 +72,7 @@ test('user cannot register with name exceeding max length', function () {
     $response->assertJsonValidationErrors(['name']);
 });
 
-test('user cannot register with email exceeding max length', function () {
+test('user cannot register with email exceeding max length', function (): void {
     $response = $this->postJson('/register', [
         'name' => 'Test User',
         'email' => str_repeat('a', 250).'@example.com',
@@ -84,7 +84,7 @@ test('user cannot register with email exceeding max length', function () {
     $response->assertJsonValidationErrors(['email']);
 });
 
-test('user cannot register with password less than 8 characters', function () {
+test('user cannot register with password less than 8 characters', function (): void {
     $response = $this->postJson('/register', [
         'name' => 'Test User',
         'email' => 'test@example.com',
@@ -96,7 +96,7 @@ test('user cannot register with password less than 8 characters', function () {
     $response->assertJsonValidationErrors(['password']);
 });
 
-test('user can register with exactly 8 character password', function () {
+test('user can register with exactly 8 character password', function (): void {
     $response = $this->postJson('/register', [
         'name' => 'Test User',
         'email' => 'test8@example.com',
@@ -107,7 +107,7 @@ test('user can register with exactly 8 character password', function () {
     $response->assertStatus(201);
 });
 
-test('user can login after registration with correct credentials', function () {
+test('user can login after registration with correct credentials', function (): void {
     $registerResponse = $this->postJson('/register', [
         'name' => 'Test User',
         'email' => 'testlogin@example.com',
@@ -125,7 +125,7 @@ test('user can login after registration with correct credentials', function () {
     expect($loginResponse->status())->toBeIn([200, 302]);
 });
 
-test('user cannot login after registration with wrong password', function () {
+test('user cannot login after registration with wrong password', function (): void {
     $registerResponse = $this->postJson('/register', [
         'name' => 'Test User',
         'email' => 'testwrong@example.com',

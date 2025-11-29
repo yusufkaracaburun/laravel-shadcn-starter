@@ -21,7 +21,7 @@ beforeEach(function (): void {
     }
 });
 
-test('user can login with valid credentials', function () {
+test('user can login with valid credentials', function (): void {
     $uniqueEmail = 'valid-login-'.uniqid().'@example.com';
 
     $user = User::factory()->create([
@@ -43,7 +43,7 @@ test('user can login with valid credentials', function () {
     expect($response->json('two_factor'))->toBeFalse();
 });
 
-test('user cannot login with invalid credentials', function () {
+test('user cannot login with invalid credentials', function (): void {
     $uniqueEmail = 'invalid-login-'.uniqid().'@example.com';
 
     $user = User::factory()->create([
@@ -60,7 +60,7 @@ test('user cannot login with invalid credentials', function () {
     $response->assertJsonValidationErrors(['email']);
 });
 
-test('user cannot login with non-existent email', function () {
+test('user cannot login with non-existent email', function (): void {
     $uniqueEmail = 'nonexistent-'.uniqid().'@example.com';
 
     $response = $this->postJson('/login', [
@@ -72,7 +72,7 @@ test('user cannot login with non-existent email', function () {
     $response->assertJsonValidationErrors(['email']);
 });
 
-test('login requires email field', function () {
+test('login requires email field', function (): void {
     // Use a unique email in the request body to avoid rate limiting
     // Even though email is missing, Fortify might still rate limit by IP
     $uniqueEmail = 'no-email-field-'.uniqid().'@example.com';
@@ -85,7 +85,7 @@ test('login requires email field', function () {
     $response->assertJsonValidationErrors(['email']);
 });
 
-test('login requires password field', function () {
+test('login requires password field', function (): void {
     // Use a unique email to avoid rate limiting from previous tests
     $uniqueEmail = 'password-field-test-'.uniqid().'@example.com';
 
@@ -97,7 +97,7 @@ test('login requires password field', function () {
     $response->assertJsonValidationErrors(['password']);
 });
 
-test('login requires valid email format', function () {
+test('login requires valid email format', function (): void {
     // Use a unique invalid email to avoid rate limiting
     $uniqueInvalidEmail = 'invalid-email-'.uniqid();
 
@@ -110,7 +110,7 @@ test('login requires valid email format', function () {
     $response->assertJsonValidationErrors(['email']);
 });
 
-test('user can logout when authenticated', function () {
+test('user can logout when authenticated', function (): void {
     $user = User::factory()->create();
 
     $response = $this->actingAs($user)->postJson('/logout');
@@ -118,7 +118,7 @@ test('user can logout when authenticated', function () {
     $response->assertStatus(204);
 });
 
-test('user cannot logout when not authenticated', function () {
+test('user cannot logout when not authenticated', function (): void {
     $response = $this->postJson('/logout');
 
     $response->assertStatus(401);

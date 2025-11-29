@@ -64,6 +64,7 @@
         ],
         "test": [
             "@php artisan config:clear --ansi",
+            "composer format",
             "./vendor/bin/pest --parallel"
         ],
         "test:coverage": [

@@ -116,4 +116,16 @@ return [
 
     'prefix' => env('CACHE_PREFIX', Str::slug((string) env('APP_NAME', 'laravel')).'-cache-'),
 
+    /*
+    |--------------------------------------------------------------------------
+    | Default Cache TTL
+    |--------------------------------------------------------------------------
+    |
+    | Default time-to-live in seconds for cached items when not explicitly
+    | specified. Default is 10 minutes (600 seconds).
+    |
+    */
+
+    'default_ttl' => (int) env('CACHE_DEFAULT_TTL', 600),
+
 ];

@@ -11,14 +11,14 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Notification;
 
-beforeEach(function () {
+beforeEach(function (): void {
     // Increase rate limit for tests to avoid throttling issues
     Config::set('login-link.rate_limit_attempts', 100);
     Config::set('login-link.rate_limit_decay', 1);
 
     // Clear all possible rate limiter keys
     // The throttle middleware uses email or IP as the key: login-link:{email|ip}
-    $cache = app('cache')->store();
+    $cache = app(\Illuminate\Contracts\Cache\Factory::class)->store();
     $prefix = config('cache.prefix', '');
 
     // Clear common keys
@@ -29,7 +29,7 @@ beforeEach(function () {
     RateLimiter::clear('login-link:nonexistent@example.com');
 });
 
-test('login link store creates magic link for valid email', function () {
+test('login link store creates magic link for valid email', function (): void {
     // Arrange
     Config::set('login-link.enabled', true);
     Notification::fake();
@@ -44,11 +44,12 @@ test('login link store creates magic link for valid email', function () {
 
     // Assert
     $response->assertRedirect('/auth/login');
-    expect(LoginLink::where('user_id', $user->id)->count())->toBe(1);
+
+    expect(\App\Models\LoginLink::query()->where('user_id', $user->id)->count())->toBe(1);
     Notification::assertSentTo($user, LoginLinkMail::class);
 });
 
-test('login link store validates email is required', function () {
+test('login link store validates email is required', function (): void {
     // Arrange
     Config::set('login-link.enabled', true);
     // Clear rate limiter for IP (throttle uses IP when email is not provided)
@@ -62,7 +63,7 @@ test('login link store validates email is required', function () {
     $response->assertRedirect('/auth/login');
 });
 
-test('login link store validates email format', function () {
+test('login link store validates email format', function (): void {
     // Arrange
     Config::set('login-link.enabled', true);
     // Clear rate limiter for invalid email (throttle uses email when provided)
@@ -78,7 +79,7 @@ test('login link store validates email format', function () {
     $response->assertRedirect('/auth/login');
 });
 
-test('login link store validates email exists', function () {
+test('login link store validates email exists', function (): void {
     // Arrange
     Config::set('login-link.enabled', true);
     // Clear rate limiter for this email
@@ -94,7 +95,7 @@ test('login link store validates email exists', function () {
     $response->assertRedirect('/auth/login');
 });
 
-test('login link store respects rate limiting', function () {
+test('login link store respects rate limiting', function (): void {
     // Arrange
     Config::set('login-link.enabled', true);
     Config::set('login-link.rate_limit_attempts', 1);
@@ -115,13 +116,13 @@ test('login link store respects rate limiting', function () {
     $response->assertSessionHas('error');
 });
 
-test('login link login authenticates user with valid token', function () {
+test('login link login authenticates user with valid token', function (): void {
     // Arrange
     Config::set('login-link.enabled', true);
     // Clear rate limiter for IP (throttle middleware uses IP for GET requests)
     RateLimiter::clear('login-link:127.0.0.1');
     $user = User::factory()->create();
-    $loginLink = LoginLink::create([
+    $loginLink = \App\Models\LoginLink::query()->create([
         'user_id' => $user->id,
         'token' => 'valid-token-123',
         'expires_at' => now()->addMinutes(15),
@@ -133,18 +134,19 @@ test('login link login authenticates user with valid token', function () {
 
     // Assert
     $response->assertRedirect();
+
     expect(Auth::check())->toBeTrue();
     expect(Auth::id())->toBe($user->id);
     expect($loginLink->fresh()->used_at)->not->toBeNull();
 });
 
-test('login link login fails with expired token', function () {
+test('login link login fails with expired token', function (): void {
     // Arrange
     Config::set('login-link.enabled', true);
     // Clear rate limiter for IP (throttle middleware uses IP for GET requests)
     RateLimiter::clear('login-link:127.0.0.1');
     $user = User::factory()->create();
-    LoginLink::create([
+    \App\Models\LoginLink::query()->create([
         'user_id' => $user->id,
         'token' => 'expired-token',
         'expires_at' => now()->subMinute(),
@@ -156,16 +158,17 @@ test('login link login fails with expired token', function () {
 
     // Assert
     $response->assertNotFound();
+
     expect(Auth::check())->toBeFalse();
 });
 
-test('login link login fails with used token', function () {
+test('login link login fails with used token', function (): void {
     // Arrange
     Config::set('login-link.enabled', true);
     // Clear rate limiter for IP (throttle middleware uses IP for GET requests)
     RateLimiter::clear('login-link:127.0.0.1');
     $user = User::factory()->create();
-    LoginLink::create([
+    \App\Models\LoginLink::query()->create([
         'user_id' => $user->id,
         'token' => 'used-token',
         'expires_at' => now()->addMinutes(15),
@@ -178,10 +181,11 @@ test('login link login fails with used token', function () {
 
     // Assert
     $response->assertNotFound();
+
     expect(Auth::check())->toBeFalse();
 });
 
-test('login link login fails with invalid token', function () {
+test('login link login fails with invalid token', function (): void {
     // Arrange
     Config::set('login-link.enabled', true);
     // Clear rate limiter for IP (throttle middleware uses IP for GET requests)
@@ -193,10 +197,11 @@ test('login link login fails with invalid token', function () {
 
     // Assert
     $response->assertNotFound();
+
     expect(Auth::check())->toBeFalse();
 });
 
-test('login link routes return 404 when feature is disabled', function () {
+test('login link routes return 404 when feature is disabled', function (): void {
     // Arrange
     Config::set('login-link.enabled', false);
     // Clear rate limiter for IP (throttle middleware uses IP for GET requests)

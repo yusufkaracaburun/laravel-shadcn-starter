@@ -17,6 +17,7 @@ return new class extends Migration
             if (! Schema::hasColumn('users', 'current_team_id')) {
                 $table->foreignId('current_team_id')->nullable()->after('remember_token');
             }
+
             if (! Schema::hasColumn('users', 'profile_photo_path')) {
                 $table->string('profile_photo_path', 2048)->nullable()->after('current_team_id');
             }

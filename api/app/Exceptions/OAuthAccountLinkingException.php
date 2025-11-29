@@ -40,6 +40,6 @@ final class OAuthAccountLinkingException extends Exception implements Responsabl
             ], 422);
         }
 
-        return Redirect::back()->with('error', $this->getMessage());
+        return back()->with('error', $this->getMessage());
     }
 }
