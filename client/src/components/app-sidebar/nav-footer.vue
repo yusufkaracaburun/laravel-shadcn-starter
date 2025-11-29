@@ -29,6 +29,7 @@ const { isMobile, open } = useSidebar()
           <UiSidebarMenuButton
             size="lg"
             class="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+            data-testid="navigation_user-menu"
           >
             <UiAvatar class="size-8 rounded-lg">
               <UiAvatarImage :src="user.avatar" :alt="user.name" />
@@ -97,7 +98,7 @@ const { isMobile, open } = useSidebar()
           </UiDropdownMenuGroup>
 
           <UiDropdownMenuSeparator />
-          <UiDropdownMenuItem @click="logout">
+          <UiDropdownMenuItem @click="logout" data-testid="dashboard_logout_button">
             <LogOut />
             Log out
           </UiDropdownMenuItem>

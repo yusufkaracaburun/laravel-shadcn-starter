@@ -21,6 +21,7 @@ const activeTab = ref(tabs.value[0].value)
     title="workspace"
     description="workspace description"
     sticky
+    data-testid="dashboard_page"
   >
     <template #actions>
       <Button

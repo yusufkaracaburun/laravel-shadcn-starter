@@ -35,7 +35,7 @@ async function handleLogin() {
       <UiCardDescription>
         Enter your email and password below to log into your account.
         Not have an account?
-        <UiButton variant="link" class="px-0 text-muted-foreground" @click="$router.push('/auth/sign-up')">
+        <UiButton variant="link" class="px-0 text-muted-foreground" @click="$router.push('/auth/sign-up')" data-testid="login-form_sign-up_link">
           Sign Up
         </UiButton>
       </UiCardDescription>
@@ -47,7 +47,7 @@ async function handleLogin() {
             <UiLabel for="email">
               Email
             </UiLabel>
-            <UiInput id="email" v-model="email" type="email" placeholder="m@example.com" required :disabled="loading" />
+            <UiInput id="email" v-model="email" type="email" placeholder="m@example.com" required :disabled="loading" data-testid="login-form_email_input" />
           </div>
           <div class="grid gap-2">
             <div class="flex items-center justify-between">
@@ -59,11 +59,12 @@ async function handleLogin() {
             <UiInput
               id="password" v-model="password" type="password" required placeholder="*********"
               :disabled="loading"
+              data-testid="login-form_password_input"
             />
           </div>
 
-          <UiButton type="submit" class="w-full" :disabled="loading">
-            <UiSpinner v-if="loading" class="mr-2" />
+          <UiButton type="submit" class="w-full" :disabled="loading" data-testid="login-form_submit_button">
+            <UiSpinner v-if="loading" class="mr-2" data-testid="login-form_loading_spinner" />
             Login
           </UiButton>
         </div>
@@ -72,8 +73,8 @@ async function handleLogin() {
       <UiSeparator label="Or continue with" />
 
       <div class="flex flex-col items-center justify-between gap-4">
-        <GitHubButton />
-        <GoogleButton />
+        <GitHubButton :test-id="'login-form_github_button'" />
+        <GoogleButton :test-id="'login-form_google_button'" />
       </div>
 
       <UiCardDescription>
