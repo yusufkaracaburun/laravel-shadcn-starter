@@ -3,9 +3,10 @@
 declare(strict_types=1);
 
 use Illuminate\Foundation\Application;
-use Illuminate\Http\Middleware\HandleCors;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+use Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets;
+use Illuminate\Http\Middleware\HandleCors;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -15,6 +16,10 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        $middleware->web(append: [
+            AddLinkHeadersForPreloadedAssets::class,
+        ]);
+
         $middleware->api(prepend: [
             HandleCors::class,
         ]);
@@ -24,6 +29,8 @@ return Application::configure(basePath: dirname(__DIR__))
             'login',
             'register',
         ]);
+
+        $middleware->trustProxies(at: '*');
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
