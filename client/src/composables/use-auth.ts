@@ -1,29 +1,50 @@
-import { storeToRefs } from 'pinia'
+import { useQueryClient } from '@tanstack/vue-query'
 
-import { useAuthStore } from '@/stores/auth'
+import type { User } from '@/services/api/auth.api'
+import type { IResponse } from '@/services/types/response.type'
+
+import { RouterPath } from '@/constants/route-path'
 
 export function useAuth() {
   const router = useRouter()
+  const queryClient = useQueryClient()
 
-  const authStore = useAuthStore()
-  const { isLogin } = storeToRefs(authStore)
   const loading = ref(false)
 
   function logout() {
-    isLogin.value = false
+    // Clear user data from query cache
+    queryClient.setQueryData(['currentUser'], null)
+    queryClient.removeQueries({ queryKey: ['currentUser'] })
 
-    router.push({ path: '/auth/sign-in' })
+    router.push({ path: RouterPath.LOGIN as string })
   }
 
   function toHome() {
-    router.push({ path: '/workspace' })
+    router.push({ path: RouterPath.HOME as string })
   }
 
   async function login() {
     loading.value = true
     await new Promise(resolve => setTimeout(resolve, 1000))
-    // mock login
-    isLogin.value = true
+    // mock login - set a mock user in the query cache
+    const mockUser: IResponse<User> = {
+      data: {
+        id: 1,
+        name: 'Mock User',
+        email: 'mock@example.com',
+        email_verified_at: new Date().toISOString(),
+        current_team_id: null,
+        profile_photo_path: null,
+        currentTeam: null,
+        teams: [],
+        oauthConnections: [],
+      },
+      extra: {},
+      code: 200,
+      message: 'Success',
+      success: true,
+    }
+    queryClient.setQueryData(['currentUser'], mockUser)
     loading.value = false
 
     const redirect = router.currentRoute.value.query.redirect as string
