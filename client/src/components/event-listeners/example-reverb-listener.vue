@@ -14,11 +14,11 @@ onMounted(() => {
 
   // Listen to a public channel
   const channel = echo.channel('example-channel')
+
+  // Listen for the event
   channel.listen('.example.event', (data: { message: string, timestamp: string }) => {
     messages.value.push(data)
-    console.warn('Received message:', data)
   })
-  console.warn('Listening to example-channel for example.event', channel)
 })
 
 onUnmounted(() => {

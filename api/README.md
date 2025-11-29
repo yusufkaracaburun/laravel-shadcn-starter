@@ -102,7 +102,7 @@ REVERB_APP_ID=your-app-id
 REVERB_APP_KEY=your-app-key
 REVERB_APP_SECRET=your-app-secret
 REVERB_HOST=localhost
-REVERB_PORT=8080
+REVERB_PORT=9999
 REVERB_SCHEME=http
 ```
 
@@ -113,7 +113,7 @@ REVERB_SCHEME=http
 VITE_REVERB_ENABLED=true
 VITE_REVERB_APP_KEY=your-app-key          # Same as REVERB_APP_KEY above
 VITE_REVERB_HOST=localhost                 # Same as REVERB_HOST above
-VITE_REVERB_PORT=8080                      # Same as REVERB_PORT above
+VITE_REVERB_PORT=9999                      # Same as REVERB_PORT above
 VITE_REVERB_SCHEME=http                    # Same as REVERB_SCHEME above
 ```
 

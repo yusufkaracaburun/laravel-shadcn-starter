@@ -21,6 +21,20 @@ Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->purpose('Display an inspiring quote');
 
+Artisan::command('reverb:broadcast {message?}', function (string $message = null) {
+    $message = $message ?? 'Hello from Reverb! This is a test message.';
+    
+    $event = new \App\Events\ExampleBroadcastEvent($message);
+    
+    $this->info("📡 Broadcasting event to 'example-channel'...");
+    $this->info("   Event name: example.event");
+    $this->info("   Message: {$message}");
+    
+    event($event);
+    
+    $this->info("✅ Event dispatched! Check your Reverb server logs and client console.");
+})->purpose('Broadcast a test event to the example-channel via Reverb');
+
 /*
 |--------------------------------------------------------------------------
 | Scheduled Tasks

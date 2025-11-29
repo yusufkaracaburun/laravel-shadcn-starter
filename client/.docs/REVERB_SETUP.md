@@ -41,7 +41,7 @@ BROADCAST_CONNECTION=reverb
 # Reverb Application Credentials (shared with client)
 REVERB_APP_KEY=your-app-key-here
 REVERB_HOST=localhost
-REVERB_PORT=8080
+REVERB_PORT=9999
 REVERB_SCHEME=http
 
 # Reverb Server Credentials (API only - DO NOT share with client)
@@ -60,7 +60,7 @@ VITE_REVERB_ENABLED=true
 # Reverb Connection (must match API values)
 VITE_REVERB_APP_KEY=your-app-key-here          # Same as REVERB_APP_KEY in api/.env
 VITE_REVERB_HOST=localhost                      # Same as REVERB_HOST in api/.env
-VITE_REVERB_PORT=8080                           # Same as REVERB_PORT in api/.env
+VITE_REVERB_PORT=9999                           # Same as REVERB_PORT in api/.env
 VITE_REVERB_SCHEME=http                         # Same as REVERB_SCHEME in api/.env
 ```
 
@@ -92,7 +92,7 @@ REVERB_APP_KEY=p4ekv8fs13h3d4ec2iy1
 REVERB_APP_SECRET=cys1za6lddfukukfrjzn
 REVERB_APP_ID=358622
 REVERB_HOST=localhost
-REVERB_PORT=8080
+REVERB_PORT=9999
 REVERB_SCHEME=http
 ```
 
@@ -101,7 +101,7 @@ REVERB_SCHEME=http
 VITE_REVERB_ENABLED=true
 VITE_REVERB_APP_KEY=p4ekv8fs13h3d4ec2iy1
 VITE_REVERB_HOST=localhost
-VITE_REVERB_PORT=8080
+VITE_REVERB_PORT=9999
 VITE_REVERB_SCHEME=http
 ```
 
@@ -132,7 +132,9 @@ If the client can't connect to Reverb:
 1. **Check values match**: Ensure `VITE_REVERB_APP_KEY` in client matches `REVERB_APP_KEY` in API
 2. **Check host/port**: Ensure `VITE_REVERB_HOST` and `VITE_REVERB_PORT` match where Reverb is running
 3. **Check Reverb is running**: Run `php artisan reverb:start` in the API directory
-4. **Check CORS**: Ensure the client origin is in `REVERB_ALLOWED_ORIGINS` in API `.env`
+4. **Check CORS/Allowed Origins**: 
+   - Ensure the client origin is in `REVERB_ALLOWED_ORIGINS` in API `.env`
+   - Or configure `allowed_origins => ['*']` in `api/config/reverb.php` for development (not recommended for production)
 
 ### Authentication Issues
 
@@ -150,4 +152,5 @@ For production:
 2. **Use domain**: Set `REVERB_HOST=your-domain.com` (not localhost)
 3. **Secure secrets**: Never commit `.env` files with real credentials
 4. **Environment-specific configs**: Use different values for staging/production
+5. **Restrict allowed origins**: Never use `['*']` for `allowed_origins` in production - specify exact origins
 

@@ -9,6 +9,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 
 /**
  * Example broadcast event for testing Reverb.
@@ -17,7 +18,7 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
  * To broadcast this event:
  * event(new ExampleBroadcastEvent('Hello from Reverb!'));
  */
-final class ExampleBroadcastEvent implements ShouldBroadcast
+final class ExampleBroadcastEvent implements ShouldBroadcastNow
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 

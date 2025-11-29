@@ -36,6 +36,8 @@ REVERB_HOST=localhost
 REVERB_PORT=9999
 REVERB_SCHEME=http
 REVERB_ALLOWED_ORIGINS=http://localhost:5173,http://localhost:3000
+# Or use '*' to allow all origins (development only - configured in config/reverb.php)
+# For production, always specify exact origins for security
 ```
 
 **Client `.env`** (`client/.env`):
@@ -89,11 +91,11 @@ use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Broadcasting\PrivateChannel;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class OrderShipped implements ShouldBroadcast
+class OrderShipped implements ShouldBroadcastNow
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -140,22 +142,51 @@ class OrderShipped implements ShouldBroadcast
 
 ### Broadcasting Events
 
+**For immediate broadcasting** (recommended for real-time updates), use `ShouldBroadcastNow`:
+
+```php
+use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
+
+class OrderShipped implements ShouldBroadcastNow
+{
+    // Event will broadcast immediately
+}
+```
+
 Broadcast events using the `event()` helper:
 
 ```php
 use App\Events\OrderShipped;
 
-// Broadcast immediately
+// Broadcast immediately (if using ShouldBroadcastNow)
 event(new OrderShipped($orderId, $trackingNumber));
+```
 
-// Or queue the broadcast (recommended for heavy operations)
-use Illuminate\Broadcasting\ShouldBroadcastNow;
+**For queued broadcasting** (recommended for heavy operations), use `ShouldBroadcast` with `ShouldQueue`:
 
-class OrderShipped implements ShouldBroadcast, ShouldBroadcastNow
+```php
+use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+use Illuminate\Contracts\Queue\ShouldQueue;
+
+class OrderShipped implements ShouldBroadcast, ShouldQueue
 {
-    // ...
+    // Event will be queued and broadcast asynchronously
 }
 ```
+
+### Testing Broadcasts
+
+A test command is available to quickly test your Reverb setup:
+
+```bash
+# Broadcast with default message
+php artisan reverb:broadcast
+
+# Broadcast with custom message
+php artisan reverb:broadcast "Your custom message here"
+```
+
+This command broadcasts to the `example-channel` using the `ExampleBroadcastEvent` class. You can use the included example component (`client/src/components/event-listeners/example-reverb-listener.vue`) to see the messages in real-time.
 
 ### Broadcasting from Models
 
@@ -390,11 +421,11 @@ echo.join(`chat.${roomId}`)
 namespace App\Events;
 
 use Illuminate\Broadcasting\Channel;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class NotificationCreated implements ShouldBroadcast
+class NotificationCreated implements ShouldBroadcastNow
 {
     use Dispatchable, SerializesModels;
 
@@ -470,11 +501,11 @@ namespace App\Events;
 
 use App\Models\Order;
 use Illuminate\Broadcasting\Channel;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class OrderStatusUpdated implements ShouldBroadcast
+class OrderStatusUpdated implements ShouldBroadcastNow
 {
     use Dispatchable, SerializesModels;
 
@@ -571,11 +602,11 @@ namespace App\Events;
 
 use App\Models\Message;
 use Illuminate\Broadcasting\PresenceChannel;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class MessageSent implements ShouldBroadcast
+class MessageSent implements ShouldBroadcastNow
 {
     use Dispatchable, SerializesModels;
 
@@ -649,10 +680,19 @@ onUnmounted(() => {
 
 ## Best Practices
 
-### 1. Queue Broadcast Events
+### 1. Choose the Right Broadcasting Interface
 
-For heavy operations, queue your broadcast events:
+**For immediate real-time updates** (most common):
+```php
+use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 
+class OrderShipped implements ShouldBroadcastNow
+{
+    // Event broadcasts immediately
+}
+```
+
+**For heavy operations** (queue the broadcast):
 ```php
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -776,14 +816,20 @@ lsof -i :9999
    ```
    Should be `reverb`.
 
-2. **Verify event implements ShouldBroadcast**:
+2. **Verify event implements ShouldBroadcastNow** (for immediate broadcasting):
    ```php
-   class MyEvent implements ShouldBroadcast
+   class MyEvent implements ShouldBroadcastNow
    ```
+   Or `ShouldBroadcast` with `ShouldQueue` for queued broadcasting.
 
 3. **Check Reverb server logs**:
    ```bash
    php artisan reverb:start --debug
+   ```
+
+4. **Test broadcasting with the example command**:
+   ```bash
+   php artisan reverb:broadcast "Test message"
    ```
 
 ### Private Channels Not Working
@@ -823,7 +869,34 @@ lsof -i :9999
 ## Example Files
 
 - **Server Event**: `app/Events/ExampleBroadcastEvent.php`
-- **Client Component**: `client/src/components/example-reverb-listener.vue`
+- **Client Component**: `client/src/components/event-listeners/example-reverb-listener.vue`
 - **Echo Composable**: `client/src/composables/use-echo.ts`
 - **Channel Routes**: `routes/channels.php`
+- **Broadcast Command**: `routes/console.php` (see `reverb:broadcast` command)
+
+## Testing Your Setup
+
+### Quick Test
+
+1. **Start the Reverb server**:
+   ```bash
+   php artisan reverb:start --debug
+   ```
+
+2. **Open your client application** in a browser
+
+3. **Broadcast a test event**:
+   ```bash
+   php artisan reverb:broadcast "Hello from Reverb!"
+   ```
+
+4. **Check the browser console** - you should see the message appear in real-time
+
+### Example Component
+
+The included example component (`client/src/components/event-listeners/example-reverb-listener.vue`) demonstrates:
+- Subscribing to a public channel
+- Listening for specific events
+- Displaying received messages
+- Proper cleanup on component unmount
 
