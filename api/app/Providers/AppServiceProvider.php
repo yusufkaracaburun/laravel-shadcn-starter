@@ -9,7 +9,6 @@ use Carbon\CarbonImmutable;
 use App\Policies\TeamPolicy;
 use Illuminate\Http\Request;
 use Laravel\Fortify\Fortify;
-use Laravel\Sanctum\Sanctum;
 use App\Policies\StudentPolicy;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\App;
@@ -143,5 +142,4 @@ final class AppServiceProvider extends ServiceProvider
 
         RateLimiter::for('login-link', fn (Request $request) => Limit::perMinute((int) config('login-link.rate_limit_attempts', 1))->by($request->email ?? $request->ip()));
     }
-
 }

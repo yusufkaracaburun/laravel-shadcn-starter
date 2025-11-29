@@ -31,11 +31,14 @@ final class RolePermissionSeeder extends Seeder
         // Assign permissions to roles
         $this->assignPermissionsToRoles($roles, $permissions);
 
-        // Create teams
-        $teams = $this->createTeams();
+        // Clear cache after creating roles and permissions
+        app()[PermissionRegistrar::class]->forgetCachedPermissions();
 
-        // Create admin user
-        $admin = $this->createAdminUser();
+        // Create admin user first (needed for team ownership)
+        $admin = $this->createAdminUser($roles);
+
+        // Create teams (owned by admin user)
+        $teams = $this->createTeams($admin);
 
         // Assign team-scoped roles
         $this->assignTeamScopedRoles($admin, $teams, $roles);
@@ -63,7 +66,7 @@ final class RolePermissionSeeder extends Seeder
             foreach ($actions as $action) {
                 $name = "{$module}.{$action}";
                 $permissions[$name] = Permission::firstOrCreate(
-                    ['name' => $name, 'guard_name' => 'sanctum']
+                    ['name' => $name, 'guard_name' => 'web']
                 );
             }
         }
@@ -90,7 +93,7 @@ final class RolePermissionSeeder extends Seeder
 
         foreach ($roles as $name => $description) {
             $createdRoles[$name] = Role::firstOrCreate(
-                ['name' => $name, 'guard_name' => 'sanctum']
+                ['name' => $name, 'guard_name' => 'web']
             );
         }
 
@@ -160,30 +163,11 @@ final class RolePermissionSeeder extends Seeder
     }
 
     /**
-     * Create default teams.
-     *
-     * @return array<Team>
-     */
-    private function createTeams(): array
-    {
-        $teams = [];
-
-        // Create a default team
-        $teams[] = Team::firstOrCreate(
-            ['name' => 'Default Team'],
-            [
-                'user_id' => 1, // Will be updated after admin user is created
-                'personal_team' => false,
-            ]
-        );
-
-        return $teams;
-    }
-
-    /**
      * Create admin user.
+     *
+     * @param  array<string, Role>  $roles
      */
-    private function createAdminUser(): User
+    private function createAdminUser(array $roles): User
     {
         $admin = User::firstOrCreate(
             ['email' => 'admin@example.com'],
@@ -194,10 +178,37 @@ final class RolePermissionSeeder extends Seeder
             ]
         );
 
+        // Refresh user to ensure it's loaded fresh
+        $admin->refresh();
+
         // Assign super-admin role globally
-        $admin->assignRole('super-admin');
+        // Use the Role model directly - Spatie will use the model's getGuardName()
+        if (! $admin->hasRole($roles['super-admin'])) {
+            $admin->assignRole($roles['super-admin']);
+        }
 
         return $admin;
+    }
+
+    /**
+     * Create default teams.
+     *
+     * @return array<Team>
+     */
+    private function createTeams(User $admin): array
+    {
+        $teams = [];
+
+        // Create a default team owned by admin user
+        $teams[] = Team::firstOrCreate(
+            ['name' => 'Default Team'],
+            [
+                'user_id' => $admin->id,
+                'personal_team' => false,
+            ]
+        );
+
+        return $teams;
     }
 
     /**
@@ -214,12 +225,7 @@ final class RolePermissionSeeder extends Seeder
 
         $team = $teams[0];
 
-        // Update team owner if needed
-        if (! $team->user_id) {
-            $team->update(['user_id' => $admin->id]);
-        }
-
-        // Add admin to team
+        // Add admin to team (if not already a member)
         if (! $admin->teams()->where('teams.id', $team->id)->exists()) {
             $admin->teams()->attach($team->id, ['role' => 'owner']);
         }
@@ -230,7 +236,9 @@ final class RolePermissionSeeder extends Seeder
         // Assign team-scoped role (using Spatie's team support)
         $permissionRegistrar = app(PermissionRegistrar::class);
         $permissionRegistrar->setPermissionsTeamId($team->id);
-        $admin->assignRole($roles['admin']);
+        if (! $admin->hasRole($roles['admin'])) {
+            $admin->assignRole($roles['admin']);
+        }
         $permissionRegistrar->setPermissionsTeamId(null); // Reset to global context
     }
 }

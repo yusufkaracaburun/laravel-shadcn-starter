@@ -32,4 +32,3 @@ Route::prefix('auth')->group(function (): void {
         });
     }
 });
-

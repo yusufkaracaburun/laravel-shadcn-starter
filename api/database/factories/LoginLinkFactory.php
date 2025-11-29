@@ -6,6 +6,7 @@ namespace Database\Factories;
 
 use App\Models\User;
 use App\Models\LoginLink;
+use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -22,7 +23,7 @@ final class LoginLinkFactory extends Factory
     {
         return [
             'user_id' => User::factory(),
-            'token' => fake()->uuid(),
+            'token' => Str::random(64),
             'expires_at' => now()->addMinutes(15),
             'used_at' => null,
         ];

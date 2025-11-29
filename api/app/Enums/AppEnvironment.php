@@ -11,4 +11,3 @@ enum AppEnvironment: string
     case Staging = 'staging';
     case Production = 'production';
 }
-

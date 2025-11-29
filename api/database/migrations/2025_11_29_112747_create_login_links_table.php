@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('login_links', function (Blueprint $table): void {
             $table->id();
-            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
             $table->string('token', 64)->unique();
             $table->timestamp('expires_at');
             $table->timestamp('used_at')->nullable();
