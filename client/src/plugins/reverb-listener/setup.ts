@@ -2,9 +2,9 @@ import type { App } from 'vue'
 
 import { storeToRefs } from 'pinia'
 import { nextTick, watch } from 'vue'
-import { toast } from 'vue-sonner'
 
 import { useEcho } from '@/composables/use-echo'
+import { useToast } from '@/composables/use-toast'
 import { useAuthStore } from '@/stores/auth'
 
 import pinia from '../pinia/setup'
@@ -35,6 +35,13 @@ export function setupReverbListener(app: App) {
 
     console.warn('🔌 Echo is available, setting up Reverb listeners...')
 
+    const { showInfo, showSuccess, showError, showWarning } = useToast()
+
+    // Test toast to verify toast system is working
+    showInfo('Reverb listener initialized', {
+      duration: 3000,
+    })
+
     const authStore = useAuthStore(pinia)
     const { user } = storeToRefs(authStore)
 
@@ -47,7 +54,7 @@ export function setupReverbListener(app: App) {
     exampleChannel
       .listen('.example.event', (data: any) => {
         console.warn('📢 Example event received:', data)
-        toast.info('Example Event', {
+        showInfo('Example Event', {
           description: data.message || JSON.stringify(data, null, 2),
         })
       })
@@ -118,30 +125,41 @@ export function setupReverbListener(app: App) {
       console.warn('🍞 Showing toast:', { notificationTitle, type, notificationDescription })
 
       try {
+        // Ensure we have a valid title
+        if (!notificationTitle || notificationTitle.trim() === '') {
+          console.error('❌ Cannot show toast: notificationTitle is empty')
+          return
+        }
+
+        const toastOptions: any = {}
+        // Only add description if it has a value
+        if (notificationDescription) {
+          toastOptions.description = notificationDescription
+        }
+
+        let toastResult: any = null
         switch (type) {
           case 'success':
-            toast.success(notificationTitle, {
-              description: notificationDescription,
-            })
+            toastResult = showSuccess(notificationTitle, toastOptions)
             break
           case 'error':
-            toast.error(notificationTitle, {
-              description: notificationDescription,
-            })
+            toastResult = showError(notificationTitle, toastOptions)
             break
           case 'warning':
-            toast.warning(notificationTitle, {
-              description: notificationDescription,
-            })
+            toastResult = showWarning(notificationTitle, toastOptions)
             break
           case 'info':
           default:
-            toast.info(notificationTitle, {
-              description: notificationDescription,
-            })
+            toastResult = showInfo(notificationTitle, toastOptions)
             break
         }
-        console.warn('✅ Toast called successfully')
+
+        if (toastResult) {
+          console.warn('✅ Toast called successfully, ID:', toastResult)
+        }
+        else {
+          console.error('❌ Toast returned null/undefined - toast may not have rendered')
+        }
       }
       catch (error) {
         console.error('❌ Toast error:', error)

@@ -3,6 +3,7 @@ import { storeToRefs } from 'pinia'
 
 import Loading from '@/components/loading.vue'
 import { Toaster } from '@/components/ui/sonner'
+import { defaultToasterProps } from '@/composables/use-toast'
 import { THEMES } from '@/constants/themes'
 import { useThemeStore } from '@/stores/theme'
 
@@ -17,7 +18,7 @@ watchEffect(() => {
 </script>
 
 <template>
-  <Toaster />
+  <Toaster v-bind="defaultToasterProps" />
 
   <Suspense>
     <router-view v-slot="{ Component, route }">
