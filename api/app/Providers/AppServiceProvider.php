@@ -92,6 +92,9 @@ final class AppServiceProvider extends ServiceProvider
     private function configureDates(): void
     {
         Date::use(CarbonImmutable::class);
+        
+        // Set Carbon locale to match application locale
+        CarbonImmutable::setLocale(config('app.locale'));
     }
 
     /**
