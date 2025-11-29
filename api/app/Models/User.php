@@ -25,9 +25,9 @@ final class User extends Authenticatable
 
     use HasFactory;
 
-    use HasRoles;
-
     use Notifiable;
+
+    use HasRoles;
 
     use SoftDeletes;
 
