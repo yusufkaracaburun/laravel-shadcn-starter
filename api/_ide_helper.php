@@ -23399,33 +23399,6 @@ namespace Laravel\Socialite\Facades {
             }
     }
 
-namespace Prism\Prism\Facades {
-    /**
-     */
-    class PrismServer {
-        /**
-         * @param \Closure():PendingRequest|callable():PendingRequest $prism
-         * @static
-         */
-        public static function register($name, $prism)
-        {
-            /** @var \Prism\Prism\PrismServer $instance */
-            return $instance->register($name, $prism);
-        }
-
-        /**
-         * @return \Prism\Prism\Collection<int, array{name: string, prism: Closure():PendingRequest|callable():PendingRequest}>
-         * @static
-         */
-        public static function prisms()
-        {
-            /** @var \Prism\Prism\PrismServer $instance */
-            return $instance->prisms();
-        }
-
-            }
-    }
-
 namespace Illuminate\Http {
     /**
      */
@@ -28399,15 +28372,9 @@ namespace  {
     class Vite extends \Illuminate\Support\Facades\Vite {}
     class Octane extends \Laravel\Octane\Facades\Octane {}
     class Socialite extends \Laravel\Socialite\Facades\Socialite {}
-    class PrismServer extends \Prism\Prism\Facades\PrismServer {}
 }
 
 
-namespace Facades\Livewire\Features\SupportFileUploads {
-    /**
-     * @mixin \Livewire\Features\SupportFileUploads\GenerateSignedUploadUrl     */
-    class GenerateSignedUploadUrl extends \Livewire\Features\SupportFileUploads\GenerateSignedUploadUrl {}
-}
 
 
 

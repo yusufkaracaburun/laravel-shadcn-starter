@@ -5,9 +5,7 @@ declare(strict_types=1);
 namespace App\Providers;
 
 use App\Models\Team;
-use App\Models\User;
 use Carbon\CarbonImmutable;
-use Knuckles\Scribe\Scribe;
 use App\Policies\TeamPolicy;
 use Illuminate\Http\Request;
 use Laravel\Fortify\Fortify;
@@ -71,7 +69,6 @@ final class AppServiceProvider extends ServiceProvider
         $this->configureUrl();
         $this->configureVite();
         $this->configureRateLimiting();
-        $this->configureScribeDocumentation();
     }
 
     /**
@@ -147,20 +144,4 @@ final class AppServiceProvider extends ServiceProvider
         RateLimiter::for('login-link', fn (Request $request) => Limit::perMinute((int) config('login-link.rate_limit_attempts', 1))->by($request->email ?? $request->ip()));
     }
 
-    /**
-     * Configure the application's Scribe documentation.
-     *
-     * @see https://scribe.knuckles.wtf/laravel/
-     */
-    private function configureScribeDocumentation(): void
-    {
-        if (class_exists(Scribe::class)) {
-            Scribe::beforeResponseCall(function (): void {
-                $user = User::query()->first();
-                if ($user) {
-                    Sanctum::actingAs($user, ['*']);
-                }
-            });
-        }
-    }
 }
