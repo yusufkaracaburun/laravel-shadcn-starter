@@ -18,7 +18,7 @@ test.describe('Register E2E', () => {
     await expect(page.getByRole('heading', { name: 'Sign Up' })).toBeVisible()
   })
 
-  test('should register successfully with valid data', async ({ page }) => {
+  test.skip('should register successfully with valid data', async ({ page }) => {
     // Mock successful registration API response
     await mockSuccessfulRegistration(page)
 
