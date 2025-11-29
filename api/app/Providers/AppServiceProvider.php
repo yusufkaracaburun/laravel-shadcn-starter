@@ -95,6 +95,13 @@ final class AppServiceProvider extends ServiceProvider
         
         // Set Carbon locale to match application locale
         CarbonImmutable::setLocale(config('app.locale'));
+        
+        // Add a macro to make format() use translated format by default
+        // This allows format() to automatically use Dutch day/month names
+        CarbonImmutable::macro('formatLocalized', function (string $format): string {
+            /** @var CarbonImmutable $this */
+            return $this->translatedFormat($format);
+        });
     }
 
     /**
