@@ -2,7 +2,31 @@
 
 declare(strict_types=1);
 
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\RateLimiter;
+
+beforeEach(function (): void {
+    // Clear all possible rate limiter variations before each test
+    // Match the exact format from FortifyServiceProvider: Str::transliterate(Str::lower($email)).'|'.$ip
+    $emails = ['test@example.com', 'test8@example.com', 'testlogin@example.com', 'testwrong@example.com'];
+    $ips = ['127.0.0.1', '::1'];
+
+    foreach ($emails as $email) {
+        foreach ($ips as $ip) {
+            $throttleKey = Str::transliterate(Str::lower($email)).'|'.$ip;
+            RateLimiter::clear('login:'.$throttleKey);
+        }
+    }
+});
+
 test('user cannot login with empty email', function () {
+    // Clear rate limiter for empty email case
+    // When email is empty, rate limiter uses IP only (per best practices)
+    $ips = ['127.0.0.1', '::1'];
+    foreach ($ips as $ip) {
+        RateLimiter::clear('login:'.$ip);
+    }
+
     $response = $this->postJson('/login', [
         'email' => '',
         'password' => 'password123',
@@ -13,8 +37,10 @@ test('user cannot login with empty email', function () {
 });
 
 test('user cannot login with empty password', function () {
+    $uniqueEmail = 'empty-password-'.uniqid().'@example.com';
+
     $response = $this->postJson('/login', [
-        'email' => 'test@example.com',
+        'email' => $uniqueEmail,
         'password' => '',
     ]);
 

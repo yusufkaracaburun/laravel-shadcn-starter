@@ -5,18 +5,17 @@ declare(strict_types=1);
 namespace App\Providers;
 
 use App\Models\Team;
+use App\Models\User;
 use Carbon\CarbonImmutable;
 use App\Policies\TeamPolicy;
+use App\Policies\UserPolicy;
 use Illuminate\Http\Request;
-use Laravel\Fortify\Fortify;
-use App\Policies\StudentPolicy;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Vite;
-use App\Actions\Fortify\CreateNewUser;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Cache\RateLimiting\Limit;
@@ -31,8 +30,7 @@ final class AppServiceProvider extends ServiceProvider
      */
     protected $policies = [
         Team::class => TeamPolicy::class,
-        // Add Student model when available:
-        // Student::class => StudentPolicy::class,
+        User::class => UserPolicy::class,
     ];
 
     /**
@@ -58,8 +56,6 @@ final class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Fortify::createUsersUsing(CreateNewUser::class);
-
         $this->registerPolicies();
 
         $this->configureCommands();
@@ -138,8 +134,6 @@ final class AppServiceProvider extends ServiceProvider
      */
     private function configureRateLimiting(): void
     {
-        RateLimiter::for('login', fn (Request $request) => $request->email ? Limit::perMinute(5)->by($request->email) : Limit::perMinute(5)->by($request->ip()));
-
-        RateLimiter::for('login-link', fn (Request $request) => Limit::perMinute((int) config('login-link.rate_limit_attempts', 1))->by($request->email ?? $request->ip()));
+        RateLimiter::for('login-link', fn (Request $request): Limit => Limit::perMinute((int) config('login-link.rate_limit_attempts', 1))->by($request->email ?? $request->ip()));
     }
 }
