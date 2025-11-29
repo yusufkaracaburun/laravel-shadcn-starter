@@ -12,7 +12,7 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectVa
 import { Textarea } from '@/components/ui/textarea'
 
 const schema = z.object({
-  email: z.email(),
+  email: z.string().email(),
   role: z.enum(['superadmin', 'admin', 'cashier', 'manager']),
   description: z.string().optional(),
 })
