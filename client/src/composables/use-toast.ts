@@ -20,9 +20,10 @@ type PromiseToastData<T = any> = Omit<ExternalToast, 'description'> & {
  * These defaults will be used throughout the application
  */
 export const defaultToastOptions: ExternalToast = {
-  position: 'top-center',
+  position: 'bottom-right',
   duration: 5000,
   closeButton: true,
+  testId: 'toast',
 }
 
 /**
@@ -71,7 +72,7 @@ export const toastConfig = {
  * Default Toaster component props
  */
 export const defaultToasterProps = {
-  position: 'top-center' as const,
+  position: 'bottom-right' as const,
   theme: 'system' as const,
   richColors: true,
   expand: true,
