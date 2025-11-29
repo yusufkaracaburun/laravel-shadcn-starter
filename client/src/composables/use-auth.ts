@@ -16,7 +16,7 @@ export function useAuth() {
   }
 
   function toHome() {
-    router.push({ path: '/dashboard' })
+    router.push({ path: '/workspace' })
   }
 
   async function login() {

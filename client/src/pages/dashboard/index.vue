@@ -16,13 +16,12 @@ const tabs = ref([
 const activeTab = ref(tabs.value[0].value)
 </script>
 
-<route lang="yaml">
-meta:
-  auth: true
-</route>
-
 <template>
-  <Page title="workspace" description="workspace description" sticky>
+  <Page
+    title="workspace"
+    description="workspace description"
+    sticky
+  >
     <template #actions>
       <Button
         @click="() => toast('hello', {
@@ -35,7 +34,11 @@ meta:
 
     <UiTabs :default-value="activeTab" class="w-full">
       <UiTabsList>
-        <UiTabsTrigger v-for="tab in tabs" :key="tab.value" :value="tab.value" :disabled="tab.disabled">
+        <UiTabsTrigger
+          v-for="tab in tabs" :key="tab.value"
+          :value="tab.value"
+          :disabled="tab.disabled"
+        >
           {{ tab.name }}
         </UiTabsTrigger>
       </UiTabsList>
@@ -46,4 +49,6 @@ meta:
   </Page>
 </template>
 
-<style></style>
+<style>
+
+</style>

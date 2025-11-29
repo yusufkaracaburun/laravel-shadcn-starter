@@ -1,97 +1,9 @@
 <script setup lang="ts">
-import type { AxiosError } from 'axios'
-
-import { nextTick } from 'vue'
-import { toTypedSchema } from '@vee-validate/zod'
-import { useForm } from 'vee-validate'
-import { toast } from 'vue-sonner'
-import { z } from 'zod'
-
-import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
-import { Input } from '@/components/ui/input'
-import { useAuthStore } from '@/stores/auth'
-
 import AuthTitle from './components/auth-title.vue'
 import GitHubButton from './components/github-button.vue'
 import GoogleButton from './components/google-button.vue'
 import PrivacyPolicyButton from './components/privacy-policy-button.vue'
 import TermsOfServiceButton from './components/terms-of-service-button.vue'
-
-const registerSchema = toTypedSchema(z.object({
-  firstName: z.string().min(1, 'First name is required'),
-  lastName: z.string().min(1, 'Last name is required'),
-  email: z.string().email('Please enter a valid email address'),
-  password: z.string().min(8, 'Password must be at least 8 characters'),
-  password_confirmation: z.string().min(1, 'Please confirm your password'),
-}).refine(data => data.password === data.password_confirmation, {
-  message: 'Passwords do not match',
-  path: ['password_confirmation'],
-}))
-
-const { handleSubmit } = useForm({
-  validationSchema: registerSchema,
-})
-
-const router = useRouter()
-const authStore = useAuthStore()
-const loading = computed(() => authStore.loading)
-const error = ref<string | null>(null)
-
-const onSubmit = handleSubmit(async (values) => {
-  error.value = null
-
-  try {
-    const result = await authStore.register({
-      name: `${values.firstName} ${values.lastName}`,
-      email: values.email,
-      password: values.password,
-      password_confirmation: values.password_confirmation,
-    })
-
-    if (result && result.success) {
-      toast.success('Account created successfully!')
-      // Navigate immediately - router.push returns a promise
-      router.push({ path: '/auth/sign-in' }).catch(() => {
-        // If navigation fails, try using window.location as fallback
-        window.location.href = '/auth/sign-in'
-      })
-    }
-    else {
-      // Handle errors from auth store
-      if (result?.errors) {
-        const firstError = Object.values(result.errors)[0]
-        error.value = Array.isArray(firstError) ? firstError[0] : firstError || 'Validation failed'
-      }
-      else if (result?.message) {
-        error.value = result.message
-      }
-      else {
-        error.value = 'Registration failed'
-      }
-      toast.error(error.value)
-    }
-  }
-  catch (err) {
-    const axiosError = err as AxiosError<{ message?: string, errors?: Record<string, string[]> }>
-    if (axiosError.response?.status === 422) {
-      const errorData = axiosError.response.data
-      if (errorData?.errors) {
-        const firstError = Object.values(errorData.errors)[0]
-        error.value = Array.isArray(firstError) ? firstError[0] : 'Validation failed'
-      }
-      else if (errorData?.message) {
-        error.value = errorData.message
-      }
-      else {
-        error.value = 'Validation failed'
-      }
-    }
-    else {
-      error.value = 'An error occurred during registration. Please try again.'
-    }
-    toast.error(error.value)
-  }
-})
 </script>
 
 <template>
@@ -106,75 +18,56 @@ const onSubmit = handleSubmit(async (values) => {
           <UiCardDescription>
             Enter your email and password to create an account.
             Already have an account?
-            <UiButton variant="link" class="px-0 text-muted-foreground" @click="$router.push('/auth/sign-in')">
+            <UiButton
+              variant="link" class="px-0 text-muted-foreground"
+              @click="$router.push('/auth/sign-in')"
+            >
               Sign In
             </UiButton>
           </UiCardDescription>
         </UiCardHeader>
         <UiCardContent>
           <div class="grid gap-4">
-            <form class="contents" @submit="onSubmit">
-              <div class="grid grid-cols-2 gap-4">
-                <FormField v-slot="{ componentField }" name="firstName">
-                  <FormItem>
-                    <FormLabel>First name</FormLabel>
-                    <FormControl>
-                      <Input id="first-name" placeholder="Max" v-bind="componentField" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                </FormField>
-
-                <FormField v-slot="{ componentField }" name="lastName">
-                  <FormItem>
-                    <FormLabel>Last name</FormLabel>
-                    <FormControl>
-                      <Input id="last-name" placeholder="Robinson" v-bind="componentField" />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                </FormField>
+            <div class="grid grid-cols-2 gap-4">
+              <div class="grid gap-2">
+                <UiLabel for="first-name">
+                  First name
+                </UiLabel>
+                <UiInput id="first-name" placeholder="Max" required />
               </div>
-
-              <FormField v-slot="{ componentField }" name="email">
-                <FormItem>
-                  <FormLabel>Email</FormLabel>
-                  <FormControl>
-                    <Input id="email" type="email" placeholder="m@example.com" v-bind="componentField" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              </FormField>
-
-              <FormField v-slot="{ componentField }" name="password">
-                <FormItem>
-                  <FormLabel>Password</FormLabel>
-                  <FormControl>
-                    <Input id="password" type="password" placeholder="******" v-bind="componentField" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              </FormField>
-
-              <FormField v-slot="{ componentField }" name="password_confirmation">
-                <FormItem>
-                  <FormLabel>Confirm Password</FormLabel>
-                  <FormControl>
-                    <Input id="password-confirmation" type="password" placeholder="******" v-bind="componentField" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              </FormField>
-
-              <div v-if="error" class="text-sm text-destructive" role="alert">
-                {{ error }}
+              <div class="grid gap-2">
+                <UiLabel for="last-name">
+                  Last name
+                </UiLabel>
+                <UiInput id="last-name" placeholder="Robinson" required />
               </div>
-
-              <UiButton type="submit" class="w-full" :disabled="loading">
-                <UiSpinner v-if="loading" class="mr-2" />
-                {{ loading ? 'Creating Account...' : 'Create Account' }}
-              </UiButton>
-            </form>
+            </div>
+            <div class="grid gap-2">
+              <UiLabel for="email">
+                Email
+              </UiLabel>
+              <UiInput
+                id="email"
+                type="email"
+                placeholder="m@example.com"
+                required
+              />
+            </div>
+            <div class="grid gap-2">
+              <UiLabel for="password">
+                Password
+              </UiLabel>
+              <UiInput id="password" type="password" placeholder="******" />
+            </div>
+            <div class="grid gap-2">
+              <UiLabel for="password">
+                Confirm Password
+              </UiLabel>
+              <UiInput id="password" type="password" placeholder="******" />
+            </div>
+            <UiButton type="submit" class="w-full">
+              Create Account
+            </UiButton>
 
             <UiSeparator label="Or continue with" />
 

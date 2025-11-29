@@ -29,7 +29,7 @@ const formSchema = z.object({
   firstName: z.string().min(1).default(user?.firstName || ''),
   lastName: z.string().min(1).default(user?.lastName || ''),
   username: z.string().min(1).default(user?.username || ''),
-  email: z.string().email().min(1).default(user?.email || ''),
+  email: z.email().min(1).default(user?.email || ''),
   phoneNumber: z.string().min(1).default(user?.phoneNumber || ''),
   status: userStatusSchema.default(user?.status || 'active'),
   role: userRoleSchema.default(user?.role || 'cashier'),
