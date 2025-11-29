@@ -40,9 +40,18 @@ export async function registerUser(request: APIRequestContext, data: RegisterDat
   return response
 }
 
+export async function getCsrfCookie(request: APIRequestContext) {
+  const response = await request.get(`${apiURL}/sanctum/csrf-cookie`, {
+    headers: {
+      'Accept': 'application/json',
+    },
+  })
+  return response
+}
+
 export async function getAuthenticatedContext(request: APIRequestContext, credentials: LoginCredentials) {
   // First get CSRF cookie
-  await request.get(`${apiURL}/sanctum/csrf-cookie`)
+  await getCsrfCookie(request)
 
   // Then login
   const loginResponse = await loginUser(request, credentials)
@@ -52,6 +61,39 @@ export async function getAuthenticatedContext(request: APIRequestContext, creden
     cookies: cookies.join('; '),
     loginResponse,
   }
+}
+
+export async function logoutUser(request: APIRequestContext, cookies?: string) {
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+  }
+
+  if (cookies) {
+    headers.Cookie = cookies
+  }
+
+  const response = await request.post(`${apiURL}/logout`, {
+    headers,
+  })
+
+  return response
+}
+
+export async function getCurrentUser(request: APIRequestContext, cookies?: string) {
+  const headers: Record<string, string> = {
+    'Accept': 'application/json',
+  }
+
+  if (cookies) {
+    headers.Cookie = cookies
+  }
+
+  const response = await request.get(`${apiURL}/api/user/current`, {
+    headers,
+  })
+
+  return response
 }
 
 export async function expectSuccessfulLogin(response: any) {

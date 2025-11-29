@@ -5,16 +5,16 @@ declare(strict_types=1);
 namespace App\Events;
 
 use Illuminate\Broadcasting\Channel;
-use Illuminate\Broadcasting\PrivateChannel;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
-use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Broadcasting\PrivateChannel;
+use Illuminate\Foundation\Events\Dispatchable;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 
 /**
  * Notification event for user notifications via Reverb.
- * 
+ *
  * This event will automatically show toast notifications in the frontend.
- * 
+ *
  * @example
  * ```php
  * // Send notification to a specific user
@@ -23,7 +23,7 @@ use Illuminate\Queue\SerializesModels;
  *     message: 'Your order has been shipped!',
  *     type: 'success'
  * ));
- * 
+ *
  * // Send public notification
  * event(new NotificationCreated(
  *     message: 'System maintenance in 5 minutes',
@@ -32,21 +32,23 @@ use Illuminate\Queue\SerializesModels;
  * ));
  * ```
  */
-final class NotificationCreated implements ShouldBroadcastNow
+final readonly class NotificationCreated implements ShouldBroadcastNow
 {
-    use Dispatchable, SerializesModels;
+    use Dispatchable;
+
+    use SerializesModels;
 
     /**
      * Create a new event instance.
      */
     public function __construct(
-        public readonly ?int $userId = null,
-        public readonly string $message = '',
-        public readonly string $type = 'info',
-        public readonly ?string $title = null,
-        public readonly ?string $description = null,
-        public readonly array $data = [],
-        public readonly bool $isPublic = false,
+        public ?int $userId = null,
+        public string $message = '',
+        public string $type = 'info',
+        public ?string $title = null,
+        public ?string $description = null,
+        public array $data = [],
+        public bool $isPublic = false,
     ) {}
 
     /**
@@ -97,4 +99,3 @@ final class NotificationCreated implements ShouldBroadcastNow
         ];
     }
 }
-

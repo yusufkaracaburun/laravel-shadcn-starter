@@ -11,6 +11,7 @@ use App\Support\Cache\TeamCache;
 use Illuminate\Http\JsonResponse;
 use App\Http\Responses\ApiResponse;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Auth;
 use App\Support\Cache\CacheInvalidationService;
 use App\Http\Controllers\Concerns\UsesCachedResponses;
@@ -38,16 +39,7 @@ final class UserController extends Controller
         // Load teams and current team relationships
         $user->load(['teams', 'currentTeam', 'ownedTeams']);
 
-        // Get all teams (owned + member) for response
-        $allTeams = $user->ownedTeams->merge($user->teams)->unique('id')->values();
-
-        // Build response data - use makeVisible to ensure current_team_id is included
-        $user->makeVisible(['current_team_id']);
-        $userData = $user->toArray();
-        $userData['teams'] = $allTeams;
-        $userData['currentTeam'] = $user->currentTeam;
-
-        return ApiResponse::success($userData);
+        return ApiResponse::success(new UserResource($user));
     }
 
     /**
@@ -72,10 +64,10 @@ final class UserController extends Controller
             // If no team is set, return all users
             $users = $this->cachedResponse(
                 'api.user.index',
-                fn () => User::query()->get()->toArray()
+                fn () => User::query()->get()
             );
 
-            return ApiResponse::success($users);
+            return ApiResponse::success(UserResource::collection($users));
         }
 
         $users = TeamCache::remember(
@@ -85,10 +77,9 @@ final class UserController extends Controller
                 ->whereHas('teams', fn ($query) => $query->where('teams.id', $teamId))
                 ->orWhereHas('ownedTeams', fn ($query) => $query->where('id', $teamId))
                 ->get()
-                ->toArray()
         );
 
-        return ApiResponse::success($users);
+        return ApiResponse::success(UserResource::collection($users));
     }
 
     /**
@@ -102,14 +93,16 @@ final class UserController extends Controller
         $currentUser = Auth::user();
 
         if (! $currentUser) {
-            return ApiResponse::success($user);
+            return ApiResponse::success(new UserResource($user));
         }
 
         $currentUser->refresh();
         $teamId = $currentUser->getAttributeValue('current_team_id');
 
         if ($teamId === null) {
-            return ApiResponse::success($user);
+            $user->load(['teams', 'currentTeam', 'ownedTeams']);
+
+            return ApiResponse::success(new UserResource($user));
         }
 
         $cachedUser = TeamCache::remember(
@@ -118,7 +111,7 @@ final class UserController extends Controller
             fn () => $user->load(['teams', 'currentTeam', 'ownedTeams'])
         );
 
-        return ApiResponse::success($cachedUser);
+        return ApiResponse::success(new UserResource($cachedUser));
     }
 
     /**
@@ -140,7 +133,9 @@ final class UserController extends Controller
             'password' => $validated['password'],
         ]);
 
-        return ApiResponse::created($user);
+        $user->load(['teams', 'currentTeam', 'ownedTeams']);
+
+        return ApiResponse::created(new UserResource($user));
     }
 
     /**
@@ -156,6 +151,8 @@ final class UserController extends Controller
         ]);
 
         $user->update($validated);
+        $user->refresh();
+        $user->load(['teams', 'currentTeam', 'ownedTeams']);
 
         // Invalidate user and team caches
         CacheInvalidationService::invalidateUser($user->id);
@@ -163,7 +160,7 @@ final class UserController extends Controller
             CacheInvalidationService::invalidateTeam($user->current_team_id);
         }
 
-        return ApiResponse::success($user);
+        return ApiResponse::success(new UserResource($user));
     }
 
     /**

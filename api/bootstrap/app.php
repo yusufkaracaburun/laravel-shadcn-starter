@@ -10,6 +10,7 @@ use App\Http\Middleware\CacheApiResponse;
 use Illuminate\Http\Middleware\HandleCors;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Session\Middleware\StartSession;
 use App\Exceptions\OAuthAccountLinkingException;
 use Spatie\Permission\Middleware\RoleMiddleware;
 use Illuminate\Auth\Access\AuthorizationException;
@@ -44,6 +45,7 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $middleware->api(prepend: [
             HandleCors::class,
+            StartSession::class, // Required for Sanctum stateful authentication
         ]);
 
         $middleware->validateCsrfTokens(except: [

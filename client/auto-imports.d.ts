@@ -10,12 +10,24 @@ declare global {
   const computed: typeof import('vue').computed
   const createApp: typeof import('vue').createApp
   const customRef: typeof import('vue').customRef
+  const defaultToastOptions: typeof import('./src/composables/use-toast').defaultToastOptions
+  const defaultToasterProps: typeof import('./src/composables/use-toast').defaultToasterProps
   const defineAsyncComponent: typeof import('vue').defineAsyncComponent
   const defineComponent: typeof import('vue').defineComponent
   const effectScope: typeof import('vue').effectScope
+  const getActionToastOptions: typeof import('./src/composables/use-toast').getActionToastOptions
   const getCurrentInstance: typeof import('vue').getCurrentInstance
   const getCurrentScope: typeof import('vue').getCurrentScope
   const getCurrentWatcher: typeof import('vue').getCurrentWatcher
+  const getDefaultToastOptions: typeof import('./src/composables/use-toast').getDefaultToastOptions
+  const getDefaultTypeToastOptions: typeof import('./src/composables/use-toast').getDefaultTypeToastOptions
+  const getErrorToastOptions: typeof import('./src/composables/use-toast').getErrorToastOptions
+  const getInfoToastOptions: typeof import('./src/composables/use-toast').getInfoToastOptions
+  const getLoadingToastOptions: typeof import('./src/composables/use-toast').getLoadingToastOptions
+  const getNormalToastOptions: typeof import('./src/composables/use-toast').getNormalToastOptions
+  const getSuccessToastOptions: typeof import('./src/composables/use-toast').getSuccessToastOptions
+  const getToastConfig: typeof import('./src/composables/use-toast').getToastConfig
+  const getWarningToastOptions: typeof import('./src/composables/use-toast').getWarningToastOptions
   const h: typeof import('vue').h
   const inject: typeof import('vue').inject
   const isProxy: typeof import('vue').isProxy
@@ -46,6 +58,7 @@ declare global {
   const readonly: typeof import('vue').readonly
   const ref: typeof import('vue').ref
   const resolveComponent: typeof import('vue').resolveComponent
+  const setupVueSonner: typeof import('./src/composables/use-toast').setupVueSonner
   const shallowReactive: typeof import('vue').shallowReactive
   const shallowReadonly: typeof import('vue').shallowReadonly
   const shallowRef: typeof import('vue').shallowRef
@@ -53,6 +66,7 @@ declare global {
   const toRef: typeof import('vue').toRef
   const toRefs: typeof import('vue').toRefs
   const toValue: typeof import('vue').toValue
+  const toastConfig: typeof import('./src/composables/use-toast').toastConfig
   const triggerRef: typeof import('vue').triggerRef
   const unref: typeof import('vue').unref
   const useAttrs: typeof import('vue').useAttrs
@@ -65,6 +79,7 @@ declare global {
   const useId: typeof import('vue').useId
   const useLink: typeof import('vue-router').useLink
   const useModel: typeof import('vue').useModel
+  const useReverbNotifications: typeof import('./src/composables/use-reverb-notifications').useReverbNotifications
   const useRoute: typeof import('vue-router').useRoute
   const useRouteHelper: typeof import('./src/composables/use-route-helper').useRouteHelper
   const useRouter: typeof import('vue-router').useRouter
@@ -73,6 +88,7 @@ declare global {
   const useSlots: typeof import('vue').useSlots
   const useTemplateRef: typeof import('vue').useTemplateRef
   const useThemeStore: typeof import('./src/stores/theme').useThemeStore
+  const useToast: typeof import('./src/composables/use-toast').useToast
   const watch: typeof import('vue').watch
   const watchEffect: typeof import('vue').watchEffect
   const watchPostEffect: typeof import('vue').watchPostEffect

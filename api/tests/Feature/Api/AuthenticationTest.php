@@ -35,6 +35,10 @@ test('user can login with valid credentials', function (): void {
         'password' => Hash::make('password123'),
     ]);
 
+    // First, get CSRF cookie
+    $this->get('/sanctum/csrf-cookie');
+
+    // Then login
     $response = $this->postJson('/login', [
         'email' => $uniqueEmail,
         'password' => 'password123',
@@ -42,6 +46,33 @@ test('user can login with valid credentials', function (): void {
 
     $response->assertStatus(200)
         ->assertJsonStructure(['two_factor']);
+
+    // Verify user can access authenticated endpoint after login
+    $userResponse = $this->getJson('/api/user/current');
+    $userResponse->assertOk()
+        ->assertJsonStructure([
+            'success',
+            'code',
+            'message',
+            'data' => [
+                'id',
+                'name',
+                'email',
+                'current_team_id',
+                'created_at',
+                'updated_at',
+                'teams',
+                'currentTeam',
+            ],
+        ])
+        ->assertJson(fn ($json) => $json->where('success', true)
+            ->where('code', 200)
+            ->where('message', 'Success')
+            ->where('data.id', $user->id)
+            ->where('data.email', $user->email)
+            ->where('data.name', $user->name)
+            ->has('extra')
+        );
 });
 
 test('user cannot login with invalid credentials', function (): void {
@@ -80,10 +111,25 @@ test('user can register with valid data', function (): void {
 test('user can logout when authenticated', function (): void {
     $user = User::factory()->create();
 
-    // Use actingAs with session for web routes
-    $response = $this->actingAs($user)->postJson('/logout');
+    // Get CSRF cookie first
+    $this->get('/sanctum/csrf-cookie');
+
+    // Login to establish session
+    $this->postJson('/login', [
+        'email' => $user->email,
+        'password' => 'password', // Default factory password
+    ]);
+
+    // Verify authenticated before logout
+    $this->getJson('/api/user/current')->assertOk();
+
+    // Logout
+    $response = $this->postJson('/logout');
 
     $response->assertNoContent();
+
+    // Note: In test environment, session may persist after logout
+    // The logout endpoint itself is tested above
 });
 
 test('user cannot logout when not authenticated', function (): void {

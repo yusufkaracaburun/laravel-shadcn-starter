@@ -2,16 +2,15 @@ import { expect, test } from '@playwright/test'
 
 import {
   getAuthenticatedContext,
+  getCurrentUser,
   registerUser,
 } from '../../helpers/api-helpers'
 import { generateTestUser } from '../../helpers/test-data'
 
-const apiURL = process.env.PLAYWRIGHT_TEST_API_URL || 'http://127.0.0.1:8000'
-
 test.describe('User API', () => {
   test.describe.configure({ mode: 'parallel' })
 
-  test.skip('should get current user when authenticated', async ({ request }) => {
+  test('should get current user when authenticated with proper API Resource structure', async ({ request }) => {
     // Arrange - Register and login first
     const testUser = generateTestUser()
     await registerUser(request, {
@@ -27,35 +26,48 @@ test.describe('User API', () => {
     })
 
     // Act - Get current user
-    const response = await request.get(`${apiURL}/api/user/current`, {
-      headers: {
-        Accept: 'application/json',
-        Cookie: cookies,
-      },
-    })
+    const response = await getCurrentUser(request, cookies)
 
-    // Assert
+    // Assert - Verify response structure
     expect(response.status()).toBe(200)
     const body = await response.json()
-    expect(body).toHaveProperty('id')
-    expect(body).toHaveProperty('name')
-    expect(body).toHaveProperty('email')
-    expect(body.email).toBe(testUser.email)
+
+    // Verify API Response wrapper
+    expect(body).toHaveProperty('success', true)
+    expect(body).toHaveProperty('code', 200)
+    expect(body).toHaveProperty('message', 'Success')
+    expect(body).toHaveProperty('data')
+    expect(body).toHaveProperty('extra')
+
+    // Verify UserResource structure
+    expect(body.data).toHaveProperty('id')
+    expect(body.data).toHaveProperty('name', testUser.name)
+    expect(body.data).toHaveProperty('email', testUser.email)
+    expect(body.data).toHaveProperty('current_team_id')
+    expect(body.data).toHaveProperty('created_at')
+    expect(body.data).toHaveProperty('updated_at')
+    expect(body.data).toHaveProperty('teams')
+    expect(body.data).toHaveProperty('currentTeam')
+
+    // Verify data types
+    expect(typeof body.data.id).toBe('number')
+    expect(typeof body.data.name).toBe('string')
+    expect(typeof body.data.email).toBe('string')
+    expect(Array.isArray(body.data.teams)).toBe(true)
+    expect(body.data.currentTeam === null || typeof body.data.currentTeam === 'object').toBe(true)
   })
 
-  test.skip('should fail to get current user when not authenticated', async ({ request }) => {
+  test('should fail to get current user when not authenticated', async ({ request }) => {
     // Act
-    const response = await request.get(`${apiURL}/api/user/current`, {
-      headers: {
-        Accept: 'application/json',
-      },
-    })
+    const response = await getCurrentUser(request)
 
     // Assert
     expect(response.status()).toBe(401)
+    const body = await response.json()
+    expect(body).toHaveProperty('message')
   })
 
-  test.skip('should update user profile information', async ({ request }) => {
+  test('should return user with teams when user has teams', async ({ request }) => {
     // Arrange - Register and login first
     const testUser = generateTestUser()
     await registerUser(request, {
@@ -70,22 +82,27 @@ test.describe('User API', () => {
       password: testUser.password,
     })
 
-    // Act - Update user profile information
-    const updateData = {
-      name: 'Updated Name',
-      email: testUser.email, // Email cannot be changed
+    // Act - Get current user
+    const response = await getCurrentUser(request, cookies)
+
+    // Assert
+    expect(response.status()).toBe(200)
+    const body = await response.json()
+
+    // Verify teams structure (even if empty)
+    expect(body.data).toHaveProperty('teams')
+    expect(Array.isArray(body.data.teams)).toBe(true)
+    expect(body.data).toHaveProperty('currentTeam')
+    expect(body.data.currentTeam === null || typeof body.data.currentTeam === 'object').toBe(true)
+
+    // If currentTeam exists, verify it has proper structure
+    if (body.data.currentTeam !== null) {
+      expect(body.data.currentTeam).toHaveProperty('id')
+      expect(body.data.currentTeam).toHaveProperty('name')
+      expect(body.data.currentTeam).toHaveProperty('personal_team')
+      expect(body.data.currentTeam).toHaveProperty('user_id')
+      expect(body.data.currentTeam).toHaveProperty('created_at')
+      expect(body.data.currentTeam).toHaveProperty('updated_at')
     }
-
-    const response = await request.put(`${apiURL}/api/user/profile-information`, {
-      data: updateData,
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'Cookie': cookies,
-      },
-    })
-
-    // Assert - Note: This may need adjustment based on actual API implementation
-    expect([200, 201, 204]).toContain(response.status())
   })
 })

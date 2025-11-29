@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-use App\Events\ExampleBroadcastEvent;
 use App\Events\NotificationCreated;
 use Illuminate\Foundation\Inspiring;
+use App\Events\ExampleBroadcastEvent;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Schedule;
 

@@ -20,6 +20,21 @@ test('authenticated user can access current user endpoint', function (): void {
     $response = $this->getJson('/api/user/current');
 
     $response->assertOk()
+        ->assertJsonStructure([
+            'success',
+            'code',
+            'message',
+            'data' => [
+                'id',
+                'name',
+                'email',
+                'current_team_id',
+                'created_at',
+                'updated_at',
+                'teams',
+                'currentTeam',
+            ],
+        ])
         ->assertJson(
             fn (AssertableJson $json): AssertableJson => $json->where('success', true)
                 ->where('code', 200)
@@ -27,7 +42,10 @@ test('authenticated user can access current user endpoint', function (): void {
                 ->has('data', fn (AssertableJson $json): AssertableJson => $json->where('id', $user->id)
                     ->where('email', $user->email)
                     ->where('name', $user->name)
-                    ->etc())
+                    ->whereType('teams', 'array')
+                    ->whereType('currentTeam', ['array', 'null'])
+                    ->etc()
+                )
                 ->has('extra')
         );
 });
