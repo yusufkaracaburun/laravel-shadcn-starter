@@ -42,7 +42,8 @@ final class OauthController extends Controller
         } catch (InvalidStateException) {
             return Redirect::intended(Auth::check() ? route('profile.show') : route('login'))->with('error', __('The request timed out. Please try again.'));
         } catch (OAuthAccountLinkingException $oauthAccountLinkingException) {
-            return Redirect::intended(Auth::check() ? route('profile.show') : route('login'))->with('error', $oauthAccountLinkingException->getMessage());
+            // Let the exception handle its own response rendering
+            throw $oauthAccountLinkingException;
         } catch (Throwable $throwable) {
             report($throwable);
 

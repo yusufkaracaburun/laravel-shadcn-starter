@@ -2,16 +2,24 @@
 
 declare(strict_types=1);
 
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
 use App\Http\Middleware\EnsureTeamIsSet;
 use Illuminate\Http\Middleware\HandleCors;
+use Illuminate\Auth\AuthenticationException;
+use Illuminate\Validation\ValidationException;
+use App\Exceptions\OAuthAccountLinkingException;
 use Spatie\Permission\Middleware\RoleMiddleware;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Spatie\Permission\Middleware\PermissionMiddleware;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 use Spatie\Permission\Middleware\RoleOrPermissionMiddleware;
 use Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -52,5 +60,27 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        //
+        // Report OAuth account linking exceptions with context
+        $exceptions->report(function (OAuthAccountLinkingException $e) {
+            // Log with warning level since these are user-facing errors, not system errors
+            Log::warning('OAuth account linking failed', [
+                'message' => $e->getMessage(),
+                'exception' => $e,
+            ]);
+        });
+
+        // Render OAuth account linking exceptions properly
+        $exceptions->render(function (OAuthAccountLinkingException $e, $request) {
+            return $e->toResponse($request);
+        });
+
+        // Ignore expected exceptions from being reported (they're user-facing, not system errors)
+        $exceptions->dontReport([
+            AuthenticationException::class,
+            AuthorizationException::class,
+            ModelNotFoundException::class,
+            ValidationException::class,
+            HttpException::class,
+            NotFoundHttpException::class,
+        ]);
     })->create();
