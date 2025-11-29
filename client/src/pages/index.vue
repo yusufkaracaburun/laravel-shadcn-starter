@@ -276,6 +276,9 @@ const githubUrl = 'https://github.com/shipfastlabs/larasonic-vue'
         <div class="mx-auto w-full sm:w-2/3 items-center justify-center">
           <Terminal />
         </div>
+        <div class="mx-auto mt-8 w-full sm:w-2/3 items-center justify-center">
+          <EventListenersExampleReverbListener />
+        </div>
       </div>
     </section>
   </div>

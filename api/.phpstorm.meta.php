@@ -1626,7 +1626,7 @@ namespace PHPSTORM_META {
             'queue.failed.table' => 'string',
             'reverb.default' => 'string',
             'reverb.servers.reverb.host' => 'string',
-            'reverb.servers.reverb.port' => 'integer',
+            'reverb.servers.reverb.port' => 'string',
             'reverb.servers.reverb.path' => 'string',
             'reverb.servers.reverb.hostname' => 'string',
             'reverb.servers.reverb.options.tls' => 'array',
@@ -2278,7 +2278,7 @@ namespace PHPSTORM_META {
             'queue.failed.table' => 'string',
             'reverb.default' => 'string',
             'reverb.servers.reverb.host' => 'string',
-            'reverb.servers.reverb.port' => 'integer',
+            'reverb.servers.reverb.port' => 'string',
             'reverb.servers.reverb.path' => 'string',
             'reverb.servers.reverb.hostname' => 'string',
             'reverb.servers.reverb.options.tls' => 'array',
@@ -2930,7 +2930,7 @@ namespace PHPSTORM_META {
             'queue.failed.table' => 'string',
             'reverb.default' => 'string',
             'reverb.servers.reverb.host' => 'string',
-            'reverb.servers.reverb.port' => 'integer',
+            'reverb.servers.reverb.port' => 'string',
             'reverb.servers.reverb.path' => 'string',
             'reverb.servers.reverb.hostname' => 'string',
             'reverb.servers.reverb.options.tls' => 'array',
@@ -3309,8 +3309,7 @@ namespace PHPSTORM_META {
 'GOOGLE_CLIENT_SECRET','GITLAB_CLIENT_ID','GITLAB_CLIENT_SECRET','STRIPE_KEY','STRIPE_SECRET',
 'STRIPE_WEBHOOK_SECRET','SENTRY_LARAVEL_DSN','GEMINI_API_KEY','VITE_APP_URL','CORS_ALLOWED_ORIGINS',
 'CORS_SUPPORTS_CREDENTIALS','BROADCAST_CONNECTION','REVERB_APP_ID','REVERB_APP_KEY','REVERB_APP_SECRET',
-'REVERB_HOST','REVERB_PORT','REVERB_SCHEME','REVERB_ALLOWED_ORIGINS','VITE_REVERB_APP_KEY',
-'VITE_REVERB_HOST','VITE_REVERB_PORT','VITE_REVERB_SCHEME',);
+'REVERB_HOST','REVERB_PORT','REVERB_SCHEME','REVERB_ALLOWED_ORIGINS',);
         
                 expectedArguments(\Illuminate\Support\Facades\Gate::has(), 0, argumentsSet('auth'));
     expectedArguments(\Illuminate\Support\Facades\Gate::allows(), 0, argumentsSet('auth'));

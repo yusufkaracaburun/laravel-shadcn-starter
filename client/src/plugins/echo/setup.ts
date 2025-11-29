@@ -15,6 +15,8 @@ export function setupEcho(app: App) {
 
   const appKey = env.VITE_REVERB_APP_KEY
   const host = env.VITE_REVERB_HOST
+  const port = env.VITE_REVERB_PORT ?? 9999;
+  const forceTLS = (env.VITE_REVERB_SCHEME ?? 'http') ==='https'
   if (!appKey || !host) {
     console.warn('Reverb is enabled but missing required configuration (VITE_REVERB_APP_KEY, VITE_REVERB_HOST)')
     return
@@ -27,9 +29,9 @@ export function setupEcho(app: App) {
     broadcaster: 'reverb',
     key: appKey,
     wsHost: host,
-    wsPort: env.VITE_REVERB_PORT ?? 8080,
-    wssPort: env.VITE_REVERB_PORT ?? 8080,
-    forceTLS: (env.VITE_REVERB_SCHEME ?? 'http') === 'https',
+    wsPort: port,
+    wssPort: port,
+    forceTLS: forceTLS,
     enabledTransports: ['ws', 'wss'],
     disableStats: true,
     authEndpoint: `${env.VITE_SERVER_API_URL}${env.VITE_SERVER_API_PREFIX}/broadcasting/auth`,

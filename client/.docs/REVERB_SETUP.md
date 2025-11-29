@@ -47,9 +47,6 @@ REVERB_SCHEME=http
 # Reverb Server Credentials (API only - DO NOT share with client)
 REVERB_APP_SECRET=your-app-secret-here
 REVERB_APP_ID=your-app-id-here
-
-# Optional: Allowed origins for CORS
-REVERB_ALLOWED_ORIGINS=http://localhost:5173,http://localhost:3000,http://127.0.0.1:5173,http://127.0.0.1:3000
 ```
 
 ## Client `.env` Configuration
@@ -97,7 +94,6 @@ REVERB_APP_ID=358622
 REVERB_HOST=localhost
 REVERB_PORT=8080
 REVERB_SCHEME=http
-REVERB_ALLOWED_ORIGINS=http://localhost:5173,http://localhost:3000
 ```
 
 ### `client/.env`

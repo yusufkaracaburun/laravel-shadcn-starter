@@ -104,7 +104,6 @@ REVERB_APP_SECRET=your-app-secret
 REVERB_HOST=localhost
 REVERB_PORT=8080
 REVERB_SCHEME=http
-REVERB_ALLOWED_ORIGINS=http://localhost:5173,http://localhost:3000
 ```
 
 **Client `.env`** (`client/.env`):
