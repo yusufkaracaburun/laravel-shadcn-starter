@@ -13,5 +13,5 @@ Artisan::command('inspire', function () {
 Schedule::daily()
     ->onOneServer()
     ->group(fn () => [
-        Schedule::command('sitemap:generate'),
+        // Add scheduled commands here
     ]);

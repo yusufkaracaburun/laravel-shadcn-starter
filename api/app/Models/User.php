@@ -7,7 +7,6 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Filament\Panel;
 use InvalidArgumentException;
-use Laravel\Cashier\Billable;
 use Laravel\Sanctum\HasApiTokens;
 use Database\Factories\UserFactory;
 use Spatie\Permission\Traits\HasRoles;
@@ -23,8 +22,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 final class User extends Authenticatable implements FilamentUser
 {
     /** @use HasFactory<UserFactory> */
-    use Billable;
-
     use HasApiTokens;
     use HasFactory;
     use HasRoles;
@@ -52,10 +49,6 @@ final class User extends Authenticatable implements FilamentUser
         'remember_token',
         'two_factor_recovery_codes',
         'two_factor_secret',
-        'stripe_id',
-        'pm_type',
-        'pm_last_four',
-        'trial_ends_at',
     ];
 
     /**

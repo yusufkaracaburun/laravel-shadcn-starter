@@ -62,11 +62,7 @@ test('user has hidden attributes', function () {
     expect($user->getHidden())->toContain('password')
         ->toContain('remember_token')
         ->toContain('two_factor_recovery_codes')
-        ->toContain('two_factor_secret')
-        ->toContain('stripe_id')
-        ->toContain('pm_type')
-        ->toContain('pm_last_four')
-        ->toContain('trial_ends_at');
+        ->toContain('two_factor_secret');
 });
 
 test('user has api tokens trait', function () {

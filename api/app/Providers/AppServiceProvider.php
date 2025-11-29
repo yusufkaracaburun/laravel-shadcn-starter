@@ -24,8 +24,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Support\Facades\RateLimiter;
-use Knuckles\Scribe\Extracting\ExtractedEndpointData;
-use Symfony\Component\HttpFoundation\Request as HttpFoundationRequest;
 
 final class AppServiceProvider extends ServiceProvider
 {
@@ -45,7 +43,17 @@ final class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        /**
+         * This is optional, but it's recommended to register Telescope in local environment.
+         * You are free to remove this if you don't want to use Telescope.
+         * Remove the migration files if you don't want to use Telescope.
+         *
+         * @see https://laravel.com/docs/telescope
+         */
+        if ($this->app->environment('local') && class_exists(\Laravel\Telescope\TelescopeServiceProvider::class)) {
+            $this->app->register(\Laravel\Telescope\TelescopeServiceProvider::class);
+            $this->app->register(TelescopeServiceProvider::class);
+        }
     }
 
     /**
@@ -147,7 +155,7 @@ final class AppServiceProvider extends ServiceProvider
     private function configureScribeDocumentation(): void
     {
         if (class_exists(Scribe::class)) {
-            Scribe::beforeResponseCall(function (HttpFoundationRequest $request, ExtractedEndpointData $endpointData): void {
+            Scribe::beforeResponseCall(function (): void {
                 $user = User::query()->first();
                 if ($user) {
                     Sanctum::actingAs($user, ['*']);
