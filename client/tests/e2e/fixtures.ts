@@ -1,4 +1,4 @@
-import { test as base } from 'playwright-bdd'
+import { test as base } from '@playwright/test'
 
 import { DashboardPage } from './pages/DashboardPage'
 import { LoginPage } from './pages/LoginPage'
@@ -20,8 +20,8 @@ export interface TestFixtures {
 }
 
 /**
- * Extend base Playwright BDD test with custom fixtures
- * These fixtures are available in step definitions via the test context
+ * Extend base Playwright test with custom fixtures
+ * These fixtures are available in tests via the test context
  */
 export const test = base.extend<TestFixtures>({
   /**
@@ -56,7 +56,7 @@ export const test = base.extend<TestFixtures>({
    * Stores user data between steps within a test
    * This fixture provides a mutable object that can be updated during test execution
    */
-  testUser: async ({}, use) => {
+  testUser: async ({ page: _page }, use) => {
     // Create a mutable object that can be updated in steps
     const testUserStore: { email: string, password: string, name: string } | null = null
     await use(testUserStore)

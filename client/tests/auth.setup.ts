@@ -5,7 +5,7 @@ import { registerUser } from './helpers/api-helpers'
 import { generateTestUser } from './helpers/test-data'
 
 // Path to store authenticated state (relative to project root)
-const authFile = 'playwright/.auth/user.json'
+const authFile = '.auth/user.json'
 
 /**
  * Authentication setup
