@@ -5,13 +5,11 @@ declare(strict_types=1);
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Filament\Panel;
 use InvalidArgumentException;
 use Laravel\Sanctum\HasApiTokens;
 use Database\Factories\UserFactory;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Notifications\Notifiable;
-use Filament\Models\Contracts\FilamentUser;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -19,7 +17,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-final class User extends Authenticatable implements FilamentUser
+final class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
     use HasApiTokens;
@@ -50,20 +48,6 @@ final class User extends Authenticatable implements FilamentUser
         'two_factor_recovery_codes',
         'two_factor_secret',
     ];
-
-    /**
-     * Configure the panel access.
-     * In production, you should modify this to check for admin permissions.
-     *
-     * @see https://docs.larasonic.com/features/admin
-     */
-    public function canAccessPanel(Panel $panel): bool
-    {
-        // In local environment, allow all users
-        // In production, you should check for admin permissions:
-        // return $this->is_admin ?? false;
-        return true;
-    }
 
     /**
      * Get the Oauth Connections for the user.
