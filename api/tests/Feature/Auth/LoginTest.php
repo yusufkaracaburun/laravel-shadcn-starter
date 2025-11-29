@@ -23,7 +23,7 @@ beforeEach(function (): void {
 
 test('user can login with valid credentials', function () {
     $uniqueEmail = 'valid-login-'.uniqid().'@example.com';
-    
+
     $user = User::factory()->create([
         'email' => $uniqueEmail,
         'password' => Hash::make('password123'),
@@ -45,7 +45,7 @@ test('user can login with valid credentials', function () {
 
 test('user cannot login with invalid credentials', function () {
     $uniqueEmail = 'invalid-login-'.uniqid().'@example.com';
-    
+
     $user = User::factory()->create([
         'email' => $uniqueEmail,
         'password' => Hash::make('password123'),
@@ -62,7 +62,7 @@ test('user cannot login with invalid credentials', function () {
 
 test('user cannot login with non-existent email', function () {
     $uniqueEmail = 'nonexistent-'.uniqid().'@example.com';
-    
+
     $response = $this->postJson('/login', [
         'email' => $uniqueEmail,
         'password' => 'password123',
@@ -76,7 +76,7 @@ test('login requires email field', function () {
     // Use a unique email in the request body to avoid rate limiting
     // Even though email is missing, Fortify might still rate limit by IP
     $uniqueEmail = 'no-email-field-'.uniqid().'@example.com';
-    
+
     $response = $this->postJson('/login', [
         'password' => 'password123',
     ]);
@@ -88,7 +88,7 @@ test('login requires email field', function () {
 test('login requires password field', function () {
     // Use a unique email to avoid rate limiting from previous tests
     $uniqueEmail = 'password-field-test-'.uniqid().'@example.com';
-    
+
     $response = $this->postJson('/login', [
         'email' => $uniqueEmail,
     ]);
@@ -100,7 +100,7 @@ test('login requires password field', function () {
 test('login requires valid email format', function () {
     // Use a unique invalid email to avoid rate limiting
     $uniqueInvalidEmail = 'invalid-email-'.uniqid();
-    
+
     $response = $this->postJson('/login', [
         'email' => $uniqueInvalidEmail,
         'password' => 'password123',

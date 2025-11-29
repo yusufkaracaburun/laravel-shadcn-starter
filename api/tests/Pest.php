@@ -50,7 +50,7 @@ use Illuminate\Support\Facades\RateLimiter;
 
 /**
  * Clear login rate limiter for testing.
- * 
+ *
  * This matches the exact key format used in FortifyServiceProvider:
  * - If email is provided: Str::transliterate(Str::lower($email)).'|'.$ip
  * - If email is empty: $ip only
@@ -58,7 +58,7 @@ use Illuminate\Support\Facades\RateLimiter;
 function clearLoginRateLimiter(string $email = 'test@example.com', string $ip = '127.0.0.1'): void
 {
     $email = trim($email);
-    
+
     if ($email !== '') {
         // Match the exact format from FortifyServiceProvider for non-empty emails
         $throttleKey = Str::transliterate(Str::lower($email)).'|'.$ip;

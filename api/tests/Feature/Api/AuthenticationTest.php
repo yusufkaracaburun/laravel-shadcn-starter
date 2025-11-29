@@ -29,7 +29,7 @@ test('user can get csrf cookie', function (): void {
 
 test('user can login with valid credentials', function (): void {
     $uniqueEmail = 'api-valid-login-'.uniqid().'@example.com';
-    
+
     $user = User::factory()->create([
         'email' => $uniqueEmail,
         'password' => Hash::make('password123'),
