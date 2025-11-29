@@ -14,6 +14,12 @@ const EnvSchema = z.object({
   VITE_SERVER_API_URL: z.string().url(),
   VITE_SERVER_API_PREFIX: z.string(),
   VITE_SERVER_API_TIMEOUT: z.coerce.number().default(5000),
+  // Reverb (WebSocket) configuration
+  VITE_REVERB_ENABLED: z.string().optional().default('false'),
+  VITE_REVERB_APP_KEY: z.string().optional(),
+  VITE_REVERB_HOST: z.string().optional(),
+  VITE_REVERB_PORT: z.coerce.number().optional().default(8080),
+  VITE_REVERB_SCHEME: z.enum(['http', 'https']).optional().default('http'),
 })
 
 export type env = z.infer<typeof EnvSchema>

@@ -17,7 +17,7 @@ Laravel is a web application framework with expressive, elegant syntax. We belie
 - Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
 - Database agnostic [schema migrations](https://laravel.com/docs/migrations).
 - [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- [Real-time event broadcasting with Laravel Reverb](https://laravel.com/docs/12.x/reverb).
 
 Laravel is accessible, powerful, and provides tools required for large, robust applications.
 
@@ -82,6 +82,94 @@ make migrate           # Run migrations in development
 ```
 
 For detailed Docker documentation, see [.deployment/README.md](.deployment/README.md).
+
+## Laravel Reverb (Real-time WebSocket Communication)
+
+This application is configured with [Laravel Reverb](https://laravel.com/docs/12.x/reverb) for real-time WebSocket communication.
+
+### Configuration
+
+Reverb is configured in `config/reverb.php` and `config/broadcasting.php`. The default broadcaster is set to `reverb`.
+
+### Environment Variables
+
+**API `.env`** (`api/.env`):
+
+```env
+# Reverb Configuration
+BROADCAST_CONNECTION=reverb
+REVERB_APP_ID=your-app-id
+REVERB_APP_KEY=your-app-key
+REVERB_APP_SECRET=your-app-secret
+REVERB_HOST=localhost
+REVERB_PORT=8080
+REVERB_SCHEME=http
+REVERB_ALLOWED_ORIGINS=http://localhost:5173,http://localhost:3000
+```
+
+**Client `.env`** (`client/.env`):
+
+```env
+# Reverb Configuration (must match API values)
+VITE_REVERB_ENABLED=true
+VITE_REVERB_APP_KEY=your-app-key          # Same as REVERB_APP_KEY above
+VITE_REVERB_HOST=localhost                 # Same as REVERB_HOST above
+VITE_REVERB_PORT=8080                      # Same as REVERB_PORT above
+VITE_REVERB_SCHEME=http                    # Same as REVERB_SCHEME above
+```
+
+> **Note**: The client only needs the **public** credentials (`APP_KEY`, `HOST`, `PORT`, `SCHEME`). The secret and app ID stay in the API `.env` only. See [REVERB_SETUP.md](../REVERB_SETUP.md) for detailed setup instructions.
+
+### Running Reverb Server
+
+The Reverb server is automatically started when you run `composer run dev`. You can also start it manually:
+
+```bash
+php artisan reverb:start
+```
+
+### Broadcasting Events
+
+Create events that implement `ShouldBroadcast`:
+
+```php
+use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+
+class ExampleBroadcastEvent implements ShouldBroadcast
+{
+    public function broadcastOn(): array
+    {
+        return [new Channel('example-channel')];
+    }
+}
+```
+
+Then broadcast the event:
+
+```php
+event(new ExampleBroadcastEvent('Hello from Reverb!'));
+```
+
+### Client-Side Usage
+
+The Vue client is configured with Laravel Echo. Use the `useEcho()` composable:
+
+```vue
+<script setup>
+import { useEcho } from '@/composables/use-echo'
+
+const echo = useEcho()
+
+if (echo) {
+  echo.channel('example-channel')
+    .listen('.example.event', (data) => {
+      console.log('Received:', data)
+    })
+}
+</script>
+```
+
+See `client/src/components/example-reverb-listener.vue` for a complete example.
 
 ## License
 

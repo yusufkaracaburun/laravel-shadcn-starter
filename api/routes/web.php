@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Events\ExampleBroadcastEvent;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\User\OauthController;
 
@@ -20,4 +21,8 @@ require __DIR__.'/auth.php';
 
 Route::middleware('auth')->group(function (): void {
     Route::delete('/auth/destroy/{provider}', [OauthController::class, 'destroy'])->name('oauth.destroy');
+});
+
+Route::get('/reverb', function (): void {
+   event(new ExampleBroadcastEvent('Hello from Reverb!'));
 });
