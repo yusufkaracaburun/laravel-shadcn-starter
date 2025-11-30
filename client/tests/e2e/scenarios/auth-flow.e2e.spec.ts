@@ -1,16 +1,18 @@
 import { registerUser } from '../../helpers/api-helpers'
-import { generateTestUser } from '../../helpers/test-data'
+import { testusers } from '../.data/testusers'
 import { expect, test } from '../fixtures'
 
 test.describe('Authentication Flow', () => {
   test('User can complete full authentication flow (register → login → logout)', async ({ page, registerPage, dashboardPage }) => {
+    const user = testusers.customer
+
     await test.step('Navigate to register page', async () => {
       await registerPage.navigate()
       await registerPage.verifyOnPage()
     })
 
     await test.step('Fill registration form', async () => {
-      await registerPage.fillForm('Test User', 'flowuser@example.com', 'password123', 'password123')
+      await registerPage.fillForm(user.name, user.email, user.password, user.password)
     })
 
     await test.step('Submit registration form', async () => {
@@ -41,17 +43,14 @@ test.describe('Authentication Flow', () => {
   })
 
   test('User can access protected routes after login', async ({ page, loginPage, dashboardPage, request }) => {
-    const user = generateTestUser()
-    user.email = 'protected@example.com'
-    user.password = 'password123'
-    user.password_confirmation = 'password123'
+    const user = testusers.customer
 
     await test.step('Register user via API', async () => {
       await registerUser(request, {
         name: user.name,
         email: user.email,
         password: user.password,
-        password_confirmation: user.password_confirmation,
+        password_confirmation: user.password,
       })
     })
 
@@ -61,7 +60,7 @@ test.describe('Authentication Flow', () => {
     })
 
     await test.step('Fill login form', async () => {
-      await loginPage.fillForm('protected@example.com', 'password123')
+      await loginPage.fillForm(user.email, user.password)
     })
 
     await test.step('Submit login form', async () => {
@@ -89,11 +88,12 @@ test.describe('Authentication Flow', () => {
     const page = await context.newPage()
 
     await test.step('Navigate to dashboard without authentication', async () => {
-      await page.goto('/dashboard', { waitUntil: 'domcontentloaded' })
+      await page.goto('/dashboard')
     })
 
-    await test.step('Wait for redirect to login page', async () => {
+    await test.step('Wait for client-side redirect to login page', async () => {
       await page.waitForURL(/.*\/auth\/sign-in/)
+      await page.waitForLoadState('networkidle')
     })
 
     await test.step('Verify redirect to login page', async () => {
@@ -104,17 +104,14 @@ test.describe('Authentication Flow', () => {
   })
 
   test('User session persists after page reload', async ({ page, loginPage, dashboardPage, request }) => {
-    const user = generateTestUser()
-    user.email = 'session@example.com'
-    user.password = 'password123'
-    user.password_confirmation = 'password123'
+    const user = testusers.customer
 
     await test.step('Register user via API', async () => {
       await registerUser(request, {
         name: user.name,
         email: user.email,
         password: user.password,
-        password_confirmation: user.password_confirmation,
+        password_confirmation: user.password,
       })
     })
 
@@ -124,7 +121,7 @@ test.describe('Authentication Flow', () => {
     })
 
     await test.step('Fill login form', async () => {
-      await loginPage.fillForm('session@example.com', 'password123')
+      await loginPage.fillForm(user.email, user.password)
     })
 
     await test.step('Submit login form', async () => {

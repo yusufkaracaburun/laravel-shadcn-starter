@@ -2,6 +2,7 @@ import type { Page } from '@playwright/test'
 
 import { expect } from '@playwright/test'
 
+import { apiURL } from '../../../playwright.config'
 import { BasePage } from './BasePage'
 
 /**
@@ -71,15 +72,14 @@ export class RegisterPage extends BasePage {
     const responsePromise = this.page.waitForResponse((response) => {
       const url = response.url()
       const method = response.request().method()
-      return (url.includes('/register') || url.endsWith('/register')) && method === 'POST'
+      // Match POST requests to the register endpoint on the API server
+      // Exclude CSRF cookie requests (GET requests to /sanctum/csrf-cookie)
+      return url.startsWith(apiURL) && (url.endsWith('/register') || url.endsWith('/register/')) && method === 'POST'
     })
     await submitButton.click()
-    const response = await responsePromise
+    await responsePromise
     const spinner = this.getByTestId('register-form_loading_spinner')
     await spinner.waitFor({ state: 'hidden' }).catch(() => {})
-    if (response.status() >= 200 && response.status() < 300) {
-      await this.page.waitForLoadState('networkidle')
-    }
   }
 
   /**

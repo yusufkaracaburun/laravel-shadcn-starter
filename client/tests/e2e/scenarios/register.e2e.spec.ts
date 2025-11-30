@@ -1,5 +1,6 @@
 import { registerUser } from '../../helpers/api-helpers'
 import { generateTestUser } from '../../helpers/test-data'
+import { testusers } from '../.data/testusers'
 import { expect, test } from '../fixtures'
 
 test.describe('User Registration', () => {
@@ -29,17 +30,14 @@ test.describe('User Registration', () => {
   })
 
   test('User cannot register with duplicate email', async ({ page, registerPage, request }) => {
-    const user = generateTestUser()
-    user.email = 'existing@example.com'
-    user.password = 'password123'
-    user.password_confirmation = 'password123'
+    const existingUser = testusers.customer
 
     await test.step('Register user via API', async () => {
       await registerUser(request, {
-        name: user.name,
-        email: user.email,
-        password: user.password,
-        password_confirmation: user.password_confirmation,
+        name: existingUser.name,
+        email: existingUser.email,
+        password: existingUser.password,
+        password_confirmation: existingUser.password,
       })
     })
 
@@ -49,7 +47,7 @@ test.describe('User Registration', () => {
     })
 
     await test.step('Fill registration form with duplicate email', async () => {
-      await registerPage.fillForm('Another User', 'existing@example.com', 'password123', 'password123')
+      await registerPage.fillForm('Another User', existingUser.email, existingUser.password, existingUser.password)
     })
 
     await test.step('Submit registration form', async () => {

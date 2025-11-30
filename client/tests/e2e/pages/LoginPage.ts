@@ -1,6 +1,8 @@
-import { expect } from '@playwright/test'
 import type { Page } from '@playwright/test'
 
+import { expect } from '@playwright/test'
+
+import { apiURL } from '../../../playwright.config'
 import { BasePage } from './BasePage'
 
 /**
@@ -52,15 +54,14 @@ export class LoginPage extends BasePage {
     const responsePromise = this.page.waitForResponse((response) => {
       const url = response.url()
       const method = response.request().method()
-      return (url.includes('/login') || url.endsWith('/login')) && method === 'POST'
+      // Match POST requests to the login endpoint on the API server
+      // Exclude CSRF cookie requests (GET requests to /sanctum/csrf-cookie)
+      return url.startsWith(apiURL) && (url.endsWith('/login') || url.endsWith('/login/')) && method === 'POST'
     })
     await submitButton.click()
-    const response = await responsePromise
+    await responsePromise
     const spinner = this.getByTestId('login-form_loading_spinner')
     await spinner.waitFor({ state: 'hidden' }).catch(() => {})
-    if (response.status() >= 200 && response.status() < 300) {
-      await this.page.waitForLoadState('networkidle')
-    }
   }
 
   /**
@@ -104,4 +105,3 @@ export class LoginPage extends BasePage {
     await this.submit()
   }
 }
-

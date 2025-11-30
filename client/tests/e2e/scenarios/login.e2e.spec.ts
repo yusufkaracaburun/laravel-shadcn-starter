@@ -1,20 +1,17 @@
 import { registerUser } from '../../helpers/api-helpers'
-import { generateTestUser } from '../../helpers/test-data'
+import { testusers } from '../.data/testusers'
 import { expect, test } from '../fixtures'
 
 test.describe('User Login', () => {
   test('User can login successfully with valid credentials', async ({ page, loginPage, dashboardPage, request }) => {
-    const user = generateTestUser()
-    user.email = 'test@example.com'
-    user.password = 'password123'
-    user.password_confirmation = 'password123'
+    const user = testusers.customer
 
     await test.step('Register user via API', async () => {
       await registerUser(request, {
         name: user.name,
         email: user.email,
         password: user.password,
-        password_confirmation: user.password_confirmation,
+        password_confirmation: user.password,
       })
     })
 
@@ -24,7 +21,7 @@ test.describe('User Login', () => {
     })
 
     await test.step('Fill login form', async () => {
-      await loginPage.fillForm('test@example.com', 'password123')
+      await loginPage.fillForm(user.email, user.password)
     })
 
     await test.step('Submit login form', async () => {
@@ -71,17 +68,14 @@ test.describe('User Login', () => {
   })
 
   test('User is redirected to dashboard after successful login', async ({ page, loginPage, dashboardPage, request }) => {
-    const user = generateTestUser()
-    user.email = 'test@example.com'
-    user.password = 'password123'
-    user.password_confirmation = 'password123'
+    const user = testusers.customer
 
     await test.step('Register user via API', async () => {
       await registerUser(request, {
         name: user.name,
         email: user.email,
         password: user.password,
-        password_confirmation: user.password_confirmation,
+        password_confirmation: user.password,
       })
     })
 
@@ -91,7 +85,7 @@ test.describe('User Login', () => {
     })
 
     await test.step('Fill login form', async () => {
-      await loginPage.fillForm('test@example.com', 'password123')
+      await loginPage.fillForm(user.email, user.password)
     })
 
     await test.step('Submit login form', async () => {

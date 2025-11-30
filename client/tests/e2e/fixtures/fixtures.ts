@@ -1,8 +1,8 @@
 import { test as base } from '@playwright/test'
 
-import { DashboardPage } from './pages/DashboardPage'
-import { LoginPage } from './pages/LoginPage'
-import { RegisterPage } from './pages/RegisterPage'
+import { DashboardPage } from '../pages/DashboardPage.js'
+import { LoginPage } from '../pages/LoginPage.js'
+import { RegisterPage } from '../pages/RegisterPage.js'
 
 /**
  * Custom fixtures for E2E tests
