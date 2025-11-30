@@ -30,7 +30,7 @@ export default defineConfig({
       testMatch: /.*\.setup\.ts$/,
     },
     {
-      name: 'chromium',
+      name: 'e2e',
       use: {
         ...devices['Desktop Chrome'],
         storageState: '.auth/user.json',
@@ -41,7 +41,7 @@ export default defineConfig({
       ],
     },
     {
-      name: 'chromium-unauth',
+      name: 'e2e-unauth',
       use: {
         ...devices['Desktop Chrome'],
       },

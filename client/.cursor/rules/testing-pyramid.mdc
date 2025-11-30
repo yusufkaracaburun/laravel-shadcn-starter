@@ -1,10 +1,10 @@
 ---
 description: Testing Pyramid guidelines for client/frontend test files only - enforces proper test structure, naming conventions, and pyramid principles for TypeScript/JavaScript tests
 globs:
-  - "tests/**/*.spec.ts"
-  - "tests/**/*.spec.js"
-  - "tests/**/*.test.ts"
-  - "tests/**/*.test.js"
+  - "client/tests/**/*.spec.ts"
+  - "client/tests/**/*.spec.js"
+  - "client/tests/**/*.test.ts"
+  - "client/tests/**/*.test.js"
 alwaysApply: false
 ---
 
@@ -40,12 +40,36 @@ When writing or modifying test files, strictly follow the Testing Pyramid princi
 
 ## Test Structure (REQUIRED)
 
-All TypeScript/JavaScript tests MUST follow this structure:
+Test structure depends on the test framework:
+
+### Unit and Component Tests (Vitest)
+
+Use `describe()` and `it()` for unit and component tests:
 
 ```typescript
+import { describe, it, expect } from 'vitest'
+
 describe('Component/Feature Name', () => {
   describe('when condition X', () => {
     it('should do Y', () => {
+      // Arrange
+      // Act
+      // Assert
+    })
+  })
+})
+```
+
+### E2E and API Tests (Playwright)
+
+Use `test.describe()` and `test()` for E2E and API tests:
+
+```typescript
+import { test, expect } from '@playwright/test'
+
+test.describe('Feature Name', () => {
+  test.describe('when condition X', () => {
+    test('should do Y', async ({ page, request }) => {
       // Arrange
       // Act
       // Assert
@@ -74,6 +98,8 @@ describe('Component/Feature Name', () => {
 
 **Example**:
 ```typescript
+import { describe, it, expect } from 'vitest'
+
 describe('UserService', () => {
   it('should calculate user age correctly', () => {
     // Arrange
