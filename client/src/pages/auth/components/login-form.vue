@@ -1,5 +1,7 @@
 <script lang="ts" setup>
 import { useAuth } from '@/composables/use-auth'
+import env from '@/utils/env'
+import { testusers } from '../../../../tests/.data/users.data'
 
 import GitHubButton from './github-button.vue'
 import GoogleButton from './google-button.vue'
@@ -13,6 +15,8 @@ const email = ref('')
 const password = ref('')
 const remember = ref(false)
 
+const isLocalEnv = computed(() => env.VITE_APP_ENV === 'local')
+
 async function handleLogin() {
   if (!email.value || !password.value) {
     return
@@ -21,6 +25,22 @@ async function handleLogin() {
   await login({
     email: email.value,
     password: password.value,
+    remember: remember.value,
+  })
+}
+
+async function quickLogin(userKey: keyof typeof testusers) {
+  const user = testusers[userKey]
+  if (!user) {
+    return
+  }
+
+  email.value = user.email
+  password.value = user.password
+
+  await login({
+    email: user.email,
+    password: user.password,
     remember: remember.value,
   })
 }
@@ -76,6 +96,24 @@ async function handleLogin() {
         <GitHubButton :test-id="'login-form_github_button'" />
         <GoogleButton :test-id="'login-form_google_button'" />
       </div>
+
+      <template v-if="isLocalEnv">
+        <UiSeparator label="Quick Login (Local Only)" />
+        <div class="grid gap-2">
+          <UiButton
+            v-for="(user, key) in testusers"
+            :key="key"
+            variant="outline"
+            size="sm"
+            class="w-full justify-start"
+            :disabled="loading"
+            :data-testid="`login-form_quick-login_${key}_button`"
+            @click="quickLogin(key as keyof typeof testusers)"
+          >
+            {{ user.name }}
+          </UiButton>
+        </div>
+      </template>
 
       <UiCardDescription>
         By clicking login, you agree to our
