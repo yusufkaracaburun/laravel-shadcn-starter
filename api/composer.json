@@ -103,7 +103,7 @@
             "@pre:test",
             "./vendor/bin/pest --parallel --filter=Unit"
         ],
-        "test:features": [
+        "test:feature": [
             "@pre:test",
             "./vendor/bin/pest --parallel --filter=Feature"
         ],

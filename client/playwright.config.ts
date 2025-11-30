@@ -53,6 +53,8 @@ export default defineConfig({
       name: 'api',
       use: { ...devices['Desktop Chrome'] },
       testMatch: /tests\/.*\.api\.spec\.ts$/,
+      fullyParallel: false,
+      workers: 2,
     },
   ],
   webServer: [
