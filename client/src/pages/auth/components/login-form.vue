@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import { useAuth } from '@/composables/use-auth'
 import env from '@/utils/env'
-import { testusers } from '../../../../tests/.data/users.data'
 
+import { testusers } from '../../../../tests/.data/users.data'
 import GitHubButton from './github-button.vue'
 import GoogleButton from './google-button.vue'
 import PrivacyPolicyButton from './privacy-policy-button.vue'
@@ -55,7 +55,7 @@ async function quickLogin(userKey: keyof typeof testusers) {
       <UiCardDescription>
         Enter your email and password below to log into your account.
         Not have an account?
-        <UiButton variant="link" class="px-0 text-muted-foreground" @click="$router.push('/auth/sign-up')" data-testid="login-form_sign-up_link">
+        <UiButton variant="link" class="px-0 text-muted-foreground" data-testid="login-form_sign-up_link" @click="$router.push('/auth/sign-up')">
           Sign Up
         </UiButton>
       </UiCardDescription>
@@ -84,7 +84,7 @@ async function quickLogin(userKey: keyof typeof testusers) {
           </div>
 
           <UiButton type="submit" class="w-full" :disabled="loading" data-testid="login-form_submit_button">
-            <UiSpinner v-if="loading" class="mr-2" data-testid="login-form_loading_spinner" />
+            <UiSpinner v-if="loading" class="mr-2" />
             Login
           </UiButton>
         </div>
@@ -93,8 +93,8 @@ async function quickLogin(userKey: keyof typeof testusers) {
       <UiSeparator label="Or continue with" />
 
       <div class="flex flex-col items-center justify-between gap-4">
-        <GitHubButton :test-id="'login-form_github_button'" />
-        <GoogleButton :test-id="'login-form_google_button'" />
+        <GitHubButton />
+        <GoogleButton />
       </div>
 
       <template v-if="isLocalEnv">
