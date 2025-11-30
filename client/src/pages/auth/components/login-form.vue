@@ -1,5 +1,7 @@
 <script lang="ts" setup>
 import { useAuth } from '@/composables/use-auth'
+import env from '@/utils/env'
+import { testusers } from '../../../../tests/.data/users.data'
 
 import GitHubButton from './github-button.vue'
 import GoogleButton from './google-button.vue'
@@ -13,6 +15,8 @@ const email = ref('')
 const password = ref('')
 const remember = ref(false)
 
+const isLocalEnv = computed(() => env.VITE_APP_ENV === 'local')
+
 async function handleLogin() {
   if (!email.value || !password.value) {
     return
@@ -21,6 +25,22 @@ async function handleLogin() {
   await login({
     email: email.value,
     password: password.value,
+    remember: remember.value,
+  })
+}
+
+async function quickLogin(userKey: keyof typeof testusers) {
+  const user = testusers[userKey]
+  if (!user) {
+    return
+  }
+
+  email.value = user.email
+  password.value = user.password
+
+  await login({
+    email: user.email,
+    password: user.password,
     remember: remember.value,
   })
 }
@@ -35,7 +55,7 @@ async function handleLogin() {
       <UiCardDescription>
         Enter your email and password below to log into your account.
         Not have an account?
-        <UiButton variant="link" class="px-0 text-muted-foreground" @click="$router.push('/auth/sign-up')">
+        <UiButton variant="link" class="px-0 text-muted-foreground" @click="$router.push('/auth/sign-up')" data-testid="login-form_sign-up_link">
           Sign Up
         </UiButton>
       </UiCardDescription>
@@ -47,7 +67,7 @@ async function handleLogin() {
             <UiLabel for="email">
               Email
             </UiLabel>
-            <UiInput id="email" v-model="email" type="email" placeholder="m@example.com" required :disabled="loading" />
+            <UiInput id="email" v-model="email" type="email" placeholder="m@example.com" required :disabled="loading" data-testid="login-form_email_input" />
           </div>
           <div class="grid gap-2">
             <div class="flex items-center justify-between">
@@ -59,11 +79,12 @@ async function handleLogin() {
             <UiInput
               id="password" v-model="password" type="password" required placeholder="*********"
               :disabled="loading"
+              data-testid="login-form_password_input"
             />
           </div>
 
-          <UiButton type="submit" class="w-full" :disabled="loading">
-            <UiSpinner v-if="loading" class="mr-2" />
+          <UiButton type="submit" class="w-full" :disabled="loading" data-testid="login-form_submit_button">
+            <UiSpinner v-if="loading" class="mr-2" data-testid="login-form_loading_spinner" />
             Login
           </UiButton>
         </div>
@@ -72,9 +93,27 @@ async function handleLogin() {
       <UiSeparator label="Or continue with" />
 
       <div class="flex flex-col items-center justify-between gap-4">
-        <GitHubButton />
-        <GoogleButton />
+        <GitHubButton :test-id="'login-form_github_button'" />
+        <GoogleButton :test-id="'login-form_google_button'" />
       </div>
+
+      <template v-if="isLocalEnv">
+        <UiSeparator label="Quick Login (Local Only)" />
+        <div class="grid gap-2">
+          <UiButton
+            v-for="(user, key) in testusers"
+            :key="key"
+            variant="outline"
+            size="sm"
+            class="w-full justify-start"
+            :disabled="loading"
+            :data-testid="`login-form_quick-login_${key}_button`"
+            @click="quickLogin(key as keyof typeof testusers)"
+          >
+            {{ user.name }}
+          </UiButton>
+        </div>
+      </template>
 
       <UiCardDescription>
         By clicking login, you agree to our

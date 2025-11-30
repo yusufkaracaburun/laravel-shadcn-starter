@@ -49,6 +49,7 @@ async function handleRegister() {
             <UiButton
               variant="link" class="px-0 text-muted-foreground"
               @click="$router.push('/auth/sign-in')"
+              data-testid="register-form_sign-in_link"
             >
               Sign In
             </UiButton>
@@ -67,6 +68,7 @@ async function handleRegister() {
                   placeholder="John Doe"
                   required
                   :disabled="loading"
+                  data-testid="register-form_name_input"
                 />
               </div>
               <div class="grid gap-2">
@@ -80,6 +82,7 @@ async function handleRegister() {
                   placeholder="m@example.com"
                   required
                   :disabled="loading"
+                  data-testid="register-form_email_input"
                 />
               </div>
               <div class="grid gap-2">
@@ -93,6 +96,7 @@ async function handleRegister() {
                   placeholder="******"
                   required
                   :disabled="loading"
+                  data-testid="register-form_password_input"
                 />
               </div>
               <div class="grid gap-2">
@@ -106,10 +110,11 @@ async function handleRegister() {
                   placeholder="******"
                   required
                   :disabled="loading"
+                  data-testid="register-form_password-confirmation_input"
                 />
               </div>
-              <UiButton type="submit" class="w-full" :disabled="loading">
-                <UiSpinner v-if="loading" class="mr-2" />
+              <UiButton type="submit" class="w-full" :disabled="loading" data-testid="register-form_submit_button">
+                <UiSpinner v-if="loading" class="mr-2" data-testid="register-form_loading_spinner" />
                 Create Account
               </UiButton>
             </div>
@@ -118,8 +123,8 @@ async function handleRegister() {
           <UiSeparator label="Or continue with" />
 
           <div class="flex flex-col items-center justify-between gap-4">
-            <GitHubButton />
-            <GoogleButton />
+            <GitHubButton :test-id="'register-form_github_button'" />
+            <GoogleButton :test-id="'register-form_google_button'" />
           </div>
 
           <UiCardDescription>

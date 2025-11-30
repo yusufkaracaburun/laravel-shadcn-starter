@@ -31,6 +31,24 @@ final class EnsureTeamIsSet
             ], Response::HTTP_UNAUTHORIZED);
         }
 
+        // Super admin bypasses team requirement
+        // Check hasRole with team context cleared and cache cleared
+        $permissionRegistrar = app(PermissionRegistrar::class);
+        $originalTeamId = $permissionRegistrar->getPermissionsTeamId();
+        $permissionRegistrar->setPermissionsTeamId(null);
+
+        // Clear cache and roles relation for fresh check
+        $permissionRegistrar->forgetCachedPermissions();
+
+        $user->unsetRelation('roles');
+        $isSuperAdmin = $user->hasRole('super-admin');
+
+        $permissionRegistrar->setPermissionsTeamId($originalTeamId);
+
+        if ($isSuperAdmin) {
+            return $next($request);
+        }
+
         if (! $user->current_team_id) {
             return response()->json([
                 'message' => 'No active team selected. Please select a team first.',

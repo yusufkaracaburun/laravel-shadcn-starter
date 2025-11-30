@@ -3106,8 +3106,9 @@ namespace PHPSTORM_META {
     override(\optional(0), type(0));
 
             registerArgumentsSet('auth', 
-'viewTelescope','viewAny','view','create','update',
-'delete','manage','restore','forceDelete','belongsToSameTeam',);
+'viewTelescope','before','viewAny','view','create',
+'update','delete','manage','restore','forceDelete',
+'belongsToSameTeam',);
         registerArgumentsSet('configs', 
 'app.name','app.env','app.debug','app.url','app.frontend_url',
 'app.asset_url','app.timezone','app.locale','app.fallback_locale','app.faker_locale',
@@ -3250,11 +3251,10 @@ namespace PHPSTORM_META {
 'register.store','verification.verify','verification.send','user-profile-information.update','user-password.update',
 'password.confirmation','password.confirm.store','two-factor.login.store','two-factor.enable','two-factor.confirm',
 'two-factor.disable','two-factor.qr-code','two-factor.secret-key','two-factor.recovery-codes','two-factor.regenerate-recovery-codes',
-'sanctum.csrf-cookie','generated::X04zVcIRWvJaEUtv','api.user.current','user.index','user.store',
+'sanctum.csrf-cookie','api.user.current','user.index','user.store',
 'user.show','user.update','user.destroy','teams.index','teams.store',
-'teams.show','teams.update','teams.destroy','api.teams.switch','generated::Tw3U5aOlRBgES7rZ',
-'oauth.redirect','oauth.callback','login-link.store','login-link.login','oauth.destroy',
-'generated::krNJZln8FaSD3TWQ','storage.local',);
+'teams.show','teams.update','teams.destroy','api.teams.switch',
+'oauth.redirect','oauth.callback','login-link.store','login-link.login','oauth.destroy','storage.local',);
         registerArgumentsSet('views', 
 'laravel-exceptions-renderer::components.badge','laravel-exceptions-renderer::components.empty-state','laravel-exceptions-renderer::components.file-with-line','laravel-exceptions-renderer::components.formatted-source','laravel-exceptions-renderer::components.frame',
 'laravel-exceptions-renderer::components.frame-code','laravel-exceptions-renderer::components.header','laravel-exceptions-renderer::components.http-method','laravel-exceptions-renderer::components.icons.alert','laravel-exceptions-renderer::components.icons.check',

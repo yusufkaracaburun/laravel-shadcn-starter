@@ -29,6 +29,9 @@ test('user can login with valid credentials', function (): void {
         'password' => Hash::make('password123'),
     ]);
 
+    // Get CSRF cookie first
+    $this->get('/sanctum/csrf-cookie');
+
     $response = $this->postJson('/login', [
         'email' => $uniqueEmail,
         'password' => 'password123',
@@ -51,6 +54,9 @@ test('user cannot login with invalid credentials', function (): void {
         'password' => Hash::make('password123'),
     ]);
 
+    // Get CSRF cookie first
+    $this->get('/sanctum/csrf-cookie');
+
     $response = $this->postJson('/login', [
         'email' => $uniqueEmail,
         'password' => 'wrong-password',
@@ -62,6 +68,9 @@ test('user cannot login with invalid credentials', function (): void {
 
 test('user cannot login with non-existent email', function (): void {
     $uniqueEmail = 'nonexistent-'.uniqid().'@example.com';
+
+    // Get CSRF cookie first
+    $this->get('/sanctum/csrf-cookie');
 
     $response = $this->postJson('/login', [
         'email' => $uniqueEmail,
@@ -77,6 +86,9 @@ test('login requires email field', function (): void {
     // Even though email is missing, Fortify might still rate limit by IP
     $uniqueEmail = 'no-email-field-'.uniqid().'@example.com';
 
+    // Get CSRF cookie first
+    $this->get('/sanctum/csrf-cookie');
+
     $response = $this->postJson('/login', [
         'password' => 'password123',
     ]);
@@ -88,6 +100,9 @@ test('login requires email field', function (): void {
 test('login requires password field', function (): void {
     // Use a unique email to avoid rate limiting from previous tests
     $uniqueEmail = 'password-field-test-'.uniqid().'@example.com';
+
+    // Get CSRF cookie first
+    $this->get('/sanctum/csrf-cookie');
 
     $response = $this->postJson('/login', [
         'email' => $uniqueEmail,
@@ -101,6 +116,9 @@ test('login requires valid email format', function (): void {
     // Use a unique invalid email to avoid rate limiting
     $uniqueInvalidEmail = 'invalid-email-'.uniqid();
 
+    // Get CSRF cookie first
+    $this->get('/sanctum/csrf-cookie');
+
     $response = $this->postJson('/login', [
         'email' => $uniqueInvalidEmail,
         'password' => 'password123',
@@ -113,12 +131,18 @@ test('login requires valid email format', function (): void {
 test('user can logout when authenticated', function (): void {
     $user = User::factory()->create();
 
+    // Get CSRF cookie first
+    $this->get('/sanctum/csrf-cookie');
+
     $response = $this->actingAs($user)->postJson('/logout');
 
     $response->assertStatus(204);
 });
 
 test('user cannot logout when not authenticated', function (): void {
+    // Get CSRF cookie first
+    $this->get('/sanctum/csrf-cookie');
+
     $response = $this->postJson('/logout');
 
     $response->assertStatus(401);

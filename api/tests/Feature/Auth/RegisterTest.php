@@ -6,6 +6,9 @@ use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 
 test('user can register with valid data', function (): void {
+    // Get CSRF cookie first
+    $this->get('/sanctum/csrf-cookie');
+
     $response = $this->postJson('/register', [
         'name' => 'John Doe',
         'email' => 'john@example.com',
@@ -30,6 +33,9 @@ test('user cannot register with duplicate email', function (): void {
         'email' => 'existing@example.com',
     ]);
 
+    // Get CSRF cookie first
+    $this->get('/sanctum/csrf-cookie');
+
     $response = $this->postJson('/register', [
         'name' => 'John Doe',
         'email' => 'existing@example.com',
@@ -42,6 +48,9 @@ test('user cannot register with duplicate email', function (): void {
 });
 
 test('register requires name field', function (): void {
+    // Get CSRF cookie first
+    $this->get('/sanctum/csrf-cookie');
+
     $response = $this->postJson('/register', [
         'email' => 'john@example.com',
         'password' => 'password123',
@@ -53,6 +62,9 @@ test('register requires name field', function (): void {
 });
 
 test('register requires email field', function (): void {
+    // Get CSRF cookie first
+    $this->get('/sanctum/csrf-cookie');
+
     $response = $this->postJson('/register', [
         'name' => 'John Doe',
         'password' => 'password123',
@@ -64,6 +76,9 @@ test('register requires email field', function (): void {
 });
 
 test('register requires password field', function (): void {
+    // Get CSRF cookie first
+    $this->get('/sanctum/csrf-cookie');
+
     $response = $this->postJson('/register', [
         'name' => 'John Doe',
         'email' => 'john@example.com',
@@ -75,6 +90,9 @@ test('register requires password field', function (): void {
 });
 
 test('register requires password confirmation', function (): void {
+    // Get CSRF cookie first
+    $this->get('/sanctum/csrf-cookie');
+
     $response = $this->postJson('/register', [
         'name' => 'John Doe',
         'email' => 'john@example.com',
@@ -86,6 +104,9 @@ test('register requires password confirmation', function (): void {
 });
 
 test('register requires matching password confirmation', function (): void {
+    // Get CSRF cookie first
+    $this->get('/sanctum/csrf-cookie');
+
     $response = $this->postJson('/register', [
         'name' => 'John Doe',
         'email' => 'john@example.com',
@@ -98,6 +119,9 @@ test('register requires matching password confirmation', function (): void {
 });
 
 test('register requires valid email format', function (): void {
+    // Get CSRF cookie first
+    $this->get('/sanctum/csrf-cookie');
+
     $response = $this->postJson('/register', [
         'name' => 'John Doe',
         'email' => 'invalid-email',
@@ -110,6 +134,9 @@ test('register requires valid email format', function (): void {
 });
 
 test('register requires minimum password length', function (): void {
+    // Get CSRF cookie first
+    $this->get('/sanctum/csrf-cookie');
+
     $response = $this->postJson('/register', [
         'name' => 'John Doe',
         'email' => 'john@example.com',
@@ -122,6 +149,9 @@ test('register requires minimum password length', function (): void {
 });
 
 test('registered user can login immediately', function (): void {
+    // Get CSRF cookie first
+    $this->get('/sanctum/csrf-cookie');
+
     $response = $this->postJson('/register', [
         'name' => 'John Doe',
         'email' => 'john@example.com',
