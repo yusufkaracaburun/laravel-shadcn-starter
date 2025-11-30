@@ -1,5 +1,6 @@
-import { expect } from '@playwright/test'
 import type { Page } from '@playwright/test'
+
+import { expect } from '@playwright/test'
 
 import { BasePage } from './BasePage'
 
@@ -67,7 +68,18 @@ export class RegisterPage extends BasePage {
    */
   async submit(): Promise<void> {
     const submitButton = this.getByTestId('register-form_submit_button')
+    const responsePromise = this.page.waitForResponse((response) => {
+      const url = response.url()
+      const method = response.request().method()
+      return (url.includes('/register') || url.endsWith('/register')) && method === 'POST'
+    })
     await submitButton.click()
+    const response = await responsePromise
+    const spinner = this.getByTestId('register-form_loading_spinner')
+    await spinner.waitFor({ state: 'hidden' }).catch(() => {})
+    if (response.status() >= 200 && response.status() < 300) {
+      await this.page.waitForLoadState('networkidle')
+    }
   }
 
   /**
@@ -103,4 +115,3 @@ export class RegisterPage extends BasePage {
     await this.submit()
   }
 }
-

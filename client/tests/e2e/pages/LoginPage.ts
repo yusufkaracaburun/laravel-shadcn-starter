@@ -49,7 +49,18 @@ export class LoginPage extends BasePage {
    */
   async submit(): Promise<void> {
     const submitButton = this.getByTestId('login-form_submit_button')
+    const responsePromise = this.page.waitForResponse((response) => {
+      const url = response.url()
+      const method = response.request().method()
+      return (url.includes('/login') || url.endsWith('/login')) && method === 'POST'
+    })
     await submitButton.click()
+    const response = await responsePromise
+    const spinner = this.getByTestId('login-form_loading_spinner')
+    await spinner.waitFor({ state: 'hidden' }).catch(() => {})
+    if (response.status() >= 200 && response.status() < 300) {
+      await this.page.waitForLoadState('networkidle')
+    }
   }
 
   /**

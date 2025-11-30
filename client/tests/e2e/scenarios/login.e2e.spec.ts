@@ -29,6 +29,9 @@ test.describe('User Login', () => {
 
     await test.step('Submit login form', async () => {
       await loginPage.submit()
+    })
+
+    await test.step('Wait for navigation to dashboard', async () => {
       await page.waitForURL(/.*\/dashboard/)
     })
 
@@ -93,6 +96,9 @@ test.describe('User Login', () => {
 
     await test.step('Submit login form', async () => {
       await loginPage.submit()
+    })
+
+    await test.step('Wait for navigation to dashboard', async () => {
       await page.waitForURL(/.*\/dashboard/)
     })
 

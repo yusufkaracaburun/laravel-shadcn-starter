@@ -15,6 +15,9 @@ test.describe('Authentication Flow', () => {
 
     await test.step('Submit registration form', async () => {
       await registerPage.submit()
+    })
+
+    await test.step('Wait for navigation to dashboard', async () => {
       await page.waitForURL(/.*\/dashboard/)
     })
 
@@ -57,9 +60,15 @@ test.describe('Authentication Flow', () => {
       await loginPage.verifyOnPage()
     })
 
-    await test.step('Fill and submit login form', async () => {
+    await test.step('Fill login form', async () => {
       await loginPage.fillForm('protected@example.com', 'password123')
+    })
+
+    await test.step('Submit login form', async () => {
       await loginPage.submit()
+    })
+
+    await test.step('Wait for navigation to dashboard', async () => {
       await page.waitForURL(/.*\/dashboard/)
     })
 
@@ -80,7 +89,11 @@ test.describe('Authentication Flow', () => {
     const page = await context.newPage()
 
     await test.step('Navigate to dashboard without authentication', async () => {
-      await page.goto('/dashboard', { waitUntil: 'networkidle' })
+      await page.goto('/dashboard', { waitUntil: 'domcontentloaded' })
+    })
+
+    await test.step('Wait for redirect to login page', async () => {
+      await page.waitForURL(/.*\/auth\/sign-in/)
     })
 
     await test.step('Verify redirect to login page', async () => {
@@ -110,9 +123,15 @@ test.describe('Authentication Flow', () => {
       await loginPage.verifyOnPage()
     })
 
-    await test.step('Fill and submit login form', async () => {
+    await test.step('Fill login form', async () => {
       await loginPage.fillForm('session@example.com', 'password123')
+    })
+
+    await test.step('Submit login form', async () => {
       await loginPage.submit()
+    })
+
+    await test.step('Wait for navigation to dashboard', async () => {
       await page.waitForURL(/.*\/dashboard/)
     })
 

@@ -26,7 +26,7 @@
         },
         {
           "name": "pusherTransportNonTLS",
-          "value": "{\"timestamp\":1764459465254,\"transport\":\"ws\",\"latency\":32,\"cacheSkipCount\":0}"
+          "value": "{\"timestamp\":1764487633124,\"transport\":\"ws\",\"latency\":33,\"cacheSkipCount\":0}"
         }
       ]
     }
