@@ -5,7 +5,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query'
 import { useAxios } from '@/composables/use-axios'
 
 import type { IResponse } from '../types/response.type'
-import type { User } from './auth.api'
+import type { User } from '@/composables/use-auth'
 
 // Get user by ID
 export function useGetUserQuery(id: number) {

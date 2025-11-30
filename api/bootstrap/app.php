@@ -45,7 +45,7 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $middleware->api(prepend: [
             HandleCors::class,
-            StartSession::class, // Required for Sanctum stateful authentication
+            StartSession::class,
         ]);
 
         $middleware->validateCsrfTokens(except: [

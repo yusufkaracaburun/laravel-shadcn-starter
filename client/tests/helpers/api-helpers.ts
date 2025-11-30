@@ -148,7 +148,7 @@ export async function getCsrfTokenAndCookies(request: APIRequestContext, session
   if (sessionCookies) {
     headers.Cookie = sessionCookies
   }
-  
+
   const csrfResponse = await request.get(buildUrl('/sanctum/csrf-cookie'), { headers })
   const csrfCookieHeader = csrfResponse.headers()['set-cookie']
 
@@ -185,13 +185,13 @@ export async function getCsrfTokenAndCookies(request: APIRequestContext, session
   // These should be kept URL-encoded as they appear in Set-Cookie
   // Format: "name1=value1; name2=value2"
   const cookieValues = extractCookieValue(csrfCookieHeader)
-  
+
   // Merge with existing session cookies if provided
   const cookieMap = new Map<string, string>()
-  
+
   // Add existing cookies first (to preserve session, especially laravel_session)
   if (sessionCookies) {
-    sessionCookies.split('; ').forEach(cookie => {
+    sessionCookies.split('; ').forEach((cookie) => {
       const trimmedCookie = cookie.trim()
       if (trimmedCookie) {
         const equalIndex = trimmedCookie.indexOf('=')
@@ -204,9 +204,9 @@ export async function getCsrfTokenAndCookies(request: APIRequestContext, session
       }
     })
   }
-  
+
   // Add/update with new cookies from CSRF response (new cookies take precedence)
-  cookieValues.forEach(cookie => {
+  cookieValues.forEach((cookie) => {
     const trimmedCookie = cookie.trim()
     if (trimmedCookie) {
       const equalIndex = trimmedCookie.indexOf('=')
@@ -218,7 +218,7 @@ export async function getCsrfTokenAndCookies(request: APIRequestContext, session
       }
     }
   })
-  
+
   const cookieString = Array.from(cookieMap.values())
     .filter(Boolean)
     .join('; ')
@@ -311,10 +311,10 @@ export function createAuthApi(request: APIRequestContext) {
       if (cookieValues.length > 0) {
         // Merge new cookies with existing
         const cookieMap = new Map<string, string>()
-        
+
         // Add existing cookies first (to preserve them)
         if (sessionCookies) {
-          sessionCookies.split('; ').forEach(cookie => {
+          sessionCookies.split('; ').forEach((cookie) => {
             const trimmedCookie = cookie.trim()
             if (trimmedCookie) {
               const equalIndex = trimmedCookie.indexOf('=')
@@ -327,9 +327,9 @@ export function createAuthApi(request: APIRequestContext) {
             }
           })
         }
-        
+
         // Add/update with new cookies (new cookies take precedence)
-        cookieValues.forEach(cookie => {
+        cookieValues.forEach((cookie) => {
           const trimmedCookie = cookie.trim()
           if (trimmedCookie) {
             const equalIndex = trimmedCookie.indexOf('=')
@@ -341,7 +341,7 @@ export function createAuthApi(request: APIRequestContext) {
             }
           }
         })
-        
+
         // Rebuild cookie string, ensuring proper format
         sessionCookies = Array.from(cookieMap.values())
           .filter(Boolean)
@@ -358,14 +358,14 @@ export function createAuthApi(request: APIRequestContext) {
   const getCsrfData = async (): Promise<CsrfData> => {
     // Small random delay to stagger requests when tests run in parallel
     await new Promise(resolve => setTimeout(resolve, Math.random() * 300))
-    
+
     // Get CSRF token and cookies, sending existing session cookies to maintain session
     // getCsrfTokenAndCookies already merges cookies, so we just use the result
     const csrfData = await getCsrfTokenAndCookies(request, sessionCookies)
-    
+
     // Update session cookies from response (getCsrfTokenAndCookies already merged them)
     sessionCookies = csrfData.cookies
-    
+
     return csrfData
   }
 
@@ -381,7 +381,7 @@ export function createAuthApi(request: APIRequestContext) {
       if (attempt > 0) {
         // Exponential backoff with jitter: base delay * 2^attempt + random(0-200ms)
         const baseDelay = 300
-        const exponentialDelay = baseDelay * Math.pow(2, attempt - 1)
+        const exponentialDelay = baseDelay * 2 ** (attempt - 1)
         const jitter = Math.random() * 200
         await new Promise(resolve => setTimeout(resolve, exponentialDelay + jitter))
       }

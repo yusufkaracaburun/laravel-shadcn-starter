@@ -63,4 +63,37 @@ export default defineConfig({
     drop: ['debugger'],
     pure: ['console.log'],
   },
+  server: {
+    proxy: {
+      // Proxy API requests to Laravel backend
+      // This makes frontend and backend appear on same origin (localhost:5173)
+      // So SameSite=Lax cookies will work
+      '/api': {
+        target: 'http://127.0.0.1:8000',
+        changeOrigin: true,
+        secure: false,
+      },
+      // Proxy auth endpoints (login, register, logout, sanctum/csrf-cookie)
+      '/sanctum': {
+        target: 'http://127.0.0.1:8000',
+        changeOrigin: true,
+        secure: false,
+      },
+      '/login': {
+        target: 'http://127.0.0.1:8000',
+        changeOrigin: true,
+        secure: false,
+      },
+      '/register': {
+        target: 'http://127.0.0.1:8000',
+        changeOrigin: true,
+        secure: false,
+      },
+      '/logout': {
+        target: 'http://127.0.0.1:8000',
+        changeOrigin: true,
+        secure: false,
+      },
+    },
+  },
 })

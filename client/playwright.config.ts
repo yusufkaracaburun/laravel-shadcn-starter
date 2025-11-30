@@ -2,8 +2,8 @@ import { defineConfig, devices } from '@playwright/test'
 // @ts-expect-error - process is a Node.js global, types are provided by @types/node
 import process from 'node:process'
 
-const baseURL = process.env.PLAYWRIGHT_TEST_BASE_URL || 'http://localhost:5173'
-const apiURL = process.env.PLAYWRIGHT_TEST_API_URL || 'http://127.0.0.1:8000'
+const baseURL = process.env.VITE_SERVER_API_URL || 'http://localhost:5173'
+const apiURL = process.env.VITE_SERVER_API_URL || 'http://127.0.0.1:8000'
 
 export default defineConfig({
   testDir: '.',

@@ -1,107 +1,22 @@
 import { defineStore } from 'pinia'
 import { computed } from 'vue'
 
-import type { LoginCredentials, RegisterData, User } from '@/services/api/auth.api'
+import { useAuth } from '@/composables/use-auth'
 
-import { useGetCurrentUserQuery, useLoginMutation, useLogoutMutation, useRegisterMutation } from '@/services/api/auth.api'
-
+/**
+ * Auth store - wrapper around useAuth() composable for Pinia integration
+ * Used by router guards and plugins that need reactive auth state
+ * For login/register/logout, use the useAuth() composable directly instead
+ */
 export const useAuthStore = defineStore('auth', () => {
-  const loading = ref(false)
-
-  // Use TanStack Query for user data
-  const { data: userData, isLoading: userLoading, refetch: refetchUser } = useGetCurrentUserQuery()
-  const user = computed(() => userData.value?.data ?? null)
-
-  const isAuthenticated = computed(() => !!user.value)
-  const isLogin = computed(() => isAuthenticated.value)
-
-  // Mutations
-  const loginMutation = useLoginMutation()
-  const registerMutation = useRegisterMutation()
-  const logoutMutation = useLogoutMutation()
-
-  async function fetchUser() {
-    loading.value = true
-    try {
-      await refetchUser()
-    }
-    catch (error) {
-      console.error('Failed to fetch user:', error)
-    }
-    finally {
-      loading.value = false
-    }
-  }
-
-  async function login(credentials: LoginCredentials) {
-    loading.value = true
-    try {
-      const result = await loginMutation.mutateAsync(credentials)
-      return result
-    }
-    catch (error: any) {
-      const errors = error.response?.data?.errors || {}
-      const message = error.response?.data?.message || 'Login failed'
-      return {
-        success: false,
-        errors,
-        message,
-      }
-    }
-    finally {
-      loading.value = false
-    }
-  }
-
-  async function register(data: RegisterData) {
-    loading.value = true
-    try {
-      const result = await registerMutation.mutateAsync(data)
-      // Mutation returns { success: boolean }
-      if (result && result.success === true) {
-        return { success: true }
-      }
-      // If result exists but success is false, return it
-      if (result) {
-        return { success: false, message: result.message || 'Registration failed' }
-      }
-      return { success: false, message: 'Registration failed' }
-    }
-    catch (error: any) {
-      const errors = error.response?.data?.errors || {}
-      const message = error.response?.data?.message || 'Registration failed'
-      return {
-        success: false,
-        errors,
-        message,
-      }
-    }
-    finally {
-      loading.value = false
-    }
-  }
-
-  async function logout() {
-    loading.value = true
-    try {
-      await logoutMutation.mutateAsync()
-    }
-    catch (error) {
-      console.error('Logout error:', error)
-    }
-    finally {
-      loading.value = false
-    }
-  }
+  // Use the composable for all auth functionality
+  const auth = useAuth()
 
   return {
-    user,
-    loading: computed(() => loading.value || userLoading.value),
-    isAuthenticated,
-    isLogin,
-    fetchUser,
-    login,
-    register,
-    logout,
+    user: computed(() => auth.user.value),
+    loading: computed(() => auth.loading.value),
+    isAuthenticated: computed(() => auth.isAuthenticated.value),
+    isLogin: computed(() => auth.isAuthenticated.value),
+    fetchUser: auth.fetchUser,
   }
 })
