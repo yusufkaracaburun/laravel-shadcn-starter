@@ -89,11 +89,44 @@ function extractCookieValue(cookieHeader: string | string[] | undefined): string
   }).filter(Boolean)
 }
 
+function parseCookieValue(cookieString: string): string | null {
+  const match = cookieString.match(/XSRF-TOKEN=([^;]+)/)
+  return match ? decodeURIComponent(match[1]) : null
+}
+
 export async function getCsrfCookieString(request: APIRequestContext): Promise<string> {
   const csrfResponse = await getCsrfCookie(request)
   const csrfCookieHeader = csrfResponse.headers()['set-cookie']
   const cookieValues = extractCookieValue(csrfCookieHeader)
   return cookieValues.length > 0 ? cookieValues.join('; ') : ''
+}
+
+export async function getCsrfTokenAndCookies(request: APIRequestContext): Promise<{ token: string | null, cookies: string }> {
+  const csrfResponse = await getCsrfCookie(request)
+  const csrfCookieHeader = csrfResponse.headers()['set-cookie']
+  const cookieValues = extractCookieValue(csrfCookieHeader)
+  const cookieString = cookieValues.length > 0 ? cookieValues.join('; ') : ''
+  
+  // Extract XSRF token from cookies - check the full cookie header strings
+  let token: string | null = null
+  const cookieHeaders = Array.isArray(csrfCookieHeader) ? csrfCookieHeader : (csrfCookieHeader ? [csrfCookieHeader] : [])
+  
+  for (const cookie of cookieHeaders) {
+    const match = cookie.match(/XSRF-TOKEN=([^;]+)/)
+    if (match) {
+      try {
+        token = decodeURIComponent(match[1])
+        break
+      }
+      catch {
+        // If decoding fails, use raw value
+        token = match[1]
+        break
+      }
+    }
+  }
+  
+  return { token, cookies: cookieString }
 }
 
 export async function getAuthenticatedContext(request: APIRequestContext, credentials: LoginCredentials) {

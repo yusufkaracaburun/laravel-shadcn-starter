@@ -5,24 +5,29 @@ export interface TestUser {
 }
 
 export const testusers: Record<string, TestUser> = {
-  superadmin: {
-    name: 'Super Admin',
-    email: 'superadmin@example.com',
+  super_admin: {
+    name: 'Super Admin User',
+    email: 'super-admin@example.com',
     password: 'password',
   },
   admin: {
-    name: 'Admin',
+    name: 'Admin User',
     email: 'admin@example.com',
     password: 'password',
   },
   customer: {
-    name: 'Customer',
+    name: 'Customer User',
     email: 'customer@example.com',
     password: 'password',
   },
   contractor: {
-    name: 'Contractor',
+    name: 'Contractor User',
     email: 'contractor@example.com',
+    password: 'password',
+  },
+  test: {
+    name: 'Test User',
+    email: 'test@example.com',
     password: 'password',
   },
 }

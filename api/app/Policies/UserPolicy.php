@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Policies;
 
 use App\Models\User;
+use Spatie\Permission\PermissionRegistrar;
 
 /**
  * Policy for User model authorization.
@@ -14,6 +15,36 @@ use App\Models\User;
  */
 final class UserPolicy
 {
+    /**
+     * Perform pre-authorization checks on the model.
+     * Super admin bypasses all authorization checks.
+     */
+    public function before(User $user, string $ability): ?bool
+    {
+        // Check for super-admin with team context cleared (global role)
+        // First ensure roles are loaded
+        if (! $user->relationLoaded('roles')) {
+            $user->load('roles');
+        }
+
+        $permissionRegistrar = app(PermissionRegistrar::class);
+        $originalTeamId = $permissionRegistrar->getPermissionsTeamId();
+        $permissionRegistrar->setPermissionsTeamId(null); // Check global roles
+
+        // Clear role cache to ensure fresh check
+        $user->unsetRelation('roles');
+        $isSuperAdmin = $user->hasRole('super-admin');
+
+        // Restore original team context
+        $permissionRegistrar->setPermissionsTeamId($originalTeamId);
+
+        if ($isSuperAdmin) {
+            return true;
+        }
+
+        return null;
+    }
+
     /**
      * Determine whether the user can view any models.
      * Permission check is team-scoped via TeamResolver.

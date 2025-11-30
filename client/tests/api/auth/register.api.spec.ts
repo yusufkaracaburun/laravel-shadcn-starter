@@ -3,6 +3,7 @@ import { expect, test } from '@playwright/test'
 import {
   expectSuccessfulRegistration,
   expectValidationError,
+  getCsrfCookieString,
   registerUser,
 } from '../../helpers/api-helpers'
 import { generateTestUser } from '../../helpers/test-data'
@@ -46,7 +47,9 @@ test.describe('Register API', () => {
 
   test('should fail registration with missing name', async ({ request }) => {
     const testUser = generateTestUser()
-    const response = await request.post(`${process.env.PLAYWRIGHT_TEST_API_URL || 'http://127.0.0.1:8000'}/register`, {
+    const apiURL = process.env.PLAYWRIGHT_TEST_API_URL || 'http://127.0.0.1:8000'
+    const cookies = await getCsrfCookieString(request)
+    const response = await request.post(`${apiURL}/register`, {
       data: {
         email: testUser.email,
         password: testUser.password,
@@ -55,6 +58,7 @@ test.describe('Register API', () => {
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
+        ...(cookies ? { Cookie: cookies } : {}),
       },
     })
 
@@ -63,7 +67,9 @@ test.describe('Register API', () => {
 
   test('should fail registration with missing email', async ({ request }) => {
     const testUser = generateTestUser()
-    const response = await request.post(`${process.env.PLAYWRIGHT_TEST_API_URL || 'http://127.0.0.1:8000'}/register`, {
+    const apiURL = process.env.PLAYWRIGHT_TEST_API_URL || 'http://127.0.0.1:8000'
+    const cookies = await getCsrfCookieString(request)
+    const response = await request.post(`${apiURL}/register`, {
       data: {
         name: testUser.name,
         password: testUser.password,
@@ -72,6 +78,7 @@ test.describe('Register API', () => {
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
+        ...(cookies ? { Cookie: cookies } : {}),
       },
     })
 
@@ -80,7 +87,9 @@ test.describe('Register API', () => {
 
   test('should fail registration with missing password', async ({ request }) => {
     const testUser = generateTestUser()
-    const response = await request.post(`${process.env.PLAYWRIGHT_TEST_API_URL || 'http://127.0.0.1:8000'}/register`, {
+    const apiURL = process.env.PLAYWRIGHT_TEST_API_URL || 'http://127.0.0.1:8000'
+    const cookies = await getCsrfCookieString(request)
+    const response = await request.post(`${apiURL}/register`, {
       data: {
         name: testUser.name,
         email: testUser.email,
@@ -89,6 +98,8 @@ test.describe('Register API', () => {
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
+        ...(cookies ? { Cookie: cookies } : {}),
+        ...(token ? { 'X-XSRF-TOKEN': token } : {}),
       },
     })
 
@@ -97,7 +108,9 @@ test.describe('Register API', () => {
 
   test('should fail registration with missing password_confirmation', async ({ request }) => {
     const testUser = generateTestUser()
-    const response = await request.post(`${process.env.PLAYWRIGHT_TEST_API_URL || 'http://127.0.0.1:8000'}/register`, {
+    const apiURL = process.env.PLAYWRIGHT_TEST_API_URL || 'http://127.0.0.1:8000'
+    const cookies = await getCsrfCookieString(request)
+    const response = await request.post(`${apiURL}/register`, {
       data: {
         name: testUser.name,
         email: testUser.email,
@@ -106,6 +119,7 @@ test.describe('Register API', () => {
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
+        ...(cookies ? { Cookie: cookies } : {}),
       },
     })
 

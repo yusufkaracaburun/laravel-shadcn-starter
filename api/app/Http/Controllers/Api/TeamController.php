@@ -16,12 +16,13 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Support\Cache\CacheInvalidationService;
 use App\Http\Controllers\Concerns\UsesCachedResponses;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use App\Http\Controllers\Concerns\InvalidatesCachedModels;
 
 final class TeamController extends Controller
 {
+    use AuthorizesRequests;
     use InvalidatesCachedModels;
-
     use UsesCachedResponses;
 
     /**
@@ -91,14 +92,8 @@ final class TeamController extends Controller
      */
     public function show(Team $team): JsonResponse
     {
-        /** @var User $user */
-        $user = Auth::user();
-
-        // Check if user belongs to this team
-        if (! $user->teams()->where('teams.id', $team->id)->exists() &&
-            ! $user->ownedTeams()->where('id', $team->id)->exists()) {
-            return ApiResponse::error('Unauthorized', Response::HTTP_FORBIDDEN);
-        }
+        // Policy's before() method handles super-admin, view() handles regular users
+        $this->authorize('view', $team);
 
         $cachedTeam = TeamCache::remember(
             $team->id,
@@ -119,10 +114,8 @@ final class TeamController extends Controller
         /** @var User $user */
         $user = Auth::user();
 
-        // Only team owner can update
-        if ($team->user_id !== $user->id) {
-            return ApiResponse::error('Only team owner can update the team', Response::HTTP_FORBIDDEN);
-        }
+        // Policy's before() method handles super-admin, update() handles regular users
+        $this->authorize('update', $team);
 
         $validated = $request->validate([
             'name' => ['sometimes', 'required', 'string', 'max:255'],
@@ -146,14 +139,11 @@ final class TeamController extends Controller
     {
         /** @var User $user */
         $user = Auth::user();
-        $user->refresh(); // Ensure all attributes are loaded
 
-        // Only team owner can delete
-        if ($team->user_id !== $user->id) {
-            return ApiResponse::error('Only team owner can delete the team', Response::HTTP_FORBIDDEN);
-        }
+        // Policy's before() method handles super-admin, delete() handles regular users
+        $this->authorize('delete', $team);
 
-        // If this was the current team, clear it
+        // If this was the current team for any user, clear it
         if ($user->current_team_id === $team->id) {
             $user->update(['current_team_id' => null]);
         }

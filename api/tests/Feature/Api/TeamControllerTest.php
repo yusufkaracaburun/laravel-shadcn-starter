@@ -13,8 +13,11 @@ test('authenticated user can list their teams', function (): void {
     // Arrange
     $user = User::factory()->create();
     $team1 = Team::factory()->create(['user_id' => $user->id]);
+    $team1->users()->attach($user->id, ['role' => 'owner']);
     $team2 = Team::factory()->create();
     $team2->users()->attach($user->id, ['role' => 'member']);
+    // Set current team
+    $user->update(['current_team_id' => $team1->id]);
 
     Sanctum::actingAs($user);
 
@@ -36,6 +39,8 @@ test('authenticated user can list their teams', function (): void {
 test('authenticated user can create a team', function (): void {
     // Arrange
     $user = User::factory()->create();
+    // User needs a current team for the middleware, but can be any team or null
+    // Since creating a team will set it as current if none exists, we can leave it null
     Sanctum::actingAs($user);
 
     // Act
@@ -60,6 +65,9 @@ test('authenticated user can view their team', function (): void {
     // Arrange
     $user = User::factory()->create();
     $team = Team::factory()->create(['user_id' => $user->id]);
+    // Attach user to team and set current team
+    $user->teams()->attach($team->id, ['role' => 'owner']);
+    $user->update(['current_team_id' => $team->id]);
     Sanctum::actingAs($user);
 
     // Act
@@ -79,6 +87,9 @@ test('authenticated user can update their team', function (): void {
     // Arrange
     $user = User::factory()->create();
     $team = Team::factory()->create(['user_id' => $user->id]);
+    // Attach user to team and set current team
+    $user->teams()->attach($team->id, ['role' => 'owner']);
+    $user->update(['current_team_id' => $team->id]);
     Sanctum::actingAs($user);
 
     // Act
@@ -98,6 +109,13 @@ test('user cannot update team they do not own', function (): void {
     $owner = User::factory()->create();
     $otherUser = User::factory()->create();
     $team = Team::factory()->create(['user_id' => $owner->id]);
+    // Attach owner to team and set current team
+    $owner->teams()->attach($team->id, ['role' => 'owner']);
+    $owner->update(['current_team_id' => $team->id]);
+    // Set other user's current team (but they don't belong to this team)
+    $otherTeam = Team::factory()->create(['user_id' => $otherUser->id]);
+    $otherUser->teams()->attach($otherTeam->id, ['role' => 'owner']);
+    $otherUser->update(['current_team_id' => $otherTeam->id]);
     Sanctum::actingAs($otherUser);
 
     // Act
@@ -113,6 +131,9 @@ test('authenticated user can delete their team', function (): void {
     // Arrange
     $user = User::factory()->create();
     $team = Team::factory()->create(['user_id' => $user->id]);
+    // Attach user to team and set current team
+    $user->teams()->attach($team->id, ['role' => 'owner']);
+    $user->update(['current_team_id' => $team->id]);
     Sanctum::actingAs($user);
 
     // Act
@@ -128,8 +149,10 @@ test('authenticated user can switch current team', function (): void {
     // Arrange
     $user = User::factory()->create();
     $team1 = Team::factory()->create(['user_id' => $user->id]);
+    $team1->users()->attach($user->id, ['role' => 'owner']);
     $team2 = Team::factory()->create();
     $team2->users()->attach($user->id, ['role' => 'member']);
+    $user->update(['current_team_id' => $team1->id]);
     Sanctum::actingAs($user);
 
     // Act
@@ -149,6 +172,11 @@ test('user cannot switch to team they do not belong to', function (): void {
     $user = User::factory()->create();
     $otherUser = User::factory()->create();
     $team = Team::factory()->create(['user_id' => $otherUser->id]);
+    $otherUser->teams()->attach($team->id, ['role' => 'owner']);
+    // Set user's current team
+    $userTeam = Team::factory()->create(['user_id' => $user->id]);
+    $user->teams()->attach($userTeam->id, ['role' => 'owner']);
+    $user->update(['current_team_id' => $userTeam->id]);
     Sanctum::actingAs($user);
 
     // Act

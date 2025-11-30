@@ -171,13 +171,10 @@ final class RolePermissionSeeder extends Seeder
             'email_verified_at' => now(),
         ]);
 
-        // Refresh user to ensure it's loaded fresh
         $admin->refresh();
 
-        // Assign super-admin role globally
-        // Use the Role model directly - Spatie will use the model's getGuardName()
-        if (! $admin->hasRole($roles['super-admin'])) {
-            $admin->assignRole($roles['super-admin']);
+        if (isset($roles['super-admin']) && ! $admin->hasRole($roles['super-admin'])) {
+            $this->assignGlobalRole($admin, $roles['super-admin']);
         }
 
         return $admin;
@@ -204,27 +201,53 @@ final class RolePermissionSeeder extends Seeder
      */
     private function assignTeamScopedRoles(User $admin, array $teams, array $roles): void
     {
-        if ($teams === []) {
+        if ($teams === [] || ! isset($roles['admin'])) {
             return;
         }
 
         $team = $teams[0];
 
-        // Add admin to team (if not already a member)
         if (! $admin->teams()->where('teams.id', $team->id)->exists()) {
             $admin->teams()->attach($team->id, ['role' => 'owner']);
         }
 
-        // Set as current team
         $admin->update(['current_team_id' => $team->id]);
+        $this->assignTeamScopedRole($admin, $team, $roles['admin']);
+    }
 
-        // Assign team-scoped role (using Spatie's team support)
-        $permissionRegistrar = app(PermissionRegistrar::class);
-        $permissionRegistrar->setPermissionsTeamId($team->id);
-        if (! $admin->hasRole($roles['admin'])) {
-            $admin->assignRole($roles['admin']);
+    /**
+     * Assign a global role to a user (team_id = null).
+     */
+    private function assignGlobalRole(User $user, Role $role): void
+    {
+        if ($user->hasRole($role)) {
+            return;
         }
 
-        $permissionRegistrar->setPermissionsTeamId(null); // Reset to global context
+        $permissionRegistrar = app(PermissionRegistrar::class);
+        $permissionRegistrar->forgetCachedPermissions();
+        $originalTeamId = $permissionRegistrar->getPermissionsTeamId();
+        $permissionRegistrar->setPermissionsTeamId(null);
+        $user->assignRole($role);
+        $permissionRegistrar->setPermissionsTeamId($originalTeamId);
+        $permissionRegistrar->forgetCachedPermissions();
+    }
+
+    /**
+     * Assign a team-scoped role to a user.
+     */
+    private function assignTeamScopedRole(User $user, Team $team, Role $role): void
+    {
+        if ($user->hasRole($role)) {
+            return;
+        }
+
+        $permissionRegistrar = app(PermissionRegistrar::class);
+        $permissionRegistrar->forgetCachedPermissions();
+        $originalTeamId = $permissionRegistrar->getPermissionsTeamId();
+        $permissionRegistrar->setPermissionsTeamId($team->id);
+        $user->assignRole($role);
+        $permissionRegistrar->setPermissionsTeamId($originalTeamId);
+        $permissionRegistrar->forgetCachedPermissions();
     }
 }

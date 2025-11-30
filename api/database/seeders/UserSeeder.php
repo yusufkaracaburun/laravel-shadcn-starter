@@ -14,25 +14,23 @@ use Spatie\Permission\PermissionRegistrar;
 
 final class UserSeeder extends Seeder
 {
+    private PermissionRegistrar $permissionRegistrar;
+
+    public function __construct()
+    {
+        $this->permissionRegistrar = app(PermissionRegistrar::class);
+    }
+
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        // Reset cached roles and permissions
-        app()[PermissionRegistrar::class]->forgetCachedPermissions();
-
-        // Get roles (they should already exist from RolePermissionSeeder)
+        $this->clearCache();
         $roles = $this->getRoles();
-
-        // Create specific test users
         $this->createTestUsers($roles);
-
-        // Create additional users with different roles
         $this->createRoleBasedUsers($roles);
-
-        // Clear cache after creating users
-        app()[PermissionRegistrar::class]->forgetCachedPermissions();
+        $this->clearCache();
     }
 
     /**
@@ -62,48 +60,35 @@ final class UserSeeder extends Seeder
      */
     private function createTestUsers(array $roles): void
     {
-        // Test user (already created in DatabaseSeeder, but ensure it exists)
-        $testUser = User::query()->firstOrCreate(['email' => 'test@example.com'], [
-            'name' => 'Test User',
-            'password' => Hash::make('password'),
-            'email_verified_at' => now(),
-        ]);
-
-        if (! $testUser->hasAnyRole($roles)) {
-            $testUser->assignRole($roles['customer'] ?? null);
+        // Super admin (global role, no team)
+        if (isset($roles['super-admin'])) {
+            $superAdmin = $this->createUser('super-admin@example.com', 'Super Admin');
+            $superAdmin->teams()->detach();
+            $superAdmin->update(['current_team_id' => null]);
+            $this->assignGlobalRole($superAdmin, $roles['super-admin']);
         }
 
-        // Admin test user
-        $admin = User::query()->firstOrCreate(['email' => 'admin@example.com'], [
-            'name' => 'Admin User',
-            'password' => Hash::make('password'),
-            'email_verified_at' => now(),
-        ]);
-
-        if (! $admin->hasRole($roles['admin'] ?? null)) {
-            $admin->assignRole($roles['admin'] ?? null);
+        // Test users with team-scoped roles
+        $team = Team::query()->first();
+        if (! $team) {
+            return;
         }
 
-        // Customer test user
-        $customer = User::query()->firstOrCreate(['email' => 'customer@example.com'], [
-            'name' => 'Customer User',
-            'password' => Hash::make('password'),
-            'email_verified_at' => now(),
-        ]);
+        $testUsers = [
+            ['email' => 'test@example.com', 'name' => 'Test User', 'role' => 'customer', 'teamRole' => 'member'],
+            ['email' => 'admin@example.com', 'name' => 'Admin User', 'role' => 'admin', 'teamRole' => 'owner'],
+            ['email' => 'customer@example.com', 'name' => 'Customer User', 'role' => 'customer', 'teamRole' => 'member'],
+            ['email' => 'contractor@example.com', 'name' => 'Contractor User', 'role' => 'contractor', 'teamRole' => 'member'],
+        ];
 
-        if (! $customer->hasRole($roles['customer'] ?? null)) {
-            $customer->assignRole($roles['customer'] ?? null);
-        }
+        foreach ($testUsers as $userData) {
+            if (! isset($roles[$userData['role']])) {
+                continue;
+            }
 
-        // Contractor test user
-        $contractor = User::query()->firstOrCreate(['email' => 'contractor@example.com'], [
-            'name' => 'Contractor User',
-            'password' => Hash::make('password'),
-            'email_verified_at' => now(),
-        ]);
-
-        if (! $contractor->hasRole($roles['contractor'] ?? null)) {
-            $contractor->assignRole($roles['contractor'] ?? null);
+            $user = $this->createUser($userData['email'], $userData['name']);
+            $this->assignUserToTeam($user, $team, $userData['teamRole']);
+            $this->assignTeamScopedRole($user, $team, $roles[$userData['role']]);
         }
     }
 
@@ -114,32 +99,92 @@ final class UserSeeder extends Seeder
      */
     private function createRoleBasedUsers(array $roles): void
     {
-        // Create additional admins
-        $admins = User::factory()->count(2)->create();
-        foreach ($admins as $admin) {
-            if (! $admin->hasRole($roles['admin'] ?? null)) {
-                $admin->assignRole($roles['admin'] ?? null);
+        $usersByRole = [
+            'admin' => User::factory()->count(2)->create(),
+            'customer' => User::factory()->count(10)->create(),
+            'contractor' => User::factory()->count(5)->create(),
+        ];
+
+        $allUsers = collect($usersByRole)->flatten();
+        $this->assignUsersToTeams($allUsers);
+
+        $team = Team::query()->first();
+        if (! $team) {
+            return;
+        }
+
+        $this->clearCache();
+
+        foreach ($usersByRole as $roleName => $users) {
+            if (! isset($roles[$roleName])) {
+                continue;
+            }
+
+            foreach ($users as $user) {
+                if ($user->teams()->where('teams.id', $team->id)->exists()) {
+                    $this->assignTeamScopedRole($user, $team, $roles[$roleName]);
+                }
             }
         }
 
-        // Create additional customers
-        $customers = User::factory()->count(10)->create();
-        foreach ($customers as $customer) {
-            if (! $customer->hasRole($roles['customer'] ?? null)) {
-                $customer->assignRole($roles['customer'] ?? null);
-            }
+        $this->clearCache();
+    }
+
+    /**
+     * Create a user with default password.
+     */
+    private function createUser(string $email, string $name): User
+    {
+        return User::query()->firstOrCreate(['email' => $email], [
+            'name' => $name,
+            'password' => Hash::make('password'),
+            'email_verified_at' => now(),
+        ]);
+    }
+
+    /**
+     * Assign a global role to a user (team_id = null).
+     */
+    private function assignGlobalRole(User $user, Role $role): void
+    {
+        if ($user->hasRole($role)) {
+            return;
         }
 
-        // Create additional contractors
-        $contractors = User::factory()->count(5)->create();
-        foreach ($contractors as $contractor) {
-            if (! $contractor->hasRole($roles['contractor'] ?? null)) {
-                $contractor->assignRole($roles['contractor'] ?? null);
-            }
+        $this->clearCache();
+        $originalTeamId = $this->permissionRegistrar->getPermissionsTeamId();
+        $this->permissionRegistrar->setPermissionsTeamId(null);
+        $user->assignRole($role);
+        $this->permissionRegistrar->setPermissionsTeamId($originalTeamId);
+        $this->clearCache();
+    }
+
+    /**
+     * Assign a team-scoped role to a user.
+     */
+    private function assignTeamScopedRole(User $user, Team $team, Role $role): void
+    {
+        if ($user->hasRole($role)) {
+            return;
         }
 
-        // Assign some users to teams if teams exist
-        $this->assignUsersToTeams($admins->merge($customers)->merge($contractors));
+        $this->clearCache();
+        $originalTeamId = $this->permissionRegistrar->getPermissionsTeamId();
+        $this->permissionRegistrar->setPermissionsTeamId($team->id);
+        $user->assignRole($role);
+        $this->permissionRegistrar->setPermissionsTeamId($originalTeamId);
+        $this->clearCache();
+    }
+
+    /**
+     * Assign a user to a team.
+     */
+    private function assignUserToTeam(User $user, Team $team, string $teamRole = 'member'): void
+    {
+        if (! $user->teams()->where('teams.id', $team->id)->exists()) {
+            $user->teams()->attach($team->id, ['role' => $teamRole]);
+        }
+        $user->update(['current_team_id' => $team->id]);
     }
 
     /**
@@ -147,28 +192,31 @@ final class UserSeeder extends Seeder
      *
      * @param  Collection<int, User>  $users
      */
-    private function assignUsersToTeams($users): void
+    private function assignUsersToTeams(Collection $users): void
     {
-        $teams = Team::all();
-
-        if ($teams->isEmpty()) {
+        $team = Team::query()->first();
+        if (! $team) {
             return;
         }
 
-        $defaultTeam = $teams->first();
-
         foreach ($users as $user) {
-            // Randomly assign some users to teams
             if (random_int(0, 1) !== 0) {
-                if (! $user->teams()->where('teams.id', $defaultTeam->id)->exists()) {
-                    $user->teams()->attach($defaultTeam->id, ['role' => 'member']);
+                if (! $user->teams()->where('teams.id', $team->id)->exists()) {
+                    $user->teams()->attach($team->id, ['role' => 'member']);
                 }
 
-                // Set as current team for some users
                 if (random_int(0, 1) && ! $user->current_team_id) {
-                    $user->update(['current_team_id' => $defaultTeam->id]);
+                    $user->update(['current_team_id' => $team->id]);
                 }
             }
         }
+    }
+
+    /**
+     * Clear permission cache.
+     */
+    private function clearCache(): void
+    {
+        $this->permissionRegistrar->forgetCachedPermissions();
     }
 }

@@ -3,6 +3,7 @@ import { expect, test } from '@playwright/test'
 import {
   expectSuccessfulLogin,
   expectValidationError,
+  getCsrfCookieString,
   loginUser,
   registerUser,
 } from '../../helpers/api-helpers'
@@ -58,13 +59,16 @@ test.describe('Login API', () => {
   })
 
   test('should fail login with missing email', async ({ request }) => {
-    const response = await request.post(`${process.env.PLAYWRIGHT_TEST_API_URL || 'http://127.0.0.1:8000'}/login`, {
+    const apiURL = process.env.PLAYWRIGHT_TEST_API_URL || 'http://127.0.0.1:8000'
+    const cookies = await getCsrfCookieString(request)
+    const response = await request.post(`${apiURL}/login`, {
       data: {
         password: 'password123',
       },
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
+        ...(cookies ? { Cookie: cookies } : {}),
       },
     })
 
@@ -72,13 +76,16 @@ test.describe('Login API', () => {
   })
 
   test('should fail login with missing password', async ({ request }) => {
-    const response = await request.post(`${process.env.PLAYWRIGHT_TEST_API_URL || 'http://127.0.0.1:8000'}/login`, {
+    const apiURL = process.env.PLAYWRIGHT_TEST_API_URL || 'http://127.0.0.1:8000'
+    const cookies = await getCsrfCookieString(request)
+    const response = await request.post(`${apiURL}/login`, {
       data: {
         email: 'test@example.com',
       },
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
+        ...(cookies ? { Cookie: cookies } : {}),
       },
     })
 

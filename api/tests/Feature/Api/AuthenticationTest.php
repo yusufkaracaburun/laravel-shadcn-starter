@@ -83,6 +83,9 @@ test('user cannot login with invalid credentials', function (): void {
         'password' => Hash::make('password123'),
     ]);
 
+    // Get CSRF cookie first
+    $this->get('/sanctum/csrf-cookie');
+
     $response = $this->postJson('/login', [
         'email' => $uniqueEmail,
         'password' => 'wrong-password',
@@ -93,6 +96,9 @@ test('user cannot login with invalid credentials', function (): void {
 });
 
 test('user can register with valid data', function (): void {
+    // Get CSRF cookie first
+    $this->get('/sanctum/csrf-cookie');
+
     $response = $this->postJson('/register', [
         'name' => 'John Doe',
         'email' => 'john@example.com',
@@ -133,6 +139,9 @@ test('user can logout when authenticated', function (): void {
 });
 
 test('user cannot logout when not authenticated', function (): void {
+    // Get CSRF cookie first
+    $this->get('/sanctum/csrf-cookie');
+
     $response = $this->postJson('/logout');
 
     $response->assertUnauthorized();

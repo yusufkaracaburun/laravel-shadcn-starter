@@ -25,6 +25,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Cache\RateLimiting\Limit;
 use Spatie\Permission\Models\Permission;
+use Spatie\Permission\PermissionRegistrar;
 use Illuminate\Support\Facades\RateLimiter;
 
 final class AppServiceProvider extends ServiceProvider
@@ -63,6 +64,7 @@ final class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->registerPolicies();
+        $this->configureSuperAdmin();
 
         $this->configureCommands();
         $this->configureDates();
@@ -81,6 +83,32 @@ final class AppServiceProvider extends ServiceProvider
         foreach ($this->policies as $model => $policy) {
             Gate::policy($model, $policy);
         }
+    }
+
+    /**
+     * Configure super admin to have all permissions.
+     * Implicitly grant "Super Admin" role all permissions via Gate::before.
+     * This works in the app by using gate-related functions like auth()->user->can() and @can().
+     */
+    private function configureSuperAdmin(): void
+    {
+        Gate::before(function ($user, $ability) {
+            // Check for super-admin role with team context cleared (global role)
+            if (! $user) {
+                return null;
+            }
+
+            $permissionRegistrar = app(PermissionRegistrar::class);
+            $originalTeamId = $permissionRegistrar->getPermissionsTeamId();
+            $permissionRegistrar->setPermissionsTeamId(null); // Check global roles
+
+            $isSuperAdmin = $user->hasRole('super-admin');
+
+            // Restore original team context
+            $permissionRegistrar->setPermissionsTeamId($originalTeamId);
+
+            return $isSuperAdmin ? true : null;
+        });
     }
 
     /**

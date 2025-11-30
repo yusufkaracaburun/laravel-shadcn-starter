@@ -6,6 +6,7 @@ namespace App\Policies;
 
 use App\Models\Team;
 use App\Models\User;
+use Spatie\Permission\PermissionRegistrar;
 
 /**
  * Policy for Team model authorization.
@@ -15,6 +16,35 @@ use App\Models\User;
  */
 final class TeamPolicy
 {
+    /**
+     * Perform pre-authorization checks on the model.
+     * Super admin bypasses all authorization checks.
+     */
+    public function before(User $user, string $ability): ?bool
+    {
+        // Check for super-admin with team context cleared (global role)
+        $permissionRegistrar = app(PermissionRegistrar::class);
+        $originalTeamId = $permissionRegistrar->getPermissionsTeamId();
+        $permissionRegistrar->setPermissionsTeamId(null); // Check global roles
+
+        // Clear permission cache and roles relation to ensure fresh check
+        $permissionRegistrar->forgetCachedPermissions();
+        $user->unsetRelation('roles');
+
+        // Load roles fresh from database
+        $user->load('roles');
+        $isSuperAdmin = $user->hasRole('super-admin');
+
+        // Restore original team context
+        $permissionRegistrar->setPermissionsTeamId($originalTeamId);
+
+        if ($isSuperAdmin) {
+            return true;
+        }
+
+        return null;
+    }
+
     /**
      * Determine whether the user can view any teams.
      * Permission check is team-scoped via TeamResolver.
