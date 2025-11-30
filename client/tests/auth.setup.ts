@@ -1,8 +1,8 @@
 import { expect, test as setup } from '@playwright/test'
 
 import { LoginPage } from './e2e/pages/LoginPage'
-import { registerUser } from './helpers/api-helpers'
-import { generateTestUser } from './helpers/test-data'
+import { registerUser } from './e2e/helpers/api-helpers'
+import { generateTestUser } from './e2e/helpers/test-data'
 
 // Path to store authenticated state (relative to project root)
 const authFile = '.auth/user.json'

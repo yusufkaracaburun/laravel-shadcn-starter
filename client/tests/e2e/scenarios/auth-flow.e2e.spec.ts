@@ -1,4 +1,4 @@
-import { registerUser } from '../../helpers/api-helpers'
+import { registerUser } from '../helpers/api-helpers'
 import { testusers } from '../.data/testusers'
 import { expect, test } from '../fixtures'
 

@@ -1,7 +1,7 @@
-import { registerUser } from '../../helpers/api-helpers'
-import { generateTestUser } from '../../helpers/test-data'
 import { testusers } from '../.data/testusers'
 import { expect, test } from '../fixtures'
+import { registerUser } from '../helpers/api-helpers'
+import { generateTestUser } from '../helpers/test-data'
 
 test.describe('User Registration', () => {
   test('User can register successfully with valid data', async ({ page, registerPage }) => {
