@@ -58,6 +58,8 @@ export async function registerUser(request: APIRequestContext, data: RegisterDat
     'Content-Type': 'application/json',
     'Accept': 'application/json',
     'X-XSRF-TOKEN': xsrfToken,
+    'Origin': apiURL,
+    'Referer': `${apiURL}/`,
   }
 
   if (cookieString) {
@@ -110,41 +112,60 @@ export async function getCsrfCookieString(request: APIRequestContext): Promise<s
   return cookieValues.length > 0 ? cookieValues.join('; ') : ''
 }
 
+/**
+ * Parse a Set-Cookie header value into cookie name and value
+ */
+function parseCookie(cookieHeader: string): { name: string; value: string } | null {
+  const match = cookieHeader.match(/^([^=]+)=([^;]+)/)
+  if (match && match[1] && match[2]) {
+    return {
+      name: match[1].trim(),
+      value: match[2].trim(),
+    }
+  }
+  return null
+}
+
 export async function getCsrfTokenAndCookies(request: APIRequestContext): Promise<{ token: string | null, cookies: string }> {
   const csrfResponse = await getCsrfCookie(request)
   const csrfCookieHeader = csrfResponse.headers()['set-cookie']
   
   // Extract XSRF token from cookies
   // Laravel sets the XSRF-TOKEN cookie with a URL-encoded encrypted value
-  // We need to:
-  // 1. Extract the URL-encoded value from Set-Cookie header
-  // 2. Decode it to get the encrypted value for X-XSRF-TOKEN header
-  // 3. Keep the URL-encoded value for the Cookie header
+  // The cookie in Set-Cookie header is: XSRF-TOKEN=encrypted_value%3D; expires=...
+  // When sending back:
+  // - Cookie header: XSRF-TOKEN=encrypted_value%3D (URL-encoded, as received)
+  // - X-XSRF-TOKEN header: encrypted_value= (URL-decoded encrypted value)
+  // Laravel will decrypt both and compare the decrypted values
+  
   let token: string | null = null
-  let urlEncodedTokenValue: string | null = null
   const cookieHeaders = Array.isArray(csrfCookieHeader) ? csrfCookieHeader : (csrfCookieHeader ? [csrfCookieHeader] : [])
   
-  // Extract token from full cookie header
+  // Extract token from full cookie header (value is URL-encoded in Set-Cookie)
   for (const cookie of cookieHeaders) {
     const match = cookie.match(/XSRF-TOKEN=([^;]+)/)
     if (match && match[1]) {
-      urlEncodedTokenValue = match[1].trim()
+      const urlEncodedValue = match[1].trim()
       try {
-        // Decode the URL-encoded value to get the encrypted token for the header
-        token = decodeURIComponent(urlEncodedTokenValue)
+        // Decode URL-encoding to get the encrypted value for X-XSRF-TOKEN header
+        // This is the encrypted session token that Laravel will decrypt
+        token = decodeURIComponent(urlEncodedValue)
       }
       catch {
-        token = urlEncodedTokenValue
+        // If decoding fails, use raw value (shouldn't happen with valid cookies)
+        token = urlEncodedValue
       }
       break
     }
   }
   
-  // Extract cookie values for sending in Cookie header (keep URL-encoded values)
+  // Extract all cookie values for sending in Cookie header
+  // These should be kept URL-encoded as they appear in Set-Cookie
+  // Format: "name1=value1; name2=value2"
   const cookieValues = extractCookieValue(csrfCookieHeader)
-  let cookieString = cookieValues.length > 0 ? cookieValues.join('; ') : ''
+  const cookieString = cookieValues.length > 0 ? cookieValues.join('; ') : ''
   
-  // If we still don't have a token, try extracting from the cookie string
+  // Fallback: if we didn't find token in headers, try extracting from cookie string
   if (!token && cookieString) {
     const match = cookieString.match(/XSRF-TOKEN=([^;]+)/)
     if (match && match[1]) {
