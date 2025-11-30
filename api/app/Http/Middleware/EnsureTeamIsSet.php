@@ -39,6 +39,7 @@ final class EnsureTeamIsSet
 
         // Clear cache and roles relation for fresh check
         $permissionRegistrar->forgetCachedPermissions();
+
         $user->unsetRelation('roles');
         $isSuperAdmin = $user->hasRole('super-admin');
 

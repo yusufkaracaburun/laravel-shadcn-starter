@@ -59,6 +59,7 @@ test('super admin can access routes without team requirement', function (): void
 
     // Assert
     $response->assertOk();
+
     expect($response->json('data.email'))->toBe($superAdmin->email);
 });
 
@@ -126,6 +127,7 @@ test('super admin can perform all CRUD operations on teams', function (): void {
 
     // Verify role is assigned globally
     $permissionRegistrar->setPermissionsTeamId(null);
+
     $superAdmin->unsetRelation('roles');
     expect($superAdmin->hasRole('super-admin'))->toBeTrue();
 
@@ -151,6 +153,7 @@ test('super admin can perform all CRUD operations on teams', function (): void {
             'json' => $response->json(),
         ]);
     }
+
     $response->assertOk();
 
     // Test create
@@ -230,6 +233,7 @@ test('super admin can access user from different team', function (): void {
 
     // Assert - Super admin can view users from any team
     $response->assertOk();
+
     expect($response->json('data.id'))->toBe($otherUser->id);
 });
 
@@ -256,6 +260,7 @@ test('super admin can update user from different team', function (): void {
 
     // Assert
     $response->assertOk();
+
     $otherUser->refresh();
     expect($otherUser->name)->toBe('Updated by Super Admin');
 });
@@ -280,7 +285,8 @@ test('super admin can delete user from different team', function (): void {
 
     // Assert
     $response->assertNoContent();
-    expect(User::find($otherUser->id))->toBeNull();
+
+    expect(User::query()->find($otherUser->id))->toBeNull();
 });
 
 test('regular users still require proper permissions', function (): void {
@@ -347,5 +353,6 @@ test('super admin can access team they do not belong to', function (): void {
 
     // Assert - Super admin can view teams they don't belong to
     $response->assertOk();
+
     expect($response->json('data.id'))->toBe($team->id);
 });

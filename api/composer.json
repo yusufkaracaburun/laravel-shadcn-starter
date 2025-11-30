@@ -53,9 +53,9 @@
             "composer update",
             "composer install",
             "@php artisan key:generate --ansi",
-            "@php artisan migrate --force",
+            "@php artisan migrate:fresh --seed --force",
             "@php artisan optimize:clear",
-            "@php artisan optimize",
+            "@php artisan config:clear",
             "@php artisan boost:update"
         ],
         "dev": [
@@ -66,6 +66,10 @@
             "@php artisan config:clear --ansi",
             "composer format",
             "./vendor/bin/pest --parallel"
+        ],
+        "test:features": [
+            "@php artisan config:clear --ansi",
+            "./vendor/bin/pest --parallel --filter=Feature"
         ],
         "test:coverage": [
             "@php artisan config:clear --ansi",

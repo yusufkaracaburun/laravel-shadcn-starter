@@ -22,7 +22,9 @@ use App\Http\Controllers\Concerns\InvalidatesCachedModels;
 final class TeamController extends Controller
 {
     use AuthorizesRequests;
+
     use InvalidatesCachedModels;
+
     use UsesCachedResponses;
 
     /**
@@ -111,8 +113,7 @@ final class TeamController extends Controller
      */
     public function update(Request $request, Team $team): JsonResponse
     {
-        /** @var User $user */
-        $user = Auth::user();
+        Auth::user();
 
         // Policy's before() method handles super-admin, update() handles regular users
         $this->authorize('update', $team);

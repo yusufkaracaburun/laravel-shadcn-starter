@@ -16,16 +16,20 @@ export interface RegisterData {
   password_confirmation: string
 }
 
-export async function loginUser(request: APIRequestContext, credentials: LoginCredentials, cookies?: string) {
-  // If no cookies provided, get CSRF cookies first
-  let cookieString = cookies
-  if (!cookieString) {
-    cookieString = await getCsrfCookieString(request)
+export async function loginUser(request: APIRequestContext, credentials: LoginCredentials, cookies?: string, token?: string) {
+  // Always get fresh CSRF cookies and token to ensure they're valid
+  const csrfData = await getCsrfTokenAndCookies(request)
+  const cookieString = cookies || csrfData.cookies
+  const xsrfToken = token || csrfData.token
+
+  if (!xsrfToken) {
+    throw new Error('Failed to extract XSRF-TOKEN from CSRF cookie response')
   }
 
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
+    'X-XSRF-TOKEN': xsrfToken,
   }
 
   if (cookieString) {
@@ -40,16 +44,20 @@ export async function loginUser(request: APIRequestContext, credentials: LoginCr
   return response
 }
 
-export async function registerUser(request: APIRequestContext, data: RegisterData, cookies?: string) {
-  // If no cookies provided, get CSRF cookies first
-  let cookieString = cookies
-  if (!cookieString) {
-    cookieString = await getCsrfCookieString(request)
+export async function registerUser(request: APIRequestContext, data: RegisterData, cookies?: string, token?: string) {
+  // Always get fresh CSRF cookies and token to ensure they're valid
+  const csrfData = await getCsrfTokenAndCookies(request)
+  const cookieString = cookies || csrfData.cookies
+  const xsrfToken = token || csrfData.token
+
+  if (!xsrfToken) {
+    throw new Error('Failed to extract XSRF-TOKEN from CSRF cookie response')
   }
 
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
+    'X-XSRF-TOKEN': xsrfToken,
   }
 
   if (cookieString) {
@@ -83,6 +91,7 @@ function extractCookieValue(cookieHeader: string | string[] | undefined): string
   }
 
   // Extract just the cookie name=value part (before the first semicolon)
+  // The value may be URL-encoded, which is fine - we'll decode it when extracting the token
   return cookies.map((cookie) => {
     const match = cookie.match(/^([^;]+)/)
     return match ? match[1].trim() : ''
@@ -104,24 +113,47 @@ export async function getCsrfCookieString(request: APIRequestContext): Promise<s
 export async function getCsrfTokenAndCookies(request: APIRequestContext): Promise<{ token: string | null, cookies: string }> {
   const csrfResponse = await getCsrfCookie(request)
   const csrfCookieHeader = csrfResponse.headers()['set-cookie']
-  const cookieValues = extractCookieValue(csrfCookieHeader)
-  const cookieString = cookieValues.length > 0 ? cookieValues.join('; ') : ''
   
-  // Extract XSRF token from cookies - check the full cookie header strings
+  // Extract XSRF token from cookies
+  // Laravel sets the XSRF-TOKEN cookie with a URL-encoded encrypted value
+  // We need to:
+  // 1. Extract the URL-encoded value from Set-Cookie header
+  // 2. Decode it to get the encrypted value for X-XSRF-TOKEN header
+  // 3. Keep the URL-encoded value for the Cookie header
   let token: string | null = null
+  let urlEncodedTokenValue: string | null = null
   const cookieHeaders = Array.isArray(csrfCookieHeader) ? csrfCookieHeader : (csrfCookieHeader ? [csrfCookieHeader] : [])
   
+  // Extract token from full cookie header
   for (const cookie of cookieHeaders) {
     const match = cookie.match(/XSRF-TOKEN=([^;]+)/)
-    if (match) {
+    if (match && match[1]) {
+      urlEncodedTokenValue = match[1].trim()
       try {
-        token = decodeURIComponent(match[1])
-        break
+        // Decode the URL-encoded value to get the encrypted token for the header
+        token = decodeURIComponent(urlEncodedTokenValue)
       }
       catch {
-        // If decoding fails, use raw value
-        token = match[1]
-        break
+        token = urlEncodedTokenValue
+      }
+      break
+    }
+  }
+  
+  // Extract cookie values for sending in Cookie header (keep URL-encoded values)
+  const cookieValues = extractCookieValue(csrfCookieHeader)
+  let cookieString = cookieValues.length > 0 ? cookieValues.join('; ') : ''
+  
+  // If we still don't have a token, try extracting from the cookie string
+  if (!token && cookieString) {
+    const match = cookieString.match(/XSRF-TOKEN=([^;]+)/)
+    if (match && match[1]) {
+      const rawValue = match[1].trim()
+      try {
+        token = decodeURIComponent(rawValue)
+      }
+      catch {
+        token = rawValue
       }
     }
   }
@@ -130,21 +162,55 @@ export async function getCsrfTokenAndCookies(request: APIRequestContext): Promis
 }
 
 export async function getAuthenticatedContext(request: APIRequestContext, credentials: LoginCredentials) {
-  // First get CSRF cookie
+  // First get CSRF cookie and token
   const csrfResponse = await getCsrfCookie(request)
-
-  // Extract cookies from CSRF response
   const csrfCookieHeader = csrfResponse.headers()['set-cookie']
   const csrfCookieValues = extractCookieValue(csrfCookieHeader)
+  
+  // Extract token from CSRF cookies
+  let xsrfToken: string | null = null
+  const cookieHeaders = Array.isArray(csrfCookieHeader) ? csrfCookieHeader : (csrfCookieHeader ? [csrfCookieHeader] : [])
+  for (const cookie of cookieHeaders) {
+    const match = cookie.match(/XSRF-TOKEN=([^;]+)/)
+    if (match) {
+      try {
+        xsrfToken = decodeURIComponent(match[1])
+        break
+      }
+      catch {
+        xsrfToken = match[1]
+        break
+      }
+    }
+  }
+  
   const csrfCookieString = csrfCookieValues.length > 0 ? csrfCookieValues.join('; ') : ''
 
-  // Then login with CSRF cookies
-  const loginResponse = await loginUser(request, credentials, csrfCookieString)
+  // Then login with CSRF cookies and token
+  const loginResponse = await loginUser(request, credentials, csrfCookieString, xsrfToken)
   const loginCookieHeader = loginResponse.headers()['set-cookie']
   const loginCookieValues = extractCookieValue(loginCookieHeader)
 
-  // Combine all cookies
-  const allCookieValues = [...csrfCookieValues, ...loginCookieValues]
+  // Merge cookies, avoiding duplicates by cookie name
+  const allCookieMap = new Map<string, string>()
+  
+  // Add CSRF cookies first
+  for (const cookie of csrfCookieValues) {
+    const [name] = cookie.split('=')
+    if (name) {
+      allCookieMap.set(name, cookie)
+    }
+  }
+  
+  // Add login cookies (these will override CSRF cookies if same name, e.g., updated XSRF-TOKEN)
+  for (const cookie of loginCookieValues) {
+    const [name] = cookie.split('=')
+    if (name) {
+      allCookieMap.set(name, cookie)
+    }
+  }
+
+  const allCookieValues = Array.from(allCookieMap.values())
 
   return {
     cookies: allCookieValues.length > 0 ? allCookieValues.join('; ') : '',

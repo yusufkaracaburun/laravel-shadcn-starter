@@ -20,7 +20,7 @@ final class TeamPolicy
      * Perform pre-authorization checks on the model.
      * Super admin bypasses all authorization checks.
      */
-    public function before(User $user, string $ability): ?bool
+    public function before(User $user): ?bool
     {
         // Check for super-admin with team context cleared (global role)
         $permissionRegistrar = app(PermissionRegistrar::class);
@@ -29,10 +29,12 @@ final class TeamPolicy
 
         // Clear permission cache and roles relation to ensure fresh check
         $permissionRegistrar->forgetCachedPermissions();
+
         $user->unsetRelation('roles');
 
         // Load roles fresh from database
         $user->load('roles');
+
         $isSuperAdmin = $user->hasRole('super-admin');
 
         // Restore original team context

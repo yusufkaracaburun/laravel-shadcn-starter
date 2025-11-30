@@ -14,7 +14,7 @@ use Spatie\Permission\PermissionRegistrar;
 
 final class UserSeeder extends Seeder
 {
-    private PermissionRegistrar $permissionRegistrar;
+    private readonly PermissionRegistrar $permissionRegistrar;
 
     public function __construct()
     {
@@ -184,6 +184,7 @@ final class UserSeeder extends Seeder
         if (! $user->teams()->where('teams.id', $team->id)->exists()) {
             $user->teams()->attach($team->id, ['role' => $teamRole]);
         }
+
         $user->update(['current_team_id' => $team->id]);
     }
 

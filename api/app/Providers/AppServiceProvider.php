@@ -92,7 +92,7 @@ final class AppServiceProvider extends ServiceProvider
      */
     private function configureSuperAdmin(): void
     {
-        Gate::before(function ($user, $ability) {
+        Gate::before(function ($user, $ability): ?true {
             // Check for super-admin role with team context cleared (global role)
             if (! $user) {
                 return null;

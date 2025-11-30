@@ -226,6 +226,7 @@ final class RolePermissionSeeder extends Seeder
 
         $permissionRegistrar = app(PermissionRegistrar::class);
         $permissionRegistrar->forgetCachedPermissions();
+
         $originalTeamId = $permissionRegistrar->getPermissionsTeamId();
         $permissionRegistrar->setPermissionsTeamId(null);
         $user->assignRole($role);
@@ -244,6 +245,7 @@ final class RolePermissionSeeder extends Seeder
 
         $permissionRegistrar = app(PermissionRegistrar::class);
         $permissionRegistrar->forgetCachedPermissions();
+
         $originalTeamId = $permissionRegistrar->getPermissionsTeamId();
         $permissionRegistrar->setPermissionsTeamId($team->id);
         $user->assignRole($role);

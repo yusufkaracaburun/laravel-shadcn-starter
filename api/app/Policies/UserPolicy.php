@@ -19,7 +19,7 @@ final class UserPolicy
      * Perform pre-authorization checks on the model.
      * Super admin bypasses all authorization checks.
      */
-    public function before(User $user, string $ability): ?bool
+    public function before(User $user): ?bool
     {
         // Check for super-admin with team context cleared (global role)
         // First ensure roles are loaded

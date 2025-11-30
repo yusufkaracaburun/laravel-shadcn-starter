@@ -4,6 +4,7 @@ import {
   expectSuccessfulRegistration,
   expectValidationError,
   getCsrfCookieString,
+  getCsrfTokenAndCookies,
   registerUser,
 } from '../../helpers/api-helpers'
 import { generateTestUser } from '../../helpers/test-data'
@@ -48,7 +49,7 @@ test.describe('Register API', () => {
   test('should fail registration with missing name', async ({ request }) => {
     const testUser = generateTestUser()
     const apiURL = process.env.PLAYWRIGHT_TEST_API_URL || 'http://127.0.0.1:8000'
-    const cookies = await getCsrfCookieString(request)
+    const { cookies, token } = await getCsrfTokenAndCookies(request)
     const response = await request.post(`${apiURL}/register`, {
       data: {
         email: testUser.email,
@@ -59,6 +60,7 @@ test.describe('Register API', () => {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
         ...(cookies ? { Cookie: cookies } : {}),
+        ...(token ? { 'X-XSRF-TOKEN': token } : {}),
       },
     })
 
@@ -68,7 +70,7 @@ test.describe('Register API', () => {
   test('should fail registration with missing email', async ({ request }) => {
     const testUser = generateTestUser()
     const apiURL = process.env.PLAYWRIGHT_TEST_API_URL || 'http://127.0.0.1:8000'
-    const cookies = await getCsrfCookieString(request)
+    const { cookies, token } = await getCsrfTokenAndCookies(request)
     const response = await request.post(`${apiURL}/register`, {
       data: {
         name: testUser.name,
@@ -79,6 +81,7 @@ test.describe('Register API', () => {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
         ...(cookies ? { Cookie: cookies } : {}),
+        ...(token ? { 'X-XSRF-TOKEN': token } : {}),
       },
     })
 
@@ -88,7 +91,7 @@ test.describe('Register API', () => {
   test('should fail registration with missing password', async ({ request }) => {
     const testUser = generateTestUser()
     const apiURL = process.env.PLAYWRIGHT_TEST_API_URL || 'http://127.0.0.1:8000'
-    const cookies = await getCsrfCookieString(request)
+    const { cookies, token } = await getCsrfTokenAndCookies(request)
     const response = await request.post(`${apiURL}/register`, {
       data: {
         name: testUser.name,
@@ -109,7 +112,7 @@ test.describe('Register API', () => {
   test('should fail registration with missing password_confirmation', async ({ request }) => {
     const testUser = generateTestUser()
     const apiURL = process.env.PLAYWRIGHT_TEST_API_URL || 'http://127.0.0.1:8000'
-    const cookies = await getCsrfCookieString(request)
+    const { cookies, token } = await getCsrfTokenAndCookies(request)
     const response = await request.post(`${apiURL}/register`, {
       data: {
         name: testUser.name,
@@ -120,6 +123,7 @@ test.describe('Register API', () => {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
         ...(cookies ? { Cookie: cookies } : {}),
+        ...(token ? { 'X-XSRF-TOKEN': token } : {}),
       },
     })
 

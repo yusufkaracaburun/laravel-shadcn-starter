@@ -3251,11 +3251,10 @@ namespace PHPSTORM_META {
 'register.store','verification.verify','verification.send','user-profile-information.update','user-password.update',
 'password.confirmation','password.confirm.store','two-factor.login.store','two-factor.enable','two-factor.confirm',
 'two-factor.disable','two-factor.qr-code','two-factor.secret-key','two-factor.recovery-codes','two-factor.regenerate-recovery-codes',
-'sanctum.csrf-cookie','generated::xSuiViviNQl1gpxm','api.user.current','user.index','user.store',
+'sanctum.csrf-cookie','api.user.current','user.index','user.store',
 'user.show','user.update','user.destroy','teams.index','teams.store',
-'teams.show','teams.update','teams.destroy','api.teams.switch','generated::pXMZi9o3eveaOCdt',
-'oauth.redirect','oauth.callback','login-link.store','login-link.login','oauth.destroy',
-'generated::lvyyrcmtHhPagQii','storage.local',);
+'teams.show','teams.update','teams.destroy','api.teams.switch',
+'oauth.redirect','oauth.callback','login-link.store','login-link.login','oauth.destroy','storage.local',);
         registerArgumentsSet('views', 
 'laravel-exceptions-renderer::components.badge','laravel-exceptions-renderer::components.empty-state','laravel-exceptions-renderer::components.file-with-line','laravel-exceptions-renderer::components.formatted-source','laravel-exceptions-renderer::components.frame',
 'laravel-exceptions-renderer::components.frame-code','laravel-exceptions-renderer::components.header','laravel-exceptions-renderer::components.http-method','laravel-exceptions-renderer::components.icons.alert','laravel-exceptions-renderer::components.icons.check',
