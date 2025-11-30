@@ -140,10 +140,16 @@ export async function getCsrfCookie(request: APIRequestContext): Promise<APIResp
  * We extract all cookies (including laravel_session) to maintain session state
  * between requests, as Playwright's APIRequestContext may not always maintain
  * cookies properly for API requests.
+ * If sessionCookies are provided, sends them to maintain the session
  */
-export async function getCsrfTokenAndCookies(request: APIRequestContext): Promise<CsrfData> {
-  // First, get the CSRF cookie - this also sets laravel_session cookie
-  const csrfResponse = await getCsrfCookie(request)
+export async function getCsrfTokenAndCookies(request: APIRequestContext, sessionCookies?: string): Promise<CsrfData> {
+  // Get CSRF cookie, sending existing session cookies to maintain the session
+  const headers: Record<string, string> = createHeaders()
+  if (sessionCookies) {
+    headers.Cookie = sessionCookies
+  }
+  
+  const csrfResponse = await request.get(buildUrl('/sanctum/csrf-cookie'), { headers })
   const csrfCookieHeader = csrfResponse.headers()['set-cookie']
 
   // Extract XSRF token from cookies for the X-XSRF-TOKEN header
@@ -179,7 +185,43 @@ export async function getCsrfTokenAndCookies(request: APIRequestContext): Promis
   // These should be kept URL-encoded as they appear in Set-Cookie
   // Format: "name1=value1; name2=value2"
   const cookieValues = extractCookieValue(csrfCookieHeader)
-  const cookieString = cookieValues.length > 0 ? cookieValues.join('; ') : ''
+  
+  // Merge with existing session cookies if provided
+  const cookieMap = new Map<string, string>()
+  
+  // Add existing cookies first (to preserve session, especially laravel_session)
+  if (sessionCookies) {
+    sessionCookies.split('; ').forEach(cookie => {
+      const trimmedCookie = cookie.trim()
+      if (trimmedCookie) {
+        const equalIndex = trimmedCookie.indexOf('=')
+        if (equalIndex > 0) {
+          const name = trimmedCookie.substring(0, equalIndex).trim()
+          if (name) {
+            cookieMap.set(name, trimmedCookie)
+          }
+        }
+      }
+    })
+  }
+  
+  // Add/update with new cookies from CSRF response (new cookies take precedence)
+  cookieValues.forEach(cookie => {
+    const trimmedCookie = cookie.trim()
+    if (trimmedCookie) {
+      const equalIndex = trimmedCookie.indexOf('=')
+      if (equalIndex > 0) {
+        const name = trimmedCookie.substring(0, equalIndex).trim()
+        if (name) {
+          cookieMap.set(name, trimmedCookie)
+        }
+      }
+    }
+  })
+  
+  const cookieString = Array.from(cookieMap.values())
+    .filter(Boolean)
+    .join('; ')
 
   // Fallback: if we didn't find token in headers, try extracting from cookie string
   if (!token && cookieString) {
@@ -253,8 +295,6 @@ export function apiRequest(request: APIRequestContext) {
  */
 export function createAuthApi(request: APIRequestContext) {
   const api = apiRequest(request)
-  // Cache CSRF token to avoid hitting rate limits
-  let cachedToken: string | null = null
   // Manually maintain session cookies since Playwright's APIRequestContext
   // doesn't reliably maintain cookies for API requests
   let sessionCookies: string = ''
@@ -272,94 +312,61 @@ export function createAuthApi(request: APIRequestContext) {
         // Merge new cookies with existing
         const cookieMap = new Map<string, string>()
         
-        // Add existing cookies
+        // Add existing cookies first (to preserve them)
         if (sessionCookies) {
           sessionCookies.split('; ').forEach(cookie => {
-            const [name] = cookie.split('=')
-            if (name && name.trim()) {
-              cookieMap.set(name.trim(), cookie)
+            const trimmedCookie = cookie.trim()
+            if (trimmedCookie) {
+              const equalIndex = trimmedCookie.indexOf('=')
+              if (equalIndex > 0) {
+                const name = trimmedCookie.substring(0, equalIndex).trim()
+                if (name) {
+                  cookieMap.set(name, trimmedCookie)
+                }
+              }
             }
           })
         }
         
         // Add/update with new cookies (new cookies take precedence)
         cookieValues.forEach(cookie => {
-          if (cookie) {
-            const [name] = cookie.split('=')
-            if (name && name.trim()) {
-              cookieMap.set(name.trim(), cookie)
+          const trimmedCookie = cookie.trim()
+          if (trimmedCookie) {
+            const equalIndex = trimmedCookie.indexOf('=')
+            if (equalIndex > 0) {
+              const name = trimmedCookie.substring(0, equalIndex).trim()
+              if (name) {
+                cookieMap.set(name, trimmedCookie)
+              }
             }
           }
         })
         
-        sessionCookies = Array.from(cookieMap.values()).join('; ')
+        // Rebuild cookie string, ensuring proper format
+        sessionCookies = Array.from(cookieMap.values())
+          .filter(Boolean)
+          .join('; ')
       }
     }
   }
 
   /**
-   * Get CSRF token for the X-XSRF-TOKEN header
-   * Manually maintains session cookies to ensure session persistence
+   * Get CSRF token and cookies, maintaining session
+   * Always gets fresh token and cookies to ensure they match
+   * Sends existing session cookies to maintain the session
    */
-  const getCsrfToken = async (forceRefresh = false): Promise<string | null> => {
-    // Return cached token if available and not forcing refresh
-    if (cachedToken && !forceRefresh) {
-      return cachedToken
-    }
-
+  const getCsrfData = async (): Promise<CsrfData> => {
     // Small random delay to stagger requests when tests run in parallel
     await new Promise(resolve => setTimeout(resolve, Math.random() * 300))
-
-    // Get CSRF cookie, sending existing session cookies to maintain the session
-    const headers: Record<string, string> = createHeaders()
-    if (sessionCookies) {
-      headers.Cookie = sessionCookies
-    }
     
-    const csrfResponse = await request.get(buildUrl('/sanctum/csrf-cookie'), { headers })
+    // Get CSRF token and cookies, sending existing session cookies to maintain session
+    // getCsrfTokenAndCookies already merges cookies, so we just use the result
+    const csrfData = await getCsrfTokenAndCookies(request, sessionCookies)
     
-    // Update session cookies from response
-    updateCookies(csrfResponse)
+    // Update session cookies from response (getCsrfTokenAndCookies already merged them)
+    sessionCookies = csrfData.cookies
     
-    const csrfCookieHeader = csrfResponse.headers()['set-cookie']
-
-    // Extract XSRF token for the X-XSRF-TOKEN header
-    let token: string | null = null
-    const cookieHeaders = Array.isArray(csrfCookieHeader) ? csrfCookieHeader : (csrfCookieHeader ? [csrfCookieHeader] : [])
-
-    for (const cookie of cookieHeaders) {
-      const match = cookie.match(/XSRF-TOKEN=([^;]+)/)
-      if (match && match[1]) {
-        const urlEncodedValue = match[1].trim()
-        try {
-          token = decodeURIComponent(urlEncodedValue)
-        }
-        catch {
-          token = urlEncodedValue
-        }
-        break
-      }
-    }
-
-    // Fallback: try extracting from cookie string if not found in headers
-    if (!token) {
-      const cookieValues = extractCookieValue(csrfCookieHeader)
-      const cookieString = cookieValues.join('; ')
-      const match = cookieString.match(/XSRF-TOKEN=([^;]+)/)
-      if (match && match[1]) {
-        const rawValue = match[1].trim()
-        try {
-          token = decodeURIComponent(rawValue)
-        }
-        catch {
-          token = rawValue
-        }
-      }
-    }
-
-    // Cache the token
-    cachedToken = token
-    return token
+    return csrfData
   }
 
   /**
@@ -377,8 +384,6 @@ export function createAuthApi(request: APIRequestContext) {
         const exponentialDelay = baseDelay * Math.pow(2, attempt - 1)
         const jitter = Math.random() * 200
         await new Promise(resolve => setTimeout(resolve, exponentialDelay + jitter))
-        // Clear cached token on retry to ensure fresh token
-        cachedToken = null
       }
 
       const response = await fn()
@@ -401,17 +406,12 @@ export function createAuthApi(request: APIRequestContext) {
      */
     login: async (credentials: LoginCredentials): Promise<APIResponse> => {
       return retryOnRateLimit(async () => {
-        // Get fresh token for login request
-        const token = await getCsrfToken(true)
-        const headers = buildAuthenticatedHeaders({ token, cookies: sessionCookies })
+        // Get fresh CSRF token and cookies, maintaining session
+        const csrfData = await getCsrfData()
+        const headers = buildAuthenticatedHeaders(csrfData)
         const response = await api.post('/login', credentials, { headers })
         // Update session cookies from login response (important for maintaining session)
         updateCookies(response)
-        // After successful login, clear cached token so next request gets fresh one
-        // that matches the authenticated session
-        if (response.status() === 200) {
-          cachedToken = null
-        }
         return response
       })
     },
@@ -421,17 +421,12 @@ export function createAuthApi(request: APIRequestContext) {
      */
     register: async (data: RegisterData): Promise<APIResponse> => {
       return retryOnRateLimit(async () => {
-        // Get fresh token for register request
-        const token = await getCsrfToken(true)
-        const headers = buildAuthenticatedHeaders({ token, cookies: sessionCookies })
+        // Get fresh CSRF token and cookies, maintaining session
+        const csrfData = await getCsrfData()
+        const headers = buildAuthenticatedHeaders(csrfData)
         const response = await api.post('/register', data, { headers })
         // Update session cookies from register response (important for maintaining session)
         updateCookies(response)
-        // After successful register, clear cached token so next request gets fresh one
-        // that matches the authenticated session
-        if (response.status() === 201) {
-          cachedToken = null
-        }
         return response
       })
     },
@@ -441,14 +436,12 @@ export function createAuthApi(request: APIRequestContext) {
      */
     logout: async (): Promise<APIResponse> => {
       return retryOnRateLimit(async () => {
-        // Get fresh token that matches current session
-        const token = await getCsrfToken(true)
-        const headers = buildAuthenticatedHeaders({ token, cookies: sessionCookies })
+        // Get fresh CSRF token and cookies, maintaining session
+        const csrfData = await getCsrfData()
+        const headers = buildAuthenticatedHeaders(csrfData)
         const response = await api.post('/logout', undefined, { headers })
         // Update session cookies (logout may clear session)
         updateCookies(response)
-        // Clear cached token after logout
-        cachedToken = null
         return response
       })
     },
@@ -458,10 +451,9 @@ export function createAuthApi(request: APIRequestContext) {
      */
     getCurrentUser: async (): Promise<APIResponse> => {
       return retryOnRateLimit(async () => {
-        // Get fresh token that matches current session
-        // Send session cookies to ensure we're using the authenticated session
-        const token = await getCsrfToken(true)
-        const headers = buildAuthenticatedHeaders({ token, cookies: sessionCookies })
+        // Get fresh CSRF token and cookies, maintaining session
+        const csrfData = await getCsrfData()
+        const headers = buildAuthenticatedHeaders(csrfData)
         return api.get('/api/user/current', { headers })
       })
     },

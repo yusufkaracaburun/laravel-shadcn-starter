@@ -103,7 +103,7 @@ return [
     |
     */
 
-    'middleware' => ['web'], //frontend can't connect, cors issue
+    'middleware' => ['web'],
 
     /*
     |--------------------------------------------------------------------------
