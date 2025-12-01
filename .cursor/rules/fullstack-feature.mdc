@@ -1,0 +1,554 @@
+---
+description: Full-Stack Feature Development - Workflow for implementing features that span both backend and frontend with mandatory testing and verification
+globs:
+  - "api/app/Http/Controllers/**/*.php"
+  - "api/routes/api/**/*.php"
+  - "client/src/services/api/**/*.ts"
+  - "client/src/pages/**/*.vue"
+alwaysApply: false
+---
+
+# Full-Stack Feature Development Rules
+
+This rule guides the implementation of features that span both the Laravel backend API and Vue.js frontend. It enforces a strict development workflow with mandatory testing and verification at each step.
+
+## Development Workflow (MANDATORY ORDER)
+
+When implementing a new feature, **ALWAYS** follow this order:
+
+### Phase 1: Backend Implementation
+1. Create/update database migration (if needed)
+2. Create/update model (if needed)
+3. Create API Resource class
+4. Create/update controller method
+5. Add route definition
+6. Write feature test
+7. **VERIFY**: Run backend tests - `cd api && php artisan test --filter={feature}`
+
+### Phase 2: Frontend Implementation
+1. Create TypeScript interface matching backend resource
+2. Create API service function
+3. Create/update page/component
+4. Write API test
+5. **VERIFY**: Run frontend API tests
+
+### Phase 3: Integration & Verification
+1. Test end-to-end flow manually
+2. Verify authentication works
+3. Verify error handling works
+4. Run all tests (backend + frontend)
+5. **VERIFY**: All tests pass
+
+**MUST NOT**:
+- Skip any phase
+- Mark feature complete without passing tests
+- Implement frontend before backend
+- Skip verification steps
+
+## Backend Implementation Checklist
+
+### 1. Database & Model
+
+**MUST**:
+- Create migration if schema changes needed
+- Update model with relationships, casts, fillable
+- Create/update factory for testing
+- Run migration: `php artisan migrate`
+
+**Example**:
+```php
+// database/migrations/xxxx_create_posts_table.php
+Schema::create('posts', function (Blueprint $table) {
+    $table->id();
+    $table->foreignId('user_id')->constrained();
+    $table->string('title');
+    $table->text('content');
+    $table->timestamps();
+});
+
+// app/Models/Post.php
+class Post extends Model
+{
+    protected $fillable = ['user_id', 'title', 'content'];
+    
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+}
+```
+
+### 2. API Resource
+
+**MUST**:
+- Create resource class in `app/Http/Resources/`
+- Transform model to API response format
+- Include relationships when loaded
+- Use consistent field naming
+
+**Example**:
+```php
+// app/Http/Resources/PostResource.php
+class PostResource extends JsonResource
+{
+    public function toArray(Request $request): array
+    {
+        return [
+            'id' => $this->id,
+            'title' => $this->title,
+            'content' => $this->content,
+            'user' => new UserResource($this->whenLoaded('user')),
+            'created_at' => $this->created_at?->toIso8601String(),
+            'updated_at' => $this->updated_at?->toIso8601String(),
+        ];
+    }
+}
+```
+
+### 3. Controller
+
+**MUST**:
+- Use `ApiResponse` for all responses
+- Use API Resources for data transformation
+- Follow existing controller patterns
+- Add proper PHPDoc comments
+
+**Example**:
+```php
+// app/Http/Controllers/Api/PostController.php
+final class PostController extends Controller
+{
+    public function index(): JsonResponse
+    {
+        $posts = Post::with('user')->paginate(15);
+        
+        return ApiResponse::success(
+            PostResource::collection($posts->items()),
+            ['pagination' => [
+                'current_page' => $posts->currentPage(),
+                'total' => $posts->total(),
+            ]]
+        );
+    }
+    
+    public function store(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'content' => 'required|string',
+        ]);
+        
+        $post = Post::create([
+            ...$validated,
+            'user_id' => Auth::id(),
+        ]);
+        
+        return ApiResponse::created(new PostResource($post));
+    }
+}
+```
+
+### 4. Routes
+
+**MUST**:
+- Add routes in appropriate route file (`routes/api/{resource}.php`)
+- Use route names following convention: `api.{resource}.{action}`
+- Apply `auth:sanctum` middleware for protected routes
+- Group related routes
+
+**Example**:
+```php
+// routes/api/posts.php
+Route::middleware('auth:sanctum')->group(function (): void {
+    Route::apiResource('post', PostController::class);
+});
+```
+
+### 5. Backend Tests
+
+**MUST**:
+- Create feature test in `tests/Feature/Api/`
+- Test all CRUD operations
+- Test authentication requirements
+- Test validation errors
+- Test authorization (if applicable)
+
+**Example**:
+```php
+// tests/Feature/Api/PostControllerTest.php
+test('authenticated user can create post', function () {
+    $user = User::factory()->create();
+    
+    $this->actingAs($user)
+        ->postJson('/api/post', [
+            'title' => 'Test Post',
+            'content' => 'Test content',
+        ])
+        ->assertStatus(201)
+        ->assertJsonStructure([
+            'success',
+            'code',
+            'message',
+            'data' => ['id', 'title', 'content'],
+            'extra',
+        ]);
+});
+
+test('unauthenticated user cannot create post', function () {
+    $this->postJson('/api/post', [
+        'title' => 'Test Post',
+        'content' => 'Test content',
+    ])->assertUnauthorized();
+});
+```
+
+**VERIFY**: `cd api && php artisan test --filter=Post`
+
+## Frontend Implementation Checklist
+
+### 1. TypeScript Interface
+
+**MUST**:
+- Create interface matching backend resource exactly
+- Use same field names and types
+- Include optional fields with `?`
+- Export from API service file
+
+**Example**:
+```typescript
+// client/src/services/api/posts.api.ts
+export interface Post {
+  id: number
+  title: string
+  content: string
+  user?: User
+  created_at: string
+  updated_at: string
+}
+
+export interface CreatePostRequest {
+  title: string
+  content: string
+}
+```
+
+### 2. API Service
+
+**MUST**:
+- Create service file: `client/src/services/api/{resource}.api.ts`
+- Use `useAxios()` composable
+- Use TanStack Query for data fetching
+- Use `IResponse<T>` wrapper
+- Export query/mutation hooks
+
+**Example**:
+```typescript
+// client/src/services/api/posts.api.ts
+import { useQuery, useMutation, useQueryClient } from '@tanstack/vue-query'
+import { useAxios } from '@/composables/use-axios'
+import type { IResponse } from '@/services/types/response.type'
+
+export interface Post {
+  id: number
+  title: string
+  content: string
+  created_at: string
+  updated_at: string
+}
+
+export function useGetPostsQuery() {
+  const { axiosInstance } = useAxios()
+  return useQuery({
+    queryKey: ['posts'],
+    queryFn: async (): Promise<IResponse<Post[]>> => {
+      const response = await axiosInstance.get('/post')
+      return response.data
+    },
+  })
+}
+
+export function useCreatePostMutation() {
+  const { axiosInstance } = useAxios()
+  const queryClient = useQueryClient()
+  
+  return useMutation({
+    mutationFn: async (data: { title: string; content: string }): Promise<IResponse<Post>> => {
+      const response = await axiosInstance.post('/post', data)
+      return response.data
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['posts'] })
+    },
+  })
+}
+```
+
+### 3. Page/Component
+
+**MUST**:
+- Use API service hooks
+- Handle loading states
+- Handle error states
+- Use TypeScript types
+- Follow Vue 3 Composition API patterns
+
+**Example**:
+```vue
+<script setup lang="ts">
+import { useGetPostsQuery, useCreatePostMutation } from '@/services/api/posts.api'
+
+const { data, isLoading, error } = useGetPostsQuery()
+const createPost = useCreatePostMutation()
+
+function handleCreate() {
+  createPost.mutate({
+    title: 'New Post',
+    content: 'Post content',
+  })
+}
+</script>
+
+<template>
+  <div>
+    <div v-if="isLoading">Loading...</div>
+    <div v-else-if="error">Error: {{ error }}</div>
+    <div v-else>
+      <div v-for="post in data?.data" :key="post.id">
+        {{ post.title }}
+      </div>
+    </div>
+  </div>
+</template>
+```
+
+### 4. Frontend API Tests
+
+**MUST**:
+- Create API test in `client/tests/api/`
+- Use Playwright `APIRequestContext`
+- Follow functional design patterns
+- Test authentication flow
+- Test error scenarios
+
+**Example**:
+```typescript
+// client/tests/api/posts.api.spec.ts
+import { expect, test } from '@playwright/test'
+import type { APIRequestContext } from '@playwright/test'
+
+const apiURL = process.env.PLAYWRIGHT_TEST_API_URL || 'http://localhost:8000'
+
+// Pure function for creating test data
+const createTestPost = (title: string): { title: string; content: string } => ({
+  title: `Test ${title} ${Date.now()}`,
+  content: 'Test content',
+})
+
+test.describe('Posts API', () => {
+  test('should create and retrieve post', async ({ request }) => {
+    // Get CSRF cookie
+    await request.get(`${apiURL}/sanctum/csrf-cookie`)
+    
+    // Login
+    await request.post(`${apiURL}/login`, {
+      data: { email: 'test@example.com', password: 'password123' },
+    })
+    
+    // Arrange
+    const testPost = createTestPost('Post')
+    
+    // Act - Create post
+    const createResponse = await request.post(`${apiURL}/api/post`, {
+      data: testPost,
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      },
+    })
+    
+    // Assert
+    expect(createResponse.status()).toBe(201)
+    const createBody = await createResponse.json()
+    expect(createBody).toHaveProperty('success', true)
+    expect(createBody.data).toHaveProperty('id')
+    expect(createBody.data.title).toBe(testPost.title)
+    
+    // Act - Get post
+    const getResponse = await request.get(`${apiURL}/api/post/${createBody.data.id}`)
+    
+    // Assert
+    expect(getResponse.status()).toBe(200)
+    const getBody = await getResponse.json()
+    expect(getBody.data.id).toBe(createBody.data.id)
+  })
+})
+```
+
+**VERIFY**: `cd client && npm run test:api` (or equivalent)
+
+## Integration Verification
+
+### Manual Testing Checklist
+
+- [ ] Backend endpoint accessible: `curl http://localhost:8000/api/{resource}`
+- [ ] Response format matches `IResponse<T>` structure
+- [ ] Frontend can fetch data successfully
+- [ ] Frontend can create/update/delete data
+- [ ] Authentication works (login → authenticated requests)
+- [ ] Error handling works (401, 422, 404, 500)
+- [ ] Loading states display correctly
+- [ ] TypeScript types match backend response
+
+### Automated Testing
+
+**MUST** run all tests before marking complete:
+
+```bash
+# Backend tests
+cd api && php artisan test
+
+# Frontend API tests
+cd client && npm run test:api
+
+# Both should pass 100%
+```
+
+## Naming Conventions
+
+### Backend
+- **Controller**: `{Resource}Controller` (e.g., `PostController`)
+- **Resource**: `{Resource}Resource` (e.g., `PostResource`)
+- **Route file**: `routes/api/{resource}.php` (e.g., `routes/api/posts.php`)
+- **Route name**: `api.{resource}.{action}` (e.g., `api.post.index`)
+
+### Frontend
+- **API service**: `client/src/services/api/{resource}.api.ts` (e.g., `posts.api.ts`)
+- **Interface**: `{Resource}` (e.g., `Post`)
+- **Query hook**: `useGet{Resource}Query()` (e.g., `useGetPostsQuery()`)
+- **Mutation hook**: `useCreate{Resource}Mutation()` (e.g., `useCreatePostMutation()`)
+- **Page**: `client/src/pages/{resource}/index.vue` (e.g., `posts/index.vue`)
+
+## Common Patterns
+
+### List with Pagination
+
+**Backend**:
+```php
+public function index(Request $request): JsonResponse
+{
+    $perPage = $request->get('per_page', 15);
+    $posts = Post::with('user')->paginate($perPage);
+    
+    return ApiResponse::success(
+        PostResource::collection($posts->items()),
+        ['pagination' => [
+            'current_page' => $posts->currentPage(),
+            'total' => $posts->total(),
+            'per_page' => $posts->perPage(),
+            'last_page' => $posts->lastPage(),
+        ]]
+    );
+}
+```
+
+**Frontend**:
+```typescript
+export interface PaginatedPosts {
+  data: Post[]
+  pagination: {
+    current_page: number
+    total: number
+    per_page: number
+    last_page: number
+  }
+}
+
+export function useGetPostsQuery(page = 1) {
+  const { axiosInstance } = useAxios()
+  return useQuery({
+    queryKey: ['posts', page],
+    queryFn: async (): Promise<IResponse<PaginatedPosts>> => {
+      const response = await axiosInstance.get('/post', { params: { page } })
+      return response.data
+    },
+  })
+}
+```
+
+### Create with Validation
+
+**Backend**:
+```php
+public function store(Request $request): JsonResponse
+{
+    $validated = $request->validate([
+        'title' => 'required|string|max:255',
+        'content' => 'required|string|min:10',
+    ]);
+    
+    $post = Post::create([
+        ...$validated,
+        'user_id' => Auth::id(),
+    ]);
+    
+    return ApiResponse::created(new PostResource($post));
+}
+```
+
+**Frontend**:
+```typescript
+export function useCreatePostMutation() {
+  const { axiosInstance } = useAxios()
+  const queryClient = useQueryClient()
+  
+  return useMutation({
+    mutationFn: async (data: CreatePostRequest): Promise<IResponse<Post>> => {
+      const response = await axiosInstance.post('/post', data)
+      return response.data
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['posts'] })
+    },
+    onError: (error: AxiosError) => {
+      if (error.response?.status === 422) {
+        // Handle validation errors
+        const errors = error.response.data.errors
+      }
+    },
+  })
+}
+```
+
+## Error Scenarios to Test
+
+**MUST** test all error scenarios:
+
+1. **401 Unauthorized**: User not authenticated
+2. **422 Validation Error**: Invalid input data
+3. **404 Not Found**: Resource doesn't exist
+4. **403 Forbidden**: User lacks permission
+5. **500 Server Error**: Backend error
+
+## Completion Criteria
+
+A feature is **NOT complete** until:
+
+- [ ] Backend endpoint implemented with `ApiResponse`
+- [ ] Backend feature test passes
+- [ ] Frontend TypeScript interface matches backend resource
+- [ ] Frontend API service implemented
+- [ ] Frontend page/component implemented
+- [ ] Frontend API test passes
+- [ ] Manual end-to-end testing successful
+- [ ] All backend tests pass: `cd api && php artisan test`
+- [ ] All frontend API tests pass: `cd client && npm run test:api`
+- [ ] No TypeScript errors
+- [ ] No linter errors
+
+## References
+
+- Backend-Frontend Integration: `@.cursor/rules/backend-frontend-integration.mdc`
+- Backend Testing: `@api/.cursor/rules/testing-pyramid.mdc`
+- Frontend API Testing: `@client/.cursor/rules/api-testing.mdc`
+- API Response Format: `@api/app/Http/Responses/ApiResponse.php`
+- Frontend Response Type: `@client/src/services/types/response.type.ts`

@@ -1,14 +1,14 @@
 ---
 description: Playwright locator strategy rules for E2E test files only - enforces proper element selection strategy for stable and maintainable tests
 globs:
-  - "client/tests/e2e/**/*.e2e.spec.ts"
-  - "client/tests/e2e/**/*.e2e.test.ts"
+  - "tests/e2e/**/*.e2e.spec.ts"
+  - "tests/e2e/**/*.e2e.test.ts"
 alwaysApply: false
 ---
 
 # Playwright Locator Strategy Rules for E2E Tests
 
-This rule applies specifically to E2E tests written with Playwright. For test structure, naming conventions, and pyramid principles, see `@.cursor/rules/testing-pyramid.mdc`.
+This rule applies specifically to E2E tests written with Playwright. For test structure, naming conventions, and pyramid principles, see `@client/.cursor/rules/testing-pyramid.mdc`.
 
 ## Locator Strategy (MANDATORY)
 

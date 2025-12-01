@@ -1,7 +1,7 @@
 ---
 description: Vue rules for vue components only - enforces proper component structure, naming conventions, and best practices
 globs:
-  - "client/src/components/**/*.vue"
+  - "src/components/**/*.vue"
 alwaysApply: false
 ---
 

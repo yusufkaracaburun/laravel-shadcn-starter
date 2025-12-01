@@ -1,8 +1,8 @@
 ---
 description: API testing guidelines for client/frontend test files only - enforces proper API test structure, APIRequestContext usage, and best practices for TypeScript/JavaScript API tests
 globs:
-  - "client/tests/api/**/*.api.spec.ts"
-  - "client/tests/api/**/*.api.test.ts"
+  - "tests/api/**/*.api.spec.ts"
+  - "tests/api/**/*.api.test.ts"
 alwaysApply: false
 ---
 
@@ -745,4 +745,4 @@ API tests are **integration-level tests** in the testing pyramid:
 
 ### Project References
 - See existing API helpers: `@tests/e2e/helpers/api-helpers.ts`
-- Follow testing pyramid guidelines: `@.cursor/rules/testing-pyramid.mdc`
+- Follow testing pyramid guidelines: `@client/.cursor/rules/testing-pyramid.mdc`

@@ -1,0 +1,419 @@
+---
+alwaysApply: true
+description: Backend-Frontend Integration Rules - Ensures perfect communication between Laravel API and Vue.js frontend with consistent patterns, authentication, and mandatory testing
+---
+
+# Backend-Frontend Integration Rules
+
+This rule ensures perfect communication between the Laravel backend API (`api/`) and Vue.js frontend (`client/`). It enforces consistent patterns, authentication flows, API contracts, and mandatory testing.
+
+## Architecture Overview
+
+```
+┌─────────────┐         ┌─────────────┐
+│   Frontend  │ ──────> │   Backend   │
+│   (Vue.js)  │ <────── │  (Laravel)  │
+│  localhost  │         │  localhost   │
+│    :5173    │         │    :8000     │
+└─────────────┘         └─────────────┘
+```
+
+- **Backend**: Laravel 12 API with Sanctum + Fortify
+- **Frontend**: Vue.js 3 SPA with TypeScript
+- **Authentication**: Cookie-based session authentication (Sanctum SPA mode)
+- **Communication**: RESTful API + WebSockets (Reverb)
+
+## API Response Format (MANDATORY)
+
+### Backend Response Format
+
+**ALWAYS** use `ApiResponse` class for all API responses:
+
+```php
+use App\Http\Responses\ApiResponse;
+
+// Success response
+return ApiResponse::success($data, $extra, $message, $code);
+
+// Error response
+return ApiResponse::error($message, $code, $data, $extra);
+
+// Created response
+return ApiResponse::created($data, $extra, $message);
+
+// No content response
+return ApiResponse::noContent();
+```
+
+**Response Structure**:
+```php
+[
+    'success' => true|false,
+    'code' => 200|201|400|401|404|422|500,
+    'message' => 'Success'|'Error message',
+    'data' => mixed,  // The actual response data
+    'extra' => [],    // Additional metadata
+]
+```
+
+### Frontend Response Type
+
+**ALWAYS** use the existing `IResponse<T>` interface from `client/src/services/types/response.type.ts`:
+
+```typescript
+import type { IResponse } from '@/services/types/response.type'
+
+// Type-safe API response
+const response: IResponse<UserData> = await axiosInstance.get('/api/user/current')
+// response.data contains UserData
+// response.success, response.code, response.message, response.extra
+```
+
+**MUST**:
+- Define TypeScript interfaces for all API response data types
+- Match backend resource structure exactly
+- Use `IResponse<T>` wrapper for all API responses
+- Never access response data directly - always use `response.data`
+
+**MUST NOT**:
+- Return raw data from controllers (always use `ApiResponse`)
+- Access response without type safety
+- Create custom response formats
+
+## Authentication Flow (MANDATORY)
+
+### Sanctum Cookie-Based Authentication
+
+**Frontend Authentication Steps**:
+
+1. **Get CSRF Cookie** (REQUIRED FIRST):
+```typescript
+await axiosInstance.get('/sanctum/csrf-cookie')
+```
+
+2. **Login/Register**:
+```typescript
+await axiosInstance.post('/login', {
+  email: 'user@example.com',
+  password: 'password123'
+})
+```
+
+3. **Subsequent Requests**:
+- Cookies are automatically included via `withCredentials: true`
+- No manual token handling needed
+
+**Backend Authentication**:
+
+- All API routes under `/api/*` require `auth:sanctum` middleware
+- Authentication routes (`/login`, `/logout`, `/register`) are handled by Fortify
+- CSRF protection is enabled for stateful routes
+
+**MUST**:
+- Always call `/sanctum/csrf-cookie` before login/register
+- Use `withCredentials: true` in axios configuration
+- Include `Accept: application/json` and `X-Requested-With: XMLHttpRequest` headers
+- Handle 401 responses (unauthorized) in frontend
+
+**MUST NOT**:
+- Skip CSRF cookie step
+- Use Bearer tokens for SPA authentication (use cookies)
+- Store tokens manually (cookies are handled automatically)
+
+## API Endpoint Naming (MANDATORY)
+
+### Backend Route Naming
+
+**MUST** follow Laravel conventions:
+- Resource routes: `api.user.index`, `api.user.show`, `api.user.store`, etc.
+- Custom routes: `api.user.current`, `api.teams.switch`, etc.
+- Use route names consistently
+
+### Frontend API Service Naming
+
+**MUST** follow this pattern:
+- File: `client/src/services/api/{resource}.api.ts`
+- Function: `useGet{Resource}Query()`, `useCreate{Resource}Mutation()`, etc.
+- Example: `client/src/services/api/users.api.ts` with `useGetUsersQuery()`
+
+## Type Safety (MANDATORY)
+
+### Backend Resources
+
+**ALWAYS** use API Resources for data transformation:
+```php
+use App\Http\Resources\UserResource;
+
+return ApiResponse::success(new UserResource($user));
+```
+
+### Frontend Types
+
+**ALWAYS** create matching TypeScript interfaces:
+```typescript
+// client/src/services/api/users.api.ts
+export interface User {
+  id: number
+  name: string
+  email: string
+  email_verified_at: string | null
+  current_team_id: number | null
+  created_at: string
+  updated_at: string
+  teams?: Team[]
+  currentTeam?: Team | null
+}
+
+export function useGetCurrentUserQuery() {
+  const { axiosInstance } = useAxios()
+  return useQuery({
+    queryKey: ['user', 'current'],
+    queryFn: async (): Promise<IResponse<User>> => {
+      const response = await axiosInstance.get('/user/current')
+      return response.data
+    },
+  })
+}
+```
+
+**MUST**:
+- Create TypeScript interfaces that match backend resources exactly
+- Use Zod schemas for validation when appropriate
+- Export types from API service files
+- Use `IResponse<T>` wrapper for all API calls
+
+**MUST NOT**:
+- Use `any` types for API responses
+- Skip type definitions
+- Mismatch field names between backend and frontend
+
+## Error Handling (MANDATORY)
+
+### Backend Error Responses
+
+**ALWAYS** use `ApiResponse::error()`:
+```php
+return ApiResponse::error('Validation failed', 422, $errors, []);
+```
+
+### Frontend Error Handling
+
+**ALWAYS** handle errors properly:
+```typescript
+try {
+  const response = await axiosInstance.post('/api/users', data)
+  // Handle success
+} catch (error: AxiosError) {
+  if (error.response?.status === 422) {
+    // Validation errors
+    const errors = error.response.data.errors
+  } else if (error.response?.status === 401) {
+    // Unauthorized - redirect to login
+  }
+}
+```
+
+**MUST**:
+- Handle 401 (unauthorized) - redirect to login
+- Handle 422 (validation errors) - display field errors
+- Handle 404 (not found) - show appropriate message
+- Handle 500 (server error) - show generic error message
+
+## Testing Requirements (MANDATORY)
+
+### Backend Tests
+
+**MUST** create feature tests for all API endpoints:
+```php
+// tests/Feature/Api/UserControllerTest.php
+test('user can get current user', function () {
+    $user = User::factory()->create();
+    
+    $response = $this->actingAs($user)
+        ->getJson('/api/user/current');
+    
+    $response->assertOk()
+        ->assertJsonStructure([
+            'success',
+            'code',
+            'message',
+            'data' => ['id', 'name', 'email'],
+            'extra',
+        ]);
+});
+```
+
+### Frontend API Tests
+
+**MUST** create API tests using Playwright `APIRequestContext`:
+```typescript
+// client/tests/api/users.api.spec.ts
+import { expect, test } from '@playwright/test'
+
+test('should get current user', async ({ request }) => {
+  // Get CSRF cookie
+  await request.get('http://localhost:8000/sanctum/csrf-cookie')
+  
+  // Login
+  await request.post('http://localhost:8000/login', {
+    data: { email: 'test@example.com', password: 'password123' },
+  })
+  
+  // Get current user
+  const response = await request.get('http://localhost:8000/api/user/current')
+  
+  expect(response.status()).toBe(200)
+  const body = await response.json()
+  expect(body).toHaveProperty('success', true)
+  expect(body).toHaveProperty('data')
+  expect(body.data).toHaveProperty('id')
+})
+```
+
+**MUST**:
+- Write backend feature tests for all endpoints
+- Write frontend API tests for all API calls
+- Run tests before marking feature complete
+- Verify response structure matches expectations
+- Test both success and error scenarios
+
+**MUST NOT**:
+- Skip tests for new endpoints
+- Mark feature complete without passing tests
+- Test only happy paths (test errors too)
+
+## Verification Checklist
+
+Before marking any feature complete, verify:
+
+### Backend Verification
+- [ ] API endpoint returns `ApiResponse` format
+- [ ] Response structure matches frontend `IResponse<T>` interface
+- [ ] Feature test passes: `php artisan test --filter={feature}`
+- [ ] All tests pass: `php artisan test`
+- [ ] Route is properly named and documented
+
+### Frontend Verification
+- [ ] TypeScript interface matches backend resource
+- [ ] API service uses `IResponse<T>` wrapper
+- [ ] API test passes: `npm run test:api` (or equivalent)
+- [ ] Error handling implemented
+- [ ] Authentication flow works (CSRF cookie → login → authenticated requests)
+
+### Integration Verification
+- [ ] Backend endpoint accessible from frontend
+- [ ] Response format matches between backend and frontend
+- [ ] TypeScript types match backend response structure
+- [ ] Authentication cookies work correctly
+- [ ] Error responses handled properly
+
+## Development Workflow
+
+When implementing a new feature:
+
+1. **Backend First**:
+   - Create API endpoint with `ApiResponse`
+   - Create API Resource for data transformation
+   - Write feature test
+   - Verify test passes
+
+2. **Frontend Second**:
+   - Create TypeScript interface matching backend resource
+   - Create API service function
+   - Create page/component using the API service
+   - Write API test
+   - Verify test passes
+
+3. **Integration**:
+   - Test end-to-end flow
+   - Verify authentication works
+   - Verify error handling works
+   - Run all tests
+
+## Common Patterns
+
+### Creating a New Resource Endpoint
+
+**Backend**:
+```php
+// routes/api/users.php
+Route::get('/users/{user}', [UserController::class, 'show'])
+    ->name('api.user.show');
+
+// app/Http/Controllers/Api/UserController.php
+public function show(User $user): JsonResponse
+{
+    return ApiResponse::success(new UserResource($user));
+}
+```
+
+**Frontend**:
+```typescript
+// client/src/services/api/users.api.ts
+export interface User {
+  id: number
+  name: string
+  email: string
+  // ... match backend UserResource exactly
+}
+
+export function useGetUserQuery(userId: number) {
+  const { axiosInstance } = useAxios()
+  return useQuery({
+    queryKey: ['user', userId],
+    queryFn: async (): Promise<IResponse<User>> => {
+      const response = await axiosInstance.get(`/user/${userId}`)
+      return response.data
+    },
+  })
+}
+```
+
+### Handling Pagination
+
+**Backend**:
+```php
+public function index(): JsonResponse
+{
+    $users = User::paginate(15);
+    return ApiResponse::success(
+        UserResource::collection($users->items()),
+        ['pagination' => [
+            'current_page' => $users->currentPage(),
+            'total' => $users->total(),
+            'per_page' => $users->perPage(),
+        ]]
+    );
+}
+```
+
+**Frontend**:
+```typescript
+export interface PaginatedResponse<T> {
+  data: T[]
+  pagination: {
+    current_page: number
+    total: number
+    per_page: number
+  }
+}
+
+export function useGetUsersQuery() {
+  const { axiosInstance } = useAxios()
+  return useQuery({
+    queryKey: ['users'],
+    queryFn: async (): Promise<IResponse<PaginatedResponse<User>>> => {
+      const response = await axiosInstance.get('/user')
+      return response.data
+    },
+  })
+}
+```
+
+## References
+
+- Backend API Response: `@api/app/Http/Responses/ApiResponse.php`
+- Frontend Response Type: `@client/src/services/types/response.type.ts`
+- Backend Testing: `@api/.cursor/rules/testing-pyramid.mdc`
+- Frontend API Testing: `@client/.cursor/rules/api-testing.mdc`
+- Authentication Setup: `@api/.docs/sanctum.md`

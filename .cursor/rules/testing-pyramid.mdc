@@ -1,0 +1,458 @@
+---
+description: Testing Pyramid guidelines - Enforces proper test structure, naming conventions, and pyramid principles for both backend and frontend tests
+globs:
+  - "api/tests/**/*Test.php"
+  - "api/tests/**/*.php"
+  - "client/tests/**/*.spec.ts"
+  - "client/tests/**/*.spec.js"
+  - "client/tests/**/*.test.ts"
+  - "client/tests/**/*.test.js"
+alwaysApply: false
+---
+
+# Testing Pyramid Rules
+
+This rule enforces the Testing Pyramid strategy across both backend (API) and frontend (client) test files. Follow these principles to build maintainable, fast, and reliable test suites.
+
+## The Testing Pyramid Structure
+
+```
+        /\
+       /  \      E2E Tests (Few - 5-10%)
+      /    \
+     /      \    Integration Tests (Some - 15-20%)
+    /        \
+   /__________\  Unit Tests (Many - 70-80%)
+```
+
+## Core Principles
+
+1. **More tests at the bottom, fewer at the top** - The pyramid shape is intentional
+2. **Speed increases as you go down** - Unit tests are fastest, E2E tests are slowest
+3. **Cost decreases as you go down** - Unit tests are cheapest to write and maintain
+4. **Test at the right level** - Avoid duplicating tests across levels
+
+## Test Type Selection
+
+### Unit Tests (70-80% of all tests)
+
+**When to Use**:
+- Testing business logic
+- Testing pure functions
+- Testing data transformations
+- Testing edge cases
+- Testing error handling
+
+**Characteristics**:
+- **Speed**: Very fast (milliseconds)
+- **Scope**: Single unit of code
+- **Isolation**: Completely isolated, no external dependencies
+- **Cost**: Low to write and maintain
+
+**What to Test**:
+- Business logic
+- Data transformations
+- Edge cases and error handling
+- Algorithm correctness
+- Pure functions
+
+**What NOT to Test**:
+- Framework code
+- Third-party libraries
+- External services (mock these)
+- Database operations (use integration tests)
+
+**Naming Convention**:
+- Backend: `*.unit.test.php` or `*Test.php` (in `tests/Unit/`)
+- Frontend: `*.unit.spec.ts` or `*.unit.test.ts` (in `tests/unit/`)
+
+**Example Structure**:
+```php
+// Backend (PHP/Pest)
+test('user can calculate age correctly', function () {
+    // Arrange
+    $birthDate = new DateTime('1990-01-01');
+    $user = new User(['birth_date' => $birthDate]);
+    
+    // Act
+    $age = $user->calculateAge();
+    
+    // Assert
+    expect($age)->toBe(34);
+});
+```
+
+```typescript
+// Frontend (TypeScript/Vitest)
+describe('UserService', () => {
+  it('should calculate user age correctly', () => {
+    // Arrange
+    const birthDate = new Date('1990-01-01')
+    const user = new User({ birthDate })
+    
+    // Act
+    const age = user.calculateAge()
+    
+    // Assert
+    expect(age).toBe(34)
+  })
+})
+```
+
+### Integration Tests (15-20% of all tests)
+
+**When to Use**:
+- Testing database operations
+- Testing API endpoints
+- Testing service interactions
+- Testing external integrations
+
+**Characteristics**:
+- **Speed**: Moderate (seconds)
+- **Scope**: Multiple components or services
+- **Dependencies**: Real databases, file systems, or external services
+- **Cost**: Moderate to write and maintain
+
+**Types**:
+- **Database Integration Tests**: Test database queries and transactions
+- **API Integration Tests**: Test REST/GraphQL endpoints
+- **Service Integration Tests**: Test interactions between services
+
+**Naming Convention**:
+- Backend: `*.integration.test.php` or `*Test.php` (in `tests/Feature/`)
+- Frontend: `*.integration.spec.ts` or `*.api.spec.ts` (in `tests/api/`)
+
+**Example Structure**:
+```php
+// Backend (PHP/Pest)
+test('user can create post and persist to database', function () {
+    $user = User::factory()->create();
+    
+    $this->actingAs($user)
+        ->postJson('/api/post', [
+            'title' => 'Test Post',
+            'content' => 'Test content',
+        ])
+        ->assertStatus(201);
+    
+    $this->assertDatabaseHas('posts', [
+        'user_id' => $user->id,
+        'title' => 'Test Post',
+    ]);
+});
+```
+
+```typescript
+// Frontend (TypeScript/Playwright)
+test('should create and retrieve post', async ({ request }) => {
+  // Get CSRF cookie
+  await request.get('http://localhost:8000/sanctum/csrf-cookie')
+  
+  // Login
+  await request.post('http://localhost:8000/login', {
+    data: { email: 'test@example.com', password: 'password123' },
+  })
+  
+  // Create post
+  const createResponse = await request.post('http://localhost:8000/api/post', {
+    data: { title: 'Test Post', content: 'Test content' },
+  })
+  
+  expect(createResponse.status()).toBe(201)
+  const body = await createResponse.json()
+  expect(body.data).toHaveProperty('id')
+})
+```
+
+### End-to-End (E2E) Tests (5-10% of all tests)
+
+**When to Use**:
+- Testing critical user journeys
+- Testing complete workflows
+- Testing cross-browser compatibility
+- Testing user-visible features end-to-end
+
+**Characteristics**:
+- **Speed**: Slow (minutes)
+- **Scope**: Entire application
+- **Environment**: Production-like environment
+- **Cost**: High to write and maintain
+
+**What to Test**:
+- Critical user journeys
+- Happy paths for key features
+- Complete workflows
+
+**What NOT to Test**:
+- Every possible scenario (use unit tests)
+- Edge cases (use unit/integration tests)
+- Business logic details (use unit tests)
+
+**Naming Convention**:
+- Backend: `*.e2e.test.php` (in `tests/E2E/`)
+- Frontend: `*.e2e.spec.ts` or `*.e2e.test.ts` (in `tests/e2e/`)
+
+**Example Structure**:
+```typescript
+// Frontend (TypeScript/Playwright)
+test('user can complete registration flow', async ({ page }) => {
+  await page.goto('/register')
+  await page.fill('[name="email"]', 'user@example.com')
+  await page.fill('[name="password"]', 'secure123')
+  await page.fill('[name="password_confirmation"]', 'secure123')
+  await page.click('button[type="submit"]')
+  
+  await expect(page).toHaveURL('/dashboard')
+  await expect(page.locator('text=Welcome')).toBeVisible()
+})
+```
+
+## Test Organization
+
+### Backend (API) Structure
+
+```
+api/tests/
+  Unit/              # Unit tests (70-80%)
+  Feature/           # Integration/API tests (15-20%)
+  E2E/               # E2E tests (5-10%)
+  Helpers/           # Test utilities
+  Factories/         # Test data factories
+```
+
+### Frontend (Client) Structure
+
+```
+client/tests/
+  unit/              # Unit tests (70-80%)
+  api/                # API/Integration tests (15-20%)
+  e2e/                # E2E tests (5-10%)
+  helpers/            # Test utilities
+  fixtures/           # Test data
+```
+
+## Best Practices
+
+### 1. Follow the Pyramid Shape
+
+**DO**:
+- Write many unit tests (70-80%)
+- Write some integration tests (15-20%)
+- Write few E2E tests (5-10%)
+
+**DON'T**:
+- Create an "ice cream cone" (many E2E, few unit tests)
+- Create a "hourglass" (many at top and bottom, few in middle)
+- Skip any layer entirely
+
+### 2. Push Tests Down the Pyramid
+
+**Rule**: If a higher-level test finds a bug and no lower-level test fails, write a lower-level test.
+
+**Why**: Lower-level tests are faster, cheaper, and easier to debug.
+
+**Example**: If an E2E test finds a calculation error, add a unit test for that calculation.
+
+### 3. Avoid Test Duplication
+
+**Principle**: Test each behavior at the appropriate level, not at every level.
+
+**Strategy**:
+- Test business logic in unit tests
+- Test integrations in integration tests
+- Test user workflows in E2E tests
+- Don't repeat the same test at multiple levels
+
+### 4. Write Clean Test Code
+
+**Guidelines**:
+- Test code is as important as production code
+- Test one condition per test
+- Use descriptive test names
+- Follow AAA pattern (Arrange, Act, Assert)
+- Keep tests readable and maintainable
+- Don't over-optimize (DRY vs DAMP balance)
+
+### 5. Test Structure (AAA Pattern)
+
+**Always Follow**:
+```php
+// Backend
+test('user can calculate total correctly', function () {
+    // Arrange
+    $cart = new ShoppingCart();
+    $cart->addItem(['price' => 10, 'quantity' => 2]);
+    
+    // Act
+    $total = $cart->getTotal();
+    
+    // Assert
+    expect($total)->toBe(20);
+});
+```
+
+```typescript
+// Frontend
+describe('ShoppingCart', () => {
+  it('should calculate total correctly', () => {
+    // Arrange
+    const cart = new ShoppingCart()
+    cart.addItem({ price: 10, quantity: 2 })
+    
+    // Act
+    const total = cart.getTotal()
+    
+    // Assert
+    expect(total).toBe(20)
+  })
+})
+```
+
+### 6. Maintain Test Independence
+
+**Rules**:
+- Tests should not depend on each other
+- Tests should be runnable in any order
+- Tests should clean up after themselves
+- Tests should be idempotent
+
+### 7. Use Appropriate Test Data
+
+- **Unit Tests**: Use simple, focused test data
+- **Integration Tests**: Use realistic test data
+- **E2E Tests**: Use production-like test data
+
+## Common Pitfalls to Avoid
+
+### 1. The Ice Cream Cone Anti-Pattern
+
+**Problem**: Too many E2E tests, too few unit tests.
+
+**Symptoms**:
+- Slow test suite
+- Flaky tests
+- High maintenance cost
+- Long feedback cycles
+
+**Solution**: Move tests down the pyramid. Convert E2E tests to unit/integration tests where possible.
+
+### 2. Testing Implementation Details
+
+**Problem**: Testing how code works instead of what it does.
+
+**Solution**: Test behavior and outcomes, not implementation.
+
+### 3. Over-Mocking
+
+**Problem**: Mocking everything, including code you own.
+
+**Solution**: Only mock external dependencies. Test your own code with real implementations.
+
+### 4. Testing Framework Code
+
+**Problem**: Writing tests for framework/library code.
+
+**Solution**: Trust that frameworks work. Test your code that uses the framework.
+
+### 5. Ignoring the Middle Layer
+
+**Problem**: Having unit tests and E2E tests but no integration tests.
+
+**Solution**: Add integration tests to verify components work together.
+
+### 6. Testing Everything at Every Level
+
+**Problem**: Duplicating the same test at multiple levels.
+
+**Solution**: Test each behavior at the most appropriate level.
+
+### 7. Slow Unit Tests
+
+**Problem**: Unit tests that take too long because they're not truly isolated.
+
+**Solution**: Ensure unit tests are fast by removing external dependencies.
+
+### 8. Brittle E2E Tests
+
+**Problem**: E2E tests that break with every UI change.
+
+**Solution**:
+- Test user-visible behavior, not implementation
+- Use stable selectors
+- Keep E2E tests focused on critical paths
+
+## Test Execution Strategy
+
+### Local Development
+
+1. Run unit tests on save (watch mode)
+2. Run integration tests before commit
+3. Run E2E tests before push
+
+### CI/CD Pipeline
+
+1. **Stage 1**: Unit tests (fastest feedback)
+2. **Stage 2**: Integration tests
+3. **Stage 3**: E2E tests (can run in parallel)
+4. **Stage 4**: Performance tests (if applicable)
+
+## Coverage Guidelines
+
+**Aim For**:
+- **Unit Tests**: 80-90% code coverage
+- **Integration Tests**: Cover all integration points
+- **E2E Tests**: Cover all critical user journeys
+
+**Don't Obsess Over**:
+- 100% coverage (diminishing returns)
+- Coverage of framework code
+- Coverage of generated code
+
+## Metrics to Track
+
+1. **Test Execution Time**
+   - Unit tests: < 1 second total
+   - Integration tests: < 30 seconds total
+   - E2E tests: < 5 minutes total
+
+2. **Test Count Distribution**
+   - Unit: 70-80%
+   - Integration: 15-20%
+   - E2E: 5-10%
+
+3. **Test Reliability**
+   - Flaky test rate: < 1%
+   - Test pass rate: > 99%
+
+## Quick Reference Checklist
+
+### When Writing Tests
+
+- [ ] Is this a unit test? (Fast, isolated, tests one thing)
+- [ ] Is this an integration test? (Tests multiple components together)
+- [ ] Is this an E2E test? (Tests complete user workflow)
+- [ ] Am I testing at the right level? (Not duplicating tests)
+- [ ] Is my test independent? (Can run in any order)
+- [ ] Is my test maintainable? (Clear, readable, well-named)
+- [ ] Does my test provide value? (Not testing framework code)
+
+### Test Distribution
+
+- [ ] 70-80% unit tests
+- [ ] 15-20% integration tests
+- [ ] 5-10% E2E tests
+
+### Test Quality
+
+- [ ] Tests are fast (unit < 1s, integration < 30s, E2E < 5min)
+- [ ] Tests are reliable (no flaky tests)
+- [ ] Tests are maintainable (clear, readable)
+- [ ] Tests provide good coverage (80-90% for unit tests)
+
+## References
+
+- Testing Pyramid Guide: `@.cursor/guides/testing-pyramid.md`
+- Backend Testing Rules: `@api/.cursor/rules/testing-pyramid.mdc`
+- Frontend Testing Rules: `@client/.cursor/rules/testing-pyramid.mdc`
+- API Testing Rules: `@client/.cursor/rules/api-testing.mdc`
+- Playwright Rules: `@client/.cursor/rules/playwright.mdc`
