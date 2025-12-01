@@ -52,6 +52,7 @@ async function quickLogin(userKey: keyof typeof testusers) {
               data-testid="sign-in_quick-login-button"
               @click="quickLogin(key as keyof typeof testusers)"
             >
+              <UiSpinner v-if="loading" class="mr-2" />
               <span class="font-medium">{{ user.name }}</span>
               <span class="ml-auto text-xs text-muted-foreground">{{ user.email }}</span>
             </UiButton>
