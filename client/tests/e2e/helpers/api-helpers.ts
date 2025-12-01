@@ -2,7 +2,7 @@ import type { APIRequestContext, APIResponse } from '@playwright/test'
 
 import process from 'node:process'
 
-const apiURL = process.env.PLAYWRIGHT_TEST_API_URL || 'http://127.0.0.1:8000'
+const apiURL = process.env.PLAYWRIGHT_TEST_API_URL || 'https://api.skeleton:8890'
 
 export interface LoginCredentials {
   email: string

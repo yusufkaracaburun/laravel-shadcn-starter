@@ -33,12 +33,16 @@ export async function getCsrfCookie(axiosInstance: ReturnType<typeof useAxios>['
  * 2. POST /login with credentials
  * 3. Session cookies are automatically set
  */
+export interface LoginResponse {
+  two_factor: boolean
+}
+
 export function useLoginMutation() {
   const { axiosWebInstance } = useAxios()
   const queryClient = useQueryClient()
 
-  return useMutation<IResponse<null>, AxiosError, LoginRequest>({
-    mutationFn: async (credentials: LoginRequest): Promise<IResponse<null>> => {
+  return useMutation<LoginResponse, AxiosError, LoginRequest>({
+    mutationFn: async (credentials: LoginRequest): Promise<LoginResponse> => {
       // Step 1: Get CSRF cookie (REQUIRED FIRST)
       await getCsrfCookie(axiosWebInstance)
 

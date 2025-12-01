@@ -44,7 +44,7 @@ vi.mock('@tanstack/vue-query', async () => {
 // Mock env
 vi.mock('@/utils/env', () => ({
   default: {
-    VITE_SERVER_API_URL: 'http://localhost:8000',
+    VITE_SERVER_API_URL: 'https://api.skeleton:8890',
   },
 }))
 
@@ -64,7 +64,7 @@ describe('auth.api', () => {
 
       // Assert
       expect(mockAxiosGet).toHaveBeenCalledWith('/sanctum/csrf-cookie', {
-        baseURL: 'http://localhost:8000',
+        baseURL: 'https://api.skeleton:8890',
         withCredentials: true,
       })
     })

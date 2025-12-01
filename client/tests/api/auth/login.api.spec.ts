@@ -5,7 +5,7 @@ import { expect, test } from '@playwright/test'
 import { testusers } from '../../.data/users.data'
 
 // @ts-expect-error - process is a Node.js global, types are provided by @types/node
-const apiURL = process.env.PLAYWRIGHT_TEST_API_URL || 'http://127.0.0.1:8000'
+const apiURL = process.env.PLAYWRIGHT_TEST_API_URL || 'https://api.skeleton:8890'
 
 // ============================================================================
 // Pure Functions (no side effects)
@@ -69,6 +69,7 @@ function extractCsrfToken(cookieHeader: string | string[] | undefined): string |
 async function getCsrfCookie(request: APIRequestContext): Promise<string | null> {
   const response = await request.get(buildUrl('/sanctum/csrf-cookie'), {
     headers: createHeaders(),
+    ignoreHTTPSErrors: true,
   })
 
   expect(response.status()).toBe(204)
@@ -90,6 +91,7 @@ async function login(request: APIRequestContext, credentials: { email: string, p
   const response = await request.post(buildUrl('/login'), {
     data: credentials,
     headers,
+    ignoreHTTPSErrors: true,
   })
 
   const body = await response.json()
@@ -103,6 +105,7 @@ async function login(request: APIRequestContext, credentials: { email: string, p
 async function getCurrentUser(request: APIRequestContext): Promise<unknown> {
   const response = await request.get(buildUrl('/api/user/current'), {
     headers: createHeaders(),
+    ignoreHTTPSErrors: true,
   })
 
   expect(response.status()).toBe(200)

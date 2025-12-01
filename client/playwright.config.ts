@@ -3,7 +3,7 @@ import { defineConfig, devices } from '@playwright/test'
 import process from 'node:process'
 
 const baseURL = process.env.VITE_SERVER_API_URL || 'http://localhost:5173'
-const apiURL = process.env.VITE_SERVER_API_URL || 'http://127.0.0.1:8000'
+const apiURL = process.env.PLAYWRIGHT_TEST_API_URL || 'https://api.skeleton:8890'
 
 export default defineConfig({
   testDir: '.',
@@ -64,14 +64,8 @@ export default defineConfig({
       reuseExistingServer: true,
       timeout: 15000,
     },
-    {
-      command: 'cd ../api && php artisan serve',
-      url: `${apiURL}/sanctum/csrf-cookie`,
-      reuseExistingServer: true,
-      timeout: 20000,
-      stdout: 'ignore',
-      stderr: 'pipe',
-    },
+    // API server runs separately at https://api.skeleton:8890
+    // Removed webServer entry for API since it's not started by Playwright
   ],
   globalSetup: undefined,
   globalTeardown: undefined,

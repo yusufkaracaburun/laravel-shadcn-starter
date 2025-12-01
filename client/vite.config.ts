@@ -63,35 +63,7 @@ export default defineConfig({
     drop: ['debugger'],
     pure: ['console.log'],
   },
-  server: {
-    proxy: {
-      // Proxy backend routes to http://127.0.0.1:8000
-      // This allows cookies to work properly (same origin: localhost:5173)
-      '/api': {
-        target: 'http://127.0.0.1:8000',
-        changeOrigin: true,
-        secure: false,
-      },
-      '/sanctum': {
-        target: 'http://127.0.0.1:8000',
-        changeOrigin: true,
-        secure: false,
-      },
-      '/login': {
-        target: 'http://127.0.0.1:8000',
-        changeOrigin: true,
-        secure: false,
-      },
-      '/logout': {
-        target: 'http://127.0.0.1:8000',
-        changeOrigin: true,
-        secure: false,
-      },
-      '/register': {
-        target: 'http://127.0.0.1:8000',
-        changeOrigin: true,
-        secure: false,
-      },
-    },
+  build: {
+    manifest: true,
   },
 })
