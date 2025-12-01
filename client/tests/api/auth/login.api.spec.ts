@@ -4,6 +4,7 @@ import { expect, test } from '@playwright/test'
 
 import { testusers } from '../../.data/users.data'
 
+// @ts-expect-error - process is a Node.js global, types are provided by @types/node
 const apiURL = process.env.PLAYWRIGHT_TEST_API_URL || 'http://127.0.0.1:8000'
 
 // ============================================================================
@@ -34,7 +35,13 @@ function buildUrl(endpoint: string): string {
  * Pure function: Extracts XSRF token from Set-Cookie header
  */
 function extractCsrfToken(cookieHeader: string | string[] | undefined): string | null {
-  const cookies = Array.isArray(cookieHeader) ? cookieHeader : (cookieHeader ? [cookieHeader] : [])
+  let cookies: string[] = []
+  if (Array.isArray(cookieHeader)) {
+    cookies = cookieHeader
+  }
+  else if (cookieHeader) {
+    cookies = [cookieHeader]
+  }
 
   for (const cookie of cookies) {
     const match = cookie.match(/XSRF-TOKEN=([^;]+)/)
@@ -127,9 +134,9 @@ test.describe('Login API', () => {
     const { response: loginResponse, body: loginBody } = await login(request, credentials, csrfToken)
 
     // Assert - Login should succeed
+    // Fortify returns {"two_factor": false} on successful login (not IResponse format)
     expect(loginResponse.status()).toBe(200)
-    expect(loginBody).toHaveProperty('success', true)
-    expect(loginBody).toHaveProperty('code', 200)
+    expect(loginBody).toHaveProperty('two_factor', false)
 
     // Act - Get current user to verify authentication (side effect)
     const userBody = await getCurrentUser(request)
