@@ -1,6 +1,7 @@
 import tailwindcss from '@tailwindcss/vite'
 import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
+import process from 'node:process'
 import { fileURLToPath, URL } from 'node:url'
 import { visualizer } from 'rollup-plugin-visualizer'
 import AutoImport from 'unplugin-auto-import/vite'
@@ -66,7 +67,7 @@ export default defineConfig({
   server: {
     proxy: {
       '^/(sanctum|login|logout|register|api)': {
-        target: 'https://api.skeleton:8890',
+        target: process.env.VITE_SERVER_API_URL || 'https://api.skeleton:8890',
         changeOrigin: true,
         secure: false, // Allow self-signed certificates
         ws: true,
