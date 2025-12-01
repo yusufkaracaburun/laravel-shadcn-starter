@@ -2,7 +2,7 @@
 import { storeToRefs } from 'pinia'
 
 import { THEME_PRIMARY_COLORS, THEMES } from '@/constants/themes'
-import { useThemeStore } from '@/stores/theme'
+import { useThemeStore } from '@/stores/theme.store'
 
 const themeStore = useThemeStore()
 const { setTheme } = themeStore

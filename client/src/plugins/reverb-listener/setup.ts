@@ -5,7 +5,7 @@ import { nextTick, watch } from 'vue'
 
 import { useEcho } from '@/composables/use-echo'
 import { useToast } from '@/composables/use-toast'
-import { useAuthStore } from '@/stores/auth'
+import { useAuthStore } from '@/stores/auth.store'
 
 import pinia from '../pinia/setup'
 

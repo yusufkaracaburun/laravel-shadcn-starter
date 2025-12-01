@@ -5,7 +5,7 @@ import Loading from '@/components/loading.vue'
 import { Toaster } from '@/components/ui/sonner'
 import { defaultToasterProps } from '@/composables/use-toast'
 import { THEMES } from '@/constants/themes'
-import { useThemeStore } from '@/stores/theme'
+import { useThemeStore } from '@/stores/theme.store'
 
 const themeStore = useThemeStore()
 const { theme: t, radius } = storeToRefs(themeStore)

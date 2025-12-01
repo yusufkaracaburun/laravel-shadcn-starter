@@ -2,11 +2,11 @@ import { createPinia, setActivePinia } from 'pinia'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { useAuth } from '@/composables/use-auth'
-import { useAuthStore } from '@/stores/auth'
 
 // Mock TanStack Query before store import
 const mockRefetch = vi.fn()
 const mockMutateAsync = vi.fn()
+const loginCredentials = { email: 'test@example.com', password: 'password' }
 
 vi.mock('@tanstack/vue-query', () => ({
   useQuery: vi.fn(() => ({
@@ -90,7 +90,7 @@ describe('useAuth', () => {
     mockCurrentRoute.value.query = {}
 
     // Act
-    await login()
+    await login(loginCredentials)
 
     // Assert
     expect(mockPush).toHaveBeenCalledWith({ path: '/dashboard' })
@@ -102,7 +102,7 @@ describe('useAuth', () => {
     mockCurrentRoute.value.query = { redirect: '/settings' }
 
     // Act
-    await login()
+    await login(loginCredentials)
 
     // Assert
     expect(mockPush).toHaveBeenCalledWith('/settings')
@@ -114,7 +114,7 @@ describe('useAuth', () => {
     mockCurrentRoute.value.query = { redirect: '//external.com' }
 
     // Act
-    await login()
+    await login(loginCredentials)
 
     // Assert
     expect(mockPush).toHaveBeenCalledWith({ path: '/dashboard' })
@@ -126,7 +126,7 @@ describe('useAuth', () => {
     mockCurrentRoute.value.query = {}
 
     // Act
-    const loginPromise = login()
+    const loginPromise = login(loginCredentials)
 
     // Assert - loading should be true during async operation
     expect(loading.value).toBe(true)

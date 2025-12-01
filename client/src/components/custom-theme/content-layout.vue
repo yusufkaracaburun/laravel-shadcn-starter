@@ -2,7 +2,7 @@
 import { storeToRefs } from 'pinia'
 
 import { CONTENT_LAYOUTS } from '@/constants/themes'
-import { useThemeStore } from '@/stores/theme'
+import { useThemeStore } from '@/stores/theme.store'
 
 const themeStore = useThemeStore()
 const { setContentLayout } = themeStore

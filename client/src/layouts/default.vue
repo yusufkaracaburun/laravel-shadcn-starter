@@ -7,7 +7,7 @@ import CommandMenuPanel from '@/components/command-menu-panel/index.vue'
 import ThemePopover from '@/components/custom-theme/theme-popover.vue'
 import ToggleTheme from '@/components/toggle-theme.vue'
 import { cn } from '@/lib/utils'
-import { useThemeStore } from '@/stores/theme'
+import { useThemeStore } from '@/stores/theme.store'
 
 const defaultOpen = useCookies(['sidebar:state'])
 const themeStore = useThemeStore()

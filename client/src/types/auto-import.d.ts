@@ -78,7 +78,7 @@ declare global {
   const unref: typeof import('vue').unref
   const useAttrs: typeof import('vue').useAttrs
   const useAuth: typeof import('../composables/use-auth').useAuth
-  const useAuthStore: typeof import('../stores/auth').useAuthStore
+  const useAuthStore: typeof import('../stores/auth.store').useAuthStore
   const useAxios: typeof import('../composables/use-axios').useAxios
   const useCssModule: typeof import('vue').useCssModule
   const useCssVars: typeof import('vue').useCssVars
@@ -95,7 +95,7 @@ declare global {
   const useSlots: typeof import('vue').useSlots
   const useTemplateRef: typeof import('vue').useTemplateRef
   const useThemeConfig: typeof import('../composables/use-theme-config')['useThemeConfig']
-  const useThemeStore: typeof import('../stores/theme').useThemeStore
+  const useThemeStore: typeof import('../stores/theme.store').useThemeStore
   const useToast: typeof import('../composables/use-toast').useToast
   const watch: typeof import('vue').watch
   const watchEffect: typeof import('vue').watchEffect
