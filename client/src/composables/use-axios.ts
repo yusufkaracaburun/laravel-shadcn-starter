@@ -9,7 +9,7 @@ import env from '@/utils/env'
 export function useAxios() {
   const router = useRouter()
   const axiosWebInstance = initializeAxios({
-    baseURL: env.VITE_SERVER_API_URL,
+    baseURL: '',
   })
 
   const axiosInstance = initializeAxios({
