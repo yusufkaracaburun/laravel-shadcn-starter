@@ -10,7 +10,6 @@ import {
   FieldLabel,
 } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
-
 import { useAuth } from '@/composables/use-auth'
 
 import GitHubButton from './github-button.vue'
