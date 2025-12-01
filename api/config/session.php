@@ -156,6 +156,11 @@ return [
     | available to. By default, the cookie will be available to the root
     | domain and all subdomains. Typically, this shouldn't be changed.
     |
+    | For cross-domain SPA authentication (e.g., frontend on different domain):
+    | - Development: Set to 'localhost' or leave empty for mixed origins
+    | - Production: Set to your domain (e.g., '.yourdomain.com' for subdomain support)
+    | - Empty/null: Allows cookies on both localhost and 127.0.0.1 (development only)
+    |
     */
 
     'domain' => env('SESSION_DOMAIN', 'localhost'),
