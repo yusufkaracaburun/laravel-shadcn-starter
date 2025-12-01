@@ -66,10 +66,11 @@ export default defineConfig({
   },
   server: {
     proxy: {
+      // Proxy al je Sanctum / API routes naar de backend
       '^/(sanctum|login|logout|register|api)': {
         target: process.env.VITE_SERVER_API_URL || 'https://api.skeleton:8890',
         changeOrigin: true,
-        secure: false, // Allow self-signed certificates
+        secure: false,
         ws: true,
       },
     },

@@ -14,9 +14,9 @@ use App\Http\Controllers\Api\UserController;
 |
 */
 
-Route::middleware('auth:sanctum')->group(function (): void {
+Route::middleware('auth:sanctum')->name('api.user.')->group(function (): void {
     // Current authenticated user
-    Route::get('/user/current', [UserController::class, 'current'])->name('api.user.current');
+    Route::get('/user/current', [UserController::class, 'current'])->name('current');
 
     // User resource routes
     Route::apiResource('user', UserController::class);
