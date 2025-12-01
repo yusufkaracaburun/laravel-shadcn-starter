@@ -22,7 +22,7 @@ export interface RegisterRequest {
  * Get CSRF cookie from Sanctum
  * This MUST be called before login/register requests
  */
-export async function getCsrfCookie(axiosInstance: ReturnType<typeof useAxios>['axiosWebInstance']): Promise<void> {
+export async function getCsrfCookie(axiosInstance: ReturnType<typeof useAxios>['axiosInstance']): Promise<void> {
   await axiosInstance.get('/sanctum/csrf-cookie')
 }
 
@@ -38,16 +38,16 @@ export interface LoginResponse {
 }
 
 export function useLoginMutation() {
-  const { axiosWebInstance } = useAxios()
+  const { axiosInstance } = useAxios()
   const queryClient = useQueryClient()
 
   return useMutation<LoginResponse, AxiosError, LoginRequest>({
     mutationFn: async (credentials: LoginRequest): Promise<LoginResponse> => {
       // Step 1: Get CSRF cookie (REQUIRED FIRST)
-      await getCsrfCookie(axiosWebInstance)
+      await getCsrfCookie(axiosInstance)
 
       // Step 2: Login with credentials
-      const response = await axiosWebInstance.post('/login', credentials)
+      const response = await axiosInstance.post('/login', credentials)
       return response.data
     },
     onSuccess: () => {
@@ -65,16 +65,16 @@ export function useLoginMutation() {
  * 3. Session cookies are automatically set
  */
 export function useRegisterMutation() {
-  const { axiosWebInstance } = useAxios()
+  const { axiosInstance } = useAxios()
   const queryClient = useQueryClient()
 
   return useMutation<IResponse<null>, AxiosError, RegisterRequest>({
     mutationFn: async (data: RegisterRequest): Promise<IResponse<null>> => {
       // Step 1: Get CSRF cookie (REQUIRED FIRST)
-      await getCsrfCookie(axiosWebInstance)
+      await getCsrfCookie(axiosInstance)
 
       // Step 2: Register with user data
-      const response = await axiosWebInstance.post('/register', data)
+      const response = await axiosInstance.post('/register', data)
       return response.data
     },
     onSuccess: () => {
@@ -89,12 +89,12 @@ export function useRegisterMutation() {
  * POST /logout to clear session cookies
  */
 export function useLogoutMutation() {
-  const { axiosWebInstance } = useAxios()
+  const { axiosInstance } = useAxios()
   const queryClient = useQueryClient()
 
   return useMutation<IResponse<null>, AxiosError>({
     mutationFn: async (): Promise<IResponse<null>> => {
-      const response = await axiosWebInstance.post('/logout')
+      const response = await axiosInstance.post('/logout')
       return response.data
     },
     onSuccess: () => {

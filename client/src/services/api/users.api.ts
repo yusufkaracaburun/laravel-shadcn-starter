@@ -42,7 +42,7 @@ export function useGetCurrentUserQuery() {
   return useQuery<IResponse<User>, AxiosError>({
     queryKey: ['user', 'current'],
     queryFn: async (): Promise<IResponse<User>> => {
-      const response = await axiosInstance.get('/user/current')
+      const response = await axiosInstance.get('/api/user/current')
       return response.data
     },
     retry: (failureCount, error) => {
@@ -56,4 +56,3 @@ export function useGetCurrentUserQuery() {
     staleTime: 5 * 60 * 1000, // Consider data fresh for 5 minutes
   })
 }
-
