@@ -8,12 +8,14 @@ import env from '@/utils/env'
 
 export function useAxios() {
   const router = useRouter()
+  // Use relative URLs to leverage Vite proxy (same-origin for cookies)
+  // This makes requests go through Vite dev server proxy, avoiding cross-site cookie issues
   const axiosWebInstance = initializeAxios({
-    baseURL: env.VITE_SERVER_API_URL,
+    baseURL: '', // Relative URL - goes through Vite proxy
   })
 
   const axiosInstance = initializeAxios({
-    baseURL: env.VITE_SERVER_API_URL + env.VITE_SERVER_API_PREFIX,
+    baseURL: env.VITE_SERVER_API_PREFIX, // Relative URL - goes through Vite proxy
   })
 
   axiosInstance.interceptors.request.use((config) => {

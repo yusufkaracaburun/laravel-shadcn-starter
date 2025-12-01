@@ -63,6 +63,16 @@ export default defineConfig({
     drop: ['debugger'],
     pure: ['console.log'],
   },
+  server: {
+    proxy: {
+      '^/(sanctum|login|logout|register|api)': {
+        target: 'https://api.skeleton:8890',
+        changeOrigin: true,
+        secure: false, // Allow self-signed certificates
+        ws: true,
+      },
+    },
+  },
   build: {
     manifest: true,
   },
