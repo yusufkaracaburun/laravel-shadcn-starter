@@ -2,11 +2,13 @@
 
 declare(strict_types=1);
 
+use Tests\TestCase;
 use App\Models\User;
 use Laravel\Sanctum\Sanctum;
 use Illuminate\Testing\Fluent\AssertableJson;
 
 test('unauthenticated users can access user index endpoint but get empty result', function (): void {
+    /** @var TestCase $this */
     $response = $this->getJson('/api/user');
 
     $response->assertOk()
@@ -20,6 +22,7 @@ test('unauthenticated users can access user index endpoint but get empty result'
 });
 
 test('authenticated user can list all users', function (): void {
+    /** @var TestCase $this */
     $user = User::factory()->create();
     User::factory()->count(2)->create();
 

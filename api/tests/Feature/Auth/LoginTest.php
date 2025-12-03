@@ -2,11 +2,17 @@
 
 declare(strict_types=1);
 
+use Tests\TestCase;
 use App\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\RateLimiter;
 
+/**
+ * Pest test file - closures are bound to TestCase instance.
+ *
+ * @var TestCase $this
+ */
 beforeEach(function (): void {
     // Clear all possible rate limiter variations before each test
     // Match the exact format from FortifyServiceProvider: Str::transliterate(Str::lower($email)).'|'.$ip
@@ -22,6 +28,7 @@ beforeEach(function (): void {
 });
 
 test('user can login with valid credentials', function (): void {
+    /** @var TestCase $this */
     $uniqueEmail = 'valid-login-'.uniqid().'@example.com';
 
     $user = User::factory()->create([
@@ -49,6 +56,7 @@ test('user can login with valid credentials', function (): void {
 });
 
 test('user cannot login with invalid credentials', function (): void {
+    /** @var TestCase $this */
     $uniqueEmail = 'invalid-login-'.uniqid().'@example.com';
 
     $user = User::factory()->create([
@@ -69,6 +77,7 @@ test('user cannot login with invalid credentials', function (): void {
 });
 
 test('user cannot login with non-existent email', function (): void {
+    /** @var TestCase $this */
     $uniqueEmail = 'nonexistent-'.uniqid().'@example.com';
 
     // Get CSRF cookie first
@@ -84,6 +93,7 @@ test('user cannot login with non-existent email', function (): void {
 });
 
 test('login requires email field', function (): void {
+    /** @var TestCase $this */
     // Use a unique email in the request body to avoid rate limiting
     // Even though email is missing, Fortify might still rate limit by IP
     $uniqueEmail = 'no-email-field-'.uniqid().'@example.com';
@@ -100,6 +110,7 @@ test('login requires email field', function (): void {
 });
 
 test('login requires password field', function (): void {
+    /** @var TestCase $this */
     // Use a unique email to avoid rate limiting from previous tests
     $uniqueEmail = 'password-field-test-'.uniqid().'@example.com';
 
@@ -115,6 +126,7 @@ test('login requires password field', function (): void {
 });
 
 test('login requires valid email format', function (): void {
+    /** @var TestCase $this */
     // Use a unique invalid email to avoid rate limiting
     $uniqueInvalidEmail = 'invalid-email-'.uniqid();
 
@@ -131,17 +143,28 @@ test('login requires valid email format', function (): void {
 });
 
 test('user can logout when authenticated', function (): void {
-    $user = User::factory()->create();
+    /** @var TestCase $this */
+    $user = User::factory()->create([
+        'password' => Hash::make('password123'),
+    ]);
 
     // Get CSRF cookie first
     $this->get('/sanctum/csrf-cookie');
 
-    $response = $this->actingAs($user)->postJson('/logout');
+    // Login to establish session
+    $this->postJson('/login', [
+        'email' => $user->email,
+        'password' => 'password123',
+    ]);
+
+    // Logout
+    $response = $this->postJson('/logout');
 
     $response->assertStatus(204);
 });
 
 test('user cannot logout when not authenticated', function (): void {
+    /** @var TestCase $this */
     // Get CSRF cookie first
     $this->get('/sanctum/csrf-cookie');
 

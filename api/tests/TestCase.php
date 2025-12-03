@@ -5,10 +5,28 @@ declare(strict_types=1);
 namespace Tests;
 
 use Illuminate\Support\Str;
+use Illuminate\Testing\TestResponse;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
+use Illuminate\Foundation\Testing\Concerns\MakesHttpRequests;
 
+/**
+ * Base test case for all tests.
+ *
+ * @mixin MakesHttpRequests
+ *
+ * @method TestResponse get(string $uri, array $headers = [])
+ * @method TestResponse post(string $uri, array $data = [], array $headers = [])
+ * @method TestResponse put(string $uri, array $data = [], array $headers = [])
+ * @method TestResponse patch(string $uri, array $data = [], array $headers = [])
+ * @method TestResponse delete(string $uri, array $data = [], array $headers = [])
+ * @method TestResponse getJson(string $uri, array $headers = [])
+ * @method TestResponse postJson(string $uri, array $data = [], array $headers = [])
+ * @method TestResponse putJson(string $uri, array $data = [], array $headers = [])
+ * @method TestResponse patchJson(string $uri, array $data = [], array $headers = [])
+ * @method TestResponse deleteJson(string $uri, array $data = [], array $headers = [])
+ */
 abstract class TestCase extends BaseTestCase
 {
     use RefreshDatabase;

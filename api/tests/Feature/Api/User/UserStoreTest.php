@@ -2,11 +2,13 @@
 
 declare(strict_types=1);
 
+use Tests\TestCase;
 use App\Models\User;
 use Laravel\Sanctum\Sanctum;
 use Illuminate\Testing\Fluent\AssertableJson;
 
 test('unauthenticated users cannot create users', function (): void {
+    /** @var TestCase $this */
     $response = $this->postJson('/api/user', [
         'name' => 'Test User',
         'email' => 'test@example.com',
@@ -21,6 +23,7 @@ test('unauthenticated users cannot create users', function (): void {
 });
 
 test('authenticated user can create new user', function (): void {
+    /** @var TestCase $this */
     $user = User::factory()->create();
 
     Sanctum::actingAs($user, ['*']);
@@ -52,6 +55,7 @@ test('authenticated user can create new user', function (): void {
 });
 
 test('user creation requires valid data', function (): void {
+    /** @var TestCase $this */
     $user = User::factory()->create();
 
     Sanctum::actingAs($user, ['*']);
@@ -67,6 +71,7 @@ test('user creation requires valid data', function (): void {
 });
 
 test('user creation requires unique email', function (): void {
+    /** @var TestCase $this */
     $existingUser = User::factory()->create(['email' => 'existing@example.com']);
     $user = User::factory()->create();
 

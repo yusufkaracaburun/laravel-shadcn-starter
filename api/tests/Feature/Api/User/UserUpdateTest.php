@@ -2,11 +2,13 @@
 
 declare(strict_types=1);
 
+use Tests\TestCase;
 use App\Models\User;
 use Laravel\Sanctum\Sanctum;
 use Illuminate\Testing\Fluent\AssertableJson;
 
 test('unauthenticated users cannot update users', function (): void {
+    /** @var TestCase $this */
     $user = User::factory()->create();
 
     $response = $this->putJson("/api/user/{$user->id}", [
@@ -19,6 +21,7 @@ test('unauthenticated users cannot update users', function (): void {
 });
 
 test('authenticated user can update user', function (): void {
+    /** @var TestCase $this */
     $user = User::factory()->create();
     $targetUser = User::factory()->create();
 
@@ -50,6 +53,7 @@ test('authenticated user can update user', function (): void {
 });
 
 test('user update requires valid email format', function (): void {
+    /** @var TestCase $this */
     $user = User::factory()->create();
     $targetUser = User::factory()->create();
 

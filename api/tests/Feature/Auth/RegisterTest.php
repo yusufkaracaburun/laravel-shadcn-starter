@@ -2,10 +2,12 @@
 
 declare(strict_types=1);
 
+use Tests\TestCase;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 
 test('user can register with valid data', function (): void {
+    /** @var TestCase $this */
     // Get CSRF cookie first
     $this->get('/sanctum/csrf-cookie');
 
@@ -29,6 +31,7 @@ test('user can register with valid data', function (): void {
 });
 
 test('user cannot register with duplicate email', function (): void {
+    /** @var TestCase $this */
     User::factory()->create([
         'email' => 'existing@example.com',
     ]);
@@ -48,6 +51,7 @@ test('user cannot register with duplicate email', function (): void {
 });
 
 test('register requires name field', function (): void {
+    /** @var TestCase $this */
     // Get CSRF cookie first
     $this->get('/sanctum/csrf-cookie');
 
@@ -62,6 +66,7 @@ test('register requires name field', function (): void {
 });
 
 test('register requires email field', function (): void {
+    /** @var TestCase $this */
     // Get CSRF cookie first
     $this->get('/sanctum/csrf-cookie');
 
@@ -76,6 +81,7 @@ test('register requires email field', function (): void {
 });
 
 test('register requires password field', function (): void {
+    /** @var TestCase $this */
     // Get CSRF cookie first
     $this->get('/sanctum/csrf-cookie');
 
@@ -90,6 +96,7 @@ test('register requires password field', function (): void {
 });
 
 test('register requires password confirmation', function (): void {
+    /** @var TestCase $this */
     // Get CSRF cookie first
     $this->get('/sanctum/csrf-cookie');
 
@@ -104,6 +111,7 @@ test('register requires password confirmation', function (): void {
 });
 
 test('register requires matching password confirmation', function (): void {
+    /** @var TestCase $this */
     // Get CSRF cookie first
     $this->get('/sanctum/csrf-cookie');
 
@@ -119,6 +127,7 @@ test('register requires matching password confirmation', function (): void {
 });
 
 test('register requires valid email format', function (): void {
+    /** @var TestCase $this */
     // Get CSRF cookie first
     $this->get('/sanctum/csrf-cookie');
 
@@ -134,6 +143,7 @@ test('register requires valid email format', function (): void {
 });
 
 test('register requires minimum password length', function (): void {
+    /** @var TestCase $this */
     // Get CSRF cookie first
     $this->get('/sanctum/csrf-cookie');
 
@@ -149,6 +159,7 @@ test('register requires minimum password length', function (): void {
 });
 
 test('registered user can login immediately', function (): void {
+    /** @var TestCase $this */
     // Get CSRF cookie first
     $this->get('/sanctum/csrf-cookie');
 

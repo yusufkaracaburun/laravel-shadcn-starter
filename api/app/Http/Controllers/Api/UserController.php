@@ -22,11 +22,6 @@ final class UserController extends Controller
     use InvalidatesCachedModels;
     use UsesCachedResponses;
 
-
-    public function __construct()
-    {
-    }
-
     /**
      * Display a paginated list of users.
      *

@@ -20,6 +20,7 @@ beforeEach(function (): void {
 });
 
 test('user cannot login with empty email', function (): void {
+    /** @var TestCase $this */
     // Clear rate limiter for empty email case
     // When email is empty, rate limiter uses IP only (per best practices)
     $ips = ['127.0.0.1', '::1'];
@@ -40,6 +41,7 @@ test('user cannot login with empty email', function (): void {
 });
 
 test('user cannot login with empty password', function (): void {
+    /** @var TestCase $this */
     $uniqueEmail = 'empty-password-'.uniqid().'@example.com';
 
     // Get CSRF cookie first
@@ -55,6 +57,7 @@ test('user cannot login with empty password', function (): void {
 });
 
 test('user cannot register with empty name', function (): void {
+    /** @var TestCase $this */
     // Get CSRF cookie first
     $this->get('/sanctum/csrf-cookie');
 
@@ -70,6 +73,7 @@ test('user cannot register with empty name', function (): void {
 });
 
 test('user cannot register with name exceeding max length', function (): void {
+    /** @var TestCase $this */
     // Get CSRF cookie first
     $this->get('/sanctum/csrf-cookie');
 
@@ -85,6 +89,7 @@ test('user cannot register with name exceeding max length', function (): void {
 });
 
 test('user cannot register with email exceeding max length', function (): void {
+    /** @var TestCase $this */
     // Get CSRF cookie first
     $this->get('/sanctum/csrf-cookie');
 
@@ -100,6 +105,7 @@ test('user cannot register with email exceeding max length', function (): void {
 });
 
 test('user cannot register with password less than 8 characters', function (): void {
+    /** @var TestCase $this */
     // Get CSRF cookie first
     $this->get('/sanctum/csrf-cookie');
 
@@ -115,6 +121,7 @@ test('user cannot register with password less than 8 characters', function (): v
 });
 
 test('user can register with exactly 8 character password', function (): void {
+    /** @var TestCase $this */
     // Get CSRF cookie first
     $this->get('/sanctum/csrf-cookie');
 
@@ -129,6 +136,7 @@ test('user can register with exactly 8 character password', function (): void {
 });
 
 test('user can login after registration with correct credentials', function (): void {
+    /** @var TestCase $this */
     // Get CSRF cookie first
     $this->get('/sanctum/csrf-cookie');
 
@@ -150,6 +158,7 @@ test('user can login after registration with correct credentials', function (): 
 });
 
 test('user cannot login after registration with wrong password', function (): void {
+    /** @var TestCase $this */
     // Get CSRF cookie first
     $this->get('/sanctum/csrf-cookie');
 

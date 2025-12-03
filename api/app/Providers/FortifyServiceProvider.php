@@ -58,7 +58,9 @@ final class FortifyServiceProvider extends ServiceProvider
                 ? Str::transliterate(Str::lower($email)).'|'.$request->ip()
                 : $request->ip();
 
-            return Limit::perMinute(5)->by($throttleKey);
+            $limit = app()->isLocal() ? 1000 : 5;
+
+            return Limit::perMinute($limit)->by($throttleKey);
         });
 
         RateLimiter::for('two-factor', fn (Request $request): Limit => Limit::perMinute(5)->by($request->session()->get('login.id')));

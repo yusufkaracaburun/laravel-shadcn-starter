@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Tests\TestCase;
 use App\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
@@ -30,6 +31,7 @@ beforeEach(function (): void {
 });
 
 test('complete authentication flow works with session-based sanctum', function (): void {
+    /** @var TestCase $this */
     $uniqueEmail = 'flow-test-'.uniqid().'@example.com';
     $password = 'password123';
 
@@ -100,6 +102,7 @@ test('complete authentication flow works with session-based sanctum', function (
 });
 
 test('csrf cookie is required for session-based authentication', function (): void {
+    /** @var TestCase $this */
     // Test that CSRF cookie endpoint works
     $csrfResponse = $this->get('/sanctum/csrf-cookie');
     $csrfResponse->assertNoContent();
@@ -111,6 +114,7 @@ test('csrf cookie is required for session-based authentication', function (): vo
 });
 
 test('authentication flow with user that has teams', function (): void {
+    /** @var TestCase $this */
     $uniqueEmail = 'teams-test-'.uniqid().'@example.com';
     $password = 'password123';
 
