@@ -26,8 +26,8 @@ export interface NavGroup {
 
 export interface User {
   name: string
-  avatar: string
   email: string
+  avatar: string | null
 }
 
 export interface Team {

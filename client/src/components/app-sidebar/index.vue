@@ -14,16 +14,14 @@ import TeamSwitcher from './team-switcher.vue'
 const authStore = useAuthStore()
 const { user: authUser } = storeToRefs(authStore)
 
-// Map API user to sidebar user format (with avatar fallback)
 const sidebarUser = computed<SidebarUser>(() => {
   if (authUser.value) {
     return {
       name: authUser.value.name,
       email: authUser.value.email,
-      avatar: '/placeholder.png', // Default avatar since API doesn't provide one
+      avatar: authUser.value.profile_photo_path || 'https://i.pravatar.cc/300'
     }
   }
-  // Fallback to mock user if not authenticated (shouldn't happen if auth guard works)
   return sidebarData.user
 })
 </script>
