@@ -19,7 +19,7 @@ beforeEach(function (): void {
 
     // Clear all possible rate limiter keys
     // The throttle middleware uses email or IP as the key: login-link:{email|ip}
-    $cache = app(Factory::class)->store();
+    $cache = resolve(Factory::class)->store();
     $prefix = config('cache.prefix', '');
 
     // Clear common keys

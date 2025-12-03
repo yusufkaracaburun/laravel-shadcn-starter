@@ -3,6 +3,7 @@ import type { App } from 'vue'
 import { setupVueSonner } from '@/composables/use-toast'
 
 import { setupAutoAnimate } from './auto-animate/setup'
+import { setupCookie } from './cookie/setup'
 import { setupDayjs } from './dayjs/setup'
 import { setupEcho } from './echo/setup'
 import { setupI18n } from './i18n/setup'
@@ -15,6 +16,7 @@ import { setupTanstackVueQuery } from './tanstack-vue-query/setup'
 export function setupPlugins(app: App) {
   setupDayjs()
   setupNProgress()
+  setupCookie()
   setupAutoAnimate(app)
   setupTanstackVueQuery(app)
   setupI18n(app)
@@ -22,6 +24,5 @@ export function setupPlugins(app: App) {
   setupRouter(app)
   setupVueSonner(app)
   setupEcho(app)
-  // Setup Reverb listener after Echo and Pinia are initialized
   setupReverbListener(app)
 }

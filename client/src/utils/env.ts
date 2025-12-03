@@ -11,15 +11,15 @@ import { z } from 'zod'
 const EnvSchema = z.object({
   // Add your environment variables here, for example:
   VITE_APP_ENV: z.string(),
-  VITE_SERVER_API_URL: z.string().url(),
+  VITE_SERVER_API_URL: z.url(),
   VITE_SERVER_API_PREFIX: z.string(),
   VITE_SERVER_API_TIMEOUT: z.coerce.number().default(5000),
   // Reverb (WebSocket) configuration
-  VITE_REVERB_ENABLED: z.string().optional().default('false'),
+  VITE_REVERB_ENABLED: z.string().default('false'),
   VITE_REVERB_APP_KEY: z.string().optional(),
   VITE_REVERB_HOST: z.string().optional(),
-  VITE_REVERB_PORT: z.coerce.number().optional().default(8080),
-  VITE_REVERB_SCHEME: z.enum(['http', 'https']).optional().default('http'),
+  VITE_REVERB_PORT: z.coerce.number().default(9999),
+  VITE_REVERB_SCHEME: z.enum(['http', 'https']).default('http'),
 })
 
 export type env = z.infer<typeof EnvSchema>
@@ -29,9 +29,9 @@ const { data: env, error } = EnvSchema.safeParse(import.meta.env)
 
 if (error) {
   console.error('❌ Invalid env')
-  console.error(error.flatten().fieldErrors)
+  console.error(error.issues)
   toast.error(`Env error: you should check your .env file`, {
-    description: h('pre', { class: 'mt-2 w-[340px] rounded-md bg-slate-950 p-4' }, h('code', { class: 'text-white' }, JSON.stringify(error, null, 2))),
+    description: h('pre', { class: 'mt-2 w-[340px] rounded-md bg-slate-950 p-4' }, h('code', { class: 'text-white' }, JSON.stringify(error.issues, null, 2))),
   })
 }
 

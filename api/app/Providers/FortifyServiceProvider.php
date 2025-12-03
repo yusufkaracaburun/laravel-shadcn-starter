@@ -50,7 +50,7 @@ final class FortifyServiceProvider extends ServiceProvider
         RateLimiter::for('login', function (Request $request): Limit {
             // Get email from request, handling missing/empty cases gracefully
             $email = $request->input(Fortify::username(), '');
-            $email = trim((string) $email);
+            $email = mb_trim((string) $email);
 
             // If email is empty, rate limit by IP only to prevent enumeration attacks
             // Otherwise, rate limit by email|IP combination

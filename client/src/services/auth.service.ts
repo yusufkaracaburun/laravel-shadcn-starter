@@ -4,7 +4,7 @@ import { useMutation, useQueryClient } from '@tanstack/vue-query'
 
 import { useAxios } from '@/composables/use-axios'
 
-import type { IResponse } from '../types/response.type'
+import type { IResponse } from './types/response.type'
 
 export interface LoginRequest {
   email: string
@@ -16,14 +16,7 @@ export interface RegisterRequest {
   email: string
   password: string
   password_confirmation: string
-}
-
-/**
- * Get CSRF cookie from Sanctum
- * This MUST be called before login/register requests
- */
-export async function getCsrfCookie(axiosInstance: ReturnType<typeof useAxios>['axiosInstance']): Promise<void> {
-  await axiosInstance.get('/sanctum/csrf-cookie')
+  [key: string]: unknown
 }
 
 /**
@@ -35,6 +28,7 @@ export async function getCsrfCookie(axiosInstance: ReturnType<typeof useAxios>['
  */
 export interface LoginResponse {
   two_factor: boolean
+  [key: string]: unknown
 }
 
 export function useLoginMutation() {
@@ -43,10 +37,6 @@ export function useLoginMutation() {
 
   return useMutation<LoginResponse, AxiosError, LoginRequest>({
     mutationFn: async (credentials: LoginRequest): Promise<LoginResponse> => {
-      // Step 1: Get CSRF cookie (REQUIRED FIRST)
-      await getCsrfCookie(axiosInstance)
-
-      // Step 2: Login with credentials
       const response = await axiosInstance.post('/login', credentials)
       return response.data
     },
@@ -70,10 +60,6 @@ export function useRegisterMutation() {
 
   return useMutation<IResponse<null>, AxiosError, RegisterRequest>({
     mutationFn: async (data: RegisterRequest): Promise<IResponse<null>> => {
-      // Step 1: Get CSRF cookie (REQUIRED FIRST)
-      await getCsrfCookie(axiosInstance)
-
-      // Step 2: Register with user data
       const response = await axiosInstance.post('/register', data)
       return response.data
     },

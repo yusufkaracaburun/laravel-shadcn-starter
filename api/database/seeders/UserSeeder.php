@@ -18,7 +18,7 @@ final class UserSeeder extends Seeder
 
     public function __construct()
     {
-        $this->permissionRegistrar = app(PermissionRegistrar::class);
+        $this->permissionRegistrar = resolve(PermissionRegistrar::class);
     }
 
     /**

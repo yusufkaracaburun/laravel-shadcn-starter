@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/vue-query'
 
 import { useAxios } from '@/composables/use-axios'
 
-import type { IResponse } from '../types/response.type'
+import type { IResponse } from './types/response.type'
 
 /**
  * User interface matching backend UserResource exactly
@@ -20,6 +20,7 @@ export interface User {
   updated_at: string
   teams?: Team[]
   currentTeam?: Team | null
+  [key: string]: unknown
 }
 
 export interface Team {
@@ -29,6 +30,7 @@ export interface Team {
   personal_team: boolean
   created_at: string
   updated_at: string
+  [key: string]: unknown
 }
 
 /**

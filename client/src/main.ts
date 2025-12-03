@@ -1,9 +1,8 @@
-import { createApp } from 'vue'
-import { nextTick } from 'vue'
+import { createApp, nextTick } from 'vue'
 
 import App from './App.vue'
-import { setupPlugins } from './plugins'
 import { useAuth } from './composables/use-auth'
+import { setupPlugins } from './plugins'
 
 import '@/assets/index.css'
 import '@/assets/scrollbar.css'
@@ -20,17 +19,19 @@ async function bootstrap() {
 
   app.mount('#app')
 
-  // Check authentication status after app is mounted and Pinia is ready
-  // This will fetch current user if session cookies exist
   await nextTick()
+  await checkUserAuth()
+}
+
+bootstrap()
+
+async function checkUserAuth() {
   try {
     const { checkAuth } = useAuth()
     await checkAuth()
   }
   catch (error) {
     // Silently fail - user is not authenticated
-    console.debug('No authenticated session found')
+    console.warn('No authenticated session found', error)
   }
 }
-
-bootstrap()

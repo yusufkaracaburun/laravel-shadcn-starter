@@ -20,7 +20,6 @@ use App\Http\Controllers\Concerns\InvalidatesCachedModels;
 final class UserController extends Controller
 {
     use InvalidatesCachedModels;
-
     use UsesCachedResponses;
 
     /**
@@ -32,6 +31,10 @@ final class UserController extends Controller
     {
         /** @var User $user */
         $user = Auth::user();
+
+        if (! $user) {
+            return ApiResponse::error('Unauthenticated.', Response::HTTP_UNAUTHORIZED);
+        }
 
         // Ensure current_team_id is loaded by refreshing the model
         $user->refresh();

@@ -98,7 +98,7 @@ final class AppServiceProvider extends ServiceProvider
                 return null;
             }
 
-            $permissionRegistrar = app(PermissionRegistrar::class);
+            $permissionRegistrar = resolve(PermissionRegistrar::class);
             $originalTeamId = $permissionRegistrar->getPermissionsTeamId();
             $permissionRegistrar->setPermissionsTeamId(null); // Check global roles
 

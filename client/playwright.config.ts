@@ -1,12 +1,11 @@
 import { defineConfig, devices } from '@playwright/test'
-// @ts-expect-error - process is a Node.js global, types are provided by @types/node
 import process from 'node:process'
 
-const baseURL = process.env.VITE_SERVER_API_URL || 'http://localhost:5173'
-const apiURL = process.env.PLAYWRIGHT_TEST_API_URL || 'https://api.skeleton:8890'
+const apiURL = process.env.VITE_API_BASE_URL
+const baseURL = process.env.VITE_FRONTEND_URL
 
 export default defineConfig({
-  testDir: '.',
+  testDir: './tests',
   testMatch: [
     /tests\/.*\.(e2e|api)\.spec\.ts$/,
   ],
@@ -23,6 +22,10 @@ export default defineConfig({
     video: 'retain-on-failure',
     actionTimeout: 10000,
     navigationTimeout: 10000,
+    extraHTTPHeaders: {
+      Accept: 'application/json',
+    },
+    ignoreHTTPSErrors: true,
   },
   projects: [
     {
@@ -51,21 +54,22 @@ export default defineConfig({
     },
     {
       name: 'api',
-      use: { ...devices['Desktop Chrome'] },
-      testMatch: /tests\/.*\.api\.spec\.ts$/,
+      testDir: './tests/api',
       fullyParallel: false,
       workers: 2,
+      use: {
+        baseURL: apiURL,
+        ...devices['Desktop Chrome'],
+      },
     },
   ],
   webServer: [
     {
-      command: 'npm run dev',
+      command: 'pnpm dev',
       url: baseURL,
       reuseExistingServer: true,
       timeout: 15000,
     },
-    // API server runs separately at https://api.skeleton:8890
-    // Removed webServer entry for API since it's not started by Playwright
   ],
   globalSetup: undefined,
   globalTeardown: undefined,

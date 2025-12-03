@@ -14,10 +14,10 @@ use App\Http\Controllers\Api\UserController;
 |
 */
 
-Route::middleware('auth:sanctum')->name('api.user.')->group(function (): void {
+Route::name('api.users.')->group(function (): void {
     // Current authenticated user
     Route::get('/user/current', [UserController::class, 'current'])->name('current');
 
     // User resource routes
     Route::apiResource('user', UserController::class);
-});
+})->middleware('auth:sanctum');

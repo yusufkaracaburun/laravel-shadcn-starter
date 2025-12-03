@@ -57,7 +57,7 @@ use Illuminate\Support\Facades\RateLimiter;
  */
 function clearLoginRateLimiter(string $email = 'test@example.com', string $ip = '127.0.0.1'): void
 {
-    $email = trim($email);
+    $email = mb_trim($email);
 
     if ($email !== '') {
         // Match the exact format from FortifyServiceProvider for non-empty emails

@@ -1,11 +1,11 @@
 import { storeToRefs } from 'pinia'
 
-import type { LoginRequest, RegisterRequest } from '@/services/api/auth.api'
+import type { LoginRequest, RegisterRequest } from '@/services/auth.service'
 
 import { useToast } from '@/composables/use-toast'
 import { RouterPath } from '@/constants/route-path'
-import { useLoginMutation, useLogoutMutation, useRegisterMutation } from '@/services/api/auth.api'
-import { useGetCurrentUserQuery } from '@/services/api/users.api'
+import { useLoginMutation, useLogoutMutation, useRegisterMutation } from '@/services/auth.service'
+import { useGetCurrentUserQuery } from '@/services/users.service'
 import { useAuthStore } from '@/stores/auth.store'
 
 export function useAuth() {

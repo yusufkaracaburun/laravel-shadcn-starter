@@ -14,7 +14,7 @@ use Spatie\Permission\PermissionRegistrar;
 
 // Clear permission cache before each test (per Spatie testing docs)
 beforeEach(function (): void {
-    app(PermissionRegistrar::class)->forgetCachedPermissions();
+    resolve(PermissionRegistrar::class)->forgetCachedPermissions();
 });
 
 test('super admin can bypass all permission checks via Gate::before', function (): void {
@@ -113,7 +113,7 @@ test('super admin can perform all CRUD operations on teams', function (): void {
 
     // Assign role globally (team_id = null) when teams are enabled
     // Per Spatie docs: clear cache before assigning roles
-    $permissionRegistrar = app(PermissionRegistrar::class);
+    $permissionRegistrar = resolve(PermissionRegistrar::class);
     $permissionRegistrar->forgetCachedPermissions();
 
     $originalTeamId = $permissionRegistrar->getPermissionsTeamId();
@@ -189,7 +189,7 @@ test('super admin bypasses team-scoped permission checks', function (): void {
     $permission = Permission::create(['name' => 'teams.manage', 'guard_name' => 'web']);
 
     // Act - Check permission without team context
-    $permissionRegistrar = app(PermissionRegistrar::class);
+    $permissionRegistrar = resolve(PermissionRegistrar::class);
     $permissionRegistrar->setPermissionsTeamId(null);
 
     // Assert - Super admin can access team-scoped permissions

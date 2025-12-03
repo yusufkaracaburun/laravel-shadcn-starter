@@ -1,22 +1,38 @@
-import type { AxiosError, AxiosRequestConfig } from 'axios'
+import type { AxiosError, InternalAxiosRequestConfig } from 'axios'
 
 import axios from 'axios'
 import { useRouter } from 'vue-router'
 
 import { RouterPath } from '@/constants/route-path'
+import { getCookieValue } from '@/plugins/cookie/setup'
 import env from '@/utils/env'
 
 export function useAxios() {
   const router = useRouter()
-  const axiosInstance = initializeAxios({
-    baseURL: '',
-  })
+  const axiosInstance = initializeAxios()
 
-  axiosInstance.interceptors.request.use((config) => {
-    return config
-  }, (error) => {
-    return Promise.reject(error)
-  })
+  axiosInstance.interceptors.request.use(
+    async (request: InternalAxiosRequestConfig) => {
+      if (request.method === 'GET') {
+        return request
+      }
+
+      let csrfToken = getCookieValue('XSRF-TOKEN')
+      console.warn('CSRF TOKEN', request.method, csrfToken)
+
+      // if (!csrfToken) {
+      //   await getCsrfCookie()
+      //   csrfToken = getCookieValue('XSRF-TOKEN')
+      // }
+
+      request.headers['X-XSRF-TOKEN'] = csrfToken
+
+      return request
+    },
+    (error) => {
+      return Promise.reject(error)
+    },
+  )
 
   axiosInstance.interceptors.response.use((response) => {
     return response
@@ -31,23 +47,36 @@ export function useAxios() {
         })
       }
     }
+    if (error.response?.status === 403) {
+      useToast().showError('You are not authorized to access this page')
+    }
+    if (error.response?.status === 422) {
+      useToast().showError('Validation error')
+    }
+    if (error.response?.status === 500) {
+      useToast().showError('Internal server error')
+    }
     return Promise.reject(error)
   })
 
+  async function getCsrfCookie() {
+    return await axiosInstance.get('/sanctum/csrf-cookie')
+  }
+
   return {
     axiosInstance,
+    getCsrfCookie,
   }
 }
 
-function initializeAxios(config: AxiosRequestConfig) {
+function initializeAxios() {
   return axios.create({
-    ...config,
+    baseURL: env.VITE_SERVER_API_URL,
     timeout: env.VITE_SERVER_API_TIMEOUT,
     withCredentials: true,
     headers: {
       'Accept': 'application/json',
       'X-Requested-With': 'XMLHttpRequest',
-      'Content-Type': 'application/json',
     },
   })
 }

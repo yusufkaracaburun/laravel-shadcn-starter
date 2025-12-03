@@ -79,7 +79,7 @@ trait AsFakeAction
     protected static function getFakeResolvedInstance(): ?MockInterface
     {
         /** @var MockInterface|null */
-        return app(static::getFakeResolvedInstanceKey());
+        return resolve(static::getFakeResolvedInstanceKey());
     }
 
     protected static function getFakeResolvedInstanceKey(): string

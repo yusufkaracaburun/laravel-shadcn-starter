@@ -7,10 +7,8 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
 use App\Http\Middleware\EnsureTeamIsSet;
 use App\Http\Middleware\CacheApiResponse;
-use Illuminate\Http\Middleware\HandleCors;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Validation\ValidationException;
-use Illuminate\Session\Middleware\StartSession;
 use App\Exceptions\OAuthAccountLinkingException;
 use Spatie\Permission\Middleware\RoleMiddleware;
 use Illuminate\Auth\Access\AuthorizationException;
@@ -22,6 +20,7 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 use Spatie\Permission\Middleware\RoleOrPermissionMiddleware;
 use Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -44,18 +43,13 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
 
         $middleware->api(prepend: [
-            HandleCors::class,
-            StartSession::class,
+            EnsureFrontendRequestsAreStateful::class,
         ]);
 
         $middleware->validateCsrfTokens(except: [
-            'api/*',
-            'auth/login-link',
+            // API routes are handled by Sanctum
         ]);
 
-        $middleware->trustProxies(at: '*');
-
-        // Register middleware aliases
         $middleware->alias([
             'role' => RoleMiddleware::class,
             'permission' => PermissionMiddleware::class,

@@ -54,7 +54,7 @@ test('user can have team-scoped role', function (): void {
     $role = Role::create(['name' => 'team-admin', 'guard_name' => 'web']);
 
     // Act - Set team context via PermissionRegistrar and assign role
-    $permissionRegistrar = app(PermissionRegistrar::class);
+    $permissionRegistrar = resolve(PermissionRegistrar::class);
     $permissionRegistrar->setPermissionsTeamId($team->id);
 
     $user->assignRole($role);
@@ -81,7 +81,7 @@ test('user can check team-scoped permission', function (): void {
     $role->givePermissionTo($permission);
 
     // Act - Set team context via PermissionRegistrar and assign role
-    $permissionRegistrar = app(PermissionRegistrar::class);
+    $permissionRegistrar = resolve(PermissionRegistrar::class);
     $permissionRegistrar->setPermissionsTeamId($team->id);
 
     $user->assignRole($role);

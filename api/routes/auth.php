@@ -21,7 +21,6 @@ use Laravel\Sanctum\Http\Controllers\CsrfCookieController;
 // Sanctum route for SPA authentication (CSRF cookie)
 Route::get('/sanctum/csrf-cookie', [CsrfCookieController::class, 'show']);
 
-
 Route::prefix('auth')->group(function (): void {
     // OAuth Provider Routes
     Route::get('/redirect/{provider}', [OauthController::class, 'redirect'])->name('oauth.redirect');

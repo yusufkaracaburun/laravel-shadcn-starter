@@ -22,6 +22,7 @@ declare global {
   const defineComponent: typeof import('vue').defineComponent
   const effectScope: typeof import('vue').effectScope
   const getActionToastOptions: typeof import('../composables/use-toast').getActionToastOptions
+  const getCsrfCookie: typeof import('../composables/use-axios').getCsrfCookie
   const getCurrentInstance: typeof import('vue').getCurrentInstance
   const getCurrentScope: typeof import('vue').getCurrentScope
   const getCurrentWatcher: typeof import('vue').getCurrentWatcher
