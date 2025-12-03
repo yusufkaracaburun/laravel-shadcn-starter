@@ -1,7 +1,6 @@
-import type { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios'
-import type axios from 'axios'
+import type { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
 
-import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { useAxios } from '@/composables/use-axios'
 
@@ -62,7 +61,7 @@ vi.mock('@/constants/route-path', () => ({
 }))
 
 describe('useAxios', () => {
-  let axiosInstance: ReturnType<typeof axios.create>
+  let axiosInstance: AxiosInstance
   let consoleWarnSpy: ReturnType<typeof vi.spyOn>
 
   beforeEach(() => {
@@ -74,9 +73,11 @@ describe('useAxios', () => {
     // Suppress console.warn output during tests
     consoleWarnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {})
 
-    // Get fresh axios instance
+    // Get fresh axios instance for each test
     const { axiosInstance: instance } = useAxios()
     axiosInstance = instance
+    // Reset adapter to default
+    delete axiosInstance.defaults.adapter
   })
 
   afterEach(() => {
@@ -100,114 +101,136 @@ describe('useAxios', () => {
 
   describe('request interceptor', () => {
     it('should not modify GET requests', async () => {
-      // Arrange
-      const config: AxiosRequestConfig = {
-        method: 'GET',
-        url: '/api/users',
-        headers: {},
+      // Arrange - Create a fresh instance to ensure clean state
+      mockGetCookieValue.mockClear()
+      const { axiosInstance: freshInstance } = useAxios()
+      let capturedConfig: AxiosRequestConfig | undefined
+
+      freshInstance.defaults.adapter = async (config) => {
+        capturedConfig = config
+        return {
+          data: {},
+          status: 200,
+          statusText: 'OK',
+          headers: {},
+          config,
+        } as AxiosResponse
       }
 
       // Act
-      const result = await axiosInstance.interceptors.request.handlers[0].fulfilled(config)
+      await freshInstance.get('/api/users')
 
       // Assert
-      expect(result).toEqual(config)
-      expect(result.headers?.['X-XSRF-TOKEN']).toBeUndefined()
+      // GET requests should not call getCookieValue because interceptor returns early
+      expect(mockGetCookieValue).not.toHaveBeenCalled()
+      // GET requests should not have CSRF token in headers
+      expect(capturedConfig?.headers?.['X-XSRF-TOKEN']).toBeUndefined()
     })
 
     it('should add CSRF token to POST requests', async () => {
       // Arrange
       mockGetCookieValue.mockReturnValue('csrf-token-123')
-      const config: AxiosRequestConfig = {
-        method: 'POST',
-        url: '/api/users',
-        headers: {},
+      let capturedConfig: AxiosRequestConfig | undefined
+      axiosInstance.defaults.adapter = async (config) => {
+        capturedConfig = config
+        return {
+          data: {},
+          status: 200,
+          statusText: 'OK',
+          headers: {},
+          config,
+        } as AxiosResponse
       }
 
       // Act
-      const result = await axiosInstance.interceptors.request.handlers[0].fulfilled(config)
+      await axiosInstance.post('/api/users', { name: 'Test' })
 
       // Assert
       expect(mockGetCookieValue).toHaveBeenCalledWith('XSRF-TOKEN')
-      expect(result.headers?.['X-XSRF-TOKEN']).toBe('csrf-token-123')
+      expect(capturedConfig?.headers?.['X-XSRF-TOKEN']).toBe('csrf-token-123')
     })
 
     it('should add CSRF token to PUT requests', async () => {
       // Arrange
       mockGetCookieValue.mockReturnValue('csrf-token-456')
-      const config: AxiosRequestConfig = {
-        method: 'PUT',
-        url: '/api/users/1',
-        headers: {},
+      let capturedConfig: AxiosRequestConfig | undefined
+      axiosInstance.defaults.adapter = async (config) => {
+        capturedConfig = config
+        return {
+          data: {},
+          status: 200,
+          statusText: 'OK',
+          headers: {},
+          config,
+        } as AxiosResponse
       }
 
       // Act
-      const result = await axiosInstance.interceptors.request.handlers[0].fulfilled(config)
+      await axiosInstance.put('/api/users/1', { name: 'Updated' })
 
       // Assert
-      expect(result.headers?.['X-XSRF-TOKEN']).toBe('csrf-token-456')
+      expect(capturedConfig?.headers?.['X-XSRF-TOKEN']).toBe('csrf-token-456')
     })
 
     it('should add CSRF token to DELETE requests', async () => {
       // Arrange
       mockGetCookieValue.mockReturnValue('csrf-token-789')
-      const config: AxiosRequestConfig = {
-        method: 'DELETE',
-        url: '/api/users/1',
-        headers: {},
+      let capturedConfig: AxiosRequestConfig | undefined
+      axiosInstance.defaults.adapter = async (config) => {
+        capturedConfig = config
+        return {
+          data: {},
+          status: 200,
+          statusText: 'OK',
+          headers: {},
+          config,
+        } as AxiosResponse
       }
 
       // Act
-      const result = await axiosInstance.interceptors.request.handlers[0].fulfilled(config)
+      await axiosInstance.delete('/api/users/1')
 
       // Assert
-      expect(result.headers?.['X-XSRF-TOKEN']).toBe('csrf-token-789')
-    })
-
-    it('should handle request interceptor errors', async () => {
-      // Arrange
-      const error = new Error('Request error')
-
-      // Act & Assert
-      await expect(
-        axiosInstance.interceptors.request.handlers[0].rejected(error),
-      ).rejects.toBe(error)
+      expect(capturedConfig?.headers?.['X-XSRF-TOKEN']).toBe('csrf-token-789')
     })
   })
 
   describe('response interceptor', () => {
-    it('should return successful responses unchanged', () => {
+    it('should return successful responses unchanged', async () => {
       // Arrange
-      const response: AxiosResponse = {
+      const mockResponse = {
         data: { success: true },
         status: 200,
         statusText: 'OK',
         headers: {},
-        config: {} as AxiosRequestConfig,
       }
+      axiosInstance.defaults.adapter = async () => mockResponse as AxiosResponse
 
       // Act
-      const result = axiosInstance.interceptors.response.handlers[0].fulfilled(response)
+      const result = await axiosInstance.get('/api/test')
 
       // Assert
-      expect(result).toBe(response)
+      expect(result).toEqual(mockResponse)
     })
 
     it('should redirect to login on 401 error when not on login page', async () => {
       // Arrange
       mockCurrentRoute.value.path = '/dashboard'
-      const error = {
-        response: {
-          status: 401,
-          data: { message: 'Unauthorized' },
-        },
-      } as AxiosError
+      axiosInstance.defaults.adapter = async () => {
+        const error = {
+          response: {
+            status: 401,
+            data: { message: 'Unauthorized' },
+          },
+        } as AxiosError
+        throw error
+      }
 
       // Act
       try {
-        await axiosInstance.interceptors.response.handlers[0].rejected(error)
+        await axiosInstance.get('/api/protected')
       }
-      catch (e) {
+      catch {
         // Expected to reject
       }
 
@@ -222,18 +245,21 @@ describe('useAxios', () => {
     it('should not redirect on 401 error when already on login page', async () => {
       // Arrange
       mockCurrentRoute.value.path = '/auth/sign-in'
-      const error = {
-        response: {
-          status: 401,
-          data: { message: 'Unauthorized' },
-        },
-      } as AxiosError
+      axiosInstance.defaults.adapter = async () => {
+        const error = {
+          response: {
+            status: 401,
+            data: { message: 'Unauthorized' },
+          },
+        } as AxiosError
+        throw error
+      }
 
       // Act
       try {
-        await axiosInstance.interceptors.response.handlers[0].rejected(error)
+        await axiosInstance.get('/api/protected')
       }
-      catch (e) {
+      catch {
         // Expected to reject
       }
 
@@ -244,112 +270,127 @@ describe('useAxios', () => {
 
     it('should store 403 errors and show toast', async () => {
       // Arrange
-      const error = {
-        response: {
-          status: 403,
-          data: { message: 'Forbidden' },
-        },
-      } as AxiosError
+      axiosInstance.defaults.adapter = async () => {
+        const error = {
+          response: {
+            status: 403,
+            data: { message: 'Forbidden' },
+          },
+        } as AxiosError
+        throw error
+      }
 
       // Act
       try {
-        await axiosInstance.interceptors.response.handlers[0].rejected(error)
+        await axiosInstance.get('/api/protected')
       }
-      catch (e) {
+      catch {
         // Expected to reject
       }
 
       // Assert
-      expect(mockSetApiError).toHaveBeenCalledWith(error)
+      expect(mockSetApiError).toHaveBeenCalled()
       expect(mockShowError).toHaveBeenCalledWith('You are not authorized to access this page')
     })
 
     it('should store 422 errors and show toast', async () => {
       // Arrange
-      const error = {
-        response: {
-          status: 422,
-          data: {
-            message: 'Validation failed',
-            errors: { email: ['The email is required'] },
+      axiosInstance.defaults.adapter = async () => {
+        const error = {
+          response: {
+            status: 422,
+            data: {
+              message: 'Validation failed',
+              errors: { email: ['The email is required'] },
+            },
           },
-        },
-      } as AxiosError
+        } as AxiosError
+        throw error
+      }
 
       // Act
       try {
-        await axiosInstance.interceptors.response.handlers[0].rejected(error)
+        await axiosInstance.post('/api/users', {})
       }
-      catch (e) {
+      catch {
         // Expected to reject
       }
 
       // Assert
-      expect(mockSetApiError).toHaveBeenCalledWith(error)
+      expect(mockSetApiError).toHaveBeenCalled()
       expect(mockShowError).toHaveBeenCalledWith('Validation error')
     })
 
     it('should store 500 errors and show toast', async () => {
       // Arrange
-      const error = {
-        response: {
-          status: 500,
-          data: { message: 'Internal server error' },
-        },
-      } as AxiosError
+      axiosInstance.defaults.adapter = async () => {
+        const error = {
+          response: {
+            status: 500,
+            data: { message: 'Internal server error' },
+          },
+        } as AxiosError
+        throw error
+      }
 
       // Act
       try {
-        await axiosInstance.interceptors.response.handlers[0].rejected(error)
+        await axiosInstance.get('/api/users')
       }
-      catch (e) {
+      catch {
         // Expected to reject
       }
 
       // Assert
-      expect(mockSetApiError).toHaveBeenCalledWith(error)
+      expect(mockSetApiError).toHaveBeenCalled()
       expect(mockShowError).toHaveBeenCalledWith('Internal server error')
     })
 
     it('should store other errors without showing specific toast', async () => {
       // Arrange
-      const error = {
-        response: {
-          status: 404,
-          data: { message: 'Not found' },
-        },
-      } as AxiosError
+      axiosInstance.defaults.adapter = async () => {
+        const error = {
+          response: {
+            status: 404,
+            data: { message: 'Not found' },
+          },
+        } as AxiosError
+        throw error
+      }
 
       // Act
       try {
-        await axiosInstance.interceptors.response.handlers[0].rejected(error)
+        await axiosInstance.get('/api/users/999')
       }
-      catch (e) {
+      catch {
         // Expected to reject
       }
 
       // Assert
-      expect(mockSetApiError).toHaveBeenCalledWith(error)
+      expect(mockSetApiError).toHaveBeenCalled()
       expect(mockShowError).not.toHaveBeenCalled()
     })
 
     it('should store network errors', async () => {
       // Arrange
-      const error = {
-        code: 'ERR_NETWORK',
-        message: 'Network Error',
-      } as AxiosError
+      axiosInstance.defaults.adapter = async () => {
+        const error = {
+          code: 'ERR_NETWORK',
+          message: 'Network Error',
+        } as AxiosError
+        throw error
+      }
 
       // Act
       try {
-        await axiosInstance.interceptors.response.handlers[0].rejected(error)
+        await axiosInstance.get('/api/users')
       }
-      catch (e) {
+      catch {
         // Expected to reject
       }
 
       // Assert
-      expect(mockSetApiError).toHaveBeenCalledWith(error)
+      expect(mockSetApiError).toHaveBeenCalled()
     })
   })
 

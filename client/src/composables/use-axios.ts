@@ -14,7 +14,7 @@ export function useAxios() {
 
   axiosInstance.interceptors.request.use(
     async (request: InternalAxiosRequestConfig) => {
-      if (request.method === 'GET') {
+      if (['GET', 'get'].includes(request.method as string)) {
         return request
       }
 
