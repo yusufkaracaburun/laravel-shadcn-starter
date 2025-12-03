@@ -139,6 +139,7 @@ final class UserSeeder extends Seeder
             'name' => $name,
             'password' => Hash::make('password'),
             'email_verified_at' => now(),
+            'profile_photo_path' => "https://ui-avatars.com/api/?name=" . urlencode($name),
         ]);
     }
 
