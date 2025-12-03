@@ -3,8 +3,8 @@
  * Combines base, app, and test configurations
  */
 
-import baseConfig from './eslint.config.base.mjs'
 import appConfig from './eslint.config.app.mjs'
+import baseConfig from './eslint.config.base.mjs'
 import testConfig from './eslint.config.tests.mjs'
 
 // Combine all configs using antfu's append() method

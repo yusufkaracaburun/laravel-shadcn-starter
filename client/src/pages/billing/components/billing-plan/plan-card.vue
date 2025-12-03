@@ -42,9 +42,7 @@ defineProps<Props>()
 
     <CardContent>
       <div class="flex items-center gap-1 mb-2 text-xs">
-        <span v-if="discount" class="text-xl line-through text-muted-foreground"
-          >${{ discount }}</span
-        >
+        <span v-if="discount" class="text-xl line-through text-muted-foreground">${{ discount }}</span>
         <span class="text-3xl font-bold text-primary">${{ price }}</span>
         <div class="text-muted-foreground">
           <span>/</span>

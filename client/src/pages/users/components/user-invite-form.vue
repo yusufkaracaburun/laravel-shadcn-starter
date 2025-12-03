@@ -1,11 +1,9 @@
 <script setup lang="ts">
-import { h } from 'vue'
 import { toTypedSchema } from '@vee-validate/zod'
 import { Send } from 'lucide-vue-next'
 import { useForm } from 'vee-validate'
+import { h } from 'vue'
 import { z } from 'zod'
-
-import { useToast } from '@/composables/use-toast'
 
 import Button from '@/components/ui/button/Button.vue'
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
@@ -19,6 +17,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
+import { useToast } from '@/composables/use-toast'
 
 const schema = z.object({
   email: z.email(),

@@ -18,7 +18,7 @@ export function useAxios() {
         return request
       }
 
-      let csrfToken = getCookieValue('XSRF-TOKEN')
+      const csrfToken = getCookieValue('XSRF-TOKEN')
       console.warn('CSRF TOKEN', request.method, csrfToken)
 
       // if (!csrfToken) {
@@ -87,7 +87,7 @@ function initializeAxios() {
     timeout: env.VITE_SERVER_API_TIMEOUT,
     withCredentials: true,
     headers: {
-      Accept: 'application/json',
+      'Accept': 'application/json',
       'X-Requested-With': 'XMLHttpRequest',
     },
   })

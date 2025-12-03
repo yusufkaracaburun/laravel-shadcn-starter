@@ -38,7 +38,9 @@ function handleSelect(command: TCommand) {
       </UiDropdownMenuTrigger>
       <UiDropdownMenuContent align="end" class="w-[160px]">
         <UiDialogTrigger as-child>
-          <UiDropdownMenuItem @click.stop="handleSelect('edit')"> Edit </UiDropdownMenuItem>
+          <UiDropdownMenuItem @click.stop="handleSelect('edit')">
+            Edit
+          </UiDropdownMenuItem>
         </UiDialogTrigger>
 
         <UiDialogTrigger as-child>

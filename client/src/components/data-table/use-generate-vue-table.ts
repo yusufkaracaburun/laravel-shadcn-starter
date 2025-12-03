@@ -70,10 +70,10 @@ export function generateVueTable<T>(props: DataTableProps<T>) {
       },
     },
     enableRowSelection: true,
-    onSortingChange: (updaterOrValue) => valueUpdater(updaterOrValue, sorting),
-    onColumnFiltersChange: (updaterOrValue) => valueUpdater(updaterOrValue, columnFilters),
-    onColumnVisibilityChange: (updaterOrValue) => valueUpdater(updaterOrValue, columnVisibility),
-    onRowSelectionChange: (updaterOrValue) => valueUpdater(updaterOrValue, rowSelection),
+    onSortingChange: updaterOrValue => valueUpdater(updaterOrValue, sorting),
+    onColumnFiltersChange: updaterOrValue => valueUpdater(updaterOrValue, columnFilters),
+    onColumnVisibilityChange: updaterOrValue => valueUpdater(updaterOrValue, columnVisibility),
+    onRowSelectionChange: updaterOrValue => valueUpdater(updaterOrValue, rowSelection),
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -93,7 +93,8 @@ export function generateVueTable<T>(props: DataTableProps<T>) {
     }
     tableConfig.pageCount = pageCount.value
     tableConfig.manualPagination = true
-  } else {
+  }
+  else {
     tableConfig.getPaginationRowModel = getPaginationRowModel()
   }
 

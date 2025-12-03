@@ -83,7 +83,9 @@ const isOpen = ref(false)
 
       <DrawerFooter class="pt-2">
         <DrawerClose as-child>
-          <Button variant="outline"> Cancel </Button>
+          <Button variant="outline">
+            Cancel
+          </Button>
         </DrawerClose>
       </DrawerFooter>
     </DrawerContent>

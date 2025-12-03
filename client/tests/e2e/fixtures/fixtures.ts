@@ -58,7 +58,7 @@ export const test = base.extend<TestFixtures>({
    */
   testUser: async ({ page: _page }, use) => {
     // Create a mutable object that can be updated in steps
-    const testUserStore: { email: string; password: string; name: string } | null = null
+    const testUserStore: { email: string, password: string, name: string } | null = null
     await use(testUserStore)
   },
 })

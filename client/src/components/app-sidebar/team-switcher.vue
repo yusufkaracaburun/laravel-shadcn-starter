@@ -58,7 +58,9 @@ function handleSelect(command: TComponent) {
             :side="isMobile || open ? 'bottom' : 'right'"
             :side-offset="4"
           >
-            <UiDropdownMenuLabel class="text-xs text-muted-foreground"> Teams </UiDropdownMenuLabel>
+            <UiDropdownMenuLabel class="text-xs text-muted-foreground">
+              Teams
+            </UiDropdownMenuLabel>
             <UiDropdownMenuItem
               v-for="(team, index) in teams"
               :key="team.name"
@@ -80,7 +82,9 @@ function handleSelect(command: TComponent) {
                 >
                   <Plus class="size-4" />
                 </div>
-                <div class="font-medium text-muted-foreground">Add team</div>
+                <div class="font-medium text-muted-foreground">
+                  Add team
+                </div>
               </UiDropdownMenuItem>
             </UiDialogTrigger>
           </UiDropdownMenuContent>
