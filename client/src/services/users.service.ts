@@ -48,7 +48,7 @@ export function useGetCurrentUserQuery() {
       const response = await axiosInstance.get('/api/user/current')
       return response.data
     },
-    retry: (failureCount, error) => {
+    retry: (failureCount: number, error: AxiosError) => {
       // Don't retry on 401 (unauthorized) - user is not authenticated
       if (error.response?.status === 401) {
         return false
