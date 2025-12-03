@@ -3,7 +3,11 @@ import { expect, test } from '../fixtures'
 import { registerUser } from '../helpers/api-helpers'
 
 test.describe('Authentication Flow', () => {
-  test('User can complete full authentication flow (register → login → logout)', async ({ page, registerPage, dashboardPage }) => {
+  test('User can complete full authentication flow (register → login → logout)', async ({
+    page,
+    registerPage,
+    dashboardPage,
+  }) => {
     const user = testusers.customer
 
     await test.step('Navigate to register page', async () => {
@@ -42,7 +46,12 @@ test.describe('Authentication Flow', () => {
     })
   })
 
-  test('User can access protected routes after login', async ({ page, loginPage, dashboardPage, request }) => {
+  test('User can access protected routes after login', async ({
+    page,
+    loginPage,
+    dashboardPage,
+    request,
+  }) => {
     const user = testusers.customer
 
     await test.step('Register user via API', async () => {
@@ -81,7 +90,9 @@ test.describe('Authentication Flow', () => {
     })
   })
 
-  test('User is redirected to login when accessing protected routes without auth', async ({ browser }) => {
+  test('User is redirected to login when accessing protected routes without auth', async ({
+    browser,
+  }) => {
     const context = await browser.newContext({
       storageState: undefined,
     })
@@ -103,7 +114,12 @@ test.describe('Authentication Flow', () => {
     await context.close()
   })
 
-  test('User session persists after page reload', async ({ page, loginPage, dashboardPage, request }) => {
+  test('User session persists after page reload', async ({
+    page,
+    loginPage,
+    dashboardPage,
+    request,
+  }) => {
     const user = testusers.customer
 
     await test.step('Register user via API', async () => {

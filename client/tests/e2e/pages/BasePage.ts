@@ -25,14 +25,19 @@ export class BasePage {
   /**
    * Get element by role (fallback method)
    */
-  protected getByRole(role: 'button' | 'link' | 'textbox' | 'heading', options?: { name?: string }): Locator {
+  protected getByRole(
+    role: 'button' | 'link' | 'textbox' | 'heading',
+    options?: { name?: string },
+  ): Locator {
     return this.page.getByRole(role, options)
   }
 
   /**
    * Wait for page to load
    */
-  async waitForLoadState(state: 'load' | 'domcontentloaded' | 'networkidle' = 'networkidle'): Promise<void> {
+  async waitForLoadState(
+    state: 'load' | 'domcontentloaded' | 'networkidle' = 'networkidle',
+  ): Promise<void> {
     await this.page.waitForLoadState(state)
   }
 

@@ -3,7 +3,12 @@ import { expect, test } from '../fixtures'
 import { registerUser } from '../helpers/api-helpers'
 
 test.describe('User Login', () => {
-  test('User can login successfully with valid credentials', async ({ page, loginPage, dashboardPage, request }) => {
+  test('User can login successfully with valid credentials', async ({
+    page,
+    loginPage,
+    dashboardPage,
+    request,
+  }) => {
     const user = testusers.customer
 
     await test.step('Register user via API', async () => {
@@ -67,7 +72,12 @@ test.describe('User Login', () => {
     })
   })
 
-  test('User is redirected to dashboard after successful login', async ({ page, loginPage, dashboardPage, request }) => {
+  test('User is redirected to dashboard after successful login', async ({
+    page,
+    loginPage,
+    dashboardPage,
+    request,
+  }) => {
     const user = testusers.customer
 
     await test.step('Register user via API', async () => {

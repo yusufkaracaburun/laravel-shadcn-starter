@@ -17,7 +17,7 @@ const apiURL = process.env.PLAYWRIGHT_TEST_API_URL || 'https://api.skeleton:8890
 function createHeaders(customHeaders?: Record<string, string>): Record<string, string> {
   return {
     'Content-Type': 'application/json',
-    'Accept': 'application/json',
+    Accept: 'application/json',
     'X-Requested-With': 'XMLHttpRequest',
     ...customHeaders,
   }
@@ -38,8 +38,7 @@ function extractCsrfToken(cookieHeader: string | string[] | undefined): string |
   let cookies: string[] = []
   if (Array.isArray(cookieHeader)) {
     cookies = cookieHeader
-  }
-  else if (cookieHeader) {
+  } else if (cookieHeader) {
     cookies = [cookieHeader]
   }
 
@@ -49,8 +48,7 @@ function extractCsrfToken(cookieHeader: string | string[] | undefined): string |
       try {
         // Decode URL-encoding to get the encrypted value for X-XSRF-TOKEN header
         return decodeURIComponent(match[1].trim())
-      }
-      catch {
+      } catch {
         return match[1].trim()
       }
     }
@@ -81,7 +79,11 @@ async function getCsrfCookie(request: APIRequestContext): Promise<string | null>
 /**
  * Side effect: Login with credentials
  */
-async function login(request: APIRequestContext, credentials: { email: string, password: string }, csrfToken: string | null): Promise<{ response: Awaited<ReturnType<APIRequestContext['post']>>, body: unknown }> {
+async function login(
+  request: APIRequestContext,
+  credentials: { email: string; password: string },
+  csrfToken: string | null,
+): Promise<{ response: Awaited<ReturnType<APIRequestContext['post']>>; body: unknown }> {
   const headers = createHeaders()
 
   if (csrfToken) {
@@ -134,7 +136,11 @@ test.describe('Login API', () => {
     expect(csrfToken).toBeTruthy()
 
     // Act - Login with credentials (side effect)
-    const { response: loginResponse, body: loginBody } = await login(request, credentials, csrfToken)
+    const { response: loginResponse, body: loginBody } = await login(
+      request,
+      credentials,
+      csrfToken,
+    )
 
     // Assert - Login should succeed
     // Fortify returns {"two_factor": false} on successful login (not IResponse format)
@@ -164,7 +170,11 @@ test.describe('Login API', () => {
     expect(csrfToken).not.toBeNull()
 
     // Act - Attempt login with invalid credentials (side effect)
-    const { response: loginResponse, body: loginBody } = await login(request, invalidCredentials, csrfToken)
+    const { response: loginResponse, body: loginBody } = await login(
+      request,
+      invalidCredentials,
+      csrfToken,
+    )
 
     // Assert - Login should fail with 422
     expect(loginResponse.status()).toBe(422)
