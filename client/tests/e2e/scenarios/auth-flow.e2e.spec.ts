@@ -1,6 +1,6 @@
-import { registerUser } from '../helpers/api-helpers'
 import { testusers } from '../.data/testusers'
 import { expect, test } from '../fixtures'
+import { registerUser } from '../helpers/api-helpers'
 
 test.describe('Authentication Flow', () => {
   test('User can complete full authentication flow (register → login → logout)', async ({ page, registerPage, dashboardPage }) => {

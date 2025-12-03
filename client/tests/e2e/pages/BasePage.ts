@@ -1,4 +1,4 @@
-import type { Page, Locator } from '@playwright/test'
+import type { Locator, Page } from '@playwright/test'
 
 /**
  * Base Page Object Model with common functionality
@@ -50,4 +50,3 @@ export class BasePage {
     await this.page.waitForURL(url, options)
   }
 }
-

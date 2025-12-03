@@ -98,7 +98,7 @@ const { isMobile, open } = useSidebar()
           </UiDropdownMenuGroup>
 
           <UiDropdownMenuSeparator />
-          <UiDropdownMenuItem @click="logout" data-testid="dashboard_logout_button">
+          <UiDropdownMenuItem data-testid="dashboard_logout_button" @click="logout">
             <LogOut />
             Log out
           </UiDropdownMenuItem>
