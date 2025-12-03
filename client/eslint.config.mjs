@@ -1,6 +1,8 @@
 import antfu from '@antfu/eslint-config'
 import pluginQuery from '@tanstack/eslint-plugin-query'
 
+import testConfig from './eslint.config.tests.mjs'
+
 export default antfu({
   type: 'app',
   vue: true,
@@ -37,4 +39,4 @@ export default antfu({
     }],
   },
   ...pluginQuery.configs['flat/recommended'],
-})
+}, testConfig)

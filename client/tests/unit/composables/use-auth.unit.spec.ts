@@ -1,6 +1,6 @@
 import { createPinia, setActivePinia } from 'pinia'
-import { ref } from 'vue'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
+import { ref } from 'vue'
 
 import { useAuth } from '@/composables/use-auth'
 
@@ -192,7 +192,7 @@ describe('useAuth', () => {
     // Reset pending and wait for completion
     loginPending.value = false
     await loginPromise
-    
+
     // After completion, loading should be false
     expect(loading.value).toBe(false)
   })

@@ -43,4 +43,5 @@ config.global.stubs = {
 }
 
 // Make ref available globally for auto-imports
+// eslint-disable-next-line no-restricted-globals
 global.ref = (val: any) => ({ value: val })
