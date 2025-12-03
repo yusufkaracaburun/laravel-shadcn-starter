@@ -5,7 +5,7 @@ import type { LoginRequest, RegisterRequest } from '@/services/auth.service'
 import { useToast } from '@/composables/use-toast'
 import { RouterPath } from '@/constants/route-path'
 import { useLoginMutation, useLogoutMutation, useRegisterMutation } from '@/services/auth.service'
-import { useGetCurrentUserQuery } from '@/services/users.service'
+import { useGetCurrentUserQuery, type User } from '@/services/users.service'
 import { useAuthStore } from '@/stores/auth.store'
 import { useErrorStore } from '@/stores/error.store'
 
