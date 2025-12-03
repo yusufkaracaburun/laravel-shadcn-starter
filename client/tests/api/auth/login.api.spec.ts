@@ -144,7 +144,10 @@ test.describe('Login API', () => {
     // Assert - Login should succeed
     // Fortify returns {"two_factor": false} on successful login (not IResponse format)
     expect(loginResponse.status()).toBe(200)
-    expect(loginBody).toHaveProperty('two_factor', false)
+    expect(loginBody).toHaveProperty('id', 1)
+    expect(loginBody).toHaveProperty('current_team_id', 1)
+    expect(loginBody).toHaveProperty('email', testusers.admin.email)
+    expect(loginBody).toHaveProperty('name', testusers.admin.name)
 
     // Act - Get current user to verify authentication (side effect)
     const userBody = await getCurrentUser(request)
