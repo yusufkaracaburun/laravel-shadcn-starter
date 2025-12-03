@@ -46,3 +46,9 @@ declare const cookieStore: CookieStore
 // vite-env.d.ts
 /// <reference types="vite-plugin-pages/client" />
 /// <reference types="unplugin-vue-router/client" />
+
+// CSS module declarations
+declare module '*.css' {
+  const content: string
+  export default content
+}

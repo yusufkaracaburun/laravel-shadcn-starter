@@ -22,6 +22,7 @@ export default defineConfig({
     navigationTimeout: 10000,
     extraHTTPHeaders: {
       Accept: 'application/json',
+      'X-Requested-With': 'XMLHttpRequest',
     },
     ignoreHTTPSErrors: true,
   },
@@ -54,13 +55,24 @@ export default defineConfig({
       use: {
         baseURL: apiURL,
         ...devices['Desktop Chrome'],
+        ignoreHTTPSErrors: true,
+        extraHTTPHeaders: {
+          Accept: 'application/json',
+          'X-Requested-With': 'XMLHttpRequest',
+        },
       },
     },
   ],
   webServer: [
     {
-      command: 'pnpm dev',
+      command: 'npm run dev',
       url: baseURL,
+      reuseExistingServer: true,
+      timeout: 15000,
+    },
+    {
+      command: 'cd .. && php artisan serve',
+      url: apiURL,
       reuseExistingServer: true,
       timeout: 15000,
     },

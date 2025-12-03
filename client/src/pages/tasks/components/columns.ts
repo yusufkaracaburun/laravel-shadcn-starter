@@ -25,7 +25,7 @@ export const columns: ColumnDef<Task>[] = [
     header: ({ column }) => h(DataTableColumnHeader<Task>, { column, title: 'Title' }),
 
     cell: ({ row }) => {
-      const label = labels.find(label => label.value === row.original.label)
+      const label = labels.find((label) => label.value === row.original.label)
 
       return h('div', { class: 'flex space-x-2' }, [
         label ? h(Badge, { variant: 'outline' }, () => label.label) : null,
@@ -38,10 +38,9 @@ export const columns: ColumnDef<Task>[] = [
     header: ({ column }) => h(DataTableColumnHeader<Task>, { column, title: 'Status' }),
 
     cell: ({ row }) => {
-      const status = statuses.find(status => status.value === row.getValue('status'))
+      const status = statuses.find((status) => status.value === row.getValue('status'))
 
-      if (!status)
-        return null
+      if (!status) return null
 
       return h('div', { class: 'flex w-[100px] items-center' }, [
         status.icon && h(status.icon, { class: 'mr-2 h-4 w-4 text-muted-foreground' }),
@@ -56,10 +55,9 @@ export const columns: ColumnDef<Task>[] = [
     accessorKey: 'priority',
     header: ({ column }) => h(DataTableColumnHeader<Task>, { column, title: 'Priority' }),
     cell: ({ row }) => {
-      const priority = priorities.find(priority => priority.value === row.getValue('priority'))
+      const priority = priorities.find((priority) => priority.value === row.getValue('priority'))
 
-      if (!priority)
-        return null
+      if (!priority) return null
 
       return h('div', { class: 'flex items-center' }, [
         priority.icon && h(priority.icon, { class: 'mr-2 h-4 w-4 text-muted-foreground' }),

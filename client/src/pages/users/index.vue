@@ -24,9 +24,7 @@ function mockLoading() {
     <template #actions>
       <UserInvite />
       <UserCreate />
-      <UiButton variant="outline" @click="mockLoading">
-        <Loader />Mock Loading
-      </UiButton>
+      <UiButton variant="outline" @click="mockLoading"> <Loader />Mock Loading </UiButton>
     </template>
     <div class="overflow-x-auto">
       <DataTable :loading :data="users" :columns="columns" />

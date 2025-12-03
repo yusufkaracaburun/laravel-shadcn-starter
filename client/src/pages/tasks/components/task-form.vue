@@ -131,9 +131,7 @@ const onSubmit = handleSubmit((values) => {
         </UiFormItem>
       </FormField>
 
-      <UiButton type="submit">
-        Submit
-      </UiButton>
+      <UiButton type="submit"> Submit </UiButton>
     </form>
   </div>
 </template>

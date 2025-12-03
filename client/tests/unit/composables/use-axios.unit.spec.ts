@@ -229,8 +229,7 @@ describe('useAxios', () => {
       // Act
       try {
         await axiosInstance.get('/api/protected')
-      }
-      catch {
+      } catch {
         // Expected to reject
       }
 
@@ -258,8 +257,7 @@ describe('useAxios', () => {
       // Act
       try {
         await axiosInstance.get('/api/protected')
-      }
-      catch {
+      } catch {
         // Expected to reject
       }
 
@@ -283,8 +281,7 @@ describe('useAxios', () => {
       // Act
       try {
         await axiosInstance.get('/api/protected')
-      }
-      catch {
+      } catch {
         // Expected to reject
       }
 
@@ -311,8 +308,7 @@ describe('useAxios', () => {
       // Act
       try {
         await axiosInstance.post('/api/users', {})
-      }
-      catch {
+      } catch {
         // Expected to reject
       }
 
@@ -336,8 +332,7 @@ describe('useAxios', () => {
       // Act
       try {
         await axiosInstance.get('/api/users')
-      }
-      catch {
+      } catch {
         // Expected to reject
       }
 
@@ -361,8 +356,7 @@ describe('useAxios', () => {
       // Act
       try {
         await axiosInstance.get('/api/users/999')
-      }
-      catch {
+      } catch {
         // Expected to reject
       }
 
@@ -384,8 +378,7 @@ describe('useAxios', () => {
       // Act
       try {
         await axiosInstance.get('/api/users')
-      }
-      catch {
+      } catch {
         // Expected to reject
       }
 

@@ -14,9 +14,7 @@ function handleComplete(e: string[]) {
       <AuthTitle />
       <UiCard class="w-full max-w-sm">
         <UiCardHeader>
-          <UiCardTitle class="text-2xl">
-            Two-Factor Authentication
-          </UiCardTitle>
+          <UiCardTitle class="text-2xl"> Two-Factor Authentication </UiCardTitle>
           <UiCardDescription>
             Please enter the authentication code.We have sent the authentication code to your email.
           </UiCardDescription>
@@ -33,9 +31,7 @@ function handleComplete(e: string[]) {
           </div>
         </UiCardContent>
         <UiCardFooter class="flex flex-col gap-2">
-          <UiButton class="w-full" :disabled="value.length < 6">
-            Verify
-          </UiButton>
+          <UiButton class="w-full" :disabled="value.length < 6"> Verify </UiButton>
 
           <UiCardDescription>
             Haven't received it?

@@ -4,8 +4,7 @@ import { expect, test } from '@playwright/test'
 
 import { testusers } from '../../.data/users.data'
 
-// @ts-expect-error - process is a Node.js global, types are provided by @types/node
-const apiURL = process.env.PLAYWRIGHT_TEST_API_URL || 'https://api.skeleton:8890'
+const apiURL = process.env.VITE_API_BASE_URL || 'http://localhost:8000'
 
 // ============================================================================
 // Pure Functions (no side effects)
@@ -17,7 +16,7 @@ const apiURL = process.env.PLAYWRIGHT_TEST_API_URL || 'https://api.skeleton:8890
 function createHeaders(customHeaders?: Record<string, string>): Record<string, string> {
   return {
     'Content-Type': 'application/json',
-    'Accept': 'application/json',
+    Accept: 'application/json',
     'X-Requested-With': 'XMLHttpRequest',
     ...customHeaders,
   }
@@ -38,8 +37,7 @@ function extractCsrfToken(cookieHeader: string | string[] | undefined): string |
   let cookies: string[] = []
   if (Array.isArray(cookieHeader)) {
     cookies = cookieHeader
-  }
-  else if (cookieHeader) {
+  } else if (cookieHeader) {
     cookies = [cookieHeader]
   }
 
@@ -49,8 +47,7 @@ function extractCsrfToken(cookieHeader: string | string[] | undefined): string |
       try {
         // Decode URL-encoding to get the encrypted value for X-XSRF-TOKEN header
         return decodeURIComponent(match[1].trim())
-      }
-      catch {
+      } catch {
         return match[1].trim()
       }
     }
@@ -83,9 +80,9 @@ async function getCsrfCookie(request: APIRequestContext): Promise<string | null>
  */
 async function login(
   request: APIRequestContext,
-  credentials: { email: string, password: string },
+  credentials: { email: string; password: string },
   csrfToken: string | null,
-): Promise<{ response: Awaited<ReturnType<APIRequestContext['post']>>, body: unknown }> {
+): Promise<{ response: Awaited<ReturnType<APIRequestContext['post']>>; body: unknown }> {
   const headers = createHeaders()
 
   if (csrfToken) {

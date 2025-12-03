@@ -2,6 +2,8 @@
   "extends": "./tsconfig.app.json",
   "compilerOptions": {
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.tests.tsbuildinfo",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "types": ["vite/client", "@playwright/test", "vitest/globals", "node"],
     "noUnusedLocals": false,
@@ -10,7 +12,14 @@
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true
   },
-  "include": ["tests/**/*.ts", "tests/**/*.tsx", "playwright.config.ts", "vitest.config.ts"],
+  "include": [
+    "tests/**/*.ts",
+    "tests/**/*.tsx",
+    "tests/**/*.d.ts",
+    "playwright.config.ts",
+    "vitest.config.ts",
+    "auto-imports.d.ts"
+  ],
   "exclude": [
     "node_modules",
     "dist",

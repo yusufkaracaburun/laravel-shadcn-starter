@@ -14,6 +14,6 @@ export const accountValidator = z.object({
   dob: z.iso
     .datetime()
     .optional()
-    .refine(date => date !== undefined, 'Please select a valid date.'),
+    .refine((date) => date !== undefined, 'Please select a valid date.'),
   language: z.string().min(1, 'Please select a language.'),
 })

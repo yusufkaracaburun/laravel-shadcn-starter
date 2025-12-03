@@ -48,10 +48,9 @@ export const columns: ColumnDef<User>[] = [
     header: ({ column }) => h(DataTableColumnHeader<User>, { column, title: 'Status' }),
 
     cell: ({ row }) => {
-      const callType = callTypes.find(callType => callType.value === row.getValue('status'))
+      const callType = callTypes.find((callType) => callType.value === row.getValue('status'))
 
-      if (!callType)
-        return null
+      if (!callType) return null
 
       return h(
         Badge,
@@ -69,10 +68,9 @@ export const columns: ColumnDef<User>[] = [
     accessorKey: 'role',
     header: ({ column }) => h(DataTableColumnHeader<User>, { column, title: 'Role' }),
     cell: ({ row }) => {
-      const priority = userTypes.find(priority => priority.value === row.getValue('role'))
+      const priority = userTypes.find((priority) => priority.value === row.getValue('role'))
 
-      if (!priority)
-        return null
+      if (!priority) return null
 
       return h('div', { class: 'flex items-center' }, [
         priority.icon && h(priority.icon, { class: 'mr-2 h-4 w-4 text-muted-foreground' }),

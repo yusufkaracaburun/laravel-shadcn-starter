@@ -23,7 +23,7 @@ const registerSchema = toTypedSchema(
       password: z.string().min(8, 'Password must be at least 8 characters.'),
       password_confirmation: z.string().min(1, 'Please confirm your password.'),
     })
-    .refine(data => data.password === data.password_confirmation, {
+    .refine((data) => data.password === data.password_confirmation, {
       message: 'Passwords do not match.',
       path: ['password_confirmation'],
     }),
@@ -47,8 +47,7 @@ const onSubmit = handleSubmit(async (values) => {
       password: values.password,
       password_confirmation: values.password_confirmation,
     })
-  }
-  catch (error: any) {
+  } catch (error: any) {
     // Handle backend validation errors (422)
     if (error.response?.status === 422) {
       const backendErrors = error.response.data.errors || {}
@@ -76,9 +75,7 @@ const onSubmit = handleSubmit(async (values) => {
       <AuthTitle />
       <UiCard class="max-w-sm mx-auto">
         <UiCardHeader>
-          <UiCardTitle class="text-xl">
-            Sign Up
-          </UiCardTitle>
+          <UiCardTitle class="text-xl"> Sign Up </UiCardTitle>
           <UiCardDescription>
             Enter your email and password to create an account. Already have an account?
             <UiButton
@@ -95,9 +92,7 @@ const onSubmit = handleSubmit(async (values) => {
             <FieldGroup>
               <VeeField v-slot="{ field, errors }" name="name">
                 <Field :data-invalid="!!errors.length">
-                  <FieldLabel for="register-form-name">
-                    Name
-                  </FieldLabel>
+                  <FieldLabel for="register-form-name"> Name </FieldLabel>
                   <Input
                     id="register-form-name"
                     v-bind="field"
@@ -110,9 +105,7 @@ const onSubmit = handleSubmit(async (values) => {
 
               <VeeField v-slot="{ field, errors }" name="email">
                 <Field :data-invalid="!!errors.length">
-                  <FieldLabel for="register-form-email">
-                    Email
-                  </FieldLabel>
+                  <FieldLabel for="register-form-email"> Email </FieldLabel>
                   <Input
                     id="register-form-email"
                     v-bind="field"
@@ -127,9 +120,7 @@ const onSubmit = handleSubmit(async (values) => {
 
               <VeeField v-slot="{ field, errors }" name="password">
                 <Field :data-invalid="!!errors.length">
-                  <FieldLabel for="register-form-password">
-                    Password
-                  </FieldLabel>
+                  <FieldLabel for="register-form-password"> Password </FieldLabel>
                   <Input
                     id="register-form-password"
                     v-bind="field"
