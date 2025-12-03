@@ -19,7 +19,7 @@ export function useAxios() {
       }
 
       const csrfToken = getCookieValue('XSRF-TOKEN')
-      console.warn('CSRF TOKEN', request.method, csrfToken)
+      console.warn('[axiosInstance.interceptors.request] - CSRF TOKEN', request.method, csrfToken)
 
       // if (!csrfToken) {
       //   await getCsrfCookie()

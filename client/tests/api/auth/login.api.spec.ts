@@ -123,8 +123,8 @@ test.describe('Login API', () => {
   test('should login successfully with valid credentials', async ({ request }) => {
     // Arrange - Pure data preparation
     const credentials = {
-      email: testusers.admin.email,
-      password: testusers.admin.password,
+      email: testusers.test.email,
+      password: testusers.test.password,
     }
 
     // Act - Get CSRF cookie (side effect)
@@ -146,8 +146,8 @@ test.describe('Login API', () => {
     expect(loginResponse.status()).toBe(200)
     expect(loginBody).toHaveProperty('id', 1)
     expect(loginBody).toHaveProperty('current_team_id', 1)
-    expect(loginBody).toHaveProperty('email', testusers.admin.email)
-    expect(loginBody).toHaveProperty('name', testusers.admin.name)
+    expect(loginBody).toHaveProperty('email', testusers.test.email)
+    expect(loginBody).toHaveProperty('name', testusers.test.name)
 
     // Act - Get current user to verify authentication (side effect)
     const userBody = await getCurrentUser(request)
@@ -186,8 +186,8 @@ test.describe('Login API', () => {
   test('should return 419 for missing CSRF token', async ({ request }) => {
     // Arrange - Pure data preparation
     const credentials = {
-      email: testusers.admin.email,
-      password: testusers.admin.password,
+      email: testusers.test.email,
+      password: testusers.test.password,
     }
 
     // Act - Login without CSRF token (side effect)

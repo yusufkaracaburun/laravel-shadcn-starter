@@ -32,11 +32,13 @@ export interface LoginResponse {
 }
 
 export function useLoginMutation() {
-  const { axiosInstance } = useAxios()
+  const { axiosInstance, getCsrfCookie } = useAxios()
   const queryClient = useQueryClient()
 
   return useMutation<LoginResponse, AxiosError, LoginRequest>({
     mutationFn: async (credentials: LoginRequest): Promise<LoginResponse> => {
+      await getCsrfCookie();
+      
       const response = await axiosInstance.post('/login', credentials)
       return response.data
     },
