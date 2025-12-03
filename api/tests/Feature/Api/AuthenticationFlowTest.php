@@ -51,7 +51,11 @@ test('complete authentication flow works with session-based sanctum', function (
     ]);
 
     $loginResponse->assertStatus(200)
-        ->assertJsonStructure(['two_factor']);
+        ->assertJsonStructure([
+            'id',
+            'name',
+            'email',
+        ]);
 
     // Step 4: Access authenticated endpoint (should work with session)
     $currentUserResponse = $this->getJson('/api/user/current');

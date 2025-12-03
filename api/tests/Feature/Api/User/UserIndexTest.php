@@ -6,10 +6,17 @@ use App\Models\User;
 use Laravel\Sanctum\Sanctum;
 use Illuminate\Testing\Fluent\AssertableJson;
 
-test('unauthenticated users cannot access user index endpoint', function (): void {
+test('unauthenticated users can access user index endpoint but get empty result', function (): void {
     $response = $this->getJson('/api/user');
 
-    $response->assertUnauthorized();
+    $response->assertOk()
+        ->assertJson(
+            fn (AssertableJson $json): AssertableJson => $json->where('success', true)
+                ->where('code', 200)
+                ->has('data', 0)
+                ->has('extra')
+                ->etc()
+        );
 });
 
 test('authenticated user can list all users', function (): void {

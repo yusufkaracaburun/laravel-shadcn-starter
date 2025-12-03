@@ -45,7 +45,11 @@ test('user can login with valid credentials', function (): void {
     ]);
 
     $response->assertStatus(200)
-        ->assertJsonStructure(['two_factor']);
+        ->assertJsonStructure([
+            'id',
+            'name',
+            'email',
+        ]);
 
     // Verify user can access authenticated endpoint after login
     $userResponse = $this->getJson('/api/user/current');

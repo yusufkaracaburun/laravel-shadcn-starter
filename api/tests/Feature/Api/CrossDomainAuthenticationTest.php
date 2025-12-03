@@ -97,7 +97,11 @@ test('cross-domain authentication flow works with session cookies', function ():
     ]);
 
     $loginResponse->assertStatus(200)
-        ->assertJsonStructure(['two_factor']);
+        ->assertJsonStructure([
+            'id',
+            'name',
+            'email',
+        ]);
 
     // Verify session cookie is set
     $cookies = $loginResponse->headers->getCookies();

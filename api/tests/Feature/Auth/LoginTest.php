@@ -39,11 +39,13 @@ test('user can login with valid credentials', function (): void {
 
     $response->assertStatus(200);
     $response->assertJsonStructure([
-        'two_factor',
+        'id',
+        'name',
+        'email',
     ]);
 
-    expect($response->json())->toHaveKey('two_factor');
-    expect($response->json('two_factor'))->toBeFalse();
+    expect($response->json())->toHaveKey('id');
+    expect($response->json('email'))->toBe($uniqueEmail);
 });
 
 test('user cannot login with invalid credentials', function (): void {
