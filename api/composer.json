@@ -96,7 +96,7 @@
         "pre:test": [
             "Composer\\Config::disableProcessTimeout",
             "@format",
-            "@clear:cache"
+            "@cache:clear"
         ],
         "test": [
             "@pre:test",
