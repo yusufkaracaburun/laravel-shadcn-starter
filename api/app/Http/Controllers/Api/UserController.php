@@ -22,27 +22,9 @@ final class UserController extends Controller
     use InvalidatesCachedModels;
     use UsesCachedResponses;
 
-    /**
-     * Get the current authenticated user.
-     *
-     * @authenticated
-     */
-    public function current(): JsonResponse
+
+    public function __construct()
     {
-        /** @var User $user */
-        $user = Auth::user();
-
-        if (! $user) {
-            return ApiResponse::error('Unauthenticated.', Response::HTTP_UNAUTHORIZED);
-        }
-
-        // Ensure current_team_id is loaded by refreshing the model
-        $user->refresh();
-
-        // Load teams and current team relationships
-        $user->load(['teams', 'currentTeam', 'ownedTeams']);
-
-        return ApiResponse::success(new UserResource($user));
     }
 
     /**
@@ -183,5 +165,28 @@ final class UserController extends Controller
         }
 
         return ApiResponse::noContent();
+    }
+
+    /**
+     * Get the current authenticated user.
+     *
+     * @authenticated
+     */
+    public function current(): JsonResponse
+    {
+        /** @var User $user */
+        $user = Auth::user();
+
+        if (! $user) {
+            return ApiResponse::error('Unauthenticated.', Response::HTTP_UNAUTHORIZED);
+        }
+
+        // Ensure current_team_id is loaded by refreshing the model
+        $user->refresh();
+
+        // Load teams and current team relationships
+        $user->load(['teams', 'currentTeam', 'ownedTeams']);
+
+        return ApiResponse::success(new UserResource($user));
     }
 }
