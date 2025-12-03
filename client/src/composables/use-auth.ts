@@ -7,11 +7,13 @@ import { RouterPath } from '@/constants/route-path'
 import { useLoginMutation, useLogoutMutation, useRegisterMutation } from '@/services/auth.service'
 import { useGetCurrentUserQuery } from '@/services/users.service'
 import { useAuthStore } from '@/stores/auth.store'
+import { useErrorStore } from '@/stores/error.store'
 
 export function useAuth() {
   const router = useRouter()
   const toast = useToast()
   const authStore = useAuthStore()
+  const errorStore = useErrorStore()
   const { user, isAuthenticated } = storeToRefs(authStore)
 
   const loginMutation = useLoginMutation()
@@ -20,7 +22,7 @@ export function useAuth() {
   const { data: currentUser, refetch: fetchCurrentUser } = useGetCurrentUserQuery()
 
   // Watch for current user changes and update store
-  watch(currentUser, (newUser) => {
+  watch(() => currentUser.value, (newUser) => {
     if (newUser?.data) {
       authStore.setUser(newUser.data)
     }
@@ -50,17 +52,20 @@ export function useAuth() {
       }
     }
     catch (error: any) {
-      // Handle validation errors (422)
-      if (error.response?.status === 422) {
-        const errors = error.response.data.errors
-        const firstError = Object.values(errors)[0] as string[]
-        toast.showError(firstError?.[0] || 'Validation failed')
-      }
-      else if (error.response?.status === 401) {
-        toast.showError('Invalid email or password')
+      // Store error with context
+      errorStore.setError(error, { context: 'login' })
+
+      // Use error store utilities for messages
+      const message = errorStore.getErrorMessage(error)
+      const validationErrors = errorStore.getValidationErrors(error)
+
+      // Show toast with appropriate message
+      if (Object.keys(validationErrors).length > 0) {
+        const firstError = Object.values(validationErrors)[0]?.[0]
+        toast.showError(firstError || message)
       }
       else {
-        toast.showError('Login failed. Please try again.')
+        toast.showError(message)
       }
       throw error
     }
@@ -82,14 +87,20 @@ export function useAuth() {
       }
     }
     catch (error: any) {
-      // Handle validation errors (422)
-      if (error.response?.status === 422) {
-        const errors = error.response.data.errors
-        const firstError = Object.values(errors)[0] as string[]
-        toast.showError(firstError?.[0] || 'Validation failed')
+      // Store error with context
+      errorStore.setError(error, { context: 'register' })
+
+      // Use error store utilities for messages
+      const message = errorStore.getErrorMessage(error)
+      const validationErrors = errorStore.getValidationErrors(error)
+
+      // Show toast with appropriate message
+      if (Object.keys(validationErrors).length > 0) {
+        const firstError = Object.values(validationErrors)[0]?.[0]
+        toast.showError(firstError || message)
       }
       else {
-        toast.showError('Registration failed. Please try again.')
+        toast.showError(message)
       }
       throw error
     }
@@ -103,10 +114,15 @@ export function useAuth() {
       router.push({ path: RouterPath.LOGIN as string })
     }
     catch (error: any) {
-      console.error('Logout failed', error)
+      // Store error with context
+      errorStore.setError(error, { context: 'logout' })
+
       // Even if logout fails, clear local state
       authStore.clearUser()
-      toast.showError('Logout failed, but you have been logged out locally.')
+
+      // Use error store for message
+      const message = errorStore.getErrorMessage(error)
+      toast.showError(message || 'Logout failed, but you have been logged out locally.')
       router.push({ path: RouterPath.LOGIN as string })
     }
   }

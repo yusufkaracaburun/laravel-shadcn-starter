@@ -23,8 +23,6 @@ async function bootstrap() {
   await checkUserAuth()
 }
 
-bootstrap()
-
 async function checkUserAuth() {
   try {
     const { checkAuth } = useAuth()
@@ -35,3 +33,5 @@ async function checkUserAuth() {
     console.warn('No authenticated session found', error)
   }
 }
+
+bootstrap()

@@ -5,6 +5,7 @@ import { useRouter } from 'vue-router'
 
 import { RouterPath } from '@/constants/route-path'
 import { getCookieValue } from '@/plugins/cookie/setup'
+import { useErrorStore } from '@/stores/error.store'
 import env from '@/utils/env'
 
 export function useAxios() {
@@ -37,7 +38,9 @@ export function useAxios() {
   axiosInstance.interceptors.response.use((response) => {
     return response
   }, (error: AxiosError) => {
-    // Handle 401 Unauthorized - redirect to login
+    const errorStore = useErrorStore()
+
+    // Handle 401 Unauthorized - redirect to login (don't store 401 errors)
     if (error.response?.status === 401) {
       // Only redirect if not already on login page
       if (router.currentRoute.value.path !== RouterPath.LOGIN as string) {
@@ -46,7 +49,13 @@ export function useAxios() {
           query: { redirect: router.currentRoute.value.fullPath },
         })
       }
+      return Promise.reject(error)
     }
+
+    // Store other errors in error store
+    errorStore.setApiError(error)
+
+    // Keep existing toast notifications
     if (error.response?.status === 403) {
       useToast().showError('You are not authorized to access this page')
     }

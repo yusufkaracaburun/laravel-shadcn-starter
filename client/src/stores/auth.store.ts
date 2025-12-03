@@ -21,10 +21,15 @@ export const useAuthStore = defineStore('user', () => {
     user.value = userData
   }
 
+  function clearUser() {
+    user.value = null
+  }
+
   return {
     user,
     isAuthenticated,
     isLogin,
     setUser,
+    clearUser,
   }
 })
