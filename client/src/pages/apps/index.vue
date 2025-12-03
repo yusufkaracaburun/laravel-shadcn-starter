@@ -13,17 +13,12 @@ type AppType = 'all' | 'connected' | 'notConnected'
 
 const searchTerm = ref('')
 const appType = ref<AppType>('all')
-const appTypes: AppType[] = [
-  'all',
-  'connected',
-  'notConnected',
-]
+const appTypes: AppType[] = ['all', 'connected', 'notConnected']
 
 const sort = ref<TSort>('asc')
 
 watch(searchTerm, (newValue) => {
-  if (!newValue)
-    appList.value = apps
+  if (!newValue) appList.value = apps
 
   appList.value = apps.filter((app) => {
     return app.name.toLowerCase().includes(newValue.toLowerCase())
@@ -32,29 +27,21 @@ watch(searchTerm, (newValue) => {
 
 watch(sort, (newValue) => {
   appList.value = apps.sort((a, b) => {
-    if (newValue === 'asc')
-      return a.name.localeCompare(b.name)
+    if (newValue === 'asc') return a.name.localeCompare(b.name)
     return b.name.localeCompare(a.name)
   })
 })
 
 watch(appType, (newValue) => {
   appList.value = apps.filter((app) => {
-    if (newValue === 'all')
-      return true
-    return newValue === 'connected'
-      ? app.connected
-      : !app.connected
+    if (newValue === 'all') return true
+    return newValue === 'connected' ? app.connected : !app.connected
   })
 })
 </script>
 
 <template>
-  <Page
-    title="Apps"
-    description="Apps description"
-    sticky
-  >
+  <Page title="Apps" description="Apps description" sticky>
     <div class="flex items-end justify-between sm:items-center">
       <div class="flex flex-col gap-4 sm:flex-row">
         <UiInput
@@ -78,15 +65,12 @@ watch(appType, (newValue) => {
       <SortSelect v-model:sort="sort" />
     </div>
     <main class="grid grid-cols-1 gap-4 mt-2 lg:grid-cols-3">
-      <AppCard
-        v-for="(app, index) in appList" :key="index"
-        :app="app"
-      />
+      <AppCard v-for="(app, index) in appList" :key="index" :app="app" />
     </main>
   </Page>
 </template>
 
 <route lang="yaml">
-  meta:
-    auth: true
+meta:
+  auth: true
 </route>

@@ -17,8 +17,7 @@ async function quickLogin(userKey: keyof typeof testusers) {
       email: user.email,
       password: user.password,
     })
-  }
-  catch (error) {
+  } catch (error) {
     // Error handling is done in useAuth composable
     console.error('Quick login failed:', error)
   }
@@ -34,12 +33,8 @@ async function quickLogin(userKey: keyof typeof testusers) {
       <!-- Quick Login Buttons (Local Development Only) -->
       <UiCard v-if="isLocal" class="w-full max-w-sm">
         <UiCardHeader>
-          <UiCardTitle class="text-lg">
-            Quick Login (Local Only)
-          </UiCardTitle>
-          <UiCardDescription>
-            Click a button to quickly login with a test user.
-          </UiCardDescription>
+          <UiCardTitle class="text-lg"> Quick Login (Local Only) </UiCardTitle>
+          <UiCardDescription> Click a button to quickly login with a test user. </UiCardDescription>
         </UiCardHeader>
         <UiCardContent>
           <div class="grid gap-2">

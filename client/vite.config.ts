@@ -29,27 +29,14 @@ export default defineConfig({
       defaultLayout: 'default',
     }),
     AutoImport({
-      include: [
-        /\.[tj]sx?$/,
-        /\.vue$/,
-        /\.md$/,
-      ],
-      imports: [
-        'vue',
-        VueRouterAutoImports,
-      ],
-      dirs: [
-        'src/composables/**/*.ts',
-        'src/constants/**/*.ts',
-        'src/stores/**/*.ts',
-      ],
+      include: [/\.[tj]sx?$/, /\.vue$/, /\.md$/],
+      imports: ['vue', VueRouterAutoImports],
+      dirs: ['src/composables/**/*.ts', 'src/constants/**/*.ts', 'src/stores/**/*.ts'],
       defaultExportByFilename: true,
       dts: 'src/types/auto-import.d.ts',
     }),
     Component({
-      dirs: [
-        'src/components',
-      ],
+      dirs: ['src/components'],
       collapseSamePrefixes: true,
       directoryAsNamespace: true,
       dts: 'src/types/auto-import-components.d.ts',

@@ -1,8 +1,4 @@
-import {
-  AudioWaveform,
-  Command,
-  GalleryVerticalEnd,
-} from 'lucide-vue-next'
+import { AudioWaveform, Command, GalleryVerticalEnd } from 'lucide-vue-next'
 
 import { useSidebar } from '@/composables/use-sidebar'
 

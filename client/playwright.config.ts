@@ -6,9 +6,7 @@ const baseURL = process.env.VITE_FRONTEND_URL
 
 export default defineConfig({
   testDir: './tests',
-  testMatch: [
-    /tests\/.*\.(e2e|api)\.spec\.ts$/,
-  ],
+  testMatch: [/tests\/.*\.(e2e|api)\.spec\.ts$/],
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
@@ -39,18 +37,14 @@ export default defineConfig({
         storageState: '.auth/user.json',
       },
       dependencies: ['setup'],
-      testMatch: [
-        /tests\/.*\.e2e\.spec\.ts$/,
-      ],
+      testMatch: [/tests\/.*\.e2e\.spec\.ts$/],
     },
     {
       name: 'e2e-unauth',
       use: {
         ...devices['Desktop Chrome'],
       },
-      testMatch: [
-        /tests\/.*\.e2e\.spec\.ts$/,
-      ],
+      testMatch: [/tests\/.*\.e2e\.spec\.ts$/],
     },
     {
       name: 'api',

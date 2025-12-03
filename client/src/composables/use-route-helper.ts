@@ -7,8 +7,7 @@ export function useRouteHelper() {
   function routeName(name: string, params: Record<string, any> = {}) {
     try {
       return router.resolve({ name, params }).href
-    }
-    catch (error) {
+    } catch (error) {
       console.warn(`Route "${name}" not found`)
       return '#'
     }

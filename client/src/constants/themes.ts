@@ -1,9 +1,18 @@
 import { MoveHorizontal, UnfoldHorizontal } from 'lucide-vue-next'
 
-export const THEMES = ['zinc', 'red', 'rose', 'orange', 'green', 'blue', 'yellow', 'violet'] as const
-export type Theme = typeof THEMES[number]
+export const THEMES = [
+  'zinc',
+  'red',
+  'rose',
+  'orange',
+  'green',
+  'blue',
+  'yellow',
+  'violet',
+] as const
+export type Theme = (typeof THEMES)[number]
 
-export const THEME_PRIMARY_COLORS: { theme: Theme, primaryColor: string }[] = [
+export const THEME_PRIMARY_COLORS: { theme: Theme; primaryColor: string }[] = [
   { theme: 'zinc', primaryColor: 'oklch(44.2% 0.017 285.786)' },
   { theme: 'red', primaryColor: 'oklch(57.7% 0.245 27.325)' },
   { theme: 'rose', primaryColor: 'oklch(0.645 0.246 16.439)' },
@@ -14,7 +23,7 @@ export const THEME_PRIMARY_COLORS: { theme: Theme, primaryColor: string }[] = [
   { theme: 'violet', primaryColor: 'oklch(0.606 0.25 292.717)' },
 ] as const
 
-export type Radius = typeof RADIUS[number]
+export type Radius = (typeof RADIUS)[number]
 export const RADIUS = [0, 0.25, 0.5, 0.75, 1] as const
 
 export type ContentLayout = 'full' | 'centered'

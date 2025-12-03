@@ -17,17 +17,15 @@ const activeTab = ref(tabs.value[0].value)
 </script>
 
 <template>
-  <Page
-    title="workspace"
-    description="workspace description"
-    sticky
-    data-testid="dashboard_page"
-  >
+  <Page title="workspace" description="workspace description" sticky data-testid="dashboard_page">
     <template #actions>
       <Button
-        @click="() => toast('hello', {
-          position: 'top-center',
-        })"
+        @click="
+          () =>
+            toast('hello', {
+              position: 'top-center',
+            })
+        "
       >
         Download
       </Button>
@@ -36,7 +34,8 @@ const activeTab = ref(tabs.value[0].value)
     <UiTabs :default-value="activeTab" class="w-full">
       <UiTabsList>
         <UiTabsTrigger
-          v-for="tab in tabs" :key="tab.value"
+          v-for="tab in tabs"
+          :key="tab.value"
           :value="tab.value"
           :disabled="tab.disabled"
         >
@@ -50,6 +49,4 @@ const activeTab = ref(tabs.value[0].value)
   </Page>
 </template>
 
-<style>
-
-</style>
+<style></style>

@@ -6,10 +6,7 @@ import SettingsAside from './settings-aside.vue'
 </script>
 
 <template>
-  <Page
-    title="Settings"
-    description="Manage your store settings."
-  >
+  <Page title="Settings" description="Manage your store settings.">
     <TwoColLayout>
       <template #aside>
         <SettingsAside />

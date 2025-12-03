@@ -1,14 +1,23 @@
 <script setup lang="ts">
+import { h } from 'vue'
 import { toTypedSchema } from '@vee-validate/zod'
 import { Send } from 'lucide-vue-next'
 import { useForm } from 'vee-validate'
-import { toast } from 'vue-sonner'
 import { z } from 'zod'
+
+import { useToast } from '@/composables/use-toast'
 
 import Button from '@/components/ui/button/Button.vue'
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
 
 const schema = z.object({
@@ -18,6 +27,8 @@ const schema = z.object({
 })
 
 const roles = ['superadmin', 'admin', 'cashier', 'manager'] as const
+
+const { toast } = useToast()
 
 const userInviteFormSchema = toTypedSchema(schema)
 const { handleSubmit } = useForm({

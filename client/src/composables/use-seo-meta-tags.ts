@@ -69,10 +69,7 @@ export function useSeoMetaTags(
   seoMeta?: SeoMeta | null,
   options: SeoMetaOptions = { merge: true },
 ) {
-  if (!seoMeta)
-    return useSeoMeta(defaultSeoMeta)
+  if (!seoMeta) return useSeoMeta(defaultSeoMeta)
 
-  return useSeoMeta(
-    options.merge ? { ...defaultSeoMeta, ...seoMeta } : seoMeta,
-  )
+  return useSeoMeta(options.merge ? { ...defaultSeoMeta, ...seoMeta } : seoMeta)
 }

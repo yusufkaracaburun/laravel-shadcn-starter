@@ -18,15 +18,14 @@ const props = defineProps<Props>()
 </script>
 
 <template>
-  <span
-    :class="cn(
-      'mr-1',
-      statusVariants({ color, rounded }),
-      props.class,
-    )"
-  >
+  <span :class="cn('mr-1', statusVariants({ color, rounded }), props.class)">
     <span
-      :class="cn(statusVariants({ color, rounded }), 'absolute inline-flex h-full w-full animate-ping opacity-75')"
+      :class="
+        cn(
+          statusVariants({ color, rounded }),
+          'absolute inline-flex h-full w-full animate-ping opacity-75',
+        )
+      "
     />
     <span :class="cn(statusVariants({ color, rounded }), props.class, 'relative inline-flex')" />
   </span>

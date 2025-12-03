@@ -12,24 +12,13 @@ export default defineConfig({
     vueJsx(),
     tailwindcss(),
     AutoImport({
-      include: [
-        /\.[tj]sx?$/,
-        /\.vue$/,
-      ],
-      imports: [
-        'vue',
-        'vue-router',
-      ],
-      dirs: [
-        'src/composables/**/*.ts',
-        'src/stores/**/*.ts',
-      ],
+      include: [/\.[tj]sx?$/, /\.vue$/],
+      imports: ['vue', 'vue-router'],
+      dirs: ['src/composables/**/*.ts', 'src/stores/**/*.ts'],
       defaultExportByFilename: true,
     }),
     Component({
-      dirs: [
-        'src/components',
-      ],
+      dirs: ['src/components'],
       collapseSamePrefixes: true,
       directoryAsNamespace: true,
     }),

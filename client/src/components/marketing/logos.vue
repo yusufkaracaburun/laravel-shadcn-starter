@@ -15,15 +15,9 @@ const types = [
 </script>
 
 <template>
-  <div
-    class="relative flex w-full flex-col items-center justify-center overflow-hidden -rotate-3"
-  >
+  <div class="relative flex w-full flex-col items-center justify-center overflow-hidden -rotate-3">
     <Marquee pause-on-hover reverse class="[--duration:50s]">
-      <div
-        v-for="type in types"
-        :key="type.name"
-        class="flex items-center gap-2 mx-4"
-      >
+      <div v-for="type in types" :key="type.name" class="flex items-center gap-2 mx-4">
         <Icon :icon="type.icon" class="w-12 h-12" />
         <span class="font-black text-4xl">{{ type.name }}</span>
       </div>

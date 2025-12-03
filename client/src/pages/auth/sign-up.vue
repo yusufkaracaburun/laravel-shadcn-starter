@@ -3,12 +3,7 @@ import { toTypedSchema } from '@vee-validate/zod'
 import { useForm, Field as VeeField } from 'vee-validate'
 import { z } from 'zod'
 
-import {
-  Field,
-  FieldError,
-  FieldGroup,
-  FieldLabel,
-} from '@/components/ui/field'
+import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { useAuth } from '@/composables/use-auth'
 
@@ -21,15 +16,17 @@ import TermsOfServiceButton from './components/terms-of-service-button.vue'
 const { register, loading } = useAuth()
 
 const registerSchema = toTypedSchema(
-  z.object({
-    name: z.string().min(1, 'Name is required.').min(2, 'Name must be at least 2 characters.'),
-    email: z.string().email('Please enter a valid email address.').min(1, 'Email is required.'),
-    password: z.string().min(8, 'Password must be at least 8 characters.'),
-    password_confirmation: z.string().min(1, 'Please confirm your password.'),
-  }).refine(data => data.password === data.password_confirmation, {
-    message: 'Passwords do not match.',
-    path: ['password_confirmation'],
-  }),
+  z
+    .object({
+      name: z.string().min(1, 'Name is required.').min(2, 'Name must be at least 2 characters.'),
+      email: z.string().email('Please enter a valid email address.').min(1, 'Email is required.'),
+      password: z.string().min(8, 'Password must be at least 8 characters.'),
+      password_confirmation: z.string().min(1, 'Please confirm your password.'),
+    })
+    .refine((data) => data.password === data.password_confirmation, {
+      message: 'Passwords do not match.',
+      path: ['password_confirmation'],
+    }),
 )
 
 const { handleSubmit, setFieldError } = useForm({
@@ -50,8 +47,7 @@ const onSubmit = handleSubmit(async (values) => {
       password: values.password,
       password_confirmation: values.password_confirmation,
     })
-  }
-  catch (error: any) {
+  } catch (error: any) {
     // Handle backend validation errors (422)
     if (error.response?.status === 422) {
       const backendErrors = error.response.data.errors || {}
@@ -61,7 +57,10 @@ const onSubmit = handleSubmit(async (values) => {
         if (Array.isArray(fieldErrors) && fieldErrors.length > 0) {
           // Map backend field names to form field names
           const formField = field === 'password_confirmation' ? 'password_confirmation' : field
-          setFieldError(formField as 'name' | 'email' | 'password' | 'password_confirmation', fieldErrors[0])
+          setFieldError(
+            formField as 'name' | 'email' | 'password' | 'password_confirmation',
+            fieldErrors[0],
+          )
         }
       })
     }
@@ -76,13 +75,14 @@ const onSubmit = handleSubmit(async (values) => {
       <AuthTitle />
       <UiCard class="max-w-sm mx-auto">
         <UiCardHeader>
-          <UiCardTitle class="text-xl">
-            Sign Up
-          </UiCardTitle>
+          <UiCardTitle class="text-xl"> Sign Up </UiCardTitle>
           <UiCardDescription>
-            Enter your email and password to create an account.
-            Already have an account?
-            <UiButton variant="link" class="px-0 text-muted-foreground" @click="$router.push('/auth/sign-in')">
+            Enter your email and password to create an account. Already have an account?
+            <UiButton
+              variant="link"
+              class="px-0 text-muted-foreground"
+              @click="$router.push('/auth/sign-in')"
+            >
               Sign In
             </UiButton>
           </UiCardDescription>
@@ -92,9 +92,7 @@ const onSubmit = handleSubmit(async (values) => {
             <FieldGroup>
               <VeeField v-slot="{ field, errors }" name="name">
                 <Field :data-invalid="!!errors.length">
-                  <FieldLabel for="register-form-name">
-                    Name
-                  </FieldLabel>
+                  <FieldLabel for="register-form-name"> Name </FieldLabel>
                   <Input
                     id="register-form-name"
                     v-bind="field"
@@ -107,9 +105,7 @@ const onSubmit = handleSubmit(async (values) => {
 
               <VeeField v-slot="{ field, errors }" name="email">
                 <Field :data-invalid="!!errors.length">
-                  <FieldLabel for="register-form-email">
-                    Email
-                  </FieldLabel>
+                  <FieldLabel for="register-form-email"> Email </FieldLabel>
                   <Input
                     id="register-form-email"
                     v-bind="field"
@@ -124,9 +120,7 @@ const onSubmit = handleSubmit(async (values) => {
 
               <VeeField v-slot="{ field, errors }" name="password">
                 <Field :data-invalid="!!errors.length">
-                  <FieldLabel for="register-form-password">
-                    Password
-                  </FieldLabel>
+                  <FieldLabel for="register-form-password"> Password </FieldLabel>
                   <Input
                     id="register-form-password"
                     v-bind="field"

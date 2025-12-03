@@ -1,7 +1,5 @@
 <script lang="ts" setup>
-import {
-  ChevronRight,
-} from 'lucide-vue-next'
+import { ChevronRight } from 'lucide-vue-next'
 
 import { useSidebar } from '@/components/ui/sidebar'
 
@@ -24,7 +22,7 @@ function isCollapsed(menu: NavItem): boolean {
       }
     })
   })
-  return !!menu.items?.some(item => item.url === pathname)
+  return !!menu.items?.some((item) => item.url === pathname)
 }
 
 function isActive(menu: NavItem): boolean {
@@ -32,7 +30,7 @@ function isActive(menu: NavItem): boolean {
   if (menu.url) {
     return pathname === menu.url
   }
-  return !!menu.items?.some(item => item.url === pathname)
+  return !!menu.items?.some((item) => item.url === pathname)
 }
 </script>
 
@@ -54,7 +52,8 @@ function isActive(menu: NavItem): boolean {
           <!-- sidebar expanded -->
           <UiCollapsible
             v-if="state !== 'collapsed' || isMobile"
-            as-child :default-open="isCollapsed(menu)"
+            as-child
+            :default-open="isCollapsed(menu)"
             class="group/collapsible"
           >
             <UiSidebarMenuItem>

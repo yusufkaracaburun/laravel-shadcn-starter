@@ -31,7 +31,11 @@ if (error) {
   console.error('❌ Invalid env')
   console.error(error.issues)
   toast.error(`Env error: you should check your .env file`, {
-    description: h('pre', { class: 'mt-2 w-[340px] rounded-md bg-slate-950 p-4' }, h('code', { class: 'text-white' }, JSON.stringify(error.issues, null, 2))),
+    description: h(
+      'pre',
+      { class: 'mt-2 w-[340px] rounded-md bg-slate-950 p-4' },
+      h('code', { class: 'text-white' }, JSON.stringify(error.issues, null, 2)),
+    ),
   })
 }
 

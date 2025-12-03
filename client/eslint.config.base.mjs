@@ -24,13 +24,7 @@ export default antfu({
     '**/lib/**',
     '**/components/ui/**',
   ],
-  ignores: [
-    '**/node_modules/**',
-    '**/dist/**',
-    '**/build/**',
-    '**/lib/**',
-    '**/components/ui/**',
-  ],
+  ignores: ['**/node_modules/**', '**/dist/**', '**/build/**', '**/lib/**', '**/components/ui/**'],
   settings: {
     'import/core-modules': ['vue-router/auto-routes'],
   },
@@ -38,9 +32,12 @@ export default antfu({
     definePage: 'readonly',
   },
   rules: {
-    'perfectionist/sort-imports': ['error', {
-      tsconfigRootDir: '.',
-    }],
+    'perfectionist/sort-imports': [
+      'error',
+      {
+        tsconfigRootDir: '.',
+      },
+    ],
   },
   ...pluginQuery.configs['flat/recommended'],
 })

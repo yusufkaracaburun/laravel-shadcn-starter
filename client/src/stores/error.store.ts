@@ -69,7 +69,10 @@ const NETWORK_ERROR_PATTERNS = ['Network', 'timeout', 'ECONNREFUSED'] as const
 /**
  * Extract error message from API response data
  */
-function extractApiErrorMessage(responseData: ApiResponseData | undefined, axiosError: AxiosError): string {
+function extractApiErrorMessage(
+  responseData: ApiResponseData | undefined,
+  axiosError: AxiosError,
+): string {
   if (responseData?.message) {
     return responseData.message
   }
@@ -117,7 +120,7 @@ function getStatusMessage(status: number | undefined, axiosError: AxiosError): s
  * Check if error is a network error based on message patterns
  */
 function isNetworkError(error: Error): boolean {
-  return NETWORK_ERROR_PATTERNS.some(pattern => error.message.includes(pattern))
+  return NETWORK_ERROR_PATTERNS.some((pattern) => error.message.includes(pattern))
 }
 
 /**
@@ -211,7 +214,11 @@ export const useErrorStore = defineStore('error', () => {
   function createErrorState(
     type: ErrorType,
     message: string,
-    options?: SetErrorOptions & { status?: number, validationErrors?: Record<string, string[]>, originalError?: unknown },
+    options?: SetErrorOptions & {
+      status?: number
+      validationErrors?: Record<string, string[]>
+      originalError?: unknown
+    },
   ): ErrorState {
     return {
       type,
@@ -285,9 +292,10 @@ export const useErrorStore = defineStore('error', () => {
 
     // Extract error message
     const extractedMessage = extractApiErrorMessage(responseData, axiosError)
-    const message = responseData?.message || responseData?.error
-      ? extractedMessage
-      : getStatusMessage(status, axiosError)
+    const message =
+      responseData?.message || responseData?.error
+        ? extractedMessage
+        : getStatusMessage(status, axiosError)
 
     currentError.value = createErrorState('api', message, {
       ...options,

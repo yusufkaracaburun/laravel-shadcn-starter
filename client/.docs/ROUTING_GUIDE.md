@@ -111,8 +111,8 @@ import Error from '@/components/custom-error.vue'
 </template>
 
 <route lang="yaml">
-  meta:
-    layout: false
+meta:
+  layout: false
 </route>
 ```
 
@@ -128,7 +128,7 @@ const route = useRoute()
 
 // Access query parameters
 const page = computed(() => Number(route.query.page) || 1)
-const search = computed(() => route.query.search as string || '')
+const search = computed(() => (route.query.search as string) || '')
 const redirect = computed(() => route.query.redirect as string)
 </script>
 
@@ -153,8 +153,8 @@ router.push({
   query: {
     page: 2,
     search: 'john',
-    sort: 'name'
-  }
+    sort: 'name',
+  },
 })
 
 // Or using path
@@ -169,7 +169,7 @@ router.beforeEach((to, _from) => {
   if (to.meta.auth && !isLogin) {
     return {
       name: '/auth/sign-in',
-      query: { redirect: to.fullPath } // Preserve destination
+      query: { redirect: to.fullPath }, // Preserve destination
     }
   }
 })
@@ -181,8 +181,7 @@ async function login() {
   const redirect = router.currentRoute.value.query.redirect as string
   if (redirect && !redirect.startsWith('//')) {
     router.push(redirect) // Go to original destination
-  }
-  else {
+  } else {
     router.push('/dashboard') // Default
   }
 }
@@ -330,7 +329,8 @@ src/pages/
   <div class="layout-default">
     <AppSidebar />
     <main>
-      <RouterView />  <!-- Page content renders here -->
+      <RouterView />
+      <!-- Page content renders here -->
     </main>
   </div>
 </template>
@@ -357,7 +357,7 @@ const router = useRouter()
 // Type-safe route navigation
 router.push({
   name: '/users/[id]', // TypeScript validates this exists
-  params: { id: '123' } // TypeScript validates params
+  params: { id: '123' }, // TypeScript validates params
 })
 
 // Type-safe query
@@ -365,8 +365,8 @@ router.push({
   name: '/users',
   query: {
     page: '2', // TypeScript knows available query keys
-    search: 'john'
-  }
+    search: 'john',
+  },
 })
 ```
 
@@ -402,13 +402,13 @@ router.push('/dashboard')
 // Navigate with params
 router.push({
   name: '/users/[id]',
-  params: { id: '123' }
+  params: { id: '123' },
 })
 
 // Navigate with query
 router.push({
   name: '/users',
-  query: { page: 2 }
+  query: { page: 2 },
 })
 
 // Replace current route (no history entry)
@@ -531,7 +531,7 @@ import { useRoute, useRouter } from 'vue-router'
 const route = useRoute()
 const router = useRouter()
 
-const searchQuery = ref(route.query.q as string || '')
+const searchQuery = ref((route.query.q as string) || '')
 const page = computed(() => Number(route.query.page) || 1)
 
 function performSearch() {
@@ -539,18 +539,16 @@ function performSearch() {
     name: '/search',
     query: {
       q: searchQuery.value,
-      page: 1
-    }
+      page: 1,
+    },
   })
 }
 </script>
 
 <template>
   <div>
-    <input v-model="searchQuery" @keyup.enter="performSearch">
-    <button @click="performSearch">
-      Search
-    </button>
+    <input v-model="searchQuery" @keyup.enter="performSearch" />
+    <button @click="performSearch">Search</button>
     <p>Page: {{ page }}</p>
   </div>
 </template>
@@ -572,9 +570,8 @@ const authStore = useAuthStore()
 const teamId = computed(() => Number(route.params.team))
 const user = computed(() => authStore.user)
 const team = computed(() => {
-  if (!user.value?.teams)
-    return null
-  return user.value.teams.find(t => t.id === teamId.value) || user.value.currentTeam
+  if (!user.value?.teams) return null
+  return user.value.teams.find((t) => t.id === teamId.value) || user.value.currentTeam
 })
 </script>
 
@@ -682,7 +679,7 @@ const team = computed(() => {
 
    ```typescript
    const page = computed(() => Number(route.query.page) || 1)
-   const search = computed(() => route.query.search as string || '')
+   const search = computed(() => (route.query.search as string) || '')
    ```
 
 4. **Use Computed for Reactive Params**: Make params reactive
@@ -696,7 +693,7 @@ const team = computed(() => {
    ```typescript
    return {
      name: '/login',
-     query: { redirect: to.fullPath }
+     query: { redirect: to.fullPath },
    }
    ```
 

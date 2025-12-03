@@ -17,7 +17,7 @@ export const columns: ColumnDef<User>[] = [
   {
     accessorKey: 'username',
     header: ({ column }) => h(DataTableColumnHeader<User>, { column, title: 'username' }),
-    cell: ({ row }) => h('div', { }, row.getValue('username')),
+    cell: ({ row }) => h('div', {}, row.getValue('username')),
     enableSorting: false,
     enableHiding: false,
     enableResizing: true,
@@ -26,10 +26,11 @@ export const columns: ColumnDef<User>[] = [
   {
     accessorKey: 'email',
     header: ({ column }) => h(DataTableColumnHeader<User>, { column, title: 'Email' }),
-    cell: ({ row }) => h('div', { }, [
-      h('span', {}, row.getValue('email')),
-      h(Copy, { class: 'ml-2', size: 'sm', content: (row.getValue('email') || '') as string }),
-    ]),
+    cell: ({ row }) =>
+      h('div', {}, [
+        h('span', {}, row.getValue('email')),
+        h(Copy, { class: 'ml-2', size: 'sm', content: (row.getValue('email') || '') as string }),
+      ]),
     enableSorting: false,
     enableResizing: true,
   },
@@ -37,7 +38,7 @@ export const columns: ColumnDef<User>[] = [
   {
     accessorKey: 'phoneNumber',
     header: ({ column }) => h(DataTableColumnHeader<User>, { column, title: 'PhoneNumber' }),
-    cell: ({ row }) => h('div', { }, row.getValue('phoneNumber')),
+    cell: ({ row }) => h('div', {}, row.getValue('phoneNumber')),
     enableSorting: false,
     enableResizing: true,
   },
@@ -47,12 +48,15 @@ export const columns: ColumnDef<User>[] = [
     header: ({ column }) => h(DataTableColumnHeader<User>, { column, title: 'Status' }),
 
     cell: ({ row }) => {
-      const callType = callTypes.find(callType => callType.value === row.getValue('status'))
+      const callType = callTypes.find((callType) => callType.value === row.getValue('status'))
 
-      if (!callType)
-        return null
+      if (!callType) return null
 
-      return h(Badge, { class: `${callType.style || ''}`, variant: 'outline' }, () => callType.label)
+      return h(
+        Badge,
+        { class: `${callType.style || ''}`, variant: 'outline' },
+        () => callType.label,
+      )
     },
     filterFn: (row, id, value) => {
       return value.includes(row.getValue(id))
@@ -64,12 +68,9 @@ export const columns: ColumnDef<User>[] = [
     accessorKey: 'role',
     header: ({ column }) => h(DataTableColumnHeader<User>, { column, title: 'Role' }),
     cell: ({ row }) => {
-      const priority = userTypes.find(
-        priority => priority.value === row.getValue('role'),
-      )
+      const priority = userTypes.find((priority) => priority.value === row.getValue('role'))
 
-      if (!priority)
-        return null
+      if (!priority) return null
 
       return h('div', { class: 'flex items-center' }, [
         priority.icon && h(priority.icon, { class: 'mr-2 h-4 w-4 text-muted-foreground' }),

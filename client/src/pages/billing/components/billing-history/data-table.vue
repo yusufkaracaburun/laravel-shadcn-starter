@@ -45,19 +45,31 @@ const columnVisibility = ref<VisibilityState>({})
 const rowSelection = ref({})
 
 const table = useVueTable({
-  get data() { return props.data },
-  get columns() { return props.columns },
+  get data() {
+    return props.data
+  },
+  get columns() {
+    return props.columns
+  },
   state: {
-    get sorting() { return sorting.value },
-    get columnFilters() { return columnFilters.value },
-    get columnVisibility() { return columnVisibility.value },
-    get rowSelection() { return rowSelection.value },
+    get sorting() {
+      return sorting.value
+    },
+    get columnFilters() {
+      return columnFilters.value
+    },
+    get columnVisibility() {
+      return columnVisibility.value
+    },
+    get rowSelection() {
+      return rowSelection.value
+    },
   },
   enableRowSelection: true,
-  onSortingChange: updaterOrValue => valueUpdater(updaterOrValue, sorting),
-  onColumnFiltersChange: updaterOrValue => valueUpdater(updaterOrValue, columnFilters),
-  onColumnVisibilityChange: updaterOrValue => valueUpdater(updaterOrValue, columnVisibility),
-  onRowSelectionChange: updaterOrValue => valueUpdater(updaterOrValue, rowSelection),
+  onSortingChange: (updaterOrValue) => valueUpdater(updaterOrValue, sorting),
+  onColumnFiltersChange: (updaterOrValue) => valueUpdater(updaterOrValue, columnFilters),
+  onColumnVisibilityChange: (updaterOrValue) => valueUpdater(updaterOrValue, columnVisibility),
+  onRowSelectionChange: (updaterOrValue) => valueUpdater(updaterOrValue, rowSelection),
   getCoreRowModel: getCoreRowModel(),
   getFilteredRowModel: getFilteredRowModel(),
   getPaginationRowModel: getPaginationRowModel(),
@@ -75,7 +87,11 @@ const table = useVueTable({
         <TableHeader>
           <TableRow v-for="headerGroup in table.getHeaderGroups()" :key="headerGroup.id">
             <TableHead v-for="header in headerGroup.headers" :key="header.id">
-              <FlexRender v-if="!header.isPlaceholder" :render="header.column.columnDef.header" :props="header.getContext()" />
+              <FlexRender
+                v-if="!header.isPlaceholder"
+                :render="header.column.columnDef.header"
+                :props="header.getContext()"
+              />
             </TableHead>
           </TableRow>
         </TableHeader>
@@ -93,12 +109,7 @@ const table = useVueTable({
           </template>
 
           <TableRow v-else>
-            <TableCell
-              :colspan="columns.length"
-              class="h-24 text-center"
-            >
-              No results.
-            </TableCell>
+            <TableCell :colspan="columns.length" class="h-24 text-center"> No results. </TableCell>
           </TableRow>
         </TableBody>
       </Table>

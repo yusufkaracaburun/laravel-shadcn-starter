@@ -3,12 +3,7 @@ import { toTypedSchema } from '@vee-validate/zod'
 import { useForm, Field as VeeField } from 'vee-validate'
 import { z } from 'zod'
 
-import {
-  Field,
-  FieldError,
-  FieldGroup,
-  FieldLabel,
-} from '@/components/ui/field'
+import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { useAuth } from '@/composables/use-auth'
 
@@ -41,8 +36,7 @@ const onSubmit = handleSubmit(async (values) => {
       email: values.email,
       password: values.password,
     })
-  }
-  catch (error: any) {
+  } catch (error: any) {
     // Handle backend validation errors (422)
     if (error.response?.status === 422) {
       const backendErrors = error.response.data.errors || {}
@@ -62,13 +56,14 @@ const onSubmit = handleSubmit(async (values) => {
 <template>
   <UiCard class="w-full max-w-sm">
     <UiCardHeader>
-      <UiCardTitle class="text-2xl">
-        Login
-      </UiCardTitle>
+      <UiCardTitle class="text-2xl"> Login </UiCardTitle>
       <UiCardDescription>
-        Enter your email and password below to log into your account.
-        Not have an account?
-        <UiButton variant="link" class="px-0 text-muted-foreground" @click="$router.push('/auth/sign-up')">
+        Enter your email and password below to log into your account. Not have an account?
+        <UiButton
+          variant="link"
+          class="px-0 text-muted-foreground"
+          @click="$router.push('/auth/sign-up')"
+        >
           Sign Up
         </UiButton>
       </UiCardDescription>
@@ -78,9 +73,7 @@ const onSubmit = handleSubmit(async (values) => {
         <FieldGroup>
           <VeeField v-slot="{ field, errors }" name="email">
             <Field :data-invalid="!!errors.length">
-              <FieldLabel for="login-form-email">
-                Email
-              </FieldLabel>
+              <FieldLabel for="login-form-email"> Email </FieldLabel>
               <Input
                 id="login-form-email"
                 v-bind="field"
@@ -96,9 +89,7 @@ const onSubmit = handleSubmit(async (values) => {
           <VeeField v-slot="{ field, errors }" name="password">
             <Field :data-invalid="!!errors.length">
               <div class="flex items-center justify-between">
-                <FieldLabel for="login-form-password">
-                  Password
-                </FieldLabel>
+                <FieldLabel for="login-form-password"> Password </FieldLabel>
                 <ToForgotPasswordLink />
               </div>
               <Input
