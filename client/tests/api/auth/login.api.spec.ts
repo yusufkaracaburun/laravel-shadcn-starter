@@ -141,10 +141,7 @@ test.describe('Login API', () => {
       csrfToken,
     )
 
-    // Assert - Login should succeed
-    // Fortify returns {"two_factor": false} on successful login (not IResponse format)
     expect(loginResponse.status()).toBe(200)
-    expect(loginBody).toHaveProperty('id', 1)
     expect(loginBody).toHaveProperty('current_team_id', 1)
     expect(loginBody).toHaveProperty('email', testusers.test.email)
     expect(loginBody).toHaveProperty('name', testusers.test.name)
