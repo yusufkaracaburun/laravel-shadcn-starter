@@ -2,17 +2,20 @@
 
 declare(strict_types=1);
 
+use Tests\TestCase;
 use App\Models\User;
 use Laravel\Sanctum\Sanctum;
 use Illuminate\Testing\Fluent\AssertableJson;
 
 test('unauthenticated users cannot access current user endpoint', function (): void {
+    /** @var TestCase $this */
     $response = $this->getJson('/api/user/current');
 
     $response->assertUnauthorized();
 });
 
 test('authenticated user can access current user endpoint', function (): void {
+    /** @var TestCase $this */
     $user = User::factory()->create();
 
     Sanctum::actingAs($user, ['*']);

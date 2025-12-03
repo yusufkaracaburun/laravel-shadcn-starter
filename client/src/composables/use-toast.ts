@@ -275,10 +275,7 @@ export function useToast() {
    * )
    * ```
    */
-  function showPromise<T>(
-    promise: Promise<T>,
-    data: PromiseToastData<T>,
-  ) {
+  function showPromise<T>(promise: Promise<T>, data: PromiseToastData<T>) {
     const defaultOptions = getDefaultToastOptions()
     return toast.promise(promise, {
       ...defaultOptions,

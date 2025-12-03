@@ -7,12 +7,7 @@ import { Copy, CopyCheck } from 'lucide-vue-next'
 import type { ButtonVariants } from '@/components/ui/button'
 
 import { Button } from '@/components/ui/button'
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { cn } from '@/lib/utils'
 
 import { copyVariants } from '.'

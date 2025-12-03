@@ -4,14 +4,12 @@
     "paths": {
       "@/*": ["./src/*"]
     },
-    "types": [
-      "unplugin-vue-router/client",
-      "vite-plugin-vue-layouts/client"
-    ]
+    "types": ["unplugin-vue-router/client", "vite-plugin-vue-layouts/client"]
   },
   "references": [
     { "path": "./tsconfig.app.json" },
-    { "path": "./tsconfig.node.json" }
+    { "path": "./tsconfig.node.json" },
+    { "path": "./tsconfig.tests.json" }
   ],
   "files": []
 }

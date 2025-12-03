@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Tests\TestCase;
 use App\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Hash;
@@ -22,12 +23,14 @@ beforeEach(function (): void {
 });
 
 test('user can get csrf cookie', function (): void {
+    /** @var TestCase $this */
     $response = $this->get('/sanctum/csrf-cookie');
 
     $response->assertNoContent();
 });
 
 test('user can login with valid credentials', function (): void {
+    /** @var TestCase $this */
     $uniqueEmail = 'api-valid-login-'.uniqid().'@example.com';
 
     $user = User::factory()->create([
@@ -45,7 +48,11 @@ test('user can login with valid credentials', function (): void {
     ]);
 
     $response->assertStatus(200)
-        ->assertJsonStructure(['two_factor']);
+        ->assertJsonStructure([
+            'id',
+            'name',
+            'email',
+        ]);
 
     // Verify user can access authenticated endpoint after login
     $userResponse = $this->getJson('/api/user/current');
@@ -76,6 +83,7 @@ test('user can login with valid credentials', function (): void {
 });
 
 test('user cannot login with invalid credentials', function (): void {
+    /** @var TestCase $this */
     $uniqueEmail = 'api-invalid-login-'.uniqid().'@example.com';
 
     User::factory()->create([
@@ -96,6 +104,7 @@ test('user cannot login with invalid credentials', function (): void {
 });
 
 test('user can register with valid data', function (): void {
+    /** @var TestCase $this */
     // Get CSRF cookie first
     $this->get('/sanctum/csrf-cookie');
 
@@ -115,6 +124,7 @@ test('user can register with valid data', function (): void {
 });
 
 test('user can logout when authenticated', function (): void {
+    /** @var TestCase $this */
     $user = User::factory()->create();
 
     // Get CSRF cookie first
@@ -139,6 +149,7 @@ test('user can logout when authenticated', function (): void {
 });
 
 test('user cannot logout when not authenticated', function (): void {
+    /** @var TestCase $this */
     // Get CSRF cookie first
     $this->get('/sanctum/csrf-cookie');
 

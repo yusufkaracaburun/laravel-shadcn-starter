@@ -27,7 +27,7 @@ final class UserPolicy
             $user->load('roles');
         }
 
-        $permissionRegistrar = app(PermissionRegistrar::class);
+        $permissionRegistrar = resolve(PermissionRegistrar::class);
         $originalTeamId = $permissionRegistrar->getPermissionsTeamId();
         $permissionRegistrar->setPermissionsTeamId(null); // Check global roles
 

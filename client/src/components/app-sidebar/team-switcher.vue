@@ -1,8 +1,5 @@
 <script lang="ts" setup>
-import {
-  ChevronsUpDown,
-  Plus,
-} from 'lucide-vue-next'
+import { ChevronsUpDown, Plus } from 'lucide-vue-next'
 
 import { useSidebar } from '@/components/ui/sidebar'
 
@@ -58,12 +55,10 @@ function handleSelect(command: TComponent) {
           <UiDropdownMenuContent
             class="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"
             align="start"
-            :side="(isMobile || open) ? 'bottom' : 'right'"
+            :side="isMobile || open ? 'bottom' : 'right'"
             :side-offset="4"
           >
-            <UiDropdownMenuLabel class="text-xs text-muted-foreground">
-              Teams
-            </UiDropdownMenuLabel>
+            <UiDropdownMenuLabel class="text-xs text-muted-foreground"> Teams </UiDropdownMenuLabel>
             <UiDropdownMenuItem
               v-for="(team, index) in teams"
               :key="team.name"
@@ -80,12 +75,12 @@ function handleSelect(command: TComponent) {
 
             <UiDialogTrigger as-child>
               <UiDropdownMenuItem class="gap-2 p-2" @click.stop="handleSelect('team-add')">
-                <div class="flex items-center justify-center border rounded-md size-6 bg-background">
+                <div
+                  class="flex items-center justify-center border rounded-md size-6 bg-background"
+                >
                   <Plus class="size-4" />
                 </div>
-                <div class="font-medium text-muted-foreground">
-                  Add team
-                </div>
+                <div class="font-medium text-muted-foreground">Add team</div>
               </UiDropdownMenuItem>
             </UiDialogTrigger>
           </UiDropdownMenuContent>

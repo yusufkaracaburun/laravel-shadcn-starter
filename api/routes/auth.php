@@ -5,6 +5,7 @@ declare(strict_types=1);
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\User\OauthController;
 use App\Http\Controllers\User\LoginLinkController;
+use Laravel\Sanctum\Http\Controllers\CsrfCookieController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,6 +17,9 @@ use App\Http\Controllers\User\LoginLinkController;
 | are handled by the Vue client via Vue Router.
 |
 */
+
+// Sanctum route for SPA authentication (CSRF cookie)
+Route::get('/sanctum/csrf-cookie', [CsrfCookieController::class, 'show']);
 
 Route::prefix('auth')->group(function (): void {
     // OAuth Provider Routes

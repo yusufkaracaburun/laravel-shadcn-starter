@@ -23,7 +23,7 @@ final class TeamPolicy
     public function before(User $user): ?bool
     {
         // Check for super-admin with team context cleared (global role)
-        $permissionRegistrar = app(PermissionRegistrar::class);
+        $permissionRegistrar = resolve(PermissionRegistrar::class);
         $originalTeamId = $permissionRegistrar->getPermissionsTeamId();
         $permissionRegistrar->setPermissionsTeamId(null); // Check global roles
 

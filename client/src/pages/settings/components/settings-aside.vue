@@ -12,13 +12,14 @@ const links = [
   { path: '/settings/display', label: 'Display', icon: h(PictureInPicture2) },
 ]
 
-const currentLink = computed(() => links.find(link => link.path === currentPath.value))
+const currentLink = computed(() => links.find((link) => link.path === currentPath.value))
 </script>
 
 <template>
   <nav class="flex flex-col gap-2">
     <router-link
-      v-for="link in links" :key="link.path"
+      v-for="link in links"
+      :key="link.path"
       :to="link.path"
       class="items-center hidden px-2 py-1 rounded-md lg:flex hover:bg-primary/5"
       :class="link.path === currentPath ? activeClass : ''"
@@ -29,17 +30,16 @@ const currentLink = computed(() => links.find(link => link.path === currentPath.
 
     <UiDropdownMenu class="lg:hidden">
       <UiDropdownMenuTrigger>
-        <div class="flex items-center w-48 px-2 py-1 border rounded-md lg:hidden hover:bg-primary/5 border-primary/4">
+        <div
+          class="flex items-center w-48 px-2 py-1 border rounded-md lg:hidden hover:bg-primary/5 border-primary/4"
+        >
           <component :is="currentLink?.icon" class="size-4 mr-1" />
           <span>{{ currentLink?.label }}</span>
           <ChevronsUpDown class="size-4 ml-auto" />
         </div>
       </UiDropdownMenuTrigger>
       <UiDropdownMenuContent class="w-48" align="start">
-        <UiDropdownMenuItem
-          v-for="link in links" :key="link.path"
-          @click="$router.push(link.path)"
-        >
+        <UiDropdownMenuItem v-for="link in links" :key="link.path" @click="$router.push(link.path)">
           <component :is="link.icon" class="size-4 mr-1" />
           {{ link.label }}
         </UiDropdownMenuItem>

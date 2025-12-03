@@ -5,15 +5,24 @@ import { FlexRender } from '@tanstack/vue-table'
 
 import DataTableLoading from '@/components/data-table/table-loading.vue'
 import DataTablePagination from '@/components/data-table/table-pagination.vue'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
 
 import type { DataTableProps } from './types'
 
 import NoResultFound from '../no-result-found.vue'
 
-defineProps<DataTableProps<T> & {
-  table: VueTable<T>
-}>()
+defineProps<
+  DataTableProps<T> & {
+    table: VueTable<T>
+  }
+>()
 </script>
 
 <template>
@@ -25,7 +34,11 @@ defineProps<DataTableProps<T> & {
         <TableHeader>
           <TableRow v-for="headerGroup in table.getHeaderGroups()" :key="headerGroup.id">
             <TableHead v-for="header in headerGroup.headers" :key="header.id">
-              <FlexRender v-if="!header.isPlaceholder" :render="header.column.columnDef.header" :props="header.getContext()" />
+              <FlexRender
+                v-if="!header.isPlaceholder"
+                :render="header.column.columnDef.header"
+                :props="header.getContext()"
+              />
             </TableHead>
           </TableRow>
         </TableHeader>
@@ -43,10 +56,7 @@ defineProps<DataTableProps<T> & {
           </template>
 
           <TableRow v-else>
-            <TableCell
-              :colspan="columns.length"
-              class="h-24 text-center"
-            >
+            <TableCell :colspan="columns.length" class="h-24 text-center">
               <NoResultFound />
             </TableCell>
           </TableRow>

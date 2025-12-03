@@ -2,11 +2,7 @@
 import { Paintbrush } from 'lucide-vue-next'
 
 import { Button } from '@/components/ui/button'
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 
 import ContentLayout from './content-layout.vue'
 import CustomColor from './custom-color.vue'

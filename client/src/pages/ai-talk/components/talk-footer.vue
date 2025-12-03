@@ -12,14 +12,18 @@ function handleTypeChange(type: string) {
 
 function handleSubmit() {
   emit('submit', text.value)
-  nextTick(() => text.value = '')
+  nextTick(() => (text.value = ''))
 }
 </script>
 
 <template>
   <div class="flex items-center justify-center">
     <main class="w-full p-2 border rounded-md">
-      <UiTextarea v-model="text" placeholder="input something" class="mb-2 border-none resize-none outline-1" />
+      <UiTextarea
+        v-model="text"
+        placeholder="input something"
+        class="mb-2 border-none resize-none outline-1"
+      />
 
       <div class="flex items-center">
         <TalkType @update:type="handleTypeChange" />
@@ -29,7 +33,13 @@ function handleSubmit() {
         <UiButton variant="ghost">
           <Paperclip class="size-4" />
         </UiButton>
-        <UiButton variant="outline" size="icon" class="rounded-full" :disabled="!text" @click="handleSubmit">
+        <UiButton
+          variant="outline"
+          size="icon"
+          class="rounded-full"
+          :disabled="!text"
+          @click="handleSubmit"
+        >
           <ArrowUp class="size-4" />
         </UiButton>
       </div>

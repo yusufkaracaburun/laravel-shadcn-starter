@@ -7,7 +7,14 @@ import { z } from 'zod'
 import { Button } from '@/components/ui/button'
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 
 import type { User } from '../data/schema'
 
@@ -26,11 +33,26 @@ const status = ['active', 'inactive', 'invited', 'suspended'] as const
 
 const formSchema = z.object({
   id: z.string().optional(),
-  firstName: z.string().min(1).default(user?.firstName || ''),
-  lastName: z.string().min(1).default(user?.lastName || ''),
-  username: z.string().min(1).default(user?.username || ''),
-  email: z.email().min(1).default(user?.email || ''),
-  phoneNumber: z.string().min(1).default(user?.phoneNumber || ''),
+  firstName: z
+    .string()
+    .min(1)
+    .default(user?.firstName || ''),
+  lastName: z
+    .string()
+    .min(1)
+    .default(user?.lastName || ''),
+  username: z
+    .string()
+    .min(1)
+    .default(user?.username || ''),
+  email: z
+    .email()
+    .min(1)
+    .default(user?.email || ''),
+  phoneNumber: z
+    .string()
+    .min(1)
+    .default(user?.phoneNumber || ''),
   status: userStatusSchema.default(user?.status || 'active'),
   role: userRoleSchema.default(user?.role || 'cashier'),
 })
@@ -153,8 +175,6 @@ const onSubmit = handleSubmit((values) => {
       </FormItem>
     </FormField>
 
-    <Button type="submit" class="w-full">
-      SaveChanges
-    </Button>
+    <Button type="submit" class="w-full"> SaveChanges </Button>
   </form>
 </template>

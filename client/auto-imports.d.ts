@@ -71,11 +71,12 @@ declare global {
   const unref: typeof import('vue').unref
   const useAttrs: typeof import('vue').useAttrs
   const useAuth: typeof import('./src/composables/use-auth').useAuth
-  const useAuthStore: typeof import('./src/stores/auth').useAuthStore
+  const useAuthStore: typeof import('./src/stores/auth.store').useAuthStore
   const useAxios: typeof import('./src/composables/use-axios').useAxios
   const useCssModule: typeof import('vue').useCssModule
   const useCssVars: typeof import('vue').useCssVars
   const useEcho: typeof import('./src/composables/use-echo').useEcho
+  const useErrorStore: typeof import('./src/stores/error.store').useErrorStore
   const useId: typeof import('vue').useId
   const useLink: typeof import('vue-router').useLink
   const useModel: typeof import('vue').useModel
@@ -87,7 +88,7 @@ declare global {
   const useSidebar: typeof import('./src/composables/use-sidebar').useSidebar
   const useSlots: typeof import('vue').useSlots
   const useTemplateRef: typeof import('vue').useTemplateRef
-  const useThemeStore: typeof import('./src/stores/theme').useThemeStore
+  const useThemeStore: typeof import('./src/stores/theme.store').useThemeStore
   const useToast: typeof import('./src/composables/use-toast').useToast
   const watch: typeof import('vue').watch
   const watchEffect: typeof import('vue').watchEffect
@@ -99,4 +100,7 @@ declare global {
   // @ts-ignore
   export type { Component, Slot, Slots, ComponentPublicInstance, ComputedRef, DirectiveBinding, ExtractDefaultPropTypes, ExtractPropTypes, ExtractPublicPropTypes, InjectionKey, PropType, Ref, ShallowRef, MaybeRef, MaybeRefOrGetter, VNode, WritableComputedRef } from 'vue'
   import('vue')
+  // @ts-ignore
+  export type { ErrorType, ErrorState, SetErrorOptions } from './src/stores/error.store'
+  import('./src/stores/error.store')
 }

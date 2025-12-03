@@ -47,7 +47,12 @@ test.describe('User Registration', () => {
     })
 
     await test.step('Fill registration form with duplicate email', async () => {
-      await registerPage.fillForm('Another User', existingUser.email, existingUser.password, existingUser.password)
+      await registerPage.fillForm(
+        'Another User',
+        existingUser.email,
+        existingUser.password,
+        existingUser.password,
+      )
     })
 
     await test.step('Submit registration form', async () => {
@@ -64,7 +69,10 @@ test.describe('User Registration', () => {
     })
   })
 
-  test('User is redirected to login after successful registration', async ({ page, registerPage }) => {
+  test('User is redirected to login after successful registration', async ({
+    page,
+    registerPage,
+  }) => {
     const user = generateTestUser()
 
     await test.step('Navigate to register page', async () => {

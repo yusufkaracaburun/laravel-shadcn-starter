@@ -19,7 +19,9 @@ export function setupEcho(app: App) {
   const port = env.VITE_REVERB_PORT ?? 9999
   const forceTLS = (env.VITE_REVERB_SCHEME ?? 'http') === 'https'
   if (!appKey || !host) {
-    console.warn('Reverb is enabled but missing required configuration (VITE_REVERB_APP_KEY, VITE_REVERB_HOST)')
+    console.warn(
+      'Reverb is enabled but missing required configuration (VITE_REVERB_APP_KEY, VITE_REVERB_HOST)',
+    )
     return
   }
 

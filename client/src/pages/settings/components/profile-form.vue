@@ -5,7 +5,14 @@ import { FieldArray, useForm } from 'vee-validate'
 import { toast } from 'vue-sonner'
 
 import { Button } from '@/components/ui/button'
-import { FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
+import {
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import {
   Select,
@@ -29,28 +36,25 @@ const { handleSubmit, resetForm } = useForm({
   validationSchema: profileFormSchema,
   initialValues: {
     bio: 'I own a computer.',
-    urls: [
-      { value: 'https://shadcn.com' },
-      { value: 'http://twitter.com/shadcn' },
-    ],
+    urls: [{ value: 'https://shadcn.com' }, { value: 'http://twitter.com/shadcn' }],
   },
 })
 
 const onSubmit = handleSubmit((values) => {
   toast('You submitted the following values:', {
-    description: h('pre', { class: 'mt-2 w-[340px] rounded-md bg-slate-950 p-4' }, h('code', { class: 'text-white' }, JSON.stringify(values, null, 2))),
+    description: h(
+      'pre',
+      { class: 'mt-2 w-[340px] rounded-md bg-slate-950 p-4' },
+      h('code', { class: 'text-white' }, JSON.stringify(values, null, 2)),
+    ),
   })
 })
 </script>
 
 <template>
   <div>
-    <h3 class="text-lg font-medium">
-      Profile
-    </h3>
-    <p class="text-sm text-muted-foreground">
-      This is how others will see you on the site.
-    </p>
+    <h3 class="text-lg font-medium">Profile</h3>
+    <p class="text-sm text-muted-foreground">This is how others will see you on the site.</p>
   </div>
   <Separator orientation="horizontal" class="my-4" />
   <form class="space-y-8" @submit="onSubmit">
@@ -61,7 +65,8 @@ const onSubmit = handleSubmit((values) => {
           <Input type="text" placeholder="shadcn" v-bind="componentField" />
         </FormControl>
         <FormDescription>
-          This is your public display name. It can be your real name or a pseudonym. You can only change this once every 30 days.
+          This is your public display name. It can be your real name or a pseudonym. You can only
+          change this once every 30 days.
         </FormDescription>
         <FormMessage />
       </FormItem>
@@ -110,9 +115,7 @@ const onSubmit = handleSubmit((values) => {
         <div v-for="(field, index) in fields" :key="`urls-${field.key}`" class="mb-2">
           <FormField v-slot="{ componentField }" :name="`urls[${index}].value`">
             <FormItem>
-              <FormLabel :class="cn(index !== 0 && 'sr-only')">
-                URLs
-              </FormLabel>
+              <FormLabel :class="cn(index !== 0 && 'sr-only')"> URLs </FormLabel>
               <FormDescription :class="cn(index !== 0 && 'sr-only')">
                 Add links to your website, blog, or social media profiles.
               </FormDescription>
@@ -120,7 +123,11 @@ const onSubmit = handleSubmit((values) => {
                 <FormControl>
                   <Input type="url" v-bind="componentField" />
                 </FormControl>
-                <button type="button" class="absolute py-2 pe-3 end-0 text-muted-foreground" @click="remove(index)">
+                <button
+                  type="button"
+                  class="absolute py-2 pe-3 end-0 text-muted-foreground"
+                  @click="remove(index)"
+                >
                   <X class="w-3" />
                 </button>
               </div>
@@ -142,17 +149,9 @@ const onSubmit = handleSubmit((values) => {
     </div>
 
     <div class="flex justify-start gap-2">
-      <Button type="submit">
-        Update profile
-      </Button>
+      <Button type="submit"> Update profile </Button>
 
-      <Button
-        type="button"
-        variant="outline"
-        @click="resetForm"
-      >
-        Reset form
-      </Button>
+      <Button type="button" variant="outline" @click="resetForm"> Reset form </Button>
     </div>
   </form>
 </template>

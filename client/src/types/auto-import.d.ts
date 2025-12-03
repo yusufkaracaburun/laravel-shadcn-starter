@@ -22,6 +22,7 @@ declare global {
   const defineComponent: typeof import('vue').defineComponent
   const effectScope: typeof import('vue').effectScope
   const getActionToastOptions: typeof import('../composables/use-toast').getActionToastOptions
+  const getCsrfCookie: typeof import('../composables/use-axios').getCsrfCookie
   const getCurrentInstance: typeof import('vue').getCurrentInstance
   const getCurrentScope: typeof import('vue').getCurrentScope
   const getCurrentWatcher: typeof import('vue').getCurrentWatcher
@@ -78,11 +79,12 @@ declare global {
   const unref: typeof import('vue').unref
   const useAttrs: typeof import('vue').useAttrs
   const useAuth: typeof import('../composables/use-auth').useAuth
-  const useAuthStore: typeof import('../stores/auth').useAuthStore
+  const useAuthStore: typeof import('../stores/auth.store').useAuthStore
   const useAxios: typeof import('../composables/use-axios').useAxios
   const useCssModule: typeof import('vue').useCssModule
   const useCssVars: typeof import('vue').useCssVars
   const useEcho: typeof import('../composables/use-echo').useEcho
+  const useErrorStore: typeof import('../stores/error.store').useErrorStore
   const useId: typeof import('vue').useId
   const useLink: typeof import('vue-router')['useLink']
   const useModel: typeof import('vue').useModel
@@ -95,7 +97,7 @@ declare global {
   const useSlots: typeof import('vue').useSlots
   const useTemplateRef: typeof import('vue').useTemplateRef
   const useThemeConfig: typeof import('../composables/use-theme-config')['useThemeConfig']
-  const useThemeStore: typeof import('../stores/theme').useThemeStore
+  const useThemeStore: typeof import('../stores/theme.store').useThemeStore
   const useToast: typeof import('../composables/use-toast').useToast
   const watch: typeof import('vue').watch
   const watchEffect: typeof import('vue').watchEffect
@@ -110,4 +112,7 @@ declare global {
   // @ts-ignore
   export type { Theme, Radius, ContentLayout } from '../constants/themes'
   import('../constants/themes')
+  // @ts-ignore
+  export type { ErrorType, ErrorState, SetErrorOptions } from '../stores/error.store'
+  import('../stores/error.store')
 }

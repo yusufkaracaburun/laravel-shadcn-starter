@@ -5,7 +5,7 @@ import { toast } from 'vue-sonner'
 import { useEcho } from '@/composables/use-echo'
 
 const echo = useEcho()
-const messages = ref<Array<{ message: string, timestamp: string }>>([])
+const messages = ref<Array<{ message: string; timestamp: string }>>([])
 
 onMounted(() => {
   if (!echo) {
@@ -17,10 +17,14 @@ onMounted(() => {
   const channel = echo.channel('example-channel')
 
   // Listen for the event
-  channel.listen('.example.event', (data: { message: string, timestamp: string }) => {
+  channel.listen('.example.event', (data: { message: string; timestamp: string }) => {
     messages.value.push(data)
     toast.success('Received message:', {
-      description: h('pre', { class: 'mt-2 w-[340px] rounded-md bg-slate-950 p-4' }, h('code', { class: 'text-white' }, JSON.stringify(data, null, 2))),
+      description: h(
+        'pre',
+        { class: 'mt-2 w-[340px] rounded-md bg-slate-950 p-4' },
+        h('code', { class: 'text-white' }, JSON.stringify(data, null, 2)),
+      ),
     })
   })
 })
@@ -34,9 +38,7 @@ onUnmounted(() => {
 
 <template>
   <div class="p-4 border rounded-lg">
-    <h3 class="text-lg font-semibold mb-2">
-      Reverb Example Listener
-    </h3>
+    <h3 class="text-lg font-semibold mb-2">Reverb Example Listener</h3>
     <p v-if="!echo" class="text-sm text-muted-foreground">
       Echo is not available. Make sure Reverb is configured and running.
     </p>

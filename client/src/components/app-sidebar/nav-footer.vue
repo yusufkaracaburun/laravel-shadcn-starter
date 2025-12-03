@@ -13,9 +13,7 @@ import { useSidebar } from '@/components/ui/sidebar'
 
 import type { User } from './types'
 
-const { user } = defineProps<
-  { user: User }
->()
+const { user } = defineProps<{ user: User }>()
 
 const { logout } = useAuth()
 const { isMobile, open } = useSidebar()
@@ -33,9 +31,7 @@ const { isMobile, open } = useSidebar()
           >
             <UiAvatar class="size-8 rounded-lg">
               <UiAvatarImage :src="user.avatar" :alt="user.name" />
-              <UiAvatarFallback class="rounded-lg">
-                CN
-              </UiAvatarFallback>
+              <UiAvatarFallback class="rounded-lg"> CN </UiAvatarFallback>
             </UiAvatar>
             <div class="grid flex-1 text-sm leading-tight text-left">
               <span class="font-semibold truncate">{{ user.name }}</span>
@@ -46,7 +42,7 @@ const { isMobile, open } = useSidebar()
         </UiDropdownMenuTrigger>
         <UiDropdownMenuContent
           class="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"
-          :side="(isMobile || open) ? 'bottom' : 'right'"
+          :side="isMobile || open ? 'bottom' : 'right'"
           align="start"
           :side-offset="4"
         >
@@ -54,9 +50,7 @@ const { isMobile, open } = useSidebar()
             <div class="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
               <UiAvatar class="size-8 rounded-lg">
                 <UiAvatarImage :src="user.avatar" :alt="user.name" />
-                <UiAvatarFallback class="rounded-lg">
-                  CN
-                </UiAvatarFallback>
+                <UiAvatarFallback class="rounded-lg"> CN </UiAvatarFallback>
               </UiAvatar>
               <div class="grid flex-1 text-sm leading-tight text-left">
                 <span class="font-semibold truncate">{{ user.name }}</span>
@@ -98,7 +92,7 @@ const { isMobile, open } = useSidebar()
           </UiDropdownMenuGroup>
 
           <UiDropdownMenuSeparator />
-          <UiDropdownMenuItem @click="logout" data-testid="dashboard_logout_button">
+          <UiDropdownMenuItem data-testid="dashboard_logout_button" @click="logout">
             <LogOut />
             Log out
           </UiDropdownMenuItem>

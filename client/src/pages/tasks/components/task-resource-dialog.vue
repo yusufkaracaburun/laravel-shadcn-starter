@@ -9,8 +9,10 @@ const props = defineProps<{
 defineEmits(['close'])
 
 const task = computed(() => props.task)
-const title = computed(() => task.value?.id ? `Edit Task` : 'New Task')
-const description = computed(() => task.value?.id ? `Edit task ${task.value.id}` : 'Create new task')
+const title = computed(() => (task.value?.id ? `Edit Task` : 'New Task'))
+const description = computed(() =>
+  task.value?.id ? `Edit task ${task.value.id}` : 'Create new task',
+)
 </script>
 
 <template>

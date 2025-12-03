@@ -33,7 +33,7 @@ final class EnsureTeamIsSet
 
         // Super admin bypasses team requirement
         // Check hasRole with team context cleared and cache cleared
-        $permissionRegistrar = app(PermissionRegistrar::class);
+        $permissionRegistrar = resolve(PermissionRegistrar::class);
         $originalTeamId = $permissionRegistrar->getPermissionsTeamId();
         $permissionRegistrar->setPermissionsTeamId(null);
 
@@ -56,7 +56,7 @@ final class EnsureTeamIsSet
         }
 
         // Set the team context for Spatie permissions
-        $permissionRegistrar = app(PermissionRegistrar::class);
+        $permissionRegistrar = resolve(PermissionRegistrar::class);
         $permissionRegistrar->setPermissionsTeamId($user->current_team_id);
 
         $response = $next($request);

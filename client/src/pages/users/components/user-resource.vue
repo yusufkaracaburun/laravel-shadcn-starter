@@ -9,8 +9,10 @@ const props = defineProps<{
 defineEmits(['close'])
 
 const user = computed(() => props.user)
-const title = computed(() => user.value?.id ? `Edit User` : 'New User')
-const description = computed(() => user.value?.id ? `Edit user ${user.value.username}` : 'Create new user')
+const title = computed(() => (user.value?.id ? `Edit User` : 'New User'))
+const description = computed(() =>
+  user.value?.id ? `Edit user ${user.value.username}` : 'Create new user',
+)
 </script>
 
 <template>

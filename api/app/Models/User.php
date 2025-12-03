@@ -24,11 +24,8 @@ final class User extends Authenticatable
     use HasApiTokens;
 
     use HasFactory;
-
     use HasRoles;
-
     use Notifiable;
-
     use SoftDeletes;
 
     /**
@@ -40,6 +37,7 @@ final class User extends Authenticatable
         'id',
         'created_at',
         'updated_at',
+        'profile_photo_path',
     ];
 
     /**

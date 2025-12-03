@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Tests\TestCase;
 use App\Models\Team;
 use App\Models\User;
 use Laravel\Sanctum\Sanctum;
@@ -10,6 +11,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 uses(RefreshDatabase::class);
 
 test('authenticated user can list their teams', function (): void {
+    /** @var TestCase $this */
     // Arrange
     $user = User::factory()->create();
     $team1 = Team::factory()->create(['user_id' => $user->id]);
@@ -37,6 +39,7 @@ test('authenticated user can list their teams', function (): void {
 });
 
 test('authenticated user can create a team', function (): void {
+    /** @var TestCase $this */
     // Arrange
     $user = User::factory()->create();
     // User needs a current team for the middleware, but can be any team or null
@@ -62,6 +65,7 @@ test('authenticated user can create a team', function (): void {
 });
 
 test('authenticated user can view their team', function (): void {
+    /** @var TestCase $this */
     // Arrange
     $user = User::factory()->create();
     $team = Team::factory()->create(['user_id' => $user->id]);
@@ -84,6 +88,7 @@ test('authenticated user can view their team', function (): void {
 });
 
 test('authenticated user can update their team', function (): void {
+    /** @var TestCase $this */
     // Arrange
     $user = User::factory()->create();
     $team = Team::factory()->create(['user_id' => $user->id]);
@@ -105,6 +110,7 @@ test('authenticated user can update their team', function (): void {
 });
 
 test('user cannot update team they do not own', function (): void {
+    /** @var TestCase $this */
     // Arrange
     $owner = User::factory()->create();
     $otherUser = User::factory()->create();
@@ -128,6 +134,7 @@ test('user cannot update team they do not own', function (): void {
 });
 
 test('authenticated user can delete their team', function (): void {
+    /** @var TestCase $this */
     // Arrange
     $user = User::factory()->create();
     $team = Team::factory()->create(['user_id' => $user->id]);
@@ -146,6 +153,7 @@ test('authenticated user can delete their team', function (): void {
 });
 
 test('authenticated user can switch current team', function (): void {
+    /** @var TestCase $this */
     // Arrange
     $user = User::factory()->create();
     $team1 = Team::factory()->create(['user_id' => $user->id]);
@@ -168,6 +176,7 @@ test('authenticated user can switch current team', function (): void {
 });
 
 test('user cannot switch to team they do not belong to', function (): void {
+    /** @var TestCase $this */
     // Arrange
     $user = User::factory()->create();
     $otherUser = User::factory()->create();

@@ -18,7 +18,7 @@ final class UserSeeder extends Seeder
 
     public function __construct()
     {
-        $this->permissionRegistrar = app(PermissionRegistrar::class);
+        $this->permissionRegistrar = resolve(PermissionRegistrar::class);
     }
 
     /**
@@ -139,6 +139,7 @@ final class UserSeeder extends Seeder
             'name' => $name,
             'password' => Hash::make('password'),
             'email_verified_at' => now(),
+            'profile_photo_path' => 'https://i.pravatar.cc/300',
         ]);
     }
 

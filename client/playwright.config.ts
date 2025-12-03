@@ -1,15 +1,12 @@
 import { defineConfig, devices } from '@playwright/test'
-// @ts-expect-error - process is a Node.js global, types are provided by @types/node
 import process from 'node:process'
 
-const baseURL = process.env.VITE_SERVER_API_URL || 'http://localhost:5173'
-const apiURL = process.env.VITE_SERVER_API_URL || 'http://127.0.0.1:8000'
+const apiURL = process.env.VITE_API_BASE_URL
+const baseURL = process.env.VITE_FRONTEND_URL
 
 export default defineConfig({
-  testDir: '.',
-  testMatch: [
-    /tests\/.*\.(e2e|api)\.spec\.ts$/,
-  ],
+  testDir: './tests',
+  testMatch: [/tests\/.*\.(e2e|api)\.spec\.ts$/],
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
@@ -23,6 +20,11 @@ export default defineConfig({
     video: 'retain-on-failure',
     actionTimeout: 10000,
     navigationTimeout: 10000,
+    extraHTTPHeaders: {
+      Accept: 'application/json',
+      'X-Requested-With': 'XMLHttpRequest',
+    },
+    ignoreHTTPSErrors: true,
   },
   projects: [
     {
@@ -36,25 +38,30 @@ export default defineConfig({
         storageState: '.auth/user.json',
       },
       dependencies: ['setup'],
-      testMatch: [
-        /tests\/.*\.e2e\.spec\.ts$/,
-      ],
+      testMatch: [/tests\/.*\.e2e\.spec\.ts$/],
     },
     {
       name: 'e2e-unauth',
       use: {
         ...devices['Desktop Chrome'],
       },
-      testMatch: [
-        /tests\/.*\.e2e\.spec\.ts$/,
-      ],
+      testMatch: [/tests\/.*\.e2e\.spec\.ts$/],
     },
     {
       name: 'api',
-      use: { ...devices['Desktop Chrome'] },
-      testMatch: /tests\/.*\.api\.spec\.ts$/,
+      testDir: './tests/api',
+      testMatch: [/tests\/api\/.*\.(api|spec)\.spec\.ts$/, /tests\/api\/scenarios\/.*\.spec\.ts$/],
       fullyParallel: false,
-      workers: 2,
+      workers: 1,
+      use: {
+        baseURL: apiURL,
+        ...devices['Desktop Chrome'],
+        ignoreHTTPSErrors: true,
+        extraHTTPHeaders: {
+          Accept: 'application/json',
+          'X-Requested-With': 'XMLHttpRequest',
+        },
+      },
     },
   ],
   webServer: [
@@ -65,12 +72,10 @@ export default defineConfig({
       timeout: 15000,
     },
     {
-      command: 'cd ../api && php artisan serve',
-      url: `${apiURL}/sanctum/csrf-cookie`,
+      command: 'cd .. && php artisan serve',
+      url: apiURL,
       reuseExistingServer: true,
-      timeout: 20000,
-      stdout: 'ignore',
-      stderr: 'pipe',
+      timeout: 15000,
     },
   ],
   globalSetup: undefined,

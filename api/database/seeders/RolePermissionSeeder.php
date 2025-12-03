@@ -82,9 +82,8 @@ final class RolePermissionSeeder extends Seeder
         $roles = [
             'super-admin' => 'Super Administrator with full access',
             'admin' => 'Administrator with management access',
-            'teacher' => 'Teacher with teaching permissions',
-            'student' => 'Student with limited access',
-            'parent' => 'Parent with viewing permissions',
+            'customer' => 'Customer with limited access',
+            'contractor' => 'Contractor with project access',
         ];
 
         $createdRoles = [];
@@ -136,24 +135,19 @@ final class RolePermissionSeeder extends Seeder
             $permissions['users.delete'],
         ]);
 
-        // Teacher permissions
-        $roles['teacher']->givePermissionTo([
+        // Customer permissions
+        $roles['customer']->givePermissionTo([
+            $permissions['students.view'],
+            $permissions['attendance.view'],
+            $permissions['invoices.view'],
+        ]);
+
+        // Contractor permissions
+        $roles['contractor']->givePermissionTo([
             $permissions['students.view'],
             $permissions['attendance.view'],
             $permissions['attendance.create'],
             $permissions['attendance.update'],
-        ]);
-
-        // Student permissions
-        $roles['student']->givePermissionTo([
-            $permissions['students.view'],
-            $permissions['attendance.view'],
-        ]);
-
-        // Parent permissions
-        $roles['parent']->givePermissionTo([
-            $permissions['students.view'],
-            $permissions['attendance.view'],
             $permissions['invoices.view'],
         ]);
     }
@@ -224,7 +218,7 @@ final class RolePermissionSeeder extends Seeder
             return;
         }
 
-        $permissionRegistrar = app(PermissionRegistrar::class);
+        $permissionRegistrar = resolve(PermissionRegistrar::class);
         $permissionRegistrar->forgetCachedPermissions();
 
         $originalTeamId = $permissionRegistrar->getPermissionsTeamId();
@@ -243,7 +237,7 @@ final class RolePermissionSeeder extends Seeder
             return;
         }
 
-        $permissionRegistrar = app(PermissionRegistrar::class);
+        $permissionRegistrar = resolve(PermissionRegistrar::class);
         $permissionRegistrar->forgetCachedPermissions();
 
         $originalTeamId = $permissionRegistrar->getPermissionsTeamId();

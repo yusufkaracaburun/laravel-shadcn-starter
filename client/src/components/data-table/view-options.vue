@@ -9,25 +9,21 @@ interface DataTableViewOptionsProps {
 
 const props = defineProps<DataTableViewOptionsProps>()
 
-const columns = computed(() => props.table.getAllColumns()
-  .filter(
-    column =>
-      typeof column.accessorFn !== 'undefined' && column.getCanHide(),
-  ))
+const columns = computed(() =>
+  props.table
+    .getAllColumns()
+    .filter((column) => typeof column.accessorFn !== 'undefined' && column.getCanHide()),
+)
 
 function resetColumnVisible() {
-  columns.value.forEach(column => column.toggleVisibility(true))
+  columns.value.forEach((column) => column.toggleVisibility(true))
 }
 </script>
 
 <template>
   <UiDropdownMenu>
     <UiDropdownMenuTrigger as-child>
-      <UiButton
-        variant="outline"
-        size="sm"
-        class="hidden h-8 ml-auto lg:flex"
-      >
+      <UiButton variant="outline" size="sm" class="hidden h-8 ml-auto lg:flex">
         <Settings2 class="size-4 mr-2" />
         Columns View
       </UiButton>
@@ -41,16 +37,13 @@ function resetColumnVisible() {
         :key="column.id"
         class="capitalize"
         :model-value="column.getIsVisible()"
-        @update:model-value="(value:boolean) => column.toggleVisibility(!!value)"
+        @update:model-value="(value: boolean) => column.toggleVisibility(!!value)"
       >
         {{ column.id }}
       </UiDropdownMenuCheckboxItem>
 
       <UiDropdownMenuSeparator />
-      <UiDropdownMenuItem
-        class="capitalize"
-        @click="resetColumnVisible"
-      >
+      <UiDropdownMenuItem class="capitalize" @click="resetColumnVisible">
         <RefreshCcw />
         Reset
       </UiDropdownMenuItem>

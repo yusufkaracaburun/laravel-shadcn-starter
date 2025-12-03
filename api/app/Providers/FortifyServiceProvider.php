@@ -14,6 +14,8 @@ use App\Actions\Fortify\ResetUserPassword;
 use App\Actions\Fortify\UpdateUserPassword;
 use Illuminate\Support\Facades\RateLimiter;
 use App\Actions\Fortify\UpdateUserProfileInformation;
+use App\Http\Responses\Fortify\LoginResponse as CustomLoginResponse;
+use Laravel\Fortify\Contracts\LoginResponse as LoginResponseContract;
 
 final class FortifyServiceProvider extends ServiceProvider
 {
@@ -22,7 +24,7 @@ final class FortifyServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->singleton(LoginResponseContract::class, CustomLoginResponse::class);
     }
 
     /**
@@ -48,7 +50,7 @@ final class FortifyServiceProvider extends ServiceProvider
         RateLimiter::for('login', function (Request $request): Limit {
             // Get email from request, handling missing/empty cases gracefully
             $email = $request->input(Fortify::username(), '');
-            $email = trim((string) $email);
+            $email = mb_trim((string) $email);
 
             // If email is empty, rate limit by IP only to prevent enumeration attacks
             // Otherwise, rate limit by email|IP combination
@@ -56,7 +58,9 @@ final class FortifyServiceProvider extends ServiceProvider
                 ? Str::transliterate(Str::lower($email)).'|'.$request->ip()
                 : $request->ip();
 
-            return Limit::perMinute(5)->by($throttleKey);
+            $limit = app()->isLocal() ? 1000 : 5;
+
+            return Limit::perMinute($limit)->by($throttleKey);
         });
 
         RateLimiter::for('two-factor', fn (Request $request): Limit => Limit::perMinute(5)->by($request->session()->get('login.id')));

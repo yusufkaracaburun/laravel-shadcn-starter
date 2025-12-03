@@ -1,12 +1,7 @@
 <script setup lang="ts" generic="T">
 import type { Table } from '@tanstack/vue-table'
 
-import {
-  ChevronLeftIcon,
-  ChevronRightIcon,
-  ChevronsLeft,
-  ChevronsRight,
-} from 'lucide-vue-next'
+import { ChevronLeftIcon, ChevronRightIcon, ChevronsLeft, ChevronsRight } from 'lucide-vue-next'
 
 import type { ServerPagination } from './types'
 
@@ -54,13 +49,11 @@ const canNextPage = computed(() => {
 })
 
 function handlePageSizeChange(value: any) {
-  if (!value)
-    return
+  if (!value) return
   const newPageSize = Number(value)
   if (isServerPagination.value && props.serverPagination?.onPageSizeChange) {
     props.serverPagination.onPageSizeChange(newPageSize)
-  }
-  else {
+  } else {
     props.table.setPageSize(newPageSize)
   }
 }
@@ -68,8 +61,7 @@ function handlePageSizeChange(value: any) {
 function goToFirstPage() {
   if (isServerPagination.value && props.serverPagination?.onPageChange) {
     props.serverPagination.onPageChange(1)
-  }
-  else {
+  } else {
     props.table.setPageIndex(0)
   }
 }
@@ -77,8 +69,7 @@ function goToFirstPage() {
 function goToPreviousPage() {
   if (isServerPagination.value && props.serverPagination?.onPageChange) {
     props.serverPagination.onPageChange(currentPage.value - 1)
-  }
-  else {
+  } else {
     props.table.previousPage()
   }
 }
@@ -86,8 +77,7 @@ function goToPreviousPage() {
 function goToNextPage() {
   if (isServerPagination.value && props.serverPagination?.onPageChange) {
     props.serverPagination.onPageChange(currentPage.value + 1)
-  }
-  else {
+  } else {
     props.table.nextPage()
   }
 }
@@ -95,8 +85,7 @@ function goToNextPage() {
 function goToLastPage() {
   if (isServerPagination.value && props.serverPagination?.onPageChange) {
     props.serverPagination.onPageChange(totalPages.value)
-  }
-  else {
+  } else {
     props.table.setPageIndex(props.table.getPageCount() - 1)
   }
 }
@@ -107,18 +96,17 @@ function goToLastPage() {
     <div class="flex-1" />
     <div class="flex items-center space-x-6 lg:space-x-8">
       <div class="flex items-center space-x-2">
-        <p class="hidden text-sm font-medium line-clamp-1 md:block">
-          Rows per page
-        </p>
-        <UiSelect
-          :model-value="`${currentPageSize}`"
-          @update:model-value="handlePageSizeChange"
-        >
+        <p class="hidden text-sm font-medium line-clamp-1 md:block">Rows per page</p>
+        <UiSelect :model-value="`${currentPageSize}`" @update:model-value="handlePageSizeChange">
           <UiSelectTrigger class="h-8 w-[70px]">
             <UiSelectValue :placeholder="`${currentPageSize}`" />
           </UiSelectTrigger>
           <UiSelectContent side="top">
-            <UiSelectItem v-for="pageSize in [10, 20, 30, 40, 50]" :key="pageSize" :value="`${pageSize}`">
+            <UiSelectItem
+              v-for="pageSize in [10, 20, 30, 40, 50]"
+              :key="pageSize"
+              :value="`${pageSize}`"
+            >
               {{ pageSize }}
             </UiSelectItem>
           </UiSelectContent>

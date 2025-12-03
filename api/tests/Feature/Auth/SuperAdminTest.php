@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Tests\TestCase;
 use App\Models\Team;
 use App\Models\User;
 use Laravel\Sanctum\Sanctum;
@@ -14,7 +15,7 @@ use Spatie\Permission\PermissionRegistrar;
 
 // Clear permission cache before each test (per Spatie testing docs)
 beforeEach(function (): void {
-    app(PermissionRegistrar::class)->forgetCachedPermissions();
+    resolve(PermissionRegistrar::class)->forgetCachedPermissions();
 });
 
 test('super admin can bypass all permission checks via Gate::before', function (): void {
@@ -45,6 +46,7 @@ test('super admin can use canAny and cannot methods correctly', function (): voi
 });
 
 test('super admin can access routes without team requirement', function (): void {
+    /** @var TestCase $this */
     // Arrange
     $superAdmin = User::factory()->create([
         'current_team_id' => null,
@@ -64,6 +66,7 @@ test('super admin can access routes without team requirement', function (): void
 });
 
 test('super admin can perform all CRUD operations on users', function (): void {
+    /** @var TestCase $this */
     // Arrange
     $superAdmin = User::factory()->create([
         'current_team_id' => null,
@@ -105,6 +108,7 @@ test('super admin can perform all CRUD operations on users', function (): void {
 });
 
 test('super admin can perform all CRUD operations on teams', function (): void {
+    /** @var TestCase $this */
     // Arrange
     $superAdmin = User::factory()->create([
         'current_team_id' => null,
@@ -113,7 +117,7 @@ test('super admin can perform all CRUD operations on teams', function (): void {
 
     // Assign role globally (team_id = null) when teams are enabled
     // Per Spatie docs: clear cache before assigning roles
-    $permissionRegistrar = app(PermissionRegistrar::class);
+    $permissionRegistrar = resolve(PermissionRegistrar::class);
     $permissionRegistrar->forgetCachedPermissions();
 
     $originalTeamId = $permissionRegistrar->getPermissionsTeamId();
@@ -189,7 +193,7 @@ test('super admin bypasses team-scoped permission checks', function (): void {
     $permission = Permission::create(['name' => 'teams.manage', 'guard_name' => 'web']);
 
     // Act - Check permission without team context
-    $permissionRegistrar = app(PermissionRegistrar::class);
+    $permissionRegistrar = resolve(PermissionRegistrar::class);
     $permissionRegistrar->setPermissionsTeamId(null);
 
     // Assert - Super admin can access team-scoped permissions
@@ -214,6 +218,7 @@ test('super admin is not linked to teams', function (): void {
 });
 
 test('super admin can access user from different team', function (): void {
+    /** @var TestCase $this */
     // Arrange
     $superAdmin = User::factory()->create([
         'current_team_id' => null,
@@ -238,6 +243,7 @@ test('super admin can access user from different team', function (): void {
 });
 
 test('super admin can update user from different team', function (): void {
+    /** @var TestCase $this */
     // Arrange
     $superAdmin = User::factory()->create([
         'current_team_id' => null,
@@ -266,6 +272,7 @@ test('super admin can update user from different team', function (): void {
 });
 
 test('super admin can delete user from different team', function (): void {
+    /** @var TestCase $this */
     // Arrange
     $superAdmin = User::factory()->create([
         'current_team_id' => null,
@@ -302,6 +309,7 @@ test('regular users still require proper permissions', function (): void {
 });
 
 test('regular users still require team when accessing protected routes', function (): void {
+    /** @var TestCase $this */
     // Arrange
     $regularUser = User::factory()->create([
         'current_team_id' => null,
@@ -319,6 +327,7 @@ test('regular users still require team when accessing protected routes', functio
 });
 
 test('super admin user is created correctly in seeder', function (): void {
+    /** @var TestCase $this */
     // Arrange - Run the seeder
     $this->seed(RolePermissionSeeder::class);
     $this->seed(UserSeeder::class);
@@ -335,6 +344,7 @@ test('super admin user is created correctly in seeder', function (): void {
 });
 
 test('super admin can access team they do not belong to', function (): void {
+    /** @var TestCase $this */
     // Arrange
     $superAdmin = User::factory()->create([
         'current_team_id' => null,

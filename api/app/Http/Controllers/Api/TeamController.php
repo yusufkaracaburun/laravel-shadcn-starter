@@ -22,9 +22,7 @@ use App\Http\Controllers\Concerns\InvalidatesCachedModels;
 final class TeamController extends Controller
 {
     use AuthorizesRequests;
-
     use InvalidatesCachedModels;
-
     use UsesCachedResponses;
 
     /**

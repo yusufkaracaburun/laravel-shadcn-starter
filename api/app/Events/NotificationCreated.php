@@ -35,7 +35,6 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 final readonly class NotificationCreated implements ShouldBroadcastNow
 {
     use Dispatchable;
-
     use SerializesModels;
 
     /**

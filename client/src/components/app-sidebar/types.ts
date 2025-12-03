@@ -8,15 +8,16 @@ interface BaseNavItem {
   icon?: NavIcon
 }
 
-export type NavItem
-  = | BaseNavItem & {
-    items: (BaseNavItem & { url?: string })[]
-    url?: never
-    isActive?: boolean
-  } | BaseNavItem & {
-    url: string
-    items?: never
-  }
+export type NavItem =
+  | (BaseNavItem & {
+      items: (BaseNavItem & { url?: string })[]
+      url?: never
+      isActive?: boolean
+    })
+  | (BaseNavItem & {
+      url: string
+      items?: never
+    })
 
 export interface NavGroup {
   title: string
@@ -25,8 +26,8 @@ export interface NavGroup {
 
 export interface User {
   name: string
-  avatar: string
   email: string
+  avatar: string | null
 }
 
 export interface Team {

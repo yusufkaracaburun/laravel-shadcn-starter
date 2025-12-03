@@ -20,16 +20,14 @@ const props = withDefaults(defineProps<Props>(), {
 
 <template>
   <div
-    :class="cn(
-      'bg-secondary text-secondary-foreground text-sm inline-grid grid-cols-[4px_1fr] items-start gap-3 rounded-md border p-3',
-      props.class,
-    )"
+    :class="
+      cn(
+        'bg-secondary text-secondary-foreground text-sm inline-grid grid-cols-[4px_1fr] items-start gap-3 rounded-md border p-3',
+        props.class,
+      )
+    "
   >
-    <div
-      :class="cn(
-        'h-full w-1 rounded-full',
-        inlineTipVariants({ variant: props.variant }))"
-    />
+    <div :class="cn('h-full w-1 rounded-full', inlineTipVariants({ variant: props.variant }))" />
 
     <div class="text-muted-foreground">
       <strong class="text-sm font-semibold text-foreground mr-2">{{ props.label }}:</strong>

@@ -57,7 +57,12 @@ export class RegisterPage extends BasePage {
   /**
    * Fill registration form with all fields
    */
-  async fillForm(name: string, email: string, password: string, passwordConfirmation: string): Promise<void> {
+  async fillForm(
+    name: string,
+    email: string,
+    password: string,
+    passwordConfirmation: string,
+  ): Promise<void> {
     await this.fillName(name)
     await this.fillEmail(email)
     await this.fillPassword(password)
@@ -74,7 +79,11 @@ export class RegisterPage extends BasePage {
       const method = response.request().method()
       // Match POST requests to the register endpoint on the API server
       // Exclude CSRF cookie requests (GET requests to /sanctum/csrf-cookie)
-      return url.startsWith(apiURL) && (url.endsWith('/register') || url.endsWith('/register/')) && method === 'POST'
+      return (
+        url.startsWith(apiURL) &&
+        (url.endsWith('/register') || url.endsWith('/register/')) &&
+        method === 'POST'
+      )
     })
     await submitButton.click()
     await responsePromise
@@ -110,7 +119,12 @@ export class RegisterPage extends BasePage {
   /**
    * Complete registration flow: fill form and submit
    */
-  async register(name: string, email: string, password: string, passwordConfirmation: string): Promise<void> {
+  async register(
+    name: string,
+    email: string,
+    password: string,
+    passwordConfirmation: string,
+  ): Promise<void> {
     await this.fillForm(name, email, password, passwordConfirmation)
     await this.submit()
   }

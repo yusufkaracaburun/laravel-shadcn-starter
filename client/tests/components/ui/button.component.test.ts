@@ -33,7 +33,9 @@ describe('Button', () => {
       },
     })
     const button = wrapper.find('button')
-    expect(button.classes().some(cls => cls.includes('destructive') || cls.includes('bg-destructive'))).toBe(true)
+    expect(
+      button.classes().some((cls) => cls.includes('destructive') || cls.includes('bg-destructive')),
+    ).toBe(true)
   })
 
   it('should apply size classes', () => {
@@ -46,7 +48,7 @@ describe('Button', () => {
       },
     })
     const button = wrapper.find('button')
-    expect(button.classes().some(cls => cls.includes('lg') || cls.includes('h-10'))).toBe(true)
+    expect(button.classes().some((cls) => cls.includes('lg') || cls.includes('h-10'))).toBe(true)
   })
 
   it('should be disabled when disabled prop is true', () => {
@@ -75,4 +77,3 @@ describe('Button', () => {
     expect(wrapper.emitted('click')).toBeFalsy()
   })
 })
-

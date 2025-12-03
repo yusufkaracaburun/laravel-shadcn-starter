@@ -13,13 +13,13 @@ const mode = useColorMode()
 
 <template>
   <UiCommandGroup heading="Theme">
-    <UiCommandItem value="light" @click="mode = 'light', $emit('click')">
+    <UiCommandItem value="light" @click="((mode = 'light'), $emit('click'))">
       <CommandItemHasIcon name="Light" :icon="Sun" />
     </UiCommandItem>
-    <UiCommandItem value="dark" @click="mode = 'dark', $emit('click')">
+    <UiCommandItem value="dark" @click="((mode = 'dark'), $emit('click'))">
       <CommandItemHasIcon name="Dark" :icon="Moon" />
     </UiCommandItem>
-    <UiCommandItem value="system" @click="mode = 'auto', $emit('click')">
+    <UiCommandItem value="system" @click="((mode = 'auto'), $emit('click'))">
       <CommandItemHasIcon name="System" :icon="SunMoon" />
     </UiCommandItem>
   </UiCommandGroup>

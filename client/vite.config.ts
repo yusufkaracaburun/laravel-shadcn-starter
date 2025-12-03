@@ -28,27 +28,14 @@ export default defineConfig({
       defaultLayout: 'default',
     }),
     AutoImport({
-      include: [
-        /\.[tj]sx?$/,
-        /\.vue$/,
-        /\.md$/,
-      ],
-      imports: [
-        'vue',
-        VueRouterAutoImports,
-      ],
-      dirs: [
-        'src/composables/**/*.ts',
-        'src/constants/**/*.ts',
-        'src/stores/**/*.ts',
-      ],
+      include: [/\.[tj]sx?$/, /\.vue$/, /\.md$/],
+      imports: ['vue', VueRouterAutoImports],
+      dirs: ['src/composables/**/*.ts', 'src/constants/**/*.ts', 'src/stores/**/*.ts'],
       defaultExportByFilename: true,
       dts: 'src/types/auto-import.d.ts',
     }),
     Component({
-      dirs: [
-        'src/components',
-      ],
+      dirs: ['src/components'],
       collapseSamePrefixes: true,
       directoryAsNamespace: true,
       dts: 'src/types/auto-import-components.d.ts',
@@ -63,35 +50,7 @@ export default defineConfig({
     drop: ['debugger'],
     pure: ['console.log'],
   },
-  server: {
-    proxy: {
-      // Proxy backend routes to http://127.0.0.1:8000
-      // This allows cookies to work properly (same origin: localhost:5173)
-      '/api': {
-        target: 'http://127.0.0.1:8000',
-        changeOrigin: true,
-        secure: false,
-      },
-      '/sanctum': {
-        target: 'http://127.0.0.1:8000',
-        changeOrigin: true,
-        secure: false,
-      },
-      '/login': {
-        target: 'http://127.0.0.1:8000',
-        changeOrigin: true,
-        secure: false,
-      },
-      '/logout': {
-        target: 'http://127.0.0.1:8000',
-        changeOrigin: true,
-        secure: false,
-      },
-      '/register': {
-        target: 'http://127.0.0.1:8000',
-        changeOrigin: true,
-        secure: false,
-      },
-    },
+  build: {
+    manifest: true,
   },
 })

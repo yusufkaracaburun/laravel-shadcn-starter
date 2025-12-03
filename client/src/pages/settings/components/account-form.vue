@@ -15,13 +15,17 @@ import {
   CommandItem,
   CommandList,
 } from '@/components/ui/command'
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
-import { Input } from '@/components/ui/input'
 import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover'
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Separator } from '@/components/ui/separator'
 import { cn } from '@/lib/utils'
 
@@ -53,22 +57,29 @@ const accountFormSchema = toTypedSchema(accountValidator)
 // https://github.com/logaretm/vee-validate/discussions/3571
 async function onSubmit(values: any) {
   toast('You submitted the following values:', {
-    description: h('pre', { class: 'mt-2 w-[340px] rounded-md bg-slate-950 p-4' }, h('code', { class: 'text-white' }, JSON.stringify(values, null, 2))),
+    description: h(
+      'pre',
+      { class: 'mt-2 w-[340px] rounded-md bg-slate-950 p-4' },
+      h('code', { class: 'text-white' }, JSON.stringify(values, null, 2)),
+    ),
   })
 }
 </script>
 
 <template>
   <div>
-    <h3 class="text-lg font-medium">
-      Account
-    </h3>
+    <h3 class="text-lg font-medium">Account</h3>
     <p class="text-sm text-muted-foreground">
       Update your account settings. Set your preferred language and timezone.
     </p>
   </div>
   <Separator class="my-4" />
-  <Form v-slot="{ setFieldValue }" :validation-schema="accountFormSchema" class="space-y-8" @submit="onSubmit">
+  <Form
+    v-slot="{ setFieldValue }"
+    :validation-schema="accountFormSchema"
+    class="space-y-8"
+    @submit="onSubmit"
+  >
     <FormField v-slot="{ componentField }" name="name">
       <FormItem>
         <FormLabel>Name</FormLabel>
@@ -89,13 +100,18 @@ async function onSubmit(values: any) {
           <PopoverTrigger as-child>
             <FormControl>
               <Button
-                variant="outline" :class="cn(
-                  'w-[240px] justify-start text-left font-normal',
-                  !value && 'text-muted-foreground',
-                )"
+                variant="outline"
+                :class="
+                  cn(
+                    'w-[240px] justify-start text-left font-normal',
+                    !value && 'text-muted-foreground',
+                  )
+                "
               >
                 <CalendarDays class="size-4 opacity-50" />
-                <span>{{ value ? df.format(toDate(dateValue, getLocalTimeZone())) : "Pick a date" }}</span>
+                <span>{{
+                  value ? df.format(toDate(dateValue, getLocalTimeZone())) : 'Pick a date'
+                }}</span>
               </Button>
             </FormControl>
           </PopoverTrigger>
@@ -107,25 +123,24 @@ async function onSubmit(values: any) {
               initial-focus
               :min-value="new CalendarDate(1900, 1, 1)"
               :max-value="today(getLocalTimeZone())"
-              @update:model-value="(v) => {
-                if (v) {
-                  dateValue = v
-                  setFieldValue('dob', toDate(v).toISOString())
+              @update:model-value="
+                (v) => {
+                  if (v) {
+                    dateValue = v
+                    setFieldValue('dob', toDate(v).toISOString())
+                  } else {
+                    dateValue = undefined
+                    setFieldValue('dob', undefined)
+                  }
                 }
-                else {
-                  dateValue = undefined
-                  setFieldValue('dob', undefined)
-                }
-              }"
+              "
             />
           </PopoverContent>
         </Popover>
-        <FormDescription>
-          Your date of birth is used to calculate your age.
-        </FormDescription>
+        <FormDescription> Your date of birth is used to calculate your age. </FormDescription>
         <FormMessage />
       </FormItem>
-      <input type="hidden" v-bind="field">
+      <input type="hidden" v-bind="field" />
     </FormField>
 
     <FormField v-slot="{ value }" name="language">
@@ -136,14 +151,16 @@ async function onSubmit(values: any) {
           <PopoverTrigger as-child>
             <FormControl>
               <Button
-                variant="outline" role="combobox" :aria-expanded="open" :class="cn(
-                  'w-[200px] justify-between',
-                  !value && 'text-muted-foreground',
-                )"
+                variant="outline"
+                role="combobox"
+                :aria-expanded="open"
+                :class="cn('w-[200px] justify-between', !value && 'text-muted-foreground')"
               >
-                {{ value ? languages.find(
-                  (language) => language.value === value,
-                )?.label : 'Select language...' }}
+                {{
+                  value
+                    ? languages.find((language) => language.value === value)?.label
+                    : 'Select language...'
+                }}
 
                 <ChevronsUpDown class="size-4 ml-2 opacity-50 shrink-0" />
               </Button>
@@ -156,17 +173,20 @@ async function onSubmit(values: any) {
               <CommandList>
                 <CommandGroup>
                   <CommandItem
-                    v-for="language in languages" :key="language.value" :value="language.label"
-                    @select="() => {
-                      setFieldValue('language', language.value)
-                      open = false
-                    }"
+                    v-for="language in languages"
+                    :key="language.value"
+                    :value="language.label"
+                    @select="
+                      () => {
+                        setFieldValue('language', language.value)
+                        open = false
+                      }
+                    "
                   >
                     <Check
-                      :class="cn(
-                        'mr-2 h-4 w-4',
-                        value === language.value ? 'opacity-100' : 'opacity-0',
-                      )"
+                      :class="
+                        cn('mr-2 h-4 w-4', value === language.value ? 'opacity-100' : 'opacity-0')
+                      "
                     />
                     {{ language.label }}
                   </CommandItem>
@@ -184,9 +204,7 @@ async function onSubmit(values: any) {
     </FormField>
 
     <div class="flex justify-start">
-      <Button type="submit">
-        Update account
-      </Button>
+      <Button type="submit"> Update account </Button>
     </div>
   </Form>
 </template>

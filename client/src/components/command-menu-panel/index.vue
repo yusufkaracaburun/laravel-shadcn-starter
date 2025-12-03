@@ -20,7 +20,7 @@ function handleOpenChange() {
   open.value = !open.value
 }
 
-const firstKey = computed(() => navigator?.userAgent.includes('Mac OS') ? '⌘' : 'Ctrl')
+const firstKey = computed(() => (navigator?.userAgent.includes('Mac OS') ? '⌘' : 'Ctrl'))
 </script>
 
 <template>

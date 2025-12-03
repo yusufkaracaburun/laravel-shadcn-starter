@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Tests\TestCase;
 use App\Models\User;
 use App\Models\LoginLink;
 use Illuminate\Support\Facades\URL;
@@ -19,7 +20,7 @@ beforeEach(function (): void {
 
     // Clear all possible rate limiter keys
     // The throttle middleware uses email or IP as the key: login-link:{email|ip}
-    $cache = app(Factory::class)->store();
+    $cache = resolve(Factory::class)->store();
     $prefix = config('cache.prefix', '');
 
     // Clear common keys
@@ -31,6 +32,7 @@ beforeEach(function (): void {
 });
 
 test('login link store creates magic link for valid email', function (): void {
+    /** @var TestCase $this */
     // Arrange
     Config::set('login-link.enabled', true);
     Notification::fake();
@@ -51,6 +53,7 @@ test('login link store creates magic link for valid email', function (): void {
 });
 
 test('login link store validates email is required', function (): void {
+    /** @var TestCase $this */
     // Arrange
     Config::set('login-link.enabled', true);
     // Clear rate limiter for IP (throttle uses IP when email is not provided)
@@ -65,6 +68,7 @@ test('login link store validates email is required', function (): void {
 });
 
 test('login link store validates email format', function (): void {
+    /** @var TestCase $this */
     // Arrange
     Config::set('login-link.enabled', true);
     // Clear rate limiter for invalid email (throttle uses email when provided)
@@ -81,6 +85,7 @@ test('login link store validates email format', function (): void {
 });
 
 test('login link store validates email exists', function (): void {
+    /** @var TestCase $this */
     // Arrange
     Config::set('login-link.enabled', true);
     // Clear rate limiter for this email
@@ -97,6 +102,7 @@ test('login link store validates email exists', function (): void {
 });
 
 test('login link store respects rate limiting', function (): void {
+    /** @var TestCase $this */
     // Arrange
     Config::set('login-link.enabled', true);
     Config::set('login-link.rate_limit_attempts', 1);
@@ -118,6 +124,7 @@ test('login link store respects rate limiting', function (): void {
 });
 
 test('login link login authenticates user with valid token', function (): void {
+    /** @var TestCase $this */
     // Arrange
     Config::set('login-link.enabled', true);
     // Clear rate limiter for IP (throttle middleware uses IP for GET requests)
@@ -142,6 +149,7 @@ test('login link login authenticates user with valid token', function (): void {
 });
 
 test('login link login fails with expired token', function (): void {
+    /** @var TestCase $this */
     // Arrange
     Config::set('login-link.enabled', true);
     // Clear rate limiter for IP (throttle middleware uses IP for GET requests)
@@ -164,6 +172,7 @@ test('login link login fails with expired token', function (): void {
 });
 
 test('login link login fails with used token', function (): void {
+    /** @var TestCase $this */
     // Arrange
     Config::set('login-link.enabled', true);
     // Clear rate limiter for IP (throttle middleware uses IP for GET requests)
@@ -187,6 +196,7 @@ test('login link login fails with used token', function (): void {
 });
 
 test('login link login fails with invalid token', function (): void {
+    /** @var TestCase $this */
     // Arrange
     Config::set('login-link.enabled', true);
     // Clear rate limiter for IP (throttle middleware uses IP for GET requests)
@@ -203,6 +213,7 @@ test('login link login fails with invalid token', function (): void {
 });
 
 test('login link routes return 404 when feature is disabled', function (): void {
+    /** @var TestCase $this */
     // Arrange
     Config::set('login-link.enabled', false);
     // Clear rate limiter for IP (throttle middleware uses IP for GET requests)

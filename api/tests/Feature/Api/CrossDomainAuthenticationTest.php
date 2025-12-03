@@ -97,17 +97,22 @@ test('cross-domain authentication flow works with session cookies', function ():
     ]);
 
     $loginResponse->assertStatus(200)
-        ->assertJsonStructure(['two_factor']);
+        ->assertJsonStructure([
+            'id',
+            'name',
+            'email',
+        ]);
 
     // Verify session cookie is set
     $cookies = $loginResponse->headers->getCookies();
     $hasSessionCookie = false;
     foreach ($cookies as $cookie) {
-        if (str_contains($cookie->getName(), 'session') || str_contains($cookie->getName(), 'laravel')) {
+        if (str_contains((string) $cookie->getName(), 'session') || str_contains((string) $cookie->getName(), 'laravel')) {
             $hasSessionCookie = true;
             break;
         }
     }
+
     expect($hasSessionCookie)->toBeTrue();
 
     // Step 3: Access authenticated endpoint (should work with session)

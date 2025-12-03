@@ -1,0 +1,52 @@
+# Dependencies
+node_modules
+pnpm-lock.yaml
+package-lock.json
+yarn.lock
+
+# Build outputs
+dist
+dist-ssr
+build
+*.local
+
+# Generated files
+auto-imports.d.ts
+components.d.ts
+*.d.ts
+
+# Coverage and test results
+coverage
+test-results
+playwright-report
+playwright/.cache
+playwright/.auth
+.vitest
+
+# Logs
+*.log
+logs
+
+# Editor
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Temporary files
+.tmp
+*.tmp
+.cache
+
+# Stats
+stats.html
+
+# Pact contracts (if they shouldn't be formatted)
+pact/pacts/
+
