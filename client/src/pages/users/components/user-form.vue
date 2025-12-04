@@ -3,19 +3,21 @@ import { toTypedSchema } from '@vee-validate/zod'
 import { useForm } from 'vee-validate'
 import { z } from 'zod'
 
+import type { User } from '@/services/users.service'
+
 import { Button } from '@/components/ui/button'
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { useToast } from '@/composables/use-toast'
+import { useCreateUserMutation, useUpdateUserMutation } from '@/services/users.service'
 import { useErrorStore } from '@/stores/error.store'
-import { useCreateUserMutation, useUpdateUserMutation, type User } from '@/services/users.service'
 
 const props = defineProps<{
   user?: User | null
 }>()
 
 const emits = defineEmits<{
-  (e: 'close'): void
+  close: []
 }>()
 
 const toast = useToast()
@@ -54,24 +56,28 @@ const formSchema = computed(() => {
   return baseSchema.extend({
     password: z.string().min(8, 'Password must be at least 8 characters.'),
     password_confirmation: z.string().min(1, 'Please confirm your password.'),
-  }).refine((data) => data.password === data.password_confirmation, {
+  }).refine(data => data.password === data.password_confirmation, {
     message: 'Passwords do not match.',
     path: ['password_confirmation'],
   })
 })
 
-const getInitialValues = () => ({
-  name: props.user?.name || '',
-  email: props.user?.email || '',
-  password: '',
-  password_confirmation: '',
-  profile_photo: null,
-})
+function getInitialValues() {
+  return {
+    name: props.user?.name || '',
+    email: props.user?.email || '',
+    password: '',
+    password_confirmation: '',
+    profile_photo: null,
+  }
+}
 
-const { handleSubmit, setFieldError, resetForm, setValue } = useForm({
+const form = useForm({
   validationSchema: computed(() => toTypedSchema(formSchema.value)),
   initialValues: getInitialValues(),
 })
+
+const { handleSubmit, setFieldError, resetForm } = form
 
 const profilePhotoPreview = ref<string | null>(null)
 const existingProfilePhotoUrl = computed(() => props.user?.profile_photo_url || null)
@@ -79,14 +85,24 @@ const existingProfilePhotoUrl = computed(() => props.user?.profile_photo_url || 
 // Watch for user changes to update form values and preview
 watch(() => props.user, (user) => {
   if (user) {
-    setValue('name', user.name)
-    setValue('email', user.email)
+    // Use resetForm with values to update all fields at once
+    resetForm({
+      values: {
+        name: user.name || '',
+        email: user.email || '',
+        password: '',
+        password_confirmation: '',
+        profile_photo: null,
+      },
+    })
     if (user.profile_photo_url) {
       profilePhotoPreview.value = user.profile_photo_url
     }
   }
   else {
-    resetForm()
+    resetForm({
+      values: getInitialValues(),
+    })
     profilePhotoPreview.value = null
   }
 }, { immediate: true })
@@ -107,8 +123,8 @@ function handlePhotoChange(event: Event) {
       target.value = ''
       return
     }
-    // Set the file value in the form
-    setValue('profile_photo', file)
+    // Set the file value in the form using setFieldValue
+    form.setFieldValue('profile_photo', file)
     // Create preview
     const reader = new FileReader()
     reader.onload = (e) => {
@@ -117,7 +133,7 @@ function handlePhotoChange(event: Event) {
     reader.readAsDataURL(file)
   }
   else {
-    setValue('profile_photo', null)
+    form.setFieldValue('profile_photo', null)
     profilePhotoPreview.value = null
   }
 }
@@ -127,8 +143,8 @@ const onSubmit = handleSubmit(async (values) => {
     if (isEditMode.value && props.user) {
       // Update existing user
       const updateData: Record<string, any> = {
-        name: values.name,
-        email: values.email,
+        name: values.name || '',
+        email: values.email || '',
       }
 
       // Only include password if provided
@@ -152,10 +168,10 @@ const onSubmit = handleSubmit(async (values) => {
     else {
       // Create new user
       await createUserMutation.mutateAsync({
-        name: values.name,
-        email: values.email,
-        password: values.password,
-        password_confirmation: values.password_confirmation,
+        name: values.name || '',
+        email: values.email || '',
+        password: values.password || '',
+        password_confirmation: values.password_confirmation || '',
         profile_photo: values.profile_photo || null,
       })
 
@@ -244,7 +260,7 @@ const onSubmit = handleSubmit(async (values) => {
       </FormItem>
     </FormField>
 
-    <FormField v-slot="{ componentField }" name="profile_photo">
+    <FormField name="profile_photo">
       <FormItem>
         <FormLabel>Profile Photo</FormLabel>
         <FormControl>
@@ -259,10 +275,10 @@ const onSubmit = handleSubmit(async (values) => {
             </p>
             <div v-if="profilePhotoPreview || existingProfilePhotoUrl" class="mt-2">
               <img
-                :src="profilePhotoPreview || existingProfilePhotoUrl"
-                alt="Profile photo preview"
+                :src="(profilePhotoPreview || existingProfilePhotoUrl) ?? ''"
+                alt="Profile preview"
                 class="h-24 w-24 rounded-full object-cover border"
-              />
+              >
             </div>
           </div>
         </FormControl>
