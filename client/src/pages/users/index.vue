@@ -2,21 +2,14 @@
 import { Loader } from 'lucide-vue-next'
 
 import Page from '@/components/global-layout/basic-page.vue'
+import { useUsers } from '@/composables/use-users'
 
 import { columns } from './components/columns'
 import DataTable from './components/data-table.vue'
 import UserCreate from './components/user-create.vue'
 import UserInvite from './components/user-invite.vue'
-import { users } from './data/users'
 
-const loading = ref(false)
-
-function mockLoading() {
-  loading.value = true
-  setTimeout(() => {
-    loading.value = false
-  }, 2000)
-}
+const { loading, fetchUsersData, usersResponse } = useUsers()
 </script>
 
 <template>
@@ -24,10 +17,12 @@ function mockLoading() {
     <template #actions>
       <UserInvite />
       <UserCreate />
-      <UiButton variant="outline" @click="mockLoading"> <Loader />Mock Loading </UiButton>
+      <UiButton variant="outline" @click="fetchUsersData">
+        <Loader />Fetch Users
+      </UiButton>
     </template>
     <div class="overflow-x-auto">
-      <DataTable :loading :data="users" :columns="columns" />
+      <DataTable :loading="loading" :data="usersResponse?.data ?? []" :columns="columns" />
     </div>
   </Page>
 </template>

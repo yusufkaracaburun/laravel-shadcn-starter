@@ -59,3 +59,27 @@ export function useGetCurrentUserQuery() {
     staleTime: 5 * 60 * 1000, // Consider data fresh for 5 minutes
   })
 }
+
+/**
+ * List all users
+ * @see api/app/Http/Controllers/Api/UserController.php::index()
+ */
+export function useGetUsersQuery() {
+  const { axiosInstance } = useAxios()
+
+  return useQuery<IResponse<User[]>, AxiosError>({
+    queryKey: ['userList'],
+    queryFn: async (): Promise<IResponse<User[]>> => {
+      const response = await axiosInstance.get('/api/user')
+      return response.data
+    },
+    retry: (failureCount: number, error: AxiosError) => {
+      // Don't retry on 401 (unauthorized) - user is not authenticated
+      if (error.response?.status === 401) {
+        return false
+      }
+      // Retry up to 2 times for other errors
+      return failureCount < 2
+    },
+  })
+}

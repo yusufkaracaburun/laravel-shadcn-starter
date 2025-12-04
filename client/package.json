@@ -40,7 +40,7 @@
     "test:e2e": "playwright test --project=e2e",
     "test:e2e:failed": "playwright test --last-failed",
     "test:e2e:report": "playwright show-report",
-    "test:all": "npm run test:unit && npm run test:component && npm run test:api && npm run test:e2e",
+    "test:all": "pnpm test:unit && pnpm test:component && pnpm test:api && pnpm test:e2e",
     "release": "npx changelogen@latest --release"
   },
   "dependencies": {
