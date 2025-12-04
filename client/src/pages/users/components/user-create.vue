@@ -7,16 +7,18 @@ const isOpen = ref(false)
 </script>
 
 <template>
-  <UiDialog v-model:open="isOpen">
-    <UiDialogTrigger as-child>
+  <UiDrawer v-model:open="isOpen" direction="right">
+    <UiDrawerTrigger as-child>
       <UiButton>
         <UserRoundPlus />
         Create User
       </UiButton>
-    </UiDialogTrigger>
+    </UiDrawerTrigger>
 
-    <UiDialogContent class="max-h-[500px] overflow-y-auto">
-      <UserResource @close="isOpen = false" />
-    </UiDialogContent>
-  </UiDialog>
+    <UiDrawerContent class="px-4 pb-4">
+      <div class="overflow-y-auto max-h-[calc(100vh-4rem)]">
+        <UserResource @close="isOpen = false" />
+      </div>
+    </UiDrawerContent>
+  </UiDrawer>
 </template>

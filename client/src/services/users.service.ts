@@ -1,6 +1,6 @@
 import type { AxiosError } from 'axios'
 
-import { useQuery } from '@tanstack/vue-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query'
 
 import { useAxios } from '@/composables/use-axios'
 
@@ -109,6 +109,56 @@ export function useGetUsersQuery(page: MaybeRef<number> = 1, pageSize: MaybeRef<
       }
       // Retry up to 2 times for other errors
       return failureCount < 2
+    },
+  })
+}
+
+/**
+ * Create user request interface matching backend validation
+ * @see api/app/Http/Controllers/Api/UserController.php::store()
+ */
+export interface CreateUserRequest {
+  name: string
+  email: string
+  password: string
+  password_confirmation: string
+  profile_photo?: File | null
+}
+
+/**
+ * Create a new user
+ * @see api/app/Http/Controllers/Api/UserController.php::store()
+ */
+export function useCreateUserMutation() {
+  const { axiosInstance } = useAxios()
+  const queryClient = useQueryClient()
+
+  return useMutation<IResponse<User>, AxiosError, CreateUserRequest>({
+    mutationFn: async (data: CreateUserRequest): Promise<IResponse<User>> => {
+      // If profile photo is present, use FormData for multipart/form-data
+      if (data.profile_photo) {
+        const formData = new FormData()
+        formData.append('name', data.name)
+        formData.append('email', data.email)
+        formData.append('password', data.password)
+        formData.append('password_confirmation', data.password_confirmation)
+        formData.append('profile_photo', data.profile_photo)
+
+        const response = await axiosInstance.post('/api/user', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        })
+        return response.data
+      }
+
+      // Otherwise, use JSON
+      const response = await axiosInstance.post('/api/user', data)
+      return response.data
+    },
+    onSuccess: () => {
+      // Invalidate user list query to refresh the users list
+      queryClient.invalidateQueries({ queryKey: ['userList'] })
     },
   })
 }

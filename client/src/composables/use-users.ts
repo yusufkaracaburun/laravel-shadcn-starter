@@ -1,7 +1,7 @@
 import type { ServerPagination } from '@/components/data-table/types'
 
 import { useToast } from '@/composables/use-toast'
-import { useGetUsersQuery } from '@/services/users.service'
+import { useCreateUserMutation, useGetUsersQuery, type CreateUserRequest } from '@/services/users.service'
 import { useErrorStore } from '@/stores/error.store'
 
 export function useUsers() {
@@ -66,11 +66,42 @@ export function useUsers() {
     }
   }
 
+  // Create user mutation
+  const createUserMutation = useCreateUserMutation()
+
+  async function createUser(data: CreateUserRequest) {
+    try {
+      const response = await createUserMutation.mutateAsync(data)
+      toast.showSuccess('User created successfully!')
+      return response
+    }
+    catch (error: any) {
+      // Store error with context
+      errorStore.setError(error, { context: 'createUser' })
+
+      // Use error store utilities for messages
+      const message = errorStore.getErrorMessage(error)
+      const validationErrors = errorStore.getValidationErrors(error)
+
+      // Show toast with appropriate message
+      if (Object.keys(validationErrors).length > 0) {
+        const firstError = Object.values(validationErrors)[0]?.[0]
+        toast.showError(firstError || message)
+      }
+      else {
+        toast.showError(message)
+      }
+      throw error
+    }
+  }
+
   return {
     users,
     loading,
     fetchUsersData,
     usersResponse,
     serverPagination,
+    createUser,
+    createUserMutation,
   }
 }

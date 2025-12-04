@@ -6,6 +6,7 @@ namespace App\Repositories;
 
 use App\Models\User;
 use App\Support\Cache\TeamCache;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 /**
@@ -59,6 +60,14 @@ class UserRepository
      */
     public function create(array $data): User
     {
+        // Handle profile photo upload if present
+        if (isset($data['profile_photo']) && $data['profile_photo'] instanceof UploadedFile) {
+            $photo = $data['profile_photo'];
+            $path = $photo->store('profile-photos', 'public');
+            $data['profile_photo_path'] = $path;
+            unset($data['profile_photo']);
+        }
+
         $user = User::query()->create($data);
         $user->load(['teams', 'currentTeam', 'ownedTeams']);
 

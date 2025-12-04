@@ -86,13 +86,21 @@ final class UserController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'profile_photo' => ['sometimes', 'image', 'max:2048'], // Max 2MB
         ]);
 
-        $user = $this->userRepository->create([
+        $userData = [
             'name' => $validated['name'],
             'email' => $validated['email'],
             'password' => $validated['password'],
-        ]);
+        ];
+
+        // Handle profile photo upload if present
+        if ($request->hasFile('profile_photo')) {
+            $userData['profile_photo'] = $request->file('profile_photo');
+        }
+
+        $user = $this->userRepository->create($userData);
 
         return ApiResponse::created(new UserResource($user));
     }
