@@ -7,11 +7,11 @@ namespace App\Http\Controllers\Api;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use App\Support\Cache\TeamCache;
 use Illuminate\Http\JsonResponse;
 use App\Http\Responses\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
+use App\Repositories\UserRepository;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\UserIndexRequest;
 use App\Support\Cache\CacheInvalidationService;
@@ -23,10 +23,13 @@ final class UserController extends Controller
     use InvalidatesCachedModels;
     use UsesCachedResponses;
 
+    public function __construct(
+        private readonly UserRepository $userRepository
+    ) {}
+
     /**
      * Display a paginated list of users.
      *
-     * @param UserIndexRequest $request
      * @authenticated
      */
     public function index(UserIndexRequest $request): JsonResponse
@@ -39,16 +42,8 @@ final class UserController extends Controller
         $user->refresh();
         $teamId = $user->getAttributeValue('current_team_id');
 
-        if ($teamId === null) {
-            // If no team is set, return all users with pagination
-            $paginator = User::query()->paginate($validated['per_page']);
-        } else {
-            // Team-scoped users with pagination
-            $paginator = User::query()
-                ->whereHas('teams', fn ($query) => $query->where('teams.id', $teamId))
-                ->orWhereHas('ownedTeams', fn ($query) => $query->where('id', $teamId))
-                ->paginate($validated['per_page']);
-        }
+        $perPage = (int) ($validated['per_page'] ?? 15);
+        $paginator = $this->userRepository->getPaginated($perPage, $teamId);
 
         // Transform items using UserResource
         $paginator->setCollection(
@@ -72,21 +67,12 @@ final class UserController extends Controller
         $currentUser = Auth::user();
 
         $currentUser->refresh();
+
         $teamId = $currentUser->getAttributeValue('current_team_id');
 
-        if ($teamId === null) {
-            $user->load(['teams', 'currentTeam', 'ownedTeams']);
+        $user = $this->userRepository->findById($user->id, $teamId);
 
-            return ApiResponse::success(new UserResource($user));
-        }
-
-        $cachedUser = TeamCache::remember(
-            $teamId,
-            "users:{$user->id}",
-            fn () => $user->load(['teams', 'currentTeam', 'ownedTeams'])
-        );
-
-        return ApiResponse::success(new UserResource($cachedUser));
+        return ApiResponse::success(new UserResource($user));
     }
 
     /**
@@ -102,13 +88,11 @@ final class UserController extends Controller
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
 
-        $user = User::query()->create([
+        $user = $this->userRepository->create([
             'name' => $validated['name'],
             'email' => $validated['email'],
             'password' => $validated['password'],
         ]);
-
-        $user->load(['teams', 'currentTeam', 'ownedTeams']);
 
         return ApiResponse::created(new UserResource($user));
     }
@@ -125,9 +109,7 @@ final class UserController extends Controller
             'email' => ['sometimes', 'required', 'string', 'email', 'max:255', 'unique:users,email,'.$user->id],
         ]);
 
-        $user->update($validated);
-        $user->refresh();
-        $user->load(['teams', 'currentTeam', 'ownedTeams']);
+        $user = $this->userRepository->update($user, $validated);
 
         // Invalidate user and team caches
         CacheInvalidationService::invalidateUser($user->id);
@@ -146,10 +128,12 @@ final class UserController extends Controller
     public function destroy(User $user): Response
     {
         $teamId = $user->current_team_id;
-        $user->delete();
+        $userId = $user->id;
+
+        $this->userRepository->delete($user);
 
         // Invalidate user and team caches
-        CacheInvalidationService::invalidateUser($user->id);
+        CacheInvalidationService::invalidateUser($userId);
         if ($teamId) {
             CacheInvalidationService::invalidateTeam($teamId);
         }
@@ -167,11 +151,7 @@ final class UserController extends Controller
         /** @var User $user */
         $user = Auth::user();
 
-        // Ensure current_team_id is loaded by refreshing the model
-        $user->refresh();
-
-        // Load teams and current team relationships
-        $user->load(['teams', 'currentTeam', 'ownedTeams']);
+        $user = $this->userRepository->getCurrentUser($user);
 
         return ApiResponse::success(new UserResource($user));
     }

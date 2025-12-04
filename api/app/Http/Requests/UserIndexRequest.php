@@ -5,8 +5,9 @@ declare(strict_types=1);
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Contracts\Validation\ValidationRule;
 
-class UserIndexRequest extends FormRequest
+final class UserIndexRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -19,7 +20,7 @@ class UserIndexRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * @return array<string, ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {
@@ -29,11 +30,11 @@ class UserIndexRequest extends FormRequest
         ];
     }
 
-    protected function prepareForValidation()
+    protected function prepareForValidation(): void
     {
         $this->merge([
-            'page' => $this->input('page', 1),
-            'per_page' => $this->input('per_page', 15),
+            'page' => $this->integer('page', 1),
+            'per_page' => $this->integer('per_page', 15),
         ]);
     }
 }
