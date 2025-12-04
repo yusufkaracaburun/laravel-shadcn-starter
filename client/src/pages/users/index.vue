@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { Loader } from 'lucide-vue-next'
-
 import Page from '@/components/global-layout/basic-page.vue'
 import { useUsers } from '@/composables/use-users'
 
@@ -9,7 +7,7 @@ import DataTable from './components/data-table.vue'
 import UserCreate from './components/user-create.vue'
 import UserInvite from './components/user-invite.vue'
 
-const { loading, fetchUsersData, usersResponse } = useUsers()
+const { loading, users, serverPagination } = useUsers()
 </script>
 
 <template>
@@ -17,12 +15,14 @@ const { loading, fetchUsersData, usersResponse } = useUsers()
     <template #actions>
       <UserInvite />
       <UserCreate />
-      <UiButton variant="outline" @click="fetchUsersData">
-        <Loader />Fetch Users
-      </UiButton>
     </template>
     <div class="overflow-x-auto">
-      <DataTable :loading="loading" :data="usersResponse?.data ?? []" :columns="columns" />
+      <DataTable
+        :loading="loading"
+        :data="users"
+        :columns="columns"
+        :server-pagination="serverPagination"
+      />
     </div>
   </Page>
 </template>

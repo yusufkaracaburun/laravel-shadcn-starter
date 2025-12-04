@@ -4,14 +4,11 @@ import type { Table } from '@tanstack/vue-table'
 import { X } from 'lucide-vue-next'
 import { computed } from 'vue'
 
-import DataTableFacetedFilter from '@/components/data-table/faceted-filter.vue'
+import type { User } from '@/services/users.service'
+
 import DataTableViewOptions from '@/components/data-table/view-options.vue'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-
-import type { User } from '../data/schema'
-
-import { callTypes, userTypes } from '../data/data'
 
 interface DataTableToolbarProps {
   table: Table<User>
@@ -26,22 +23,16 @@ const isFiltered = computed(() => props.table.getState().columnFilters.length > 
   <div class="flex items-center justify-between">
     <div class="flex items-center flex-1 space-x-2">
       <Input
-        placeholder="Filter users by username..."
-        :model-value="(table.getColumn('username')?.getFilterValue() as string) ?? ''"
+        placeholder="Filter users by name..."
+        :model-value="(table.getColumn('name')?.getFilterValue() as string) ?? ''"
         class="h-8 w-[150px] lg:w-[250px]"
-        @input="table.getColumn('username')?.setFilterValue($event.target.value)"
+        @input="table.getColumn('name')?.setFilterValue($event.target.value)"
       />
-      <DataTableFacetedFilter
-        v-if="table.getColumn('status')"
-        :column="table.getColumn('status')"
-        title="Status"
-        :options="callTypes"
-      />
-      <DataTableFacetedFilter
-        v-if="table.getColumn('role')"
-        :column="table.getColumn('role')"
-        title="Role"
-        :options="userTypes"
+      <Input
+        placeholder="Filter users by email..."
+        :model-value="(table.getColumn('email')?.getFilterValue() as string) ?? ''"
+        class="h-8 w-[150px] lg:w-[250px]"
+        @input="table.getColumn('email')?.setFilterValue($event.target.value)"
       />
 
       <Button

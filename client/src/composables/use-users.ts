@@ -1,23 +1,54 @@
-import { storeToRefs } from 'pinia'
-import { useRouter } from 'vue-router'
+import type { ServerPagination } from '@/components/data-table/types'
 
 import { useToast } from '@/composables/use-toast'
 import { useGetUsersQuery } from '@/services/users.service'
-import { useAuthStore } from '@/stores/auth.store'
 import { useErrorStore } from '@/stores/error.store'
 
 export function useUsers() {
-  const router = useRouter()
   const toast = useToast()
-  const authStore = useAuthStore()
   const errorStore = useErrorStore()
-  const { user, isAuthenticated } = storeToRefs(authStore)
 
-  const { data: usersResponse, isLoading, isFetching, refetch: fetchUsers } = useGetUsersQuery()
+  // Pagination state
+  const page = ref(1)
+  const pageSize = ref(15)
+
+  const { data: usersResponse, isLoading, isFetching, refetch: fetchUsers } = useGetUsersQuery(
+    page,
+    pageSize,
+  )
 
   // Computed refs for easy access
-  const users = computed(() => usersResponse.value?.data ?? [])
+  const users = computed(() => usersResponse.value?.data?.data ?? [])
   const loading = computed(() => isLoading.value || isFetching.value)
+
+  // Extract pagination metadata from Laravel's pagination structure
+  const pagination = computed(() => usersResponse.value?.data ?? {
+    current_page: 1,
+    last_page: 1,
+    per_page: 15,
+    total: 0,
+    from: null,
+    to: null,
+  })
+
+  // Pagination handlers
+  function onPageChange(newPage: number) {
+    page.value = newPage
+  }
+
+  function onPageSizeChange(newPageSize: number) {
+    pageSize.value = newPageSize
+    page.value = 1 // Reset to first page when page size changes
+  }
+
+  // Server pagination object for data-table
+  const serverPagination = computed<ServerPagination>(() => ({
+    page: pagination.value.current_page,
+    pageSize: pagination.value.per_page,
+    total: pagination.value.total,
+    onPageChange,
+    onPageSizeChange,
+  }))
 
   async function fetchUsersData() {
     try {
@@ -40,5 +71,6 @@ export function useUsers() {
     loading,
     fetchUsersData,
     usersResponse,
+    serverPagination,
   }
 }

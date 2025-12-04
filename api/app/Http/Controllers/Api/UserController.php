@@ -13,6 +13,7 @@ use App\Http\Responses\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\UserIndexRequest;
 use App\Support\Cache\CacheInvalidationService;
 use App\Http\Controllers\Concerns\UsesCachedResponses;
 use App\Http\Controllers\Concerns\InvalidatesCachedModels;
@@ -25,41 +26,39 @@ final class UserController extends Controller
     /**
      * Display a paginated list of users.
      *
-     *
+     * @param UserIndexRequest $request
      * @authenticated
      */
-    public function index(): JsonResponse
+    public function index(UserIndexRequest $request): JsonResponse
     {
-        /** @var User|null $user */
+        /** @var User $user */
         $user = Auth::user();
 
-        if (! $user) {
-            return ApiResponse::success([]);
-        }
+        $validated = $request->validated();
 
         $user->refresh();
         $teamId = $user->getAttributeValue('current_team_id');
 
         if ($teamId === null) {
-            // If no team is set, return all users
-            $users = $this->cachedResponse(
-                'api.user.index',
-                fn () => User::query()->get()
-            );
-
-            return ApiResponse::success(UserResource::collection($users));
-        }
-
-        $users = TeamCache::remember(
-            $teamId,
-            'users:list',
-            fn () => User::query()
+            // If no team is set, return all users with pagination
+            $paginator = User::query()->paginate($validated['per_page']);
+        } else {
+            // Team-scoped users with pagination
+            $paginator = User::query()
                 ->whereHas('teams', fn ($query) => $query->where('teams.id', $teamId))
                 ->orWhereHas('ownedTeams', fn ($query) => $query->where('id', $teamId))
-                ->get()
+                ->paginate($validated['per_page']);
+        }
+
+        // Transform items using UserResource
+        $paginator->setCollection(
+            UserResource::collection($paginator->items())->collection
         );
 
-        return ApiResponse::success(UserResource::collection($users));
+        // Get Laravel's pagination JSON structure
+        $paginationData = $paginator->toArray();
+
+        return ApiResponse::success($paginationData);
     }
 
     /**
@@ -69,12 +68,8 @@ final class UserController extends Controller
      */
     public function show(User $user): JsonResponse
     {
-        /** @var User|null $currentUser */
+        /** @var User $currentUser */
         $currentUser = Auth::user();
-
-        if (! $currentUser) {
-            return ApiResponse::success(new UserResource($user));
-        }
 
         $currentUser->refresh();
         $teamId = $currentUser->getAttributeValue('current_team_id');
@@ -171,10 +166,6 @@ final class UserController extends Controller
     {
         /** @var User $user */
         $user = Auth::user();
-
-        if (! $user) {
-            return ApiResponse::error('Unauthenticated.', Response::HTTP_UNAUTHORIZED);
-        }
 
         // Ensure current_team_id is loaded by refreshing the model
         $user->refresh();

@@ -2,22 +2,21 @@ import type { ColumnDef } from '@tanstack/vue-table'
 
 import { h } from 'vue'
 
+import type { User } from '@/services/users.service'
+
 import DataTableColumnHeader from '@/components/data-table/column-header.vue'
 import { SelectColumn } from '@/components/data-table/table-columns'
 import { Copy } from '@/components/sva-ui/copy'
 import Badge from '@/components/ui/badge/Badge.vue'
 
-import type { User } from '../data/schema'
-
-import { callTypes, userTypes } from '../data/data'
 import DataTableRowActions from './data-table-row-actions.vue'
 
 export const columns: ColumnDef<User>[] = [
   SelectColumn as ColumnDef<User>,
   {
-    accessorKey: 'username',
-    header: ({ column }) => h(DataTableColumnHeader<User>, { column, title: 'username' }),
-    cell: ({ row }) => h('div', {}, row.getValue('username')),
+    accessorKey: 'name',
+    header: ({ column }) => h(DataTableColumnHeader<User>, { column, title: 'Name' }),
+    cell: ({ row }) => h('div', {}, row.getValue('name') || '—'),
     enableSorting: false,
     enableHiding: false,
     enableResizing: true,
@@ -26,56 +25,43 @@ export const columns: ColumnDef<User>[] = [
   {
     accessorKey: 'email',
     header: ({ column }) => h(DataTableColumnHeader<User>, { column, title: 'Email' }),
-    cell: ({ row }) =>
-      h('div', {}, [
-        h('span', {}, row.getValue('email')),
-        h(Copy, { class: 'ml-2', size: 'sm', content: (row.getValue('email') || '') as string }),
-      ]),
-    enableSorting: false,
-    enableResizing: true,
-  },
-
-  {
-    accessorKey: 'phoneNumber',
-    header: ({ column }) => h(DataTableColumnHeader<User>, { column, title: 'PhoneNumber' }),
-    cell: ({ row }) => h('div', {}, row.getValue('phoneNumber')),
-    enableSorting: false,
-    enableResizing: true,
-  },
-
-  {
-    accessorKey: 'status',
-    header: ({ column }) => h(DataTableColumnHeader<User>, { column, title: 'Status' }),
-
     cell: ({ row }) => {
-      const callType = callTypes.find((callType) => callType.value === row.getValue('status'))
+      const email = row.getValue('email')
+      const emailStr = email && typeof email === 'string' ? email : ''
+      return h('div', {}, [
+        h('span', {}, emailStr || '—'),
+        h(Copy, { class: 'ml-2', size: 'sm', content: emailStr }),
+      ])
+    },
+    enableSorting: false,
+    enableResizing: true,
+  },
 
-      if (!callType) return null
-
+  {
+    accessorKey: 'email_verified_at',
+    header: ({ column }) => h(DataTableColumnHeader<User>, { column, title: 'Verified' }),
+    cell: ({ row }) => {
+      const verifiedAt = row.getValue('email_verified_at')
       return h(
         Badge,
-        { class: `${callType.style || ''}`, variant: 'outline' },
-        () => callType.label,
+        { variant: verifiedAt ? 'default' : 'secondary' },
+        () => verifiedAt ? 'Verified' : 'Unverified',
       )
     },
-    filterFn: (row, id, value) => {
-      return value.includes(row.getValue(id))
-    },
+    enableSorting: false,
     enableResizing: true,
   },
 
   {
-    accessorKey: 'role',
-    header: ({ column }) => h(DataTableColumnHeader<User>, { column, title: 'Role' }),
+    accessorKey: 'created_at',
+    header: ({ column }) => h(DataTableColumnHeader<User>, { column, title: 'Created At' }),
     cell: ({ row }) => {
-      const priority = userTypes.find((priority) => priority.value === row.getValue('role'))
-
-      if (!priority) return null
-
-      return h('div', { class: 'flex items-center' }, [
-        priority.icon && h(priority.icon, { class: 'mr-2 h-4 w-4 text-muted-foreground' }),
-        h('span', {}, priority.label),
-      ])
+      const createdAt = row.getValue('created_at')
+      if (!createdAt || typeof createdAt !== 'string') {
+        return h('div', {}, '—')
+      }
+      const date = new Date(createdAt)
+      return h('div', {}, date.toLocaleDateString())
     },
     enableSorting: false,
     enableResizing: true,
