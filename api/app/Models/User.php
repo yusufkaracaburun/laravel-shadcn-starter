@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use InvalidArgumentException;
 use Laravel\Sanctum\HasApiTokens;
+use Spatie\MediaLibrary\HasMedia;
 use Database\Factories\UserFactory;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Notifications\Notifiable;
+use Spatie\MediaLibrary\InteractsWithMedia;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Support\Cache\CacheInvalidationService;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -18,13 +19,14 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-final class User extends Authenticatable
+final class User extends Authenticatable implements HasMedia
 {
     /** @use HasFactory<UserFactory> */
     use HasApiTokens;
 
     use HasFactory;
     use HasRoles;
+    use InteractsWithMedia;
     use Notifiable;
     use SoftDeletes;
 
@@ -37,7 +39,6 @@ final class User extends Authenticatable
         'id',
         'created_at',
         'updated_at',
-        'profile_photo_path',
     ];
 
     /**
@@ -129,6 +130,26 @@ final class User extends Authenticatable
     public function getGuardName(): string
     {
         return 'sanctum';
+    }
+
+    /**
+     * Register media collections for the model.
+     */
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('profile-photos')
+            ->singleFile()
+            ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/gif', 'image/webp']);
+    }
+
+    /**
+     * Get the profile photo URL attribute.
+     */
+    protected function getProfilePhotoUrlAttribute(): ?string
+    {
+        $url = $this->getFirstMediaUrl('profile-photos');
+
+        return $url ?: null;
     }
 
     /**

@@ -1,10 +1,20 @@
 <script lang="ts" setup>
+import type { User } from '@/services/users.service'
+
 import UserForm from './user-form.vue'
+
+const props = defineProps<{
+  user?: User | null
+}>()
 
 defineEmits(['close'])
 
-const title = computed(() => 'Create New User')
-const description = computed(() => 'Add a new user to the system. Fill in the required information below.')
+const title = computed(() => (props.user ? 'Edit User' : 'Create New User'))
+const description = computed(() =>
+  props.user
+    ? `Update user information for ${props.user.name}. Leave password fields blank to keep the current password.`
+    : 'Add a new user to the system. Fill in the required information below.',
+)
 </script>
 
 <template>
@@ -17,5 +27,5 @@ const description = computed(() => 'Add a new user to the system. Fill in the re
     </UiDrawerDescription>
   </UiDrawerHeader>
 
-  <UserForm class="mt-4" @close="$emit('close')" />
+  <UserForm :user="user" class="mt-4" @close="$emit('close')" />
 </template>

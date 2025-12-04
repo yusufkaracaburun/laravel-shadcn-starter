@@ -16,7 +16,7 @@ export interface User {
   email: string
   email_verified_at: string | null
   current_team_id: number | null
-  profile_photo_path: string | null
+  profile_photo_url: string | null
   created_at: string
   updated_at: string
   teams?: Team[]
@@ -126,6 +126,18 @@ export interface CreateUserRequest {
 }
 
 /**
+ * Update user request interface matching backend validation
+ * @see api/app/Http/Controllers/Api/UserController.php::update()
+ */
+export interface UpdateUserRequest {
+  name?: string
+  email?: string
+  password?: string
+  password_confirmation?: string
+  profile_photo?: File | null
+}
+
+/**
  * Create a new user
  * @see api/app/Http/Controllers/Api/UserController.php::store()
  */
@@ -159,6 +171,47 @@ export function useCreateUserMutation() {
     onSuccess: () => {
       // Invalidate user list query to refresh the users list
       queryClient.invalidateQueries({ queryKey: ['userList'] })
+    },
+  })
+}
+
+/**
+ * Update an existing user
+ * @see api/app/Http/Controllers/Api/UserController.php::update()
+ */
+export function useUpdateUserMutation() {
+  const { axiosInstance } = useAxios()
+  const queryClient = useQueryClient()
+
+  return useMutation<IResponse<User>, AxiosError, { userId: number; data: UpdateUserRequest }>({
+    mutationFn: async ({ userId, data }): Promise<IResponse<User>> => {
+      // If profile photo is present, use FormData for multipart/form-data
+      if (data.profile_photo) {
+        const formData = new FormData()
+        if (data.name) formData.append('name', data.name)
+        if (data.email) formData.append('email', data.email)
+        if (data.password) formData.append('password', data.password)
+        if (data.password_confirmation) formData.append('password_confirmation', data.password_confirmation)
+        formData.append('profile_photo', data.profile_photo)
+        // Use POST with _method=PUT for file uploads (Laravel supports this)
+        formData.append('_method', 'PUT')
+
+        const response = await axiosInstance.post(`/api/user/${userId}`, formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        })
+        return response.data
+      }
+
+      // Otherwise, use JSON with PUT method
+      const response = await axiosInstance.put(`/api/user/${userId}`, data)
+      return response.data
+    },
+    onSuccess: () => {
+      // Invalidate user list query and current user query to refresh the users list
+      queryClient.invalidateQueries({ queryKey: ['userList'] })
+      queryClient.invalidateQueries({ queryKey: ['user', 'current'] })
     },
   })
 }

@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Api;
 
 use App\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Http\JsonResponse;
 use App\Http\Responses\ApiResponse;
@@ -13,7 +12,9 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
 use App\Repositories\UserRepository;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UserIndexRequest;
+use App\Http\Requests\UpdateUserRequest;
 use App\Support\Cache\CacheInvalidationService;
 use App\Http\Controllers\Concerns\UsesCachedResponses;
 use App\Http\Controllers\Concerns\InvalidatesCachedModels;
@@ -80,27 +81,15 @@ final class UserController extends Controller
      *
      * @authenticated
      */
-    public function store(Request $request): JsonResponse
+    public function store(StoreUserRequest $request): JsonResponse
     {
-        $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
-            'profile_photo' => ['sometimes', 'image', 'max:2048'], // Max 2MB
-        ]);
-
-        $userData = [
-            'name' => $validated['name'],
-            'email' => $validated['email'],
-            'password' => $validated['password'],
-        ];
+        $user = $this->userRepository->create($request->validated());
 
         // Handle profile photo upload if present
         if ($request->hasFile('profile_photo')) {
-            $userData['profile_photo'] = $request->file('profile_photo');
+            $user->addMediaFromRequest('profile_photo')
+                ->toMediaCollection('profile-photos');
         }
-
-        $user = $this->userRepository->create($userData);
 
         return ApiResponse::created(new UserResource($user));
     }
@@ -110,14 +99,24 @@ final class UserController extends Controller
      *
      * @authenticated
      */
-    public function update(Request $request, User $user): JsonResponse
+    public function update(UpdateUserRequest $request, User $user): JsonResponse
     {
-        $validated = $request->validate([
-            'name' => ['sometimes', 'required', 'string', 'max:255'],
-            'email' => ['sometimes', 'required', 'string', 'email', 'max:255', 'unique:users,email,'.$user->id],
-        ]);
+        $validated = $request->validated();
+
+        // Remove profile_photo from validated data before updating user
+        // Media Library handles file uploads separately
+        unset($validated['profile_photo']);
 
         $user = $this->userRepository->update($user, $validated);
+
+        // Handle profile photo upload if present
+        if ($request->hasFile('profile_photo')) {
+            // Clear existing profile photo (singleFile collection)
+            $user->clearMediaCollection('profile-photos');
+            // Add new profile photo
+            $user->addMediaFromRequest('profile_photo')
+                ->toMediaCollection('profile-photos');
+        }
 
         // Invalidate user and team caches
         CacheInvalidationService::invalidateUser($user->id);

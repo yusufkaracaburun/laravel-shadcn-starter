@@ -5,6 +5,7 @@ declare(strict_types=1);
 use Tests\TestCase;
 use App\Models\User;
 use Laravel\Sanctum\Sanctum;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Testing\Fluent\AssertableJson;
 
 test('unauthenticated users cannot create users', function (): void {
@@ -86,4 +87,66 @@ test('user creation requires unique email', function (): void {
 
     $response->assertUnprocessable()
         ->assertJsonValidationErrors(['email']);
+});
+
+test('user can be created with profile photo', function (): void {
+    /** @var TestCase $this */
+    $user = User::factory()->create();
+
+    Sanctum::actingAs($user, ['*']);
+
+    $file = UploadedFile::fake()->image('avatar.jpg', 100, 100);
+
+    $response = $this->post('/api/user', [
+        'name' => 'Test User',
+        'email' => 'test@example.com',
+        'password' => 'password123',
+        'password_confirmation' => 'password123',
+        'profile_photo' => $file,
+    ]);
+
+    $response->assertCreated()
+        ->assertJson(
+            fn (AssertableJson $json): AssertableJson => $json->where('success', true)
+                ->where('code', 201)
+                ->has('data', fn (AssertableJson $json): AssertableJson => $json->where('name', 'Test User')
+                    ->where('email', 'test@example.com')
+                    ->has('profile_photo_url')
+                    ->etc())
+                ->etc()
+        );
+
+    $createdUser = User::query()->where('email', 'test@example.com')->first();
+    expect($createdUser)->not->toBeNull();
+    expect($createdUser->getFirstMedia('profile-photos'))->not->toBeNull();
+    expect($createdUser->profile_photo_url)->not->toBeNull();
+});
+
+test('user can be created without profile photo', function (): void {
+    /** @var TestCase $this */
+    $user = User::factory()->create();
+
+    Sanctum::actingAs($user, ['*']);
+
+    $response = $this->postJson('/api/user', [
+        'name' => 'Test User',
+        'email' => 'test@example.com',
+        'password' => 'password123',
+        'password_confirmation' => 'password123',
+    ]);
+
+    $response->assertCreated()
+        ->assertJson(
+            fn (AssertableJson $json): AssertableJson => $json->where('success', true)
+                ->where('code', 201)
+                ->has('data', fn (AssertableJson $json): AssertableJson => $json->where('name', 'Test User')
+                    ->where('email', 'test@example.com')
+                    ->where('profile_photo_url', null)
+                    ->etc())
+                ->etc()
+        );
+
+    $createdUser = User::query()->where('email', 'test@example.com')->first();
+    expect($createdUser)->not->toBeNull();
+    expect($createdUser->getFirstMedia('profile-photos'))->toBeNull();
 });

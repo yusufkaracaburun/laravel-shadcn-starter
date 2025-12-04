@@ -31,7 +31,7 @@ final class UserResource extends JsonResource
             'current_team_id' => $this->current_team_id,
             'created_at' => $this->created_at?->toIso8601String(),
             'updated_at' => $this->updated_at?->toIso8601String(),
-            'profile_photo_path' => $this->profile_photo_path,
+            'profile_photo_url' => $this->profile_photo_url,
             'teams' => TeamResource::collection($this->when(
                 $this->relationLoaded('teams') || $this->relationLoaded('ownedTeams'),
                 fn () => $this->getAllTeams()

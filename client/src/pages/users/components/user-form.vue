@@ -8,7 +8,11 @@ import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/comp
 import { Input } from '@/components/ui/input'
 import { useToast } from '@/composables/use-toast'
 import { useErrorStore } from '@/stores/error.store'
-import { useCreateUserMutation } from '@/services/users.service'
+import { useCreateUserMutation, useUpdateUserMutation, type User } from '@/services/users.service'
+
+const props = defineProps<{
+  user?: User | null
+}>()
 
 const emits = defineEmits<{
   (e: 'close'): void
@@ -17,34 +21,75 @@ const emits = defineEmits<{
 const toast = useToast()
 const errorStore = useErrorStore()
 const createUserMutation = useCreateUserMutation()
+const updateUserMutation = useUpdateUserMutation()
 
-const formSchema = toTypedSchema(
-  z
-    .object({
-      name: z.string().min(1, 'Name is required.'),
-      email: z.string().email('Please enter a valid email address.').min(1, 'Email is required.'),
-      password: z.string().min(8, 'Password must be at least 8 characters.'),
-      password_confirmation: z.string().min(1, 'Please confirm your password.'),
-      profile_photo: z.instanceof(File).optional().nullable(),
-    })
-    .refine((data) => data.password === data.password_confirmation, {
+const isEditMode = computed(() => !!props.user)
+
+// Dynamic schema based on edit mode
+const formSchema = computed(() => {
+  const baseSchema = z.object({
+    name: z.string().min(1, 'Name is required.'),
+    email: z.string().email('Please enter a valid email address.').min(1, 'Email is required.'),
+    profile_photo: z.instanceof(File).optional().nullable(),
+  })
+
+  if (isEditMode.value) {
+    // In edit mode, password is optional
+    return baseSchema.extend({
+      password: z.string().min(8, 'Password must be at least 8 characters.').optional(),
+      password_confirmation: z.string().min(1, 'Please confirm your password.').optional(),
+    }).refine((data) => {
+      // Only validate password match if password is provided
+      if (data.password || data.password_confirmation) {
+        return data.password === data.password_confirmation
+      }
+      return true
+    }, {
       message: 'Passwords do not match.',
       path: ['password_confirmation'],
-    }),
-)
+    })
+  }
+
+  // In create mode, password is required
+  return baseSchema.extend({
+    password: z.string().min(8, 'Password must be at least 8 characters.'),
+    password_confirmation: z.string().min(1, 'Please confirm your password.'),
+  }).refine((data) => data.password === data.password_confirmation, {
+    message: 'Passwords do not match.',
+    path: ['password_confirmation'],
+  })
+})
+
+const getInitialValues = () => ({
+  name: props.user?.name || '',
+  email: props.user?.email || '',
+  password: '',
+  password_confirmation: '',
+  profile_photo: null,
+})
 
 const { handleSubmit, setFieldError, resetForm, setValue } = useForm({
-  validationSchema: formSchema,
-  initialValues: {
-    name: '',
-    email: '',
-    password: '',
-    password_confirmation: '',
-    profile_photo: null,
-  },
+  validationSchema: computed(() => toTypedSchema(formSchema.value)),
+  initialValues: getInitialValues(),
 })
 
 const profilePhotoPreview = ref<string | null>(null)
+const existingProfilePhotoUrl = computed(() => props.user?.profile_photo_url || null)
+
+// Watch for user changes to update form values and preview
+watch(() => props.user, (user) => {
+  if (user) {
+    setValue('name', user.name)
+    setValue('email', user.email)
+    if (user.profile_photo_url) {
+      profilePhotoPreview.value = user.profile_photo_url
+    }
+  }
+  else {
+    resetForm()
+    profilePhotoPreview.value = null
+  }
+}, { immediate: true })
 
 function handlePhotoChange(event: Event) {
   const target = event.target as HTMLInputElement
@@ -79,22 +124,52 @@ function handlePhotoChange(event: Event) {
 
 const onSubmit = handleSubmit(async (values) => {
   try {
-    await createUserMutation.mutateAsync({
-      name: values.name,
-      email: values.email,
-      password: values.password,
-      password_confirmation: values.password_confirmation,
-      profile_photo: values.profile_photo || null,
-    })
+    if (isEditMode.value && props.user) {
+      // Update existing user
+      const updateData: Record<string, any> = {
+        name: values.name,
+        email: values.email,
+      }
 
-    toast.showSuccess('User created successfully!')
+      // Only include password if provided
+      if (values.password) {
+        updateData.password = values.password
+        updateData.password_confirmation = values.password_confirmation
+      }
+
+      // Only include profile_photo if a new file was selected
+      if (values.profile_photo) {
+        updateData.profile_photo = values.profile_photo
+      }
+
+      await updateUserMutation.mutateAsync({
+        userId: props.user.id,
+        data: updateData,
+      })
+
+      toast.showSuccess('User updated successfully!')
+    }
+    else {
+      // Create new user
+      await createUserMutation.mutateAsync({
+        name: values.name,
+        email: values.email,
+        password: values.password,
+        password_confirmation: values.password_confirmation,
+        profile_photo: values.profile_photo || null,
+      })
+
+      toast.showSuccess('User created successfully!')
+    }
+
     profilePhotoPreview.value = null
     resetForm()
     emits('close')
   }
   catch (error: any) {
     // Store error with context
-    errorStore.setError(error, { context: 'createUser' })
+    const context = isEditMode.value ? 'updateUser' : 'createUser'
+    errorStore.setError(error, { context })
 
     // Handle backend validation errors (422)
     if (error.response?.status === 422) {
@@ -150,9 +225,12 @@ const onSubmit = handleSubmit(async (values) => {
       <FormItem>
         <FormLabel>Password</FormLabel>
         <FormControl>
-          <Input type="password" v-bind="componentField" placeholder="********" />
+          <Input type="password" v-bind="componentField" :placeholder="isEditMode ? 'Leave blank to keep current password' : '********'" />
         </FormControl>
         <FormMessage />
+        <p v-if="isEditMode" class="text-xs text-muted-foreground mt-1">
+          Leave blank to keep the current password
+        </p>
       </FormItem>
     </FormField>
 
@@ -160,7 +238,7 @@ const onSubmit = handleSubmit(async (values) => {
       <FormItem>
         <FormLabel>Confirm Password</FormLabel>
         <FormControl>
-          <Input type="password" v-bind="componentField" placeholder="********" />
+          <Input type="password" v-bind="componentField" :placeholder="isEditMode ? 'Leave blank to keep current password' : '********'" />
         </FormControl>
         <FormMessage />
       </FormItem>
@@ -179,9 +257,9 @@ const onSubmit = handleSubmit(async (values) => {
             <p class="text-xs text-muted-foreground">
               Upload a profile photo (max 2MB). Accepted formats: JPG, PNG, GIF, etc.
             </p>
-            <div v-if="profilePhotoPreview" class="mt-2">
+            <div v-if="profilePhotoPreview || existingProfilePhotoUrl" class="mt-2">
               <img
-                :src="profilePhotoPreview"
+                :src="profilePhotoPreview || existingProfilePhotoUrl"
                 alt="Profile photo preview"
                 class="h-24 w-24 rounded-full object-cover border"
               />
@@ -192,9 +270,9 @@ const onSubmit = handleSubmit(async (values) => {
       </FormItem>
     </FormField>
 
-    <Button type="submit" class="w-full" :disabled="createUserMutation.isPending.value">
-      <UiSpinner v-if="createUserMutation.isPending.value" class="mr-2" />
-      Create User
+    <Button type="submit" class="w-full" :disabled="isEditMode ? updateUserMutation.isPending.value : createUserMutation.isPending.value">
+      <UiSpinner v-if="isEditMode ? updateUserMutation.isPending.value : createUserMutation.isPending.value" class="mr-2" />
+      {{ isEditMode ? 'Update User' : 'Create User' }}
     </Button>
   </form>
 </template>

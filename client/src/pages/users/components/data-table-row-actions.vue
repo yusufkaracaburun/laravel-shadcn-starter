@@ -28,7 +28,7 @@ function handleSelect(command: TCommand) {
 </script>
 
 <template>
-  <UiDialog v-model:open="isOpen">
+  <UiDrawer v-model:open="isOpen" direction="right">
     <UiDropdownMenu>
       <UiDropdownMenuTrigger as-child>
         <UiButton variant="ghost" class="flex h-8 w-8 p-0 data-[state=open]:bg-muted">
@@ -37,11 +37,11 @@ function handleSelect(command: TCommand) {
         </UiButton>
       </UiDropdownMenuTrigger>
       <UiDropdownMenuContent align="end" class="w-[160px]">
-        <UiDialogTrigger as-child>
+        <UiDrawerTrigger as-child>
           <UiDropdownMenuItem @click.stop="handleSelect('edit')">
             Edit
           </UiDropdownMenuItem>
-        </UiDialogTrigger>
+        </UiDrawerTrigger>
 
         <UiDialogTrigger as-child>
           <UiDropdownMenuItem @click.stop="handleSelect('delete')">
@@ -52,8 +52,10 @@ function handleSelect(command: TCommand) {
       </UiDropdownMenuContent>
     </UiDropdownMenu>
 
-    <UiDialogContent class="max-h-[500px] overflow-y-auto">
-      <component :is="showComponent" :user="user" @close="isOpen = false" />
-    </UiDialogContent>
-  </UiDialog>
+    <UiDrawerContent class="px-4 pb-4">
+      <div class="overflow-y-auto max-h-[calc(100vh-4rem)]">
+        <component :is="showComponent" :user="user" @close="isOpen = false" />
+      </div>
+    </UiDrawerContent>
+  </UiDrawer>
 </template>
