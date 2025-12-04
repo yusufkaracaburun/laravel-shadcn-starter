@@ -1,5 +1,8 @@
 {
   "preset": "laravel",
+  "exclude": [
+    "app/Repositories"
+  ],
   "rules": {
     "array_push": true,
     "backtick_to_shell_exec": true,

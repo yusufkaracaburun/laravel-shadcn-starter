@@ -8,7 +8,12 @@ use App\Models\User;
 use App\Support\Cache\TeamCache;
 use Illuminate\Pagination\LengthAwarePaginator;
 
-final class UserRepository
+/**
+ * User Repository
+ *
+ * Note: This class is not marked as final to allow mocking in unit tests.
+ */
+class UserRepository
 {
     /**
      * Get paginated users, optionally filtered by team.
