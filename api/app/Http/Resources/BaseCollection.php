@@ -14,22 +14,22 @@ abstract class BaseCollection extends ResourceCollection
      */
     protected string $resourceClass;
 
-    public function toArray($request): array
+    final public function toArray($request): array
     {
         return [
             'data' => ($this->resourceClass)::collection($this->collection),
 
             'current_page' => $this->currentPage(),
-            'last_page'     => $this->lastPage(),
-            'per_page'      => $this->perPage(),
-            'total'         => $this->total(),
-            'from'          => $this->firstItem(),
-            'to'            => $this->lastItem(),
-            'path'          => $this->path(),
+            'last_page' => $this->lastPage(),
+            'per_page' => $this->perPage(),
+            'total' => $this->total(),
+            'from' => $this->firstItem(),
+            'to' => $this->lastItem(),
+            'path' => $this->path(),
             'first_page_url' => $this->url(1),
-            'last_page_url'  => $this->url($this->lastPage()),
-            'next_page_url'  => $this->nextPageUrl(),
-            'prev_page_url'  => $this->previousPageUrl(),
+            'last_page_url' => $this->url($this->lastPage()),
+            'next_page_url' => $this->nextPageUrl(),
+            'prev_page_url' => $this->previousPageUrl(),
         ];
     }
 }

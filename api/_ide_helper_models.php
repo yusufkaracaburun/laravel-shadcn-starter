@@ -130,6 +130,9 @@ namespace App\Models{
  * @property int|null $current_team_id
  * @property string|null $profile_photo_path
  * @property-read \App\Models\Team|null $currentTeam
+ * @property-read string|null $profile_photo_url
+ * @property-read \Spatie\MediaLibrary\MediaCollections\Models\Collections\MediaCollection<int, \Spatie\MediaLibrary\MediaCollections\Models\Media> $media
+ * @property-read int|null $media_count
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection<int, \Illuminate\Notifications\DatabaseNotification> $notifications
  * @property-read int|null $notifications_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\OauthConnection> $oauthConnections
@@ -167,6 +170,6 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User withoutRole($roles, $guard = null)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User withoutTrashed()
  */
-	final class User extends \Eloquent {}
+	final class User extends \Eloquent implements \Spatie\MediaLibrary\HasMedia {}
 }
 

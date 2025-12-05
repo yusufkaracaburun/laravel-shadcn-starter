@@ -24,11 +24,10 @@ final class UserResource extends BaseResource
 
             'profile_photo_url' => $this->profile_photo_url,
 
-            'roles' => $this->whenLoaded('roles', fn () =>
-                $this->roles->map(fn ($role) => [
-                    'id' => $role->id,
-                    'name' => $role->name,
-                ])->values()
+            'roles' => $this->whenLoaded('roles', fn () => $this->roles->map(fn ($role): array => [
+                'id' => $role->id,
+                'name' => $role->name,
+            ])->values()
             ),
 
             'teams' => $this->when(
@@ -36,8 +35,7 @@ final class UserResource extends BaseResource
                 fn () => TeamResource::collection($this->getAllTeams())
             ),
 
-            'currentTeam' => $this->whenLoaded('currentTeam', fn () =>
-                new TeamResource($this->currentTeam)
+            'currentTeam' => $this->whenLoaded('currentTeam', fn (): \App\Http\Resources\TeamResource => new TeamResource($this->currentTeam)
             ),
         ];
     }
