@@ -14,18 +14,12 @@ final class ApiResponse
      *
      * @param  array<string, mixed>  $extra
      */
-    public static function success(
-        mixed $data = null,
-        array $extra = [],
-        string $message = 'Success',
-        int $code = Response::HTTP_OK
-    ): JsonResponse {
+    public static function success($data = null, string $message = 'Success', int $code = 200)
+    {
         return response()->json([
-            'success' => true,
-            'code' => $code,
+            'status' => 'success',
             'message' => $message,
             'data' => $data,
-            'extra' => $extra,
         ], $code);
     }
 
@@ -59,7 +53,7 @@ final class ApiResponse
         array $extra = [],
         string $message = 'Created successfully'
     ): JsonResponse {
-        return self::success($data, $extra, $message, Response::HTTP_CREATED);
+        return self::success($data, $extra, $message);
     }
 
     /**

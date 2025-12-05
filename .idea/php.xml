@@ -731,11 +731,29 @@
       <path value="$PROJECT_DIR$/.tmp/modern-vue-starter-kit-workos/vendor/sebastian/diff" />
       <path value="$PROJECT_DIR$/.tmp/modern-vue-starter-kit-workos/vendor/pestphp/pest-plugin-laravel" />
       <path value="$PROJECT_DIR$/.tmp/modern-vue-starter-kit-workos/vendor/pestphp/pest-plugin-arch" />
+      <path value="$PROJECT_DIR$/api/vendor/spatie/image-optimizer" />
+      <path value="$PROJECT_DIR$/api/vendor/spatie/laravel-medialibrary" />
+      <path value="$PROJECT_DIR$/api/vendor/spatie/temporary-directory" />
+      <path value="$PROJECT_DIR$/api/vendor/spatie/image" />
+      <path value="$PROJECT_DIR$/api/vendor/spatie/laravel-package-tools" />
+      <path value="$PROJECT_DIR$/api/vendor/maennchen/zipstream-php" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.3" />
+  <component name="PhpStan">
+    <PhpStan_settings>
+      <PhpStanConfiguration tool_path="$PROJECT_DIR$/api/vendor/bin/phpstan" />
+    </PhpStan_settings>
+  </component>
   <component name="PhpStanOptionsConfiguration">
+    <option name="config" value="$PROJECT_DIR$/api/phpstan.neon" />
+    <option name="memoryLimit" value="1024M" />
     <option name="transferred" value="true" />
+  </component>
+  <component name="PhpUnit">
+    <phpunit_settings>
+      <PhpUnitSettings configuration_file_path="$PROJECT_DIR$/api/phpunit.xml" custom_loader_path="$PROJECT_DIR$/api/vendor/autoload.php" paratest_path="$PROJECT_DIR$/api/vendor/bin/paratest_for_phpstorm" use_configuration_file="true" />
+    </phpunit_settings>
   </component>
   <component name="PsalmOptionsConfiguration">
     <option name="transferred" value="true" />

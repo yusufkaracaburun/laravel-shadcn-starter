@@ -626,6 +626,7 @@
       <excludeFolder url="file://$MODULE_DIR$/api/vendor/league/oauth1-client" />
       <excludeFolder url="file://$MODULE_DIR$/api/vendor/league/uri" />
       <excludeFolder url="file://$MODULE_DIR$/api/vendor/league/uri-interfaces" />
+      <excludeFolder url="file://$MODULE_DIR$/api/vendor/maennchen/zipstream-php" />
       <excludeFolder url="file://$MODULE_DIR$/api/vendor/mockery/mockery" />
       <excludeFolder url="file://$MODULE_DIR$/api/vendor/monolog/monolog" />
       <excludeFolder url="file://$MODULE_DIR$/api/vendor/myclabs/deep-copy" />
@@ -699,7 +700,12 @@
       <excludeFolder url="file://$MODULE_DIR$/api/vendor/sebastian/recursion-context" />
       <excludeFolder url="file://$MODULE_DIR$/api/vendor/sebastian/type" />
       <excludeFolder url="file://$MODULE_DIR$/api/vendor/sebastian/version" />
+      <excludeFolder url="file://$MODULE_DIR$/api/vendor/spatie/image" />
+      <excludeFolder url="file://$MODULE_DIR$/api/vendor/spatie/image-optimizer" />
+      <excludeFolder url="file://$MODULE_DIR$/api/vendor/spatie/laravel-medialibrary" />
+      <excludeFolder url="file://$MODULE_DIR$/api/vendor/spatie/laravel-package-tools" />
       <excludeFolder url="file://$MODULE_DIR$/api/vendor/spatie/laravel-permission" />
+      <excludeFolder url="file://$MODULE_DIR$/api/vendor/spatie/temporary-directory" />
       <excludeFolder url="file://$MODULE_DIR$/api/vendor/staabm/side-effects-detector" />
       <excludeFolder url="file://$MODULE_DIR$/api/vendor/symfony/clock" />
       <excludeFolder url="file://$MODULE_DIR$/api/vendor/symfony/console" />

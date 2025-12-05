@@ -13,6 +13,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
 use App\Repositories\UserRepository;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Resources\UserCollection;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UserIndexRequest;
 use App\Http\Requests\UpdateUserRequest;
@@ -34,7 +35,7 @@ final class UserController extends Controller
      *
      * @authenticated
      */
-    public function index(UserIndexRequest $request): JsonResponse
+    public function index(UserIndexRequest $request)
     {
         /** @var User $user */
         $user = Auth::user();
@@ -45,17 +46,9 @@ final class UserController extends Controller
         $teamId = $user->getAttributeValue('current_team_id');
 
         $perPage = (int) ($validated['per_page'] ?? 15);
-        $paginator = $this->userRepository->getPaginated($perPage, $teamId);
+        $paginated = $this->userRepository->getPaginated($perPage, $teamId);
 
-        // Transform items using UserResource
-        $paginator->setCollection(
-            UserResource::collection($paginator->items())->collection
-        );
-
-        // Get Laravel's pagination JSON structure
-        $paginationData = $paginator->toArray();
-
-        return ApiResponse::success($paginationData);
+        return ApiResponse::success(new UserCollection($paginated));
     }
 
     /**
@@ -87,6 +80,7 @@ final class UserController extends Controller
         /** @var User $currentUser */
         $currentUser = Auth::user();
         $currentUser->refresh();
+
         $teamId = $currentUser->getAttributeValue('current_team_id');
 
         $user = $this->userRepository->create($request->validated(), $teamId);
@@ -110,6 +104,7 @@ final class UserController extends Controller
         /** @var User $currentUser */
         $currentUser = Auth::user();
         $currentUser->refresh();
+
         $teamId = $currentUser->getAttributeValue('current_team_id');
 
         $validated = $request->validated();
@@ -185,7 +180,7 @@ final class UserController extends Controller
             ->where('guard_name', 'web')
             ->orderBy('name')
             ->get(['id', 'name'])
-            ->map(fn ($role) => [
+            ->map(fn ($role): array => [
                 'id' => $role->id,
                 'name' => $role->name,
             ]);
