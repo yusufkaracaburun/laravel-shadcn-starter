@@ -18,6 +18,9 @@ Route::name('api.users.')->group(function (): void {
     // Current authenticated user
     Route::get('/user/current', [UserController::class, 'current'])->name('current');
 
+    // Get available roles
+    Route::get('/user/roles', [UserController::class, 'roles'])->name('roles');
+
     // User resource routes
     Route::apiResource('user', UserController::class);
 })->middleware('auth:sanctum');

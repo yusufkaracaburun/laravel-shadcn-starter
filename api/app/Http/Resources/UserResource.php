@@ -32,6 +32,13 @@ final class UserResource extends JsonResource
             'created_at' => $this->created_at?->toIso8601String(),
             'updated_at' => $this->updated_at?->toIso8601String(),
             'profile_photo_url' => $this->profile_photo_url,
+            'roles' => $this->when(
+                $this->relationLoaded('roles'),
+                fn () => $this->roles->map(fn ($role) => [
+                    'id' => $role->id,
+                    'name' => $role->name,
+                ])->values()
+            ),
             'teams' => TeamResource::collection($this->when(
                 $this->relationLoaded('teams') || $this->relationLoaded('ownedTeams'),
                 fn () => $this->getAllTeams()

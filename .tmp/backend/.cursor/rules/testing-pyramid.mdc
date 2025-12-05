@@ -1,0 +1,346 @@
+---
+alwaysApply: true
+---
+<backend-testing-pyramid-guidelines>
+=== foundation rules ===
+
+# Backend Testing Pyramid Guidelines
+
+This backend follows the Testing Pyramid strategy using Pest (PHP testing framework). The pyramid emphasizes writing many fast unit tests at the base and fewer feature tests that test HTTP endpoints and database interactions.
+
+## Testing Pyramid Structure
+
+```
+        /\
+       /  \     Feature Tests (30%)
+      /    \    - Test HTTP endpoints
+     /------\   - Test database interactions
+    /        \  - Test authentication/authorization
+   /----------\ Unit Tests (70%)
+  /            \ - Fast, isolated tests
+ /--------------\ - Test individual classes/methods
+```
+
+## Test Types
+
+### Unit Tests (70%)
+**Location**: `tests/Unit/`
+
+Unit tests are fast, isolated tests that verify individual components in isolation.
+
+**When to write unit tests:**
+- Testing individual class methods
+- Testing business logic and calculations
+- Testing model methods and relationships
+- Testing validation rules
+- Testing utility functions and helpers
+- Testing formatters and transformers
+
+**Characteristics:**
+- Fast execution (< 100ms per test)
+- No database access
+- No HTTP layer
+- Use mocks for dependencies
+- Test in complete isolation
+
+**Example:**
+<code-snippet name="Unit Test Example" lang="php">
+use App\Models\User;
+
+it('can calculate full name', function () {
+    $user = new User();
+    $user->first_name = 'John';
+    $user->last_name = 'Doe';
+    
+    expect($user->full_name)->toBe('John Doe');
+});
+</code-snippet>
+
+### Feature Tests (30%)
+**Location**: `tests/Feature/`
+
+Feature tests verify HTTP endpoints, database interactions, and authentication flows.
+
+**When to write feature tests:**
+- Testing API endpoints and routes
+- Testing database queries and relationships
+- Testing authentication and authorization
+- Testing middleware behavior
+- Testing form requests and validation
+- Testing service layer interactions
+
+**Characteristics:**
+- Medium speed (100ms - 1s per test)
+- Uses database (with RefreshDatabase)
+- Tests HTTP layer
+- Uses factories for test data
+- Tests component interactions
+
+**Example:**
+<code-snippet name="Feature Test Example" lang="php">
+use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+
+uses(RefreshDatabase::class);
+
+test('can login with valid credentials', function () {
+    $user = User::factory()->create([
+        'email' => 'test@example.com',
+        'password' => Hash::make('password'),
+    ]);
+
+    $this->withHeader('Origin', 'https://demo:5173')
+        ->get('/sanctum/csrf-cookie');
+
+    $response = $this->withHeader('Origin', 'https://demo:5173')
+        ->postJson('/api/login', [
+            'email' => 'test@example.com',
+            'password' => 'password',
+        ]);
+
+    $response->assertStatus(200);
+    $response->assertJson([
+        'email' => 'test@example.com',
+    ]);
+});
+</code-snippet>
+
+## Test Organization
+
+### Directory Structure
+```
+tests/
+├── Unit/              # Unit tests
+│   └── ExampleTest.php
+├── Feature/           # Feature tests
+│   └── SanctumSpaAuthenticationTest.php
+├── Pest.php           # Pest configuration
+└── TestCase.php       # Base test case
+```
+
+### Naming Conventions
+- Test files: `{Feature}Test.php` (e.g., `UserTest.php`)
+- Test functions: Use descriptive names with `test()` or `it()`
+- Use `test()` for feature tests, `it()` for unit tests
+
+## Running Tests
+
+### Run All Tests
+```bash
+php artisan test
+```
+
+### Run Specific Test File
+```bash
+php artisan test tests/Feature/ExampleTest.php
+```
+
+### Run with Filter
+```bash
+php artisan test --filter=testName
+```
+
+### Run Only Unit Tests
+```bash
+php artisan test tests/Unit
+```
+
+### Run Only Feature Tests
+```bash
+php artisan test tests/Feature
+```
+
+## Test Data Management
+
+### Factories
+Use factories to create test data:
+
+<code-snippet name="Factory Usage" lang="php">
+$user = User::factory()->create([
+    'email' => 'test@example.com',
+]);
+
+// With relationships
+$user = User::factory()
+    ->hasPosts(3)
+    ->create();
+</code-snippet>
+
+### RefreshDatabase Trait
+Use `RefreshDatabase` in feature tests to ensure a clean database state:
+
+<code-snippet name="RefreshDatabase Usage" lang="php">
+use Illuminate\Foundation\Testing\RefreshDatabase;
+
+uses(RefreshDatabase::class);
+</code-snippet>
+
+## Pest-Specific Guidelines
+
+### Test Structure
+- Use `test()` or `it()` for test definitions
+- Use `expect()` for assertions
+- Use `uses()` for traits and configuration
+
+### Assertions
+Use Pest's expressive assertions:
+
+<code-snippet name="Pest Assertions" lang="php">
+// Status codes
+$response->assertSuccessful();
+$response->assertNotFound();
+$response->assertForbidden();
+
+// JSON responses
+$response->assertJson(['key' => 'value']);
+$response->assertJsonStructure(['id', 'name', 'email']);
+
+// Validation errors
+$response->assertJsonValidationErrors(['email']);
+
+// Authentication
+$this->assertAuthenticated();
+$this->assertGuest();
+</code-snippet>
+
+### Datasets
+Use datasets for testing multiple scenarios:
+
+<code-snippet name="Pest Dataset" lang="php">
+it('validates email format', function (string $email, bool $expected) {
+    $response = $this->postJson('/api/register', [
+        'email' => $email,
+    ]);
+    
+    if ($expected) {
+        $response->assertSuccessful();
+    } else {
+        $response->assertJsonValidationErrors(['email']);
+    }
+})->with([
+    'valid email' => ['test@example.com', true],
+    'invalid email' => ['not-an-email', false],
+]);
+</code-snippet>
+
+### Mocking
+Use Pest's mocking capabilities:
+
+<code-snippet name="Pest Mocking" lang="php">
+use function Pest\Laravel\mock;
+
+it('sends notification on user creation', function () {
+    Notification::fake();
+    
+    $user = User::factory()->create();
+    
+    Notification::assertSent(WelcomeNotification::class);
+});
+</code-snippet>
+
+## Test Best Practices
+
+### 1. Test All Paths
+- Happy paths (successful scenarios)
+- Failure paths (error scenarios)
+- Edge cases (boundary conditions)
+
+### 2. Keep Tests Focused
+- One assertion per test when possible
+- Test one behavior at a time
+- Clear, descriptive test names
+
+### 3. Use Arrange-Act-Assert Pattern
+<code-snippet name="AAA Pattern" lang="php">
+test('can create user', function () {
+    // Arrange
+    $userData = [
+        'name' => 'John Doe',
+        'email' => 'john@example.com',
+        'password' => 'password123',
+    ];
+    
+    // Act
+    $response = $this->postJson('/api/users', $userData);
+    
+    // Assert
+    $response->assertStatus(201);
+    $this->assertDatabaseHas('users', [
+        'email' => 'john@example.com',
+    ]);
+});
+</code-snippet>
+
+### 4. Test Behavior, Not Implementation
+- Test what the code does, not how
+- Focus on outcomes and contracts
+- Avoid testing internal implementation
+
+### 5. Keep Tests Fast
+- Use mocks for slow operations
+- Avoid unnecessary database operations
+- Use factories efficiently
+
+### 6. Maintain Test Independence
+- Each test should be independent
+- No shared state between tests
+- Tests should run in any order
+
+## Common Patterns
+
+### Testing Authentication
+<code-snippet name="Authentication Test" lang="php">
+test('requires authentication', function () {
+    $response = $this->getJson('/api/user');
+    
+    $response->assertUnauthorized();
+});
+
+test('can access protected route when authenticated', function () {
+    $user = User::factory()->create();
+    
+    $this->actingAs($user)
+        ->getJson('/api/user')
+        ->assertSuccessful();
+});
+</code-snippet>
+
+### Testing Validation
+<code-snippet name="Validation Test" lang="php">
+test('validates required fields', function () {
+    $response = $this->postJson('/api/users', []);
+    
+    $response->assertStatus(422);
+    $response->assertJsonValidationErrors(['name', 'email']);
+});
+</code-snippet>
+
+### Testing Relationships
+<code-snippet name="Relationship Test" lang="php">
+test('user has posts', function () {
+    $user = User::factory()
+        ->hasPosts(3)
+        ->create();
+    
+    expect($user->posts)->toHaveCount(3);
+});
+</code-snippet>
+
+## Test Coverage Goals
+
+- **Unit Tests**: 70% of all tests
+  - Cover all business logic
+  - Cover all utility functions
+  - Cover model methods
+  
+- **Feature Tests**: 30% of all tests
+  - Cover all API endpoints
+  - Cover authentication flows
+  - Cover critical business workflows
+
+## References
+
+- Root testing pyramid: `.cursor/rules/testing-pyramid.mdc`
+- Pest documentation: Use `search-docs` tool for Pest-specific guidance
+- Laravel testing: Use `search-docs` tool for Laravel testing guidance
+</backend-testing-pyramid-guidelines>

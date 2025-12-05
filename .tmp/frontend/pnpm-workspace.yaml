@@ -1,0 +1,4 @@
+onlyBuiltDependencies:
+  - maplibre-gl
+  - simple-git-hooks
+  - vue-demi

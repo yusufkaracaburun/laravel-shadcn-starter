@@ -10,6 +10,11 @@ import type { IResponse } from './types/response.type'
  * User interface matching backend UserResource exactly
  * @see api/app/Http/Resources/UserResource.php
  */
+export interface Role {
+  id: number
+  name: string
+}
+
 export interface User {
   id: number
   name: string
@@ -19,6 +24,7 @@ export interface User {
   profile_photo_url: string | null
   created_at: string
   updated_at: string
+  roles?: Role[]
   teams?: Team[]
   currentTeam?: Team | null
   [key: string]: unknown
@@ -81,6 +87,23 @@ export function useGetCurrentUserQuery() {
 }
 
 /**
+ * Get available roles
+ * @see api/app/Http/Controllers/Api/UserController.php::roles()
+ */
+export function useGetRolesQuery() {
+  const { axiosInstance } = useAxios()
+
+  return useQuery<IResponse<Role[]>, AxiosError>({
+    queryKey: ['roles'],
+    queryFn: async (): Promise<IResponse<Role[]>> => {
+      const response = await axiosInstance.get('/api/user/roles')
+      return response.data
+    },
+    staleTime: 10 * 60 * 1000, // Consider data fresh for 10 minutes
+  })
+}
+
+/**
  * List all users with pagination
  * @see api/app/Http/Controllers/Api/UserController.php::index()
  * @param page - Page number (default: 1) - can be a ref or number
@@ -123,6 +146,7 @@ export interface CreateUserRequest {
   password: string
   password_confirmation: string
   profile_photo?: File | null
+  role?: string | null
 }
 
 /**
@@ -135,6 +159,7 @@ export interface UpdateUserRequest {
   password?: string
   password_confirmation?: string
   profile_photo?: File | null
+  role?: string | null
 }
 
 /**
@@ -154,6 +179,7 @@ export function useCreateUserMutation() {
         formData.append('email', data.email)
         formData.append('password', data.password)
         formData.append('password_confirmation', data.password_confirmation)
+        if (data.role) formData.append('role', data.role)
         formData.append('profile_photo', data.profile_photo)
 
         const response = await axiosInstance.post('/api/user', formData, {
@@ -192,6 +218,7 @@ export function useUpdateUserMutation() {
         if (data.email) formData.append('email', data.email)
         if (data.password) formData.append('password', data.password)
         if (data.password_confirmation) formData.append('password_confirmation', data.password_confirmation)
+        if (data.role) formData.append('role', data.role)
         formData.append('profile_photo', data.profile_photo)
         // Use POST with _method=PUT for file uploads (Laravel supports this)
         formData.append('_method', 'PUT')

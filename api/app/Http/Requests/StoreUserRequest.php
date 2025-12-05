@@ -29,6 +29,7 @@ final class StoreUserRequest extends FormRequest
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
             'profile_photo' => ['sometimes', 'image', 'max:2048'], // Max 2MB
+            'role' => ['sometimes', 'nullable', 'string', 'exists:roles,name'],
         ];
     }
 }

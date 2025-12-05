@@ -8,8 +8,9 @@ import type { User } from '@/services/users.service'
 import { Button } from '@/components/ui/button'
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { useToast } from '@/composables/use-toast'
-import { useCreateUserMutation, useUpdateUserMutation } from '@/services/users.service'
+import { useCreateUserMutation, useGetRolesQuery, useUpdateUserMutation } from '@/services/users.service'
 import { useErrorStore } from '@/stores/error.store'
 
 const props = defineProps<{
@@ -25,6 +26,10 @@ const errorStore = useErrorStore()
 const createUserMutation = useCreateUserMutation()
 const updateUserMutation = useUpdateUserMutation()
 
+// Fetch available roles
+const { data: rolesResponse } = useGetRolesQuery()
+const roles = computed(() => rolesResponse.value?.data ?? [])
+
 const isEditMode = computed(() => !!props.user)
 
 // Dynamic schema based on edit mode
@@ -33,6 +38,7 @@ const formSchema = computed(() => {
     name: z.string().min(1, 'Name is required.'),
     email: z.string().email('Please enter a valid email address.').min(1, 'Email is required.'),
     profile_photo: z.instanceof(File).optional().nullable(),
+    role: z.string().optional().nullable(),
   })
 
   if (isEditMode.value) {
@@ -69,6 +75,7 @@ function getInitialValues() {
     password: '',
     password_confirmation: '',
     profile_photo: null,
+    role: props.user?.roles?.[0]?.name || null,
   }
 }
 
@@ -93,6 +100,7 @@ watch(() => props.user, (user) => {
         password: '',
         password_confirmation: '',
         profile_photo: null,
+        role: user.roles?.[0]?.name || null,
       },
     })
     if (user.profile_photo_url) {
@@ -158,6 +166,11 @@ const onSubmit = handleSubmit(async (values) => {
         updateData.profile_photo = values.profile_photo
       }
 
+      // Include role if provided (can be empty string to clear role)
+      if (values.role !== null && values.role !== undefined) {
+        updateData.role = values.role || null
+      }
+
       await updateUserMutation.mutateAsync({
         userId: props.user.id,
         data: updateData,
@@ -173,6 +186,7 @@ const onSubmit = handleSubmit(async (values) => {
         password: values.password || '',
         password_confirmation: values.password_confirmation || '',
         profile_photo: values.profile_photo || null,
+        role: values.role || null,
       })
 
       toast.showSuccess('User created successfully!')
@@ -194,7 +208,7 @@ const onSubmit = handleSubmit(async (values) => {
       Object.keys(backendErrors).forEach((field) => {
         const fieldErrors = backendErrors[field]
         if (Array.isArray(fieldErrors) && fieldErrors.length > 0) {
-          setFieldError(field as 'name' | 'email' | 'password' | 'password_confirmation' | 'profile_photo', fieldErrors[0])
+          setFieldError(field as 'name' | 'email' | 'password' | 'password_confirmation' | 'profile_photo' | 'role', fieldErrors[0])
         }
       })
     }
@@ -257,6 +271,32 @@ const onSubmit = handleSubmit(async (values) => {
           <Input type="password" v-bind="componentField" :placeholder="isEditMode ? 'Leave blank to keep current password' : '********'" />
         </FormControl>
         <FormMessage />
+      </FormItem>
+    </FormField>
+
+    <FormField v-slot="{ componentField }" name="role">
+      <FormItem>
+        <FormLabel>Role</FormLabel>
+        <FormControl>
+          <Select v-bind="componentField">
+            <SelectTrigger>
+              <SelectValue placeholder="Select a role (optional)" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem
+                v-for="role in roles"
+                :key="role.id"
+                :value="role.name"
+              >
+                {{ role.name }}
+              </SelectItem>
+            </SelectContent>
+          </Select>
+        </FormControl>
+        <FormMessage />
+        <p class="text-xs text-muted-foreground mt-1">
+          Optional: Assign a role to this user
+        </p>
       </FormItem>
     </FormField>
 

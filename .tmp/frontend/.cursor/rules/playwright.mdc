@@ -1,0 +1,670 @@
+---
+description: Playwright testing rules for both API and E2E tests - enforces proper test structure, locator strategies, and best practices
+globs:
+  - "tests/api/**/*.spec.ts"
+  - "tests/api/**/*.test.ts"
+  - "tests/e2e/**/*.e2e.spec.ts"
+  - "tests/e2e/**/*.e2e.test.ts"
+alwaysApply: true
+---
+<playwright-guidelines>
+=== foundation rules ===
+
+# Playwright Testing Rules
+
+This rule applies to both API tests (`@api`) and E2E tests (`@e2e`) written with Playwright. For test structure, naming conventions, and pyramid principles, see `frontend/.cursor/rules/testing-pyramid.mdc`.
+
+## Test Types
+
+### API Tests (`@api`)
+- **Location**: `tests/api/scenarios/**/*.spec.ts`
+- **Purpose**: Test API endpoints directly without UI interactions
+- **Tool**: Use `APIRequestContext` (via `request` fixture)
+- **Speed**: Fast, no browser overhead
+
+### E2E Tests (`@e2e`)
+- **Location**: `tests/e2e/**/*.e2e.spec.ts` or `tests/e2e/**/*.e2e.test.ts`
+- **Purpose**: Test complete user workflows through the browser
+- **Tool**: Use `Page` object (via `page` fixture)
+- **Speed**: Slower, full browser automation
+
+## Locator Strategy (MANDATORY for E2E Tests)
+
+When writing E2E tests with Playwright, always follow this locator selection strategy for stability, readability, and maintainability:
+
+1. **Prefer `getByTestId()`**  
+   - Always use `data-testid` attributes and Playwright's `getByTestId()` (or equivalent) as your first choice for interacting with elements.
+   - Add `data-testid` to UI components for critical actions, input fields, and assertions.
+   - Example:
+     ```typescript
+     await page.getByTestId('login-form_login_button').click()
+     ```
+2. **Only if `data-testid` is not available:**  
+   - Use [Role selectors](https://playwright.dev/docs/locators#role-selector) (e.g. `getByRole()`), or accessible labels with `getByLabel`, but prefer descriptive and unique roles/labels.
+   - Example:
+     ```typescript
+     await page.getByRole('button', { name: 'Submit' }).click()
+     ```
+3. **Avoid CSS selectors for user-visible elements**  
+   - These are brittle and tie tests to implementation details. Only use for hidden/internal elements as a last resort.
+4. **Do NOT use XPath**  
+   - XPath selectors are discouraged and generally disallowed.
+5. **Maintain accessibility**  
+   - Ensure that the use of `data-testid` does not replace proper accessible labeling of UI elements.
+
+Revisit and add `data-testid` to components as needed to allow for stable Playwright tests.
+
+## APIRequestContext Usage (MANDATORY for API Tests)
+
+**ALWAYS** use Playwright's `APIRequestContext` for API testing:
+
+1. **Access via test fixtures**
+   - Use the `request` fixture provided by Playwright test context
+   - Example:
+     ```typescript
+     test('should get user data', async ({ request }) => {
+       const response = await request.get('/api/user')
+     })
+     ```
+
+2. **Initialize APIRequestContext when needed**
+   - For helper functions, accept `APIRequestContext` as a parameter
+   - Example:
+     ```typescript
+     import type { APIRequestContext } from '@playwright/test'
+     
+     export async function getUser(request: APIRequestContext, userId: string) {
+       return await request.get(`/api/users/${userId}`)
+     }
+     ```
+
+3. **Use environment variables for API base URL**
+   - Always use `process.env.VITE_API_BASE_URL` or `process.env.PLAYWRIGHT_TEST_API_URL` or provide a default
+   - Example:
+     ```typescript
+     const apiURL = process.env.VITE_API_BASE_URL || process.env.PLAYWRIGHT_TEST_API_URL || 'http://127.0.0.1:8000'
+     const response = await request.get(`${apiURL}/api/user`)
+     ```
+
+**MUST NOT**:
+- Use browser `page` object for API calls (use `request` fixture instead)
+- Mix UI testing with API testing in the same test (separate concerns)
+- Mock the HTTP layer (API tests should use real HTTP requests)
+
+## Test Structure (REQUIRED)
+
+### API Test Structure
+
+All API tests MUST follow functional design patterns with this structure:
+
+```typescript
+import { expect, test } from '@playwright/test'
+import type { APIRequestContext } from '@playwright/test'
+
+// Pure functions for test data preparation
+const createTestData = (base: { key: string }): { key: string } => ({
+  ...base,
+  key: `${base.key}-${Date.now()}`,
+})
+
+// Pure function for header creation
+const createHeaders = (): Record<string, string> => ({
+  'Content-Type': 'application/json',
+  'Accept': 'application/json',
+})
+
+// Curried API function
+const apiPost = (request: APIRequestContext) => 
+  async (endpoint: string, data: unknown) => {
+    return request.post(endpoint, {
+      data,
+      headers: createHeaders(),
+    })
+  }
+
+test.describe('API Feature Name', () => {
+  test('should perform specific API action', async ({ request }) => {
+    // Arrange - Pure data transformation
+    const testData = createTestData({ key: 'value' })
+    const post = apiPost(request)
+    
+    // Act - Side effect (API call)
+    const response = await post('/api/endpoint', testData)
+    
+    // Assert - Pure validation
+    expect(response.status()).toBe(200)
+    const body = await response.json()
+    expect(body).toHaveProperty('key')
+  })
+})
+```
+
+### E2E Test Structure
+
+All E2E tests MUST follow this structure:
+
+```typescript
+import { expect, test } from '@playwright/test'
+
+test.describe('Feature Name', () => {
+  test('should perform user action', async ({ page }) => {
+    // Arrange - Navigate and setup
+    await page.goto('/login')
+    
+    // Act - User interactions
+    await page.getByTestId('login-form_email_input').fill('user@example.com')
+    await page.getByTestId('login-form_password_input').fill('password123')
+    await page.getByTestId('login-form_login_button').click()
+    
+    // Assert - Verify outcomes
+    await expect(page.getByTestId('dashboard_page')).toBeVisible()
+  })
+})
+```
+
+### Test Organization
+
+- Group related tests in `test.describe` blocks
+- Use descriptive test names that explain what is being tested
+- Follow AAA pattern (Arrange, Act, Assert)
+- Keep tests focused on one scenario per test
+- Use tags to categorize tests: `test('description', { tag: ['@api', '@auth'] }, async () => {})`
+
+## Functional Design Patterns (MANDATORY for API Tests)
+
+API tests MUST follow functional programming principles:
+
+### Core Principles
+
+1. **Pure Functions**: API helper functions should be pure when possible (same input = same output, no side effects)
+2. **Function Composition**: Build complex operations by composing smaller functions
+3. **Immutability**: Don't mutate request/response data; create new objects instead
+4. **Currying**: Use curried functions for reusable, configurable API operations
+5. **Higher-Order Functions**: Create functions that return functions for flexible test builders
+6. **Separation of Concerns**: Separate pure data transformations from side-effect operations (API calls)
+
+### Functional Helper Function Structure
+
+```typescript
+import type { APIRequestContext } from '@playwright/test'
+
+const apiURL = process.env.VITE_API_BASE_URL || process.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000'
+
+export interface UserData {
+  name: string
+  email: string
+  password: string
+}
+
+// Pure function: Creates headers without side effects
+const createHeaders = (customHeaders?: Record<string, string>): Record<string, string> => ({
+  'Content-Type': 'application/json',
+  'Accept': 'application/json',
+  ...customHeaders,
+})
+
+// Pure function: Builds request URL
+const buildUrl = (endpoint: string): string => `${apiURL}${endpoint}`
+
+// Curried function: Returns a function that makes POST requests
+const createPostRequest = (request: APIRequestContext) => 
+  async <T>(endpoint: string, data: T, headers?: Record<string, string>) => {
+    return request.post(buildUrl(endpoint), {
+      data,
+      headers: createHeaders(headers),
+    })
+  }
+
+// Composed function: Uses composition to create user
+export const createUser = (request: APIRequestContext) => {
+  const post = createPostRequest(request)
+  return (data: UserData, headers?: Record<string, string>) => 
+    post('/api/users', data, headers)
+}
+```
+
+### Function Composition Pattern
+
+Build complex API operations by composing smaller, reusable functions:
+
+```typescript
+// Pure transformation functions
+const addTimestamp = (email: string): string => `${email.split('@')[0]}-${Date.now()}@${email.split('@')[1]}`
+const createUniqueUser = (user: UserData): UserData => ({
+  ...user,
+  email: addTimestamp(user.email),
+})
+
+// Compose functions for test data preparation
+const prepareTestUser = (baseUser: UserData): UserData => createUniqueUser(baseUser)
+
+// Usage in test
+test('should create user', async ({ request }) => {
+  const baseUser = { name: 'Test', email: 'test@example.com', password: 'pass123' }
+  const testUser = prepareTestUser(baseUser) // Pure transformation
+  const response = await createUser(request)(testUser) // Side effect
+  // ...
+})
+```
+
+### Currying Pattern for Reusable API Functions
+
+Use currying to create configurable, reusable API functions:
+
+```typescript
+// Curried function: Returns a function configured for a specific endpoint
+const apiRequest = (request: APIRequestContext) => 
+  (method: 'get' | 'post' | 'put' | 'delete') =>
+    async (endpoint: string, options?: { data?: unknown; headers?: Record<string, string> }) => {
+      const url = buildUrl(endpoint)
+      const headers = createHeaders(options?.headers)
+      
+      switch (method) {
+        case 'get':
+          return request.get(url, { headers })
+        case 'post':
+          return request.post(url, { data: options?.data, headers })
+        case 'put':
+          return request.put(url, { data: options?.data, headers })
+        case 'delete':
+          return request.delete(url, { headers })
+      }
+    }
+
+// Usage: Create specialized functions
+const getUser = (request: APIRequestContext) => apiRequest(request)('get')
+const postUser = (request: APIRequestContext) => apiRequest(request)('post')
+
+// In test
+test('should get user', async ({ request }) => {
+  const get = getUser(request)
+  const response = await get('/api/users/123')
+})
+```
+
+### Helper Function Best Practices
+
+**MUST**:
+- Use pure functions for data transformations (no side effects)
+- Accept `APIRequestContext` as the first parameter (for currying)
+- Use TypeScript interfaces for request/response data
+- Return the full response object (not just JSON)
+- Compose complex operations from smaller functions
+- Keep functions small and focused (single responsibility)
+
+**SHOULD**:
+- Use currying for reusable, configurable functions
+- Create higher-order functions for test builders
+- Separate pure transformations from side-effect operations
+- Use function composition to build complex flows
+- Implement safe execution patterns for error handling
+
+**MUST NOT**:
+- Mutate input parameters (maintain immutability)
+- Mix side effects with pure transformations
+- Create functions with multiple responsibilities
+- Use imperative loops when functional alternatives exist (prefer map, filter, reduce)
+
+## Assertions
+
+### API Test Assertions
+
+Always validate API responses comprehensively:
+
+#### Status Code Assertions
+
+```typescript
+// Success cases
+expect(response.status()).toBe(200)  // OK
+expect(response.status()).toBe(201)  // Created
+expect(response.status()).toBe(204)  // No Content
+
+// Error cases
+expect(response.status()).toBe(400)  // Bad Request
+expect(response.status()).toBe(401)  // Unauthorized
+expect(response.status()).toBe(404)  // Not Found
+expect(response.status()).toBe(422)  // Unprocessable Entity
+expect(response.status()).toBe(500)  // Internal Server Error
+```
+
+#### Response Body Assertions
+
+```typescript
+// Parse JSON response
+const body = await response.json()
+
+// Assert structure
+expect(body).toHaveProperty('id')
+expect(body).toHaveProperty('name')
+expect(body.email).toBe('user@example.com')
+
+// Assert array responses
+expect(Array.isArray(body)).toBe(true)
+expect(body).toHaveLength(5)
+
+// Assert nested objects
+expect(body.user).toHaveProperty('id')
+expect(body.user.email).toBe('user@example.com')
+```
+
+#### Header Assertions
+
+```typescript
+// Content-Type
+expect(response.headers()['content-type']).toContain('application/json')
+
+// Custom headers
+expect(response.headers()['x-custom-header']).toBe('expected-value')
+```
+
+### E2E Test Assertions
+
+Use Playwright's built-in assertions for E2E tests:
+
+```typescript
+// Visibility assertions
+await expect(page.getByTestId('dashboard_page')).toBeVisible()
+await expect(page.getByTestId('error_message')).toBeHidden()
+
+// Text content assertions
+await expect(page.getByTestId('welcome_message')).toHaveText('Welcome!')
+await expect(page.getByTestId('user_name')).toContainText('John Doe')
+
+// State assertions
+await expect(page.getByTestId('submit_button')).toBeEnabled()
+await expect(page.getByTestId('loading_spinner')).toBeDisabled()
+
+// URL assertions
+await expect(page).toHaveURL('/dashboard')
+await expect(page).toHaveURL(/\/dashboard\/\d+/)
+```
+
+## Data Management (REQUIRED)
+
+### API Tests: Storing Response Data
+
+Store and reuse data from API responses within a single test. Each test MUST be independent and not depend on data from other tests.
+
+```typescript
+test('should create, retrieve, and delete user in single test', async ({ request }) => {
+  // Create user
+  const createResponse = await request.post('/api/users', {
+    data: { name: 'Test User', email: `test-${Date.now()}@example.com` },
+  })
+  
+  expect(createResponse.status()).toBe(201)
+  const user = await createResponse.json()
+  const userId = user.id  // Store for use within this test
+  
+  // Use stored ID in same test
+  const getResponse = await request.get(`/api/users/${userId}`)
+  expect(getResponse.status()).toBe(200)
+  
+  // Cleanup within same test
+  await request.delete(`/api/users/${userId}`)
+})
+```
+
+### E2E Tests: Page State Management
+
+For E2E tests, use page state and navigation:
+
+```typescript
+test('should navigate through workflow', async ({ page }) => {
+  // Navigate to initial page
+  await page.goto('/login')
+  
+  // Perform actions that change state
+  await page.getByTestId('login-form_email_input').fill('user@example.com')
+  await page.getByTestId('login-form_password_input').fill('password123')
+  await page.getByTestId('login-form_login_button').click()
+  
+  // Wait for navigation
+  await page.waitForURL('/dashboard')
+  
+  // Verify new state
+  await expect(page.getByTestId('dashboard_page')).toBeVisible()
+})
+```
+
+**IMPORTANT**: 
+- Each test MUST be independent and runnable in any order
+- Do NOT store data in module-level variables for use across tests
+- Use test fixtures or setup hooks for shared configuration, not shared test data
+- Always use unique test data (timestamps, UUIDs) to avoid conflicts
+
+## Error Handling (REQUIRED)
+
+### API Tests: Testing Error Responses
+
+Always test error scenarios:
+
+```typescript
+test('should return 400 for invalid data', async ({ request }) => {
+  const response = await request.post('/api/users', {
+    data: { invalid: 'data' },
+  })
+  
+  expect(response.status()).toBe(400)
+  const body = await response.json()
+  expect(body).toHaveProperty('errors')
+  expect(body.errors).toHaveProperty('email') // Validation error
+})
+
+test('should return 401 for unauthenticated request', async ({ request }) => {
+  const response = await request.get('/api/protected')
+  expect(response.status()).toBe(401)
+})
+
+test('should return 404 for non-existent resource', async ({ request }) => {
+  const response = await request.get('/api/users/99999')
+  expect(response.status()).toBe(404)
+})
+```
+
+### E2E Tests: Testing Error States
+
+Test error states in the UI:
+
+```typescript
+test('should display validation errors', async ({ page }) => {
+  await page.goto('/login')
+  
+  // Submit form without filling required fields
+  await page.getByTestId('login-form_login_button').click()
+  
+  // Verify error messages appear
+  await expect(page.getByTestId('login-form_email_error')).toBeVisible()
+  await expect(page.getByTestId('login-form_email_error')).toHaveText('Email is required')
+})
+```
+
+## Authentication and Authorization
+
+### API Tests: CSRF Token Handling (Laravel/Sanctum)
+
+```typescript
+// Get CSRF token and cookies
+async function getCsrfTokenAndCookies(request: APIRequestContext) {
+  const csrfResponse = await request.get(`${apiURL}/sanctum/csrf-cookie`)
+  const cookies = csrfResponse.headers()['set-cookie']
+  // Extract XSRF-TOKEN from cookies
+  // Return token and cookie string
+}
+
+// Use in authenticated requests
+test('should make authenticated request', async ({ request }) => {
+  const { token, cookies } = await getCsrfTokenAndCookies(request)
+  
+  const response = await request.post('/api/endpoint', {
+    headers: {
+      'X-XSRF-TOKEN': token,
+      'Cookie': cookies,
+      'Content-Type': 'application/json',
+    },
+    data: { key: 'value' },
+  })
+  
+  expect(response.status()).toBe(200)
+})
+```
+
+### E2E Tests: Authentication Flow
+
+```typescript
+test('should login and access protected page', async ({ page }) => {
+  // Navigate to login
+  await page.goto('/login')
+  
+  // Fill login form
+  await page.getByTestId('login-form_email_input').fill('user@example.com')
+  await page.getByTestId('login-form_password_input').fill('password123')
+  await page.getByTestId('login-form_login_button').click()
+  
+  // Wait for navigation to protected page
+  await page.waitForURL('/dashboard')
+  
+  // Verify access to protected content
+  await expect(page.getByTestId('dashboard_page')).toBeVisible()
+})
+```
+
+## Test Independence (MANDATORY)
+
+All tests MUST be independent and runnable in any order:
+
+**MUST**:
+- Clean up test data after each test
+- Use unique test data (e.g., timestamps, UUIDs)
+- Not depend on other tests' execution
+- Be idempotent (can run multiple times safely)
+
+**Example for API Tests**:
+```typescript
+test('should create user with unique email', async ({ request }) => {
+  const uniqueEmail = `test-${Date.now()}@example.com`
+  
+  const response = await request.post('/api/users', {
+    data: {
+      name: 'Test User',
+      email: uniqueEmail,
+      password: 'password123',
+    },
+  })
+  
+  expect(response.status()).toBe(201)
+  
+  // Cleanup: Delete the created user
+  const body = await response.json()
+  await request.delete(`/api/users/${body.id}`)
+})
+```
+
+**Example for E2E Tests**:
+```typescript
+test('should create user through UI', async ({ page }) => {
+  const uniqueEmail = `test-${Date.now()}@example.com`
+  
+  await page.goto('/register')
+  await page.getByTestId('register-form_email_input').fill(uniqueEmail)
+  await page.getByTestId('register-form_password_input').fill('password123')
+  await page.getByTestId('register-form_submit_button').click()
+  
+  await expect(page).toHaveURL('/dashboard')
+  await expect(page.getByTestId('welcome_message')).toBeVisible()
+})
+```
+
+## Playwright Fixtures
+
+Use Playwright fixtures for shared setup and teardown:
+
+### API Test Fixtures
+
+```typescript
+// fixtures/api.ts
+import { test as base } from '@playwright/test'
+import type { APIRequestContext } from '@playwright/test'
+import { AuthClient } from '../features/auth/auth-client'
+
+export const test = base.extend<{
+  authClient: AuthClient
+  authenticatedAuthClient: AuthClient
+}>({
+  authClient: async ({ request }, use) => {
+    const authClient = new AuthClient(request)
+    await use(authClient)
+  },
+  
+  authenticatedAuthClient: async ({ request }, use) => {
+    const authClient = new AuthClient(request)
+    // Auto-login before test
+    await authClient.login('test@example.com', 'password123')
+    await use(authClient)
+  },
+})
+```
+
+### E2E Test Fixtures
+
+```typescript
+// fixtures/e2e.ts
+import { test as base } from '@playwright/test'
+
+export const test = base.extend<{
+  authenticatedPage: typeof base['page']
+}>({
+  authenticatedPage: async ({ page }, use) => {
+    // Auto-login before test
+    await page.goto('/login')
+    await page.getByTestId('login-form_email_input').fill('test@example.com')
+    await page.getByTestId('login-form_password_input').fill('password123')
+    await page.getByTestId('login-form_login_button').click()
+    await page.waitForURL('/dashboard')
+    
+    await use(page)
+  },
+})
+```
+
+## Integration with Testing Pyramid
+
+### API Tests
+- **Location**: `tests/api/scenarios/**/*.spec.ts`
+- **Purpose**: Test API endpoints directly without UI
+- **Scope**: Integration-level tests (15-20% of total tests)
+- **Speed**: Should complete in < 30 seconds total
+
+**MUST NOT**:
+- Test business logic details (use unit tests)
+- Test complete user workflows (use E2E tests)
+- Mock the HTTP layer (use real HTTP requests)
+
+### E2E Tests
+- **Location**: `tests/e2e/**/*.e2e.spec.ts` or `tests/e2e/**/*.e2e.test.ts`
+- **Purpose**: Test complete user workflows through the browser
+- **Scope**: E2E-level tests (10% of total tests)
+- **Speed**: Slower, full browser automation
+
+**MUST NOT**:
+- Test individual API endpoints (use API tests)
+- Test business logic (use unit tests)
+- Duplicate API test coverage
+
+## References
+
+### Playwright Documentation
+- [Playwright API Testing](https://playwright.dev/docs/test-api-testing)
+- [Playwright Locators](https://playwright.dev/docs/locators)
+- [Playwright Fixtures](https://playwright.dev/docs/test-fixtures)
+
+### Testing Guidelines
+- Testing pyramid: `frontend/.cursor/rules/testing-pyramid.mdc`
+- Vue component rules: `frontend/.cursor/rules/vue.mdc`
+- API test organization: `frontend/tests/api/README.md`
+
+### Functional Design Patterns
+- [A beginner's guide to starting API testing with Playwright JS](https://medium.com/singapore-gds/a-beginners-guide-to-starting-api-testing-with-playwright-js-363232c9bce6)
+- [Do You Need Design Patterns in Functional Programming?](https://dev.to/patferraggi/do-you-need-design-patterns-in-functional-programming-370c)
+- [Functional Programming Patterns: A Cookbook](https://www.freecodecamp.org/news/functional-programming-patterns-cookbook-3a0dfe2d7e0a/)
+</playwright-guidelines>

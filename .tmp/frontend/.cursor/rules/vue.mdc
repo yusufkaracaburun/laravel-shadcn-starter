@@ -1,0 +1,461 @@
+---
+description: Vue rules for Vue components - enforces proper component structure, naming conventions, TypeScript usage, and best practices
+globs:
+  - "src/components/**/*.vue"
+  - "src/pages/**/*.vue"
+  - "src/layouts/**/*.vue"
+alwaysApply: true
+---
+<vue-guidelines>
+=== foundation rules ===
+
+# Vue.js Component Rules
+
+This frontend application uses Vue 3 with TypeScript, Composition API, shadcn-vue components, Pinia for state management, and Tailwind CSS. All Vue components must follow these guidelines.
+
+## Component Structure (MANDATORY)
+
+All Vue components MUST follow this structure:
+
+```vue
+<template>
+  <div>
+    <h1>Hello, World!</h1>
+  </div>
+</template>
+
+<script setup lang="ts">
+// Component logic
+</script>
+
+<style scoped>
+/* Component styles */
+</style>
+```
+
+### Structure Requirements
+- **Template**: Must be the first section
+- **Script**: Use `<script setup lang="ts">` for Composition API
+- **Style**: Use `<style scoped>` by default for component-scoped styles
+- **Order**: Template → Script → Style (in that order)
+
+## Data Test ID Attribute (MANDATORY)
+
+- Every interactive or key UI element MUST have a `data-testid` attribute to enable robust E2E and component testing.
+- The value MUST follow the convention: `data-testid="<filename>_<purpose>_<element>"`.
+  - `<filename>`: Use the kebab-case base filename (without `.vue`) for the component (e.g. `login-form`).
+  - `<purpose>`: Short description of what the test id is for (e.g. `login`, `submit`, `title`).
+  - `<element>`: Element type/role (e.g. `button`, `input`, `title`, etc.).
+  - Example: `data-testid="login-form_login_button"`
+- Place this attribute on:
+  - All key buttons, inputs, links, actions, and areas required for UI/E2E/component tests.
+  - Root/container elements when relevant for component mounting/selecting.
+- When using multi-word filenames, use kebab-case for `<filename>` (e.g. `user-profile-card`).
+- Avoid duplicating `data-testid` within the same component.
+- Update tests to use only these stable testids for element selectors.
+- Example in a Vue template:
+  ```vue
+  <UiButton data-testid="login-form_login_button">Login</UiButton>
+  ```
+- Do NOT use component implementation or CSS selectors for test automation; always prefer `data-testid`.
+
+This rule supports Playwright and all testing guidelines for E2E and component tests.
+
+## TypeScript Usage (MANDATORY)
+
+All components MUST use TypeScript.
+
+### Props Definition
+Use `defineProps<Type>()` with TypeScript interfaces:
+
+<code-snippet name="Props Definition" lang="vue">
+<script setup lang="ts">
+interface Props {
+  title: string
+  description?: string
+  count?: number
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  description: '',
+  count: 0,
+})
+</script>
+</code-snippet>
+
+### Emits Definition
+Use `defineEmits<Type>()` with TypeScript:
+
+<code-snippet name="Emits Definition" lang="vue">
+<script setup lang="ts">
+interface Emits {
+  (e: 'update:modelValue', value: string | number): void
+  (e: 'submit', data: FormData): void
+}
+
+const emits = defineEmits<Emits>()
+</script>
+</code-snippet>
+
+### Type Annotations
+Always use explicit type annotations for:
+- Function parameters and return types
+- Reactive refs: `const count = ref<number>(0)`
+- Computed properties: `const doubled = computed<number>(() => count.value * 2)`
+- Component props and emits
+
+## Composition API (MANDATORY)
+
+Always use `<script setup lang="ts">` with Composition API:
+
+<code-snippet name="Composition API" lang="vue">
+<script setup lang="ts">
+import { ref, computed, onMounted } from 'vue'
+
+const count = ref<number>(0)
+const doubled = computed<number>(() => count.value * 2)
+
+function increment() {
+  count.value++
+}
+
+onMounted(() => {
+  console.log('Component mounted')
+})
+</script>
+</code-snippet>
+
+## Path Aliases (MANDATORY)
+
+Use path aliases consistently. Available aliases:
+
+- `@/components` - Component files
+- `@/lib` - Utility functions
+- `@/composables` - Composables
+- `@/stores` - Pinia stores
+- `@/services` - API services
+- `@/router` - Router configuration
+- `@/constants` - Constants
+
+<code-snippet name="Path Aliases" lang="vue">
+<script setup lang="ts">
+import { useAuth } from '@/composables/use-auth'
+import { Button } from '@/components/ui/button'
+import { cn } from '@/lib/utils'
+</script>
+</code-snippet>
+
+## UI Component Library (shadcn-vue)
+
+### Component Usage
+- Use shadcn-vue components from `@/components/ui`
+- Components are prefixed with `Ui` (e.g., `UiButton`, `UiCard`, `UiInput`)
+- Import components directly:
+
+<code-snippet name="UI Component Import" lang="vue">
+<script setup lang="ts">
+import { Button } from '@/components/ui/button'
+import { Card } from '@/components/ui/card'
+</script>
+
+<template>
+  <Card>
+    <Button>Click me</Button>
+  </Card>
+</template>
+</code-snippet>
+
+### Class Utility
+Use the `cn()` utility function for conditional class merging:
+
+<code-snippet name="Class Utility" lang="vue">
+<script setup lang="ts">
+import { cn } from '@/lib/utils'
+
+const isActive = ref(false)
+</script>
+
+<template>
+  <div :class="cn('base-class', isActive && 'active-class')">
+    Content
+  </div>
+</template>
+</code-snippet>
+
+## Composables Pattern
+
+### Creating Composables
+- Located in `src/composables/`
+- Use `use` prefix (e.g., `useAuth`, `useTheme`)
+- Return reactive state and functions
+- Use `storeToRefs` for Pinia stores
+
+<code-snippet name="Composable Example" lang="typescript">
+import { storeToRefs } from 'pinia'
+import { useAuthStore } from '@/stores/auth.store'
+
+export function useAuth() {
+  const router = useRouter()
+  const authStore = useAuthStore()
+  const { user, isAuthenticated } = storeToRefs(authStore)
+  
+  const loading = ref(false)
+  
+  async function login(credentials: LoginCredentials) {
+    loading.value = true
+    try {
+      // Login logic
+    } finally {
+      loading.value = false
+    }
+  }
+  
+  return {
+    user,
+    isAuthenticated,
+    loading,
+    login,
+  }
+}
+</code-snippet>
+
+### Using Composables
+<code-snippet name="Using Composables" lang="vue">
+<script setup lang="ts">
+import { useAuth } from '@/composables/use-auth'
+
+const { user, isAuthenticated, login } = useAuth()
+</script>
+</code-snippet>
+
+## State Management (Pinia)
+
+### Store Definition
+- Stores located in `src/stores/`
+- Use `defineStore` with Composition API style
+- Return reactive state and functions
+
+<code-snippet name="Pinia Store" lang="typescript">
+import { defineStore } from 'pinia'
+
+export const useAuthStore = defineStore('auth', () => {
+  const user = ref<User | null>(null)
+  
+  const isAuthenticated = computed(() => user.value !== null)
+  
+  function setUser(userData: User | null) {
+    user.value = userData
+  }
+  
+  return {
+    user,
+    isAuthenticated,
+    setUser,
+  }
+})
+</code-snippet>
+
+### Using Stores
+Use `storeToRefs` to destructure reactive state:
+
+<code-snippet name="Using Stores" lang="vue">
+<script setup lang="ts">
+import { storeToRefs } from 'pinia'
+import { useAuthStore } from '@/stores/auth.store'
+
+const authStore = useAuthStore()
+const { user, isAuthenticated } = storeToRefs(authStore)
+
+// For actions, use the store directly
+authStore.setUser(userData)
+</script>
+</code-snippet>
+
+## Form Validation (Vee-Validate + Zod)
+
+Use Vee-Validate with Zod schemas for form validation:
+
+<code-snippet name="Form Validation" lang="vue">
+<script setup lang="ts">
+import { z } from 'zod'
+import { useForm } from 'vee-validate'
+import { toTypedSchema } from '@vee-validate/zod'
+
+const schema = toTypedSchema(z.object({
+  email: z.string().email('Invalid email'),
+  password: z.string().min(8, 'Password must be at least 8 characters'),
+}))
+
+const { handleSubmit, defineField } = useForm({
+  validationSchema: schema,
+})
+
+const [email, emailAttrs] = defineField('email')
+const [password, passwordAttrs] = defineField('password')
+
+const onSubmit = handleSubmit((values) => {
+  console.log(values)
+})
+</script>
+
+<template>
+  <form @submit="onSubmit">
+    <input v-model="email" v-bind="emailAttrs" />
+    <input v-model="password" type="password" v-bind="passwordAttrs" />
+    <button type="submit">Submit</button>
+  </form>
+</template>
+</code-snippet>
+
+## Routing (Vue Router)
+
+### Route Configuration
+- Use route meta for layout configuration
+- Lazy load components with dynamic imports
+- Use path aliases for route imports
+
+<code-snippet name="Route Configuration" lang="typescript">
+const routes: RouteRecordRaw[] = [
+  {
+    path: '/dashboard',
+    name: '/dashboard',
+    component: () => import('@/pages/dashboard/index.vue'),
+    meta: {
+      layout: 'default',
+      auth: true,
+    },
+  },
+]
+</code-snippet>
+
+### Async Components
+Use `defineAsyncComponent` for code splitting:
+
+<code-snippet name="Async Components" lang="vue">
+<script setup lang="ts">
+const MarketingLayout = defineAsyncComponent(() => import('@/layouts/marketing.vue'))
+const DefaultLayout = defineAsyncComponent(() => import('@/layouts/default.vue'))
+</script>
+</code-snippet>
+
+## Styling (Tailwind CSS)
+
+### Utility Classes
+- Use Tailwind utility classes for styling
+- Use `cn()` for conditional classes
+- Use CSS variables for theming
+
+<code-snippet name="Tailwind Styling" lang="vue">
+<template>
+  <div class="flex items-center gap-4 p-4 bg-background">
+    <button :class="cn('px-4 py-2 rounded', isActive && 'bg-primary')">
+      Click me
+    </button>
+  </div>
+</template>
+</code-snippet>
+
+### Scoped Styles
+Use scoped styles when needed:
+
+<code-snippet name="Scoped Styles" lang="vue">
+<style scoped>
+.custom-class {
+  /* Component-specific styles */
+}
+</style>
+</code-snippet>
+
+## Component Organization
+
+### File Naming
+- Use PascalCase for component files: `UserProfile.vue`
+- Use kebab-case for multi-word: `user-profile-card.vue`
+- Match component name to filename
+
+### Directory Structure
+```
+src/
+├── components/
+│   ├── ui/              # shadcn-vue components
+│   ├── app-sidebar/     # Feature components
+│   └── marketing/       # Marketing components
+├── pages/               # Page components
+├── layouts/             # Layout components
+├── composables/         # Composables
+├── stores/              # Pinia stores
+└── lib/                 # Utilities
+```
+
+## Best Practices
+
+### 1. Single Responsibility
+- Keep components focused on a single purpose
+- Extract complex logic into composables
+- Split large components into smaller ones
+
+### 2. Props Validation
+- Always define props with TypeScript
+- Use `withDefaults` for default values
+- Document complex props
+
+### 3. Reactive State
+- Use `ref` for primitive values
+- Use `reactive` for objects (sparingly)
+- Use `computed` for derived state
+
+### 4. Event Handling
+- Use kebab-case for event names: `@update:model-value`
+- Emit typed events with proper payloads
+- Document custom events
+
+### 5. Performance
+- Use `v-memo` for expensive lists
+- Use `defineAsyncComponent` for code splitting
+- Avoid unnecessary re-renders
+
+### 6. Accessibility
+- Use semantic HTML
+- Add ARIA attributes when needed
+- Ensure keyboard navigation works
+
+## Common Patterns
+
+### Conditional Rendering
+<code-snippet name="Conditional Rendering" lang="vue">
+<template>
+  <div v-if="isLoading">Loading...</div>
+  <div v-else-if="error">Error: {{ error }}</div>
+  <div v-else>Content</div>
+</template>
+</code-snippet>
+
+### List Rendering
+<code-snippet name="List Rendering" lang="vue">
+<template>
+  <div v-for="item in items" :key="item.id">
+    {{ item.name }}
+  </div>
+</template>
+</code-snippet>
+
+### Two-Way Binding
+<code-snippet name="Two-Way Binding" lang="vue">
+<script setup lang="ts">
+const modelValue = defineModel<string>()
+</script>
+
+<template>
+  <input v-model="modelValue" />
+</template>
+</code-snippet>
+
+## References
+
+- Testing pyramid: `frontend/.cursor/rules/testing-pyramid.mdc`
+- Playwright rules: `frontend/.cursor/rules/playwright.mdc`
+- Vue 3 Documentation: https://vuejs.org
+- shadcn-vue: https://shadcn-vue.com
+- Pinia: https://pinia.vuejs.org
+- Vee-Validate: https://vee-validate.logaretm.com
+</vue-guidelines>

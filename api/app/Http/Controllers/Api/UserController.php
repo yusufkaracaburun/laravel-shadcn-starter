@@ -7,6 +7,7 @@ namespace App\Http\Controllers\Api;
 use App\Models\User;
 use Illuminate\Http\Response;
 use Illuminate\Http\JsonResponse;
+use Spatie\Permission\Models\Role;
 use App\Http\Responses\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
@@ -83,7 +84,12 @@ final class UserController extends Controller
      */
     public function store(StoreUserRequest $request): JsonResponse
     {
-        $user = $this->userRepository->create($request->validated());
+        /** @var User $currentUser */
+        $currentUser = Auth::user();
+        $currentUser->refresh();
+        $teamId = $currentUser->getAttributeValue('current_team_id');
+
+        $user = $this->userRepository->create($request->validated(), $teamId);
 
         // Handle profile photo upload if present
         if ($request->hasFile('profile_photo')) {
@@ -101,13 +107,18 @@ final class UserController extends Controller
      */
     public function update(UpdateUserRequest $request, User $user): JsonResponse
     {
+        /** @var User $currentUser */
+        $currentUser = Auth::user();
+        $currentUser->refresh();
+        $teamId = $currentUser->getAttributeValue('current_team_id');
+
         $validated = $request->validated();
 
         // Remove profile_photo from validated data before updating user
         // Media Library handles file uploads separately
         unset($validated['profile_photo']);
 
-        $user = $this->userRepository->update($user, $validated);
+        $user = $this->userRepository->update($user, $validated, $teamId);
 
         // Handle profile photo upload if present
         if ($request->hasFile('profile_photo')) {
@@ -161,5 +172,24 @@ final class UserController extends Controller
         $user = $this->userRepository->getCurrentUser($user);
 
         return ApiResponse::success(new UserResource($user));
+    }
+
+    /**
+     * Get available roles.
+     *
+     * @authenticated
+     */
+    public function roles(): JsonResponse
+    {
+        $roles = Role::query()
+            ->where('guard_name', 'web')
+            ->orderBy('name')
+            ->get(['id', 'name'])
+            ->map(fn ($role) => [
+                'id' => $role->id,
+                'name' => $role->name,
+            ]);
+
+        return ApiResponse::success($roles->values()->all());
     }
 }
