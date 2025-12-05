@@ -101,8 +101,8 @@ final class UserSeeder extends Seeder
     {
         $usersByRole = [
             'admin' => User::factory()->count(2)->create(),
-            'customer' => User::factory()->count(10)->create(),
-            'contractor' => User::factory()->count(5)->create(),
+            'customer' => User::factory()->count(50)->create(),
+            'contractor' => User::factory()->count(25)->create(),
         ];
 
         $allUsers = collect($usersByRole)->flatten();

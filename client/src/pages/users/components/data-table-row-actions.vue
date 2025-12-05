@@ -2,33 +2,38 @@
 import type { Row } from '@tanstack/vue-table'
 import type { Component } from 'vue'
 
-import { Ellipsis } from 'lucide-vue-next'
+import { Ellipsis, FilePenLine, Trash2 } from 'lucide-vue-next'
 
 import type { User } from '@/services/users.service'
+
+import UserDelete from './user-delete.vue'
+import UserResourceDialog from './user-resource-dialog.vue'
 
 interface DataTableRowActionsProps {
   row: Row<User>
 }
 const props = defineProps<DataTableRowActionsProps>()
 const user = computed(() => props.row.original)
-const isOpen = ref(false)
 
 const showComponent = shallowRef<Component | null>(null)
+
 type TCommand = 'edit' | 'delete'
 function handleSelect(command: TCommand) {
   switch (command) {
     case 'edit':
-      showComponent.value = defineAsyncComponent(() => import('./user-resource.vue'))
+      showComponent.value = UserResourceDialog
       break
     case 'delete':
-      showComponent.value = defineAsyncComponent(() => import('./user-delete.vue'))
+      showComponent.value = UserDelete
       break
   }
 }
+
+const isOpen = ref(false)
 </script>
 
 <template>
-  <UiDrawer v-model:open="isOpen" direction="right">
+  <UiDialog v-model:open="isOpen">
     <UiDropdownMenu>
       <UiDropdownMenuTrigger as-child>
         <UiButton variant="ghost" class="flex h-8 w-8 p-0 data-[state=open]:bg-muted">
@@ -37,25 +42,24 @@ function handleSelect(command: TCommand) {
         </UiButton>
       </UiDropdownMenuTrigger>
       <UiDropdownMenuContent align="end" class="w-[160px]">
-        <UiDrawerTrigger as-child>
-          <UiDropdownMenuItem @click.stop="handleSelect('edit')">
-            Edit
+        <UiDialogTrigger as-child>
+          <UiDropdownMenuItem @select.stop="handleSelect('edit')">
+            <span>Edit</span>
+            <UiDropdownMenuShortcut> <FilePenLine class="size-4" /> </UiDropdownMenuShortcut>
           </UiDropdownMenuItem>
-        </UiDrawerTrigger>
+        </UiDialogTrigger>
 
         <UiDialogTrigger as-child>
-          <UiDropdownMenuItem @click.stop="handleSelect('delete')">
-            Delete
-            <UiDropdownMenuShortcut>⌘⌫</UiDropdownMenuShortcut>
+          <UiDropdownMenuItem @select.stop="handleSelect('delete')">
+            <span>Delete</span>
+            <UiDropdownMenuShortcut> <Trash2 class="size-4" /> </UiDropdownMenuShortcut>
           </UiDropdownMenuItem>
         </UiDialogTrigger>
       </UiDropdownMenuContent>
     </UiDropdownMenu>
 
-    <UiDrawerContent class="px-4 pb-4">
-      <div class="overflow-y-auto max-h-[calc(100vh-4rem)]">
-        <component :is="showComponent" :user="user" @close="isOpen = false" />
-      </div>
-    </UiDrawerContent>
-  </UiDrawer>
+    <UiDialogContent>
+      <component :is="showComponent" :user="user" @close="isOpen = false" />
+    </UiDialogContent>
+  </UiDialog>
 </template>
