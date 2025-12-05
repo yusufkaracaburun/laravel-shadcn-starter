@@ -42,7 +42,7 @@ test.describe('Login', { tag: ['@api', '@auth', '@login'] }, () => {
     expect(userBody.data).toHaveProperty('email')
     expect(userBody.data).toHaveProperty('email_verified_at')
     expect(userBody.data).toHaveProperty('current_team_id')
-    expect(userBody.data).toHaveProperty('profile_photo_path')
+    expect(userBody.data).toHaveProperty('profile_photo_url')
     expect(userBody.data).toHaveProperty('created_at')
     expect(userBody.data).toHaveProperty('updated_at')
 

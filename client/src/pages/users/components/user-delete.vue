@@ -1,43 +1,42 @@
-<script lang="ts" setup>
-import { toast } from 'vue-sonner'
+<script setup lang="ts">
+import type { User } from '@/services/users.service'
 
-import type { User } from '../data/schema'
+import { useUsers } from '@/composables/use-users'
 
-const { user } = defineProps<{
+interface UserDeleteProps {
   user: User
-}>()
+}
+
+const props = defineProps<UserDeleteProps>()
 
 const emits = defineEmits<{
-  (e: 'remove'): void
+  close: []
 }>()
 
-function handleRemove() {
-  toast(`The following task has been deleted:`, {
-    description: h(
-      'pre',
-      { class: 'mt-2 w-[340px] rounded-md bg-slate-950 p-4' },
-      h('code', { class: 'text-white' }, JSON.stringify(user, null, 2)),
-    ),
-  })
+const { deleteUser } = useUsers()
 
-  emits('remove')
+async function handleRemove() {
+  await deleteUser(props.user.id)
+  emits('close')
 }
 </script>
 
 <template>
   <div>
-    <UiDialogTitle> Delete this user: {{ user.username }} ? </UiDialogTitle>
+    <UiDialogTitle> Delete this user: {{ user.name }} ? </UiDialogTitle>
     <UiDialogDescription class="mt-2 font-medium">
-      You are about to delete a user with the ID {{ user.id }}.This action cannot be undone.
+      You are about to delete a user with the ID {{ user.id }}. This action cannot be undone.
     </UiDialogDescription>
-
     <UiDialogFooter>
       <UiDialogClose as-child>
-        <UiButton variant="outline"> Cancel </UiButton>
+        <UiButton variant="outline">
+          Cancel
+        </UiButton>
       </UiDialogClose>
-
       <UiDialogClose as-child>
-        <UiButton variant="destructive" @click="handleRemove"> Delete </UiButton>
+        <UiButton variant="destructive" @click="handleRemove">
+          Delete
+        </UiButton>
       </UiDialogClose>
     </UiDialogFooter>
   </div>

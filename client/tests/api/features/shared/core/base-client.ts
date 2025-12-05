@@ -4,8 +4,6 @@ import { CookieHandler } from '../handlers/cookie-handler'
 import { CsrfHandler } from '../handlers/csrf-handler'
 import { RequestBuilder } from '../handlers/request-builder'
 
-const apiURL = process.env.VITE_API_BASE_URL || 'http://localhost:8000'
-
 /**
  * Base client class providing common functionality for all API clients
  * Implements Template Method pattern for consistent request handling
@@ -22,11 +20,16 @@ export abstract class BaseClient {
   }
 
   /**
-   * Build full URL from endpoint
+   * Build URL from endpoint
+   * Uses relative URLs so Playwright's baseURL (from config) is used
    */
   protected buildUrl(endpoint: string): string {
-    const base = endpoint.startsWith('http') ? '' : apiURL
-    return `${base}${endpoint}`
+    // If endpoint is already a full URL, use it as-is
+    // Otherwise, return relative URL (Playwright will use baseURL from config)
+    if (endpoint.startsWith('http')) {
+      return endpoint
+    }
+    return endpoint
   }
 
   /**
@@ -37,13 +40,16 @@ export abstract class BaseClient {
     options: { requireCsrf?: boolean } = {},
   ): Promise<APIResponse> {
     const cookies = this.cookieHandler.getCookies()
+    const baseHeaders = this.requestBuilder.getBaseHeaders()
     const headers = options.requireCsrf
       ? this.requestBuilder.getHeadersWithCsrf(
           this.csrfHandler.getToken(),
           false,
           cookies,
         )
-      : this.requestBuilder.getBaseHeaders()
+      : cookies
+        ? { ...baseHeaders, Cookie: cookies }
+        : baseHeaders
 
     const response = await this.request.get(this.buildUrl(endpoint), {
       headers,
@@ -149,13 +155,16 @@ export abstract class BaseClient {
     options: { requireCsrf?: boolean } = {},
   ): Promise<APIResponse> {
     const cookies = this.cookieHandler.getCookies()
+    const baseHeaders = this.requestBuilder.getBaseHeaders()
     const headers = options.requireCsrf !== false
       ? this.requestBuilder.getHeadersWithCsrf(
           this.csrfHandler.getToken(),
           false,
           cookies,
         )
-      : this.requestBuilder.getBaseHeaders()
+      : cookies
+        ? { ...baseHeaders, Cookie: cookies }
+        : baseHeaders
 
     const response = await this.request.delete(this.buildUrl(endpoint), {
       headers,

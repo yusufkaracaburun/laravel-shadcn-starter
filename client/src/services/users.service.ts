@@ -242,3 +242,22 @@ export function useUpdateUserMutation() {
     },
   })
 }
+
+/**
+ * Delete a user
+ * @see api/app/Http/Controllers/Api/UserController.php::destroy()
+ */
+export function useDeleteUserMutation() {
+  const { axiosInstance } = useAxios()
+  const queryClient = useQueryClient()
+
+  return useMutation<void, AxiosError, number>({
+    mutationFn: async (userId: number): Promise<void> => {
+      await axiosInstance.delete(`/api/user/${userId}`)
+    },
+    onSuccess: () => {
+      // Invalidate user list query to refresh the users list
+      queryClient.invalidateQueries({ queryKey: ['userList'] })
+    },
+  })
+}

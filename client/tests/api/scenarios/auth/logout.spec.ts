@@ -1,6 +1,6 @@
-import { expectSuccess, expectStatus, expectUnauthenticated } from '../../features/shared/helpers'
-import { test, expect } from '../../fixtures'
 import { HttpStatus } from '../../features/shared/enums'
+import { expectStatus, expectSuccess, expectUnauthenticated } from '../../features/shared/helpers'
+import { expect, test } from '../../fixtures'
 
 test.describe('Logout', { tag: ['@api', '@auth', '@logout'] }, () => {
   test('should logout successfully and verify authentication is terminated', async ({
