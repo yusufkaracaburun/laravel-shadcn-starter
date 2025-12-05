@@ -45,6 +45,15 @@ export interface Team {
 }
 
 /**
+ * Role interface matching backend Role model
+ * @see api/app/Http/Controllers/Api/UserController.php::roles()
+ */
+export interface Role {
+  id: number
+  name: string
+}
+
+/**
  * Login credentials interface
  */
 export interface LoginCredentials {

@@ -94,5 +94,13 @@ export class CookieHandler {
   clear(): void {
     this.cookies = ''
   }
+
+  /**
+   * Set cookies from another cookie handler
+   * Used to share cookies between client instances
+   */
+  setCookies(cookies: string): void {
+    this.cookies = cookies
+  }
 }
 

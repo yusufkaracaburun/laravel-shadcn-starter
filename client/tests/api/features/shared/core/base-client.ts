@@ -186,5 +186,14 @@ export abstract class BaseClient {
       await this.get('/sanctum/csrf-cookie', { requireCsrf: false })
     }
   }
+
+  /**
+   * Copy authentication state (cookies and CSRF token) from another BaseClient
+   * Used to share authentication between different client instances
+   */
+  protected copyAuthStateFrom(other: BaseClient): void {
+    this.cookieHandler.setCookies(other.cookieHandler.getCookies())
+    this.csrfHandler.setToken(other.csrfHandler.getToken())
+  }
 }
 

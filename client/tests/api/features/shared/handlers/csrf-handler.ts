@@ -59,5 +59,13 @@ export class CsrfHandler {
   clear(): void {
     this.csrfToken = null
   }
+
+  /**
+   * Set CSRF token from another handler
+   * Used to share CSRF token between client instances
+   */
+  setToken(token: string | null): void {
+    this.csrfToken = token
+  }
 }
 

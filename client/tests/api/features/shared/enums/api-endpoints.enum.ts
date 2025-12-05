@@ -13,5 +13,11 @@ export enum ApiEndpoints {
 
   // User
   USER_CURRENT = '/api/user/current',
+  USER_ROLES = '/api/user/roles',
+  USER_LIST = '/api/user',
+  USER_SHOW = '/api/user', // Template: append /{id}
+  USER_CREATE = '/api/user',
+  USER_UPDATE = '/api/user', // Template: append /{id}
+  USER_DELETE = '/api/user', // Template: append /{id}
 }
 
