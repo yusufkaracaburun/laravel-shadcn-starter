@@ -65,8 +65,12 @@ final class ApiResponse
     /**
      * Create a no content API response.
      */
-    public static function noContent(): Response
+    public static function noContent(?string $message = null, int $code = Response::HTTP_NO_CONTENT): JsonResponse
     {
-        return response()->noContent();
+        return response()->json([
+            'success' => true,
+            'code' => $code,
+            'message' => $message,
+        ], $code);
     }
 }

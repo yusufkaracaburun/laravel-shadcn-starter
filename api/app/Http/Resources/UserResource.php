@@ -35,7 +35,7 @@ final class UserResource extends BaseResource
                 fn () => TeamResource::collection($this->getAllTeams())
             ),
 
-            'currentTeam' => $this->whenLoaded('currentTeam', fn (): \App\Http\Resources\TeamResource => new TeamResource($this->currentTeam)
+            'currentTeam' => $this->whenLoaded('currentTeam', fn (): TeamResource => new TeamResource($this->currentTeam)
             ),
         ];
     }

@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { toast } from 'vue-sonner'
-
 import type { User } from '@/services/users.service'
+
+import { useUsers } from '@/composables/use-users'
 
 interface UserDeleteProps {
   user: User
@@ -9,14 +9,15 @@ interface UserDeleteProps {
 
 const props = defineProps<UserDeleteProps>()
 
-function handleRemove() {
-  toast(`The following user has been deleted:`, {
-    description: h(
-      'pre',
-      { class: 'mt-2 w-[340px] rounded-md bg-slate-950 p-4' },
-      h('code', { class: 'text-white' }, JSON.stringify(props.user, null, 2)),
-    ),
-  })
+const emits = defineEmits<{
+  close: []
+}>()
+
+const { deleteUser } = useUsers()
+
+async function handleRemove() {
+  await deleteUser(props.user.id)
+  emits('close')
 }
 </script>
 
@@ -28,10 +29,14 @@ function handleRemove() {
     </UiDialogDescription>
     <UiDialogFooter>
       <UiDialogClose as-child>
-        <UiButton variant="outline"> Cancel </UiButton>
+        <UiButton variant="outline">
+          Cancel
+        </UiButton>
       </UiDialogClose>
       <UiDialogClose as-child>
-        <UiButton variant="destructive" @click="handleRemove"> Delete </UiButton>
+        <UiButton variant="destructive" @click="handleRemove">
+          Delete
+        </UiButton>
       </UiDialogClose>
     </UiDialogFooter>
   </div>

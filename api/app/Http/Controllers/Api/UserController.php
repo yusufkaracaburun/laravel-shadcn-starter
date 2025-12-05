@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Api;
 
 use App\Models\User;
-use Illuminate\Http\Response;
 use Illuminate\Http\JsonResponse;
 use Spatie\Permission\Models\Role;
 use App\Http\Responses\ApiResponse;
@@ -35,7 +34,7 @@ final class UserController extends Controller
      *
      * @authenticated
      */
-    public function index(UserIndexRequest $request)
+    public function index(UserIndexRequest $request): JsonResponse
     {
         /** @var User $user */
         $user = Auth::user();
@@ -138,7 +137,7 @@ final class UserController extends Controller
      *
      * @authenticated
      */
-    public function destroy(User $user): Response
+    public function destroy(User $user): JsonResponse
     {
         $teamId = $user->current_team_id;
         $userId = $user->id;
@@ -151,7 +150,7 @@ final class UserController extends Controller
             CacheInvalidationService::invalidateTeam($teamId);
         }
 
-        return ApiResponse::noContent();
+        return ApiResponse::noContent('User deleted successfully');
     }
 
     /**

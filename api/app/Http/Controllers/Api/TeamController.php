@@ -134,7 +134,7 @@ final class TeamController extends Controller
      *
      * @authenticated
      */
-    public function destroy(Team $team): Response
+    public function destroy(Team $team): JsonResponse
     {
         /** @var User $user */
         $user = Auth::user();
@@ -154,7 +154,7 @@ final class TeamController extends Controller
         $this->invalidateAfterDelete('team', $teamId);
         CacheInvalidationService::invalidateUser($user->id);
 
-        return ApiResponse::noContent();
+        return ApiResponse::noContent('Team deleted successfully');
     }
 
     /**

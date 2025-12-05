@@ -1,8 +1,13 @@
 import type { ServerPagination } from '@/components/data-table/types'
-import type { CreateUserRequest } from '@/services/users.service'
+import type { CreateUserRequest, UpdateUserRequest } from '@/services/users.service'
 
 import { useToast } from '@/composables/use-toast'
-import { useCreateUserMutation, useGetUsersQuery } from '@/services/users.service'
+import {
+  useCreateUserMutation,
+  useDeleteUserMutation,
+  useGetUsersQuery,
+  useUpdateUserMutation,
+} from '@/services/users.service'
 import { useErrorStore } from '@/stores/error.store'
 
 export function useUsers() {
@@ -69,6 +74,8 @@ export function useUsers() {
 
   // Create user mutation
   const createUserMutation = useCreateUserMutation()
+  const updateUserMutation = useUpdateUserMutation()
+  const deleteUserMutation = useDeleteUserMutation()
 
   async function createUser(data: CreateUserRequest) {
     try {
@@ -96,6 +103,48 @@ export function useUsers() {
     }
   }
 
+  async function updateUser(userId: number, data: UpdateUserRequest) {
+    try {
+      const response = await updateUserMutation.mutateAsync({ userId, data })
+      toast.showSuccess('User updated successfully!')
+      return response
+    }
+    catch (error: any) {
+      // Store error with context
+      errorStore.setError(error, { context: 'updateUser' })
+
+      // Use error store utilities for messages
+      const message = errorStore.getErrorMessage(error)
+      const validationErrors = errorStore.getValidationErrors(error)
+
+      // Show toast with appropriate message
+      if (Object.keys(validationErrors).length > 0) {
+        const firstError = Object.values(validationErrors)[0]?.[0]
+        toast.showError(firstError || message)
+      }
+      else {
+        toast.showError(message)
+      }
+      throw error
+    }
+  }
+
+  async function deleteUser(userId: number) {
+    try {
+      await deleteUserMutation.mutateAsync(userId)
+      toast.showSuccess('User deleted successfully!')
+    }
+    catch (error: any) {
+      // Store error with context
+      errorStore.setError(error, { context: 'deleteUser' })
+
+      // Use error store utilities for messages
+      const message = errorStore.getErrorMessage(error)
+      toast.showError(message)
+      throw error
+    }
+  }
+
   return {
     users,
     loading,
@@ -104,5 +153,9 @@ export function useUsers() {
     serverPagination,
     createUser,
     createUserMutation,
+    updateUser,
+    updateUserMutation,
+    deleteUser,
+    deleteUserMutation,
   }
 }
