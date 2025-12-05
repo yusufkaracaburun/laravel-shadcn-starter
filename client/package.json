@@ -142,6 +142,11 @@
     ],
     "*.{js,ts,vue}": [
       "eslint --fix"
+    ],
+    "{src/**/*.{ts,js,vue},tests/**/*.{ts,js,vue}}": [
+      "pnpm test:unit",
+      "pnpm test:component",
+      "pnpm test:api"
     ]
   }
 }
