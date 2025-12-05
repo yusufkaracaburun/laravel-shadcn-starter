@@ -1,7 +1,8 @@
 import type { ServerPagination } from '@/components/data-table/types'
+import type { CreateUserRequest } from '@/services/users.service'
 
 import { useToast } from '@/composables/use-toast'
-import { useCreateUserMutation, useGetUsersQuery, type CreateUserRequest } from '@/services/users.service'
+import { useCreateUserMutation, useGetUsersQuery } from '@/services/users.service'
 import { useErrorStore } from '@/stores/error.store'
 
 export function useUsers() {
