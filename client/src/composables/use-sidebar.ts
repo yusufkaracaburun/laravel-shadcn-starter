@@ -3,6 +3,7 @@ import {
   BellDot,
   Boxes,
   Bug,
+  Building2,
   Component,
   CreditCard,
   LayoutDashboard,
@@ -35,6 +36,11 @@ export function useSidebar() {
           title: 'Tasks',
           url: '/tasks',
           icon: ListTodo,
+        },
+        {
+          title: 'Companies',
+          url: '/companies',
+          icon: Building2,
         },
         {
           title: 'Apps',
