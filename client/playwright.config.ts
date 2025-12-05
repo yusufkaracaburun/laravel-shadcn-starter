@@ -1,8 +1,8 @@
 import { defineConfig, devices } from '@playwright/test'
 import process from 'node:process'
 
-const apiURL = process.env.VITE_API_BASE_URL
-const baseURL = process.env.VITE_FRONTEND_URL
+const apiURL = process.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000'
+const baseURL = process.env.VITE_FRONTEND_URL || 'http://localhost:5173'
 
 export default defineConfig({
   testDir: './tests',
@@ -21,7 +21,7 @@ export default defineConfig({
     actionTimeout: 10000,
     navigationTimeout: 10000,
     extraHTTPHeaders: {
-      Accept: 'application/json',
+      'Accept': 'application/json',
       'X-Requested-With': 'XMLHttpRequest',
     },
     ignoreHTTPSErrors: true,
@@ -58,26 +58,28 @@ export default defineConfig({
         ...devices['Desktop Chrome'],
         ignoreHTTPSErrors: true,
         extraHTTPHeaders: {
-          Accept: 'application/json',
+          'Accept': 'application/json',
           'X-Requested-With': 'XMLHttpRequest',
         },
       },
     },
   ],
-  webServer: [
-    {
-      command: 'npm run dev',
-      url: baseURL,
-      reuseExistingServer: true,
-      timeout: 15000,
-    },
-    {
-      command: 'cd .. && php artisan serve',
-      url: apiURL,
-      reuseExistingServer: true,
-      timeout: 15000,
-    },
-  ],
+  // Web servers - only start if not already running
+  // For API tests, assume servers are already running (pnpm dev and php artisan serve)
+  webServer: process.env.CI
+    ? [
+        {
+          command: 'npm run dev',
+          reuseExistingServer: true,
+          timeout: 10000,
+        },
+        {
+          command: 'php ../api/artisan serve --host=127.0.0.1 --port=8000',
+          reuseExistingServer: true,
+          timeout: 30000,
+        },
+      ]
+    : undefined,
   globalSetup: undefined,
   globalTeardown: undefined,
 })
