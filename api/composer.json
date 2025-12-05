@@ -16,6 +16,7 @@
         "laravel/tinker": "^2.10.1",
         "pinkary-project/type-guard": "^0.1.0",
         "resend/resend-php": "^0.14.0",
+        "spatie/laravel-medialibrary": "^11.17",
         "spatie/laravel-permission": "^6.0",
         "symfony/mailer": "^7.2.0"
     },

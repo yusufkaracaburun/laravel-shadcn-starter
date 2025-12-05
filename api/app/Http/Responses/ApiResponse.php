@@ -16,9 +16,9 @@ final class ApiResponse
      */
     public static function success(
         mixed $data = null,
-        array $extra = [],
         string $message = 'Success',
-        int $code = Response::HTTP_OK
+        int $code = Response::HTTP_OK,
+        array $extra = []
     ): JsonResponse {
         return response()->json([
             'success' => true,
@@ -59,7 +59,7 @@ final class ApiResponse
         array $extra = [],
         string $message = 'Created successfully'
     ): JsonResponse {
-        return self::success($data, $extra, $message, Response::HTTP_CREATED);
+        return self::success($data, $message, Response::HTTP_CREATED, $extra);
     }
 
     /**

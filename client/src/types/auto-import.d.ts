@@ -99,6 +99,7 @@ declare global {
   const useThemeConfig: typeof import('../composables/use-theme-config')['useThemeConfig']
   const useThemeStore: typeof import('../stores/theme.store').useThemeStore
   const useToast: typeof import('../composables/use-toast').useToast
+  const useUsers: typeof import('../composables/use-users').useUsers
   const watch: typeof import('vue').watch
   const watchEffect: typeof import('vue').watchEffect
   const watchPostEffect: typeof import('vue').watchPostEffect

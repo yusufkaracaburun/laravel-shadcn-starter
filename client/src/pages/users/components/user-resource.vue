@@ -1,29 +1,31 @@
 <script lang="ts" setup>
-import type { User } from '../data/schema'
+import type { User } from '@/services/users.service'
 
 import UserForm from './user-form.vue'
 
 const props = defineProps<{
-  user?: User
+  user?: User | null
 }>()
+
 defineEmits(['close'])
 
-const user = computed(() => props.user)
-const title = computed(() => (user.value?.id ? `Edit User` : 'New User'))
+const title = computed(() => (props.user ? 'Edit User' : 'Create New User'))
 const description = computed(() =>
-  user.value?.id ? `Edit user ${user.value.username}` : 'Create new user',
+  props.user
+    ? `Update user information for ${props.user.name}. Leave password fields blank to keep the current password.`
+    : 'Add a new user to the system. Fill in the required information below.',
 )
 </script>
 
 <template>
-  <UiDialogHeader>
-    <UiDialogTitle>
+  <UiDrawerHeader>
+    <UiDrawerTitle>
       {{ title }}
-    </UiDialogTitle>
-    <UiDialogDescription>
+    </UiDrawerTitle>
+    <UiDrawerDescription>
       {{ description }}
-    </UiDialogDescription>
-  </UiDialogHeader>
+    </UiDrawerDescription>
+  </UiDrawerHeader>
 
-  <UserForm class="mt-2" :user="user" @close="$emit('close')" />
+  <UserForm :user="user" class="mt-4" @close="$emit('close')" />
 </template>
