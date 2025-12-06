@@ -1,0 +1,273 @@
+[
+  {
+    "id": "COMP-1001",
+    "name": "Acme Corporation",
+    "email": "contact@acme.com",
+    "phone": "+1-555-0101",
+    "industry": "technology",
+    "status": "active",
+    "employees": "201-500"
+  },
+  {
+    "id": "COMP-1002",
+    "name": "Global Finance Group",
+    "email": "info@globalfinance.com",
+    "phone": "+1-555-0102",
+    "industry": "finance",
+    "status": "active",
+    "employees": "500+"
+  },
+  {
+    "id": "COMP-1003",
+    "name": "HealthCare Solutions Inc",
+    "email": "hello@healthcaresolutions.com",
+    "phone": "+1-555-0103",
+    "industry": "healthcare",
+    "status": "active",
+    "employees": "51-200"
+  },
+  {
+    "id": "COMP-1004",
+    "name": "RetailMax Stores",
+    "email": "support@retailmax.com",
+    "phone": "+1-555-0104",
+    "industry": "retail",
+    "status": "pending",
+    "employees": "11-50"
+  },
+  {
+    "id": "COMP-1005",
+    "name": "Manufacturing Pro",
+    "email": "contact@manufacturingpro.com",
+    "phone": "+1-555-0105",
+    "industry": "manufacturing",
+    "status": "active",
+    "employees": "201-500"
+  },
+  {
+    "id": "COMP-1006",
+    "name": "EduTech Innovations",
+    "email": "info@edutech.com",
+    "phone": "+1-555-0106",
+    "industry": "education",
+    "status": "active",
+    "employees": "51-200"
+  },
+  {
+    "id": "COMP-1007",
+    "name": "CloudSync Technologies",
+    "email": "hello@cloudsync.com",
+    "phone": "+1-555-0107",
+    "industry": "technology",
+    "status": "active",
+    "employees": "11-50"
+  },
+  {
+    "id": "COMP-1008",
+    "name": "Capital Investments LLC",
+    "email": "contact@capitalinvest.com",
+    "phone": "+1-555-0108",
+    "industry": "finance",
+    "status": "inactive",
+    "employees": "1-10"
+  },
+  {
+    "id": "COMP-1009",
+    "name": "MediCare Plus",
+    "email": "support@medicareplus.com",
+    "phone": "+1-555-0109",
+    "industry": "healthcare",
+    "status": "active",
+    "employees": "500+"
+  },
+  {
+    "id": "COMP-1010",
+    "name": "ShopSmart Retail",
+    "email": "info@shopsmart.com",
+    "phone": "+1-555-0110",
+    "industry": "retail",
+    "status": "active",
+    "employees": "51-200"
+  },
+  {
+    "id": "COMP-1011",
+    "name": "Industrial Works Co",
+    "email": "hello@industrialworks.com",
+    "phone": "+1-555-0111",
+    "industry": "manufacturing",
+    "status": "pending",
+    "employees": "201-500"
+  },
+  {
+    "id": "COMP-1012",
+    "name": "LearnOnline Academy",
+    "email": "contact@learnonline.com",
+    "phone": "+1-555-0112",
+    "industry": "education",
+    "status": "active",
+    "employees": "11-50"
+  },
+  {
+    "id": "COMP-1013",
+    "name": "DataVault Systems",
+    "email": "info@datavault.com",
+    "phone": "+1-555-0113",
+    "industry": "technology",
+    "status": "active",
+    "employees": "51-200"
+  },
+  {
+    "id": "COMP-1014",
+    "name": "TrustBank Financial",
+    "email": "hello@trustbank.com",
+    "phone": "+1-555-0114",
+    "industry": "finance",
+    "status": "active",
+    "employees": "500+"
+  },
+  {
+    "id": "COMP-1015",
+    "name": "Wellness Clinic Network",
+    "email": "support@wellnessclinic.com",
+    "phone": "+1-555-0115",
+    "industry": "healthcare",
+    "status": "inactive",
+    "employees": "1-10"
+  },
+  {
+    "id": "COMP-1016",
+    "name": "MegaMart Stores",
+    "email": "contact@megamart.com",
+    "phone": "+1-555-0116",
+    "industry": "retail",
+    "status": "active",
+    "employees": "201-500"
+  },
+  {
+    "id": "COMP-1017",
+    "name": "Precision Manufacturing",
+    "email": "info@precisionmfg.com",
+    "phone": "+1-555-0117",
+    "industry": "manufacturing",
+    "status": "active",
+    "employees": "51-200"
+  },
+  {
+    "id": "COMP-1018",
+    "name": "University Online",
+    "email": "hello@universityonline.com",
+    "phone": "+1-555-0118",
+    "industry": "education",
+    "status": "pending",
+    "employees": "11-50"
+  },
+  {
+    "id": "COMP-1019",
+    "name": "NextGen Software",
+    "email": "contact@nextgensoftware.com",
+    "phone": "+1-555-0119",
+    "industry": "technology",
+    "status": "active",
+    "employees": "1-10"
+  },
+  {
+    "id": "COMP-1020",
+    "name": "Wealth Management Group",
+    "email": "info@wealthmgmt.com",
+    "phone": "+1-555-0120",
+    "industry": "finance",
+    "status": "active",
+    "employees": "51-200"
+  },
+  {
+    "id": "COMP-1021",
+    "name": "City Hospital System",
+    "email": "hello@cityhospital.com",
+    "phone": "+1-555-0121",
+    "industry": "healthcare",
+    "status": "active",
+    "employees": "500+"
+  },
+  {
+    "id": "COMP-1022",
+    "name": "Boutique Retail Co",
+    "email": "support@boutiqueretail.com",
+    "phone": "+1-555-0122",
+    "industry": "retail",
+    "status": "inactive",
+    "employees": "1-10"
+  },
+  {
+    "id": "COMP-1023",
+    "name": "AutoParts Manufacturing",
+    "email": "contact@autopartsmfg.com",
+    "phone": "+1-555-0123",
+    "industry": "manufacturing",
+    "status": "active",
+    "employees": "201-500"
+  },
+  {
+    "id": "COMP-1024",
+    "name": "TechSkills Training",
+    "email": "info@techskills.com",
+    "phone": "+1-555-0124",
+    "industry": "education",
+    "status": "active",
+    "employees": "11-50"
+  },
+  {
+    "id": "COMP-1025",
+    "name": "SecureNet Solutions",
+    "email": "hello@securenet.com",
+    "phone": "+1-555-0125",
+    "industry": "technology",
+    "status": "pending",
+    "employees": "51-200"
+  },
+  {
+    "id": "COMP-1026",
+    "name": "Investment Partners",
+    "email": "contact@investmentpartners.com",
+    "phone": "+1-555-0126",
+    "industry": "finance",
+    "status": "active",
+    "employees": "201-500"
+  },
+  {
+    "id": "COMP-1027",
+    "name": "Family Medical Center",
+    "email": "support@familymedical.com",
+    "phone": "+1-555-0127",
+    "industry": "healthcare",
+    "status": "active",
+    "employees": "11-50"
+  },
+  {
+    "id": "COMP-1028",
+    "name": "Fashion Forward Retail",
+    "email": "info@fashionforward.com",
+    "phone": "+1-555-0128",
+    "industry": "retail",
+    "status": "active",
+    "employees": "51-200"
+  },
+  {
+    "id": "COMP-1029",
+    "name": "SteelWorks Industries",
+    "email": "hello@steelworks.com",
+    "phone": "+1-555-0129",
+    "industry": "manufacturing",
+    "status": "inactive",
+    "employees": "1-10"
+  },
+  {
+    "id": "COMP-1030",
+    "name": "Digital Learning Hub",
+    "email": "contact@digitallearning.com",
+    "phone": "+1-555-0130",
+    "industry": "education",
+    "status": "active",
+    "employees": "201-500"
+  }
+]
+

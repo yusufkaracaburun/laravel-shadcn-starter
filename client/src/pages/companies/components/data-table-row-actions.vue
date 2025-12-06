@@ -4,30 +4,18 @@ import type { Component } from 'vue'
 
 import { Ellipsis, FilePenLine, Trash2 } from 'lucide-vue-next'
 
-import type { Task } from '../data/schema'
+import type { Company } from '../data/schema'
 
-import { taskSchema } from '../data/schema'
-import TaskDelete from './task-delete.vue'
-import TaskResourceDialog from './task-resource-dialog.vue'
+import { companySchema } from '../data/schema'
+import CompanyDelete from './company-delete.vue'
+import CompanyResourceDialog from './company-resource-dialog.vue'
 
 const props = defineProps<DataTableRowActionsProps>()
 
 interface DataTableRowActionsProps {
-  row: Row<Task>
+  row: Row<Company>
 }
-const task = computed(() => {
-  try {
-    return taskSchema.parse(props.row.original)
-  } catch (error) {
-    // If validation fails, return the original task with defaults
-    return {
-      ...props.row.original,
-      labels: props.row.original.labels || [],
-      dueDate: props.row.original.dueDate ?? null,
-      createdAt: props.row.original.createdAt || new Date().toISOString(),
-    }
-  }
-})
+const company = computed(() => companySchema.parse(props.row.original))
 
 const showComponent = shallowRef<Component | null>(null)
 
@@ -35,13 +23,13 @@ type TCommand = 'edit' | 'create' | 'delete'
 function handleSelect(command: TCommand) {
   switch (command) {
     case 'edit':
-      showComponent.value = TaskResourceDialog
+      showComponent.value = CompanyResourceDialog
       break
     case 'create':
-      showComponent.value = TaskResourceDialog
+      showComponent.value = CompanyResourceDialog
       break
     case 'delete':
-      showComponent.value = TaskDelete
+      showComponent.value = CompanyDelete
       break
   }
 }
@@ -81,7 +69,8 @@ const isOpen = ref(false)
     </UiDropdownMenu>
 
     <UiDialogContent>
-      <component :is="showComponent" :task="task" @close="isOpen = false" />
+      <component :is="showComponent" :company="company" @close="isOpen = false" />
     </UiDialogContent>
   </UiDialog>
 </template>
+

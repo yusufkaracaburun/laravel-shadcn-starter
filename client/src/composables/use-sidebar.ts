@@ -3,9 +3,11 @@ import {
   BellDot,
   Boxes,
   Bug,
+  Building2,
   Component,
   CreditCard,
   LayoutDashboard,
+  LayoutList,
   ListTodo,
   Palette,
   PictureInPicture2,
@@ -32,21 +34,6 @@ export function useSidebar() {
           icon: LayoutDashboard,
         },
         {
-          title: 'Tasks',
-          url: '/tasks',
-          icon: ListTodo,
-        },
-        {
-          title: 'Apps',
-          url: '/apps',
-          icon: Boxes,
-        },
-        {
-          title: 'Users',
-          url: '/users',
-          icon: Users,
-        },
-        {
           title: 'Ai Talk Example',
           url: '/ai-talk',
           icon: Podcast,
@@ -56,6 +43,21 @@ export function useSidebar() {
     {
       title: 'Pages',
       items: [
+        {
+          title: 'Users',
+          url: '/users',
+          icon: Users,
+        },
+        {
+          title: 'Companies',
+          url: '/companies',
+          icon: Building2,
+        },
+        {
+          title: 'Tasks',
+          url: '/tasks',
+          icon: ListTodo,
+        },
         {
           title: 'Auth',
           icon: SquareUserRound,
