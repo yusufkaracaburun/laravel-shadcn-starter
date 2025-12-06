@@ -6,6 +6,7 @@ import {
   Building2,
   Component,
   CreditCard,
+  FolderKanban,
   LayoutDashboard,
   LayoutList,
   ListTodo,
@@ -52,6 +53,11 @@ export function useSidebar() {
           title: 'Companies',
           url: '/companies',
           icon: Building2,
+        },
+        {
+          title: 'Projects',
+          url: '/projects',
+          icon: FolderKanban,
         },
         {
           title: 'Tasks',
