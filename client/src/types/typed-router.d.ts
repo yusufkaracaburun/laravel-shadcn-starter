@@ -61,7 +61,9 @@ declare module 'vue-router/auto-routes' {
       | '/auth/otp'
       | '/auth/sign-in'
       | '/auth/sign-in-2'
+      | '/auth/sign-in-4'
       | '/auth/sign-up'
+      | '/auth/sign-up-4'
     >,
     '/auth/': RouteRecordInfo<
       '/auth/',
@@ -98,9 +100,23 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       | never
     >,
+    '/auth/sign-in-4': RouteRecordInfo<
+      '/auth/sign-in-4',
+      '/auth/sign-in-4',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
     '/auth/sign-up': RouteRecordInfo<
       '/auth/sign-up',
       '/auth/sign-up',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
+    '/auth/sign-up-4': RouteRecordInfo<
+      '/auth/sign-up-4',
+      '/auth/sign-up-4',
       Record<never, never>,
       Record<never, never>,
       | never
@@ -309,7 +325,9 @@ declare module 'vue-router/auto-routes' {
         | '/auth/otp'
         | '/auth/sign-in'
         | '/auth/sign-in-2'
+        | '/auth/sign-in-4'
         | '/auth/sign-up'
+        | '/auth/sign-up-4'
       views:
         | 'default'
     }
@@ -343,9 +361,21 @@ declare module 'vue-router/auto-routes' {
       views:
         | never
     }
+    'src/pages/auth/sign-in-4.vue': {
+      routes:
+        | '/auth/sign-in-4'
+      views:
+        | never
+    }
     'src/pages/auth/sign-up.vue': {
       routes:
         | '/auth/sign-up'
+      views:
+        | never
+    }
+    'src/pages/auth/sign-up-4.vue': {
+      routes:
+        | '/auth/sign-up-4'
       views:
         | never
     }
