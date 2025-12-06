@@ -73,10 +73,17 @@ export const columns: ColumnDef<Task>[] = [
 
       if (!status) return null
 
-      return h('div', { class: 'flex w-[100px] items-center' }, [
-        status.icon && h(status.icon, { class: 'mr-2 h-4 w-4 text-muted-foreground' }),
-        h('span', status.label),
-      ])
+      return h(
+        Badge,
+        {
+          class: `flex w-fit items-center gap-2 ${status.color}`,
+          variant: 'secondary',
+        },
+        () => [
+          status.icon && h(status.icon, { class: 'h-3 w-3' }),
+          h('span', status.label),
+        ],
+      )
     },
     filterFn: (row, id, value) => {
       return value.includes(row.getValue(id))
@@ -90,9 +97,9 @@ export const columns: ColumnDef<Task>[] = [
 
       if (!priority) return null
 
-      return h('div', { class: 'flex items-center' }, [
-        priority.icon && h(priority.icon, { class: 'mr-2 h-4 w-4 text-muted-foreground' }),
-        h('span', {}, priority.label),
+      return h('div', { class: 'flex items-center gap-2' }, [
+        priority.icon && h(priority.icon, { class: `h-4 w-4 ${priority.color}` }),
+        h('span', { class: priority.color }, priority.label),
       ])
     },
     filterFn: (row, id, value) => {
