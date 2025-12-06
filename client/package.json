@@ -79,6 +79,7 @@
     "vue-input-otp": "^0.3.2",
     "vue-router": "^4.6.3",
     "vue-sonner": "^2.0.9",
+    "vuedraggable": "^4.1.0",
     "zod": "^4.1.13"
   },
   "devDependencies": {

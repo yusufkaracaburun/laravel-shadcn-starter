@@ -6,7 +6,6 @@ import { Ellipsis, FilePenLine, Trash2 } from 'lucide-vue-next'
 
 import type { Task } from '../data/schema'
 
-import { labels } from '../data/data'
 import { taskSchema } from '../data/schema'
 import TaskDelete from './task-delete.vue'
 import TaskResourceDialog from './task-resource-dialog.vue'
@@ -16,9 +15,19 @@ const props = defineProps<DataTableRowActionsProps>()
 interface DataTableRowActionsProps {
   row: Row<Task>
 }
-const task = computed(() => taskSchema.parse(props.row.original))
-
-const taskLabel = ref(task.value.label)
+const task = computed(() => {
+  try {
+    return taskSchema.parse(props.row.original)
+  } catch (error) {
+    // If validation fails, return the original task with defaults
+    return {
+      ...props.row.original,
+      labels: props.row.original.labels || [],
+      dueDate: props.row.original.dueDate ?? null,
+      createdAt: props.row.original.createdAt || new Date().toISOString(),
+    }
+  }
+})
 
 const showComponent = shallowRef<Component | null>(null)
 
@@ -59,23 +68,6 @@ const isOpen = ref(false)
 
         <UiDropdownMenuItem disabled> Make a copy </UiDropdownMenuItem>
         <UiDropdownMenuItem disabled> Favorite </UiDropdownMenuItem>
-
-        <UiDropdownMenuSeparator />
-
-        <UiDropdownMenuSub>
-          <UiDropdownMenuSubTrigger>Labels</UiDropdownMenuSubTrigger>
-          <UiDropdownMenuSubContent>
-            <UiDropdownMenuRadioGroup v-model="taskLabel">
-              <UiDropdownMenuRadioItem
-                v-for="label in labels"
-                :key="label.value"
-                :value="label.value"
-              >
-                {{ label.label }}
-              </UiDropdownMenuRadioItem>
-            </UiDropdownMenuRadioGroup>
-          </UiDropdownMenuSubContent>
-        </UiDropdownMenuSub>
 
         <UiDropdownMenuSeparator />
 
