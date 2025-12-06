@@ -4,13 +4,16 @@ import { toast } from 'vue-sonner'
 import Page from '@/components/global-layout/basic-page.vue'
 import { Button } from '@/components/ui/button'
 
+import AnalyticsContent from './components/analytics-content.vue'
+import NotificationsContent from './components/notifications-content.vue'
 import OverviewContent from './components/overview-content.vue'
+import ReportsContent from './components/reports-content.vue'
 
 const tabs = ref([
   { name: 'Overview', value: 'overview' },
-  { name: 'Analytics', value: 'analytics', disabled: true },
-  { name: 'Reports', value: 'reports', disabled: true },
-  { name: 'Notifications', value: 'notifications', disabled: true },
+  { name: 'Analytics', value: 'analytics' },
+  { name: 'Reports', value: 'reports' },
+  { name: 'Notifications', value: 'notifications' },
 ])
 
 const activeTab = ref(tabs.value[0].value)
@@ -37,13 +40,21 @@ const activeTab = ref(tabs.value[0].value)
           v-for="tab in tabs"
           :key="tab.value"
           :value="tab.value"
-          :disabled="tab.disabled"
         >
           {{ tab.name }}
         </UiTabsTrigger>
       </UiTabsList>
       <UiTabsContent value="overview" class="space-y-4">
         <OverviewContent />
+      </UiTabsContent>
+      <UiTabsContent value="analytics" class="space-y-4">
+        <AnalyticsContent />
+      </UiTabsContent>
+      <UiTabsContent value="reports" class="space-y-4">
+        <ReportsContent />
+      </UiTabsContent>
+      <UiTabsContent value="notifications" class="space-y-4">
+        <NotificationsContent />
       </UiTabsContent>
     </UiTabs>
   </Page>
