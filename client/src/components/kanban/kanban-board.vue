@@ -28,6 +28,8 @@ import Draggable from 'vuedraggable'
 
 import type { Column, NewTask, Task } from '@/types/kanban'
 
+import { getPriorityColor } from '@/utils/status-colors'
+
 interface Props {
   useTaskForm?: boolean
 }
@@ -386,14 +388,10 @@ function onTaskDrop() {
   nextTick(() => setColumns([...board.value.columns]))
 }
 
+import { getPriorityColor } from '@/utils/status-colors'
+
 function colorPriority(p?: Task['priority']) {
-  if (!p)
-    return 'text-warning'
-  if (p === 'low')
-    return 'text-blue-500'
-  if (p === 'medium')
-    return 'text-warning'
-  return 'text-destructive'
+  return getPriorityColor(p)
 }
 
 function iconPriority(p?: Task['priority']) {

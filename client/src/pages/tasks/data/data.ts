@@ -10,6 +10,8 @@ import {
 } from 'lucide-vue-next'
 import { h } from 'vue'
 
+import { getPriorityColor, getTaskStatusColor } from '@/utils/status-colors'
+
 export const labels = [
   {
     value: 'bug',
@@ -30,31 +32,41 @@ export const statuses = [
     value: 'backlog',
     label: 'Backlog',
     icon: h(CircleHelp),
-    color: 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300',
+    get color() {
+      return getTaskStatusColor(this.value)
+    },
   },
   {
     value: 'todo',
     label: 'Todo',
     icon: h(Circle),
-    color: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300',
+    get color() {
+      return getTaskStatusColor(this.value)
+    },
   },
   {
     value: 'in progress',
     label: 'In Progress',
     icon: h(TimerOff),
-    color: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300',
+    get color() {
+      return getTaskStatusColor(this.value)
+    },
   },
   {
     value: 'done',
     label: 'Done',
     icon: h(CircleCheck),
-    color: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300',
+    get color() {
+      return getTaskStatusColor(this.value)
+    },
   },
   {
     value: 'canceled',
     label: 'Canceled',
     icon: h(CirclePlus),
-    color: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300',
+    get color() {
+      return getTaskStatusColor(this.value)
+    },
   },
 ]
 
@@ -63,18 +75,24 @@ export const priorities = [
     value: 'low',
     label: 'Low',
     icon: h(ArrowDown),
-    color: 'text-blue-500',
+    get color() {
+      return getPriorityColor(this.value)
+    },
   },
   {
     value: 'medium',
     label: 'Medium',
     icon: h(ArrowRight),
-    color: 'text-warning',
+    get color() {
+      return getPriorityColor(this.value)
+    },
   },
   {
     value: 'high',
     label: 'High',
     icon: h(ArrowUp),
-    color: 'text-destructive',
+    get color() {
+      return getPriorityColor(this.value)
+    },
   },
 ]
