@@ -1,47 +1,119 @@
 <script lang="ts" setup>
+import { Donut } from '@unovis/ts'
+import { VisDonut, VisSingleContainer } from '@unovis/vue'
+
+import type { ChartConfig } from '@/components/ui/chart'
+
+import {
+  ChartContainer,
+  ChartLegendContent,
+  ChartTooltip,
+  ChartTooltipContent,
+  componentToString,
+} from '@/components/ui/chart'
 import { Progress } from '@/components/ui/progress'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import projects from '@/pages/projects/data/projects.json'
 
-const totalProjects = computed(() => projects.length)
-const activeProjects = computed(() => projects.filter(p => p.status === 'active').length)
-const completedProjects = computed(() => projects.filter(p => p.status === 'completed').length)
+const timeRange = ref('all')
+
+const filteredProjects = computed(() => {
+  if (timeRange.value === 'all') {
+    return projects
+  }
+
+  const now = new Date()
+  let daysToSubtract = 0
+
+  if (timeRange.value === '90d') {
+    daysToSubtract = 90
+  }
+  else if (timeRange.value === '30d') {
+    daysToSubtract = 30
+  }
+  else if (timeRange.value === '7d') {
+    daysToSubtract = 7
+  }
+
+  const startDate = new Date(now)
+  startDate.setDate(startDate.getDate() - daysToSubtract)
+
+  return projects.filter((project) => {
+    const projectStartDate = new Date(project.startDate)
+    return projectStartDate >= startDate
+  })
+})
+
+const totalProjects = computed(() => filteredProjects.value.length)
+const activeProjects = computed(() => filteredProjects.value.filter(p => p.status === 'active').length)
+const completedProjects = computed(() => filteredProjects.value.filter(p => p.status === 'completed').length)
 const inProgressProjects = computed(() => {
-  return projects.filter(p => p.status === 'active' && p.progress > 0 && p.progress < 100).length
+  return filteredProjects.value.filter(p => p.status === 'active' && p.progress > 0 && p.progress < 100).length
 })
 
 const recentProjects = computed(() => {
-  return projects
+  return filteredProjects.value
     .filter(p => p.status === 'active')
     .sort((a, b) => new Date(b.startDate).getTime() - new Date(a.startDate).getTime())
     .slice(0, 5)
 })
 
-interface StatusData {
+interface PieChartData {
   status: string
   value: number
-  color: string
-  percentage: number
+  fill: string
 }
 
-const statusDistributionData = computed<StatusData[]>(() => {
-  const onHoldCount = projects.filter(p => p.status === 'on-hold').length
-  const cancelledCount = projects.filter(p => p.status === 'cancelled').length
+function getChartColor(index: number) {
+  if (globalThis.window === undefined)
+    return `var(--chart-${index})`
+  const root = document.documentElement
+  const value = getComputedStyle(root).getPropertyValue(`--chart-${index}`).trim()
+  return value || `var(--chart-${index})`
+}
+
+const pieChartData = computed<PieChartData[]>(() => {
+  const onHoldCount = filteredProjects.value.filter(p => p.status === 'on-hold').length
+  const cancelledCount = filteredProjects.value.filter(p => p.status === 'cancelled').length
 
   const data = [
-    { status: 'Active', value: activeProjects.value, color: 'bg-blue-500' },
-    { status: 'Completed', value: completedProjects.value, color: 'bg-green-500' },
-    { status: 'On Hold', value: onHoldCount, color: 'bg-yellow-500' },
-    { status: 'Cancelled', value: cancelledCount, color: 'bg-red-500' },
+    { status: 'active', value: activeProjects.value, fill: getChartColor(1) },
+    { status: 'completed', value: completedProjects.value, fill: getChartColor(2) },
+    { status: 'onHold', value: onHoldCount, fill: getChartColor(3) },
+    { status: 'cancelled', value: cancelledCount, fill: getChartColor(4) },
   ]
 
-  const maxValue = Math.max(...data.map(d => d.value), 1)
-
-  return data.map(item => ({
-    ...item,
-    percentage: totalProjects.value > 0 ? Math.round((item.value / totalProjects.value) * 100) : 0,
-    widthPercentage: (item.value / maxValue) * 100,
-  }))
+  return data.filter(item => item.value > 0)
 })
+
+const totalProjectsCount = computed(() => pieChartData.value.reduce((acc, curr) => acc + curr.value, 0))
+
+type Data = typeof pieChartData.value[number]
+
+const chartConfig = {
+  active: {
+    label: 'Active',
+    color: 'var(--chart-1)',
+  },
+  completed: {
+    label: 'Completed',
+    color: 'var(--chart-2)',
+  },
+  onHold: {
+    label: 'On Hold',
+    color: 'var(--chart-3)',
+  },
+  cancelled: {
+    label: 'Cancelled',
+    color: 'var(--chart-4)',
+  },
+} satisfies ChartConfig
 
 function formatDate(dateString: string) {
   const date = new Date(dateString)
@@ -170,34 +242,69 @@ function formatDate(dateString: string) {
 
   <div class="grid grid-cols-1 gap-4 lg:grid-cols-7">
     <UiCard class="col-span-1 lg:col-span-4" data-testid="projects-content_status-card">
-      <UiCardHeader>
-        <UiCardTitle>Project Status Distribution</UiCardTitle>
-        <UiCardDescription> Overview of projects by status </UiCardDescription>
+      <UiCardHeader class="flex items-center gap-2 space-y-0 border-b py-5 sm:flex-row">
+        <div class="grid flex-1 gap-1">
+          <UiCardTitle>Project Status Distribution</UiCardTitle>
+          <UiCardDescription> Overview of projects by status </UiCardDescription>
+        </div>
+        <Select v-model="timeRange" data-testid="projects-content_time-range_select">
+          <SelectTrigger
+            class="hidden w-[160px] rounded-lg sm:ml-auto sm:flex"
+            aria-label="Select time range"
+          >
+            <SelectValue placeholder="All Projects" />
+          </SelectTrigger>
+          <SelectContent class="rounded-xl">
+            <SelectItem value="all" class="rounded-lg">
+              All Projects
+            </SelectItem>
+            <SelectItem value="90d" class="rounded-lg">
+              Last 3 months
+            </SelectItem>
+            <SelectItem value="30d" class="rounded-lg">
+              Last 30 days
+            </SelectItem>
+            <SelectItem value="7d" class="rounded-lg">
+              Last 7 days
+            </SelectItem>
+          </SelectContent>
+        </Select>
       </UiCardHeader>
       <UiCardContent class="px-2 pt-4 sm:px-6 sm:pt-6 pb-4">
-        <div class="space-y-6" data-testid="projects-content_status-chart">
-          <div
-            v-for="item in statusDistributionData"
-            :key="item.status"
-            class="space-y-2"
+        <ChartContainer
+          :config="chartConfig"
+          class="mx-auto aspect-square max-h-[250px] w-full"
+          :cursor="false"
+          :style="{
+            '--vis-donut-central-label-font-size': 'var(--text-3xl)',
+            '--vis-donut-central-label-font-weight': 'var(--font-weight-bold)',
+            '--vis-donut-central-label-text-color': 'var(--foreground)',
+            '--vis-donut-central-sub-label-text-color': 'var(--muted-foreground)',
+          }"
+          data-testid="projects-content_status-chart"
+        >
+          <VisSingleContainer
+            :data="pieChartData"
+            :margin="{ top: 30, bottom: 30 }"
           >
-            <div class="flex items-center justify-between text-sm">
-              <span class="font-medium">{{ item.status }}</span>
-              <div class="flex items-center gap-2">
-                <span class="font-bold">{{ item.value }}</span>
-                <span class="text-muted-foreground">({{ item.percentage }}%)</span>
-              </div>
-            </div>
-            <div class="relative h-8 w-full overflow-hidden rounded-md bg-muted">
-              <div
-                :class="item.color"
-                class="h-full rounded-md transition-all duration-500"
-                :style="{ width: `${item.widthPercentage}%` }"
-                data-testid="projects-content_status-bar"
-              />
-            </div>
-          </div>
-        </div>
+            <VisDonut
+              :value="(d: Data) => d.value"
+              :color="(d: Data) => chartConfig[d.status as keyof typeof chartConfig]?.color || d.fill"
+              :arc-width="30"
+              :central-label-offset-y="10"
+              :central-label="totalProjectsCount.toLocaleString()"
+              central-sub-label="Projects"
+            />
+            <ChartTooltip
+              :triggers="{
+                [Donut.selectors.segment]: componentToString(chartConfig, ChartTooltipContent, {
+                  hideLabel: true,
+                })!,
+              }"
+            />
+          </VisSingleContainer>
+          <ChartLegendContent />
+        </ChartContainer>
       </UiCardContent>
     </UiCard>
     <UiCard class="col-span-1 lg:col-span-3" data-testid="projects-content_recent-projects_card">
