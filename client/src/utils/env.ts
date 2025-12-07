@@ -11,7 +11,7 @@ import { z } from 'zod'
 const EnvSchema = z.object({
   // Add your environment variables here, for example:
   VITE_APP_ENV: z.string(),
-  VITE_SERVER_API_URL: z.url(),
+  VITE_SERVER_API_URL: z.string().url(),
   VITE_SERVER_API_PREFIX: z.string(),
   VITE_SERVER_API_TIMEOUT: z.coerce.number().default(5000),
   // Reverb (WebSocket) configuration
