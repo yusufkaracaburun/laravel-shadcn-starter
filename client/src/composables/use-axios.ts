@@ -36,26 +36,37 @@ export function useAxios() {
     },
     (error: AxiosError) => {
       const errorStore = useErrorStore()
+      const status = error.response?.status
 
       // Handle 401 Unauthorized - redirect to login (don't store 401 errors)
-      if (error.response?.status === 401) {
+      if (status === 401) {
         handleUnauthorized(error)
+        return Promise.reject(error)
+      }
+
+      // Map HTTP status codes to error page routes
+      const errorPageRoutes: Record<number, string> = {
+        403: '/errors/403',
+        404: '/errors/404',
+        500: '/errors/500',
+        503: '/errors/503',
+      }
+
+      // Handle HTTP errors that should redirect to error pages
+      if (status && errorPageRoutes[status]) {
+        errorStore.setApiError(error)
+        router.push({ name: errorPageRoutes[status] as any })
         return Promise.reject(error)
       }
 
       // Store other errors in error store
       errorStore.setApiError(error)
 
-      // Keep existing toast notifications
-      if (error.response?.status === 403) {
-        useToast().showError('You are not authorized to access this page')
-      }
-      if (error.response?.status === 422) {
+      // Show toast notifications for specific error types
+      if (status === 422) {
         useToast().showError('Validation error')
       }
-      if (error.response?.status === 500) {
-        useToast().showError('Internal server error')
-      }
+
       return Promise.reject(error)
     },
   )

@@ -3,7 +3,7 @@ import { toTypedSchema } from '@vee-validate/zod'
 import { useForm, Field as VeeField } from 'vee-validate'
 import { z } from 'zod'
 
-import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field'
+import { Field, FieldError, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
 import { useAuth } from '@/composables/use-auth'
 
@@ -23,7 +23,7 @@ const registerSchema = toTypedSchema(
       password: z.string().min(8, 'Password must be at least 8 characters.'),
       password_confirmation: z.string().min(1, 'Please confirm your password.'),
     })
-    .refine((data) => data.password === data.password_confirmation, {
+    .refine(data => data.password === data.password_confirmation, {
       message: 'Passwords do not match.',
       path: ['password_confirmation'],
     }),
@@ -47,7 +47,8 @@ const onSubmit = handleSubmit(async (values) => {
       password: values.password,
       password_confirmation: values.password_confirmation,
     })
-  } catch (error: any) {
+  }
+  catch (error: any) {
     // Handle backend validation errors (422)
     if (error.response?.status === 422) {
       const backendErrors = error.response.data.errors || {}
@@ -75,7 +76,9 @@ const onSubmit = handleSubmit(async (values) => {
       <AuthTitle />
       <UiCard class="max-w-sm mx-auto">
         <UiCardHeader>
-          <UiCardTitle class="text-xl"> Sign Up </UiCardTitle>
+          <UiCardTitle class="text-xl">
+            Sign Up
+          </UiCardTitle>
           <UiCardDescription>
             Enter your email and password to create an account. Already have an account?
             <UiButton
@@ -89,87 +92,101 @@ const onSubmit = handleSubmit(async (values) => {
         </UiCardHeader>
         <UiCardContent>
           <form id="register-form" @submit="onSubmit">
-            <FieldGroup>
-              <VeeField v-slot="{ field, errors }" name="name">
-                <Field :data-invalid="!!errors.length">
-                  <FieldLabel for="register-form-name"> Name </FieldLabel>
-                  <Input
-                    id="register-form-name"
-                    v-bind="field"
-                    placeholder="John Doe"
-                    :aria-invalid="!!errors.length"
-                  />
-                  <FieldError v-if="errors.length" :errors="errors" />
-                </Field>
-              </VeeField>
+            <div class="grid gap-4">
+              <div class="grid gap-2">
+                <VeeField v-slot="{ field, errors }" name="name">
+                  <Field :data-invalid="!!errors.length">
+                    <FieldLabel for="register-form-name">
+                      Name
+                    </FieldLabel>
+                    <Input
+                      id="register-form-name"
+                      v-bind="field"
+                      placeholder="John Doe"
+                      :aria-invalid="!!errors.length"
+                    />
+                    <FieldError v-if="errors.length" :errors="errors" />
+                  </Field>
+                </VeeField>
+              </div>
 
-              <VeeField v-slot="{ field, errors }" name="email">
-                <Field :data-invalid="!!errors.length">
-                  <FieldLabel for="register-form-email"> Email </FieldLabel>
-                  <Input
-                    id="register-form-email"
-                    v-bind="field"
-                    type="email"
-                    placeholder="m@example.com"
-                    autocomplete="email"
-                    :aria-invalid="!!errors.length"
-                  />
-                  <FieldError v-if="errors.length" :errors="errors" />
-                </Field>
-              </VeeField>
+              <div class="grid gap-2">
+                <VeeField v-slot="{ field, errors }" name="email">
+                  <Field :data-invalid="!!errors.length">
+                    <FieldLabel for="register-form-email">
+                      Email
+                    </FieldLabel>
+                    <Input
+                      id="register-form-email"
+                      v-bind="field"
+                      type="email"
+                      placeholder="m@example.com"
+                      autocomplete="email"
+                      :aria-invalid="!!errors.length"
+                    />
+                    <FieldError v-if="errors.length" :errors="errors" />
+                  </Field>
+                </VeeField>
+              </div>
 
-              <VeeField v-slot="{ field, errors }" name="password">
-                <Field :data-invalid="!!errors.length">
-                  <FieldLabel for="register-form-password"> Password </FieldLabel>
-                  <Input
-                    id="register-form-password"
-                    v-bind="field"
-                    type="password"
-                    placeholder="******"
-                    autocomplete="new-password"
-                    :aria-invalid="!!errors.length"
-                  />
-                  <FieldError v-if="errors.length" :errors="errors" />
-                </Field>
-              </VeeField>
+              <div class="grid gap-2">
+                <VeeField v-slot="{ field, errors }" name="password">
+                  <Field :data-invalid="!!errors.length">
+                    <FieldLabel for="register-form-password">
+                      Password
+                    </FieldLabel>
+                    <Input
+                      id="register-form-password"
+                      v-bind="field"
+                      type="password"
+                      placeholder="******"
+                      autocomplete="new-password"
+                      :aria-invalid="!!errors.length"
+                    />
+                    <FieldError v-if="errors.length" :errors="errors" />
+                  </Field>
+                </VeeField>
+              </div>
 
-              <VeeField v-slot="{ field, errors }" name="password_confirmation">
-                <Field :data-invalid="!!errors.length">
-                  <FieldLabel for="register-form-password-confirmation">
-                    Confirm Password
-                  </FieldLabel>
-                  <Input
-                    id="register-form-password-confirmation"
-                    v-bind="field"
-                    type="password"
-                    placeholder="******"
-                    autocomplete="new-password"
-                    :aria-invalid="!!errors.length"
-                  />
-                  <FieldError v-if="errors.length" :errors="errors" />
-                </Field>
-              </VeeField>
-            </FieldGroup>
+              <div class="grid gap-2">
+                <VeeField v-slot="{ field, errors }" name="password_confirmation">
+                  <Field :data-invalid="!!errors.length">
+                    <FieldLabel for="register-form-password-confirmation">
+                      Confirm Password
+                    </FieldLabel>
+                    <Input
+                      id="register-form-password-confirmation"
+                      v-bind="field"
+                      type="password"
+                      placeholder="******"
+                      autocomplete="new-password"
+                      :aria-invalid="!!errors.length"
+                    />
+                    <FieldError v-if="errors.length" :errors="errors" />
+                  </Field>
+                </VeeField>
+              </div>
+
+              <UiButton type="submit" form="register-form" class="w-full" :disabled="loading">
+                <UiSpinner v-if="loading" class="mr-2" />
+                Create Account
+              </UiButton>
+
+              <UiSeparator label="Or continue with" />
+
+              <div class="flex flex-col items-center justify-between gap-4">
+                <GitHubButton />
+                <GoogleButton />
+              </div>
+
+              <UiCardDescription>
+                By creating an account, you agree to our
+                <TermsOfServiceButton />
+                and
+                <PrivacyPolicyButton />
+              </UiCardDescription>
+            </div>
           </form>
-
-          <UiButton type="submit" form="register-form" class="w-full" :disabled="loading">
-            <UiSpinner v-if="loading" class="mr-2" />
-            Create Account
-          </UiButton>
-
-          <UiSeparator label="Or continue with" />
-
-          <div class="flex flex-col items-center justify-between gap-4">
-            <GitHubButton />
-            <GoogleButton />
-          </div>
-
-          <UiCardDescription>
-            By creating an account, you agree to our
-            <TermsOfServiceButton />
-            and
-            <PrivacyPolicyButton />
-          </UiCardDescription>
         </UiCardContent>
       </UiCard>
     </main>
