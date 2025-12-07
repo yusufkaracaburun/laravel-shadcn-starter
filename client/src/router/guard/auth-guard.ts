@@ -8,10 +8,10 @@ import { useAuthStore } from '@/stores/auth.store'
 export function authGuard(router: Router) {
   router.beforeEach((to, _from) => {
     const authStore = useAuthStore(pinia)
-    const { isAuthenticated } = storeToRefs(authStore)
+    const { isLogin } = storeToRefs(authStore)
 
     // If the page requires login but the user is not logged in, redirect to the login page and record the original target page.
-    if (to.meta.auth && !unref(isAuthenticated) && to.name !== '/auth/sign-in') {
+    if (to.meta.auth && !unref(isLogin) && to.name !== '/auth/sign-in') {
       return {
         name: '/auth/sign-in',
         query: { redirect: to.fullPath },
