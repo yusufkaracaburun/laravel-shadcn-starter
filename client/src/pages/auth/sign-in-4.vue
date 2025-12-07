@@ -1,5 +1,28 @@
 <script setup lang="ts">
+import { useAuth } from '@/composables/use-auth'
+import env from '@/utils/env'
+
+import { testusers } from '../../../tests/.data/users.data'
 import LoginForm4 from '@/pages/auth/components/LoginForm4.vue'
+import QuickLoginCard from './components/quick-login-card.vue'
+
+const { login, loading } = useAuth()
+
+const isLocal = computed(() => env.VITE_APP_ENV === 'local')
+
+async function quickLogin(userKey: keyof typeof testusers) {
+  const user = testusers[userKey]
+  try {
+    await login({
+      email: user.email,
+      password: user.password,
+    })
+  }
+  catch (error) {
+    // Error handling is done in useAuth composable
+    console.error('Quick login failed:', error)
+  }
+}
 </script>
 
 <template>
@@ -7,5 +30,11 @@ import LoginForm4 from '@/pages/auth/components/LoginForm4.vue'
     <div class="w-full max-w-sm md:max-w-4xl">
       <LoginForm4 />
     </div>
+    <QuickLoginCard
+      v-if="isLocal"
+      :testusers="testusers"
+      :loading="loading"
+      :on-quick-login="quickLogin"
+    />
   </div>
 </template>

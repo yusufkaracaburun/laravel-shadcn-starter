@@ -1,7 +1,30 @@
 <script setup lang="ts">
 import { GalleryVerticalEnd } from 'lucide-vue-next'
 
+import { useAuth } from '@/composables/use-auth'
+import env from '@/utils/env'
+
+import { testusers } from '../../../tests/.data/users.data'
 import LoginForm2 from '@/pages/auth/components/LoginForm2.vue'
+import QuickLoginCard from './components/quick-login-card.vue'
+
+const { login, loading } = useAuth()
+
+const isLocal = computed(() => env.VITE_APP_ENV === 'local')
+
+async function quickLogin(userKey: keyof typeof testusers) {
+  const user = testusers[userKey]
+  try {
+    await login({
+      email: user.email,
+      password: user.password,
+    })
+  }
+  catch (error) {
+    // Error handling is done in useAuth composable
+    console.error('Quick login failed:', error)
+  }
+}
 </script>
 
 <template>
@@ -20,6 +43,12 @@ import LoginForm2 from '@/pages/auth/components/LoginForm2.vue'
           <LoginForm2 />
         </div>
       </div>
+      <QuickLoginCard
+        v-if="isLocal"
+        :testusers="testusers"
+        :loading="loading"
+        :on-quick-login="quickLogin"
+      />
     </div>
     <div class="bg-muted relative hidden lg:block">
       <img
