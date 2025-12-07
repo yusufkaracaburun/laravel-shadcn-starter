@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { GalleryVerticalEnd } from 'lucide-vue-next'
 
-import LoginForm2 from './components/LoginForm2.vue'
+import LoginForm2 from '@/pages/auth/components/LoginForm2.vue'
 </script>
 
 <template>

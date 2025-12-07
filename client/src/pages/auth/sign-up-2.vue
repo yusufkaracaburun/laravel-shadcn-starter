@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { GalleryVerticalEnd } from 'lucide-vue-next'
 
-import SignUpForm2 from './components/SignUpForm2.vue'
+import SignUpForm2 from '@/pages/auth/components/SignUpForm2.vue'
 </script>
 
 <template>
