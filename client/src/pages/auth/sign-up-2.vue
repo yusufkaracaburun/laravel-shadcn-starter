@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { GalleryVerticalEnd } from 'lucide-vue-next'
 
-import LoginForm2 from './components/LoginForm2.vue'
+import SignUpForm2 from './components/SignUpForm2.vue'
 </script>
 
 <template>
@@ -9,7 +9,7 @@ import LoginForm2 from './components/LoginForm2.vue'
     <div class="flex flex-col gap-4 p-6 md:p-10">
       <div class="flex justify-center gap-2 md:justify-start">
         <a href="#" class="flex items-center gap-2 font-medium">
-          <div class="flex size-6 items-center justify-center rounded-md bg-primary text-primary-foreground">
+          <div class="bg-primary text-primary-foreground flex size-6 items-center justify-center rounded-md">
             <GalleryVerticalEnd class="size-4" />
           </div>
           Acme Inc.
@@ -17,7 +17,7 @@ import LoginForm2 from './components/LoginForm2.vue'
       </div>
       <div class="flex flex-1 items-center justify-center">
         <div class="w-full max-w-xs">
-          <LoginForm2 />
+          <SignUpForm2 />
         </div>
       </div>
     </div>

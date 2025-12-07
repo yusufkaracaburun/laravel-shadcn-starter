@@ -63,6 +63,7 @@ declare module 'vue-router/auto-routes' {
       | '/auth/sign-in-2'
       | '/auth/sign-in-4'
       | '/auth/sign-up'
+      | '/auth/sign-up-2'
       | '/auth/sign-up-4'
     >,
     '/auth/': RouteRecordInfo<
@@ -110,6 +111,13 @@ declare module 'vue-router/auto-routes' {
     '/auth/sign-up': RouteRecordInfo<
       '/auth/sign-up',
       '/auth/sign-up',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
+    '/auth/sign-up-2': RouteRecordInfo<
+      '/auth/sign-up-2',
+      '/auth/sign-up-2',
       Record<never, never>,
       Record<never, never>,
       | never
@@ -327,6 +335,7 @@ declare module 'vue-router/auto-routes' {
         | '/auth/sign-in-2'
         | '/auth/sign-in-4'
         | '/auth/sign-up'
+        | '/auth/sign-up-2'
         | '/auth/sign-up-4'
       views:
         | 'default'
@@ -370,6 +379,12 @@ declare module 'vue-router/auto-routes' {
     'src/pages/auth/sign-up.vue': {
       routes:
         | '/auth/sign-up'
+      views:
+        | never
+    }
+    'src/pages/auth/sign-up-2.vue': {
+      routes:
+        | '/auth/sign-up-2'
       views:
         | never
     }
