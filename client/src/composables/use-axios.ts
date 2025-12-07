@@ -21,17 +21,12 @@ export function useAxios() {
       const csrfToken = getCookieValue('XSRF-TOKEN')
       console.warn('[axiosInstance.interceptors.request] - CSRF TOKEN', request.method, csrfToken)
 
-      // if (!csrfToken) {
-      //   await getCsrfCookie()
-      //   csrfToken = getCookieValue('XSRF-TOKEN')
-      // }
-
       request.headers['X-XSRF-TOKEN'] = csrfToken
 
       return request
     },
-    (error) => {
-      return Promise.reject(error)
+    (_error) => {
+      return Promise.reject(_error)
     },
   )
 
@@ -44,13 +39,7 @@ export function useAxios() {
 
       // Handle 401 Unauthorized - redirect to login (don't store 401 errors)
       if (error.response?.status === 401) {
-        // Only redirect if not already on login page
-        if (router.currentRoute.value.path !== (RouterPath.LOGIN as string)) {
-          router.push({
-            path: RouterPath.LOGIN as string,
-            query: { redirect: router.currentRoute.value.fullPath },
-          })
-        }
+        handleUnauthorized(error)
         return Promise.reject(error)
       }
 
@@ -73,6 +62,20 @@ export function useAxios() {
 
   async function getCsrfCookie() {
     return await axiosInstance.get('/sanctum/csrf-cookie')
+  }
+
+  function handleUnauthorized(_error: AxiosError) {
+    const currentRoute = router.currentRoute.value
+    const requiresAuth = currentRoute.meta.auth === true
+
+    // Only redirect if the current route requires authentication
+    // Routes with meta.auth === undefined or false are public and shouldn't redirect
+    if (requiresAuth) {
+      router.push({
+        path: RouterPath.LOGIN as string,
+        query: { redirect: currentRoute.fullPath },
+      })
+    }
   }
 
   return {
