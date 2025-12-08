@@ -152,7 +152,7 @@ const onSubmit = handleSubmit(async (values) => {
                   />
                 </svg>
                 <span class="sr-only">Login with Meta</span>
-              </Button>
+              </UiButton>
             </Field>
             <FieldDescription class="text-center">
               Don't have an account?
