@@ -17,6 +17,7 @@ use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UserIndexRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Support\Cache\CacheInvalidationService;
+use App\Http\Controllers\Concerns\UsesQueryBuilder;
 use App\Http\Controllers\Concerns\UsesCachedResponses;
 use App\Http\Controllers\Concerns\InvalidatesCachedModels;
 
@@ -24,6 +25,7 @@ final class UserController extends Controller
 {
     use InvalidatesCachedModels;
     use UsesCachedResponses;
+    use UsesQueryBuilder;
 
     public function __construct(
         private readonly UserRepository $userRepository
@@ -169,15 +171,20 @@ final class UserController extends Controller
     }
 
     /**
-     * Get available roles.
+     * Get available roles with QueryBuilder support.
+     *
+     * Supports filtering and sorting via request parameters.
+     * Example: /api/users/roles?filter[name]=admin&sort=name
      *
      * @authenticated
      */
     public function roles(): JsonResponse
     {
-        $roles = Role::query()
-            ->where('guard_name', 'web')
-            ->orderBy('name')
+        $roles = $this->buildQuery(
+            Role::query()->where('guard_name', 'web'),
+            allowedFilters: ['name'],
+            allowedSorts: ['id', 'name', 'created_at']
+        )
             ->get(['id', 'name'])
             ->map(fn ($role): array => [
                 'id' => $role->id,

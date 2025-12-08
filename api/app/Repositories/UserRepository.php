@@ -9,6 +9,7 @@ use App\Support\Cache\TeamCache;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\PermissionRegistrar;
+use Spatie\QueryBuilder\QueryBuilder;
 
 /**
  * User Repository
@@ -18,20 +19,36 @@ use Spatie\Permission\PermissionRegistrar;
 class UserRepository
 {
     /**
-     * Get paginated users, optionally filtered by team.
+     * Get paginated users with QueryBuilder support.
+     * Supports filtering, sorting, and including relationships via request parameters.
      *
+     * @param  array<string>  $allowedFilters
+     * @param  array<string>  $allowedSorts
+     * @param  array<string>  $allowedIncludes
      * @return LengthAwarePaginator<User>
      */
-    public function getPaginated(int $perPage, ?int $teamId = null): LengthAwarePaginator
-    {
+    public function getPaginated(
+        int $perPage,
+        ?int $teamId = null,
+        array $allowedFilters = ['name', 'email'],
+        array $allowedSorts = ['id', 'name', 'email', 'created_at'],
+        array $allowedIncludes = ['teams', 'currentTeam', 'ownedTeams', 'roles']
+    ): LengthAwarePaginator {
         $query = User::query();
 
+        // Apply team filtering if teamId is provided
         if ($teamId !== null) {
             $query->whereHas('teams', fn ($query) => $query->where('teams.id', $teamId))
                 ->orWhereHas('ownedTeams', fn ($query) => $query->where('id', $teamId));
         }
 
-        return $query->with(['teams', 'currentTeam', 'ownedTeams', 'roles'])->paginate($perPage);
+        // Build query with QueryBuilder for filtering, sorting, and includes
+        $queryBuilder = QueryBuilder::for($query)
+            ->allowedFilters($allowedFilters)
+            ->allowedSorts($allowedSorts)
+            ->allowedIncludes($allowedIncludes);
+
+        return $queryBuilder->paginate($perPage);
     }
 
     /**

@@ -15,6 +15,7 @@ use App\Http\Responses\ApiResponse;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Support\Cache\CacheInvalidationService;
+use App\Http\Controllers\Concerns\UsesQueryBuilder;
 use App\Http\Controllers\Concerns\UsesCachedResponses;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use App\Http\Controllers\Concerns\InvalidatesCachedModels;
@@ -24,9 +25,13 @@ final class TeamController extends Controller
     use AuthorizesRequests;
     use InvalidatesCachedModels;
     use UsesCachedResponses;
+    use UsesQueryBuilder;
 
     /**
-     * Display a listing of the user's teams.
+     * Display a listing of the user's teams with QueryBuilder support.
+     *
+     * Supports filtering, sorting, and including relationships via request parameters.
+     * Example: /api/teams?filter[name]=MyTeam&sort=name&include=users,owner
      *
      * @authenticated
      */
@@ -38,10 +43,23 @@ final class TeamController extends Controller
         $teams = $this->cachedResponse(
             'api.teams.index',
             function () use ($user) {
-                $ownedTeams = $user->ownedTeams()->get();
-                $memberTeams = $user->teams()->get();
+                // Get all team IDs (owned + member) - specify table name to avoid ambiguity
+                $ownedTeamIds = $user->ownedTeams()->pluck('teams.id');
+                $memberTeamIds = $user->teams()->pluck('teams.id');
+                $allTeamIds = $ownedTeamIds->merge($memberTeamIds)->unique();
 
-                return $ownedTeams->merge($memberTeams)->unique('id')->values()->toArray();
+                // Build query for all teams
+                $query = Team::query()->whereIn('id', $allTeamIds);
+
+                // Apply QueryBuilder for filtering, sorting, and includes
+                $teams = $this->buildQuery(
+                    $query,
+                    allowedFilters: ['name', 'personal_team'],
+                    allowedSorts: ['id', 'name', 'created_at'],
+                    allowedIncludes: ['users', 'owner']
+                )->get();
+
+                return $teams->toArray();
             }
         );
 
