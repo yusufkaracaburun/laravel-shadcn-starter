@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Casts;
 
 use Cknow\Money\Money;
-use App\Support\MoneyHelper;
+use App\Helpers\MoneyHelper;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 

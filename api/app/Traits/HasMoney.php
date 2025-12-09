@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Traits;
 
 use Cknow\Money\Money;
-use App\Support\MoneyHelper;
+use App\Helpers\MoneyHelper;
 
 /**
  * Trait for models that have money fields.

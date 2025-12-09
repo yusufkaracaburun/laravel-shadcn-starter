@@ -7,7 +7,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
-use App\Support\Cache\ResponseCache;
+use App\Helpers\Cache\ResponseCache;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Symfony\Component\HttpFoundation\Response;

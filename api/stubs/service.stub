@@ -1,0 +1,20 @@
+<?php
+
+declare(strict_types=1);
+
+namespace {{ namespace }};
+
+use {{ modelNamespace }};
+use {{ repositoryNamespace }};
+use {{ interfaceNamespace }}\{{ interface }};
+use App\Services\BaseService;
+
+final class {{ class }} extends BaseService implements {{ interface }}
+{
+    public function __construct(
+        {{ repository }} $repository
+    ) {
+        $this->setRepository($repository);
+    }
+}
+

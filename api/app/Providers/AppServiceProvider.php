@@ -6,40 +6,37 @@ namespace App\Providers;
 
 use App\Models\Team;
 use App\Models\User;
+use App\Models\Contact;
+use App\Models\Invoice;
+use App\Models\Payment;
+use App\Models\Customer;
+use App\Models\InvoiceItem;
 use Carbon\CarbonImmutable;
-use App\Policies\TeamPolicy;
-use App\Policies\UserPolicy;
 use Illuminate\Http\Request;
 use App\Observers\RoleObserver;
 use App\Observers\TeamObserver;
 use App\Observers\UserObserver;
+use App\Observers\ContactObserver;
+use App\Observers\InvoiceObserver;
+use App\Observers\PaymentObserver;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
+use App\Observers\CustomerObserver;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Date;
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Vite;
 use App\Observers\PermissionObserver;
+use App\Observers\InvoiceItemObserver;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Cache\RateLimiting\Limit;
 use Spatie\Permission\Models\Permission;
-use Spatie\Permission\PermissionRegistrar;
 use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Http\Resources\Json\JsonResource;
 
 final class AppServiceProvider extends ServiceProvider
 {
-    /**
-     * The policy mappings for the application.
-     *
-     * @var array<class-string, class-string>
-     */
-    private array $policies = [
-        Team::class => TeamPolicy::class,
-        User::class => UserPolicy::class,
-    ];
-
     /**
      * Register any application services.
      */
@@ -63,9 +60,6 @@ final class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        $this->registerPolicies();
-        $this->configureSuperAdmin();
-
         $this->configureCommands();
         $this->configureDates();
         $this->configureModels();
@@ -73,42 +67,8 @@ final class AppServiceProvider extends ServiceProvider
         $this->configureVite();
         $this->configureRateLimiting();
         $this->registerObservers();
-    }
 
-    /**
-     * Register the application's policies.
-     */
-    private function registerPolicies(): void
-    {
-        foreach ($this->policies as $model => $policy) {
-            Gate::policy($model, $policy);
-        }
-    }
-
-    /**
-     * Configure super admin to have all permissions.
-     * Implicitly grant "Super Admin" role all permissions via Gate::before.
-     * This works in the app by using gate-related functions like auth()->user->can() and @can().
-     */
-    private function configureSuperAdmin(): void
-    {
-        Gate::before(function ($user, $ability): ?true {
-            // Check for super-admin role with team context cleared (global role)
-            if (! $user) {
-                return null;
-            }
-
-            $permissionRegistrar = resolve(PermissionRegistrar::class);
-            $originalTeamId = $permissionRegistrar->getPermissionsTeamId();
-            $permissionRegistrar->setPermissionsTeamId(null); // Check global roles
-
-            $isSuperAdmin = $user->hasRole('super-admin');
-
-            // Restore original team context
-            $permissionRegistrar->setPermissionsTeamId($originalTeamId);
-
-            return $isSuperAdmin ? true : null;
-        });
+        JsonResource::withoutWrapping();
     }
 
     /**
@@ -175,11 +135,13 @@ final class AppServiceProvider extends ServiceProvider
     /**
      * Configure the application's rate limiting.
      *
-     * @see https://laravel.com/docs/11.x/routing#rate-limiting
+     * @see https://laravel.com/docs/12.x/routing#rate-limiting
      */
     private function configureRateLimiting(): void
     {
         RateLimiter::for('login-link', fn (Request $request): Limit => Limit::perMinute((int) config('login-link.rate_limit_attempts', 1))->by($request->email ?? $request->ip()));
+
+        RateLimiter::for('api', fn (Request $request): Limit => Limit::perMinute(60)->by($request->user()?->id ?: $request->ip()));
     }
 
     /**
@@ -191,5 +153,10 @@ final class AppServiceProvider extends ServiceProvider
         Team::observe(TeamObserver::class);
         Role::observe(RoleObserver::class);
         Permission::observe(PermissionObserver::class);
+        Customer::observe(CustomerObserver::class);
+        Contact::observe(ContactObserver::class);
+        Payment::observe(PaymentObserver::class);
+        Invoice::observe(InvoiceObserver::class);
+        InvoiceItem::observe(InvoiceItemObserver::class);
     }
 }

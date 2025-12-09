@@ -548,7 +548,7 @@ A feature is **NOT complete** until:
 ## References
 
 - Backend-Frontend Integration: `@.cursor/rules/backend-frontend-integration.mdc`
-- Backend Testing: `@api/.cursor/rules/testing-pyramid.mdc`
-- Frontend API Testing: `@client/.cursor/rules/api-testing.mdc`
+- Backend Testing: `@.cursor/rules/backend/testing-pyramid.mdc`
+- Frontend API Testing: `@.cursor/rules/frontend/api-testing.mdc`
 - API Response Format: `@api/app/Http/Responses/ApiResponse.php`
 - Frontend Response Type: `@client/src/services/types/response.type.ts`

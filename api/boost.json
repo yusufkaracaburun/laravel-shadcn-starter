@@ -3,5 +3,19 @@
         "cursor",
         "phpstorm"
     ],
-    "guidelines": []
+    "editors": [
+        "cursor",
+        "phpstorm"
+    ],
+    "guidelines": [
+        "foundation",
+        "boost",
+        "php",
+        "laravel/core",
+        "laravel/v12",
+        "pint/core",
+        "pest/core",
+        "pest/v4",
+        "laravel/fortify"
+    ]
 }

@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-final class TeamInvitation extends Model
+final class TeamInvitation extends BaseModel
 {
     /**
      * The attributes that are mass assignable.

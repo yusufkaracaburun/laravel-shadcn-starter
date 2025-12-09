@@ -6,6 +6,7 @@ namespace App\Http\Responses;
 
 use Illuminate\Http\Response;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Resources\Json\JsonResource;
 
 final class ApiResponse
 {
@@ -20,6 +21,22 @@ final class ApiResponse
         int $code = Response::HTTP_OK,
         array $extra = []
     ): JsonResponse {
+        // Extract data from JsonResource if provided
+        if ($data instanceof JsonResource) {
+            $resourceData = $data->response()->getData(true);
+
+            // For single resources, Laravel wraps data in 'data' key
+            // For resource collections (pagination), structure is preserved
+            // Only extract inner 'data' if it's a simple structure with just 'data' key
+            if (is_array($resourceData) && isset($resourceData['data']) && count($resourceData) === 1) {
+                // Single resource: extract the inner data
+                $data = $resourceData['data'];
+            } else {
+                // Resource collection or complex structure: keep as is
+                $data = $resourceData;
+            }
+        }
+
         return response()->json([
             'success' => true,
             'code' => $code,
@@ -72,5 +89,57 @@ final class ApiResponse
             'code' => $code,
             'message' => $message,
         ], $code);
+    }
+
+    /**
+     * Create a 404 Not Found error response.
+     *
+     * @param  array<string, mixed>  $extra
+     */
+    public static function notFound(
+        string $message = 'Resource not found',
+        mixed $data = null,
+        array $extra = []
+    ): JsonResponse {
+        return self::error($message, Response::HTTP_NOT_FOUND, $data, $extra);
+    }
+
+    /**
+     * Create a 403 Forbidden error response.
+     *
+     * @param  array<string, mixed>  $extra
+     */
+    public static function forbidden(
+        string $message = 'Forbidden',
+        mixed $data = null,
+        array $extra = []
+    ): JsonResponse {
+        return self::error($message, Response::HTTP_FORBIDDEN, $data, $extra);
+    }
+
+    /**
+     * Create a 401 Unauthorized error response.
+     *
+     * @param  array<string, mixed>  $extra
+     */
+    public static function unauthorized(
+        string $message = 'Unauthorized',
+        mixed $data = null,
+        array $extra = []
+    ): JsonResponse {
+        return self::error($message, Response::HTTP_UNAUTHORIZED, $data, $extra);
+    }
+
+    /**
+     * Create a 422 Validation Error response.
+     *
+     * @param  array<string, mixed>  $extra
+     */
+    public static function validationError(
+        string $message = 'Validation failed',
+        mixed $data = null,
+        array $extra = []
+    ): JsonResponse {
+        return self::error($message, Response::HTTP_UNPROCESSABLE_ENTITY, $data, $extra);
     }
 }

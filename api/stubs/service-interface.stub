@@ -1,0 +1,13 @@
+<?php
+
+declare(strict_types=1);
+
+namespace {{ interfaceNamespace }};
+
+use App\Services\BaseServiceInterface;
+
+interface {{ interface }} extends BaseServiceInterface
+{
+    // Add custom service methods here
+}
+

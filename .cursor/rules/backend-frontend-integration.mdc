@@ -414,6 +414,6 @@ export function useGetUsersQuery() {
 
 - Backend API Response: `@api/app/Http/Responses/ApiResponse.php`
 - Frontend Response Type: `@client/src/services/types/response.type.ts`
-- Backend Testing: `@api/.cursor/rules/testing-pyramid.mdc`
-- Frontend API Testing: `@client/.cursor/rules/api-testing.mdc`
+- Backend Testing: `@.cursor/rules/backend/testing-pyramid.mdc`
+- Frontend API Testing: `@.cursor/rules/frontend/api-testing.mdc`
 - Authentication Setup: `@api/.docs/sanctum.md`

@@ -452,7 +452,7 @@ describe('ShoppingCart', () => {
 ## References
 
 - Testing Pyramid Guide: `@.cursor/guides/testing-pyramid.md`
-- Backend Testing Rules: `@api/.cursor/rules/testing-pyramid.mdc`
-- Frontend Testing Rules: `@client/.cursor/rules/testing-pyramid.mdc`
-- API Testing Rules: `@client/.cursor/rules/api-testing.mdc`
-- Playwright Rules: `@client/.cursor/rules/playwright.mdc`
+- Backend Testing Rules: `@.cursor/rules/backend/testing-pyramid.mdc`
+- Frontend Testing Rules: `@.cursor/rules/frontend/testing-pyramid.mdc`
+- API Testing Rules: `@.cursor/rules/frontend/api-testing.mdc`
+- Playwright Rules: `@.cursor/rules/frontend/playwright.mdc`

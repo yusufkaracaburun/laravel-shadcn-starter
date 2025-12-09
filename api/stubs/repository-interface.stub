@@ -1,0 +1,13 @@
+<?php
+
+declare(strict_types=1);
+
+namespace {{ interfaceNamespace }};
+
+use App\Repositories\{{ baseRepositoryInterface }};
+
+interface {{ interface }} extends {{ baseRepositoryInterface }}
+{
+    // Add custom repository methods here
+}
+

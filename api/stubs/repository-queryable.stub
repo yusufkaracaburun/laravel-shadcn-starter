@@ -1,0 +1,66 @@
+<?php
+
+declare(strict_types=1);
+
+namespace {{ namespace }};
+
+use {{ modelNamespace }};
+use {{ interfaceNamespace }}\{{ interface }};
+use App\Repositories\QueryableRepository;
+use Spatie\QueryBuilder\AllowedFilter;
+use Spatie\QueryBuilder\QueryBuilder;
+
+final class {{ class }} extends QueryableRepository implements {{ interface }}
+{
+    /**
+     * Model binding.
+     */
+    protected function model(): string
+    {
+        return {{ model }}::class;
+    }
+
+    /**
+     * Get allowed filters for this repository.
+     */
+    public function getAllowedFilters(): array
+    {
+        return [
+            AllowedFilter::exact('id'),
+            AllowedFilter::scope('created_at'),
+        ];
+    }
+
+    /**
+     * Get allowed sorts for this repository.
+     */
+    public function getAllowedSorts(): array
+    {
+        return [];
+    }
+
+    /**
+     * Get allowed includes for this repository.
+     */
+    public function getAllowedIncludes(): array
+    {
+        return [];
+    }
+
+    /**
+     * Get allowed fields for this repository.
+     */
+    public function getAllowedFields(): array
+    {
+        return [];
+    }
+
+    /**
+     * Get default sorts for this repository.
+     */
+    public function getDefaultSorts(): array
+    {
+        return [];
+    }
+}
+

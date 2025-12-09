@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use Spatie\Permission\Models\Role;
-use App\Support\CurrentTeamResolver;
+use App\Helpers\CurrentTeamResolver;
 use Spatie\Permission\Models\Permission;
 
 return [
