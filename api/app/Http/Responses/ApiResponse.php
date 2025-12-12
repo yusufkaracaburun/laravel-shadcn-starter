@@ -21,22 +21,6 @@ final class ApiResponse
         int $code = Response::HTTP_OK,
         array $extra = []
     ): JsonResponse {
-        // Extract data from JsonResource if provided
-        if ($data instanceof JsonResource) {
-            $resourceData = $data->response()->getData(true);
-
-            // For single resources, Laravel wraps data in 'data' key
-            // For resource collections (pagination), structure is preserved
-            // Only extract inner 'data' if it's a simple structure with just 'data' key
-            if (is_array($resourceData) && isset($resourceData['data']) && count($resourceData) === 1) {
-                // Single resource: extract the inner data
-                $data = $resourceData['data'];
-            } else {
-                // Resource collection or complex structure: keep as is
-                $data = $resourceData;
-            }
-        }
-
         return response()->json([
             'success' => true,
             'code' => $code,

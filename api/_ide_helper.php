@@ -23471,20 +23471,6 @@ namespace Laravel\Socialite\Facades {
             return $instance->getContainer();
         }
 
-        /**
-         * Register a fake user for the given driver.
-         *
-         * @param string $driver
-         * @param \Laravel\Socialite\Contracts\User|\Closure|array|null $user
-         * @return \Laravel\Socialite\Testing\SocialiteFake
-         * @static
-         */
-        public static function fake($driver, $user = null)
-        {
-            /** @var \Laravel\Socialite\Testing\SocialiteFake $instance */
-            return $instance->fake($driver, $user);
-        }
-
             }
     }
 

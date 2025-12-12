@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Logging;
 
-use Monolog\Logger;
+use Illuminate\Log\Logger;
 
 /**
  * Tap class for Laravel logging configuration.

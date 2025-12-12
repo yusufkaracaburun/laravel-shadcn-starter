@@ -67,8 +67,6 @@ final class AppServiceProvider extends ServiceProvider
         $this->configureVite();
         $this->configureRateLimiting();
         $this->registerObservers();
-
-        JsonResource::withoutWrapping();
     }
 
     /**
