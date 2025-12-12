@@ -18,7 +18,7 @@ import type { DataTableProps } from './types'
 
 import NoResultFound from '../no-result-found.vue'
 
-defineProps<
+const props = defineProps<
   DataTableProps<T> & {
     table: VueTable<T>
   }
@@ -65,6 +65,6 @@ defineProps<
       <DataTableLoading v-if="loading" />
     </div>
 
-    <DataTablePagination v-if="!loading" :table="table" :server-pagination="serverPagination" />
+    <DataTablePagination v-if="!loading" :table="table" :server-pagination="props.serverPagination" />
   </div>
 </template>

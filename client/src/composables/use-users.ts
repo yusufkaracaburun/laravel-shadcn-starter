@@ -1,3 +1,5 @@
+import type { SortingState } from '@tanstack/vue-table'
+
 import type { ServerPagination } from '@/components/data-table/types'
 import type { CreateUserRequest, UpdateUserRequest } from '@/services/users.service'
 
@@ -18,9 +20,20 @@ export function useUsers() {
   const page = ref(1)
   const pageSize = ref(15)
 
+  // Sorting state - managed here and passed to table
+  const sorting = ref<SortingState>([])
+
+  // Handler for sorting changes from table
+  function onSortingChange(newSorting: SortingState) {
+    sorting.value = newSorting
+    // Reset to first page when sorting changes
+    page.value = 1
+  }
+
   const { data: usersResponse, isLoading, isFetching, refetch: fetchUsers } = useGetUsersQuery(
     page,
     pageSize,
+    sorting,
   )
 
   // Computed refs for easy access
@@ -151,6 +164,8 @@ export function useUsers() {
     fetchUsersData,
     usersResponse,
     serverPagination,
+    sorting,
+    onSortingChange,
     createUser,
     createUserMutation,
     updateUser,

@@ -1,4 +1,4 @@
-import type { ColumnDef } from '@tanstack/vue-table'
+import type { ColumnDef, SortingState } from '@tanstack/vue-table'
 
 export interface FacetedFilterOption {
   label: string
@@ -19,4 +19,6 @@ export interface DataTableProps<T> {
   columns: ColumnDef<T, any>[]
   data: T[]
   serverPagination?: ServerPagination
+  sorting?: MaybeRef<SortingState>
+  onSortingChange?: (sorting: SortingState) => void
 }

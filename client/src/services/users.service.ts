@@ -104,25 +104,61 @@ export function useGetRolesQuery() {
 }
 
 /**
- * List all users with pagination
+ * Convert TanStack Table sorting format to Spatie QueryBuilder format
+ * @param sorting - Array of sorting objects from TanStack Table
+ * @returns Sort string for Spatie QueryBuilder (e.g., "name" or "-name" or "name,-email")
+ */
+function convertSortingToQueryString(sorting: Array<{ id: string, desc: boolean }>): string | undefined {
+  if (!sorting || sorting.length === 0) {
+    return undefined
+  }
+
+  return sorting
+    .map((sort) => {
+      const prefix = sort.desc ? '-' : ''
+      return `${prefix}${sort.id}`
+    })
+    .join(',')
+}
+
+/**
+ * List all users with pagination and sorting
  * @see api/app/Http/Controllers/Api/UserController.php::index()
  * @param page - Page number (default: 1) - can be a ref or number
  * @param pageSize - Number of items per page (default: 15) - can be a ref or number
+ * @param sorting - Sorting state from TanStack Table (default: []) - can be a ref or array
  */
-export function useGetUsersQuery(page: MaybeRef<number> = 1, pageSize: MaybeRef<number> = 15) {
+export function useGetUsersQuery(
+  page: MaybeRef<number> = 1,
+  pageSize: MaybeRef<number> = 15,
+  sorting: MaybeRef<Array<{ id: string, desc: boolean }>> = [],
+) {
   const { axiosInstance } = useAxios()
 
   return useQuery<IResponse<PaginatedUsersResponse>, AxiosError>({
-    queryKey: ['userList', computed(() => toValue(page)), computed(() => toValue(pageSize))],
+    queryKey: [
+      'userList',
+      computed(() => toValue(page)),
+      computed(() => toValue(pageSize)),
+      computed(() => JSON.stringify(toValue(sorting))),
+    ],
     queryFn: async (): Promise<IResponse<PaginatedUsersResponse>> => {
       const currentPage = toValue(page)
       const currentPageSize = toValue(pageSize)
-      const response = await axiosInstance.get('/api/user', {
-        params: {
-          page: currentPage,
-          per_page: currentPageSize,
-        },
-      })
+      const currentSorting = toValue(sorting)
+      const sortParam = convertSortingToQueryString(currentSorting)
+
+      const params: Record<string, any> = {
+        page: currentPage,
+        per_page: currentPageSize,
+      }
+
+      // Add sort parameter if sorting is provided
+      if (sortParam) {
+        params.sort = sortParam
+      }
+
+      const response = await axiosInstance.get('/api/user', { params })
       return response.data
     },
     retry: (failureCount: number, error: AxiosError) => {
@@ -179,7 +215,8 @@ export function useCreateUserMutation() {
         formData.append('email', data.email)
         formData.append('password', data.password)
         formData.append('password_confirmation', data.password_confirmation)
-        if (data.role) formData.append('role', data.role)
+        if (data.role)
+          formData.append('role', data.role)
         formData.append('profile_photo', data.profile_photo)
 
         const response = await axiosInstance.post('/api/user', formData, {
@@ -209,16 +246,21 @@ export function useUpdateUserMutation() {
   const { axiosInstance } = useAxios()
   const queryClient = useQueryClient()
 
-  return useMutation<IResponse<User>, AxiosError, { userId: number; data: UpdateUserRequest }>({
+  return useMutation<IResponse<User>, AxiosError, { userId: number, data: UpdateUserRequest }>({
     mutationFn: async ({ userId, data }): Promise<IResponse<User>> => {
       // If profile photo is present, use FormData for multipart/form-data
       if (data.profile_photo) {
         const formData = new FormData()
-        if (data.name) formData.append('name', data.name)
-        if (data.email) formData.append('email', data.email)
-        if (data.password) formData.append('password', data.password)
-        if (data.password_confirmation) formData.append('password_confirmation', data.password_confirmation)
-        if (data.role) formData.append('role', data.role)
+        if (data.name)
+          formData.append('name', data.name)
+        if (data.email)
+          formData.append('email', data.email)
+        if (data.password)
+          formData.append('password', data.password)
+        if (data.password_confirmation)
+          formData.append('password_confirmation', data.password_confirmation)
+        if (data.role)
+          formData.append('role', data.role)
         formData.append('profile_photo', data.profile_photo)
         // Use POST with _method=PUT for file uploads (Laravel supports this)
         formData.append('_method', 'PUT')

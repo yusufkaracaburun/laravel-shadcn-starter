@@ -17,7 +17,7 @@ export const columns: ColumnDef<User>[] = [
     accessorKey: 'name',
     header: ({ column }) => h(DataTableColumnHeader<User>, { column, title: 'Name' }),
     cell: ({ row }) => h('div', {}, row.getValue('name') || '—'),
-    enableSorting: false,
+    enableSorting: true,
     enableHiding: false,
     enableResizing: true,
   },
@@ -33,7 +33,7 @@ export const columns: ColumnDef<User>[] = [
         h(Copy, { class: 'ml-2', size: 'sm', content: emailStr }),
       ])
     },
-    enableSorting: false,
+    enableSorting: true,
     enableResizing: true,
   },
 
@@ -63,7 +63,7 @@ export const columns: ColumnDef<User>[] = [
       const date = new Date(createdAt)
       return h('div', {}, date.toLocaleDateString())
     },
-    enableSorting: false,
+    enableSorting: true,
     enableResizing: true,
   },
 

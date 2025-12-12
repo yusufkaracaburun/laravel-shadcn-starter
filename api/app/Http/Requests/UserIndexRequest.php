@@ -34,7 +34,7 @@ final class UserIndexRequest extends FormRequest
     {
         $this->merge([
             'page' => $this->integer('page', 1),
-            'per_page' => $this->integer('per_page', 15),
+            'per_page' => $this->integer('per_page', 10),
         ]);
     }
 }
