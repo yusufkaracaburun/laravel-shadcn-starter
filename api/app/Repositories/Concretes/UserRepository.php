@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Repositories\Concretes;
 
 use App\Models\User;
+use App\Enums\UserStatus;
 use Illuminate\Http\Request;
 use App\Helpers\Cache\TeamCache;
 use Spatie\Permission\Models\Role;
@@ -12,6 +13,7 @@ use Spatie\QueryBuilder\QueryBuilder;
 use Spatie\QueryBuilder\AllowedFilter;
 use App\Repositories\QueryableRepository;
 use Spatie\Permission\PermissionRegistrar;
+use Illuminate\Database\Eloquent\Collection;
 use Spatie\QueryBuilder\QueryBuilderRequest;
 use Illuminate\Pagination\LengthAwarePaginator;
 use App\Repositories\Contracts\UserRepositoryInterface;
@@ -73,9 +75,7 @@ final class UserRepository extends QueryableRepository implements UserRepository
         $paginated = $eloquentBuilder->paginate($perPage, ['*'], 'page', $page);
 
         // Load roles correctly for each user with proper team context
-        $paginated->getCollection()->transform(function (User $user) {
-            return $this->loadUserRelationships($user);
-        });
+        $paginated->getCollection()->transform($this->loadUserRelationships(...));
 
         return $paginated;
     }
@@ -95,7 +95,7 @@ final class UserRepository extends QueryableRepository implements UserRepository
         return TeamCache::remember(
             $teamId,
             "users:{$userId}",
-            fn () => $this->loadUserRelationships($user)
+            fn (): \App\Models\User => $this->loadUserRelationships($user)
         );
     }
 
@@ -167,6 +167,42 @@ final class UserRepository extends QueryableRepository implements UserRepository
         $this->loadUserRelationships($user);
 
         return $user;
+    }
+
+    /**
+     * Get all verified users.
+     *
+     * @return Collection<int, User>
+     */
+    public function getVerifiedUsers(): Collection
+    {
+        return User::query()
+            ->whereNotNull('email_verified_at')
+            ->get();
+    }
+
+    /**
+     * Get all active users.
+     *
+     * @return Collection<int, User>
+     */
+    public function getActiveUsers(): Collection
+    {
+        return $this->getUsersByStatus(UserStatus::ACTIVE);
+    }
+
+    /**
+     * Get users by status.
+     *
+     * @return Collection<int, User>
+     */
+    public function getUsersByStatus(UserStatus|string $status = UserStatus::ACTIVE): Collection
+    {
+        $statusEnum = $status instanceof UserStatus ? $status : UserStatus::from($status);
+
+        return User::query()
+            ->where('status', $statusEnum->value)
+            ->get();
     }
 
     /**

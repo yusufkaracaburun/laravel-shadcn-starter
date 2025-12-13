@@ -33,7 +33,6 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Cache\RateLimiting\Limit;
 use Spatie\Permission\Models\Permission;
 use Illuminate\Support\Facades\RateLimiter;
-use Illuminate\Http\Resources\Json\JsonResource;
 
 final class AppServiceProvider extends ServiceProvider
 {

@@ -6,7 +6,6 @@ namespace App\Http\Responses;
 
 use Illuminate\Http\Response;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Resources\Json\JsonResource;
 
 final class ApiResponse
 {

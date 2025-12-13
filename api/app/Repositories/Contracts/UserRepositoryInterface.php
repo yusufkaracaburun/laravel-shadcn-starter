@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Repositories\Contracts;
 
+use App\Enums\UserStatus;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
 use App\Repositories\QueryableRepositoryInterface;
 
@@ -48,4 +50,25 @@ interface UserRepositoryInterface extends QueryableRepositoryInterface
      * Get the current authenticated user with relationships loaded.
      */
     public function getCurrentUser(User $user): User;
+
+    /**
+     * Get all verified users.
+     *
+     * @return Collection<int, User>
+     */
+    public function getVerifiedUsers(): Collection;
+
+    /**
+     * Get all active users.
+     *
+     * @return Collection<int, User>
+     */
+    public function getActiveUsers(): Collection;
+
+    /**
+     * Get users by status.
+     *
+     * @return Collection<int, User>
+     */
+    public function getUsersByStatus(UserStatus|string $status = UserStatus::ACTIVE): Collection;
 }
