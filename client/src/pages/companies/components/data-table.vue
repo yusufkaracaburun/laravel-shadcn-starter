@@ -9,11 +9,11 @@ import { generateVueTable } from '@/components/data-table/use-generate-vue-table
 
 import type { Company } from '../data/schema'
 
-import DataTableToolbar from './data-table-toolbar.vue'
 import CompanyDeleteBatch from './company-delete-batch.vue'
+import DataTableToolbar from './data-table-toolbar.vue'
 
 const props = defineProps<DataTableProps<Company>>()
-const table = generateVueTable<Company>(props)
+const { table } = generateVueTable<Company>(props)
 
 const companyDeleteBatchOpen = ref(false)
 </script>
@@ -48,4 +48,3 @@ const companyDeleteBatchOpen = ref(false)
     </template>
   </DataTable>
 </template>
-

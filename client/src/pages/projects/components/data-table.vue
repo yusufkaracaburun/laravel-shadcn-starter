@@ -13,7 +13,7 @@ import DataTableToolbar from './data-table-toolbar.vue'
 import ProjectDeleteBatch from './project-delete-batch.vue'
 
 const props = defineProps<DataTableProps<Project>>()
-const table = generateVueTable<Project>(props)
+const { table } = generateVueTable<Project>(props)
 
 const projectDeleteBatchOpen = ref(false)
 </script>
@@ -48,4 +48,3 @@ const projectDeleteBatchOpen = ref(false)
     </template>
   </DataTable>
 </template>
-
