@@ -9,7 +9,7 @@ import zh from './zh.json'
 export function setupI18n(app: App) {
   const i18n = createI18n({
     legacy: false,
-    locale: 'nl',
+    locale: 'en',
     fallbackLocale: 'en',
     messages: {
       en,
