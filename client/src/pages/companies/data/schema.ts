@@ -14,3 +14,4 @@ export const companySchema = z.object({
 
 export type Company = z.infer<typeof companySchema>
 
+export const companyListSchema = z.array(companySchema)

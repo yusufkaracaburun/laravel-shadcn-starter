@@ -8,12 +8,7 @@ import { generateVueTable } from '@/components/data-table/use-generate-vue-table
 import DataTableToolbar from './data-table-toolbar.vue'
 
 const props = defineProps<DataTableProps<User>>()
-
-const { table, sorting } = generateVueTable<User>(props)
-
-// Expose sorting state to parent component if needed
-// The sorting state is managed internally by the table generator
-// and will be used by the composable through the props.serverPagination flow
+const { table } = generateVueTable<User>(props)
 </script>
 
 <template>
