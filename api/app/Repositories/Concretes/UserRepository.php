@@ -70,7 +70,14 @@ final class UserRepository extends QueryableRepository implements UserRepository
         $page = (int) $modifiedRequest->input('page', 1);
 
         // Paginate directly on the Eloquent builder
-        return $eloquentBuilder->paginate($perPage, ['*'], 'page', $page);
+        $paginated = $eloquentBuilder->paginate($perPage, ['*'], 'page', $page);
+
+        // Load roles correctly for each user with proper team context
+        $paginated->getCollection()->transform(function (User $user) {
+            return $this->loadUserRelationships($user);
+        });
+
+        return $paginated;
     }
 
     /**
@@ -81,15 +88,14 @@ final class UserRepository extends QueryableRepository implements UserRepository
         $user = User::query()->findOrFail($userId);
 
         if ($teamId === null) {
-            $user->load(['teams', 'currentTeam', 'ownedTeams', 'roles']);
-
+            $this->loadUserRelationships($user);
             return $user;
         }
 
         return TeamCache::remember(
             $teamId,
             "users:{$userId}",
-            fn () => $user->load(['teams', 'currentTeam', 'ownedTeams', 'roles'])
+            fn () => $this->loadUserRelationships($user)
         );
     }
 
@@ -108,17 +114,14 @@ final class UserRepository extends QueryableRepository implements UserRepository
         unset($data['profile_photo'], $data['role']);
 
         $user = User::query()->create($data);
-        $user->load(['teams', 'currentTeam', 'ownedTeams']);
 
         // Assign role if provided and not empty
         if ($role && $role !== '') {
             $this->assignRole($user, $role, $teamId);
         }
 
-        // Load roles after assignment (if any)
-        $user->load('roles');
-
-        return $user;
+        // Load relationships with proper team context for roles
+        return $this->loadUserRelationships($user);
     }
 
     /**
@@ -137,17 +140,14 @@ final class UserRepository extends QueryableRepository implements UserRepository
 
         $user->update($data);
         $user->refresh();
-        $user->load(['teams', 'currentTeam', 'ownedTeams']);
 
         // Update role if provided
         if ($role !== null && $role !== '') {
             $this->assignRole($user, $role, $teamId);
         }
 
-        // Load roles after assignment (if any)
-        $user->load('roles');
-
-        return $user;
+        // Load relationships with proper team context for roles
+        return $this->loadUserRelationships($user);
     }
 
     /**
@@ -164,7 +164,7 @@ final class UserRepository extends QueryableRepository implements UserRepository
     public function getCurrentUser(User $user): User
     {
         $user->refresh();
-        $user->load(['teams', 'currentTeam', 'ownedTeams', 'roles']);
+        $this->loadUserRelationships($user);
 
         return $user;
     }
@@ -204,6 +204,56 @@ final class UserRepository extends QueryableRepository implements UserRepository
     protected function model(): string
     {
         return User::class;
+    }
+
+    /**
+     * Load user relationships with proper team context for roles.
+     */
+    private function loadUserRelationships(User $user): User
+    {
+        $permissionRegistrar = resolve(PermissionRegistrar::class);
+        $originalTeamId = $permissionRegistrar->getPermissionsTeamId();
+
+        // Load non-role relationships first
+        $user->load(['teams', 'currentTeam', 'ownedTeams']);
+
+        // Clear permission cache to ensure fresh role queries
+        $permissionRegistrar->forgetCachedPermissions();
+        $user->unsetRelation('roles');
+
+        // Load roles with proper team context
+        // First, load global roles (team_id = null) for users like super-admin
+        $permissionRegistrar->setPermissionsTeamId(null);
+        $globalRoles = $user->roles()->get();
+
+        // Then, load team-scoped roles from all teams the user belongs to
+        $teamScopedRoles = collect();
+        
+        // Get all unique team IDs the user belongs to (from teams and ownedTeams)
+        $allTeamIds = $user->teams->pluck('id')
+            ->merge($user->ownedTeams->pluck('id'))
+            ->unique()
+            ->filter()
+            ->values();
+
+        // Load roles for each team the user belongs to
+        foreach ($allTeamIds as $teamId) {
+            $permissionRegistrar->setPermissionsTeamId($teamId);
+            $permissionRegistrar->forgetCachedPermissions();
+            $user->unsetRelation('roles');
+            $teamRoles = $user->roles()->get();
+            $teamScopedRoles = $teamScopedRoles->merge($teamRoles);
+        }
+
+        // Merge global and team-scoped roles, removing duplicates
+        $allRoles = $globalRoles->merge($teamScopedRoles)->unique('id')->values();
+        $user->setRelation('roles', $allRoles);
+
+        // Restore original team context
+        $permissionRegistrar->setPermissionsTeamId($originalTeamId);
+        $permissionRegistrar->forgetCachedPermissions();
+
+        return $user;
     }
 
     /**
