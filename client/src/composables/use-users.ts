@@ -18,7 +18,7 @@ export function useUsers() {
 
   // Pagination state
   const page = ref(1)
-  const pageSize = ref(15)
+  const pageSize = ref(10)
 
   // Sorting state - managed here and passed to table
   const sorting = ref<SortingState>([])
@@ -44,7 +44,7 @@ export function useUsers() {
   const pagination = computed(() => usersResponse.value?.data ?? {
     current_page: 1,
     last_page: 1,
-    per_page: 15,
+    per_page: 10,
     total: 0,
     from: null,
     to: null,

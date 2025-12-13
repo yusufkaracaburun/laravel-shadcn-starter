@@ -58,6 +58,7 @@ function handlePageSizeChange(value: any) {
   else {
     props.table.setPageSize(newPageSize)
   }
+  console.warn('handlePageSizeChange', newPageSize, currentPageSize.value, value)
 }
 
 function goToFirstPage() {
