@@ -79,6 +79,7 @@ export function generateVueTable<T>(props: DataTableProps<T>) {
       // If external sorting handler is provided, call it
       if (props.onSortingChange) {
         props.onSortingChange(sorting.value)
+        console.warn('onSortingChange', sorting.value)
       }
     },
     onColumnFiltersChange: updaterOrValue => valueUpdater(updaterOrValue, columnFilters),
