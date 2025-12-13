@@ -37,15 +37,14 @@ export function useUsers() {
   )
 
   // Watch for page and pageSize changes to trigger refetch
-  // Vue Query should track computed refs in queryKey, but we add explicit watch as fallback
+  // Vue Query tracks computed refs in queryKey, but explicit watch ensures refetch on changes
   watch([page, pageSize], ([newPage, newPageSize], [oldPage, oldPageSize]) => {
-    // Skip initial trigger (when old values are undefined)
+    // Skip initial trigger
     if (oldPage === undefined || oldPageSize === undefined) {
       return
     }
     // Only refetch if values actually changed
     if (oldPage !== newPage || oldPageSize !== newPageSize) {
-      console.warn('Pagination changed - refetching:', { oldPage, newPage, oldPageSize, newPageSize })
       fetchUsers()
     }
   })
@@ -64,32 +63,25 @@ export function useUsers() {
     to: null,
   })
 
-  // Pagination handlers - define before serverPagination computed
+  // Pagination handlers
   function onPageChange(newPage: number) {
     page.value = newPage
   }
 
   function onPageSizeChange(newPageSize: number) {
-    console.warn('onPageSizeChange called with:', newPageSize, 'current pageSize.value:', pageSize.value)
     pageSize.value = newPageSize
     page.value = 1 // Reset to first page when page size changes
-    console.warn('After update - pageSize.value:', pageSize.value)
   }
 
   // Server pagination object for data-table
-  // Use local pageSize value so dropdown updates immediately when changed
-  // Explicitly depend on pageSize to ensure reactivity
-  const serverPagination = computed<ServerPagination>(() => {
-    // Explicitly read pageSize.value to ensure dependency tracking
-    const currentPageSize = pageSize.value
-    return {
-      page: pagination.value.current_page,
-      pageSize: currentPageSize, // Use local state instead of API response for immediate UI update
-      total: pagination.value.total,
-      onPageChange,
-      onPageSizeChange,
-    }
-  })
+  // Uses local pageSize value so dropdown updates immediately when changed
+  const serverPagination = computed<ServerPagination>(() => ({
+    page: pagination.value.current_page,
+    pageSize: pageSize.value, // Use local state for immediate UI update
+    total: pagination.value.total,
+    onPageChange,
+    onPageSizeChange,
+  }))
 
   async function fetchUsersData() {
     try {

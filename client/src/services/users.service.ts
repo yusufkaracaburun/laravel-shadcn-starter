@@ -143,9 +143,9 @@ export function useGetUsersQuery(
   return useQuery<IResponse<PaginatedUsersResponse>, AxiosError>({
     queryKey: [
       'userList',
-      computed(() => toValue(pageRef)), // Use computed to unwrap ref for Vue Query tracking (like sorting)
-      computed(() => toValue(pageSizeRef)), // Use computed to unwrap ref for Vue Query tracking (like sorting)
-      computed(() => JSON.stringify(toValue(sortingRef))), // Keep computed for sorting since it needs JSON.stringify
+      computed(() => toValue(pageRef)),
+      computed(() => toValue(pageSizeRef)),
+      computed(() => JSON.stringify(toValue(sortingRef))),
     ],
     queryFn: async (): Promise<IResponse<PaginatedUsersResponse>> => {
       // Use toValue() to read current values in queryFn
