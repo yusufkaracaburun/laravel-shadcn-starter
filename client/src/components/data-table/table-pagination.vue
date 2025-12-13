@@ -52,13 +52,14 @@ function handlePageSizeChange(value: any) {
   if (!value)
     return
   const newPageSize = Number(value)
+  console.warn('handlePageSizeChange called:', { newPageSize, currentPageSize: currentPageSize.value, value, hasHandler: !!props.serverPagination?.onPageSizeChange })
   if (isServerPagination.value && props.serverPagination?.onPageSizeChange) {
+    console.warn('Calling onPageSizeChange handler')
     props.serverPagination.onPageSizeChange(newPageSize)
   }
   else {
     props.table.setPageSize(newPageSize)
   }
-  console.warn('handlePageSizeChange', newPageSize, currentPageSize.value, value)
 }
 
 function goToFirstPage() {

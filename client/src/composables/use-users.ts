@@ -36,6 +36,20 @@ export function useUsers() {
     sorting,
   )
 
+  // Watch for page and pageSize changes to trigger refetch
+  // Vue Query should track computed refs in queryKey, but we add explicit watch as fallback
+  watch([page, pageSize], ([newPage, newPageSize], [oldPage, oldPageSize]) => {
+    // Skip initial trigger (when old values are undefined)
+    if (oldPage === undefined || oldPageSize === undefined) {
+      return
+    }
+    // Only refetch if values actually changed
+    if (oldPage !== newPage || oldPageSize !== newPageSize) {
+      console.warn('Pagination changed - refetching:', { oldPage, newPage, oldPageSize, newPageSize })
+      fetchUsers()
+    }
+  })
+
   // Computed refs for easy access
   const users = computed(() => usersResponse.value?.data?.data ?? [])
   const loading = computed(() => isLoading.value || isFetching.value)
@@ -50,24 +64,32 @@ export function useUsers() {
     to: null,
   })
 
-  // Pagination handlers
+  // Pagination handlers - define before serverPagination computed
   function onPageChange(newPage: number) {
     page.value = newPage
   }
 
   function onPageSizeChange(newPageSize: number) {
+    console.warn('onPageSizeChange called with:', newPageSize, 'current pageSize.value:', pageSize.value)
     pageSize.value = newPageSize
     page.value = 1 // Reset to first page when page size changes
+    console.warn('After update - pageSize.value:', pageSize.value)
   }
 
   // Server pagination object for data-table
-  const serverPagination = computed<ServerPagination>(() => ({
-    page: pagination.value.current_page,
-    pageSize: pagination.value.per_page,
-    total: pagination.value.total,
-    onPageChange,
-    onPageSizeChange,
-  }))
+  // Use local pageSize value so dropdown updates immediately when changed
+  // Explicitly depend on pageSize to ensure reactivity
+  const serverPagination = computed<ServerPagination>(() => {
+    // Explicitly read pageSize.value to ensure dependency tracking
+    const currentPageSize = pageSize.value
+    return {
+      page: pagination.value.current_page,
+      pageSize: currentPageSize, // Use local state instead of API response for immediate UI update
+      total: pagination.value.total,
+      onPageChange,
+      onPageSizeChange,
+    }
+  })
 
   async function fetchUsersData() {
     try {

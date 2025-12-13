@@ -135,17 +135,23 @@ export function useGetUsersQuery(
 ) {
   const { axiosInstance } = useAxios()
 
+  // Normalize MaybeRef parameters to refs for proper reactivity
+  const pageRef = isRef(page) ? page : ref(page)
+  const pageSizeRef = isRef(pageSize) ? pageSize : ref(pageSize)
+  const sortingRef = isRef(sorting) ? sorting : ref(sorting)
+
   return useQuery<IResponse<PaginatedUsersResponse>, AxiosError>({
     queryKey: [
       'userList',
-      computed(() => toValue(page)),
-      computed(() => toValue(pageSize)),
-      computed(() => JSON.stringify(toValue(sorting))),
+      computed(() => toValue(pageRef)), // Use computed to unwrap ref for Vue Query tracking (like sorting)
+      computed(() => toValue(pageSizeRef)), // Use computed to unwrap ref for Vue Query tracking (like sorting)
+      computed(() => JSON.stringify(toValue(sortingRef))), // Keep computed for sorting since it needs JSON.stringify
     ],
     queryFn: async (): Promise<IResponse<PaginatedUsersResponse>> => {
-      const currentPage = toValue(page)
-      const currentPageSize = toValue(pageSize)
-      const currentSorting = toValue(sorting)
+      // Use toValue() to read current values in queryFn
+      const currentPage = toValue(pageRef)
+      const currentPageSize = toValue(pageSizeRef)
+      const currentSorting = toValue(sortingRef)
       const sortParam = convertSortingToQueryString(currentSorting)
 
       const params: Record<string, any> = {
