@@ -87,6 +87,40 @@ export function useGetCurrentUserQuery() {
 }
 
 /**
+ * Get a specific user by ID
+ * @see api/app/Http/Controllers/Api/UserController.php::show()
+ */
+export function useGetUserQuery(userId: MaybeRef<number>) {
+  const { axiosInstance } = useAxios()
+
+  // Normalize MaybeRef parameter to ref for proper reactivity
+  const userIdRef = isRef(userId) ? userId : ref(userId)
+
+  return useQuery<IResponse<User>, AxiosError>({
+    queryKey: ['user', computed(() => toValue(userIdRef))],
+    queryFn: async (): Promise<IResponse<User>> => {
+      const currentUserId = toValue(userIdRef)
+      const response = await axiosInstance.get(`/api/user/${currentUserId}`)
+      return response.data
+    },
+    retry: (failureCount: number, error: AxiosError) => {
+      // Don't retry on 401 (unauthorized) - user is not authenticated
+      if (error.response?.status === 401) {
+        return false
+      }
+      // Don't retry on 404 (not found) - user doesn't exist
+      if (error.response?.status === 404) {
+        return false
+      }
+      // Retry up to 2 times for other errors
+      return failureCount < 2
+    },
+    staleTime: 5 * 60 * 1000, // Consider data fresh for 5 minutes
+    enabled: computed(() => toValue(userIdRef) > 0), // Only fetch if userId is valid
+  })
+}
+
+/**
  * Get available roles
  * @see api/app/Http/Controllers/Api/UserController.php::roles()
  */
@@ -157,6 +191,7 @@ export function useGetUsersQuery(
       const params: Record<string, any> = {
         page: currentPage,
         per_page: currentPageSize,
+        include: 'roles', // Include roles for filtering
       }
 
       // Add sort parameter if sorting is provided
@@ -283,10 +318,12 @@ export function useUpdateUserMutation() {
       const response = await axiosInstance.put(`/api/user/${userId}`, data)
       return response.data
     },
-    onSuccess: () => {
+    onSuccess: (_, variables) => {
       // Invalidate user list query and current user query to refresh the users list
       queryClient.invalidateQueries({ queryKey: ['userList'] })
       queryClient.invalidateQueries({ queryKey: ['user', 'current'] })
+      // Invalidate the specific user query to refresh the detail page
+      queryClient.invalidateQueries({ queryKey: ['user', variables.userId] })
     },
   })
 }

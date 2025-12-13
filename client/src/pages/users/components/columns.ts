@@ -7,10 +7,10 @@ import type { User } from '@/services/users.service'
 import DataTableColumnHeader from '@/components/data-table/column-header.vue'
 import { SelectColumn } from '@/components/data-table/table-columns'
 import { Copy } from '@/components/sva-ui/copy'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import Badge from '@/components/ui/badge/Badge.vue'
 
 import DataTableRowActions from './data-table-row-actions.vue'
+import UserNameCell from './user-name-cell.vue'
 
 export const columns: ColumnDef<User>[] = [
   SelectColumn as ColumnDef<User>,
@@ -21,30 +21,8 @@ export const columns: ColumnDef<User>[] = [
       const user = row.original
       const nameValue = row.getValue('name')
       const name = (typeof nameValue === 'string' ? nameValue : '—') || '—'
-      const profilePhotoUrl = user.profile_photo_url
 
-      // Get initials from name
-      const getInitials = (name: string): string => {
-        if (!name || name === '—')
-          return '?'
-        const parts = name.trim().split(/\s+/)
-        if (parts.length >= 2) {
-          return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase()
-        }
-        return name[0].toUpperCase()
-      }
-
-      return h('div', { class: 'flex items-center gap-3' }, [
-        h(Avatar, { class: 'size-8' }, {
-          default: () => [
-            profilePhotoUrl
-              ? h(AvatarImage, { src: profilePhotoUrl, alt: name })
-              : null,
-            h(AvatarFallback, {}, () => getInitials(name)),
-          ],
-        }),
-        h('span', { class: 'font-medium' }, name),
-      ])
+      return h(UserNameCell, { user, name })
     },
     enableSorting: true,
     enableHiding: false,
@@ -76,6 +54,42 @@ export const columns: ColumnDef<User>[] = [
         { variant: verifiedAt ? 'default' : 'secondary' },
         () => verifiedAt ? 'Verified' : 'Unverified',
       )
+    },
+    enableSorting: false,
+    enableResizing: true,
+  },
+
+  {
+    id: 'roles',
+    accessorFn: (row) => {
+      // Extract role names from the roles array
+      if (!row.roles || !Array.isArray(row.roles)) {
+        return []
+      }
+      return row.roles.map((role: { name: string }) => role.name)
+    },
+    header: ({ column }) => h(DataTableColumnHeader<User>, { column, title: 'Roles' }),
+    cell: ({ row }) => {
+      const user = row.original
+      const roles = user.roles || []
+
+      if (roles.length === 0) {
+        return h('div', {}, '—')
+      }
+
+      return h('div', { class: 'flex flex-wrap gap-1' }, roles.map((role: { name: string }) =>
+        h(Badge, { variant: 'outline', key: role.name }, () => role.name),
+      ))
+    },
+    filterFn: (row, _id, value) => {
+      // value is an array of selected role names
+      if (!value || value.length === 0) {
+        return true
+      }
+      const userRoles = row.original.roles || []
+      const roleNames = new Set(userRoles.map((role: { name: string }) => role.name))
+      // Check if any of the selected roles match the user's roles
+      return value.some((selectedRole: string) => roleNames.has(selectedRole))
     },
     enableSorting: false,
     enableResizing: true,

@@ -2,7 +2,8 @@
 import type { Row } from '@tanstack/vue-table'
 import type { Component } from 'vue'
 
-import { Ellipsis, FilePenLine, Trash2 } from 'lucide-vue-next'
+import { Ellipsis, Eye, FilePenLine, Trash2 } from 'lucide-vue-next'
+import { useRouter } from 'vue-router'
 
 import type { User } from '@/services/users.service'
 
@@ -14,12 +15,16 @@ interface DataTableRowActionsProps {
 }
 const props = defineProps<DataTableRowActionsProps>()
 const user = computed(() => props.row.original)
+const router = useRouter()
 
 const showComponent = shallowRef<Component | null>(null)
 
-type TCommand = 'edit' | 'delete'
+type TCommand = 'view' | 'edit' | 'delete'
 function handleSelect(command: TCommand) {
   switch (command) {
+    case 'view':
+      router.push({ name: '/users/[id]', params: { id: user.value.id.toString() } })
+      break
     case 'edit':
       showComponent.value = UserResourceDialog
       break
@@ -42,6 +47,11 @@ const isOpen = ref(false)
         </UiButton>
       </UiDropdownMenuTrigger>
       <UiDropdownMenuContent align="end" class="w-[160px]">
+        <UiDropdownMenuItem @select.stop="handleSelect('view')">
+          <span>View</span>
+          <UiDropdownMenuShortcut> <Eye class="size-4" /> </UiDropdownMenuShortcut>
+        </UiDropdownMenuItem>
+
         <UiDialogTrigger as-child>
           <UiDropdownMenuItem @select.stop="handleSelect('edit')">
             <span>Edit</span>
