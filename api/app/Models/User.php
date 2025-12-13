@@ -145,12 +145,15 @@ final class User extends Authenticatable implements HasMedia
 
     /**
      * Get the profile photo URL attribute.
+     * 
+     * First checks for uploaded media files via Spatie Media Library.
+     * Falls back to the profile_photo_path column if no media file exists.
      */
     protected function getProfilePhotoUrlAttribute(): ?string
     {
         $url = $this->getFirstMediaUrl('profile-photos');
 
-        return $url ?: null;
+        return $url ?: $this->profile_photo_path;
     }
 
     /**

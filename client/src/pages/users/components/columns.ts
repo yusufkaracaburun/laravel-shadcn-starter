@@ -7,6 +7,7 @@ import type { User } from '@/services/users.service'
 import DataTableColumnHeader from '@/components/data-table/column-header.vue'
 import { SelectColumn } from '@/components/data-table/table-columns'
 import { Copy } from '@/components/sva-ui/copy'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import Badge from '@/components/ui/badge/Badge.vue'
 
 import DataTableRowActions from './data-table-row-actions.vue'
@@ -16,7 +17,35 @@ export const columns: ColumnDef<User>[] = [
   {
     accessorKey: 'name',
     header: ({ column }) => h(DataTableColumnHeader<User>, { column, title: 'Name' }),
-    cell: ({ row }) => h('div', {}, row.getValue('name') || '—'),
+    cell: ({ row }) => {
+      const user = row.original
+      const nameValue = row.getValue('name')
+      const name = (typeof nameValue === 'string' ? nameValue : '—') || '—'
+      const profilePhotoUrl = user.profile_photo_url
+
+      // Get initials from name
+      const getInitials = (name: string): string => {
+        if (!name || name === '—')
+          return '?'
+        const parts = name.trim().split(/\s+/)
+        if (parts.length >= 2) {
+          return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase()
+        }
+        return name[0].toUpperCase()
+      }
+
+      return h('div', { class: 'flex items-center gap-3' }, [
+        h(Avatar, { class: 'size-8' }, {
+          default: () => [
+            profilePhotoUrl
+              ? h(AvatarImage, { src: profilePhotoUrl, alt: name })
+              : null,
+            h(AvatarFallback, {}, () => getInitials(name)),
+          ],
+        }),
+        h('span', { class: 'font-medium' }, name),
+      ])
+    },
     enableSorting: true,
     enableHiding: false,
     enableResizing: true,
