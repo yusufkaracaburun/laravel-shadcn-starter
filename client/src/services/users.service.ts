@@ -130,7 +130,7 @@ function convertSortingToQueryString(sorting: Array<{ id: string, desc: boolean 
  */
 export function useGetUsersQuery(
   page: MaybeRef<number> = 1,
-  pageSize: MaybeRef<number> = 15,
+  pageSize: MaybeRef<number> = 10,
   sorting: MaybeRef<Array<{ id: string, desc: boolean }>> = [],
 ) {
   const { axiosInstance } = useAxios()

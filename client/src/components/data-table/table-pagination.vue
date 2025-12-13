@@ -111,7 +111,7 @@ function goToLastPage() {
           </UiSelectTrigger>
           <UiSelectContent side="top">
             <UiSelectItem
-              v-for="pageSize in [10, 20, 30, 40, 50, 100]"
+              v-for="pageSize in [10, 20, 30, 40, 50]"
               :key="pageSize"
               :value="`${pageSize}`"
             >
