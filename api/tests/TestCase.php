@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace Tests;
 
+use App\Models\Team;
+use App\Models\User;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Testing\TestResponse;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -38,6 +41,79 @@ abstract class TestCase extends BaseTestCase
         // Clear all login rate limiters before each test
         // This ensures rate limiting doesn't interfere with tests
         $this->clearLoginRateLimiters();
+
+        // Ensure database is clean for parallel testing
+        $this->ensureCleanDatabase();
+    }
+
+    /**
+     * Clean up after each test to ensure complete isolation.
+     * This ensures no data persists between tests in parallel execution.
+     */
+    protected function tearDown(): void
+    {
+        // Clean up all test data after each test
+        // This ensures complete isolation for parallel testing
+        $this->cleanUsers();
+
+        parent::tearDown();
+    }
+
+    /**
+     * Clean up users after database is refreshed.
+     * This ensures no data persists between tests in parallel execution.
+     */
+    protected function afterRefreshingDatabase()
+    {
+        // Clean up users after RefreshDatabase has run migrations
+        // This is critical for parallel testing where databases might share state
+        $this->cleanUsers();
+    }
+
+    /**
+     * Ensure the database is clean before each test.
+     * This is especially important for parallel testing where databases might be shared.
+     */
+    protected function ensureCleanDatabase(): void
+    {
+        // For SQLite, ensure foreign keys are enabled and database is clean
+        if (DB::getDriverName() === 'sqlite') {
+            DB::statement('PRAGMA foreign_keys=ON');
+        }
+    }
+
+    /**
+     * Clean up all users and related data for test isolation.
+     * This ensures parallel tests don't interfere with each other.
+     *
+     * This method is called both after RefreshDatabase runs and in tearDown
+     * to ensure complete isolation between tests.
+     */
+    protected function cleanUsers(): void
+    {
+        // Disable foreign key checks temporarily for SQLite to allow deletion in any order
+        if (DB::getDriverName() === 'sqlite') {
+            DB::statement('PRAGMA foreign_keys=OFF');
+        }
+
+        try {
+            // Delete all pivot table entries first
+            DB::table('team_user')->delete();
+
+            // Delete teams
+            Team::query()->delete();
+
+            // Delete all users (including soft-deleted ones)
+            User::withTrashed()->forceDelete();
+
+            // Clean up any other related tables that might have test data
+            // Add more cleanup here as needed for other models
+        } finally {
+            // Re-enable foreign key checks
+            if (DB::getDriverName() === 'sqlite') {
+                DB::statement('PRAGMA foreign_keys=ON');
+            }
+        }
     }
 
     /**

@@ -34,11 +34,6 @@ export function useSidebar() {
           url: '/dashboard',
           icon: LayoutDashboard,
         },
-        {
-          title: 'Ai Talk Example',
-          url: '/ai-talk',
-          icon: Podcast,
-        },
       ],
     },
     {
@@ -63,6 +58,16 @@ export function useSidebar() {
           title: 'Tasks',
           url: '/tasks',
           icon: ListTodo,
+        },
+      ],
+    },
+    {
+      title: 'Example',
+      items: [
+        {
+          title: 'Ai Talk Example',
+          url: '/ai-talk',
+          icon: Podcast,
         },
         {
           title: 'Auth',

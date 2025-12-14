@@ -12,7 +12,7 @@ export const THEMES = [
 ] as const
 export type Theme = (typeof THEMES)[number]
 
-export const THEME_PRIMARY_COLORS: { theme: Theme; primaryColor: string }[] = [
+export const THEME_PRIMARY_COLORS: { theme: Theme, primaryColor: string }[] = [
   { theme: 'zinc', primaryColor: 'oklch(44.2% 0.017 285.786)' },
   { theme: 'red', primaryColor: 'oklch(57.7% 0.245 27.325)' },
   { theme: 'rose', primaryColor: 'oklch(0.645 0.246 16.439)' },
@@ -31,3 +31,6 @@ export const CONTENT_LAYOUTS = [
   { label: 'Full', value: 'full', icon: UnfoldHorizontal },
   { label: 'Centered', value: 'centered', icon: MoveHorizontal },
 ] as const
+
+export type Scale = (typeof SCALES)[number]
+export const SCALES = ['xs', 'sm', 'md', 'lg'] as const

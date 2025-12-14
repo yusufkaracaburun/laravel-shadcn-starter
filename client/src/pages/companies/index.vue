@@ -2,9 +2,9 @@
 import Page from '@/components/global-layout/basic-page.vue'
 
 import { columns } from './components/columns'
-import DataTable from './components/data-table.vue'
 import CompanyCreate from './components/company-create.vue'
 import CompanyImport from './components/company-import.vue'
+import DataTable from './components/data-table.vue'
 import companies from './data/companies.json'
 </script>
 
@@ -19,4 +19,3 @@ import companies from './data/companies.json'
     </div>
   </Page>
 </template>
-

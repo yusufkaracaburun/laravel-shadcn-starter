@@ -13,7 +13,7 @@ import DataTableToolbar from './data-table-toolbar.vue'
 import TaskDeleteBatch from './task-delete-batch.vue'
 
 const props = defineProps<DataTableProps<Task>>()
-const table = generateVueTable<Task>(props)
+const { table } = generateVueTable<Task>(props)
 
 const taskDeleteBatchOpen = ref(false)
 </script>

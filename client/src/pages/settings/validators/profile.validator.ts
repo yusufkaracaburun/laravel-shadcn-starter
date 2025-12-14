@@ -4,22 +4,22 @@ export const profileValidator = z.object({
   username: z
     .string()
     .min(2, {
-      error: 'Username must be at least 2 characters.',
+      message: 'Username must be at least 2 characters.',
     })
     .max(30, {
-      error: 'Username must not be longer than 30 characters.',
+      message: 'Username must not be longer than 30 characters.',
     }),
-  email: z.email({
-    error: 'Please select an email to display.',
+  email: z.string().email({
+    message: 'Please enter a valid email address.',
   }),
   bio: z
     .string()
-    .max(160, { error: 'Bio must not be longer than 160 characters.' })
-    .min(4, { error: 'Bio must be at least 2 characters.' }),
+    .max(160, { message: 'Bio must not be longer than 160 characters.' })
+    .min(4, { message: 'Bio must be at least 4 characters.' }),
   urls: z
     .array(
       z.object({
-        value: z.url({ error: 'Please enter a valid URL.' }),
+        value: z.string().url({ message: 'Please enter a valid URL.' }),
       }),
     )
     .optional(),

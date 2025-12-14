@@ -46,6 +46,22 @@ abstract class BaseResource extends JsonResource
     }
 
     /**
+     * Format a timestamp to DateTime string format (Y-m-d H:i:s).
+     */
+    protected function formatDateTime($value): ?string
+    {
+        return $value?->toDateTimeString();
+    }
+
+    /**
+     * Format a date to date-only string format (Y-m-d).
+     */
+    protected function formatDate($value, string $format = 'Y-m-d'): ?string
+    {
+        return $value?->format($format);
+    }
+
+    /**
      * Transform array keys according to the chosen format.
      */
     protected function transformKeys(array $data): array

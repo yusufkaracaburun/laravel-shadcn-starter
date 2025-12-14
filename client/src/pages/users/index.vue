@@ -7,7 +7,7 @@ import DataTable from './components/data-table.vue'
 import UserCreate from './components/user-create.vue'
 import UserInvite from './components/user-invite.vue'
 
-const { loading, users, serverPagination } = useUsers()
+const { loading, users, serverPagination, sorting, onSortingChange } = useUsers()
 </script>
 
 <template>
@@ -22,6 +22,8 @@ const { loading, users, serverPagination } = useUsers()
         :data="users"
         :columns="columns"
         :server-pagination="serverPagination"
+        :sorting="sorting"
+        :on-sorting-change="onSortingChange"
       />
     </div>
   </Page>

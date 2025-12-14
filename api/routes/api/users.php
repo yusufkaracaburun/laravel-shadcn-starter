@@ -23,4 +23,8 @@ Route::middleware('auth:sanctum')->name('api.users.')->group(function (): void {
 
     // User resource routes
     Route::apiResource('user', UserController::class);
+
+    // Additional user routes
+    Route::get('/users/all', [UserController::class, 'all'])->name('all');
+    Route::get('/users/active', [UserController::class, 'active'])->name('active');
 });

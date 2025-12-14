@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Concerns;
 
 use Closure;
-use App\Support\Cache\ResponseCache;
+use App\Helpers\Cache\ResponseCache;
 use Illuminate\Support\Facades\Auth;
 
 trait UsesCachedResponses

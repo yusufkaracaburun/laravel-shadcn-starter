@@ -73,4 +73,56 @@ final class ApiResponse
             'message' => $message,
         ], $code);
     }
+
+    /**
+     * Create a 404 Not Found error response.
+     *
+     * @param  array<string, mixed>  $extra
+     */
+    public static function notFound(
+        string $message = 'Resource not found',
+        mixed $data = null,
+        array $extra = []
+    ): JsonResponse {
+        return self::error($message, Response::HTTP_NOT_FOUND, $data, $extra);
+    }
+
+    /**
+     * Create a 403 Forbidden error response.
+     *
+     * @param  array<string, mixed>  $extra
+     */
+    public static function forbidden(
+        string $message = 'Forbidden',
+        mixed $data = null,
+        array $extra = []
+    ): JsonResponse {
+        return self::error($message, Response::HTTP_FORBIDDEN, $data, $extra);
+    }
+
+    /**
+     * Create a 401 Unauthorized error response.
+     *
+     * @param  array<string, mixed>  $extra
+     */
+    public static function unauthorized(
+        string $message = 'Unauthorized',
+        mixed $data = null,
+        array $extra = []
+    ): JsonResponse {
+        return self::error($message, Response::HTTP_UNAUTHORIZED, $data, $extra);
+    }
+
+    /**
+     * Create a 422 Validation Error response.
+     *
+     * @param  array<string, mixed>  $extra
+     */
+    public static function validationError(
+        string $message = 'Validation failed',
+        mixed $data = null,
+        array $extra = []
+    ): JsonResponse {
+        return self::error($message, Response::HTTP_UNPROCESSABLE_ENTITY, $data, $extra);
+    }
 }

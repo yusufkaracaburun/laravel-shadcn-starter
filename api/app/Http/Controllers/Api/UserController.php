@@ -10,15 +10,15 @@ use Spatie\Permission\Models\Role;
 use App\Http\Responses\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
-use App\Repositories\UserRepository;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\UserCollection;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UserIndexRequest;
 use App\Http\Requests\UpdateUserRequest;
-use App\Support\Cache\CacheInvalidationService;
+use App\Helpers\Cache\CacheInvalidationService;
 use App\Http\Controllers\Concerns\UsesQueryBuilder;
 use App\Http\Controllers\Concerns\UsesCachedResponses;
+use App\Repositories\Contracts\UserRepositoryInterface;
 use App\Http\Controllers\Concerns\InvalidatesCachedModels;
 
 final class UserController extends Controller
@@ -28,7 +28,7 @@ final class UserController extends Controller
     use UsesQueryBuilder;
 
     public function __construct(
-        private readonly UserRepository $userRepository
+        private readonly UserRepositoryInterface $userRepository
     ) {}
 
     /**
@@ -46,7 +46,7 @@ final class UserController extends Controller
         $user->refresh();
         $teamId = $user->getAttributeValue('current_team_id');
 
-        $perPage = (int) ($validated['per_page'] ?? 15);
+        $perPage = (int) ($validated['per_page'] ?? 10);
         $paginated = $this->userRepository->getPaginated($perPage, $teamId);
 
         return ApiResponse::success(new UserCollection($paginated));
@@ -84,7 +84,7 @@ final class UserController extends Controller
 
         $teamId = $currentUser->getAttributeValue('current_team_id');
 
-        $user = $this->userRepository->create($request->validated(), $teamId);
+        $user = $this->userRepository->createUser($request->validated(), $teamId);
 
         // Handle profile photo upload if present
         if ($request->hasFile('profile_photo')) {
@@ -114,7 +114,7 @@ final class UserController extends Controller
         // Media Library handles file uploads separately
         unset($validated['profile_photo']);
 
-        $user = $this->userRepository->update($user, $validated, $teamId);
+        $user = $this->userRepository->updateUser($user, $validated, $teamId);
 
         // Handle profile photo upload if present
         if ($request->hasFile('profile_photo')) {
@@ -144,7 +144,7 @@ final class UserController extends Controller
         $teamId = $user->current_team_id;
         $userId = $user->id;
 
-        $this->userRepository->delete($user);
+        $this->userRepository->deleteUser($user);
 
         // Invalidate user and team caches
         CacheInvalidationService::invalidateUser($userId);
@@ -168,6 +168,68 @@ final class UserController extends Controller
         $user = $this->userRepository->getCurrentUser($user);
 
         return ApiResponse::success(new UserResource($user));
+    }
+
+    /**
+     * Get all users (non-paginated).
+     *
+     * @authenticated
+     */
+    public function all(): JsonResponse
+    {
+        /** @var User $user */
+        $user = Auth::user();
+        $user->refresh();
+
+        $teamId = $user->getAttributeValue('current_team_id');
+
+        $query = User::query();
+
+        // Apply team filtering if teamId is provided
+        if ($teamId !== null) {
+            $query->whereHas('teams', fn ($q) => $q->where('teams.id', $teamId))
+                ->orWhereHas('ownedTeams', fn ($q) => $q->where('id', $teamId));
+        }
+
+        $users = $this->buildQuery(
+            $query,
+            allowedFilters: ['id', 'name', 'email'],
+            allowedSorts: ['id', 'name', 'email', 'created_at'],
+            allowedIncludes: ['teams', 'currentTeam', 'ownedTeams', 'roles']
+        )->get();
+
+        return ApiResponse::success(UserResource::collection($users));
+    }
+
+    /**
+     * Get active users.
+     *
+     * @authenticated
+     */
+    public function active(): JsonResponse
+    {
+        /** @var User $user */
+        $user = Auth::user();
+        $user->refresh();
+
+        $teamId = $user->getAttributeValue('current_team_id');
+
+        $query = User::query()->whereNotNull('email_verified_at');
+
+        // Apply team filtering if teamId is provided
+        if ($teamId !== null) {
+            $query->whereHas('teams', fn ($q) => $q->where('teams.id', $teamId))
+                ->orWhereHas('ownedTeams', fn ($q) => $q->where('id', $teamId));
+        }
+
+        $users = $this->buildQuery(
+            $query,
+            allowedFilters: ['id', 'name', 'email'],
+            allowedSorts: ['id', 'name', 'email', 'created_at'],
+            allowedIncludes: ['teams', 'currentTeam', 'ownedTeams', 'roles']
+        )->get();
+
+        return ApiResponse::success(UserResource::collection($users));
     }
 
     /**

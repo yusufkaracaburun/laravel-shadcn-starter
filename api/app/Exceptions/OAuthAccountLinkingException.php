@@ -8,6 +8,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Http\JsonResponse;
+use App\Http\Responses\ApiResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Contracts\Support\Responsable;
 
@@ -34,9 +35,7 @@ final class OAuthAccountLinkingException extends Exception implements Responsabl
     public function toResponse($request)
     {
         if ($request->expectsJson()) {
-            return response()->json([
-                'message' => $this->getMessage(),
-            ], 422);
+            return ApiResponse::validationError($this->getMessage());
         }
 
         return back()->with('error', $this->getMessage());

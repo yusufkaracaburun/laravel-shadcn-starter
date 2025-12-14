@@ -20,7 +20,11 @@ import { valueUpdater } from '@/lib/utils'
 import type { DataTableProps } from './types'
 
 export function generateVueTable<T>(props: DataTableProps<T>) {
-  const sorting = ref<SortingState>([])
+  // Use external sorting state if provided, otherwise create internal one
+  const internalSorting = ref<SortingState>([])
+  const sorting = props.sorting !== undefined
+    ? (isRef(props.sorting) ? props.sorting : ref(props.sorting))
+    : internalSorting
   const columnFilters = ref<ColumnFiltersState>([])
   const columnVisibility = ref<VisibilityState>({})
   const rowSelection = ref({})
@@ -70,10 +74,17 @@ export function generateVueTable<T>(props: DataTableProps<T>) {
       },
     },
     enableRowSelection: true,
-    onSortingChange: (updaterOrValue) => valueUpdater(updaterOrValue, sorting),
-    onColumnFiltersChange: (updaterOrValue) => valueUpdater(updaterOrValue, columnFilters),
-    onColumnVisibilityChange: (updaterOrValue) => valueUpdater(updaterOrValue, columnVisibility),
-    onRowSelectionChange: (updaterOrValue) => valueUpdater(updaterOrValue, rowSelection),
+    onSortingChange: (updaterOrValue) => {
+      valueUpdater(updaterOrValue, sorting)
+      // If external sorting handler is provided, call it
+      if (props.onSortingChange) {
+        props.onSortingChange(sorting.value)
+        console.warn('onSortingChange', sorting.value)
+      }
+    },
+    onColumnFiltersChange: updaterOrValue => valueUpdater(updaterOrValue, columnFilters),
+    onColumnVisibilityChange: updaterOrValue => valueUpdater(updaterOrValue, columnVisibility),
+    onRowSelectionChange: updaterOrValue => valueUpdater(updaterOrValue, rowSelection),
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -91,13 +102,25 @@ export function generateVueTable<T>(props: DataTableProps<T>) {
         return pageSize.value
       },
     }
-    tableConfig.pageCount = pageCount.value
+    // Make pageCount reactive using Object.defineProperty
+    Object.defineProperty(tableConfig, 'pageCount', {
+      get() {
+        return pageCount.value
+      },
+      configurable: true,
+      enumerable: true,
+    })
     tableConfig.manualPagination = true
-  } else {
+  }
+  else {
     tableConfig.getPaginationRowModel = getPaginationRowModel()
   }
 
   const table = useVueTable<T>(tableConfig)
 
-  return table
+  // Return both table and sorting state for server-side operations
+  return {
+    table,
+    sorting,
+  }
 }

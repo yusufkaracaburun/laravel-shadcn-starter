@@ -1,16 +1,15 @@
 <script setup lang="ts">
-import { Settings } from 'lucide-vue-next'
+import ThemePopover from '@/components/custom-theme/theme-popover.vue'
 
 import HeaderBreadcrumbs from './header-breadcrumbs.vue'
 import HeaderNotifications from './header-notifications.vue'
 import HeaderSearch from './header-search.vue'
 import HeaderUserMenu from './header-user-menu.vue'
-import ToggleTheme from '@/components/toggle-theme.vue'
 </script>
 
 <template>
   <header
-    class="flex items-center gap-3 sm:gap-4 h-16 px-4 shrink-0 transition-[width,height] ease-linear border-b"
+    class="sticky top-0 z-50 flex items-center gap-3 sm:gap-4 h-16 px-4 shrink-0 transition-[width,height] ease-linear border-b bg-background"
   >
     <!-- Left Section: Sidebar Toggle + Breadcrumbs -->
     <div class="flex items-center gap-3 sm:gap-4">
@@ -25,25 +24,14 @@ import ToggleTheme from '@/components/toggle-theme.vue'
       <!-- Search Bar -->
       <HeaderSearch />
 
-      <!-- Theme Toggle -->
-      <ToggleTheme />
-
-      <!-- Settings Icon -->
-      <UiButton
-        variant="ghost"
-        size="icon"
-        data-testid="default-layout_settings-button"
-        @click="$router.push('/settings')"
-      >
-        <Settings class="size-4" />
-      </UiButton>
-
       <!-- Notifications Dropdown -->
       <HeaderNotifications />
+
+      <!-- Theme Popover -->
+      <ThemePopover />
 
       <!-- User Avatar Dropdown -->
       <HeaderUserMenu />
     </div>
   </header>
 </template>
-

@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 
-import type { ContentLayout, Radius, Theme } from '@/constants/themes'
+import type { ContentLayout, Radius, Scale, Theme } from '@/constants/themes'
 
 export const useThemeStore = defineStore(
   'system-config',
@@ -18,6 +18,12 @@ export const useThemeStore = defineStore(
     function setContentLayout(newContentLayout: ContentLayout) {
       contentLayout.value = newContentLayout
     }
+
+    const scale = ref<Scale>('sm')
+    function setScale(newScale: Scale) {
+      scale.value = newScale
+    }
+
     return {
       radius,
       setRadius,
@@ -27,6 +33,9 @@ export const useThemeStore = defineStore(
 
       contentLayout,
       setContentLayout,
+
+      scale,
+      setScale,
     }
   },
   {

@@ -31,7 +31,7 @@ const { contentLayout } = storeToRefs(themeStore)
 <template>
   <UiSidebarProvider
     :default-open="defaultOpen.get('sidebar:state')" :style="{
-      '--sidebar-width': 'calc(var(--spacing) * 72)',
+      '--sidebar-width': 'calc(var(--spacing) * 52)',
       '--header-height': 'calc(var(--spacing) * 12)',
     }"
   >

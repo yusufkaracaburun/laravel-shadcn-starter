@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Concerns;
 
-use App\Support\Cache\CacheInvalidationService;
+use App\Helpers\Cache\CacheInvalidationService;
 
 trait InvalidatesCachedModels
 {

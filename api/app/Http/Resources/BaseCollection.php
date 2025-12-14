@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Http\Resources;
 
+use Illuminate\Http\Request;
+use Illuminate\Pagination\AbstractPaginator;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
 abstract class BaseCollection extends ResourceCollection
@@ -14,22 +16,37 @@ abstract class BaseCollection extends ResourceCollection
      */
     protected string $resourceClass;
 
+    /**
+     * Transform the resource collection into an array.
+     * Handles both paginated and non-paginated collections.
+     *
+     * @param  Request  $request
+     * @return array<string, mixed>
+     */
     final public function toArray($request): array
     {
-        return [
-            'data' => ($this->resourceClass)::collection($this->collection),
+        $data = ($this->resourceClass)::collection($this->collection);
 
-            'current_page' => $this->currentPage(),
-            'last_page' => $this->lastPage(),
-            'per_page' => $this->perPage(),
-            'total' => $this->total(),
-            'from' => $this->firstItem(),
-            'to' => $this->lastItem(),
-            'path' => $this->path(),
-            'first_page_url' => $this->url(1),
-            'last_page_url' => $this->url($this->lastPage()),
-            'next_page_url' => $this->nextPageUrl(),
-            'prev_page_url' => $this->previousPageUrl(),
-        ];
+        if ($this->resource instanceof AbstractPaginator) {
+            return [
+                'data' => $data,
+                'meta' => [
+                    'current_page' => $this->currentPage(),
+                    'last_page' => $this->lastPage(),
+                    'per_page' => $this->perPage(),
+                    'total' => $this->total(),
+                    'from' => $this->firstItem(),
+                    'to' => $this->lastItem(),
+                ],
+                'links' => [
+                    'first' => $this->url(1),
+                    'last' => $this->url($this->lastPage()),
+                    'prev' => $this->previousPageUrl(),
+                    'next' => $this->nextPageUrl(),
+                ],
+            ];
+        }
+
+        return $data->toArray($request);
     }
 }

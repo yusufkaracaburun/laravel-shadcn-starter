@@ -78,6 +78,7 @@ declare global {
   const useEcho: typeof import('./src/composables/use-echo').useEcho
   const useErrorStore: typeof import('./src/stores/error.store').useErrorStore
   const useId: typeof import('vue').useId
+  const useKanban: typeof import('./src/composables/use-kanban').useKanban
   const useLink: typeof import('vue-router').useLink
   const useModel: typeof import('vue').useModel
   const useReverbNotifications: typeof import('./src/composables/use-reverb-notifications').useReverbNotifications

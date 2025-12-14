@@ -87,6 +87,40 @@ export function useGetCurrentUserQuery() {
 }
 
 /**
+ * Get a specific user by ID
+ * @see api/app/Http/Controllers/Api/UserController.php::show()
+ */
+export function useGetUserQuery(userId: MaybeRef<number>) {
+  const { axiosInstance } = useAxios()
+
+  // Normalize MaybeRef parameter to ref for proper reactivity
+  const userIdRef = isRef(userId) ? userId : ref(userId)
+
+  return useQuery<IResponse<User>, AxiosError>({
+    queryKey: ['user', computed(() => toValue(userIdRef))],
+    queryFn: async (): Promise<IResponse<User>> => {
+      const currentUserId = toValue(userIdRef)
+      const response = await axiosInstance.get(`/api/user/${currentUserId}`)
+      return response.data
+    },
+    retry: (failureCount: number, error: AxiosError) => {
+      // Don't retry on 401 (unauthorized) - user is not authenticated
+      if (error.response?.status === 401) {
+        return false
+      }
+      // Don't retry on 404 (not found) - user doesn't exist
+      if (error.response?.status === 404) {
+        return false
+      }
+      // Retry up to 2 times for other errors
+      return failureCount < 2
+    },
+    staleTime: 5 * 60 * 1000, // Consider data fresh for 5 minutes
+    enabled: computed(() => toValue(userIdRef) > 0), // Only fetch if userId is valid
+  })
+}
+
+/**
  * Get available roles
  * @see api/app/Http/Controllers/Api/UserController.php::roles()
  */
@@ -104,25 +138,68 @@ export function useGetRolesQuery() {
 }
 
 /**
- * List all users with pagination
+ * Convert TanStack Table sorting format to Spatie QueryBuilder format
+ * @param sorting - Array of sorting objects from TanStack Table
+ * @returns Sort string for Spatie QueryBuilder (e.g., "name" or "-name" or "name,-email")
+ */
+function convertSortingToQueryString(sorting: Array<{ id: string, desc: boolean }>): string | undefined {
+  if (!sorting || sorting.length === 0) {
+    return undefined
+  }
+
+  return sorting
+    .map((sort) => {
+      const prefix = sort.desc ? '-' : ''
+      return `${prefix}${sort.id}`
+    })
+    .join(',')
+}
+
+/**
+ * List all users with pagination and sorting
  * @see api/app/Http/Controllers/Api/UserController.php::index()
  * @param page - Page number (default: 1) - can be a ref or number
  * @param pageSize - Number of items per page (default: 15) - can be a ref or number
+ * @param sorting - Sorting state from TanStack Table (default: []) - can be a ref or array
  */
-export function useGetUsersQuery(page: MaybeRef<number> = 1, pageSize: MaybeRef<number> = 15) {
+export function useGetUsersQuery(
+  page: MaybeRef<number> = 1,
+  pageSize: MaybeRef<number> = 10,
+  sorting: MaybeRef<Array<{ id: string, desc: boolean }>> = [],
+) {
   const { axiosInstance } = useAxios()
 
+  // Normalize MaybeRef parameters to refs for proper reactivity
+  const pageRef = isRef(page) ? page : ref(page)
+  const pageSizeRef = isRef(pageSize) ? pageSize : ref(pageSize)
+  const sortingRef = isRef(sorting) ? sorting : ref(sorting)
+
   return useQuery<IResponse<PaginatedUsersResponse>, AxiosError>({
-    queryKey: ['userList', computed(() => toValue(page)), computed(() => toValue(pageSize))],
+    queryKey: [
+      'userList',
+      computed(() => toValue(pageRef)),
+      computed(() => toValue(pageSizeRef)),
+      computed(() => JSON.stringify(toValue(sortingRef))),
+    ],
     queryFn: async (): Promise<IResponse<PaginatedUsersResponse>> => {
-      const currentPage = toValue(page)
-      const currentPageSize = toValue(pageSize)
-      const response = await axiosInstance.get('/api/user', {
-        params: {
-          page: currentPage,
-          per_page: currentPageSize,
-        },
-      })
+      // Use toValue() to read current values in queryFn
+      const currentPage = toValue(pageRef)
+      const currentPageSize = toValue(pageSizeRef)
+      const currentSorting = toValue(sortingRef)
+      const sortParam = convertSortingToQueryString(currentSorting)
+
+      const params: Record<string, any> = {
+        page: currentPage,
+        per_page: currentPageSize,
+        include: 'roles', // Include roles for filtering
+      }
+
+      // Add sort parameter if sorting is provided
+      if (sortParam) {
+        params.sort = sortParam
+      }
+
+      const response = await axiosInstance.get('/api/user', { params })
       return response.data
     },
     retry: (failureCount: number, error: AxiosError) => {
@@ -179,7 +256,8 @@ export function useCreateUserMutation() {
         formData.append('email', data.email)
         formData.append('password', data.password)
         formData.append('password_confirmation', data.password_confirmation)
-        if (data.role) formData.append('role', data.role)
+        if (data.role)
+          formData.append('role', data.role)
         formData.append('profile_photo', data.profile_photo)
 
         const response = await axiosInstance.post('/api/user', formData, {
@@ -209,16 +287,21 @@ export function useUpdateUserMutation() {
   const { axiosInstance } = useAxios()
   const queryClient = useQueryClient()
 
-  return useMutation<IResponse<User>, AxiosError, { userId: number; data: UpdateUserRequest }>({
+  return useMutation<IResponse<User>, AxiosError, { userId: number, data: UpdateUserRequest }>({
     mutationFn: async ({ userId, data }): Promise<IResponse<User>> => {
       // If profile photo is present, use FormData for multipart/form-data
       if (data.profile_photo) {
         const formData = new FormData()
-        if (data.name) formData.append('name', data.name)
-        if (data.email) formData.append('email', data.email)
-        if (data.password) formData.append('password', data.password)
-        if (data.password_confirmation) formData.append('password_confirmation', data.password_confirmation)
-        if (data.role) formData.append('role', data.role)
+        if (data.name)
+          formData.append('name', data.name)
+        if (data.email)
+          formData.append('email', data.email)
+        if (data.password)
+          formData.append('password', data.password)
+        if (data.password_confirmation)
+          formData.append('password_confirmation', data.password_confirmation)
+        if (data.role)
+          formData.append('role', data.role)
         formData.append('profile_photo', data.profile_photo)
         // Use POST with _method=PUT for file uploads (Laravel supports this)
         formData.append('_method', 'PUT')
@@ -235,10 +318,12 @@ export function useUpdateUserMutation() {
       const response = await axiosInstance.put(`/api/user/${userId}`, data)
       return response.data
     },
-    onSuccess: () => {
+    onSuccess: (_, variables) => {
       // Invalidate user list query and current user query to refresh the users list
       queryClient.invalidateQueries({ queryKey: ['userList'] })
       queryClient.invalidateQueries({ queryKey: ['user', 'current'] })
+      // Invalidate the specific user query to refresh the detail page
+      queryClient.invalidateQueries({ queryKey: ['user', variables.userId] })
     },
   })
 }

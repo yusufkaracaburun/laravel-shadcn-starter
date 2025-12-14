@@ -5,18 +5,18 @@ declare(strict_types=1);
 use Tests\TestCase;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
-use App\Repositories\UserRepository;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\UserIndexRequest;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Pagination\LengthAwarePaginator;
+use App\Repositories\Contracts\UserRepositoryInterface;
 
 test('current method returns authenticated user', function (): void {
     /** @var TestCase $this */
     $user = User::factory()->create();
     $user->load(['teams', 'currentTeam', 'ownedTeams']);
 
-    $repository = $this->mock(UserRepository::class);
+    $repository = $this->mock(UserRepositoryInterface::class);
     $repository->shouldReceive('getCurrentUser')
         ->once()
         ->with($user)
@@ -35,7 +35,7 @@ test('index method returns all users', function (): void {
     $user = User::factory()->create();
     $paginator = new LengthAwarePaginator([], 0, 15, 1);
 
-    $repository = $this->mock(UserRepository::class);
+    $repository = $this->mock(UserRepositoryInterface::class);
     $repository->shouldReceive('getPaginated')
         ->once()
         ->with(15, null)
@@ -60,7 +60,7 @@ test('show method returns specific user', function (): void {
 
     $currentUser = User::factory()->create();
 
-    $repository = $this->mock(UserRepository::class);
+    $repository = $this->mock(UserRepositoryInterface::class);
     $repository->shouldReceive('findById')
         ->once()
         ->with($user->id, null)

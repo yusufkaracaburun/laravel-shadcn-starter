@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Policies;
 
 use App\Models\User;
-use Spatie\Permission\PermissionRegistrar;
+use Illuminate\Auth\Access\Response;
 
 /**
  * Policy for User model authorization.
@@ -13,123 +13,112 @@ use Spatie\Permission\PermissionRegistrar;
  * All permission checks are automatically team-scoped via TeamResolver,
  * which uses the user's current_team_id to resolve the team context.
  */
-final class UserPolicy
+final class UserPolicy extends BasePolicy
 {
-    /**
-     * Perform pre-authorization checks on the model.
-     * Super admin bypasses all authorization checks.
-     */
-    public function before(User $user): ?bool
-    {
-        // Check for super-admin with team context cleared (global role)
-        // First ensure roles are loaded
-        if (! $user->relationLoaded('roles')) {
-            $user->load('roles');
-        }
-
-        $permissionRegistrar = resolve(PermissionRegistrar::class);
-        $originalTeamId = $permissionRegistrar->getPermissionsTeamId();
-        $permissionRegistrar->setPermissionsTeamId(null); // Check global roles
-
-        // Clear role cache to ensure fresh check
-        $user->unsetRelation('roles');
-        $isSuperAdmin = $user->hasRole('super-admin');
-
-        // Restore original team context
-        $permissionRegistrar->setPermissionsTeamId($originalTeamId);
-
-        if ($isSuperAdmin) {
-            return true;
-        }
-
-        return null;
-    }
-
     /**
      * Determine whether the user can view any models.
      * Permission check is team-scoped via TeamResolver.
      */
-    public function viewAny(User $user): bool
+    public function viewAny(User $user): Response
     {
-        return $user->can('users.view');
+        return $user->can('users.view')
+            ? Response::allow()
+            : Response::deny('You do not have permission to view users.');
     }
 
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, User $model): bool
+    public function view(User $user, User $model): Response
     {
         // Allow if it's the same user
         if ($user->id === $model->id) {
-            return true;
+            return Response::allow();
         }
 
         // Allow if users belong to the same team and user has permission
-        return $this->belongsToSameTeam($user, $model)
-            && $user->can('users.view');
+        if ($this->belongsToSameTeam($user, $model) && $user->can('users.view')) {
+            return Response::allow();
+        }
+
+        return Response::deny('You do not have permission to view this user.');
     }
 
     /**
      * Determine whether the user can create models.
      */
-    public function create(User $user): bool
+    public function create(User $user): Response
     {
-        return $user->can('users.create');
+        return $user->can('users.create')
+            ? Response::allow()
+            : Response::deny('You do not have permission to create users.');
     }
 
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, User $model): bool
+    public function update(User $user, User $model): Response
     {
         // Allow if it's the same user
         if ($user->id === $model->id) {
-            return true;
+            return Response::allow();
         }
 
         // Allow if users belong to the same team and user has permission
-        return $this->belongsToSameTeam($user, $model)
-            && $user->can('users.update');
+        if ($this->belongsToSameTeam($user, $model) && $user->can('users.update')) {
+            return Response::allow();
+        }
+
+        return Response::deny('You do not have permission to update this user.');
     }
 
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, User $model): bool
+    public function delete(User $user, User $model): Response
     {
         // Prevent self-deletion
         if ($user->id === $model->id) {
-            return false;
+            return Response::deny('You cannot delete yourself.');
         }
 
         // Only allow if users belong to the same team and user has permission
-        return $this->belongsToSameTeam($user, $model)
-            && $user->can('users.delete');
+        if ($this->belongsToSameTeam($user, $model) && $user->can('users.delete')) {
+            return Response::allow();
+        }
+
+        return Response::deny('You do not have permission to delete this user.');
     }
 
     /**
      * Determine whether the user can restore the model.
      */
-    public function restore(User $user, User $model): bool
+    public function restore(User $user, User $model): Response
     {
         // Only allow if users belong to the same team and user has permission
-        return $this->belongsToSameTeam($user, $model)
-            && $user->can('users.delete');
+        if ($this->belongsToSameTeam($user, $model) && $user->can('users.delete')) {
+            return Response::allow();
+        }
+
+        return Response::deny('You do not have permission to restore this user.');
     }
 
     /**
      * Determine whether the user can permanently delete the model.
      */
-    public function forceDelete(User $user, User $model): bool
+    public function forceDelete(User $user, User $model): Response
     {
         // Prevent self-deletion
         if ($user->id === $model->id) {
-            return false;
+            return Response::deny('You cannot permanently delete yourself.');
         }
 
         // Only allow if users belong to the same team and user has permission
-        return $this->belongsToSameTeam($user, $model)
-            && $user->can('users.delete');
+        if ($this->belongsToSameTeam($user, $model) && $user->can('users.delete')) {
+            return Response::allow();
+        }
+
+        return Response::deny('You do not have permission to permanently delete this user.');
     }
 
     /**
