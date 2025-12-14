@@ -13,7 +13,7 @@ use App\Repositories\Contracts\CompanyRepositoryInterface;
 
 final class CompanyService extends BaseService implements CompanyServiceInterface
 {
-    protected CompanyRepositoryInterface $companyRepository;
+    private readonly CompanyRepositoryInterface $companyRepository;
 
     public function __construct(
         CompanyRepositoryInterface $repository
@@ -25,8 +25,6 @@ final class CompanyService extends BaseService implements CompanyServiceInterfac
     /**
      * Get paginated companies with QueryBuilder support.
      * Supports filtering, sorting, and including relationships via request parameters.
-     *
-     * @return CompanyCollection
      */
     public function getPaginated(int $perPage, ?int $teamId = null): CompanyCollection
     {

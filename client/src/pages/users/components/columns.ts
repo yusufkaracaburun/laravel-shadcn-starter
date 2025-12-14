@@ -37,7 +37,7 @@ export const columns: ColumnDef<User>[] = [
       const emailStr = email && typeof email === 'string' ? email : ''
       return h('div', {}, [
         h('span', {}, emailStr || '—'),
-        h(Copy, { class: 'ml-2', size: 'sm', content: emailStr }),
+        h(Copy, { class: 'ml-2', size: 'sm', variant: 'ghost', content: emailStr }),
       ])
     },
     enableSorting: true,

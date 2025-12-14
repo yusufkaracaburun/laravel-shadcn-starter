@@ -10,8 +10,6 @@ use Illuminate\Http\JsonResponse;
 use App\Http\Responses\ApiResponse;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Resources\CompanyResource;
-use App\Http\Resources\CompanyCollection;
 use App\Http\Requests\CompanyIndexRequest;
 use App\Http\Requests\StoreCompanyRequest;
 use App\Http\Requests\UpdateCompanyRequest;

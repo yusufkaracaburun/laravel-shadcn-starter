@@ -11,14 +11,13 @@ use App\Http\Responses\ApiResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Resources\UserCollection;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UserIndexRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Helpers\Cache\CacheInvalidationService;
+use App\Services\Contracts\UserServiceInterface;
 use App\Http\Controllers\Concerns\UsesQueryBuilder;
 use App\Http\Controllers\Concerns\UsesCachedResponses;
-use App\Services\Contracts\UserServiceInterface;
 use App\Http\Controllers\Concerns\InvalidatesCachedModels;
 
 final class UserController extends Controller

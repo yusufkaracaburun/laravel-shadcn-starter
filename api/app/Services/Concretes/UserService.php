@@ -4,19 +4,18 @@ declare(strict_types=1);
 
 namespace App\Services\Concretes;
 
-use App\Enums\UserStatus;
 use App\Models\User;
+use App\Enums\UserStatus;
 use App\Services\BaseService;
 use App\Http\Resources\UserResource;
 use App\Http\Resources\UserCollection;
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use App\Services\Contracts\UserServiceInterface;
 use App\Repositories\Contracts\UserRepositoryInterface;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 final class UserService extends BaseService implements UserServiceInterface
 {
-    protected UserRepositoryInterface $userRepository;
+    private readonly UserRepositoryInterface $userRepository;
 
     public function __construct(
         UserRepositoryInterface $repository
@@ -28,8 +27,6 @@ final class UserService extends BaseService implements UserServiceInterface
     /**
      * Get paginated users with QueryBuilder support.
      * Supports filtering, sorting, and including relationships via request parameters.
-     *
-     * @return UserCollection
      */
     public function getPaginated(int $perPage, ?int $teamId = null): UserCollection
     {

@@ -6,8 +6,8 @@ namespace App\Providers;
 
 use App\Services\Concretes\TeamService;
 use App\Services\Concretes\UserService;
-use App\Services\Concretes\CompanyService;
 use Illuminate\Support\ServiceProvider;
+use App\Services\Concretes\CompanyService;
 use App\Services\Contracts\TeamServiceInterface;
 use App\Services\Contracts\UserServiceInterface;
 use App\Services\Contracts\CompanyServiceInterface;

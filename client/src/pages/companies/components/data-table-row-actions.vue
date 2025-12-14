@@ -2,29 +2,30 @@
 import type { Row } from '@tanstack/vue-table'
 import type { Component } from 'vue'
 
-import { Ellipsis, FilePenLine, Trash2 } from 'lucide-vue-next'
+import { Ellipsis, Eye, FilePenLine, Trash2 } from 'lucide-vue-next'
+import { useRouter } from 'vue-router'
 
 import type { Company } from '@/services/companies.service'
 
 import CompanyDelete from './company-delete.vue'
 import CompanyResourceDialog from './company-resource-dialog.vue'
 
-const props = defineProps<DataTableRowActionsProps>()
-
 interface DataTableRowActionsProps {
   row: Row<Company>
 }
+const props = defineProps<DataTableRowActionsProps>()
 const company = computed(() => props.row.original)
+const router = useRouter()
 
 const showComponent = shallowRef<Component | null>(null)
 
-type TCommand = 'edit' | 'create' | 'delete'
+type TCommand = 'view' | 'edit' | 'delete'
 function handleSelect(command: TCommand) {
   switch (command) {
-    case 'edit':
-      showComponent.value = CompanyResourceDialog
+    case 'view':
+      router.push({ name: '/companies/[id]', params: { id: company.value.id.toString() } })
       break
-    case 'create':
+    case 'edit':
       showComponent.value = CompanyResourceDialog
       break
     case 'delete':
@@ -46,17 +47,17 @@ const isOpen = ref(false)
         </UiButton>
       </UiDropdownMenuTrigger>
       <UiDropdownMenuContent align="end" class="w-[160px]">
+        <UiDropdownMenuItem @select.stop="handleSelect('view')">
+          <span>View</span>
+          <UiDropdownMenuShortcut> <Eye class="size-4" /> </UiDropdownMenuShortcut>
+        </UiDropdownMenuItem>
+
         <UiDialogTrigger as-child>
           <UiDropdownMenuItem @select.stop="handleSelect('edit')">
             <span>Edit</span>
             <UiDropdownMenuShortcut> <FilePenLine class="size-4" /> </UiDropdownMenuShortcut>
           </UiDropdownMenuItem>
         </UiDialogTrigger>
-
-        <UiDropdownMenuItem disabled> Make a copy </UiDropdownMenuItem>
-        <UiDropdownMenuItem disabled> Favorite </UiDropdownMenuItem>
-
-        <UiDropdownMenuSeparator />
 
         <UiDialogTrigger as-child>
           <UiDropdownMenuItem @select.stop="handleSelect('delete')">

@@ -13,8 +13,10 @@ namespace PHPSTORM_META {
     */
     override(new \Illuminate\Contracts\Container\Container, map([
         '' => '@',
+            'App\Repositories\Contracts\CompanyRepositoryInterface' => \App\Repositories\Concretes\CompanyRepository::class,
             'App\Repositories\Contracts\TeamRepositoryInterface' => \App\Repositories\Concretes\TeamRepository::class,
             'App\Repositories\Contracts\UserRepositoryInterface' => \App\Repositories\Concretes\UserRepository::class,
+            'App\Services\Contracts\CompanyServiceInterface' => \App\Services\Concretes\CompanyService::class,
             'App\Services\Contracts\TeamServiceInterface' => \App\Services\Concretes\TeamService::class,
             'App\Services\Contracts\UserServiceInterface' => \App\Services\Concretes\UserService::class,
             'Illuminate\Bus\BatchRepository' => \Illuminate\Bus\DatabaseBatchRepository::class,
@@ -117,8 +119,10 @@ namespace PHPSTORM_META {
         ]));
     override(\Illuminate\Container\Container::makeWith(0), map([
         '' => '@',
+            'App\Repositories\Contracts\CompanyRepositoryInterface' => \App\Repositories\Concretes\CompanyRepository::class,
             'App\Repositories\Contracts\TeamRepositoryInterface' => \App\Repositories\Concretes\TeamRepository::class,
             'App\Repositories\Contracts\UserRepositoryInterface' => \App\Repositories\Concretes\UserRepository::class,
+            'App\Services\Contracts\CompanyServiceInterface' => \App\Services\Concretes\CompanyService::class,
             'App\Services\Contracts\TeamServiceInterface' => \App\Services\Concretes\TeamService::class,
             'App\Services\Contracts\UserServiceInterface' => \App\Services\Concretes\UserService::class,
             'Illuminate\Bus\BatchRepository' => \Illuminate\Bus\DatabaseBatchRepository::class,
@@ -221,8 +225,10 @@ namespace PHPSTORM_META {
         ]));
     override(\Illuminate\Contracts\Container\Container::get(0), map([
         '' => '@',
+            'App\Repositories\Contracts\CompanyRepositoryInterface' => \App\Repositories\Concretes\CompanyRepository::class,
             'App\Repositories\Contracts\TeamRepositoryInterface' => \App\Repositories\Concretes\TeamRepository::class,
             'App\Repositories\Contracts\UserRepositoryInterface' => \App\Repositories\Concretes\UserRepository::class,
+            'App\Services\Contracts\CompanyServiceInterface' => \App\Services\Concretes\CompanyService::class,
             'App\Services\Contracts\TeamServiceInterface' => \App\Services\Concretes\TeamService::class,
             'App\Services\Contracts\UserServiceInterface' => \App\Services\Concretes\UserService::class,
             'Illuminate\Bus\BatchRepository' => \Illuminate\Bus\DatabaseBatchRepository::class,
@@ -325,8 +331,10 @@ namespace PHPSTORM_META {
         ]));
     override(\Illuminate\Contracts\Container\Container::make(0), map([
         '' => '@',
+            'App\Repositories\Contracts\CompanyRepositoryInterface' => \App\Repositories\Concretes\CompanyRepository::class,
             'App\Repositories\Contracts\TeamRepositoryInterface' => \App\Repositories\Concretes\TeamRepository::class,
             'App\Repositories\Contracts\UserRepositoryInterface' => \App\Repositories\Concretes\UserRepository::class,
+            'App\Services\Contracts\CompanyServiceInterface' => \App\Services\Concretes\CompanyService::class,
             'App\Services\Contracts\TeamServiceInterface' => \App\Services\Concretes\TeamService::class,
             'App\Services\Contracts\UserServiceInterface' => \App\Services\Concretes\UserService::class,
             'Illuminate\Bus\BatchRepository' => \Illuminate\Bus\DatabaseBatchRepository::class,
@@ -429,8 +437,10 @@ namespace PHPSTORM_META {
         ]));
     override(\Illuminate\Contracts\Container\Container::makeWith(0), map([
         '' => '@',
+            'App\Repositories\Contracts\CompanyRepositoryInterface' => \App\Repositories\Concretes\CompanyRepository::class,
             'App\Repositories\Contracts\TeamRepositoryInterface' => \App\Repositories\Concretes\TeamRepository::class,
             'App\Repositories\Contracts\UserRepositoryInterface' => \App\Repositories\Concretes\UserRepository::class,
+            'App\Services\Contracts\CompanyServiceInterface' => \App\Services\Concretes\CompanyService::class,
             'App\Services\Contracts\TeamServiceInterface' => \App\Services\Concretes\TeamService::class,
             'App\Services\Contracts\UserServiceInterface' => \App\Services\Concretes\UserService::class,
             'Illuminate\Bus\BatchRepository' => \Illuminate\Bus\DatabaseBatchRepository::class,
@@ -533,8 +543,10 @@ namespace PHPSTORM_META {
         ]));
     override(\App::get(0), map([
         '' => '@',
+            'App\Repositories\Contracts\CompanyRepositoryInterface' => \App\Repositories\Concretes\CompanyRepository::class,
             'App\Repositories\Contracts\TeamRepositoryInterface' => \App\Repositories\Concretes\TeamRepository::class,
             'App\Repositories\Contracts\UserRepositoryInterface' => \App\Repositories\Concretes\UserRepository::class,
+            'App\Services\Contracts\CompanyServiceInterface' => \App\Services\Concretes\CompanyService::class,
             'App\Services\Contracts\TeamServiceInterface' => \App\Services\Concretes\TeamService::class,
             'App\Services\Contracts\UserServiceInterface' => \App\Services\Concretes\UserService::class,
             'Illuminate\Bus\BatchRepository' => \Illuminate\Bus\DatabaseBatchRepository::class,
@@ -637,8 +649,10 @@ namespace PHPSTORM_META {
         ]));
     override(\App::make(0), map([
         '' => '@',
+            'App\Repositories\Contracts\CompanyRepositoryInterface' => \App\Repositories\Concretes\CompanyRepository::class,
             'App\Repositories\Contracts\TeamRepositoryInterface' => \App\Repositories\Concretes\TeamRepository::class,
             'App\Repositories\Contracts\UserRepositoryInterface' => \App\Repositories\Concretes\UserRepository::class,
+            'App\Services\Contracts\CompanyServiceInterface' => \App\Services\Concretes\CompanyService::class,
             'App\Services\Contracts\TeamServiceInterface' => \App\Services\Concretes\TeamService::class,
             'App\Services\Contracts\UserServiceInterface' => \App\Services\Concretes\UserService::class,
             'Illuminate\Bus\BatchRepository' => \Illuminate\Bus\DatabaseBatchRepository::class,
@@ -741,8 +755,10 @@ namespace PHPSTORM_META {
         ]));
     override(\App::makeWith(0), map([
         '' => '@',
+            'App\Repositories\Contracts\CompanyRepositoryInterface' => \App\Repositories\Concretes\CompanyRepository::class,
             'App\Repositories\Contracts\TeamRepositoryInterface' => \App\Repositories\Concretes\TeamRepository::class,
             'App\Repositories\Contracts\UserRepositoryInterface' => \App\Repositories\Concretes\UserRepository::class,
+            'App\Services\Contracts\CompanyServiceInterface' => \App\Services\Concretes\CompanyService::class,
             'App\Services\Contracts\TeamServiceInterface' => \App\Services\Concretes\TeamService::class,
             'App\Services\Contracts\UserServiceInterface' => \App\Services\Concretes\UserService::class,
             'Illuminate\Bus\BatchRepository' => \Illuminate\Bus\DatabaseBatchRepository::class,
@@ -845,8 +861,10 @@ namespace PHPSTORM_META {
         ]));
     override(\app(0), map([
         '' => '@',
+            'App\Repositories\Contracts\CompanyRepositoryInterface' => \App\Repositories\Concretes\CompanyRepository::class,
             'App\Repositories\Contracts\TeamRepositoryInterface' => \App\Repositories\Concretes\TeamRepository::class,
             'App\Repositories\Contracts\UserRepositoryInterface' => \App\Repositories\Concretes\UserRepository::class,
+            'App\Services\Contracts\CompanyServiceInterface' => \App\Services\Concretes\CompanyService::class,
             'App\Services\Contracts\TeamServiceInterface' => \App\Services\Concretes\TeamService::class,
             'App\Services\Contracts\UserServiceInterface' => \App\Services\Concretes\UserService::class,
             'Illuminate\Bus\BatchRepository' => \Illuminate\Bus\DatabaseBatchRepository::class,
@@ -949,8 +967,10 @@ namespace PHPSTORM_META {
         ]));
     override(\resolve(0), map([
         '' => '@',
+            'App\Repositories\Contracts\CompanyRepositoryInterface' => \App\Repositories\Concretes\CompanyRepository::class,
             'App\Repositories\Contracts\TeamRepositoryInterface' => \App\Repositories\Concretes\TeamRepository::class,
             'App\Repositories\Contracts\UserRepositoryInterface' => \App\Repositories\Concretes\UserRepository::class,
+            'App\Services\Contracts\CompanyServiceInterface' => \App\Services\Concretes\CompanyService::class,
             'App\Services\Contracts\TeamServiceInterface' => \App\Services\Concretes\TeamService::class,
             'App\Services\Contracts\UserServiceInterface' => \App\Services\Concretes\UserService::class,
             'Illuminate\Bus\BatchRepository' => \Illuminate\Bus\DatabaseBatchRepository::class,
@@ -1053,8 +1073,10 @@ namespace PHPSTORM_META {
         ]));
     override(\Psr\Container\ContainerInterface::get(0), map([
         '' => '@',
+            'App\Repositories\Contracts\CompanyRepositoryInterface' => \App\Repositories\Concretes\CompanyRepository::class,
             'App\Repositories\Contracts\TeamRepositoryInterface' => \App\Repositories\Concretes\TeamRepository::class,
             'App\Repositories\Contracts\UserRepositoryInterface' => \App\Repositories\Concretes\UserRepository::class,
+            'App\Services\Contracts\CompanyServiceInterface' => \App\Services\Concretes\CompanyService::class,
             'App\Services\Contracts\TeamServiceInterface' => \App\Services\Concretes\TeamService::class,
             'App\Services\Contracts\UserServiceInterface' => \App\Services\Concretes\UserService::class,
             'Illuminate\Bus\BatchRepository' => \Illuminate\Bus\DatabaseBatchRepository::class,

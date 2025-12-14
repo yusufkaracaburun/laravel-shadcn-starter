@@ -5,18 +5,15 @@ declare(strict_types=1);
 namespace App\Services\Contracts;
 
 use App\Models\Company;
+use App\Services\BaseServiceInterface;
 use App\Http\Resources\CompanyResource;
 use App\Http\Resources\CompanyCollection;
-use Illuminate\Pagination\LengthAwarePaginator;
-use App\Services\BaseServiceInterface;
 
 interface CompanyServiceInterface extends BaseServiceInterface
 {
     /**
      * Get paginated companies with QueryBuilder support.
      * Supports filtering, sorting, and including relationships via request parameters.
-     *
-     * @return CompanyCollection
      */
     public function getPaginated(int $perPage, ?int $teamId = null): CompanyCollection;
 

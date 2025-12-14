@@ -4,20 +4,18 @@ declare(strict_types=1);
 
 namespace App\Services\Contracts;
 
-use App\Enums\UserStatus;
 use App\Models\User;
+use App\Enums\UserStatus;
 use App\Http\Resources\UserResource;
 use App\Http\Resources\UserCollection;
-use Illuminate\Database\Eloquent\Collection;
 use App\Services\BaseServiceInterface;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 interface UserServiceInterface extends BaseServiceInterface
 {
     /**
      * Get paginated users with QueryBuilder support.
      * Supports filtering, sorting, and including relationships via request parameters.
-     *
-     * @return UserCollection
      */
     public function getPaginated(int $perPage, ?int $teamId = null): UserCollection;
 
@@ -55,21 +53,21 @@ interface UserServiceInterface extends BaseServiceInterface
     /**
      * Get all verified users.
      *
-     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection<int, UserResource>
+     * @return AnonymousResourceCollection<int, UserResource>
      */
-    public function getVerifiedUsers(): \Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+    public function getVerifiedUsers(): AnonymousResourceCollection;
 
     /**
      * Get all active users.
      *
-     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection<int, UserResource>
+     * @return AnonymousResourceCollection<int, UserResource>
      */
-    public function getActiveUsers(): \Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+    public function getActiveUsers(): AnonymousResourceCollection;
 
     /**
      * Get users by status.
      *
-     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection<int, UserResource>
+     * @return AnonymousResourceCollection<int, UserResource>
      */
-    public function getUsersByStatus(UserStatus|string $status = UserStatus::ACTIVE): \Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+    public function getUsersByStatus(UserStatus|string $status = UserStatus::ACTIVE): AnonymousResourceCollection;
 }

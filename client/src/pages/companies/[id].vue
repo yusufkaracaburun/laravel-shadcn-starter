@@ -4,7 +4,7 @@ meta:
 </route>
 
 <script setup lang="ts">
-import { ArrowLeft, Building2, Calendar, FilePenLine, Mail, Phone, Trash2 } from 'lucide-vue-next'
+import { ArrowLeft, Building2, Calendar, FilePenLine, Mail, Phone, Trash2, Users } from 'lucide-vue-next'
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
@@ -23,6 +23,7 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { useGetCompanyQuery } from '@/services/companies.service'
+import { industries, employeeSizes, statuses } from './data/data'
 
 import CompanyDelete from './components/company-delete.vue'
 import CompanyResourceDialog from './components/company-resource-dialog.vue'
@@ -60,6 +61,21 @@ function formatDateTime(dateString: string | null): string {
   })
 }
 
+// Get status info
+function getStatusInfo(status: string) {
+  return statuses.find((s) => s.value === status) || null
+}
+
+// Get industry label
+function getIndustryLabel(industry: string) {
+  return industries.find((i) => i.value === industry)?.label || industry
+}
+
+// Get employee size label
+function getEmployeeSizeLabel(employees: string) {
+  return employeeSizes.find((e) => e.value === employees)?.label || employees
+}
+
 // Handle edit
 const editDialogOpen = ref(false)
 
@@ -84,39 +100,12 @@ const isNotFound = computed(() => {
     return false
   return (error.value as any)?.response?.status === 404
 })
-
-// Get status badge variant
-function getStatusVariant(status: string): 'default' | 'secondary' | 'destructive' | 'outline' {
-  switch (status) {
-    case 'active':
-      return 'default'
-    case 'inactive':
-      return 'secondary'
-    case 'pending':
-      return 'outline'
-    default:
-      return 'secondary'
-  }
-}
-
-// Get industry label
-function getIndustryLabel(industry: string): string {
-  const industries: Record<string, string> = {
-    technology: 'Technology',
-    finance: 'Finance',
-    healthcare: 'Healthcare',
-    retail: 'Retail',
-    manufacturing: 'Manufacturing',
-    education: 'Education',
-  }
-  return industries[industry] || industry
-}
 </script>
 
 <template>
   <Page
     :title="company ? company.name : 'Company Details'"
-    :description="company ? `View details for ${company.email}` : 'Loading company information...'"
+    :description="company ? `View details for ${company.name}` : 'Loading company information...'"
   >
     <template #actions>
       <div v-if="company" class="flex items-center gap-2">
@@ -177,8 +166,16 @@ function getIndustryLabel(industry: string): string {
                 {{ company.email }}
               </CardDescription>
               <div class="mt-4 flex items-center gap-2">
-                <Badge :variant="getStatusVariant(company.status)">
-                  {{ company.status.charAt(0).toUpperCase() + company.status.slice(1) }}
+                <Badge
+                  v-if="getStatusInfo(company.status)"
+                  :class="getStatusInfo(company.status)!.color"
+                  variant="secondary"
+                >
+                  <component
+                    :is="getStatusInfo(company.status)!.icon"
+                    class="mr-1 size-3"
+                  />
+                  {{ getStatusInfo(company.status)!.label }}
                 </Badge>
               </div>
             </div>
@@ -233,32 +230,41 @@ function getIndustryLabel(industry: string): string {
             </div>
             <div>
               <div class="text-sm font-medium text-muted-foreground mb-1">
+                Status
+              </div>
+              <div class="text-base">
+                <Badge
+                  v-if="getStatusInfo(company.status)"
+                  :class="getStatusInfo(company.status)!.color"
+                  variant="secondary"
+                >
+                  <component
+                    :is="getStatusInfo(company.status)!.icon"
+                    class="mr-1 size-3"
+                  />
+                  {{ getStatusInfo(company.status)!.label }}
+                </Badge>
+              </div>
+            </div>
+            <div>
+              <div class="text-sm font-medium text-muted-foreground mb-1 flex items-center gap-2">
+                <Users class="size-4" />
                 Employees
               </div>
               <div class="text-base">
-                {{ company.employees }}
+                {{ getEmployeeSizeLabel(company.employees) }}
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <!-- Status & Metadata -->
+        <!-- Account Status -->
         <Card>
           <CardHeader>
-            <CardTitle>Status & Metadata</CardTitle>
-            <CardDescription>Company status and account information</CardDescription>
+            <CardTitle>Account Status</CardTitle>
+            <CardDescription>Account creation and update information</CardDescription>
           </CardHeader>
           <CardContent class="space-y-4">
-            <div>
-              <div class="text-sm font-medium text-muted-foreground mb-1">
-                Status
-              </div>
-              <div class="text-base">
-                <Badge :variant="getStatusVariant(company.status)">
-                  {{ company.status.charAt(0).toUpperCase() + company.status.slice(1) }}
-                </Badge>
-              </div>
-            </div>
             <div>
               <div class="text-sm font-medium text-muted-foreground mb-1 flex items-center gap-2">
                 <Calendar class="size-4" />
