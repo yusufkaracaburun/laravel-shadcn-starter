@@ -12,7 +12,6 @@ test('unauthenticated users cannot create projects', function (): void {
     $response = $this->postJson('/api/project', [
         'name' => 'Test Project',
         'status' => 'active',
-        'priority' => 'high',
         'category' => 'development',
     ]);
 
@@ -29,7 +28,6 @@ test('authenticated user can create new project', function (): void {
         'name' => 'Test Project',
         'description' => 'Test project description',
         'status' => 'active',
-        'priority' => 'high',
         'category' => 'development',
         'start_date' => '2024-01-01',
         'end_date' => '2024-12-31',
@@ -45,7 +43,6 @@ test('authenticated user can create new project', function (): void {
                 ->has('data', fn (AssertableJson $json): AssertableJson => $json->where('name', $projectData['name'])
                     ->where('description', $projectData['description'])
                     ->where('status', $projectData['status'])
-                    ->where('priority', $projectData['priority'])
                     ->where('category', $projectData['category'])
                     ->where('progress', $projectData['progress'])
                     ->etc())
@@ -69,13 +66,12 @@ test('project creation requires valid data', function (): void {
     $response = $this->postJson('/api/project', [
         'name' => '',
         'status' => 'invalid-status',
-        'priority' => 'invalid-priority',
         'category' => 'invalid-category',
         'progress' => 150, // Invalid: exceeds max
     ]);
 
     $response->assertUnprocessable()
-        ->assertJsonValidationErrors(['name', 'status', 'priority', 'category', 'progress']);
+        ->assertJsonValidationErrors(['name', 'status', 'category', 'progress']);
 });
 
 test('project can be created with optional fields', function (): void {
@@ -87,7 +83,6 @@ test('project can be created with optional fields', function (): void {
     $response = $this->postJson('/api/project', [
         'name' => 'Test Project',
         'status' => 'active',
-        'priority' => 'medium',
         'category' => 'design',
     ]);
 
@@ -113,7 +108,6 @@ test('project end_date must be after or equal to start_date', function (): void 
     $response = $this->postJson('/api/project', [
         'name' => 'Test Project',
         'status' => 'active',
-        'priority' => 'high',
         'category' => 'development',
         'start_date' => '2024-12-31',
         'end_date' => '2024-01-01', // Before start_date

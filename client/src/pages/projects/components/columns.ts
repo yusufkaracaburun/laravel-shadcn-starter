@@ -1,6 +1,7 @@
 import type { ColumnDef } from '@tanstack/vue-table'
 
 import { h } from 'vue'
+import { useRouter } from 'vue-router'
 
 import DataTableColumnHeader from '@/components/data-table/column-header.vue'
 import { SelectColumn } from '@/components/data-table/table-columns'
@@ -9,7 +10,7 @@ import { Progress } from '@/components/ui/progress'
 
 import type { Project } from '../data/schema'
 
-import { categories, priorities, statuses } from '../data/data'
+import { categories, statuses } from '../data/data'
 import DataTableRowActions from './data-table-row-actions.vue'
 
 export const columns: ColumnDef<Project>[] = [
@@ -25,8 +26,25 @@ export const columns: ColumnDef<Project>[] = [
     accessorKey: 'name',
     header: ({ column }) => h(DataTableColumnHeader<Project>, { column, title: 'Name' }),
     cell: ({ row }) => {
-      return h('span', { class: 'max-w-[500px] truncate font-medium' }, row.getValue('name'))
+      const project = row.original
+      const router = useRouter()
+      const nameValue = row.getValue('name')
+      const name = (typeof nameValue === 'string' ? nameValue : '') || ''
+
+      return h(
+        'button',
+        {
+          class: 'max-w-[500px] truncate font-medium text-left hover:underline cursor-pointer focus:outline-none focus:underline',
+          onClick: () => {
+            router.push({ name: '/projects/[id]', params: { id: project.id.toString() } })
+          },
+        },
+        name,
+      )
     },
+    enableSorting: true,
+    enableResizing: true,
+    enableHiding: false,
   },
   {
     accessorKey: 'category',
@@ -62,24 +80,6 @@ export const columns: ColumnDef<Project>[] = [
           h('span', status.label),
         ],
       )
-    },
-    filterFn: (row, id, value) => {
-      return value.includes(row.getValue(id))
-    },
-  },
-  {
-    accessorKey: 'priority',
-    header: ({ column }) => h(DataTableColumnHeader<Project>, { column, title: 'Priority' }),
-    cell: ({ row }) => {
-      const priority = priorities.find(priority => priority.value === row.getValue('priority'))
-
-      if (!priority)
-        return null
-
-      return h('div', { class: 'flex items-center gap-2' }, [
-        priority.icon && h(priority.icon, { class: `h-4 w-4 ${priority.color}` }),
-        h('span', { class: priority.color }, priority.label),
-      ])
     },
     filterFn: (row, id, value) => {
       return value.includes(row.getValue(id))

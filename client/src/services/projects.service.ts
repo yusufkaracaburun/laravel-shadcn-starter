@@ -15,7 +15,6 @@ export interface Project {
   name: string
   description: string | null
   status: string
-  priority: string
   category: string
   start_date: string | null
   end_date: string | null
@@ -163,7 +162,6 @@ export interface CreateProjectRequest {
   name: string
   description?: string | null
   status: string
-  priority: string
   category: string
   start_date?: string | null
   end_date?: string | null
@@ -178,7 +176,6 @@ export interface UpdateProjectRequest {
   name?: string
   description?: string | null
   status?: string
-  priority?: string
   category?: string
   start_date?: string | null
   end_date?: string | null

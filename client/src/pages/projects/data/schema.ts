@@ -10,7 +10,6 @@ export const projectSchema = z.object({
   name: z.string(),
   description: z.string().nullable(),
   status: z.string(),
-  priority: z.string(),
   category: z.string(),
   start_date: z.string().nullable(),
   end_date: z.string().nullable(),

@@ -32,7 +32,7 @@ test('authenticated user can list projects', function (): void {
             'message',
             'data' => [
                 'data' => [
-                    '*' => ['id', 'name', 'description', 'status', 'priority', 'category', 'start_date', 'end_date', 'progress', 'team_id', 'created_at', 'updated_at'],
+                    '*' => ['id', 'name', 'description', 'status', 'category', 'start_date', 'end_date', 'progress', 'team_id', 'created_at', 'updated_at'],
                 ],
                 'current_page',
                 'per_page',

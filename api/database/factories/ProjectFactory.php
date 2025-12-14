@@ -27,7 +27,6 @@ final class ProjectFactory extends Factory
     public function definition(): array
     {
         $statuses = ['active', 'on-hold', 'completed', 'cancelled'];
-        $priorities = ['low', 'medium', 'high'];
         $categories = ['design', 'development', 'marketing', 'support', 'other'];
 
         $startDate = fake()->dateTimeBetween('-6 months', 'now');
@@ -37,7 +36,6 @@ final class ProjectFactory extends Factory
             'name' => fake()->sentence(3),
             'description' => fake()->paragraph(),
             'status' => fake()->randomElement($statuses),
-            'priority' => fake()->randomElement($priorities),
             'category' => fake()->randomElement($categories),
             'start_date' => $startDate,
             'end_date' => $endDate,

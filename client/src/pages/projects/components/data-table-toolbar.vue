@@ -10,7 +10,7 @@ import { Input } from '@/components/ui/input'
 
 import type { Project } from '../data/schema'
 
-import { categories, priorities, statuses } from '../data/data'
+import { categories, statuses } from '../data/data'
 
 interface DataTableToolbarProps {
   table: Table<Project>
@@ -39,12 +39,6 @@ const isFiltered = computed(() => props.table.getState().columnFilters.length > 
           :column="table.getColumn('status')"
           title="Status"
           :options="statuses"
-        />
-        <DataTableFacetedFilter
-          v-if="table.getColumn('priority')"
-          :column="table.getColumn('priority')"
-          title="Priority"
-          :options="priorities"
         />
         <DataTableFacetedFilter
           v-if="table.getColumn('category')"

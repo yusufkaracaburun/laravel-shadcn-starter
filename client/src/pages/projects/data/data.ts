@@ -1,14 +1,11 @@
 import {
-  ArrowDown,
-  ArrowRight,
-  ArrowUp,
   CheckCircle2,
   Pause,
   XCircle,
 } from 'lucide-vue-next'
 import { h } from 'vue'
 
-import { getPriorityColor, getProjectStatusColor } from '@/utils/status-colors'
+import { getProjectStatusColor } from '@/utils/status-colors'
 
 export const categories = [
   {
@@ -64,30 +61,4 @@ export const statuses = [
   },
 ]
 
-export const priorities = [
-  {
-    value: 'low',
-    label: 'Low',
-    icon: h(ArrowDown),
-    get color() {
-      return getPriorityColor(this.value)
-    },
-  },
-  {
-    value: 'medium',
-    label: 'Medium',
-    icon: h(ArrowRight),
-    get color() {
-      return getPriorityColor(this.value)
-    },
-  },
-  {
-    value: 'high',
-    label: 'High',
-    icon: h(ArrowUp),
-    get color() {
-      return getPriorityColor(this.value)
-    },
-  },
-]
 

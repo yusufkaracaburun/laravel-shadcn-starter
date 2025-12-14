@@ -171,7 +171,6 @@ function handleProjectUpdated(task: KanbanTask, _columnId: string) {
     status: updatedProject.status || originalProject.status,
     name: updatedProject.name || originalProject.name,
     description: updatedProject.description,
-    priority: updatedProject.priority || originalProject.priority,
     category: updatedProject.category || originalProject.category,
     end_date: updatedProject.end_date,
   }).catch((error) => {

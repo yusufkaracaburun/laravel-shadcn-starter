@@ -137,7 +137,6 @@ final class ProjectRepository extends QueryableRepository implements ProjectRepo
             AllowedFilter::exact('id'),
             AllowedFilter::exact('name'),
             AllowedFilter::exact('status'),
-            AllowedFilter::exact('priority'),
             AllowedFilter::exact('category'),
             AllowedFilter::exact('team_id'),
             AllowedFilter::scope('created_at'),
@@ -149,7 +148,7 @@ final class ProjectRepository extends QueryableRepository implements ProjectRepo
      */
     public function getAllowedSorts(): array
     {
-        return ['id', 'name', 'status', 'priority', 'category', 'start_date', 'end_date', 'progress', 'created_at'];
+        return ['id', 'name', 'status', 'category', 'start_date', 'end_date', 'progress', 'created_at'];
     }
 
     /**

@@ -405,7 +405,6 @@ namespace App\Models{
  * @property string $name
  * @property string|null $description
  * @property string $status
- * @property string $priority
  * @property string $category
  * @property Carbon|null $start_date
  * @property Carbon|null $end_date
@@ -425,7 +424,6 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Project whereEndDate($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Project whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Project whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Project wherePriority($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Project whereProgress($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Project whereStartDate($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Project whereStatus($value)

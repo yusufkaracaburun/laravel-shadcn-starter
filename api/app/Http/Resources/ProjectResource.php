@@ -24,7 +24,6 @@ final class ProjectResource extends BaseResource
             'name' => $this->name,
             'description' => $this->description,
             'status' => $this->status,
-            'priority' => $this->priority,
             'category' => $this->category,
             'start_date' => $this->formatDate($this->start_date),
             'end_date' => $this->formatDate($this->end_date),

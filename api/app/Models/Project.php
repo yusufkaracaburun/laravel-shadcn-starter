@@ -14,7 +14,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string $name
  * @property string|null $description
  * @property string $status
- * @property string $priority
  * @property string $category
  * @property Carbon|null $start_date
  * @property Carbon|null $end_date
@@ -37,7 +36,6 @@ final class Project extends BaseModel
         'name',
         'description',
         'status',
-        'priority',
         'category',
         'start_date',
         'end_date',

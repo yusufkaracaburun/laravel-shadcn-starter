@@ -8,7 +8,7 @@ import { useProjects } from '@/composables/use-projects'
 
 import type { Project } from '../data/schema'
 
-import { categories, priorities, statuses } from '../data/data'
+import { categories, statuses } from '../data/data'
 
 const props = defineProps<{
   project: Project | null
@@ -26,7 +26,6 @@ const formSchema = toTypedSchema(
       .default(props.project?.name ?? ''),
     description: z.string().nullable().default(props.project?.description ?? null),
     status: z.string().default(props.project?.status ?? ''),
-    priority: z.string().default(props.project?.priority ?? ''),
     category: z.string().default(props.project?.category ?? ''),
     startDate: z.string().nullable().default(props.project?.startDate ?? props.project?.start_date ?? null),
     endDate: z.string().nullable().default(props.project?.endDate ?? props.project?.end_date ?? null),
@@ -45,7 +44,6 @@ const onSubmit = handleSubmit(async (values) => {
       name: values.name,
       description: values.description || null,
       status: values.status,
-      priority: values.priority,
       category: values.category,
       start_date: values.startDate || null,
       end_date: values.endDate || null,
@@ -136,34 +134,6 @@ const onSubmit = handleSubmit(async (values) => {
                   <div class="flex items-center gap-2">
                     <component :is="status.icon" class="size-4 shrink-0" />
                     {{ status.label }}
-                  </div>
-                </UiSelectItem>
-              </UiSelectGroup>
-            </UiSelectContent>
-          </UiSelect>
-        </UiFormControl>
-        <UiFormMessage />
-      </UiFormItem>
-    </FormField>
-
-    <FormField v-slot="{ componentField }" name="priority" :validate-on-blur="!isFieldDirty">
-      <UiFormItem>
-        <UiFormLabel>Priority</UiFormLabel>
-        <UiFormControl>
-          <UiSelect v-bind="componentField">
-            <UiSelectTrigger>
-              <UiSelectValue placeholder="Select a priority" />
-            </UiSelectTrigger>
-            <UiSelectContent>
-              <UiSelectGroup>
-                <UiSelectItem
-                  v-for="priority in priorities"
-                  :key="priority.value"
-                  :value="priority.value"
-                >
-                  <div class="flex items-center gap-2">
-                    <component :is="priority.icon" class="size-4 shrink-0" />
-                    {{ priority.label }}
                   </div>
                 </UiSelectItem>
               </UiSelectGroup>

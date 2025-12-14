@@ -63,13 +63,12 @@ test('project update requires valid data', function (): void {
 
     $response = $this->putJson("/api/project/{$project->id}", [
         'status' => 'invalid-status',
-        'priority' => 'invalid-priority',
         'category' => 'invalid-category',
         'progress' => 150, // Invalid: exceeds max
     ]);
 
     $response->assertUnprocessable()
-        ->assertJsonValidationErrors(['status', 'priority', 'category', 'progress']);
+        ->assertJsonValidationErrors(['status', 'category', 'progress']);
 });
 
 test('project update allows partial updates', function (): void {

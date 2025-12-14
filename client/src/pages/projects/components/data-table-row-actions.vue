@@ -2,7 +2,8 @@
 import type { Row } from '@tanstack/vue-table'
 import type { Component } from 'vue'
 
-import { Ellipsis, FilePenLine, Trash2 } from 'lucide-vue-next'
+import { Ellipsis, Eye, FilePenLine, Trash2 } from 'lucide-vue-next'
+import { useRouter } from 'vue-router'
 
 import type { Project } from '../data/schema'
 
@@ -10,22 +11,22 @@ import { projectSchema } from '../data/schema'
 import ProjectDelete from './project-delete.vue'
 import ProjectResourceDialog from './project-resource-dialog.vue'
 
-const props = defineProps<DataTableRowActionsProps>()
-
 interface DataTableRowActionsProps {
   row: Row<Project>
 }
+const props = defineProps<DataTableRowActionsProps>()
 const project = computed(() => projectSchema.parse(props.row.original))
+const router = useRouter()
 
 const showComponent = shallowRef<Component | null>(null)
 
-type TCommand = 'edit' | 'create' | 'delete'
+type TCommand = 'view' | 'edit' | 'delete'
 function handleSelect(command: TCommand) {
   switch (command) {
-    case 'edit':
-      showComponent.value = ProjectResourceDialog
+    case 'view':
+      router.push({ name: '/projects/[id]', params: { id: project.value.id.toString() } })
       break
-    case 'create':
+    case 'edit':
       showComponent.value = ProjectResourceDialog
       break
     case 'delete':
@@ -47,6 +48,11 @@ const isOpen = ref(false)
         </UiButton>
       </UiDropdownMenuTrigger>
       <UiDropdownMenuContent align="end" class="w-[160px]">
+        <UiDropdownMenuItem @select.stop="handleSelect('view')">
+          <span>View</span>
+          <UiDropdownMenuShortcut> <Eye class="size-4" /> </UiDropdownMenuShortcut>
+        </UiDropdownMenuItem>
+
         <UiDialogTrigger as-child>
           <UiDropdownMenuItem @select.stop="handleSelect('edit')">
             <span>Edit</span>
