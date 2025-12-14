@@ -33,14 +33,14 @@ test('authenticated user can list all users with pagination', function (): void 
             fn (AssertableJson $json): AssertableJson => $json->where('success', true)
                 ->where('code', 200)
                 ->has('data.data')
-                ->has('data.meta')
-                ->whereType('data.meta.current_page', 'integer')
-                ->where('data.meta.current_page', fn ($page): bool => $page > 0)
-                ->whereType('data.meta.per_page', 'integer')
-                ->where('data.meta.per_page', fn ($perPage): bool => $perPage > 0)
-                ->whereType('data.meta.total', 'integer')
-                ->where('data.meta.total', fn ($total): bool => $total > 0)
-                ->has('data.links')
+                ->whereType('data.current_page', 'integer')
+                ->where('data.current_page', fn ($page): bool => $page > 0)
+                ->whereType('data.per_page', 'integer')
+                ->where('data.per_page', fn ($perPage): bool => $perPage > 0)
+                ->whereType('data.total', 'integer')
+                ->where('data.total', fn ($total): bool => $total > 0)
+                ->has('data.first_page_url')
+                ->has('data.last_page_url')
                 ->etc()
         );
 });
@@ -58,13 +58,12 @@ test('pagination uses default per_page of 15', function (): void {
         ->assertJson(
             fn (AssertableJson $json): AssertableJson => $json->where('success', true)
                 ->has('data.data')
-                ->has('data.meta')
-                ->whereType('data.meta.per_page', 'integer')
-                ->where('data.meta.per_page', fn ($perPage): bool => $perPage > 0)
-                ->whereType('data.meta.total', 'integer')
-                ->where('data.meta.total', fn ($total): bool => $total > 0)
-                ->whereType('data.meta.last_page', 'integer')
-                ->where('data.meta.last_page', fn ($lastPage): bool => $lastPage > 0)
+                ->whereType('data.per_page', 'integer')
+                ->where('data.per_page', fn ($perPage): bool => $perPage > 0)
+                ->whereType('data.total', 'integer')
+                ->where('data.total', fn ($total): bool => $total > 0)
+                ->whereType('data.last_page', 'integer')
+                ->where('data.last_page', fn ($lastPage): bool => $lastPage > 0)
                 ->etc()
         );
 });
@@ -82,13 +81,12 @@ test('pagination accepts custom per_page parameter', function (): void {
         ->assertJson(
             fn (AssertableJson $json): AssertableJson => $json->where('success', true)
                 ->has('data.data')
-                ->has('data.meta')
-                ->whereType('data.meta.per_page', 'integer')
-                ->where('data.meta.per_page', fn ($perPage): bool => $perPage > 0)
-                ->whereType('data.meta.total', 'integer')
-                ->where('data.meta.total', fn ($total): bool => $total > 0)
-                ->whereType('data.meta.last_page', 'integer')
-                ->where('data.meta.last_page', fn ($lastPage): bool => $lastPage > 0)
+                ->whereType('data.per_page', 'integer')
+                ->where('data.per_page', fn ($perPage): bool => $perPage > 0)
+                ->whereType('data.total', 'integer')
+                ->where('data.total', fn ($total): bool => $total > 0)
+                ->whereType('data.last_page', 'integer')
+                ->where('data.last_page', fn ($lastPage): bool => $lastPage > 0)
                 ->etc()
         );
 });
@@ -106,13 +104,12 @@ test('pagination page navigation works correctly', function (): void {
         ->assertJson(
             fn (AssertableJson $json): AssertableJson => $json->where('success', true)
                 ->has('data.data')
-                ->has('data.meta')
-                ->whereType('data.meta.current_page', 'integer')
-                ->where('data.meta.current_page', fn ($page): bool => $page > 0)
-                ->whereType('data.meta.last_page', 'integer')
-                ->where('data.meta.last_page', fn ($lastPage): bool => $lastPage > 0)
-                ->whereType('data.meta.total', 'integer')
-                ->where('data.meta.total', fn ($total): bool => $total > 0)
+                ->whereType('data.current_page', 'integer')
+                ->where('data.current_page', fn ($page): bool => $page > 0)
+                ->whereType('data.last_page', 'integer')
+                ->where('data.last_page', fn ($lastPage): bool => $lastPage > 0)
+                ->whereType('data.total', 'integer')
+                ->where('data.total', fn ($total): bool => $total > 0)
                 ->etc()
         );
 
@@ -122,11 +119,10 @@ test('pagination page navigation works correctly', function (): void {
         ->assertJson(
             fn (AssertableJson $json): AssertableJson => $json->where('success', true)
                 ->has('data.data')
-                ->has('data.meta')
-                ->whereType('data.meta.current_page', 'integer')
-                ->where('data.meta.current_page', fn ($page): bool => $page > 0)
-                ->whereType('data.meta.last_page', 'integer')
-                ->where('data.meta.last_page', fn ($lastPage): bool => $lastPage > 0)
+                ->whereType('data.current_page', 'integer')
+                ->where('data.current_page', fn ($page): bool => $page > 0)
+                ->whereType('data.last_page', 'integer')
+                ->where('data.last_page', fn ($lastPage): bool => $lastPage > 0)
                 ->etc()
         );
 
@@ -136,11 +132,10 @@ test('pagination page navigation works correctly', function (): void {
         ->assertJson(
             fn (AssertableJson $json): AssertableJson => $json->where('success', true)
                 ->has('data.data')
-                ->has('data.meta')
-                ->whereType('data.meta.current_page', 'integer')
-                ->where('data.meta.current_page', fn ($page): bool => $page > 0)
-                ->whereType('data.meta.last_page', 'integer')
-                ->where('data.meta.last_page', fn ($lastPage): bool => $lastPage > 0)
+                ->whereType('data.current_page', 'integer')
+                ->where('data.current_page', fn ($page): bool => $page > 0)
+                ->whereType('data.last_page', 'integer')
+                ->where('data.last_page', fn ($lastPage): bool => $lastPage > 0)
                 ->etc()
         );
 });
@@ -168,11 +163,10 @@ test('pagination per_page validation rejects invalid values', function (): void 
         ->assertJson(
             fn (AssertableJson $json): AssertableJson => $json->where('success', true)
                 ->has('data.data')
-                ->has('data.meta')
-                ->whereType('data.meta.per_page', 'integer')
-                ->where('data.meta.per_page', fn ($perPage): bool => $perPage > 0)
-                ->whereType('data.meta.total', 'integer')
-                ->where('data.meta.total', fn ($total): bool => $total > 0)
+                ->whereType('data.per_page', 'integer')
+                ->where('data.per_page', fn ($perPage): bool => $perPage > 0)
+                ->whereType('data.total', 'integer')
+                ->where('data.total', fn ($total): bool => $total > 0)
                 ->etc()
         );
 });

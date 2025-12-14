@@ -100,6 +100,9 @@ final class CompanyController extends Controller
 
         $teamId = $currentUser->getAttributeValue('current_team_id');
 
+        // Check if company belongs to user's team (this will throw 404 if not found)
+        $this->companyService->findById($company->id, $teamId);
+
         $validated = $request->validated();
 
         $companyResource = $this->companyService->updateCompany($company, $validated, $teamId);
@@ -117,9 +120,16 @@ final class CompanyController extends Controller
      */
     public function destroy(Company $company): JsonResponse
     {
-        $teamId = $company->team_id;
+        /** @var User $currentUser */
+        $currentUser = Auth::user();
+        $currentUser->refresh();
 
-        $this->companyService->deleteCompany($company);
+        $teamId = $currentUser->getAttributeValue('current_team_id');
+
+        // Check if company belongs to user's team
+        $companyResource = $this->companyService->findById($company->id, $teamId);
+
+        $this->companyService->deleteCompany($companyResource->resource);
 
         // Invalidate company and team caches
         if ($teamId) {

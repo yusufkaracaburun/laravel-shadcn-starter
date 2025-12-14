@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Tests\TestCase;
+use App\Models\Team;
 use App\Models\User;
 use App\Models\Company;
 use Laravel\Sanctum\Sanctum;
@@ -36,7 +37,15 @@ test('company deletion is team-scoped', function (): void {
     /** @var TestCase $this */
     $user1 = User::factory()->create();
     $user2 = User::factory()->create();
-    $company = Company::factory()->create(['team_id' => $user1->current_team_id]);
+
+    // Create teams for users
+    $team1 = Team::factory()->create(['user_id' => $user1->id]);
+    $team2 = Team::factory()->create(['user_id' => $user2->id]);
+
+    $user1->update(['current_team_id' => $team1->id]);
+    $user2->update(['current_team_id' => $team2->id]);
+
+    $company = Company::factory()->create(['team_id' => $team1->id]);
 
     Sanctum::actingAs($user2, ['*']);
 

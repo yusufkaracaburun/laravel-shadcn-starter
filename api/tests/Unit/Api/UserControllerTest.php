@@ -5,26 +5,30 @@ declare(strict_types=1);
 use Tests\TestCase;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
+use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Resources\UserCollection;
 use App\Http\Requests\UserIndexRequest;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Pagination\LengthAwarePaginator;
-use App\Repositories\Contracts\UserRepositoryInterface;
+use App\Services\Contracts\UserServiceInterface;
 
 test('current method returns authenticated user', function (): void {
     /** @var TestCase $this */
     $user = User::factory()->create();
     $user->load(['teams', 'currentTeam', 'ownedTeams']);
 
-    $repository = $this->mock(UserRepositoryInterface::class);
-    $repository->shouldReceive('getCurrentUser')
+    $userResource = new UserResource($user);
+
+    $service = $this->mock(UserServiceInterface::class);
+    $service->shouldReceive('getCurrentUser')
         ->once()
         ->with($user)
-        ->andReturn($user);
+        ->andReturn($userResource);
 
     Auth::shouldReceive('user')->once()->andReturn($user);
 
-    $controller = new UserController($repository);
+    $controller = new UserController($service);
     $response = $controller->current();
 
     expect($response)->toBeInstanceOf(JsonResponse::class);
@@ -34,12 +38,13 @@ test('index method returns all users', function (): void {
     /** @var TestCase $this */
     $user = User::factory()->create();
     $paginator = new LengthAwarePaginator([], 0, 15, 1);
+    $collection = new UserCollection($paginator);
 
-    $repository = $this->mock(UserRepositoryInterface::class);
-    $repository->shouldReceive('getPaginated')
+    $service = $this->mock(UserServiceInterface::class);
+    $service->shouldReceive('getPaginated')
         ->once()
         ->with(15, null)
-        ->andReturn($paginator);
+        ->andReturn($collection);
 
     Auth::shouldReceive('user')->once()->andReturn($user);
 
@@ -47,7 +52,7 @@ test('index method returns all users', function (): void {
     $request->setContainer(app());
     $request->validateResolved();
 
-    $controller = new UserController($repository);
+    $controller = new UserController($service);
     $response = $controller->index($request);
 
     expect($response)->toBeInstanceOf(JsonResponse::class);
@@ -60,15 +65,17 @@ test('show method returns specific user', function (): void {
 
     $currentUser = User::factory()->create();
 
-    $repository = $this->mock(UserRepositoryInterface::class);
-    $repository->shouldReceive('findById')
+    $userResource = new UserResource($user);
+
+    $service = $this->mock(UserServiceInterface::class);
+    $service->shouldReceive('findById')
         ->once()
         ->with($user->id, null)
-        ->andReturn($user);
+        ->andReturn($userResource);
 
     Auth::shouldReceive('user')->once()->andReturn($currentUser);
 
-    $controller = new UserController($repository);
+    $controller = new UserController($service);
     $response = $controller->show($user);
 
     expect($response)->toBeInstanceOf(JsonResponse::class);
