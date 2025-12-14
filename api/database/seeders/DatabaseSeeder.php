@@ -22,6 +22,7 @@ final class DatabaseSeeder extends Seeder
             CompanySeeder::class,
             ItemsSeeder::class,
             CustomerSeeder::class,
+            ProjectSeeder::class,
             InvoiceSeeder::class,
             PaymentSeeder::class,
         ]);
