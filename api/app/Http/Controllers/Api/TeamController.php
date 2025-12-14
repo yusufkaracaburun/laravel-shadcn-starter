@@ -13,15 +13,15 @@ use Illuminate\Http\JsonResponse;
 use App\Http\Responses\ApiResponse;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Requests\TeamIndexRequest;
 use App\Http\Requests\StoreTeamRequest;
+use App\Http\Requests\TeamIndexRequest;
 use App\Http\Requests\UpdateTeamRequest;
 use App\Helpers\Cache\CacheInvalidationService;
+use App\Services\Contracts\TeamServiceInterface;
 use App\Http\Controllers\Concerns\UsesQueryBuilder;
 use App\Http\Controllers\Concerns\UsesCachedResponses;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use App\Http\Controllers\Concerns\InvalidatesCachedModels;
-use App\Services\Contracts\TeamServiceInterface;
 
 final class TeamController extends Controller
 {

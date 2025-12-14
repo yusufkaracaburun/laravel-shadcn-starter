@@ -38,4 +38,3 @@ final class TeamIndexRequest extends FormRequest
         ]);
     }
 }
-

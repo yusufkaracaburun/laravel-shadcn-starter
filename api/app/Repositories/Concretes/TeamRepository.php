@@ -86,7 +86,7 @@ final class TeamRepository extends QueryableRepository implements TeamRepository
 
         // Apply user access check - user must own or belong to the team
         if ($userId !== null) {
-            $query->where(function ($q) use ($userId) {
+            $query->where(function ($q) use ($userId): void {
                 $q->where('user_id', $userId)
                     ->orWhereHas('users', fn ($subQ) => $subQ->where('users.id', $userId));
             });

@@ -48,7 +48,7 @@ test('authenticated user can list teams', function (): void {
 test('teams list supports pagination', function (): void {
     /** @var TestCase $this */
     $user = User::factory()->create();
-    Team::factory()->count(15)->create(['user_id' => $user->id])->each(function ($team) use ($user) {
+    Team::factory()->count(15)->create(['user_id' => $user->id])->each(function ($team) use ($user): void {
         $team->users()->attach($user->id, ['role' => 'owner']);
     });
 

@@ -8,4 +8,3 @@ final class TeamCollection extends BaseCollection
 {
     protected string $resourceClass = TeamResource::class;
 }
-
