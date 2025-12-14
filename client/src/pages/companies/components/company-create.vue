@@ -1,23 +1,25 @@
 <script lang="ts" setup>
-import { Plus } from 'lucide-vue-next'
+import { Building2 } from 'lucide-vue-next'
 
-import CompanyResourceDialog from './company-resource-dialog.vue'
+import CompanyResource from './company-resource.vue'
 
 const isOpen = ref(false)
 </script>
 
 <template>
-  <UiDialog v-model:open="isOpen">
-    <UiDialogTrigger as-child>
+  <UiDrawer v-model:open="isOpen" direction="right">
+    <UiDrawerTrigger as-child>
       <UiButton>
-        Create
-        <Plus />
+        <Building2 />
+        Create Company
       </UiButton>
-    </UiDialogTrigger>
+    </UiDrawerTrigger>
 
-    <UiDialogContent>
-      <CompanyResourceDialog :company="null" @close="isOpen = false" />
-    </UiDialogContent>
-  </UiDialog>
+    <UiDrawerContent class="px-4 pb-4">
+      <div class="overflow-y-auto max-h-[calc(100vh-4rem)]">
+        <CompanyResource @close="isOpen = false" />
+      </div>
+    </UiDrawerContent>
+  </UiDrawer>
 </template>
 

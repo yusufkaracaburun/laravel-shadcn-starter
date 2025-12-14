@@ -1,23 +1,25 @@
 <script lang="ts" setup>
-import { Plus } from 'lucide-vue-next'
+import { FolderPlus } from 'lucide-vue-next'
 
-import ProjectResourceDialog from './project-resource-dialog.vue'
+import ProjectResource from './project-resource.vue'
 
 const isOpen = ref(false)
 </script>
 
 <template>
-  <UiDialog v-model:open="isOpen">
-    <UiDialogTrigger as-child>
+  <UiDrawer v-model:open="isOpen" direction="right">
+    <UiDrawerTrigger as-child>
       <UiButton>
-        Create
-        <Plus />
+        <FolderPlus />
+        Create Project
       </UiButton>
-    </UiDialogTrigger>
+    </UiDrawerTrigger>
 
-    <UiDialogContent>
-      <ProjectResourceDialog :project="null" @close="isOpen = false" />
-    </UiDialogContent>
-  </UiDialog>
+    <UiDrawerContent class="px-4 pb-4">
+      <div class="overflow-y-auto max-h-[calc(100vh-4rem)]">
+        <ProjectResource @close="isOpen = false" />
+      </div>
+    </UiDrawerContent>
+  </UiDrawer>
 </template>
 
