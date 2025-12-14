@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import ThemePopover from '@/components/custom-theme/theme-popover.vue'
-import ToggleTheme from '@/components/toggle-theme.vue'
 
 import HeaderBreadcrumbs from './header-breadcrumbs.vue'
 import HeaderNotifications from './header-notifications.vue'
@@ -10,7 +9,7 @@ import HeaderUserMenu from './header-user-menu.vue'
 
 <template>
   <header
-    class="flex items-center gap-3 sm:gap-4 h-16 px-4 shrink-0 transition-[width,height] ease-linear border-b"
+    class="sticky top-0 z-50 flex items-center gap-3 sm:gap-4 h-16 px-4 shrink-0 transition-[width,height] ease-linear border-b bg-background"
   >
     <!-- Left Section: Sidebar Toggle + Breadcrumbs -->
     <div class="flex items-center gap-3 sm:gap-4">
@@ -27,9 +26,6 @@ import HeaderUserMenu from './header-user-menu.vue'
 
       <!-- Notifications Dropdown -->
       <HeaderNotifications />
-
-      <!-- Theme Toggle -->
-      <!-- <ToggleTheme /> -->
 
       <!-- Theme Popover -->
       <ThemePopover />
