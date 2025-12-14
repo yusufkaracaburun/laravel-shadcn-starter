@@ -6,9 +6,11 @@ namespace App\Providers;
 
 use App\Models\Team;
 use App\Models\User;
+use App\Models\Item;
 use App\Policies\RolePolicy;
 use App\Policies\TeamPolicy;
 use App\Policies\UserPolicy;
+use App\Policies\ItemPolicy;
 use App\Policies\PermissionPolicy;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Gate;
@@ -28,6 +30,7 @@ final class AuthServiceProvider extends ServiceProvider
         User::class => UserPolicy::class,
         Permission::class => PermissionPolicy::class,
         Role::class => RolePolicy::class,
+        Item::class => ItemPolicy::class,
     ];
 
     /**

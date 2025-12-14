@@ -58,6 +58,8 @@ final class RolePermissionSeeder extends Seeder
             'invoices' => ['view', 'create', 'update', 'delete'],
             'teams' => ['view', 'create', 'update', 'delete', 'manage'],
             'users' => ['view', 'create', 'update', 'delete'],
+            'items' => ['view', 'create', 'update', 'delete'],
+            'projects' => ['view', 'create', 'update', 'delete'],
         ];
 
         $permissions = [];
@@ -133,6 +135,14 @@ final class RolePermissionSeeder extends Seeder
             $permissions['users.create'],
             $permissions['users.update'],
             $permissions['users.delete'],
+            $permissions['items.view'],
+            $permissions['items.create'],
+            $permissions['items.update'],
+            $permissions['items.delete'],
+            $permissions['projects.view'],
+            $permissions['projects.create'],
+            $permissions['projects.update'],
+            $permissions['projects.delete'],
         ]);
 
         // Customer permissions
