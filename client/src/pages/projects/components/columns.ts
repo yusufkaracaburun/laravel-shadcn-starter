@@ -29,17 +29,10 @@ export const columns: ColumnDef<Project>[] = [
     },
   },
   {
-    accessorKey: 'description',
-    header: ({ column }) => h(DataTableColumnHeader<Project>, { column, title: 'Description' }),
-    cell: ({ row }) => {
-      return h('div', { class: 'max-w-[400px] truncate text-sm text-muted-foreground' }, row.getValue('description'))
-    },
-  },
-  {
     accessorKey: 'category',
     header: ({ column }) => h(DataTableColumnHeader<Project>, { column, title: 'Category' }),
     cell: ({ row }) => {
-      const category = categories.find((category) => category.value === row.getValue('category'))
+      const category = categories.find(category => category.value === row.getValue('category'))
 
       return h('div', { class: 'flex items-center' }, [
         category ? h(Badge, { variant: 'outline' }, () => category.label) : null,
@@ -53,9 +46,10 @@ export const columns: ColumnDef<Project>[] = [
     accessorKey: 'status',
     header: ({ column }) => h(DataTableColumnHeader<Project>, { column, title: 'Status' }),
     cell: ({ row }) => {
-      const status = statuses.find((status) => status.value === row.getValue('status'))
+      const status = statuses.find(status => status.value === row.getValue('status'))
 
-      if (!status) return null
+      if (!status)
+        return null
 
       return h(
         Badge,
@@ -77,9 +71,10 @@ export const columns: ColumnDef<Project>[] = [
     accessorKey: 'priority',
     header: ({ column }) => h(DataTableColumnHeader<Project>, { column, title: 'Priority' }),
     cell: ({ row }) => {
-      const priority = priorities.find((priority) => priority.value === row.getValue('priority'))
+      const priority = priorities.find(priority => priority.value === row.getValue('priority'))
 
-      if (!priority) return null
+      if (!priority)
+        return null
 
       return h('div', { class: 'flex items-center gap-2' }, [
         priority.icon && h(priority.icon, { class: `h-4 w-4 ${priority.color}` }),
@@ -130,4 +125,3 @@ export const columns: ColumnDef<Project>[] = [
     cell: ({ row }) => h(DataTableRowActions, { row }),
   },
 ]
-
