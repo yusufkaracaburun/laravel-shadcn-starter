@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { Settings } from 'lucide-vue-next'
+import ThemePopover from '@/components/custom-theme/theme-popover.vue'
+import ToggleTheme from '@/components/toggle-theme.vue'
 
 import HeaderBreadcrumbs from './header-breadcrumbs.vue'
 import HeaderNotifications from './header-notifications.vue'
 import HeaderSearch from './header-search.vue'
 import HeaderUserMenu from './header-user-menu.vue'
-import ToggleTheme from '@/components/toggle-theme.vue'
 </script>
 
 <template>
@@ -25,25 +25,17 @@ import ToggleTheme from '@/components/toggle-theme.vue'
       <!-- Search Bar -->
       <HeaderSearch />
 
-      <!-- Theme Toggle -->
-      <ToggleTheme />
-
-      <!-- Settings Icon -->
-      <UiButton
-        variant="ghost"
-        size="icon"
-        data-testid="default-layout_settings-button"
-        @click="$router.push('/settings')"
-      >
-        <Settings class="size-4" />
-      </UiButton>
-
       <!-- Notifications Dropdown -->
       <HeaderNotifications />
+
+      <!-- Theme Toggle -->
+      <!-- <ToggleTheme /> -->
+
+      <!-- Theme Popover -->
+      <ThemePopover />
 
       <!-- User Avatar Dropdown -->
       <HeaderUserMenu />
     </div>
   </header>
 </template>
-

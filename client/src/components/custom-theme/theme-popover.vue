@@ -7,6 +7,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import ContentLayout from './content-layout.vue'
 import CustomColor from './custom-color.vue'
 import CustomRadius from './custom-radius.vue'
+import CustomScale from './custom-scale.vue'
 import CustomThemeTitle from './custom-theme-title.vue'
 import ToggleColorMode from './toggle-color-mode.vue'
 </script>
@@ -14,7 +15,7 @@ import ToggleColorMode from './toggle-color-mode.vue'
 <template>
   <Popover>
     <PopoverTrigger>
-      <Button variant="outline" size="icon">
+      <Button variant="ghost" size="icon">
         <Paintbrush />
       </Button>
     </PopoverTrigger>
@@ -23,6 +24,7 @@ import ToggleColorMode from './toggle-color-mode.vue'
       <CustomColor />
       <CustomRadius />
       <ToggleColorMode />
+      <CustomScale />
       <ContentLayout />
     </PopoverContent>
   </Popover>

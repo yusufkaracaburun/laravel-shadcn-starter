@@ -10,6 +10,7 @@ declare global {
   const EffectScope: typeof import('vue').EffectScope
   const RADIUS: typeof import('../constants/themes').RADIUS
   const RouterPath: typeof import('../constants/route-path').RouterPath
+  const SCALES: typeof import('../constants/themes').SCALES
   const THEMES: typeof import('../constants/themes').THEMES
   const THEMES_COLOR: typeof import('../constants/themes')['THEMES_COLOR']
   const THEME_PRIMARY_COLORS: typeof import('../constants/themes').THEME_PRIMARY_COLORS
@@ -112,7 +113,7 @@ declare global {
   export type { Component, Slot, Slots, ComponentPublicInstance, ComputedRef, DirectiveBinding, ExtractDefaultPropTypes, ExtractPropTypes, ExtractPublicPropTypes, InjectionKey, PropType, Ref, ShallowRef, MaybeRef, MaybeRefOrGetter, VNode, WritableComputedRef } from 'vue'
   import('vue')
   // @ts-ignore
-  export type { Theme, Radius, ContentLayout } from '../constants/themes'
+  export type { Theme, Radius, ContentLayout, Scale } from '../constants/themes'
   import('../constants/themes')
   // @ts-ignore
   export type { ErrorType, ErrorState, SetErrorOptions } from '../stores/error.store'

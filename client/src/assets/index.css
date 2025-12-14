@@ -141,3 +141,20 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Scale classes for font size scaling */
+.scale-xs {
+  font-size: 12px;
+}
+
+.scale-sm {
+  font-size: 14px;
+}
+
+.scale-md {
+  font-size: 16px;
+}
+
+.scale-lg {
+  font-size: 18px;
+}
