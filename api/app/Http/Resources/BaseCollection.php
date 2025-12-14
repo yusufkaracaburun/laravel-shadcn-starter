@@ -28,22 +28,20 @@ abstract class BaseCollection extends ResourceCollection
         $data = ($this->resourceClass)::collection($this->collection);
 
         if ($this->resource instanceof AbstractPaginator) {
+            // Return Laravel's standard pagination format that frontend expects
             return [
-                'data' => $data,
-                'meta' => [
-                    'current_page' => $this->currentPage(),
-                    'last_page' => $this->lastPage(),
-                    'per_page' => $this->perPage(),
-                    'total' => $this->total(),
-                    'from' => $this->firstItem(),
-                    'to' => $this->lastItem(),
-                ],
-                'links' => [
-                    'first' => $this->url(1),
-                    'last' => $this->url($this->lastPage()),
-                    'prev' => $this->previousPageUrl(),
-                    'next' => $this->nextPageUrl(),
-                ],
+                'data' => $data->toArray($request),
+                'current_page' => $this->currentPage(),
+                'per_page' => $this->perPage(),
+                'total' => $this->total(),
+                'last_page' => $this->lastPage(),
+                'first_page_url' => $this->url(1),
+                'last_page_url' => $this->url($this->lastPage()),
+                'next_page_url' => $this->nextPageUrl(),
+                'prev_page_url' => $this->previousPageUrl(),
+                'path' => $this->path(),
+                'from' => $this->firstItem(),
+                'to' => $this->lastItem(),
             ];
         }
 

@@ -5,6 +5,8 @@ import {
 } from 'lucide-vue-next'
 import { h } from 'vue'
 
+import { getCompanyStatusColor } from '@/utils/status-colors'
+
 export const industries = [
   {
     value: 'technology',
@@ -37,16 +39,25 @@ export const statuses = [
     value: 'active',
     label: 'Active',
     icon: h(CheckCircle2),
+    get color() {
+      return getCompanyStatusColor(this.value)
+    },
   },
   {
     value: 'inactive',
     label: 'Inactive',
     icon: h(XCircle),
+    get color() {
+      return getCompanyStatusColor(this.value)
+    },
   },
   {
     value: 'pending',
     label: 'Pending',
     icon: h(Clock),
+    get color() {
+      return getCompanyStatusColor(this.value)
+    },
   },
 ]
 

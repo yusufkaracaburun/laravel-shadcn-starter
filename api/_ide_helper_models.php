@@ -13,6 +13,28 @@
 
 namespace App\Models{
 /**
+ * @property int $id
+ * @property string $name
+ * @property string $email
+ * @property string|null $phone
+ * @property string $industry
+ * @property string $status
+ * @property string $employees
+ * @property int|null $team_id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read Team|null $team
+ * @method static \Database\Factories\CompanyFactory factory($count = null, $state = [])
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Company forTeam(?int $teamId)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Company newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Company newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Company query()
+ */
+	final class Company extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
  * Contact model.
  * 
  * Represents a contact person associated with customers.

@@ -18,7 +18,7 @@ use App\Http\Requests\UpdateUserRequest;
 use App\Helpers\Cache\CacheInvalidationService;
 use App\Http\Controllers\Concerns\UsesQueryBuilder;
 use App\Http\Controllers\Concerns\UsesCachedResponses;
-use App\Repositories\Contracts\UserRepositoryInterface;
+use App\Services\Contracts\UserServiceInterface;
 use App\Http\Controllers\Concerns\InvalidatesCachedModels;
 
 final class UserController extends Controller
@@ -28,7 +28,7 @@ final class UserController extends Controller
     use UsesQueryBuilder;
 
     public function __construct(
-        private readonly UserRepositoryInterface $userRepository
+        private readonly UserServiceInterface $userService
     ) {}
 
     /**
@@ -47,9 +47,9 @@ final class UserController extends Controller
         $teamId = $user->getAttributeValue('current_team_id');
 
         $perPage = (int) ($validated['per_page'] ?? 10);
-        $paginated = $this->userRepository->getPaginated($perPage, $teamId);
+        $collection = $this->userService->getPaginated($perPage, $teamId);
 
-        return ApiResponse::success(new UserCollection($paginated));
+        return ApiResponse::success($collection);
     }
 
     /**
@@ -66,9 +66,9 @@ final class UserController extends Controller
 
         $teamId = $currentUser->getAttributeValue('current_team_id');
 
-        $user = $this->userRepository->findById($user->id, $teamId);
+        $userResource = $this->userService->findById($user->id, $teamId);
 
-        return ApiResponse::success(new UserResource($user));
+        return ApiResponse::success($userResource);
     }
 
     /**
@@ -84,15 +84,15 @@ final class UserController extends Controller
 
         $teamId = $currentUser->getAttributeValue('current_team_id');
 
-        $user = $this->userRepository->createUser($request->validated(), $teamId);
+        $userResource = $this->userService->createUser($request->validated(), $teamId);
 
         // Handle profile photo upload if present
         if ($request->hasFile('profile_photo')) {
-            $user->addMediaFromRequest('profile_photo')
+            $userResource->resource->addMediaFromRequest('profile_photo')
                 ->toMediaCollection('profile-photos');
         }
 
-        return ApiResponse::created(new UserResource($user));
+        return ApiResponse::created($userResource);
     }
 
     /**
@@ -114,24 +114,24 @@ final class UserController extends Controller
         // Media Library handles file uploads separately
         unset($validated['profile_photo']);
 
-        $user = $this->userRepository->updateUser($user, $validated, $teamId);
+        $userResource = $this->userService->updateUser($user, $validated, $teamId);
 
         // Handle profile photo upload if present
         if ($request->hasFile('profile_photo')) {
             // Clear existing profile photo (singleFile collection)
-            $user->clearMediaCollection('profile-photos');
+            $userResource->resource->clearMediaCollection('profile-photos');
             // Add new profile photo
-            $user->addMediaFromRequest('profile_photo')
+            $userResource->resource->addMediaFromRequest('profile_photo')
                 ->toMediaCollection('profile-photos');
         }
 
         // Invalidate user and team caches
-        CacheInvalidationService::invalidateUser($user->id);
-        if ($user->current_team_id) {
-            CacheInvalidationService::invalidateTeam($user->current_team_id);
+        CacheInvalidationService::invalidateUser($userResource->resource->id);
+        if ($userResource->resource->current_team_id) {
+            CacheInvalidationService::invalidateTeam($userResource->resource->current_team_id);
         }
 
-        return ApiResponse::success(new UserResource($user));
+        return ApiResponse::success($userResource);
     }
 
     /**
@@ -144,7 +144,7 @@ final class UserController extends Controller
         $teamId = $user->current_team_id;
         $userId = $user->id;
 
-        $this->userRepository->deleteUser($user);
+        $this->userService->deleteUser($user);
 
         // Invalidate user and team caches
         CacheInvalidationService::invalidateUser($userId);
@@ -165,9 +165,9 @@ final class UserController extends Controller
         /** @var User $user */
         $user = Auth::user();
 
-        $user = $this->userRepository->getCurrentUser($user);
+        $userResource = $this->userService->getCurrentUser($user);
 
-        return ApiResponse::success(new UserResource($user));
+        return ApiResponse::success($userResource);
     }
 
     /**

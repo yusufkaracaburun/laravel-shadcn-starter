@@ -143,6 +143,13 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       | never
     >,
+    '/companies/[id]': RouteRecordInfo<
+      '/companies/[id]',
+      '/companies/:id',
+      { id: ParamValue<true> },
+      { id: ParamValue<false> },
+      | never
+    >,
     '/dashboard/': RouteRecordInfo<
       '/dashboard/',
       '/dashboard',
@@ -410,6 +417,12 @@ declare module 'vue-router/auto-routes' {
     'src/pages/companies/index.vue': {
       routes:
         | '/companies/'
+      views:
+        | never
+    }
+    'src/pages/companies/[id].vue': {
+      routes:
+        | '/companies/[id]'
       views:
         | never
     }

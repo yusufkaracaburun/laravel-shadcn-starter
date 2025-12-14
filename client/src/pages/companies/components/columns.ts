@@ -2,11 +2,11 @@ import type { ColumnDef } from '@tanstack/vue-table'
 
 import { h } from 'vue'
 
+import type { Company } from '@/services/companies.service'
+
 import DataTableColumnHeader from '@/components/data-table/column-header.vue'
 import { SelectColumn } from '@/components/data-table/table-columns'
 import { Badge } from '@/components/ui/badge'
-
-import type { Company } from '../data/schema'
 
 import { employeeSizes, industries, statuses } from '../data/data'
 import DataTableRowActions from './data-table-row-actions.vue'
@@ -17,7 +17,7 @@ export const columns: ColumnDef<Company>[] = [
     accessorKey: 'id',
     header: ({ column }) => h(DataTableColumnHeader<Company>, { column, title: 'Company ID' }),
     cell: ({ row }) => h('div', { class: 'w-24' }, row.getValue('id')),
-    enableSorting: false,
+    enableSorting: true,
     enableHiding: false,
   },
   {
@@ -26,6 +26,8 @@ export const columns: ColumnDef<Company>[] = [
     cell: ({ row }) => {
       return h('span', { class: 'max-w-[500px] truncate font-medium' }, row.getValue('name'))
     },
+    enableSorting: true,
+    enableResizing: true,
   },
   {
     accessorKey: 'industry',
@@ -45,6 +47,8 @@ export const columns: ColumnDef<Company>[] = [
     accessorKey: 'email',
     header: ({ column }) => h(DataTableColumnHeader<Company>, { column, title: 'Email' }),
     cell: ({ row }) => h('div', { class: 'max-w-[300px] truncate' }, row.getValue('email')),
+    enableSorting: true,
+    enableResizing: true,
   },
   {
     accessorKey: 'phone',
@@ -59,10 +63,17 @@ export const columns: ColumnDef<Company>[] = [
 
       if (!status) return null
 
-      return h('div', { class: 'flex w-[100px] items-center' }, [
-        status.icon && h(status.icon, { class: 'mr-2 h-4 w-4 text-muted-foreground' }),
-        h('span', status.label),
-      ])
+      return h(
+        Badge,
+        {
+          class: `flex w-fit items-center gap-2 ${status.color}`,
+          variant: 'secondary',
+        },
+        () => [
+          status.icon && h(status.icon, { class: 'h-3 w-3' }),
+          h('span', status.label),
+        ],
+      )
     },
     filterFn: (row, id, value) => {
       return value.includes(row.getValue(id))

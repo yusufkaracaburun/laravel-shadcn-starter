@@ -1,40 +1,62 @@
 <script lang="ts" setup>
-import { toast } from 'vue-sonner'
+import type { Company } from '@/services/companies.service'
 
-import type { Company } from '../data/schema'
+import { Button } from '@/components/ui/button'
+import { useToast } from '@/composables/use-toast'
+import { useDeleteCompanyMutation } from '@/services/companies.service'
+import { useErrorStore } from '@/stores/error.store'
 
 const props = defineProps<{
   company: Company
 }>()
 
-function handleRemove() {
-  toast(`The following company has been deleted:`, {
-    description: h(
-      'pre',
-      { class: 'mt-2 w-[340px] rounded-md bg-slate-950 p-4' },
-      h('code', { class: 'text-white' }, JSON.stringify(props.company, null, 2)),
-    ),
-  })
+const emits = defineEmits<{
+  close: []
+}>()
+
+const toast = useToast()
+const errorStore = useErrorStore()
+const deleteCompanyMutation = useDeleteCompanyMutation()
+
+async function handleDelete() {
+  try {
+    await deleteCompanyMutation.mutateAsync(props.company.id)
+    toast.showSuccess('Company deleted successfully!')
+    emits('close')
+  }
+  catch (error: any) {
+    // Store error with context
+    errorStore.setError(error, { context: 'deleteCompany' })
+
+    // Use error store utilities for messages
+    const message = errorStore.getErrorMessage(error)
+    toast.showError(message)
+  }
 }
 </script>
 
 <template>
   <div>
-    <UiDialogTitle>
-      <UiDialogTitle> Delete this company: {{ company.id }} ? </UiDialogTitle>
-      <UiDialogDescription class="mt-2 font-medium">
-        You are about to delete a company with the ID {{ company.id }}.This action cannot be undone.
+    <UiDialogHeader>
+      <UiDialogTitle>Delete Company</UiDialogTitle>
+      <UiDialogDescription class="mt-2">
+        Are you sure you want to delete <strong>{{ company.name }}</strong>? This action cannot be undone.
       </UiDialogDescription>
-    </UiDialogTitle>
+    </UiDialogHeader>
     <UiDialogFooter>
       <UiDialogClose as-child>
-        <UiButton variant="outline"> Cancel </UiButton>
+        <Button variant="outline">
+          Cancel
+        </Button>
       </UiDialogClose>
-
-      <UiDialogClose as-child>
-        <UiButton variant="destructive" @click="handleRemove"> Delete </UiButton>
-      </UiDialogClose>
+      <Button
+        variant="destructive"
+        :disabled="deleteCompanyMutation.isPending.value"
+        @click="handleDelete"
+      >
+        <UiSpinner v-if="deleteCompanyMutation.isPending.value" class="mr-2" />
+        Delete
+      </Button>
     </UiDialogFooter>
   </div>
 </template>
-

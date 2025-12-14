@@ -1,15 +1,20 @@
 import { z } from 'zod'
 
-// We're keeping a simple non-relational schema here.
-// IRL, you will have a schema for your data models.
+/**
+ * Company schema matching backend CompanyResource structure
+ * @see api/app/Http/Resources/CompanyResource.php
+ */
 export const companySchema = z.object({
-  id: z.string(),
+  id: z.number(),
   name: z.string(),
   email: z.string(),
-  phone: z.string(),
+  phone: z.string().nullable(),
   industry: z.string(),
   status: z.string(),
   employees: z.string(),
+  team_id: z.number().nullable(),
+  created_at: z.string(),
+  updated_at: z.string(),
 })
 
 export type Company = z.infer<typeof companySchema>

@@ -6,6 +6,7 @@
 export type PriorityValue = 'low' | 'medium' | 'high'
 export type ProjectStatusValue = 'active' | 'completed' | 'on-hold' | 'cancelled'
 export type TaskStatusValue = 'backlog' | 'todo' | 'in progress' | 'done' | 'canceled'
+export type CompanyStatusValue = 'active' | 'inactive' | 'pending'
 
 /**
  * Get priority color class
@@ -65,6 +66,25 @@ export function getTaskStatusColor(status: TaskStatusValue | string | undefined)
       return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300'
     case 'canceled':
       return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300'
+    default:
+      return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300'
+  }
+}
+
+/**
+ * Get company status color class
+ * Returns badge-style background colors for company statuses
+ */
+export function getCompanyStatusColor(status: CompanyStatusValue | string | undefined): string {
+  if (!status) return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300'
+
+  switch (status.toLowerCase()) {
+    case 'active':
+      return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300'
+    case 'inactive':
+      return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300'
+    case 'pending':
+      return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300'
     default:
       return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300'
   }

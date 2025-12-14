@@ -4,9 +4,8 @@ import type { Component } from 'vue'
 
 import { Ellipsis, FilePenLine, Trash2 } from 'lucide-vue-next'
 
-import type { Company } from '../data/schema'
+import type { Company } from '@/services/companies.service'
 
-import { companySchema } from '../data/schema'
 import CompanyDelete from './company-delete.vue'
 import CompanyResourceDialog from './company-resource-dialog.vue'
 
@@ -15,7 +14,7 @@ const props = defineProps<DataTableRowActionsProps>()
 interface DataTableRowActionsProps {
   row: Row<Company>
 }
-const company = computed(() => companySchema.parse(props.row.original))
+const company = computed(() => props.row.original)
 
 const showComponent = shallowRef<Component | null>(null)
 
