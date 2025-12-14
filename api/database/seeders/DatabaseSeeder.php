@@ -20,6 +20,10 @@ final class DatabaseSeeder extends Seeder
             RolePermissionSeeder::class,
             UserSeeder::class,
             CompanySeeder::class,
+            ItemsSeeder::class,
+            CustomerSeeder::class,
+            InvoiceSeeder::class,
+            PaymentSeeder::class,
         ]);
     }
 }

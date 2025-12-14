@@ -212,7 +212,10 @@ namespace App\Models{
  * @property int $sort_order
  * @property \Carbon\CarbonImmutable|null $created_at
  * @property \Carbon\CarbonImmutable|null $updated_at
+ * @property int|null $item_id
+ * @property string|null $unit
  * @property-read \App\Models\Invoice $invoice
+ * @property-read \App\Models\Item|null $item
  * @method static \Database\Factories\InvoiceItemFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem newQuery()
@@ -221,11 +224,13 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem whereDescription($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem whereInvoiceId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem whereItemId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem whereQuantity($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem whereSortOrder($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem whereTotalExclVat($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem whereTotalInclVat($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem whereTotalVat($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem whereUnit($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem whereUnitPrice($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem whereVatRate($value)
@@ -414,6 +419,18 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Project newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Project newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Project query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Project whereCategory($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Project whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Project whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Project whereEndDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Project whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Project whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Project wherePriority($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Project whereProgress($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Project whereStartDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Project whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Project whereTeamId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Project whereUpdatedAt($value)
  */
 	final class Project extends \Eloquent {}
 }
@@ -509,6 +526,8 @@ namespace App\Models{
  * @property int|null $current_team_id
  * @property string|null $profile_photo_path
  * @property \App\Enums\UserStatus $status
+ * @property int|null $contact_id
+ * @property-read \App\Models\Contact|null $contact
  * @property-read \App\Models\Team|null $currentTeam
  * @property-read string|null $profile_photo_url
  * @property-read \Spatie\MediaLibrary\MediaCollections\Models\Collections\MediaCollection<int, \Spatie\MediaLibrary\MediaCollections\Models\Media> $media
@@ -534,6 +553,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User permission($permissions, $without = false)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User query()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User role($roles, $guard = null, $without = false)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereContactId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereCurrentTeamId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereDeletedAt($value)

@@ -31,6 +31,16 @@ final class InvoiceItem extends BaseModel
     }
 
     /**
+     * Get the item this invoice item is based on (if linked to an item).
+     *
+     * @return BelongsTo<Item, covariant $this>
+     */
+    public function item(): BelongsTo
+    {
+        return $this->belongsTo(Item::class);
+    }
+
+    /**
      * Boot the model.
      */
     protected static function booted(): void

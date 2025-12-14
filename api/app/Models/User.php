@@ -97,6 +97,16 @@ final class User extends Authenticatable implements HasMedia
     }
 
     /**
+     * Get the contact associated with this user.
+     *
+     * @return BelongsTo<Contact, covariant $this>
+     */
+    public function contact(): BelongsTo
+    {
+        return $this->belongsTo(Contact::class);
+    }
+
+    /**
      * Switch the user's current team.
      *
      * @param  Team|int  $team

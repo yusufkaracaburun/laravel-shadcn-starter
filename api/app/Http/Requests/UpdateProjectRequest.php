@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Http\Requests;
 
-use App\Models\Project;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\ValidationRule;
 
@@ -25,8 +24,7 @@ final class UpdateProjectRequest extends FormRequest
      */
     public function rules(): array
     {
-        /** @var Project $project */
-        $project = $this->route('project');
+        $this->route('project');
 
         return [
             'name' => ['sometimes', 'required', 'string', 'max:255'],

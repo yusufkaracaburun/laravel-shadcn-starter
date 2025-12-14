@@ -62,22 +62,19 @@ final class UserFactory extends Factory
      * State: contact user (customer contact person with login).
      *
      * Creates a Contact first, then creates a User with matching information.
-     * Note: The Contact-User relationship may need to be configured separately
-     * depending on your database schema.
+     * Sets the contact_id foreign key on the User to link it to the Contact.
      */
     public function contactUser(?Customer $customer = null): static
     {
         return $this->afterCreating(function (User $user) use ($customer): void {
             $contact = Contact::factory()->customer($customer ?? Customer::factory()->create())->create();
 
-            // Update user with contact information
+            // Update user with contact information and link to contact
             $user->forceFill([
                 'email' => $contact->email,
                 'name' => mb_trim($contact->first_name.' '.$contact->last_name),
+                'contact_id' => $contact->id,
             ])->save();
-
-            // Note: If Contact model uses hasOne(User::class), User table needs contact_id foreign key
-            // If your schema differs, you may need to manually set the relationship here
         });
     }
 }
