@@ -397,6 +397,30 @@ namespace App\Models{
 namespace App\Models{
 /**
  * @property int $id
+ * @property string $name
+ * @property string|null $description
+ * @property string $status
+ * @property string $priority
+ * @property string $category
+ * @property Carbon|null $start_date
+ * @property Carbon|null $end_date
+ * @property int $progress
+ * @property int|null $team_id
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @property-read Team|null $team
+ * @method static \Database\Factories\ProjectFactory factory($count = null, $state = [])
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Project forTeam(?int $teamId)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Project newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Project newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Project query()
+ */
+	final class Project extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * @property int $id
  * @property int|null $team_id
  * @property string $name
  * @property string $guard_name

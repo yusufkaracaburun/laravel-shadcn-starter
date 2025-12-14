@@ -45,21 +45,6 @@ export const columns: ColumnDef<User>[] = [
   },
 
   {
-    accessorKey: 'email_verified_at',
-    header: ({ column }) => h(DataTableColumnHeader<User>, { column, title: 'Verified' }),
-    cell: ({ row }) => {
-      const verifiedAt = row.getValue('email_verified_at')
-      return h(
-        Badge,
-        { variant: verifiedAt ? 'default' : 'secondary' },
-        () => verifiedAt ? 'Verified' : 'Unverified',
-      )
-    },
-    enableSorting: false,
-    enableResizing: true,
-  },
-
-  {
     id: 'roles',
     accessorFn: (row) => {
       // Extract role names from the roles array

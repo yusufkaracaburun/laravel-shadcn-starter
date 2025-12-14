@@ -1,17 +1,26 @@
 import { z } from 'zod'
 
-// We're keeping a simple non-relational schema here.
-// IRL, you will have a schema for your data models.
+/**
+ * Project schema matching backend ProjectResource
+ * @see api/app/Http/Resources/ProjectResource.php
+ * Backend returns snake_case fields, but we also provide camelCase for UI compatibility
+ */
 export const projectSchema = z.object({
-  id: z.string(),
+  id: z.number(),
   name: z.string(),
-  description: z.string(),
+  description: z.string().nullable(),
   status: z.string(),
   priority: z.string(),
   category: z.string(),
-  startDate: z.string(),
-  endDate: z.string(),
+  start_date: z.string().nullable(),
+  end_date: z.string().nullable(),
   progress: z.number(),
+  team_id: z.number().nullable(),
+  created_at: z.string(),
+  updated_at: z.string(),
+  // CamelCase aliases for UI compatibility
+  startDate: z.string().nullable().optional(),
+  endDate: z.string().nullable().optional(),
 })
 
 export type Project = z.infer<typeof projectSchema>

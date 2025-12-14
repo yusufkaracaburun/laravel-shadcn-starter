@@ -1,10 +1,10 @@
 <script lang="ts" setup>
 import { toTypedSchema } from '@vee-validate/zod'
 import { useForm } from 'vee-validate'
-import { toast } from 'vue-sonner'
 import { z } from 'zod'
 
 import { FormField } from '@/components/ui/form'
+import { useProjects } from '@/composables/use-projects'
 
 import type { Project } from '../data/schema'
 
@@ -15,6 +15,8 @@ const props = defineProps<{
 }>()
 const emits = defineEmits(['close'])
 
+const { createProject, updateProject } = useProjects()
+
 const formSchema = toTypedSchema(
   z.object({
     name: z
@@ -22,28 +24,50 @@ const formSchema = toTypedSchema(
       .min(2)
       .max(100)
       .default(props.project?.name ?? ''),
-    description: z.string().default(props.project?.description ?? ''),
+    description: z.string().nullable().default(props.project?.description ?? null),
     status: z.string().default(props.project?.status ?? ''),
     priority: z.string().default(props.project?.priority ?? ''),
     category: z.string().default(props.project?.category ?? ''),
-    startDate: z.string().default(props.project?.startDate ?? ''),
-    endDate: z.string().default(props.project?.endDate ?? ''),
+    startDate: z.string().nullable().default(props.project?.startDate ?? props.project?.start_date ?? null),
+    endDate: z.string().nullable().default(props.project?.endDate ?? props.project?.end_date ?? null),
     progress: z.number().min(0).max(100).default(props.project?.progress ?? 0),
   }),
 )
 
-const { isFieldDirty, handleSubmit } = useForm({
+const { isFieldDirty, handleSubmit, isSubmitting } = useForm({
   validationSchema: formSchema,
 })
-const onSubmit = handleSubmit((values) => {
-  toast('You submitted the following values:', {
-    description: h(
-      'pre',
-      { class: 'mt-2 w-[340px] rounded-md bg-slate-950 p-4' },
-      h('code', { class: 'text-white' }, JSON.stringify(values, null, 2)),
-    ),
-  })
-  emits('close')
+
+const onSubmit = handleSubmit(async (values) => {
+  try {
+    // Transform camelCase to snake_case for backend
+    const backendData = {
+      name: values.name,
+      description: values.description || null,
+      status: values.status,
+      priority: values.priority,
+      category: values.category,
+      start_date: values.startDate || null,
+      end_date: values.endDate || null,
+      progress: values.progress ?? 0,
+    }
+
+    if (props.project?.id) {
+      // Update existing project
+      await updateProject(props.project.id, backendData)
+    }
+    else {
+      // Create new project
+      await createProject(backendData)
+    }
+
+    emits('close')
+  }
+  catch (error) {
+    // Error handling is done in the composable
+    // Just log for debugging
+    console.error('Project form submission error:', error)
+  }
 })
 </script>
 
@@ -182,7 +206,9 @@ const onSubmit = handleSubmit((values) => {
         </UiFormItem>
       </FormField>
 
-      <UiButton type="submit"> Submit </UiButton>
+      <UiButton type="submit" :disabled="isSubmitting">
+        {{ isSubmitting ? 'Submitting...' : 'Submit' }}
+      </UiButton>
     </form>
   </div>
 </template>

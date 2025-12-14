@@ -105,7 +105,11 @@ export const columns: ColumnDef<Project>[] = [
     accessorKey: 'startDate',
     header: ({ column }) => h(DataTableColumnHeader<Project>, { column, title: 'Start Date' }),
     cell: ({ row }) => {
-      const date = new Date(row.getValue('startDate'))
+      const dateValue = row.getValue('startDate') as string | null | undefined
+      if (!dateValue) {
+        return h('div', { class: 'w-[100px] text-muted-foreground' }, '-')
+      }
+      const date = new Date(dateValue)
       return h('div', { class: 'w-[100px]' }, date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }))
     },
   },
@@ -113,7 +117,11 @@ export const columns: ColumnDef<Project>[] = [
     accessorKey: 'endDate',
     header: ({ column }) => h(DataTableColumnHeader<Project>, { column, title: 'End Date' }),
     cell: ({ row }) => {
-      const date = new Date(row.getValue('endDate'))
+      const dateValue = row.getValue('endDate') as string | null | undefined
+      if (!dateValue) {
+        return h('div', { class: 'w-[100px] text-muted-foreground' }, '-')
+      }
+      const date = new Date(dateValue)
       return h('div', { class: 'w-[100px]' }, date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }))
     },
   },

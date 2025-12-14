@@ -91,6 +91,7 @@ declare global {
   const useKanban: typeof import('../composables/use-kanban').useKanban
   const useLink: typeof import('vue-router')['useLink']
   const useModel: typeof import('vue').useModel
+  const useProjects: typeof import('../composables/use-projects').useProjects
   const useReverbNotifications: typeof import('../composables/use-reverb-notifications').useReverbNotifications
   const useRoute: typeof import('vue-router').useRoute
   const useRouteHelper: typeof import('../composables/use-route-helper').useRouteHelper

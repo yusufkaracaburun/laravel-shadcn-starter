@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { toast } from 'vue-sonner'
+import { useProjects } from '@/composables/use-projects'
 
 import type { Project } from '../data/schema'
 
@@ -7,14 +7,25 @@ const props = defineProps<{
   project: Project
 }>()
 
-function handleRemove() {
-  toast(`The following project has been deleted:`, {
-    description: h(
-      'pre',
-      { class: 'mt-2 w-[340px] rounded-md bg-slate-950 p-4' },
-      h('code', { class: 'text-white' }, JSON.stringify(props.project, null, 2)),
-    ),
-  })
+const { deleteProject } = useProjects()
+const isDeleting = ref(false)
+
+async function handleRemove() {
+  if (!props.project?.id) {
+    return
+  }
+
+  try {
+    isDeleting.value = true
+    await deleteProject(props.project.id)
+  }
+  catch (error) {
+    // Error handling is done in the composable
+    console.error('Project deletion error:', error)
+  }
+  finally {
+    isDeleting.value = false
+  }
 }
 </script>
 
@@ -32,7 +43,9 @@ function handleRemove() {
       </UiDialogClose>
 
       <UiDialogClose as-child>
-        <UiButton variant="destructive" @click="handleRemove"> Delete </UiButton>
+        <UiButton variant="destructive" :disabled="isDeleting" @click="handleRemove">
+          {{ isDeleting ? 'Deleting...' : 'Delete' }}
+        </UiButton>
       </UiDialogClose>
     </UiDialogFooter>
   </div>

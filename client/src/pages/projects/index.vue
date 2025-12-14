@@ -1,11 +1,13 @@
 <script setup lang="ts">
 import Page from '@/components/global-layout/basic-page.vue'
+import { useProjects } from '@/composables/use-projects'
 
 import { columns } from './components/columns'
 import DataTable from './components/data-table.vue'
 import ProjectCreate from './components/project-create.vue'
 import ProjectImport from './components/project-import.vue'
-import projects from './data/projects.json'
+
+const { loading, projects, serverPagination, sorting, onSortingChange } = useProjects()
 </script>
 
 <template>
@@ -15,7 +17,14 @@ import projects from './data/projects.json'
       <ProjectCreate />
     </template>
     <div class="overflow-x-auto">
-      <DataTable :data="projects" :columns="columns" />
+      <DataTable
+        :loading="loading"
+        :data="projects"
+        :columns="columns"
+        :server-pagination="serverPagination"
+        :sorting="sorting"
+        :on-sorting-change="onSortingChange"
+      />
     </div>
   </Page>
 </template>

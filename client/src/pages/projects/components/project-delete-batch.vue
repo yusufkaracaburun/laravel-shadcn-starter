@@ -4,6 +4,7 @@ import type { Table as VueTable } from '@tanstack/vue-table'
 import { toast } from 'vue-sonner'
 
 import ConfirmDialog from '@/components/confirm-dialog.vue'
+import { useProjects } from '@/composables/use-projects'
 
 import type { Project } from '../data/schema'
 
@@ -15,28 +16,47 @@ const openModel = defineModel<boolean>('open', {
   default: false,
 })
 
+const { deleteProject } = useProjects()
+
 const CONFIRM_WORD = 'DELETE'
 
 const confirmValue = ref('')
+const isDeleting = ref(false)
 
 const selectedRows = computed(() => table.getSelectedRowModel().rows)
 const selectedCount = computed(() => selectedRows.value.length || 0)
-function handleConfirm() {
+
+async function handleConfirm() {
   if (confirmValue.value !== CONFIRM_WORD) {
     toast.error(`Please type "${CONFIRM_WORD}" to confirm deletion.`)
     return
   }
 
-  openModel.value = false
+  const rowsToDelete = selectedRows.value
+  const projectIds = rowsToDelete.map(row => (row.original as Project).id).filter(id => id != null)
 
-  toast.promise(new Promise((resolve) => setTimeout(resolve, 2000)), {
-    loading: 'Deleting projects...',
-    success: () => {
-      table.resetRowSelection()
-      return `Successfully deleted ${selectedRows.value.length} projects.`
-    },
-    error: 'Failed to delete projects.',
-  })
+  if (projectIds.length === 0) {
+    toast.error('No valid projects selected for deletion.')
+    return
+  }
+
+  try {
+    isDeleting.value = true
+
+    // Delete all selected projects
+    await Promise.all(projectIds.map(id => deleteProject(id)))
+
+    table.resetRowSelection()
+    openModel.value = false
+    confirmValue.value = ''
+  }
+  catch (error) {
+    // Error handling is done in the composable
+    console.error('Batch project deletion error:', error)
+  }
+  finally {
+    isDeleting.value = false
+  }
 }
 </script>
 
@@ -45,7 +65,7 @@ function handleConfirm() {
     v-model:open="openModel"
     confirm-button-text="Delete"
     destructive
-    :disabled="confirmValue.trim() !== CONFIRM_WORD"
+    :disabled="confirmValue.trim() !== CONFIRM_WORD || isDeleting"
     @confirm="handleConfirm"
   >
     <template #title> Delete {{ selectedCount }} projects? </template>

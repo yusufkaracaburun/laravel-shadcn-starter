@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { User } from '@/services/users.service'
 import { useRouter } from 'vue-router'
+import { BadgeCheck } from 'lucide-vue-next'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 
 interface Props {
@@ -36,12 +37,19 @@ function handleClick() {
         {{ getInitials(name) }}
       </AvatarFallback>
     </Avatar>
-    <button
-      class="font-medium text-left hover:underline cursor-pointer focus:outline-none focus:underline"
-      @click="handleClick"
-    >
-      {{ name }}
-    </button>
+    <div class="flex items-center gap-1.5">
+      <button
+        class="font-medium text-left hover:underline cursor-pointer focus:outline-none focus:underline"
+        @click="handleClick"
+      >
+        {{ name }}
+      </button>
+      <BadgeCheck
+        v-if="user.email_verified_at"
+        class="size-4 text-primary flex-shrink-0"
+        aria-label="Verified"
+      />
+    </div>
   </div>
 </template>
 
