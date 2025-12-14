@@ -1,4 +1,5 @@
 import {
+  AppWindow,
   BadgeHelp,
   BellDot,
   Bug,
@@ -8,6 +9,7 @@ import {
   FolderKanban,
   LayoutDashboard,
   ListTodo,
+  Megaphone,
   Palette,
   PictureInPicture2,
   Podcast,
@@ -56,6 +58,16 @@ export function useSidebar() {
           title: 'Tasks',
           url: '/tasks',
           icon: ListTodo,
+        },
+        {
+          title: 'Apps',
+          url: '/apps',
+          icon: AppWindow,
+        },
+        {
+          title: 'Marketing',
+          url: '/marketing',
+          icon: Megaphone,
         },
       ],
     },
