@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { LayoutGrid, List } from 'lucide-vue-next'
+import { LayoutGrid, List, Grid3x3 } from 'lucide-vue-next'
 
 import Page from '@/components/global-layout/basic-page.vue'
 import { Button } from '@/components/ui/button'
@@ -15,8 +15,9 @@ import DataTable from './components/data-table.vue'
 import ProjectCreate from './components/project-create.vue'
 import ProjectImport from './components/project-import.vue'
 import ProjectsKanbanWrapper from './components/projects-kanban-wrapper.vue'
+import ProjectsCardGrid from './components/projects-card-grid.vue'
 
-type ViewMode = 'table' | 'kanban'
+type ViewMode = 'table' | 'kanban' | 'card'
 
 const viewMode = ref<ViewMode>('table')
 const { loading, projects, serverPagination, sorting, onSortingChange } = useProjects()
@@ -41,6 +42,23 @@ const { loading, projects, serverPagination, sorting, onSortingChange } = usePro
           </TooltipTrigger>
           <TooltipContent>
             <p>Table view</p>
+          </TooltipContent>
+        </Tooltip>
+        <Tooltip>
+          <TooltipTrigger as-child>
+            <Button
+              :variant="viewMode === 'card' ? 'default' : 'outline'"
+              size="icon"
+              class="size-8"
+              data-testid="projects_card-view_button"
+              @click="viewMode = 'card'"
+            >
+              <Grid3x3 class="size-4" />
+              <span class="sr-only">Card view</span>
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Card view</p>
           </TooltipContent>
         </Tooltip>
         <Tooltip>
@@ -73,6 +91,9 @@ const { loading, projects, serverPagination, sorting, onSortingChange } = usePro
         :sorting="sorting"
         :on-sorting-change="onSortingChange"
       />
+    </div>
+    <div v-else-if="viewMode === 'card'">
+      <ProjectsCardGrid :projects="projects" :loading="loading" />
     </div>
     <div v-else-if="viewMode === 'kanban'" class="h-full">
       <ProjectsKanbanWrapper :key="`kanban-${projects.length}`" :projects="projects" />
