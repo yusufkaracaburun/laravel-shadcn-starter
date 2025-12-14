@@ -9,16 +9,19 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use InvalidArgumentException;
-use App\Helpers\Cache\TeamCache;
 use Illuminate\Http\JsonResponse;
 use App\Http\Responses\ApiResponse;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\TeamIndexRequest;
+use App\Http\Requests\StoreTeamRequest;
+use App\Http\Requests\UpdateTeamRequest;
 use App\Helpers\Cache\CacheInvalidationService;
 use App\Http\Controllers\Concerns\UsesQueryBuilder;
 use App\Http\Controllers\Concerns\UsesCachedResponses;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use App\Http\Controllers\Concerns\InvalidatesCachedModels;
+use App\Services\Contracts\TeamServiceInterface;
 
 final class TeamController extends Controller
 {
@@ -27,150 +30,136 @@ final class TeamController extends Controller
     use UsesCachedResponses;
     use UsesQueryBuilder;
 
+    public function __construct(
+        private readonly TeamServiceInterface $teamService
+    ) {}
+
     /**
-     * Display a listing of the user's teams with QueryBuilder support.
-     *
-     * Supports filtering, sorting, and including relationships via request parameters.
-     * Example: /api/teams?filter[name]=MyTeam&sort=name&include=users,owner
+     * Display a paginated list of teams.
      *
      * @authenticated
      */
-    public function index(): JsonResponse
+    public function index(TeamIndexRequest $request): JsonResponse
     {
         /** @var User $user */
         $user = Auth::user();
 
-        $teams = $this->cachedResponse(
-            'api.teams.index',
-            function () use ($user) {
-                // Get all team IDs (owned + member) - specify table name to avoid ambiguity
-                $ownedTeamIds = $user->ownedTeams()->pluck('teams.id');
-                $memberTeamIds = $user->teams()->pluck('teams.id');
-                $allTeamIds = $ownedTeamIds->merge($memberTeamIds)->unique();
+        $validated = $request->validated();
 
-                // Build query for all teams
-                $query = Team::query()->whereIn('id', $allTeamIds);
+        $user->refresh();
 
-                // Apply QueryBuilder for filtering, sorting, and includes
-                $teams = $this->buildQuery(
-                    $query,
-                    allowedFilters: ['name', 'personal_team'],
-                    allowedSorts: ['id', 'name', 'created_at'],
-                    allowedIncludes: ['users', 'owner']
-                )->get();
+        $perPage = (int) ($validated['per_page'] ?? 10);
+        $collection = $this->teamService->getPaginated($perPage, $user->id);
 
-                return $teams->toArray();
-            }
-        );
-
-        return ApiResponse::success($teams);
+        return ApiResponse::success($collection);
     }
 
     /**
-     * Store a newly created team.
-     *
-     * @authenticated
-     */
-    public function store(Request $request): JsonResponse
-    {
-        $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'personal_team' => ['sometimes', 'boolean'],
-        ]);
-
-        /** @var User $user */
-        $user = Auth::user();
-        $user->refresh(); // Ensure all attributes are loaded
-
-        $team = Team::query()->create([
-            'name' => $validated['name'],
-            'user_id' => $user->id,
-            'personal_team' => $validated['personal_team'] ?? false,
-        ]);
-
-        // Add user to team as owner
-        $user->teams()->attach($team->id, ['role' => 'owner']);
-
-        // Set as current team if user has no current team
-        if (! $user->current_team_id) {
-            $user->update(['current_team_id' => $team->id]);
-        }
-
-        // Invalidate caches
-        $this->invalidateAfterCreate('team', $team->id);
-        CacheInvalidationService::invalidateUser($user->id);
-
-        return ApiResponse::created($team);
-    }
-
-    /**
-     * Display the specified team.
+     * Get a specific team by ID.
      *
      * @authenticated
      */
     public function show(Team $team): JsonResponse
     {
+        /** @var User $currentUser */
+        $currentUser = Auth::user();
+
+        $currentUser->refresh();
+
         // Policy's before() method handles super-admin, view() handles regular users
         $this->authorize('view', $team);
 
-        $cachedTeam = TeamCache::remember(
-            $team->id,
-            "team:{$team->id}",
-            fn () => $team->load(['users', 'owner'])
-        );
+        $teamResource = $this->teamService->findById($team->id, $currentUser->id);
 
-        return ApiResponse::success($cachedTeam);
+        return ApiResponse::success($teamResource);
     }
 
     /**
-     * Update the specified team.
+     * Create a new team.
      *
      * @authenticated
      */
-    public function update(Request $request, Team $team): JsonResponse
+    public function store(StoreTeamRequest $request): JsonResponse
     {
-        Auth::user();
+        /** @var User $currentUser */
+        $currentUser = Auth::user();
+        $currentUser->refresh();
+
+        $teamResource = $this->teamService->createTeam($request->validated(), $currentUser->id);
+
+        // Add user to team as owner (if not already attached)
+        $team = $teamResource->resource;
+        if (! $currentUser->teams()->where('teams.id', $team->id)->exists()) {
+            $currentUser->teams()->attach($team->id, ['role' => 'owner']);
+        }
+
+        // Set as current team if user has no current team
+        if (! $currentUser->current_team_id) {
+            $currentUser->update(['current_team_id' => $team->id]);
+        }
+
+        // Invalidate caches
+        CacheInvalidationService::invalidateUser($currentUser->id);
+
+        return ApiResponse::created($teamResource);
+    }
+
+    /**
+     * Update team information.
+     *
+     * @authenticated
+     */
+    public function update(UpdateTeamRequest $request, Team $team): JsonResponse
+    {
+        /** @var User $currentUser */
+        $currentUser = Auth::user();
+        $currentUser->refresh();
 
         // Policy's before() method handles super-admin, update() handles regular users
         $this->authorize('update', $team);
 
-        $validated = $request->validate([
-            'name' => ['sometimes', 'required', 'string', 'max:255'],
-            'personal_team' => ['sometimes', 'boolean'],
-        ]);
+        // Check if team belongs to user (this will throw 404 if not found)
+        $this->teamService->findById($team->id, $currentUser->id);
 
-        $team->update($validated);
+        $validated = $request->validated();
 
-        // Invalidate caches
-        $this->invalidateAfterUpdate('team', $team->id);
+        $teamResource = $this->teamService->updateTeam($team, $validated);
 
-        return ApiResponse::success($team);
+        // Invalidate team and user caches
+        CacheInvalidationService::invalidateTeam($team->id);
+        CacheInvalidationService::invalidateUser($currentUser->id);
+
+        return ApiResponse::success($teamResource);
     }
 
     /**
-     * Remove the specified team.
+     * Delete a team.
      *
      * @authenticated
      */
     public function destroy(Team $team): JsonResponse
     {
-        /** @var User $user */
-        $user = Auth::user();
+        /** @var User $currentUser */
+        $currentUser = Auth::user();
+        $currentUser->refresh();
 
         // Policy's before() method handles super-admin, delete() handles regular users
         $this->authorize('delete', $team);
 
+        // Check if team belongs to user
+        $this->teamService->findById($team->id, $currentUser->id);
+
         // If this was the current team for any user, clear it
-        if ($user->current_team_id === $team->id) {
-            $user->update(['current_team_id' => null]);
+        if ($currentUser->current_team_id === $team->id) {
+            $currentUser->update(['current_team_id' => null]);
         }
 
         $teamId = $team->id;
-        $team->delete();
+        $this->teamService->deleteTeam($team);
 
         // Invalidate caches
-        $this->invalidateAfterDelete('team', $teamId);
-        CacheInvalidationService::invalidateUser($user->id);
+        CacheInvalidationService::invalidateTeam($teamId);
+        CacheInvalidationService::invalidateUser($currentUser->id);
 
         return ApiResponse::noContent('Team deleted successfully');
     }
