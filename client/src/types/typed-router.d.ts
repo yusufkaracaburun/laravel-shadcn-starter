@@ -218,6 +218,20 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       | never
     >,
+    '/items/': RouteRecordInfo<
+      '/items/',
+      '/items',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
+    '/items/[id]': RouteRecordInfo<
+      '/items/[id]',
+      '/items/:id',
+      { id: ParamValue<true> },
+      { id: ParamValue<false> },
+      | never
+    >,
     '/marketing/': RouteRecordInfo<
       '/marketing/',
       '/marketing',
@@ -490,6 +504,18 @@ declare module 'vue-router/auto-routes' {
     'src/pages/help-center.vue': {
       routes:
         | '/help-center'
+      views:
+        | never
+    }
+    'src/pages/items/index.vue': {
+      routes:
+        | '/items/'
+      views:
+        | never
+    }
+    'src/pages/items/[id].vue': {
+      routes:
+        | '/items/[id]'
       views:
         | never
     }

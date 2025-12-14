@@ -73,7 +73,7 @@ abstract class BaseIndexFormRequest extends BaseFormRequest
      *
      * @return array<string, ValidationRule|array<mixed>|string>
      */
-    final public function rules(): array
+    public function rules(): array
     {
         return array_merge(
             $this->paginationRules(),
@@ -89,7 +89,7 @@ abstract class BaseIndexFormRequest extends BaseFormRequest
      *
      * @return array<string, string>
      */
-    final public function messages(): array
+    public function messages(): array
     {
         return array_merge(
             parent::messages(),
@@ -113,7 +113,7 @@ abstract class BaseIndexFormRequest extends BaseFormRequest
      *
      * @return array<string, string>
      */
-    final public function attributes(): array
+    public function attributes(): array
     {
         return array_merge(
             parent::attributes(),

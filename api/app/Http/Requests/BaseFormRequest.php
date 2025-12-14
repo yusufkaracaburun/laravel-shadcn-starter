@@ -20,7 +20,7 @@ abstract class BaseFormRequest extends FormRequest
      *
      * By default, authorize all requests. Override in child class if needed.
      */
-    final public function authorize(): bool
+    public function authorize(): bool
     {
         return true;
     }
@@ -32,7 +32,7 @@ abstract class BaseFormRequest extends FormRequest
      *
      * @return array<string, ValidationRule|array<mixed>|string>
      */
-    final public function rules(): array
+    public function rules(): array
     {
         return [];
     }
@@ -44,7 +44,7 @@ abstract class BaseFormRequest extends FormRequest
      *
      * @return array<string, string>
      */
-    final public function messages(): array
+    public function messages(): array
     {
         return [];
     }
@@ -56,7 +56,7 @@ abstract class BaseFormRequest extends FormRequest
      *
      * @return array<string, string>
      */
-    final public function attributes(): array
+    public function attributes(): array
     {
         return [];
     }

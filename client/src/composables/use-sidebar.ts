@@ -10,6 +10,7 @@ import {
   LayoutDashboard,
   ListTodo,
   Megaphone,
+  Package,
   Palette,
   PictureInPicture2,
   Podcast,
@@ -53,6 +54,11 @@ export function useSidebar() {
           title: 'Projects',
           url: '/projects',
           icon: FolderKanban,
+        },
+        {
+          title: 'Items',
+          url: '/items',
+          icon: Package,
         },
         {
           title: 'Tasks',
