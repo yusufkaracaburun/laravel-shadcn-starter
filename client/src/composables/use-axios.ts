@@ -4,6 +4,7 @@ import axios from 'axios'
 import { useRouter } from 'vue-router'
 
 import { RouterPath } from '@/constants/route-path'
+import { useToast } from '@/composables/use-toast'
 import { getCookieValue } from '@/plugins/cookie/setup'
 import { useErrorStore } from '@/stores/error.store'
 import env from '@/utils/env'
@@ -36,6 +37,7 @@ export function useAxios() {
     },
     (error: AxiosError) => {
       const errorStore = useErrorStore()
+      const toast = useToast()
       const status = error.response?.status
 
       // Handle 401 Unauthorized - redirect to login (don't store 401 errors)
@@ -44,27 +46,17 @@ export function useAxios() {
         return Promise.reject(error)
       }
 
-      // Map HTTP status codes to error page routes
-      const errorPageRoutes: Record<number, string> = {
-        403: '/errors/403',
-        404: '/errors/404',
-        500: '/errors/500',
-        503: '/errors/503',
-      }
-
-      // Handle HTTP errors that should redirect to error pages
-      if (status && errorPageRoutes[status]) {
-        errorStore.setApiError(error)
-        router.push({ name: errorPageRoutes[status] as any })
-        return Promise.reject(error)
-      }
-
-      // Store other errors in error store
+      // Store error in error store
       errorStore.setApiError(error)
 
       // Show toast notifications for specific error types
-      if (status === 422) {
-        useToast().showError('Validation error')
+      if (status === 403) {
+        toast.showError('You are not authorized to access this page')
+      } else if (status === 422) {
+        toast.showError('Validation error')
+      } else if (status === 500) {
+        const message = error.response?.data?.message || 'Internal server error'
+        toast.showError(message)
       }
 
       return Promise.reject(error)
@@ -77,11 +69,10 @@ export function useAxios() {
 
   function handleUnauthorized(_error: AxiosError) {
     const currentRoute = router.currentRoute.value
-    const requiresAuth = currentRoute.meta.auth === true
+    const isLoginPage = currentRoute.path === RouterPath.LOGIN
 
-    // Only redirect if the current route requires authentication
-    // Routes with meta.auth === undefined or false are public and shouldn't redirect
-    if (requiresAuth) {
+    // Only redirect if not already on login page
+    if (!isLoginPage) {
       router.push({
         path: RouterPath.LOGIN as string,
         query: { redirect: currentRoute.fullPath },

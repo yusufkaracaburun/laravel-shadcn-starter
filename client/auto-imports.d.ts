@@ -73,14 +73,17 @@ declare global {
   const useAuth: typeof import('./src/composables/use-auth').useAuth
   const useAuthStore: typeof import('./src/stores/auth.store').useAuthStore
   const useAxios: typeof import('./src/composables/use-axios').useAxios
+  const useCompanies: typeof import('./src/composables/use-companies').useCompanies
   const useCssModule: typeof import('vue').useCssModule
   const useCssVars: typeof import('vue').useCssVars
   const useEcho: typeof import('./src/composables/use-echo').useEcho
   const useErrorStore: typeof import('./src/stores/error.store').useErrorStore
   const useId: typeof import('vue').useId
+  const useItems: typeof import('./src/composables/use-items').useItems
   const useKanban: typeof import('./src/composables/use-kanban').useKanban
   const useLink: typeof import('vue-router').useLink
   const useModel: typeof import('vue').useModel
+  const useProjects: typeof import('./src/composables/use-projects').useProjects
   const useReverbNotifications: typeof import('./src/composables/use-reverb-notifications').useReverbNotifications
   const useRoute: typeof import('vue-router').useRoute
   const useRouteHelper: typeof import('./src/composables/use-route-helper').useRouteHelper
