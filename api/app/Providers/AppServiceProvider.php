@@ -138,7 +138,9 @@ final class AppServiceProvider extends ServiceProvider
     {
         RateLimiter::for('login-link', fn (Request $request): Limit => Limit::perMinute((int) config('login-link.rate_limit_attempts', 1))->by($request->email ?? $request->ip()));
 
-        RateLimiter::for('api', fn (Request $request): Limit => Limit::perMinute(60)->by($request->user()?->id ?: $request->ip()));
+        // Disable rate limiting in local environment for testing
+        $apiLimit = app()->isLocal() ? 10000 : 60;
+        RateLimiter::for('api', fn (Request $request): Limit => Limit::perMinute($apiLimit)->by($request->user()?->id ?: $request->ip()));
     }
 
     /**
