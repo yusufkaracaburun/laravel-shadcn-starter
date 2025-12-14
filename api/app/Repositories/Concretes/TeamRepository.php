@@ -106,6 +106,11 @@ final class TeamRepository extends QueryableRepository implements TeamRepository
         // Set user_id
         $data['user_id'] = $userId;
 
+        // Default personal_team to false if not provided
+        if (! isset($data['personal_team'])) {
+            $data['personal_team'] = false;
+        }
+
         return Team::query()->create($data);
     }
 

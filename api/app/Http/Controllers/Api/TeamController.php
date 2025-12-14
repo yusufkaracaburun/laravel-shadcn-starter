@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\StoreTeamRequest;
 use App\Http\Requests\TeamIndexRequest;
 use App\Http\Requests\UpdateTeamRequest;
+use Spatie\Permission\PermissionRegistrar;
 use App\Helpers\Cache\CacheInvalidationService;
 use App\Services\Contracts\TeamServiceInterface;
 use App\Http\Controllers\Concerns\UsesQueryBuilder;
@@ -66,10 +67,19 @@ final class TeamController extends Controller
 
         $currentUser->refresh();
 
-        // Policy's before() method handles super-admin, view() handles regular users
-        $this->authorize('view', $team);
+        // Check if user is super admin
+        $isSuperAdmin = $this->isSuperAdmin($currentUser);
 
-        $teamResource = $this->teamService->findById($team->id, $currentUser->id);
+        if ($isSuperAdmin) {
+            // Super admin can access any team - pass null to skip user filtering
+            $teamResource = $this->teamService->findById($team->id);
+        } else {
+            // For regular users, findById will throw 404 if team doesn't belong to user
+            // This matches the expected behavior where teams not belonging to user return 404
+            $teamResource = $this->teamService->findById($team->id, $currentUser->id);
+            // After finding, check if user has permission to view (for teams they belong to)
+            $this->authorize('view', $team);
+        }
 
         return ApiResponse::success($teamResource);
     }
@@ -115,11 +125,17 @@ final class TeamController extends Controller
         $currentUser = Auth::user();
         $currentUser->refresh();
 
-        // Policy's before() method handles super-admin, update() handles regular users
-        $this->authorize('update', $team);
+        // Check if user is super admin
+        $isSuperAdmin = $this->isSuperAdmin($currentUser);
 
-        // Check if team belongs to user (this will throw 404 if not found)
-        $this->teamService->findById($team->id, $currentUser->id);
+        if ($isSuperAdmin) {
+            // Super admin can update any team - skip authorization and user filtering
+        } else {
+            // For regular users, check authorization first
+            $this->authorize('update', $team);
+            // Then verify team belongs to user (this will throw 404 if not found)
+            $this->teamService->findById($team->id, $currentUser->id);
+        }
 
         $validated = $request->validated();
 
@@ -143,11 +159,17 @@ final class TeamController extends Controller
         $currentUser = Auth::user();
         $currentUser->refresh();
 
-        // Policy's before() method handles super-admin, delete() handles regular users
-        $this->authorize('delete', $team);
+        // Check if user is super admin
+        $isSuperAdmin = $this->isSuperAdmin($currentUser);
 
-        // Check if team belongs to user
-        $this->teamService->findById($team->id, $currentUser->id);
+        if ($isSuperAdmin) {
+            // Super admin can delete any team - skip authorization and user filtering
+        } else {
+            // For regular users, check authorization first
+            $this->authorize('delete', $team);
+            // Then verify team belongs to user (this will throw 404 if not found)
+            $this->teamService->findById($team->id, $currentUser->id);
+        }
 
         // If this was the current team for any user, clear it
         if ($currentUser->current_team_id === $team->id) {
@@ -203,5 +225,31 @@ final class TeamController extends Controller
             'user' => $user,
             'current_team' => $user->currentTeam,
         ]);
+    }
+
+    /**
+     * Check if user is a super admin.
+     */
+    private function isSuperAdmin(User $user): bool
+    {
+        // Use the exact same logic as BasePolicy::before() to ensure consistency
+        $permissionRegistrar = resolve(PermissionRegistrar::class);
+        $originalTeamId = $permissionRegistrar->getPermissionsTeamId();
+        $permissionRegistrar->setPermissionsTeamId(null); // Check global roles
+
+        // Clear permission cache and roles relation to ensure fresh check
+        $permissionRegistrar->forgetCachedPermissions();
+
+        if (! $user->relationLoaded('roles')) {
+            $user->load('roles');
+        }
+
+        $user->unsetRelation('roles');
+        $isSuperAdmin = $user->hasRole('super-admin');
+
+        // Restore original team context
+        $permissionRegistrar->setPermissionsTeamId($originalTeamId);
+
+        return $isSuperAdmin;
     }
 }

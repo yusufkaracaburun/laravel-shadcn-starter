@@ -78,6 +78,14 @@ final class AuthServiceProvider extends ServiceProvider
             $originalTeamId = $permissionRegistrar->getPermissionsTeamId();
             $permissionRegistrar->setPermissionsTeamId(null); // Check global roles
 
+            // Clear permission cache and roles relation to ensure fresh check
+            $permissionRegistrar->forgetCachedPermissions();
+
+            if (! $user->relationLoaded('roles')) {
+                $user->load('roles');
+            }
+
+            $user->unsetRelation('roles');
             $isSuperAdmin = $user->hasRole('super-admin');
 
             // Restore original team context
