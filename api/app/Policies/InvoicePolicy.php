@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace App\Policies;
 
-use App\Models\Item;
 use App\Models\User;
+use App\Models\Invoice;
 use Illuminate\Auth\Access\Response;
 
 /**
- * Policy for Item model authorization.
+ * Policy for Invoice model authorization.
  *
  * All permission checks are automatically team-scoped via TeamResolver,
  * which uses the user's current_team_id to resolve the team context.
  */
-final class ItemPolicy extends BasePolicy
+final class InvoicePolicy extends BasePolicy
 {
     /**
      * Determine whether the user can view any models.
@@ -22,19 +22,19 @@ final class ItemPolicy extends BasePolicy
      */
     public function viewAny(User $user): Response
     {
-        return $user->can('items.view')
+        return $user->can('invoices.view')
             ? Response::allow()
-            : Response::deny('You do not have permission to view items.');
+            : Response::deny('You do not have permission to view invoices.');
     }
 
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, Item $model): Response
+    public function view(User $user, Invoice $model): Response
     {
-        return $user->can('items.view')
+        return $user->can('invoices.view')
             ? Response::allow()
-            : Response::deny('You do not have permission to view this item.');
+            : Response::deny('You do not have permission to view this invoice.');
     }
 
     /**
@@ -42,28 +42,28 @@ final class ItemPolicy extends BasePolicy
      */
     public function create(User $user): Response
     {
-        return $user->can('items.create')
+        return $user->can('invoices.create')
             ? Response::allow()
-            : Response::deny('You do not have permission to create items.');
+            : Response::deny('You do not have permission to create invoices.');
     }
 
     /**
      * Determine whether the user can update the model.
      */
-    public function update(User $user, Item $model): Response
+    public function update(User $user, Invoice $model): Response
     {
-        return $user->can('items.update')
+        return $user->can('invoices.update')
             ? Response::allow()
-            : Response::deny('You do not have permission to update this item.');
+            : Response::deny('You do not have permission to update this invoice.');
     }
 
     /**
      * Determine whether the user can delete the model.
      */
-    public function delete(User $user, Item $model): Response
+    public function delete(User $user, Invoice $model): Response
     {
-        return $user->can('items.delete')
+        return $user->can('invoices.delete')
             ? Response::allow()
-            : Response::deny('You do not have permission to delete this item.');
+            : Response::deny('You do not have permission to delete this invoice.');
     }
 }

@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace App\Models;
 
 use Illuminate\Support\Carbon;
+use App\Observers\CompanyObserver;
 use Database\Factories\CompanyFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 
 /**
  * @property int $id
@@ -22,6 +24,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property Carbon|null $updated_at
  * @property-read Team|null $team
  */
+#[ObservedBy([CompanyObserver::class])]
 final class Company extends BaseModel
 {
     /** @use HasFactory<CompanyFactory> */

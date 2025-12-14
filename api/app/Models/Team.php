@@ -4,11 +4,14 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Observers\TeamObserver;
 use Database\Factories\TeamFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
+#[ObservedBy([TeamObserver::class])]
 final class Team extends BaseModel
 {
     /** @use HasFactory<TeamFactory> */

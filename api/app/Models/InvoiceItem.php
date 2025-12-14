@@ -60,7 +60,7 @@ final class InvoiceItem extends BaseModel
         return [
             'quantity' => 'decimal:5',
             'unit_price' => MoneyDecimalCast::class,
-            'vat_rate' => 'decimal:5',
+            'vat_rate' => 'decimal:0',
             'total_excl_vat' => MoneyDecimalCast::class,
             'total_vat' => MoneyDecimalCast::class,
             'total_incl_vat' => MoneyDecimalCast::class,

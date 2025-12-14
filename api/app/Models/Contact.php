@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace App\Models;
 
+use App\Observers\ContactObserver;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
@@ -16,6 +18,7 @@ use Illuminate\Database\Eloquent\Relations\HasManyThrough;
  *
  * Represents a contact person associated with customers.
  */
+#[ObservedBy([ContactObserver::class])]
 final class Contact extends BaseModel
 {
     /**

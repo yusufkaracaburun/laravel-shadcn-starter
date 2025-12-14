@@ -19,7 +19,7 @@ final class Item extends BaseModel
 
     protected $casts = [
         'unit_price' => MoneyDecimalCast::class,
-        'vat_rate' => 'decimal:2',
+        'vat_rate' => 'decimal:0',
     ];
 
     /**

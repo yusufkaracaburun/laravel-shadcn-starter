@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace App\Models;
 
 use Illuminate\Support\Carbon;
+use App\Observers\ProjectObserver;
 use Database\Factories\ProjectFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 
 /**
  * @property int $id
@@ -23,6 +25,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property Carbon|null $updated_at
  * @property-read Team|null $team
  */
+#[ObservedBy([ProjectObserver::class])]
 final class Project extends BaseModel
 {
     /** @use HasFactory<ProjectFactory> */
