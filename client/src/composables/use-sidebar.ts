@@ -17,6 +17,7 @@ import {
   Settings,
   SquareUserRound,
   User,
+  UserCircle,
   Users,
   Wrench,
 } from 'lucide-vue-next'
@@ -49,6 +50,11 @@ export function useSidebar() {
           title: 'Companies',
           url: '/companies',
           icon: Building2,
+        },
+        {
+          title: 'Customers',
+          url: '/customers',
+          icon: UserCircle,
         },
         {
           title: 'Projects',

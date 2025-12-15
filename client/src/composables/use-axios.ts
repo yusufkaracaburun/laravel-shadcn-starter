@@ -3,8 +3,8 @@ import type { AxiosError, InternalAxiosRequestConfig } from 'axios'
 import axios from 'axios'
 import { useRouter } from 'vue-router'
 
-import { RouterPath } from '@/constants/route-path'
 import { useToast } from '@/composables/use-toast'
+import { RouterPath } from '@/constants/route-path'
 import { getCookieValue } from '@/plugins/cookie/setup'
 import { useErrorStore } from '@/stores/error.store'
 import env from '@/utils/env'
@@ -87,8 +87,11 @@ export function useAxios() {
 }
 
 function initializeAxios() {
+  const isDevelopment = import.meta.env.DEV
+  const baseURL = isDevelopment ? '' : env.VITE_SERVER_API_URL
+
   return axios.create({
-    baseURL: env.VITE_SERVER_API_URL,
+    baseURL,
     timeout: env.VITE_SERVER_API_TIMEOUT,
     withCredentials: true,
     headers: {
