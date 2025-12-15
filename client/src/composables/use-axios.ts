@@ -87,8 +87,8 @@ export function useAxios() {
 }
 
 function initializeAxios() {
-  const isDevelopment = import.meta.env.DEV
-  const baseURL = isDevelopment ? '' : env.VITE_SERVER_API_URL
+  const isLocal = env.VITE_APP_ENV === 'local'
+  const baseURL = isLocal ? '' : env.VITE_SERVER_API_URL
 
   return axios.create({
     baseURL,

@@ -47,6 +47,7 @@ vi.mock('@/composables/use-toast', () => ({
 // Mock env
 vi.mock('@/utils/env', () => ({
   default: {
+    VITE_APP_ENV: 'test',
     VITE_SERVER_API_URL: 'https://api.example.com',
     VITE_SERVER_API_TIMEOUT: 10000,
   },
