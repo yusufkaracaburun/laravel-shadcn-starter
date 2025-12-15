@@ -15,7 +15,15 @@ interface DataTableRowActionsProps {
   row: Row<Customer>
 }
 const props = defineProps<DataTableRowActionsProps>()
-const customer = computed(() => customerSchema.parse(props.row.original))
+const customer = computed(() => {
+  const result = customerSchema.safeParse(props.row.original)
+  if (result.success) {
+    return result.data
+  }
+  // If validation fails, return the original data as-is (type assertion)
+  // This handles cases where backend returns slightly different structure
+  return props.row.original as Customer
+})
 const router = useRouter()
 
 const showComponent = shallowRef<Component | null>(null)
