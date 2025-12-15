@@ -1,9 +1,11 @@
 <script lang="ts" setup>
 import { toTypedSchema } from '@vee-validate/zod'
+import { Building2, User } from 'lucide-vue-next'
 import { useForm } from 'vee-validate'
 import { z } from 'zod'
 
 import { FormField } from '@/components/ui/form'
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { useCustomers } from '@/composables/use-customers'
 
 import type { Customer } from '../data/schema'
@@ -116,25 +118,54 @@ const onSubmit = handleSubmit(async (formValues) => {
 
 <template>
   <form class="space-y-4" @submit="onSubmit">
-    <FormField v-slot="{ componentField }" name="type" :validate-on-blur="!isFieldDirty">
-      <UiFormItem>
+    <FormField v-slot="{ componentField }" type="radio" name="type" :validate-on-blur="!isFieldDirty">
+      <UiFormItem class="space-y-1">
         <UiFormLabel>Customer Type</UiFormLabel>
-        <UiFormControl>
-          <UiSelect v-bind="componentField">
-            <UiSelectTrigger>
-              <UiSelectValue placeholder="Select customer type" />
-            </UiSelectTrigger>
-            <UiSelectContent>
-              <UiSelectItem value="private">
-                Private
-              </UiSelectItem>
-              <UiSelectItem value="business">
-                Business
-              </UiSelectItem>
-            </UiSelectContent>
-          </UiSelect>
-        </UiFormControl>
         <UiFormMessage />
+        <RadioGroup class="grid grid-cols-2 gap-4 pt-2" v-bind="componentField">
+          <UiFormItem class="h-full">
+            <UiFormLabel class="[&:has([data-state=checked])>div]:border-primary flex flex-col cursor-pointer h-full">
+              <UiFormControl>
+                <RadioGroupItem value="private" class="sr-only" />
+              </UiFormControl>
+              <div
+                class="p-4 border-2 rounded-md border-muted hover:border-accent transition-colors h-full flex items-center justify-center">
+                <div class="flex flex-col items-center gap-3">
+                  <User class="size-8 text-muted-foreground" />
+                  <div class="text-center">
+                    <div class="font-semibold text-foreground">
+                      Private
+                    </div>
+                    <div class="text-xs font-normal text-muted-foreground mt-1">
+                      Individual customer
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </UiFormLabel>
+          </UiFormItem>
+          <UiFormItem class="h-full">
+            <UiFormLabel class="[&:has([data-state=checked])>div]:border-primary flex flex-col cursor-pointer h-full">
+              <UiFormControl>
+                <RadioGroupItem value="business" class="sr-only" />
+              </UiFormControl>
+              <div
+                class="p-4 border-2 rounded-md border-muted hover:border-accent transition-colors h-full flex items-center justify-center">
+                <div class="flex flex-col items-center gap-3">
+                  <Building2 class="size-8 text-muted-foreground" />
+                  <div class="text-center">
+                    <div class="font-semibold text-foreground">
+                      Business
+                    </div>
+                    <div class="text-xs font-normal text-muted-foreground mt-1">
+                      Company or organization
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </UiFormLabel>
+          </UiFormItem>
+        </RadioGroup>
       </UiFormItem>
     </FormField>
 
@@ -255,4 +286,3 @@ const onSubmit = handleSubmit(async (formValues) => {
     </UiButton>
   </form>
 </template>
-
