@@ -23,4 +23,3 @@ export const projectSchema = z.object({
 })
 
 export type Project = z.infer<typeof projectSchema>
-

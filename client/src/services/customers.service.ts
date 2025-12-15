@@ -102,7 +102,9 @@ export interface PaginatedCustomersResponse {
  * @param sorting - Array of sorting objects from TanStack Table
  * @returns Sort string for Spatie QueryBuilder (e.g., "name" or "-name" or "name,-email")
  */
-function convertSortingToQueryString(sorting: Array<{ id: string, desc: boolean }>): string | undefined {
+function convertSortingToQueryString(
+  sorting: Array<{ id: string; desc: boolean }>,
+): string | undefined {
   if (!sorting || sorting.length === 0) {
     return undefined
   }
@@ -147,7 +149,7 @@ export interface CustomerFilters {
 export function useGetCustomersQuery(
   page: MaybeRef<number> = 1,
   pageSize: MaybeRef<number> = 15,
-  sorting: MaybeRef<Array<{ id: string, desc: boolean }>> = [],
+  sorting: MaybeRef<Array<{ id: string; desc: boolean }>> = [],
   filters: MaybeRef<CustomerFilters> = {},
   include: MaybeRef<string[]> = [],
 ) {
@@ -331,7 +333,11 @@ export function useUpdateCustomerMutation() {
   const { axiosInstance } = useAxios()
   const queryClient = useQueryClient()
 
-  return useMutation<IResponse<Customer>, AxiosError, { customerId: number, data: UpdateCustomerRequest }>({
+  return useMutation<
+    IResponse<Customer>,
+    AxiosError,
+    { customerId: number; data: UpdateCustomerRequest }
+  >({
     mutationFn: async ({ customerId, data }): Promise<IResponse<Customer>> => {
       const response = await axiosInstance.put(`/api/customers/${customerId}`, data)
       return response.data
@@ -363,4 +369,3 @@ export function useDeleteCustomerMutation() {
     },
   })
 }
-

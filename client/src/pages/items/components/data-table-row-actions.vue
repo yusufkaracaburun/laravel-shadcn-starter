@@ -58,10 +58,7 @@ const isOpen = ref(false)
           <FilePenLine class="mr-2 size-4" />
           Edit
         </UiDropdownMenuItem>
-        <UiDropdownMenuItem
-          class="text-destructive"
-          @click="handleSelect('delete')"
-        >
+        <UiDropdownMenuItem class="text-destructive" @click="handleSelect('delete')">
           <Trash2 class="mr-2 size-4" />
           Delete
         </UiDropdownMenuItem>
@@ -72,14 +69,23 @@ const isOpen = ref(false)
       <ItemResourceDialog
         v-if="showComponent === ItemResourceDialog"
         :item="item"
-        @close="() => { isOpen = false; showComponent = null }"
+        @close="
+          () => {
+            isOpen = false
+            showComponent = null
+          }
+        "
       />
       <ItemDelete
         v-else-if="showComponent === ItemDelete"
         :item="item"
-        @close="() => { isOpen = false; showComponent = null }"
+        @close="
+          () => {
+            isOpen = false
+            showComponent = null
+          }
+        "
       />
     </UiDialogContent>
   </UiDialog>
 </template>
-

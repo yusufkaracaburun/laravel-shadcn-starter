@@ -4,7 +4,16 @@ meta:
 </route>
 
 <script setup lang="ts">
-import { ArrowLeft, Building2, Calendar, FilePenLine, Mail, Phone, Trash2, Users } from 'lucide-vue-next'
+import {
+  ArrowLeft,
+  Building2,
+  Calendar,
+  FilePenLine,
+  Mail,
+  Phone,
+  Trash2,
+  Users,
+} from 'lucide-vue-next'
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
@@ -16,13 +25,7 @@ import Loading from '@/components/loading.vue'
 import Badge from '@/components/ui/badge/Badge.vue'
 import { Button } from '@/components/ui/button'
 import { StatusBadge } from '@/components/ui/status-badge'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { useGetCompanyQuery } from '@/services/companies.service'
 import { industries, employeeSizes, statuses } from './data/data'
 
@@ -40,8 +43,7 @@ const company = computed<Company | null>(() => companyResponse.value?.data ?? nu
 
 // Format date
 function formatDate(dateString: string | null): string {
-  if (!dateString)
-    return '—'
+  if (!dateString) return '—'
   return new Date(dateString).toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'long',
@@ -51,8 +53,7 @@ function formatDate(dateString: string | null): string {
 
 // Format datetime
 function formatDateTime(dateString: string | null): string {
-  if (!dateString)
-    return '—'
+  if (!dateString) return '—'
   return new Date(dateString).toLocaleString('en-US', {
     year: 'numeric',
     month: 'long',
@@ -97,8 +98,7 @@ function handleDeleteClose() {
 
 // Check if error is 404
 const isNotFound = computed(() => {
-  if (!isError.value || !error.value)
-    return false
+  if (!isError.value || !error.value) return false
   return (error.value as any)?.response?.status === 404
 })
 </script>
@@ -144,9 +144,7 @@ const isNotFound = computed(() => {
           subtitle="Error Loading Company"
           error="An error occurred while loading the company information. Please try again."
         />
-        <Button class="mt-4" @click="refetch()">
-          Retry
-        </Button>
+        <Button class="mt-4" @click="refetch()"> Retry </Button>
       </div>
     </div>
 
@@ -172,10 +170,7 @@ const isNotFound = computed(() => {
                   :class="getStatusInfo(company.status)!.color"
                   variant="secondary"
                 >
-                  <component
-                    :is="getStatusInfo(company.status)!.icon"
-                    class="mr-1 size-3"
-                  />
+                  <component :is="getStatusInfo(company.status)!.icon" class="mr-1 size-3" />
                   {{ getStatusInfo(company.status)!.label }}
                 </Badge>
               </div>
@@ -194,9 +189,7 @@ const isNotFound = computed(() => {
           </CardHeader>
           <CardContent class="space-y-4">
             <div>
-              <div class="text-sm font-medium text-muted-foreground mb-1">
-                Name
-              </div>
+              <div class="text-sm font-medium text-muted-foreground mb-1">Name</div>
               <div class="text-base">
                 {{ company.name }}
               </div>
@@ -220,9 +213,7 @@ const isNotFound = computed(() => {
               </div>
             </div>
             <div>
-              <div class="text-sm font-medium text-muted-foreground mb-1">
-                Industry
-              </div>
+              <div class="text-sm font-medium text-muted-foreground mb-1">Industry</div>
               <div class="text-base">
                 <Badge variant="outline">
                   {{ getIndustryLabel(company.industry) }}
@@ -230,9 +221,7 @@ const isNotFound = computed(() => {
               </div>
             </div>
             <div>
-              <div class="text-sm font-medium text-muted-foreground mb-1">
-                Status
-              </div>
+              <div class="text-sm font-medium text-muted-foreground mb-1">Status</div>
               <div class="text-base">
                 <StatusBadge
                   v-if="getStatusInfo(company.status)"
@@ -281,9 +270,7 @@ const isNotFound = computed(() => {
               </div>
             </div>
             <div v-if="company.team_id">
-              <div class="text-sm font-medium text-muted-foreground mb-1">
-                Team ID
-              </div>
+              <div class="text-sm font-medium text-muted-foreground mb-1">Team ID</div>
               <div class="text-base">
                 {{ company.team_id }}
               </div>

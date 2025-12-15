@@ -103,4 +103,3 @@ export class CookieHandler {
     this.cookies = cookies
   }
 }
-

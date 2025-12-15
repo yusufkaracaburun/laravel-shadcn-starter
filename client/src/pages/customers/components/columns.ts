@@ -16,7 +16,8 @@ export const columns: ColumnDef<Customer>[] = [
   SelectColumn as ColumnDef<Customer>,
   {
     accessorKey: 'number',
-    header: ({ column }) => h(DataTableColumnHeader<Customer>, { column, title: 'Customer Number' }),
+    header: ({ column }) =>
+      h(DataTableColumnHeader<Customer>, { column, title: 'Customer Number' }),
     cell: ({ row }) => {
       const number = row.getValue('number') as string | number | null | undefined
       return h('div', { class: 'w-24' }, number?.toString() || '-')
@@ -39,17 +40,20 @@ export const columns: ColumnDef<Customer>[] = [
       return h(
         'button',
         {
-          class: 'flex items-center gap-2 max-w-[500px] truncate font-medium text-left hover:underline cursor-pointer focus:outline-none focus:underline',
+          class:
+            'flex items-center gap-2 max-w-[500px] truncate font-medium text-left hover:underline cursor-pointer focus:outline-none focus:underline',
           onClick: () => {
             router.push({ name: '/customers/[id]', params: { id: customer.id.toString() } })
           },
         },
         [
-          h('div', {
-            class: 'flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-muted',
-          }, [
-            h(typeIcon, { class: 'h-4 w-4 text-muted-foreground' }),
-          ]),
+          h(
+            'div',
+            {
+              class: 'flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-muted',
+            },
+            [h(typeIcon, { class: 'h-4 w-4 text-muted-foreground' })],
+          ),
           h('span', { class: 'truncate' }, name),
         ],
       )
@@ -60,7 +64,8 @@ export const columns: ColumnDef<Customer>[] = [
   },
   {
     accessorKey: 'primary_contact',
-    header: ({ column }) => h(DataTableColumnHeader<Customer>, { column, title: 'Primary Contact' }),
+    header: ({ column }) =>
+      h(DataTableColumnHeader<Customer>, { column, title: 'Primary Contact' }),
     cell: ({ row }) => {
       const customer = row.original
       const primaryContact = customer.primary_contact
@@ -81,7 +86,8 @@ export const columns: ColumnDef<Customer>[] = [
       const emailStr = email || ''
       return h('div', { class: 'flex items-center max-w-[200px]' }, [
         h('span', { class: 'truncate text-muted-foreground' }, emailStr || '-'),
-        emailStr && h(Copy, { class: 'ml-2 flex-shrink-0', size: 'sm', variant: 'ghost', content: emailStr }),
+        emailStr &&
+          h(Copy, { class: 'ml-2 flex-shrink-0', size: 'sm', variant: 'ghost', content: emailStr }),
       ])
     },
     enableSorting: true,
@@ -107,7 +113,11 @@ export const columns: ColumnDef<Customer>[] = [
       const [datePart, timePart] = dateValue.split(' ')
       const [day, month, year] = datePart.split('-')
       const date = new Date(`${year}-${month}-${day} ${timePart}`)
-      return h('div', { class: 'w-[100px]' }, date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }))
+      return h(
+        'div',
+        { class: 'w-[100px]' },
+        date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }),
+      )
     },
     enableSorting: true,
   },

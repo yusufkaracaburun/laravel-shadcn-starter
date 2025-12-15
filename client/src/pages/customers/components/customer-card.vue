@@ -53,7 +53,10 @@ function handleSelect(command: TCommand) {
 </script>
 
 <template>
-  <Card class="hover:shadow-md transition-shadow cursor-pointer" @click="router.push({ name: '/customers/[id]', params: { id: customer.id.toString() } })">
+  <Card
+    class="hover:shadow-md transition-shadow cursor-pointer"
+    @click="router.push({ name: '/customers/[id]', params: { id: customer.id.toString() } })"
+  >
     <CardHeader>
       <div class="flex items-start justify-between">
         <div class="flex items-center gap-2">
@@ -70,16 +73,9 @@ function handleSelect(command: TCommand) {
             </UiButton>
           </UiDropdownMenuTrigger>
           <UiDropdownMenuContent align="end" @click.stop>
-            <UiDropdownMenuItem @click.stop="handleSelect('view')">
-              View
-            </UiDropdownMenuItem>
-            <UiDropdownMenuItem @click.stop="handleSelect('edit')">
-              Edit
-            </UiDropdownMenuItem>
-            <UiDropdownMenuItem
-              class="text-destructive"
-              @click.stop="handleSelect('delete')"
-            >
+            <UiDropdownMenuItem @click.stop="handleSelect('view')"> View </UiDropdownMenuItem>
+            <UiDropdownMenuItem @click.stop="handleSelect('edit')"> Edit </UiDropdownMenuItem>
+            <UiDropdownMenuItem class="text-destructive" @click.stop="handleSelect('delete')">
               Delete
             </UiDropdownMenuItem>
           </UiDropdownMenuContent>
@@ -107,7 +103,9 @@ function handleSelect(command: TCommand) {
         </div>
         <div v-if="customer.primary_contact" class="flex items-center justify-between">
           <span class="text-sm text-muted-foreground">Primary Contact</span>
-          <span class="text-sm font-medium truncate max-w-[150px]">{{ customer.primary_contact.name || customer.primary_contact.email }}</span>
+          <span class="text-sm font-medium truncate max-w-[150px]">{{
+            customer.primary_contact.name || customer.primary_contact.email
+          }}</span>
         </div>
       </div>
     </CardContent>
@@ -117,13 +115,8 @@ function handleSelect(command: TCommand) {
 
     <UiDialog v-model:open="isDialogOpen">
       <UiDialogContent v-if="showComponent" class="sm:max-w-[425px]">
-        <component
-          :is="showComponent"
-          :customer="customer"
-          @close="isDialogOpen = false"
-        />
+        <component :is="showComponent" :customer="customer" @close="isDialogOpen = false" />
       </UiDialogContent>
     </UiDialog>
   </Card>
 </template>
-

@@ -42,8 +42,7 @@ function getStatusColor(status: string, type: StatusType): string {
 }
 
 function getStatusLabel(status: string, customLabel?: string): string {
-  if (customLabel)
-    return customLabel
+  if (customLabel) return customLabel
   return status.charAt(0).toUpperCase() + status.slice(1)
 }
 
@@ -61,4 +60,3 @@ const statusLabel = computed(() => getStatusLabel(props.status, props.label))
     <span>{{ statusLabel }}</span>
   </Badge>
 </template>
-

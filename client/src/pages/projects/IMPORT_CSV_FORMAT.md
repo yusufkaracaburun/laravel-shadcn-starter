@@ -30,10 +30,12 @@ You can also include these **optional** columns:
 All dates must be written as: **YYYY-MM-DD**
 
 ✅ **Correct formats:**
+
 - `2024-01-15`
 - `2024-12-31`
 
 ❌ **Incorrect formats:**
+
 - `01/15/2024` (wrong format)
 - `2024-1-5` (missing zeros)
 

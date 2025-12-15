@@ -104,7 +104,11 @@ const formatDate = (dateString: string) => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            <TableRow v-for="report in reports" :key="report.id" data-testid="reports-content_report-row">
+            <TableRow
+              v-for="report in reports"
+              :key="report.id"
+              data-testid="reports-content_report-row"
+            >
               <TableCell class="font-medium">{{ report.name }}</TableCell>
               <TableCell>{{ report.type }}</TableCell>
               <TableCell>{{ formatDate(report.dateGenerated) }}</TableCell>
@@ -148,4 +152,3 @@ const formatDate = (dateString: string) => {
     </UiCardContent>
   </UiCard>
 </template>
-

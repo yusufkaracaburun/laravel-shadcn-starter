@@ -12,9 +12,8 @@ interface Props {
 const props = defineProps<Props>()
 
 const selectedCustomer = computed(() => {
-  if (!props.selectedCustomerId)
-    return null
-  return props.customers.find(c => c.id === props.selectedCustomerId) || null
+  if (!props.selectedCustomerId) return null
+  return props.customers.find((c) => c.id === props.selectedCustomerId) || null
 })
 
 const isOpen = ref(false)
@@ -49,16 +48,23 @@ function handleCustomerCreated() {
   <UiDialog v-model:open="isOpen">
     <UiDropdownMenu>
       <UiDropdownMenuTrigger as-child>
-        <UiButton variant="outline"
+        <UiButton
+          variant="outline"
           class="w-full justify-start h-12 px-3 data-[state=open]:bg-accent data-[state=open]:text-accent-foreground"
           :class="{
             'text-muted-foreground': !selectedCustomer,
-          }">
-          <div v-if="selectedCustomer"
-            class="flex items-center justify-center rounded-lg aspect-square size-8 bg-primary text-primary-foreground shrink-0 mr-2">
+          }"
+        >
+          <div
+            v-if="selectedCustomer"
+            class="flex items-center justify-center rounded-lg aspect-square size-8 bg-primary text-primary-foreground shrink-0 mr-2"
+          >
             <component :is="getCustomerIcon(selectedCustomer)" class="size-4" />
           </div>
-          <div v-else class="flex items-center justify-center rounded-lg aspect-square size-8 bg-muted shrink-0 mr-2">
+          <div
+            v-else
+            class="flex items-center justify-center rounded-lg aspect-square size-8 bg-muted shrink-0 mr-2"
+          >
             <User class="size-4 text-muted-foreground" />
           </div>
           <div class="grid flex-1 text-sm leading-tight text-left">
@@ -66,7 +72,10 @@ function handleCustomerCreated() {
               {{ selectedCustomer.name }}
             </span>
             <span v-else class="text-muted-foreground">Select a customer</span>
-            <span v-if="selectedCustomer?.type" class="text-xs truncate capitalize text-muted-foreground">
+            <span
+              v-if="selectedCustomer?.type"
+              class="text-xs truncate capitalize text-muted-foreground"
+            >
               {{ selectedCustomer.type }}
             </span>
           </div>
@@ -74,14 +83,18 @@ function handleCustomerCreated() {
         </UiButton>
       </UiDropdownMenuTrigger>
       <UiDropdownMenuContent
-        class="w-(--radix-dropdown-menu-trigger-width) min-w-75 rounded-lg max-h-[300px] overflow-y-auto" align="start"
-        :side-offset="4">
-        <UiDropdownMenuLabel class="text-xs text-muted-foreground">
-          Customers
-        </UiDropdownMenuLabel>
+        class="w-(--radix-dropdown-menu-trigger-width) min-w-75 rounded-lg max-h-[300px] overflow-y-auto"
+        align="start"
+        :side-offset="4"
+      >
+        <UiDropdownMenuLabel class="text-xs text-muted-foreground"> Customers </UiDropdownMenuLabel>
         <template v-if="customers.length > 0">
-          <UiDropdownMenuItem v-for="customer in customers" :key="customer.id" class="gap-2 p-2"
-            @click="handleSelect(customer)">
+          <UiDropdownMenuItem
+            v-for="customer in customers"
+            :key="customer.id"
+            class="gap-2 p-2"
+            @click="handleSelect(customer)"
+          >
             <div class="flex items-center justify-center border rounded-sm size-6 shrink-0">
               <component :is="getCustomerIcon(customer)" class="size-4 shrink-0" />
             </div>
@@ -91,6 +104,12 @@ function handleCustomerCreated() {
               </div>
               <div v-if="customer.type" class="text-xs text-muted-foreground capitalize">
                 {{ customer.type }}
+              </div>
+              <div
+                v-if="customer.primary_contact?.name"
+                class="text-xs text-muted-foreground truncate"
+              >
+                Contact: {{ customer.primary_contact.name }}
               </div>
             </div>
           </UiDropdownMenuItem>
@@ -105,9 +124,7 @@ function handleCustomerCreated() {
             <div class="flex items-center justify-center border rounded-md size-6 bg-background">
               <Plus class="size-4" />
             </div>
-            <div class="font-medium text-muted-foreground">
-              Add customer
-            </div>
+            <div class="font-medium text-muted-foreground">Add customer</div>
           </UiDropdownMenuItem>
         </UiDialogTrigger>
       </UiDropdownMenuContent>

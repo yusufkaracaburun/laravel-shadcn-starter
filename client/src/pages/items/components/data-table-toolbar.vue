@@ -22,8 +22,7 @@ interface DataTableToolbarProps {
 const props = defineProps<DataTableToolbarProps>()
 
 const isFiltered = computed(() => {
-  return props.table.getState().columnFilters.length > 0
-    || Object.keys(props.filters).length > 0
+  return props.table.getState().columnFilters.length > 0 || Object.keys(props.filters).length > 0
 })
 </script>
 
@@ -49,7 +48,12 @@ const isFiltered = computed(() => {
         v-if="isFiltered"
         variant="ghost"
         class="h-8 px-2 lg:px-3"
-        @click="() => { table.resetColumnFilters(); onClearFilters() }"
+        @click="
+          () => {
+            table.resetColumnFilters()
+            onClearFilters()
+          }
+        "
       >
         Reset
         <X class="size-4" />
@@ -58,4 +62,3 @@ const isFiltered = computed(() => {
     <DataTableViewOptions :table="table" />
   </div>
 </template>
-

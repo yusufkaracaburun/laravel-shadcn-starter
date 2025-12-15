@@ -67,4 +67,3 @@ test.describe('Logout', { tag: ['@api', '@auth', '@logout'] }, () => {
     expectUnauthenticated(response)
   })
 })
-

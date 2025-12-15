@@ -6,7 +6,12 @@ import { z } from 'zod'
 
 import { Button } from '@/components/ui/button'
 import { FormField } from '@/components/ui/form'
-import { InputGroup, InputGroupAddon, InputGroupInput, InputGroupText } from '@/components/ui/input-group'
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+  InputGroupText,
+} from '@/components/ui/input-group'
 import { Label } from '@/components/ui/label'
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
 
@@ -25,7 +30,8 @@ const emits = defineEmits(['save', 'cancel'])
 const formSchema = toTypedSchema(
   z.object({
     description: z.string().nullable().optional(),
-    quantity: z.number()
+    quantity: z
+      .number()
       .min(0.01, 'Quantity must be greater than zero')
       .refine((val) => {
         const decimalPlaces = (val.toString().split('.')[1] || '').length
@@ -39,8 +45,7 @@ const formSchema = toTypedSchema(
 
 // Extract unit_price value - handle both Money object and number
 function getUnitPriceValue(item: InvoiceItem | null): number {
-  if (!item?.unit_price)
-    return 0
+  if (!item?.unit_price) return 0
   if (typeof item.unit_price === 'object' && 'amount' in item.unit_price) {
     const amount = Number.parseFloat(item.unit_price.amount)
     return amount / 100
@@ -76,11 +81,7 @@ const { values, isFieldDirty, handleSubmit, isSubmitting, resetForm, setFieldVal
 // Calculate totals in real-time
 const calculatedTotals = computed(() => {
   const vatRate = Number.parseInt(values.vat_rate || '21')
-  return calculateItemTotals(
-    values.quantity || 0,
-    values.unit_price || 0,
-    vatRate,
-  )
+  return calculateItemTotals(values.quantity || 0, values.unit_price || 0, vatRate)
 })
 
 // Reset form when item changes
@@ -128,15 +129,34 @@ function onCancel() {
     <!-- Quantity & Unit, Unit Price & VAT Rate - One Row -->
     <div class="grid grid-cols-1 gap-4 md:grid-cols-2 md:items-start">
       <!-- Quantity and Unit - Input Group -->
-      <FormField v-slot="{ componentField: quantityField }" name="quantity" :validate-on-blur="!isFieldDirty">
+      <FormField
+        v-slot="{ componentField: quantityField }"
+        name="quantity"
+        :validate-on-blur="!isFieldDirty"
+      >
         <UiFormItem>
           <UiFormLabel>Quantity & Unit</UiFormLabel>
           <UiFormControl>
             <InputGroup>
-              <InputGroupInput type="number" step="0.01" min="0.01" placeholder="1,00" v-bind="quantityField" />
-              <FormField v-slot="{ componentField: unitField }" name="unit" :validate-on-blur="!isFieldDirty">
+              <InputGroupInput
+                type="number"
+                step="0.01"
+                min="0.01"
+                placeholder="1,00"
+                v-bind="quantityField"
+              />
+              <FormField
+                v-slot="{ componentField: unitField }"
+                name="unit"
+                :validate-on-blur="!isFieldDirty"
+              >
                 <InputGroupAddon align="inline-end">
-                  <InputGroupInput type="text" placeholder="pcs" v-bind="unitField" class="w-20 text-center" />
+                  <InputGroupInput
+                    type="text"
+                    placeholder="pcs"
+                    v-bind="unitField"
+                    class="w-20 text-center"
+                  />
                 </InputGroupAddon>
               </FormField>
             </InputGroup>
@@ -153,7 +173,11 @@ function onCancel() {
       </FormField>
 
       <!-- Unit Price and VAT Rate - Input Group -->
-      <FormField v-slot="{ componentField: priceField }" name="unit_price" :validate-on-blur="!isFieldDirty">
+      <FormField
+        v-slot="{ componentField: priceField }"
+        name="unit_price"
+        :validate-on-blur="!isFieldDirty"
+      >
         <UiFormItem>
           <UiFormLabel>Unit Price & VAT Rate</UiFormLabel>
           <UiFormControl>
@@ -161,17 +185,40 @@ function onCancel() {
               <InputGroupAddon>
                 <InputGroupText>€</InputGroupText>
               </InputGroupAddon>
-              <InputGroupInput type="number" step="0.01" min="0" placeholder="0,00" v-bind="priceField" />
-              <FormField v-slot="{ componentField: vatField }" name="vat_rate" :validate-on-blur="!isFieldDirty">
+              <InputGroupInput
+                type="number"
+                step="0.01"
+                min="0"
+                placeholder="0,00"
+                v-bind="priceField"
+              />
+              <FormField
+                v-slot="{ componentField: vatField }"
+                name="vat_rate"
+                :validate-on-blur="!isFieldDirty"
+              >
                 <InputGroupAddon align="inline-end" class="!p-0">
-                  <ToggleGroup type="single" variant="outline" class="flex h-full" v-bind="vatField">
-                    <ToggleGroupItem value="0" class="flex-1 rounded-none first:rounded-r-md" aria-label="VAT 0%">
+                  <ToggleGroup
+                    type="single"
+                    variant="outline"
+                    class="flex h-full"
+                    v-bind="vatField"
+                  >
+                    <ToggleGroupItem
+                      value="0"
+                      class="flex-1 rounded-none first:rounded-r-md"
+                      aria-label="VAT 0%"
+                    >
                       <span class="font-semibold text-xs">0%</span>
                     </ToggleGroupItem>
                     <ToggleGroupItem value="9" class="flex-1 rounded-none" aria-label="VAT 9%">
                       <span class="font-semibold text-xs">9%</span>
                     </ToggleGroupItem>
-                    <ToggleGroupItem value="21" class="flex-1 rounded-none last:rounded-r-md" aria-label="VAT 21%">
+                    <ToggleGroupItem
+                      value="21"
+                      class="flex-1 rounded-none last:rounded-r-md"
+                      aria-label="VAT 21%"
+                    >
                       <span class="font-semibold text-xs">21%</span>
                     </ToggleGroupItem>
                   </ToggleGroup>
@@ -210,12 +257,8 @@ function onCancel() {
     </div>
 
     <div class="flex justify-end gap-2">
-      <Button type="button" variant="outline" @click="onCancel">
-        Cancel
-      </Button>
-      <Button type="submit" :disabled="isSubmitting">
-        {{ item ? 'Update' : 'Add' }} Item
-      </Button>
+      <Button type="button" variant="outline" @click="onCancel"> Cancel </Button>
+      <Button type="submit" :disabled="isSubmitting"> {{ item ? 'Update' : 'Add' }} Item </Button>
     </div>
   </form>
 </template>

@@ -1,5 +1,9 @@
 import type { Project } from '../../features/projects/project-types'
-import type { CreateProjectRequest, PaginatedProjectsResponse, UpdateProjectRequest } from '../../features/projects/project-types'
+import type {
+  CreateProjectRequest,
+  PaginatedProjectsResponse,
+  UpdateProjectRequest,
+} from '../../features/projects/project-types'
 
 import { HttpStatus } from '../../features/shared/enums'
 import {
@@ -137,7 +141,10 @@ test.describe('Projects API', { tag: ['@api', '@projects'] }, () => {
       await projectClient.deleteProject(projectId)
     })
 
-    test('should return 404 for non-existent project', async ({ request, authenticatedAuthClient }) => {
+    test('should return 404 for non-existent project', async ({
+      request,
+      authenticatedAuthClient,
+    }) => {
       // Arrange
       const projectClient = new ProjectClient(request)
       projectClient.copyAuthStateFrom(authenticatedAuthClient)
@@ -191,7 +198,10 @@ test.describe('Projects API', { tag: ['@api', '@projects'] }, () => {
       await projectClient.deleteProject(projectBody.data.id)
     })
 
-    test('should return validation errors for missing name', async ({ request, authenticatedAuthClient }) => {
+    test('should return validation errors for missing name', async ({
+      request,
+      authenticatedAuthClient,
+    }) => {
       // Arrange
       const projectClient = new ProjectClient(request)
       projectClient.copyAuthStateFrom(authenticatedAuthClient)
@@ -208,7 +218,10 @@ test.describe('Projects API', { tag: ['@api', '@projects'] }, () => {
       await expectValidationErrors(response)
     })
 
-    test('should return validation errors for invalid status', async ({ request, authenticatedAuthClient }) => {
+    test('should return validation errors for invalid status', async ({
+      request,
+      authenticatedAuthClient,
+    }) => {
       // Arrange
       const projectClient = new ProjectClient(request)
       projectClient.copyAuthStateFrom(authenticatedAuthClient)
@@ -225,7 +238,10 @@ test.describe('Projects API', { tag: ['@api', '@projects'] }, () => {
       await expectValidationErrors(response)
     })
 
-    test('should return validation errors for invalid category', async ({ request, authenticatedAuthClient }) => {
+    test('should return validation errors for invalid category', async ({
+      request,
+      authenticatedAuthClient,
+    }) => {
       // Arrange
       const projectClient = new ProjectClient(request)
       projectClient.copyAuthStateFrom(authenticatedAuthClient)
@@ -242,7 +258,10 @@ test.describe('Projects API', { tag: ['@api', '@projects'] }, () => {
       await expectValidationErrors(response)
     })
 
-    test('should return validation errors for invalid date range', async ({ request, authenticatedAuthClient }) => {
+    test('should return validation errors for invalid date range', async ({
+      request,
+      authenticatedAuthClient,
+    }) => {
       // Arrange
       const projectClient = new ProjectClient(request)
       projectClient.copyAuthStateFrom(authenticatedAuthClient)
@@ -264,7 +283,10 @@ test.describe('Projects API', { tag: ['@api', '@projects'] }, () => {
       await expectValidationErrors(response)
     })
 
-    test('should return validation errors for invalid progress', async ({ request, authenticatedAuthClient }) => {
+    test('should return validation errors for invalid progress', async ({
+      request,
+      authenticatedAuthClient,
+    }) => {
       // Arrange
       const projectClient = new ProjectClient(request)
       projectClient.copyAuthStateFrom(authenticatedAuthClient)
@@ -350,7 +372,10 @@ test.describe('Projects API', { tag: ['@api', '@projects'] }, () => {
       await projectClient.deleteProject(projectId)
     })
 
-    test('should return validation errors for invalid status on update', async ({ request, authenticatedAuthClient }) => {
+    test('should return validation errors for invalid status on update', async ({
+      request,
+      authenticatedAuthClient,
+    }) => {
       // Arrange
       const projectClient = new ProjectClient(request)
       projectClient.copyAuthStateFrom(authenticatedAuthClient)
@@ -373,7 +398,10 @@ test.describe('Projects API', { tag: ['@api', '@projects'] }, () => {
       await projectClient.deleteProject(projectId)
     })
 
-    test('should return 404 for non-existent project on update', async ({ request, authenticatedAuthClient }) => {
+    test('should return 404 for non-existent project on update', async ({
+      request,
+      authenticatedAuthClient,
+    }) => {
       // Arrange
       const projectClient = new ProjectClient(request)
       projectClient.copyAuthStateFrom(authenticatedAuthClient)
@@ -425,7 +453,10 @@ test.describe('Projects API', { tag: ['@api', '@projects'] }, () => {
       expectError(getResponse, HttpStatus.NOT_FOUND)
     })
 
-    test('should return 404 for non-existent project on delete', async ({ request, authenticatedAuthClient }) => {
+    test('should return 404 for non-existent project on delete', async ({
+      request,
+      authenticatedAuthClient,
+    }) => {
       // Arrange
       const projectClient = new ProjectClient(request)
       projectClient.copyAuthStateFrom(authenticatedAuthClient)
@@ -450,4 +481,3 @@ test.describe('Projects API', { tag: ['@api', '@projects'] }, () => {
     })
   })
 })
-

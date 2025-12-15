@@ -25,15 +25,46 @@ const formSchema = toTypedSchema(
       .min(2, 'Name must be at least 2 characters')
       .max(255, 'Name must not exceed 255 characters')
       .default(props.customer?.name ?? ''),
-    email: z.string().email('Invalid email address').max(255, 'Email must not exceed 255 characters').nullable().default(props.customer?.email ?? null),
-    phone: z.string().nullable().default(props.customer?.phone ?? null),
-    address: z.string().nullable().default(props.customer?.address ?? null),
-    zipcode: z.string().nullable().default(props.customer?.zipcode ?? null),
-    city: z.string().nullable().default(props.customer?.city ?? null),
-    country: z.string().max(2, 'Country code must be 2 characters').nullable().default(props.customer?.country ?? null),
-    kvk_number: z.string().nullable().default(props.customer?.kvk_number ?? null),
-    vat_number: z.string().nullable().default(props.customer?.vat_number ?? null),
-    iban_number: z.string().max(34, 'IBAN must not exceed 34 characters').nullable().default(props.customer?.iban_number ?? null),
+    email: z
+      .string()
+      .email('Invalid email address')
+      .max(255, 'Email must not exceed 255 characters')
+      .nullable()
+      .default(props.customer?.email ?? null),
+    phone: z
+      .string()
+      .nullable()
+      .default(props.customer?.phone ?? null),
+    address: z
+      .string()
+      .nullable()
+      .default(props.customer?.address ?? null),
+    zipcode: z
+      .string()
+      .nullable()
+      .default(props.customer?.zipcode ?? null),
+    city: z
+      .string()
+      .nullable()
+      .default(props.customer?.city ?? null),
+    country: z
+      .string()
+      .max(2, 'Country code must be 2 characters')
+      .nullable()
+      .default(props.customer?.country ?? null),
+    kvk_number: z
+      .string()
+      .nullable()
+      .default(props.customer?.kvk_number ?? null),
+    vat_number: z
+      .string()
+      .nullable()
+      .default(props.customer?.vat_number ?? null),
+    iban_number: z
+      .string()
+      .max(34, 'IBAN must not exceed 34 characters')
+      .nullable()
+      .default(props.customer?.iban_number ?? null),
   }),
 )
 
@@ -61,25 +92,29 @@ const { values, isFieldDirty, handleSubmit, isSubmitting, resetForm } = useForm(
 const customerType = computed(() => values.type)
 
 // Reset form when customer changes
-watch(() => props.customer, (newCustomer) => {
-  if (newCustomer) {
-    resetForm({
-      values: {
-        type: newCustomer.type ?? 'private',
-        name: newCustomer.name ?? '',
-        email: newCustomer.email ?? null,
-        phone: newCustomer.phone ?? null,
-        address: newCustomer.address ?? null,
-        zipcode: newCustomer.zipcode ?? null,
-        city: newCustomer.city ?? null,
-        country: newCustomer.country ?? null,
-        kvk_number: newCustomer.kvk_number ?? null,
-        vat_number: newCustomer.vat_number ?? null,
-        iban_number: newCustomer.iban_number ?? null,
-      },
-    })
-  }
-}, { deep: true })
+watch(
+  () => props.customer,
+  (newCustomer) => {
+    if (newCustomer) {
+      resetForm({
+        values: {
+          type: newCustomer.type ?? 'private',
+          name: newCustomer.name ?? '',
+          email: newCustomer.email ?? null,
+          phone: newCustomer.phone ?? null,
+          address: newCustomer.address ?? null,
+          zipcode: newCustomer.zipcode ?? null,
+          city: newCustomer.city ?? null,
+          country: newCustomer.country ?? null,
+          kvk_number: newCustomer.kvk_number ?? null,
+          vat_number: newCustomer.vat_number ?? null,
+          iban_number: newCustomer.iban_number ?? null,
+        },
+      })
+    }
+  },
+  { deep: true },
+)
 
 const onSubmit = handleSubmit(async (formValues) => {
   try {
@@ -100,15 +135,13 @@ const onSubmit = handleSubmit(async (formValues) => {
     if (props.customer?.id) {
       // Update existing customer
       await updateCustomer(props.customer.id, backendData)
-    }
-    else {
+    } else {
       // Create new customer
       await createCustomer(backendData)
     }
 
     emits('close')
-  }
-  catch (error) {
+  } catch (error) {
     // Error handling is done in the composable
     // Just log for debugging
     console.error('Customer form submission error:', error)
@@ -118,24 +151,30 @@ const onSubmit = handleSubmit(async (formValues) => {
 
 <template>
   <form class="space-y-4" @submit="onSubmit">
-    <FormField v-slot="{ componentField }" type="radio" name="type" :validate-on-blur="!isFieldDirty">
+    <FormField
+      v-slot="{ componentField }"
+      type="radio"
+      name="type"
+      :validate-on-blur="!isFieldDirty"
+    >
       <UiFormItem class="space-y-1">
         <UiFormLabel>Customer Type</UiFormLabel>
         <UiFormMessage />
         <RadioGroup class="grid grid-cols-2 gap-4 pt-2" v-bind="componentField">
           <UiFormItem class="h-full">
-            <UiFormLabel class="[&:has([data-state=checked])>div]:border-primary flex flex-col cursor-pointer h-full">
+            <UiFormLabel
+              class="[&:has([data-state=checked])>div]:border-primary flex flex-col cursor-pointer h-full"
+            >
               <UiFormControl>
                 <RadioGroupItem value="private" class="sr-only" />
               </UiFormControl>
               <div
-                class="p-4 border-2 rounded-md border-muted hover:border-accent transition-colors h-full flex items-center justify-center">
+                class="p-4 border-2 rounded-md border-muted hover:border-accent transition-colors h-full flex items-center justify-center"
+              >
                 <div class="flex flex-col items-center gap-3">
                   <User class="size-8 text-muted-foreground" />
                   <div class="text-center">
-                    <div class="font-semibold text-foreground">
-                      Private
-                    </div>
+                    <div class="font-semibold text-foreground">Private</div>
                     <div class="text-xs font-normal text-muted-foreground mt-1">
                       Individual customer
                     </div>
@@ -145,18 +184,19 @@ const onSubmit = handleSubmit(async (formValues) => {
             </UiFormLabel>
           </UiFormItem>
           <UiFormItem class="h-full">
-            <UiFormLabel class="[&:has([data-state=checked])>div]:border-primary flex flex-col cursor-pointer h-full">
+            <UiFormLabel
+              class="[&:has([data-state=checked])>div]:border-primary flex flex-col cursor-pointer h-full"
+            >
               <UiFormControl>
                 <RadioGroupItem value="business" class="sr-only" />
               </UiFormControl>
               <div
-                class="p-4 border-2 rounded-md border-muted hover:border-accent transition-colors h-full flex items-center justify-center">
+                class="p-4 border-2 rounded-md border-muted hover:border-accent transition-colors h-full flex items-center justify-center"
+              >
                 <div class="flex flex-col items-center gap-3">
                   <Building2 class="size-8 text-muted-foreground" />
                   <div class="text-center">
-                    <div class="font-semibold text-foreground">
-                      Business
-                    </div>
+                    <div class="font-semibold text-foreground">Business</div>
                     <div class="text-xs font-normal text-muted-foreground mt-1">
                       Company or organization
                     </div>
@@ -245,9 +285,7 @@ const onSubmit = handleSubmit(async (formValues) => {
 
     <template v-if="customerType === 'business'">
       <div class="border-t pt-4">
-        <h3 class="mb-4 text-lg font-semibold">
-          Business Information
-        </h3>
+        <h3 class="mb-4 text-lg font-semibold">Business Information</h3>
 
         <FormField v-slot="{ componentField }" name="kvk_number" :validate-on-blur="!isFieldDirty">
           <UiFormItem>
@@ -273,7 +311,12 @@ const onSubmit = handleSubmit(async (formValues) => {
           <UiFormItem>
             <UiFormLabel>IBAN Number</UiFormLabel>
             <UiFormControl>
-              <UiInput type="text" placeholder="NL91ABNA0417164300" maxlength="34" v-bind="componentField" />
+              <UiInput
+                type="text"
+                placeholder="NL91ABNA0417164300"
+                maxlength="34"
+                v-bind="componentField"
+              />
             </UiFormControl>
             <UiFormMessage />
           </UiFormItem>
@@ -282,7 +325,7 @@ const onSubmit = handleSubmit(async (formValues) => {
     </template>
 
     <UiButton type="submit" class="w-full" :disabled="isSubmitting">
-      {{ isSubmitting ? 'Submitting...' : (customer ? 'Update Customer' : 'Create Customer') }}
+      {{ isSubmitting ? 'Submitting...' : customer ? 'Update Customer' : 'Create Customer' }}
     </UiButton>
   </form>
 </template>

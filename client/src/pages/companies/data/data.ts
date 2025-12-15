@@ -1,8 +1,4 @@
-import {
-  CheckCircle2,
-  Clock,
-  XCircle,
-} from 'lucide-vue-next'
+import { CheckCircle2, Clock, XCircle } from 'lucide-vue-next'
 import { h } from 'vue'
 
 import { getCompanyStatusColor } from '@/utils/status-colors'
@@ -83,4 +79,3 @@ export const employeeSizes = [
     label: '500+',
   },
 ]
-

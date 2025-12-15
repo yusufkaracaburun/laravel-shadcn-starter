@@ -68,4 +68,3 @@ export class CsrfHandler {
     this.csrfToken = token
   }
 }
-

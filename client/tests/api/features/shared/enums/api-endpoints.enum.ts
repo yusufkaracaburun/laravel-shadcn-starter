@@ -34,4 +34,3 @@ export enum ApiEndpoints {
   ITEM_UPDATE = '/api/items', // Template: append /{id}
   ITEM_DELETE = '/api/items', // Template: append /{id}
 }
-

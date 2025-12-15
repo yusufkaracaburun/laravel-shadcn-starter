@@ -103,7 +103,10 @@ export class UserClient extends BaseClient {
    * @param perPage - Number of items per page (default: 15)
    * Returns IResponse<PaginatedUsersResponse>
    */
-  async getUsersTyped(page: number = 1, perPage: number = 15): Promise<IResponse<PaginatedUsersResponse>> {
+  async getUsersTyped(
+    page: number = 1,
+    perPage: number = 15,
+  ): Promise<IResponse<PaginatedUsersResponse>> {
     const response = await this.getUsers(page, perPage)
     return response.json() as Promise<IResponse<PaginatedUsersResponse>>
   }
@@ -182,4 +185,3 @@ export class UserClient extends BaseClient {
     return this.delete(endpoint)
   }
 }
-

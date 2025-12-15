@@ -62,13 +62,12 @@ export class AuthClient extends BaseClient {
   async logout(): Promise<APIResponse> {
     await this.ensureCsrfCookie()
     const response = await this.post(ApiEndpoints.LOGOUT, {})
-    
+
     // Clear cookies after logout to prevent sending invalid session cookies
     if (response.status() >= 200 && response.status() < 300) {
       this.cookieHandler.clear()
     }
-    
+
     return response
   }
 }
-

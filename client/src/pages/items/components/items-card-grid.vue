@@ -25,11 +25,6 @@ const props = withDefaults(defineProps<Props>(), {
     </div>
   </div>
   <div v-else class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-    <ItemCard
-      v-for="item in items"
-      :key="item.id"
-      :item="item"
-    />
+    <ItemCard v-for="item in items" :key="item.id" :item="item" />
   </div>
 </template>
-

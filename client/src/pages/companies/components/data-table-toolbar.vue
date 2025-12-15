@@ -67,4 +67,3 @@ const isFiltered = computed(() => props.table.getState().columnFilters.length > 
     <DataTableViewOptions :table="table" />
   </div>
 </template>
-

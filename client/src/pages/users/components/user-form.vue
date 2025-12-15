@@ -8,9 +8,19 @@ import type { User } from '@/services/users.service'
 import { Button } from '@/components/ui/button'
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import { useToast } from '@/composables/use-toast'
-import { useCreateUserMutation, useGetRolesQuery, useUpdateUserMutation } from '@/services/users.service'
+import {
+  useCreateUserMutation,
+  useGetRolesQuery,
+  useUpdateUserMutation,
+} from '@/services/users.service'
 import { useErrorStore } from '@/stores/error.store'
 
 const props = defineProps<{
@@ -43,29 +53,36 @@ const formSchema = computed(() => {
 
   if (isEditMode.value) {
     // In edit mode, password is optional
-    return baseSchema.extend({
-      password: z.string().min(8, 'Password must be at least 8 characters.').optional(),
-      password_confirmation: z.string().min(1, 'Please confirm your password.').optional(),
-    }).refine((data) => {
-      // Only validate password match if password is provided
-      if (data.password || data.password_confirmation) {
-        return data.password === data.password_confirmation
-      }
-      return true
-    }, {
-      message: 'Passwords do not match.',
-      path: ['password_confirmation'],
-    })
+    return baseSchema
+      .extend({
+        password: z.string().min(8, 'Password must be at least 8 characters.').optional(),
+        password_confirmation: z.string().min(1, 'Please confirm your password.').optional(),
+      })
+      .refine(
+        (data) => {
+          // Only validate password match if password is provided
+          if (data.password || data.password_confirmation) {
+            return data.password === data.password_confirmation
+          }
+          return true
+        },
+        {
+          message: 'Passwords do not match.',
+          path: ['password_confirmation'],
+        },
+      )
   }
 
   // In create mode, password is required
-  return baseSchema.extend({
-    password: z.string().min(8, 'Password must be at least 8 characters.'),
-    password_confirmation: z.string().min(1, 'Please confirm your password.'),
-  }).refine(data => data.password === data.password_confirmation, {
-    message: 'Passwords do not match.',
-    path: ['password_confirmation'],
-  })
+  return baseSchema
+    .extend({
+      password: z.string().min(8, 'Password must be at least 8 characters.'),
+      password_confirmation: z.string().min(1, 'Please confirm your password.'),
+    })
+    .refine((data) => data.password === data.password_confirmation, {
+      message: 'Passwords do not match.',
+      path: ['password_confirmation'],
+    })
 })
 
 function getInitialValues() {
@@ -90,30 +107,33 @@ const profilePhotoPreview = ref<string | null>(null)
 const existingProfilePhotoUrl = computed(() => props.user?.profile_photo_url || null)
 
 // Watch for user changes to update form values and preview
-watch(() => props.user, (user) => {
-  if (user) {
-    // Use resetForm with values to update all fields at once
-    resetForm({
-      values: {
-        name: user.name || '',
-        email: user.email || '',
-        password: '',
-        password_confirmation: '',
-        profile_photo: null,
-        role: user.roles?.[0]?.name || null,
-      },
-    })
-    if (user.profile_photo_url) {
-      profilePhotoPreview.value = user.profile_photo_url
+watch(
+  () => props.user,
+  (user) => {
+    if (user) {
+      // Use resetForm with values to update all fields at once
+      resetForm({
+        values: {
+          name: user.name || '',
+          email: user.email || '',
+          password: '',
+          password_confirmation: '',
+          profile_photo: null,
+          role: user.roles?.[0]?.name || null,
+        },
+      })
+      if (user.profile_photo_url) {
+        profilePhotoPreview.value = user.profile_photo_url
+      }
+    } else {
+      resetForm({
+        values: getInitialValues(),
+      })
+      profilePhotoPreview.value = null
     }
-  }
-  else {
-    resetForm({
-      values: getInitialValues(),
-    })
-    profilePhotoPreview.value = null
-  }
-}, { immediate: true })
+  },
+  { immediate: true },
+)
 
 function handlePhotoChange(event: Event) {
   const target = event.target as HTMLInputElement
@@ -139,8 +159,7 @@ function handlePhotoChange(event: Event) {
       profilePhotoPreview.value = e.target?.result as string
     }
     reader.readAsDataURL(file)
-  }
-  else {
+  } else {
     form.setFieldValue('profile_photo', null)
     profilePhotoPreview.value = null
   }
@@ -177,8 +196,7 @@ const onSubmit = handleSubmit(async (values) => {
       })
 
       toast.showSuccess('User updated successfully!')
-    }
-    else {
+    } else {
       // Create new user
       await createUserMutation.mutateAsync({
         name: values.name || '',
@@ -195,8 +213,7 @@ const onSubmit = handleSubmit(async (values) => {
     profilePhotoPreview.value = null
     resetForm()
     emits('close')
-  }
-  catch (error: any) {
+  } catch (error: any) {
     // Store error with context
     const context = isEditMode.value ? 'updateUser' : 'createUser'
     errorStore.setError(error, { context })
@@ -208,7 +225,16 @@ const onSubmit = handleSubmit(async (values) => {
       Object.keys(backendErrors).forEach((field) => {
         const fieldErrors = backendErrors[field]
         if (Array.isArray(fieldErrors) && fieldErrors.length > 0) {
-          setFieldError(field as 'name' | 'email' | 'password' | 'password_confirmation' | 'profile_photo' | 'role', fieldErrors[0])
+          setFieldError(
+            field as
+              | 'name'
+              | 'email'
+              | 'password'
+              | 'password_confirmation'
+              | 'profile_photo'
+              | 'role',
+            fieldErrors[0],
+          )
         }
       })
     }
@@ -221,8 +247,7 @@ const onSubmit = handleSubmit(async (values) => {
     if (Object.keys(validationErrors).length > 0) {
       const firstError = Object.values(validationErrors)[0]?.[0]
       toast.showError(firstError || message)
-    }
-    else {
+    } else {
       toast.showError(message)
     }
   }
@@ -255,7 +280,11 @@ const onSubmit = handleSubmit(async (values) => {
       <FormItem>
         <FormLabel>Password</FormLabel>
         <FormControl>
-          <Input type="password" v-bind="componentField" :placeholder="isEditMode ? 'Leave blank to keep current password' : '********'" />
+          <Input
+            type="password"
+            v-bind="componentField"
+            :placeholder="isEditMode ? 'Leave blank to keep current password' : '********'"
+          />
         </FormControl>
         <FormMessage />
         <p v-if="isEditMode" class="text-xs text-muted-foreground mt-1">
@@ -268,7 +297,11 @@ const onSubmit = handleSubmit(async (values) => {
       <FormItem>
         <FormLabel>Confirm Password</FormLabel>
         <FormControl>
-          <Input type="password" v-bind="componentField" :placeholder="isEditMode ? 'Leave blank to keep current password' : '********'" />
+          <Input
+            type="password"
+            v-bind="componentField"
+            :placeholder="isEditMode ? 'Leave blank to keep current password' : '********'"
+          />
         </FormControl>
         <FormMessage />
       </FormItem>
@@ -283,20 +316,14 @@ const onSubmit = handleSubmit(async (values) => {
               <SelectValue placeholder="Select a role (optional)" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem
-                v-for="role in roles"
-                :key="role.id"
-                :value="role.name"
-              >
+              <SelectItem v-for="role in roles" :key="role.id" :value="role.name">
                 {{ role.name }}
               </SelectItem>
             </SelectContent>
           </Select>
         </FormControl>
         <FormMessage />
-        <p class="text-xs text-muted-foreground mt-1">
-          Optional: Assign a role to this user
-        </p>
+        <p class="text-xs text-muted-foreground mt-1">Optional: Assign a role to this user</p>
       </FormItem>
     </FormField>
 
@@ -305,11 +332,7 @@ const onSubmit = handleSubmit(async (values) => {
         <FormLabel>Profile Photo</FormLabel>
         <FormControl>
           <div class="space-y-2">
-            <Input
-              type="file"
-              accept="image/*"
-              @change="handlePhotoChange"
-            />
+            <Input type="file" accept="image/*" @change="handlePhotoChange" />
             <p class="text-xs text-muted-foreground">
               Upload a profile photo (max 2MB). Accepted formats: JPG, PNG, GIF, etc.
             </p>
@@ -318,7 +341,7 @@ const onSubmit = handleSubmit(async (values) => {
                 :src="(profilePhotoPreview || existingProfilePhotoUrl) ?? ''"
                 alt="Profile preview"
                 class="h-24 w-24 rounded-full object-cover border"
-              >
+              />
             </div>
           </div>
         </FormControl>
@@ -326,8 +349,17 @@ const onSubmit = handleSubmit(async (values) => {
       </FormItem>
     </FormField>
 
-    <Button type="submit" class="w-full" :disabled="isEditMode ? updateUserMutation.isPending.value : createUserMutation.isPending.value">
-      <UiSpinner v-if="isEditMode ? updateUserMutation.isPending.value : createUserMutation.isPending.value" class="mr-2" />
+    <Button
+      type="submit"
+      class="w-full"
+      :disabled="
+        isEditMode ? updateUserMutation.isPending.value : createUserMutation.isPending.value
+      "
+    >
+      <UiSpinner
+        v-if="isEditMode ? updateUserMutation.isPending.value : createUserMutation.isPending.value"
+        class="mr-2"
+      />
       {{ isEditMode ? 'Update User' : 'Create User' }}
     </Button>
   </form>

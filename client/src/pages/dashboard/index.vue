@@ -38,11 +38,7 @@ const activeTab = ref(tabs.value[0].value)
 
     <UiTabs :default-value="activeTab" class="w-full">
       <UiTabsList>
-        <UiTabsTrigger
-          v-for="tab in tabs"
-          :key="tab.value"
-          :value="tab.value"
-        >
+        <UiTabsTrigger v-for="tab in tabs" :key="tab.value" :value="tab.value">
           {{ tab.name }}
         </UiTabsTrigger>
       </UiTabsList>

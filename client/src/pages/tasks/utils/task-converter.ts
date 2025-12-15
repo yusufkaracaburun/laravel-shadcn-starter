@@ -64,4 +64,3 @@ export function tableTasksToKanbanTasks(tasks: TableTask[]): KanbanTask[] {
 export function kanbanTasksToTableTasks(tasks: KanbanTask[]): TableTask[] {
   return tasks.map(kanbanTaskToTableTask)
 }
-

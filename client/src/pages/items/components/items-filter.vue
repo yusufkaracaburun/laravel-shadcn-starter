@@ -26,10 +26,14 @@ const searchFilter = ref('')
 const localFilters = ref<ItemFilters>({ ...props.filters })
 
 // Watch for external filter changes
-watch(() => props.filters, (newFilters) => {
-  localFilters.value = { ...newFilters }
-  searchFilter.value = newFilters.search || ''
-}, { deep: true })
+watch(
+  () => props.filters,
+  (newFilters) => {
+    localFilters.value = { ...newFilters }
+    searchFilter.value = newFilters.search || ''
+  },
+  { deep: true },
+)
 
 // Initialize search filter
 watchEffect(() => {
@@ -51,23 +55,20 @@ const activeFilterCount = computed(() => {
 
 // Selected unit
 const selectedUnit = computed(() => {
-  return localFilters.value.unit
-    ? units.find(u => u.value === localFilters.value.unit)
-    : null
+  return localFilters.value.unit ? units.find((u) => u.value === localFilters.value.unit) : null
 })
 
 // Selected VAT rate
 const selectedVatRate = computed(() => {
   return localFilters.value.vat_rate !== undefined
-    ? vatRates.find(v => Number(v.value) === localFilters.value.vat_rate)
+    ? vatRates.find((v) => Number(v.value) === localFilters.value.vat_rate)
     : null
 })
 
 function handleUnitSelect(unit: string) {
   if (localFilters.value.unit === unit) {
     delete localFilters.value.unit
-  }
-  else {
+  } else {
     localFilters.value.unit = unit
   }
   applyFilters()
@@ -76,8 +77,7 @@ function handleUnitSelect(unit: string) {
 function handleVatRateSelect(vatRate: number) {
   if (localFilters.value.vat_rate === vatRate) {
     delete localFilters.value.vat_rate
-  }
-  else {
+  } else {
     localFilters.value.vat_rate = vatRate
   }
   applyFilters()
@@ -87,8 +87,7 @@ function handleSearchChange(value: string) {
   searchFilter.value = value
   if (value.trim()) {
     localFilters.value.search = value.trim()
-  }
-  else {
+  } else {
     delete localFilters.value.search
   }
   applyFilters()
@@ -97,8 +96,7 @@ function handleSearchChange(value: string) {
 function handleDateFilterChange(type: 'created_at' | 'updated_at', value: string) {
   if (value) {
     localFilters.value[type] = value
-  }
-  else {
+  } else {
     delete localFilters.value[type]
   }
   applyFilters()
@@ -167,10 +165,7 @@ function handleOpenChange(open: boolean) {
               @click="handleUnitSelect(unit.value)"
             >
               <span>{{ unit.label }}</span>
-              <Check
-                v-if="selectedUnit?.value === unit.value"
-                class="size-4 text-primary"
-              />
+              <Check v-if="selectedUnit?.value === unit.value" class="size-4 text-primary" />
             </button>
           </div>
         </div>
@@ -189,10 +184,7 @@ function handleOpenChange(open: boolean) {
               @click="handleVatRateSelect(Number(vatRate.value))"
             >
               <span>{{ vatRate.label }}</span>
-              <Check
-                v-if="selectedVatRate?.value === vatRate.value"
-                class="size-4 text-primary"
-              />
+              <Check v-if="selectedVatRate?.value === vatRate.value" class="size-4 text-primary" />
             </button>
           </div>
         </div>
@@ -222,11 +214,7 @@ function handleOpenChange(open: boolean) {
 
         <!-- Clear Filters -->
         <div v-if="activeFilterCount > 0" class="pt-2">
-          <Button
-            variant="ghost"
-            class="w-full justify-center"
-            @click="handleClear"
-          >
+          <Button variant="ghost" class="w-full justify-center" @click="handleClear">
             <X class="size-4 mr-2" />
             Clear filters
           </Button>
@@ -235,4 +223,3 @@ function handleOpenChange(open: boolean) {
     </PopoverContent>
   </Popover>
 </template>
-

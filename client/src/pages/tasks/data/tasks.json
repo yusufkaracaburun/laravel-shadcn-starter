@@ -5,9 +5,7 @@
     "status": "in progress",
     "priority": "medium",
     "description": "",
-    "labels": [
-      "documentation"
-    ],
+    "labels": ["documentation"],
     "dueDate": null,
     "createdAt": "2025-12-06T09:04:16.313Z"
   },
@@ -17,9 +15,7 @@
     "status": "backlog",
     "priority": "medium",
     "description": "",
-    "labels": [
-      "documentation"
-    ],
+    "labels": ["documentation"],
     "dueDate": null,
     "createdAt": "2025-12-06T09:04:16.314Z"
   },
@@ -29,9 +25,7 @@
     "status": "todo",
     "priority": "high",
     "description": "",
-    "labels": [
-      "bug"
-    ],
+    "labels": ["bug"],
     "dueDate": null,
     "createdAt": "2025-12-06T09:04:16.314Z"
   },
@@ -41,9 +35,7 @@
     "status": "backlog",
     "priority": "medium",
     "description": "",
-    "labels": [
-      "feature"
-    ],
+    "labels": ["feature"],
     "dueDate": null,
     "createdAt": "2025-12-06T09:04:16.314Z"
   },
@@ -53,9 +45,7 @@
     "status": "canceled",
     "priority": "medium",
     "description": "",
-    "labels": [
-      "feature"
-    ],
+    "labels": ["feature"],
     "dueDate": null,
     "createdAt": "2025-12-06T09:04:16.314Z"
   },
@@ -65,9 +55,7 @@
     "status": "done",
     "priority": "high",
     "description": "",
-    "labels": [
-      "bug"
-    ],
+    "labels": ["bug"],
     "dueDate": null,
     "createdAt": "2025-12-06T09:04:16.314Z"
   },
@@ -77,9 +65,7 @@
     "status": "done",
     "priority": "high",
     "description": "",
-    "labels": [
-      "feature"
-    ],
+    "labels": ["feature"],
     "dueDate": null,
     "createdAt": "2025-12-06T09:04:16.314Z"
   },
@@ -89,9 +75,7 @@
     "status": "in progress",
     "priority": "medium",
     "description": "",
-    "labels": [
-      "feature"
-    ],
+    "labels": ["feature"],
     "dueDate": null,
     "createdAt": "2025-12-06T09:04:16.314Z"
   },
@@ -101,9 +85,7 @@
     "status": "todo",
     "priority": "low",
     "description": "",
-    "labels": [
-      "feature"
-    ],
+    "labels": ["feature"],
     "dueDate": null,
     "createdAt": "2025-12-06T09:04:16.314Z"
   },
@@ -113,9 +95,7 @@
     "status": "in progress",
     "priority": "high",
     "description": "",
-    "labels": [
-      "documentation"
-    ],
+    "labels": ["documentation"],
     "dueDate": null,
     "createdAt": "2025-12-06T09:04:16.314Z"
   },
@@ -125,9 +105,7 @@
     "status": "done",
     "priority": "medium",
     "description": "",
-    "labels": [
-      "documentation"
-    ],
+    "labels": ["documentation"],
     "dueDate": null,
     "createdAt": "2025-12-06T09:04:16.314Z"
   },
@@ -137,9 +115,7 @@
     "status": "backlog",
     "priority": "medium",
     "description": "",
-    "labels": [
-      "documentation"
-    ],
+    "labels": ["documentation"],
     "dueDate": null,
     "createdAt": "2025-12-06T09:04:16.314Z"
   },
@@ -149,9 +125,7 @@
     "status": "backlog",
     "priority": "medium",
     "description": "",
-    "labels": [
-      "bug"
-    ],
+    "labels": ["bug"],
     "dueDate": null,
     "createdAt": "2025-12-06T09:04:16.314Z"
   },
@@ -161,9 +135,7 @@
     "status": "done",
     "priority": "high",
     "description": "",
-    "labels": [
-      "bug"
-    ],
+    "labels": ["bug"],
     "dueDate": null,
     "createdAt": "2025-12-06T09:04:16.314Z"
   },
@@ -173,9 +145,7 @@
     "status": "in progress",
     "priority": "low",
     "description": "",
-    "labels": [
-      "bug"
-    ],
+    "labels": ["bug"],
     "dueDate": null,
     "createdAt": "2025-12-06T09:04:16.314Z"
   },
@@ -185,9 +155,7 @@
     "status": "in progress",
     "priority": "low",
     "description": "",
-    "labels": [
-      "documentation"
-    ],
+    "labels": ["documentation"],
     "dueDate": null,
     "createdAt": "2025-12-06T09:04:16.314Z"
   },
@@ -197,9 +165,7 @@
     "status": "todo",
     "priority": "high",
     "description": "",
-    "labels": [
-      "documentation"
-    ],
+    "labels": ["documentation"],
     "dueDate": null,
     "createdAt": "2025-12-06T09:04:16.314Z"
   },
@@ -209,9 +175,7 @@
     "status": "todo",
     "priority": "high",
     "description": "",
-    "labels": [
-      "documentation"
-    ],
+    "labels": ["documentation"],
     "dueDate": null,
     "createdAt": "2025-12-06T09:04:16.314Z"
   },
@@ -221,9 +185,7 @@
     "status": "backlog",
     "priority": "high",
     "description": "",
-    "labels": [
-      "bug"
-    ],
+    "labels": ["bug"],
     "dueDate": null,
     "createdAt": "2025-12-06T09:04:16.314Z"
   },
@@ -233,9 +195,7 @@
     "status": "backlog",
     "priority": "medium",
     "description": "",
-    "labels": [
-      "documentation"
-    ],
+    "labels": ["documentation"],
     "dueDate": null,
     "createdAt": "2025-12-06T09:04:16.314Z"
   },
@@ -245,9 +205,7 @@
     "status": "todo",
     "priority": "high",
     "description": "",
-    "labels": [
-      "bug"
-    ],
+    "labels": ["bug"],
     "dueDate": null,
     "createdAt": "2025-12-06T09:04:16.314Z"
   },
@@ -257,9 +215,7 @@
     "status": "in progress",
     "priority": "low",
     "description": "",
-    "labels": [
-      "documentation"
-    ],
+    "labels": ["documentation"],
     "dueDate": null,
     "createdAt": "2025-12-06T09:04:16.314Z"
   },
@@ -269,9 +225,7 @@
     "status": "canceled",
     "priority": "low",
     "description": "",
-    "labels": [
-      "bug"
-    ],
+    "labels": ["bug"],
     "dueDate": null,
     "createdAt": "2025-12-06T09:04:16.314Z"
   },
@@ -281,9 +235,7 @@
     "status": "todo",
     "priority": "high",
     "description": "",
-    "labels": [
-      "bug"
-    ],
+    "labels": ["bug"],
     "dueDate": null,
     "createdAt": "2025-12-06T09:04:16.314Z"
   },
@@ -293,9 +245,7 @@
     "status": "todo",
     "priority": "low",
     "description": "",
-    "labels": [
-      "bug"
-    ],
+    "labels": ["bug"],
     "dueDate": null,
     "createdAt": "2025-12-06T09:04:16.314Z"
   },
@@ -305,9 +255,7 @@
     "status": "canceled",
     "priority": "low",
     "description": "",
-    "labels": [
-      "documentation"
-    ],
+    "labels": ["documentation"],
     "dueDate": null,
     "createdAt": "2025-12-06T09:04:16.314Z"
   },
@@ -317,9 +265,7 @@
     "status": "in progress",
     "priority": "medium",
     "description": "",
-    "labels": [
-      "feature"
-    ],
+    "labels": ["feature"],
     "dueDate": null,
     "createdAt": "2025-12-06T09:04:16.314Z"
   },
@@ -329,9 +275,7 @@
     "status": "canceled",
     "priority": "medium",
     "description": "",
-    "labels": [
-      "documentation"
-    ],
+    "labels": ["documentation"],
     "dueDate": null,
     "createdAt": "2025-12-06T09:04:16.314Z"
   },
@@ -341,9 +285,7 @@
     "status": "backlog",
     "priority": "high",
     "description": "",
-    "labels": [
-      "documentation"
-    ],
+    "labels": ["documentation"],
     "dueDate": null,
     "createdAt": "2025-12-06T09:04:16.314Z"
   },
@@ -353,9 +295,7 @@
     "status": "todo",
     "priority": "low",
     "description": "",
-    "labels": [
-      "documentation"
-    ],
+    "labels": ["documentation"],
     "dueDate": null,
     "createdAt": "2025-12-06T09:04:16.314Z"
   },
@@ -365,9 +305,7 @@
     "status": "in progress",
     "priority": "low",
     "description": "",
-    "labels": [
-      "bug"
-    ],
+    "labels": ["bug"],
     "dueDate": null,
     "createdAt": "2025-12-06T09:04:16.314Z"
   },
@@ -377,9 +315,7 @@
     "status": "done",
     "priority": "high",
     "description": "",
-    "labels": [
-      "documentation"
-    ],
+    "labels": ["documentation"],
     "dueDate": null,
     "createdAt": "2025-12-06T09:04:16.314Z"
   },
@@ -389,9 +325,7 @@
     "status": "in progress",
     "priority": "medium",
     "description": "",
-    "labels": [
-      "feature"
-    ],
+    "labels": ["feature"],
     "dueDate": null,
     "createdAt": "2025-12-06T09:04:16.314Z"
   },
@@ -401,9 +335,7 @@
     "status": "done",
     "priority": "low",
     "description": "",
-    "labels": [
-      "documentation"
-    ],
+    "labels": ["documentation"],
     "dueDate": null,
     "createdAt": "2025-12-06T09:04:16.314Z"
   },
@@ -413,9 +345,7 @@
     "status": "backlog",
     "priority": "low",
     "description": "",
-    "labels": [
-      "documentation"
-    ],
+    "labels": ["documentation"],
     "dueDate": null,
     "createdAt": "2025-12-06T09:04:16.314Z"
   },
@@ -425,9 +355,7 @@
     "status": "todo",
     "priority": "low",
     "description": "",
-    "labels": [
-      "feature"
-    ],
+    "labels": ["feature"],
     "dueDate": null,
     "createdAt": "2025-12-06T09:04:16.314Z"
   },
@@ -437,9 +365,7 @@
     "status": "canceled",
     "priority": "high",
     "description": "",
-    "labels": [
-      "documentation"
-    ],
+    "labels": ["documentation"],
     "dueDate": null,
     "createdAt": "2025-12-06T09:04:16.314Z"
   },
@@ -449,9 +375,7 @@
     "status": "done",
     "priority": "high",
     "description": "",
-    "labels": [
-      "bug"
-    ],
+    "labels": ["bug"],
     "dueDate": null,
     "createdAt": "2025-12-06T09:04:16.314Z"
   },
@@ -461,9 +385,7 @@
     "status": "in progress",
     "priority": "high",
     "description": "",
-    "labels": [
-      "bug"
-    ],
+    "labels": ["bug"],
     "dueDate": null,
     "createdAt": "2025-12-06T09:04:16.314Z"
   },
@@ -473,9 +395,7 @@
     "status": "in progress",
     "priority": "low",
     "description": "",
-    "labels": [
-      "feature"
-    ],
+    "labels": ["feature"],
     "dueDate": null,
     "createdAt": "2025-12-06T09:04:16.314Z"
   },
@@ -485,9 +405,7 @@
     "status": "canceled",
     "priority": "low",
     "description": "",
-    "labels": [
-      "feature"
-    ],
+    "labels": ["feature"],
     "dueDate": null,
     "createdAt": "2025-12-06T09:04:16.314Z"
   },
@@ -497,9 +415,7 @@
     "status": "in progress",
     "priority": "high",
     "description": "",
-    "labels": [
-      "bug"
-    ],
+    "labels": ["bug"],
     "dueDate": null,
     "createdAt": "2025-12-06T09:04:16.314Z"
   },
@@ -509,9 +425,7 @@
     "status": "todo",
     "priority": "high",
     "description": "",
-    "labels": [
-      "feature"
-    ],
+    "labels": ["feature"],
     "dueDate": null,
     "createdAt": "2025-12-06T09:04:16.314Z"
   },
@@ -521,9 +435,7 @@
     "status": "in progress",
     "priority": "low",
     "description": "",
-    "labels": [
-      "feature"
-    ],
+    "labels": ["feature"],
     "dueDate": null,
     "createdAt": "2025-12-06T09:04:16.314Z"
   },
@@ -533,9 +445,7 @@
     "status": "todo",
     "priority": "high",
     "description": "",
-    "labels": [
-      "feature"
-    ],
+    "labels": ["feature"],
     "dueDate": null,
     "createdAt": "2025-12-06T09:04:16.314Z"
   },
@@ -545,9 +455,7 @@
     "status": "todo",
     "priority": "medium",
     "description": "",
-    "labels": [
-      "feature"
-    ],
+    "labels": ["feature"],
     "dueDate": null,
     "createdAt": "2025-12-06T09:04:16.314Z"
   },
@@ -557,9 +465,7 @@
     "status": "todo",
     "priority": "low",
     "description": "",
-    "labels": [
-      "documentation"
-    ],
+    "labels": ["documentation"],
     "dueDate": null,
     "createdAt": "2025-12-06T09:04:16.314Z"
   },
@@ -569,9 +475,7 @@
     "status": "done",
     "priority": "medium",
     "description": "",
-    "labels": [
-      "bug"
-    ],
+    "labels": ["bug"],
     "dueDate": null,
     "createdAt": "2025-12-06T09:04:16.314Z"
   },
@@ -581,9 +485,7 @@
     "status": "canceled",
     "priority": "low",
     "description": "",
-    "labels": [
-      "bug"
-    ],
+    "labels": ["bug"],
     "dueDate": null,
     "createdAt": "2025-12-06T09:04:16.314Z"
   },
@@ -593,9 +495,7 @@
     "status": "backlog",
     "priority": "low",
     "description": "",
-    "labels": [
-      "documentation"
-    ],
+    "labels": ["documentation"],
     "dueDate": null,
     "createdAt": "2025-12-06T09:04:16.314Z"
   },
@@ -605,9 +505,7 @@
     "status": "canceled",
     "priority": "low",
     "description": "",
-    "labels": [
-      "documentation"
-    ],
+    "labels": ["documentation"],
     "dueDate": null,
     "createdAt": "2025-12-06T09:04:16.314Z"
   },
@@ -617,9 +515,7 @@
     "status": "done",
     "priority": "medium",
     "description": "",
-    "labels": [
-      "feature"
-    ],
+    "labels": ["feature"],
     "dueDate": null,
     "createdAt": "2025-12-06T09:04:16.314Z"
   },
@@ -629,9 +525,7 @@
     "status": "canceled",
     "priority": "medium",
     "description": "",
-    "labels": [
-      "feature"
-    ],
+    "labels": ["feature"],
     "dueDate": null,
     "createdAt": "2025-12-06T09:04:16.314Z"
   },
@@ -641,9 +535,7 @@
     "status": "canceled",
     "priority": "medium",
     "description": "",
-    "labels": [
-      "bug"
-    ],
+    "labels": ["bug"],
     "dueDate": null,
     "createdAt": "2025-12-06T09:04:16.314Z"
   },
@@ -653,9 +545,7 @@
     "status": "backlog",
     "priority": "low",
     "description": "",
-    "labels": [
-      "documentation"
-    ],
+    "labels": ["documentation"],
     "dueDate": null,
     "createdAt": "2025-12-06T09:04:16.314Z"
   },
@@ -665,9 +555,7 @@
     "status": "done",
     "priority": "medium",
     "description": "",
-    "labels": [
-      "bug"
-    ],
+    "labels": ["bug"],
     "dueDate": null,
     "createdAt": "2025-12-06T09:04:16.314Z"
   },
@@ -677,9 +565,7 @@
     "status": "done",
     "priority": "low",
     "description": "",
-    "labels": [
-      "feature"
-    ],
+    "labels": ["feature"],
     "dueDate": null,
     "createdAt": "2025-12-06T09:04:16.314Z"
   },
@@ -689,9 +575,7 @@
     "status": "canceled",
     "priority": "low",
     "description": "",
-    "labels": [
-      "documentation"
-    ],
+    "labels": ["documentation"],
     "dueDate": null,
     "createdAt": "2025-12-06T09:04:16.314Z"
   },
@@ -701,9 +585,7 @@
     "status": "todo",
     "priority": "high",
     "description": "",
-    "labels": [
-      "feature"
-    ],
+    "labels": ["feature"],
     "dueDate": null,
     "createdAt": "2025-12-06T09:04:16.314Z"
   },
@@ -713,9 +595,7 @@
     "status": "done",
     "priority": "medium",
     "description": "",
-    "labels": [
-      "feature"
-    ],
+    "labels": ["feature"],
     "dueDate": null,
     "createdAt": "2025-12-06T09:04:16.314Z"
   },
@@ -725,9 +605,7 @@
     "status": "done",
     "priority": "high",
     "description": "",
-    "labels": [
-      "documentation"
-    ],
+    "labels": ["documentation"],
     "dueDate": null,
     "createdAt": "2025-12-06T09:04:16.314Z"
   },
@@ -737,9 +615,7 @@
     "status": "todo",
     "priority": "high",
     "description": "",
-    "labels": [
-      "documentation"
-    ],
+    "labels": ["documentation"],
     "dueDate": null,
     "createdAt": "2025-12-06T09:04:16.314Z"
   },
@@ -749,9 +625,7 @@
     "status": "backlog",
     "priority": "medium",
     "description": "",
-    "labels": [
-      "bug"
-    ],
+    "labels": ["bug"],
     "dueDate": null,
     "createdAt": "2025-12-06T09:04:16.314Z"
   },
@@ -761,9 +635,7 @@
     "status": "todo",
     "priority": "medium",
     "description": "",
-    "labels": [
-      "feature"
-    ],
+    "labels": ["feature"],
     "dueDate": null,
     "createdAt": "2025-12-06T09:04:16.314Z"
   },
@@ -773,9 +645,7 @@
     "status": "canceled",
     "priority": "low",
     "description": "",
-    "labels": [
-      "bug"
-    ],
+    "labels": ["bug"],
     "dueDate": null,
     "createdAt": "2025-12-06T09:04:16.314Z"
   },
@@ -785,9 +655,7 @@
     "status": "done",
     "priority": "medium",
     "description": "",
-    "labels": [
-      "feature"
-    ],
+    "labels": ["feature"],
     "dueDate": null,
     "createdAt": "2025-12-06T09:04:16.314Z"
   },
@@ -797,9 +665,7 @@
     "status": "backlog",
     "priority": "medium",
     "description": "",
-    "labels": [
-      "bug"
-    ],
+    "labels": ["bug"],
     "dueDate": null,
     "createdAt": "2025-12-06T09:04:16.314Z"
   },
@@ -809,9 +675,7 @@
     "status": "in progress",
     "priority": "medium",
     "description": "",
-    "labels": [
-      "feature"
-    ],
+    "labels": ["feature"],
     "dueDate": null,
     "createdAt": "2025-12-06T09:04:16.314Z"
   },
@@ -821,9 +685,7 @@
     "status": "in progress",
     "priority": "low",
     "description": "",
-    "labels": [
-      "bug"
-    ],
+    "labels": ["bug"],
     "dueDate": null,
     "createdAt": "2025-12-06T09:04:16.314Z"
   },
@@ -833,9 +695,7 @@
     "status": "canceled",
     "priority": "medium",
     "description": "",
-    "labels": [
-      "feature"
-    ],
+    "labels": ["feature"],
     "dueDate": null,
     "createdAt": "2025-12-06T09:04:16.314Z"
   },
@@ -845,9 +705,7 @@
     "status": "backlog",
     "priority": "low",
     "description": "",
-    "labels": [
-      "feature"
-    ],
+    "labels": ["feature"],
     "dueDate": null,
     "createdAt": "2025-12-06T09:04:16.314Z"
   },
@@ -857,9 +715,7 @@
     "status": "canceled",
     "priority": "high",
     "description": "",
-    "labels": [
-      "feature"
-    ],
+    "labels": ["feature"],
     "dueDate": null,
     "createdAt": "2025-12-06T09:04:16.314Z"
   },
@@ -869,9 +725,7 @@
     "status": "in progress",
     "priority": "high",
     "description": "",
-    "labels": [
-      "feature"
-    ],
+    "labels": ["feature"],
     "dueDate": null,
     "createdAt": "2025-12-06T09:04:16.314Z"
   },
@@ -881,9 +735,7 @@
     "status": "in progress",
     "priority": "low",
     "description": "",
-    "labels": [
-      "feature"
-    ],
+    "labels": ["feature"],
     "dueDate": null,
     "createdAt": "2025-12-06T09:04:16.314Z"
   },
@@ -893,9 +745,7 @@
     "status": "backlog",
     "priority": "high",
     "description": "",
-    "labels": [
-      "bug"
-    ],
+    "labels": ["bug"],
     "dueDate": null,
     "createdAt": "2025-12-06T09:04:16.314Z"
   },
@@ -905,9 +755,7 @@
     "status": "done",
     "priority": "medium",
     "description": "",
-    "labels": [
-      "documentation"
-    ],
+    "labels": ["documentation"],
     "dueDate": null,
     "createdAt": "2025-12-06T09:04:16.314Z"
   },
@@ -917,9 +765,7 @@
     "status": "in progress",
     "priority": "medium",
     "description": "",
-    "labels": [
-      "documentation"
-    ],
+    "labels": ["documentation"],
     "dueDate": null,
     "createdAt": "2025-12-06T09:04:16.314Z"
   },
@@ -929,9 +775,7 @@
     "status": "backlog",
     "priority": "low",
     "description": "",
-    "labels": [
-      "bug"
-    ],
+    "labels": ["bug"],
     "dueDate": null,
     "createdAt": "2025-12-06T09:04:16.314Z"
   },
@@ -941,9 +785,7 @@
     "status": "canceled",
     "priority": "low",
     "description": "",
-    "labels": [
-      "bug"
-    ],
+    "labels": ["bug"],
     "dueDate": null,
     "createdAt": "2025-12-06T09:04:16.314Z"
   },
@@ -953,9 +795,7 @@
     "status": "backlog",
     "priority": "high",
     "description": "",
-    "labels": [
-      "bug"
-    ],
+    "labels": ["bug"],
     "dueDate": null,
     "createdAt": "2025-12-06T09:04:16.314Z"
   },
@@ -965,9 +805,7 @@
     "status": "todo",
     "priority": "medium",
     "description": "",
-    "labels": [
-      "documentation"
-    ],
+    "labels": ["documentation"],
     "dueDate": null,
     "createdAt": "2025-12-06T09:04:16.314Z"
   },
@@ -977,9 +815,7 @@
     "status": "in progress",
     "priority": "low",
     "description": "",
-    "labels": [
-      "feature"
-    ],
+    "labels": ["feature"],
     "dueDate": null,
     "createdAt": "2025-12-06T09:04:16.314Z"
   },
@@ -989,9 +825,7 @@
     "status": "done",
     "priority": "low",
     "description": "",
-    "labels": [
-      "documentation"
-    ],
+    "labels": ["documentation"],
     "dueDate": null,
     "createdAt": "2025-12-06T09:04:16.314Z"
   },
@@ -1001,9 +835,7 @@
     "status": "canceled",
     "priority": "high",
     "description": "",
-    "labels": [
-      "feature"
-    ],
+    "labels": ["feature"],
     "dueDate": null,
     "createdAt": "2025-12-06T09:04:16.314Z"
   },
@@ -1013,9 +845,7 @@
     "status": "todo",
     "priority": "medium",
     "description": "",
-    "labels": [
-      "bug"
-    ],
+    "labels": ["bug"],
     "dueDate": null,
     "createdAt": "2025-12-06T09:04:16.314Z"
   },
@@ -1025,9 +855,7 @@
     "status": "backlog",
     "priority": "high",
     "description": "",
-    "labels": [
-      "bug"
-    ],
+    "labels": ["bug"],
     "dueDate": null,
     "createdAt": "2025-12-06T09:04:16.314Z"
   },
@@ -1037,9 +865,7 @@
     "status": "todo",
     "priority": "medium",
     "description": "",
-    "labels": [
-      "bug"
-    ],
+    "labels": ["bug"],
     "dueDate": null,
     "createdAt": "2025-12-06T09:04:16.314Z"
   },
@@ -1049,9 +875,7 @@
     "status": "canceled",
     "priority": "low",
     "description": "",
-    "labels": [
-      "feature"
-    ],
+    "labels": ["feature"],
     "dueDate": null,
     "createdAt": "2025-12-06T09:04:16.314Z"
   },
@@ -1061,9 +885,7 @@
     "status": "backlog",
     "priority": "low",
     "description": "",
-    "labels": [
-      "feature"
-    ],
+    "labels": ["feature"],
     "dueDate": null,
     "createdAt": "2025-12-06T09:04:16.314Z"
   },
@@ -1073,9 +895,7 @@
     "status": "backlog",
     "priority": "high",
     "description": "",
-    "labels": [
-      "bug"
-    ],
+    "labels": ["bug"],
     "dueDate": null,
     "createdAt": "2025-12-06T09:04:16.314Z"
   },
@@ -1085,9 +905,7 @@
     "status": "backlog",
     "priority": "high",
     "description": "",
-    "labels": [
-      "bug"
-    ],
+    "labels": ["bug"],
     "dueDate": null,
     "createdAt": "2025-12-06T09:04:16.314Z"
   },
@@ -1097,9 +915,7 @@
     "status": "canceled",
     "priority": "low",
     "description": "",
-    "labels": [
-      "documentation"
-    ],
+    "labels": ["documentation"],
     "dueDate": null,
     "createdAt": "2025-12-06T09:04:16.314Z"
   },
@@ -1109,9 +925,7 @@
     "status": "todo",
     "priority": "medium",
     "description": "",
-    "labels": [
-      "documentation"
-    ],
+    "labels": ["documentation"],
     "dueDate": null,
     "createdAt": "2025-12-06T09:04:16.314Z"
   },
@@ -1121,9 +935,7 @@
     "status": "todo",
     "priority": "low",
     "description": "",
-    "labels": [
-      "documentation"
-    ],
+    "labels": ["documentation"],
     "dueDate": null,
     "createdAt": "2025-12-06T09:04:16.314Z"
   },
@@ -1133,9 +945,7 @@
     "status": "canceled",
     "priority": "medium",
     "description": "",
-    "labels": [
-      "bug"
-    ],
+    "labels": ["bug"],
     "dueDate": null,
     "createdAt": "2025-12-06T09:04:16.314Z"
   },
@@ -1145,9 +955,7 @@
     "status": "done",
     "priority": "low",
     "description": "",
-    "labels": [
-      "feature"
-    ],
+    "labels": ["feature"],
     "dueDate": null,
     "createdAt": "2025-12-06T09:04:16.314Z"
   },
@@ -1157,9 +965,7 @@
     "status": "backlog",
     "priority": "high",
     "description": "",
-    "labels": [
-      "bug"
-    ],
+    "labels": ["bug"],
     "dueDate": null,
     "createdAt": "2025-12-06T09:04:16.314Z"
   },
@@ -1169,9 +975,7 @@
     "status": "done",
     "priority": "medium",
     "description": "",
-    "labels": [
-      "documentation"
-    ],
+    "labels": ["documentation"],
     "dueDate": null,
     "createdAt": "2025-12-06T09:04:16.314Z"
   },
@@ -1181,9 +985,7 @@
     "status": "done",
     "priority": "high",
     "description": "",
-    "labels": [
-      "feature"
-    ],
+    "labels": ["feature"],
     "dueDate": null,
     "createdAt": "2025-12-06T09:04:16.314Z"
   },
@@ -1193,9 +995,7 @@
     "status": "in progress",
     "priority": "low",
     "description": "",
-    "labels": [
-      "bug"
-    ],
+    "labels": ["bug"],
     "dueDate": null,
     "createdAt": "2025-12-06T09:04:16.314Z"
   }

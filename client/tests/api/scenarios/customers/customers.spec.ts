@@ -151,7 +151,10 @@ test.describe('Customers API', { tag: ['@api', '@customers'] }, () => {
       await customerClient.deleteCustomer(customerId)
     })
 
-    test('should return 404 for non-existent customer', async ({ request, authenticatedAuthClient }) => {
+    test('should return 404 for non-existent customer', async ({
+      request,
+      authenticatedAuthClient,
+    }) => {
       // Arrange
       const customerClient = new CustomerClient(request)
       customerClient.copyAuthStateFrom(authenticatedAuthClient)
@@ -209,7 +212,10 @@ test.describe('Customers API', { tag: ['@api', '@customers'] }, () => {
       await customerClient.deleteCustomer(customerBody.data.id)
     })
 
-    test('should create business customer with business fields', async ({ request, authenticatedAuthClient }) => {
+    test('should create business customer with business fields', async ({
+      request,
+      authenticatedAuthClient,
+    }) => {
       // Arrange
       const customerClient = new CustomerClient(request)
       customerClient.copyAuthStateFrom(authenticatedAuthClient)
@@ -245,7 +251,10 @@ test.describe('Customers API', { tag: ['@api', '@customers'] }, () => {
       await customerClient.deleteCustomer(customerBody.data.id)
     })
 
-    test('should return validation errors for missing name', async ({ request, authenticatedAuthClient }) => {
+    test('should return validation errors for missing name', async ({
+      request,
+      authenticatedAuthClient,
+    }) => {
       // Arrange
       const customerClient = new CustomerClient(request)
       customerClient.copyAuthStateFrom(authenticatedAuthClient)
@@ -261,7 +270,10 @@ test.describe('Customers API', { tag: ['@api', '@customers'] }, () => {
       await expectValidationErrors(response)
     })
 
-    test('should return validation errors for invalid email', async ({ request, authenticatedAuthClient }) => {
+    test('should return validation errors for invalid email', async ({
+      request,
+      authenticatedAuthClient,
+    }) => {
       // Arrange
       const customerClient = new CustomerClient(request)
       customerClient.copyAuthStateFrom(authenticatedAuthClient)
@@ -322,7 +334,10 @@ test.describe('Customers API', { tag: ['@api', '@customers'] }, () => {
       await customerClient.deleteCustomer(customerId)
     })
 
-    test('should update customer type from private to business', async ({ request, authenticatedAuthClient }) => {
+    test('should update customer type from private to business', async ({
+      request,
+      authenticatedAuthClient,
+    }) => {
       // Arrange
       const customerClient = new CustomerClient(request)
       customerClient.copyAuthStateFrom(authenticatedAuthClient)
@@ -357,7 +372,10 @@ test.describe('Customers API', { tag: ['@api', '@customers'] }, () => {
       await customerClient.deleteCustomer(customerId)
     })
 
-    test('should return 404 for non-existent customer', async ({ request, authenticatedAuthClient }) => {
+    test('should return 404 for non-existent customer', async ({
+      request,
+      authenticatedAuthClient,
+    }) => {
       // Arrange
       const customerClient = new CustomerClient(request)
       customerClient.copyAuthStateFrom(authenticatedAuthClient)
@@ -406,7 +424,10 @@ test.describe('Customers API', { tag: ['@api', '@customers'] }, () => {
       expectError(getResponse, HttpStatus.NOT_FOUND)
     })
 
-    test('should return 404 for non-existent customer', async ({ request, authenticatedAuthClient }) => {
+    test('should return 404 for non-existent customer', async ({
+      request,
+      authenticatedAuthClient,
+    }) => {
       // Arrange
       const customerClient = new CustomerClient(request)
       customerClient.copyAuthStateFrom(authenticatedAuthClient)
@@ -432,7 +453,10 @@ test.describe('Customers API', { tag: ['@api', '@customers'] }, () => {
   })
 
   test.describe('Customer Relationships', () => {
-    test('should load primary contact with customer', async ({ request, authenticatedAuthClient }) => {
+    test('should load primary contact with customer', async ({
+      request,
+      authenticatedAuthClient,
+    }) => {
       // Arrange
       const customerClient = new CustomerClient(request)
       customerClient.copyAuthStateFrom(authenticatedAuthClient)
@@ -461,7 +485,10 @@ test.describe('Customers API', { tag: ['@api', '@customers'] }, () => {
       await customerClient.deleteCustomer(customerId)
     })
 
-    test('should load contacts collection when included', async ({ request, authenticatedAuthClient }) => {
+    test('should load contacts collection when included', async ({
+      request,
+      authenticatedAuthClient,
+    }) => {
       // Arrange
       const customerClient = new CustomerClient(request)
       customerClient.copyAuthStateFrom(authenticatedAuthClient)
@@ -497,7 +524,10 @@ test.describe('Customers API', { tag: ['@api', '@customers'] }, () => {
       await customerClient.deleteCustomer(customerId)
     })
 
-    test('should access user through primary contact', async ({ request, authenticatedAuthClient }) => {
+    test('should access user through primary contact', async ({
+      request,
+      authenticatedAuthClient,
+    }) => {
       // Arrange
       const customerClient = new CustomerClient(request)
       customerClient.copyAuthStateFrom(authenticatedAuthClient)
@@ -527,4 +557,3 @@ test.describe('Customers API', { tag: ['@api', '@customers'] }, () => {
     })
   })
 })
-

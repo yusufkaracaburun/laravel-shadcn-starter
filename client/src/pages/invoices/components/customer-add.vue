@@ -23,4 +23,3 @@ function handleCreated() {
     <CustomerForm :customer="null" @close="handleCreated" />
   </div>
 </template>
-

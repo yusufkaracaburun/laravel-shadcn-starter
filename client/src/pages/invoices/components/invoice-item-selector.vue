@@ -17,12 +17,15 @@ import type { Item } from '@/services/items.service'
 
 import { formatMoney } from '../utils/formatters'
 
-const props = withDefaults(defineProps<{
-  invoiceId?: number
-  items?: Item[]
-}>(), {
-  items: () => [],
-})
+const props = withDefaults(
+  defineProps<{
+    invoiceId?: number
+    items?: Item[]
+  }>(),
+  {
+    items: () => [],
+  },
+)
 
 const emits = defineEmits<{
   itemsSelected: [items: any[]]
@@ -42,11 +45,13 @@ const filteredItems = computed(() => {
   }
 
   const query = searchQuery.value.toLowerCase()
-  return items.value.filter((item) => {
-    const name = item.name?.toLowerCase() || ''
-    const description = item.description?.toLowerCase() || ''
-    return name.includes(query) || description.includes(query)
-  }).slice(0, 20)
+  return items.value
+    .filter((item) => {
+      const name = item.name?.toLowerCase() || ''
+      const description = item.description?.toLowerCase() || ''
+      return name.includes(query) || description.includes(query)
+    })
+    .slice(0, 20)
 })
 
 const selectedCount = computed(() => selectedItems.value.size)
@@ -54,8 +59,7 @@ const selectedCount = computed(() => selectedItems.value.size)
 function toggleItemSelection(itemId: number) {
   if (selectedItems.value.has(itemId)) {
     selectedItems.value.delete(itemId)
-  }
-  else {
+  } else {
     selectedItems.value.add(itemId)
   }
 }
@@ -66,15 +70,14 @@ function isItemSelected(itemId: number): boolean {
 
 function handleAddSelected() {
   const selectedItemsData = filteredItems.value
-    .filter(item => selectedItems.value.has(item.id))
+    .filter((item) => selectedItems.value.has(item.id))
     .map((item) => {
       // Extract unit_price value
       let unitPrice = 0
       if (typeof item.unit_price === 'object' && 'amount' in item.unit_price) {
         const amount = Number.parseFloat(item.unit_price.amount)
         unitPrice = amount / 100
-      }
-      else if (typeof item.unit_price === 'number') {
+      } else if (typeof item.unit_price === 'number') {
         unitPrice = item.unit_price
       }
 
@@ -126,7 +129,10 @@ function handleClose() {
         </div>
 
         <!-- Selected Count -->
-        <div v-if="selectedCount > 0" class="flex items-center justify-between rounded-lg border bg-muted/50 p-3">
+        <div
+          v-if="selectedCount > 0"
+          class="flex items-center justify-between rounded-lg border bg-muted/50 p-3"
+        >
           <div class="text-sm font-medium">
             {{ selectedCount }} item{{ selectedCount === 1 ? '' : 's' }} selected
           </div>
@@ -143,11 +149,21 @@ function handleClose() {
         </div>
 
         <div v-else class="max-h-[400px] space-y-2 overflow-y-auto">
-          <div v-for="item in filteredItems" :key="item.id"
+          <div
+            v-for="item in filteredItems"
+            :key="item.id"
             class="flex items-center gap-3 rounded-lg border p-4 hover:bg-muted/50 cursor-pointer transition-colors"
-            :class="isItemSelected(item.id) ? 'border-primary bg-primary/5' : ''" @click="toggleItemSelection(item.id)">
-            <div class="flex size-5 shrink-0 items-center justify-center rounded-sm border-2 transition-colors"
-              :class="isItemSelected(item.id) ? 'border-primary bg-primary text-primary-foreground' : 'border-muted'">
+            :class="isItemSelected(item.id) ? 'border-primary bg-primary/5' : ''"
+            @click="toggleItemSelection(item.id)"
+          >
+            <div
+              class="flex size-5 shrink-0 items-center justify-center rounded-sm border-2 transition-colors"
+              :class="
+                isItemSelected(item.id)
+                  ? 'border-primary bg-primary text-primary-foreground'
+                  : 'border-muted'
+              "
+            >
               <Check v-if="isItemSelected(item.id)" class="size-3" />
             </div>
             <div class="flex-1">
@@ -163,12 +179,13 @@ function handleClose() {
       </div>
 
       <DialogFooter>
-        <Button variant="outline" @click="handleClose">
-          Cancel
-        </Button>
+        <Button variant="outline" @click="handleClose"> Cancel </Button>
         <Button :disabled="selectedCount === 0" @click="handleAddSelected">
           <Plus class="mr-2 size-4" />
-          Add {{ selectedCount > 0 ? `${selectedCount} item${selectedCount === 1 ? '' : 's'}` : 'Items' }}
+          Add
+          {{
+            selectedCount > 0 ? `${selectedCount} item${selectedCount === 1 ? '' : 's'}` : 'Items'
+          }}
         </Button>
       </DialogFooter>
     </DialogContent>

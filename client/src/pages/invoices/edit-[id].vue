@@ -24,7 +24,12 @@ const router = useRouter()
 
 const invoiceId = computed(() => Number(route.params.id))
 
-const { data: invoiceResponse, isLoading, isError, error } = useGetInvoiceQuery(invoiceId, {
+const {
+  data: invoiceResponse,
+  isLoading,
+  isError,
+  error,
+} = useGetInvoiceQuery(invoiceId, {
   include: ['items'],
 })
 
@@ -36,7 +41,7 @@ const prerequisites = computed(() => prerequisitesResponse.value?.data ?? null)
 const customers = computed(() => {
   if (!prerequisites.value?.customers) return []
   const customersData = prerequisites.value.customers
-  return Array.isArray(customersData) ? customersData : (customersData as any).data ?? []
+  return Array.isArray(customersData) ? customersData : ((customersData as any).data ?? [])
 })
 
 const invoice = computed(() => invoiceResponse.value?.data ?? null)
@@ -125,7 +130,12 @@ async function handleUpdateAndSend() {
       </template>
 
       <template #preview>
-        <InvoicePreview :form-values="formValues" :items="formItems" :customers="customers" :is-loading="isSubmitting" />
+        <InvoicePreview
+          :form-values="formValues"
+          :items="formItems"
+          :customers="customers"
+          :is-loading="isSubmitting"
+        />
       </template>
 
       <template #actions>

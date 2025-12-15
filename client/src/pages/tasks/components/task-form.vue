@@ -48,20 +48,22 @@ if (props.task?.dueDate) {
   }
 }
 
-watch(() => dueTime.value, (newVal) => {
-  if (!newVal)
-    return
-  if (dueDate.value) {
-    const [hours, minutes] = newVal.split(':').map(Number)
-    dueDate.value = new CalendarDateTime(
-      dueDate.value.year,
-      dueDate.value.month,
-      dueDate.value.day,
-      hours,
-      minutes,
-    )
-  }
-})
+watch(
+  () => dueTime.value,
+  (newVal) => {
+    if (!newVal) return
+    if (dueDate.value) {
+      const [hours, minutes] = newVal.split(':').map(Number)
+      dueDate.value = new CalendarDateTime(
+        dueDate.value.year,
+        dueDate.value.month,
+        dueDate.value.day,
+        hours,
+        minutes,
+      )
+    }
+  },
+)
 
 const formSchema = toTypedSchema(
   z.object({
@@ -70,7 +72,10 @@ const formSchema = toTypedSchema(
       .min(2)
       .max(50)
       .default(props.task?.title ?? ''),
-    description: z.string().optional().default(props.task?.description ?? ''),
+    description: z
+      .string()
+      .optional()
+      .default(props.task?.description ?? ''),
     status: z.string().default(props.task?.status ?? ''),
     labels: z.array(z.string()).default(props.task?.labels ?? []),
     priority: z.string().default(props.task?.priority ?? ''),
@@ -86,7 +91,7 @@ const onSubmit = handleSubmit((values) => {
     ...values,
     dueDate: dueDate.value ? dueDate.value.toDate(getLocalTimeZone()) : undefined,
   }
-  
+
   // If editing existing task, emit update event
   if (props.task?.id) {
     emits('task-updated', {
@@ -101,7 +106,7 @@ const onSubmit = handleSubmit((values) => {
       createdAt: new Date().toISOString(),
     } as Task)
   }
-  
+
   toast('You submitted the following values:', {
     description: h(
       'pre',
@@ -130,7 +135,11 @@ const onSubmit = handleSubmit((values) => {
         <UiFormItem>
           <UiFormLabel>Description</UiFormLabel>
           <UiFormControl>
-            <UiTextarea placeholder="Enter task description (optional)" rows="4" v-bind="componentField" />
+            <UiTextarea
+              placeholder="Enter task description (optional)"
+              rows="4"
+              v-bind="componentField"
+            />
           </UiFormControl>
           <UiFormDescription />
           <UiFormMessage />
@@ -177,14 +186,18 @@ const onSubmit = handleSubmit((values) => {
                 <UiFormControl>
                   <Checkbox
                     :checked="componentField.modelValue?.includes(label.value)"
-                    @update:checked="(checked) => {
-                      const current = componentField.modelValue || []
-                      if (checked) {
-                        componentField.modelValue = [...current, label.value]
-                      } else {
-                        componentField.modelValue = current.filter((l: string) => l !== label.value)
+                    @update:checked="
+                      (checked) => {
+                        const current = componentField.modelValue || []
+                        if (checked) {
+                          componentField.modelValue = [...current, label.value]
+                        } else {
+                          componentField.modelValue = current.filter(
+                            (l: string) => l !== label.value,
+                          )
+                        }
                       }
-                    }"
+                    "
                   />
                 </UiFormControl>
                 <UiFormLabel class="font-normal">
@@ -229,10 +242,12 @@ const onSubmit = handleSubmit((values) => {
                 <PopoverTrigger as-child>
                   <UiButton
                     variant="outline"
-                    :class="cn(
-                      'flex-1 justify-start text-left font-normal px-3',
-                      !dueDate && 'text-muted-foreground',
-                    )"
+                    :class="
+                      cn(
+                        'flex-1 justify-start text-left font-normal px-3',
+                        !dueDate && 'text-muted-foreground',
+                      )
+                    "
                   >
                     <CalendarIcon class="mr-2 size-4" />
                     {{ dueDate ? df.format(dueDate.toDate(getLocalTimeZone())) : 'Pick a date' }}

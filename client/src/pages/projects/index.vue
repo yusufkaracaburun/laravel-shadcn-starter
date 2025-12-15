@@ -3,11 +3,7 @@ import { LayoutGrid, List, Grid3x3 } from 'lucide-vue-next'
 
 import Page from '@/components/global-layout/basic-page.vue'
 import { Button } from '@/components/ui/button'
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from '@/components/ui/tooltip'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { useProjects } from '@/composables/use-projects'
 
 import { columns } from './components/columns'
@@ -100,4 +96,3 @@ const { loading, projects, serverPagination, sorting, onSortingChange } = usePro
     </div>
   </Page>
 </template>
-

@@ -1,6 +1,6 @@
 ---
 name: Implement Invoice Pages and Files
-overview: "Create invoice pages, components, services, and composables following the customers pattern, using the actual database structure from the migration: customer_id, invoice_number, date, due_days, date_due, status, subtotal, total_vat_0/9/21, total, notes."
+overview: 'Create invoice pages, components, services, and composables following the customers pattern, using the actual database structure from the migration: customer_id, invoice_number, date, due_days, date_due, status, subtotal, total_vat_0/9/21, total, notes.'
 todos: []
 ---
 
@@ -78,7 +78,8 @@ Create service following `customers.service.ts` pattern:
 **Interfaces:**
 
 - **Money interface**: Reuse from `items.service.ts` (amount, currency, formatted)
-- **Invoice interface**: 
+- **Invoice interface**:
+
   ```typescript
   {
     id: number
@@ -298,7 +299,7 @@ All files will be created in:
 
 ## Key Differences from Customers
 
-1. **Money Fields**: All amount fields (subtotal, total_vat_*, total) use Money type from items service pattern
+1. **Money Fields**: All amount fields (subtotal, total*vat*\*, total) use Money type from items service pattern
 2. **VAT Breakdown**: Three separate VAT totals (0%, 9%, 21%) instead of single tax field
 3. **Due Days**: Separate `due_days` field in addition to `date_due`
 4. **Customer Relationship**: Invoices always have a customer_id (required foreign key)

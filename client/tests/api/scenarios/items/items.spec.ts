@@ -1,4 +1,9 @@
-import type { CreateItemRequest, Item, PaginatedItemsResponse, UpdateItemRequest } from '../../features/items/item-types'
+import type {
+  CreateItemRequest,
+  Item,
+  PaginatedItemsResponse,
+  UpdateItemRequest,
+} from '../../features/items/item-types'
 
 import { ItemClient } from '../../features/items/item-client'
 import { HttpStatus } from '../../features/shared/enums'
@@ -134,7 +139,10 @@ test.describe('Items API', { tag: ['@api', '@items'] }, () => {
       await itemClient.deleteItem(itemId)
     })
 
-    test('should return 404 for non-existent item', async ({ request, authenticatedAuthClient }) => {
+    test('should return 404 for non-existent item', async ({
+      request,
+      authenticatedAuthClient,
+    }) => {
       // Arrange
       const itemClient = new ItemClient(request)
       itemClient.copyAuthStateFrom(authenticatedAuthClient)
@@ -191,8 +199,7 @@ test.describe('Items API', { tag: ['@api', '@items'] }, () => {
         expect(unitPrice).toHaveProperty('amount')
         expect(unitPrice).toHaveProperty('currency')
         expect(unitPrice).toHaveProperty('formatted')
-      }
-      else {
+      } else {
         // Number - should match input (within rounding tolerance)
         expect(typeof unitPrice).toBe('number')
       }
@@ -201,7 +208,10 @@ test.describe('Items API', { tag: ['@api', '@items'] }, () => {
       await itemClient.deleteItem(itemBody.data.id)
     })
 
-    test('should return validation errors for missing name', async ({ request, authenticatedAuthClient }) => {
+    test('should return validation errors for missing name', async ({
+      request,
+      authenticatedAuthClient,
+    }) => {
       // Arrange
       const itemClient = new ItemClient(request)
       itemClient.copyAuthStateFrom(authenticatedAuthClient)
@@ -218,7 +228,10 @@ test.describe('Items API', { tag: ['@api', '@items'] }, () => {
       await expectValidationErrors(response)
     })
 
-    test('should return validation errors for invalid unit_price', async ({ request, authenticatedAuthClient }) => {
+    test('should return validation errors for invalid unit_price', async ({
+      request,
+      authenticatedAuthClient,
+    }) => {
       // Arrange
       const itemClient = new ItemClient(request)
       itemClient.copyAuthStateFrom(authenticatedAuthClient)
@@ -235,7 +248,10 @@ test.describe('Items API', { tag: ['@api', '@items'] }, () => {
       await expectValidationErrors(response)
     })
 
-    test('should return validation errors for invalid vat_rate', async ({ request, authenticatedAuthClient }) => {
+    test('should return validation errors for invalid vat_rate', async ({
+      request,
+      authenticatedAuthClient,
+    }) => {
       // Arrange
       const itemClient = new ItemClient(request)
       itemClient.copyAuthStateFrom(authenticatedAuthClient)
@@ -252,7 +268,10 @@ test.describe('Items API', { tag: ['@api', '@items'] }, () => {
       await expectValidationErrors(response)
     })
 
-    test('should return validation errors for duplicate name', async ({ request, authenticatedAuthClient }) => {
+    test('should return validation errors for duplicate name', async ({
+      request,
+      authenticatedAuthClient,
+    }) => {
       // Arrange
       const itemClient = new ItemClient(request)
       itemClient.copyAuthStateFrom(authenticatedAuthClient)
@@ -349,8 +368,7 @@ test.describe('Items API', { tag: ['@api', '@items'] }, () => {
         // Money object - verify it's updated
         expect(unitPrice).toHaveProperty('amount')
         expect(unitPrice).toHaveProperty('formatted')
-      }
-      else {
+      } else {
         // Number - should be close to updated value
         expect(typeof unitPrice).toBe('number')
       }
@@ -359,7 +377,10 @@ test.describe('Items API', { tag: ['@api', '@items'] }, () => {
       await itemClient.deleteItem(itemId)
     })
 
-    test('should return validation errors for invalid unit_price on update', async ({ request, authenticatedAuthClient }) => {
+    test('should return validation errors for invalid unit_price on update', async ({
+      request,
+      authenticatedAuthClient,
+    }) => {
       // Arrange
       const itemClient = new ItemClient(request)
       itemClient.copyAuthStateFrom(authenticatedAuthClient)
@@ -382,7 +403,10 @@ test.describe('Items API', { tag: ['@api', '@items'] }, () => {
       await itemClient.deleteItem(itemId)
     })
 
-    test('should return 404 for non-existent item on update', async ({ request, authenticatedAuthClient }) => {
+    test('should return 404 for non-existent item on update', async ({
+      request,
+      authenticatedAuthClient,
+    }) => {
       // Arrange
       const itemClient = new ItemClient(request)
       itemClient.copyAuthStateFrom(authenticatedAuthClient)
@@ -435,7 +459,10 @@ test.describe('Items API', { tag: ['@api', '@items'] }, () => {
       expectError(getResponse, HttpStatus.NOT_FOUND)
     })
 
-    test('should return 404 for non-existent item on delete', async ({ request, authenticatedAuthClient }) => {
+    test('should return 404 for non-existent item on delete', async ({
+      request,
+      authenticatedAuthClient,
+    }) => {
       // Arrange
       const itemClient = new ItemClient(request)
       itemClient.copyAuthStateFrom(authenticatedAuthClient)
@@ -460,4 +487,3 @@ test.describe('Items API', { tag: ['@api', '@items'] }, () => {
     })
   })
 })
-

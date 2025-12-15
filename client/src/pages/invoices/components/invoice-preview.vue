@@ -79,8 +79,13 @@ const displayTotals = computed(() => {
     <CardHeader>
       <div class="flex items-center justify-between">
         <h3 class="text-lg font-semibold">Invoice Preview</h3>
-        <StatusBadge v-if="formValues.status" :status="formValues.status" type="invoice" :icon="currentStatus.icon"
-          :label="currentStatus.label" />
+        <StatusBadge
+          v-if="formValues.status"
+          :status="formValues.status"
+          type="invoice"
+          :icon="currentStatus.icon"
+          :label="currentStatus.label"
+        />
       </div>
     </CardHeader>
     <CardContent class="space-y-6">
@@ -112,13 +117,22 @@ const displayTotals = computed(() => {
         <h4 class="font-semibold text-sm uppercase text-muted-foreground">Bill To</h4>
         <div v-if="selectedCustomer" class="space-y-1">
           <p class="font-medium">{{ selectedCustomer.name }}</p>
-          <div v-if="selectedCustomer.formatted_address?.length" class="text-sm text-muted-foreground">
+          <div
+            v-if="selectedCustomer.formatted_address?.length"
+            class="text-sm text-muted-foreground"
+          >
             <p v-for="(line, index) in selectedCustomer.formatted_address" :key="index">
               {{ line }}
             </p>
           </div>
           <div v-else-if="selectedCustomer.address" class="text-sm text-muted-foreground">
             <p>{{ selectedCustomer.address }}</p>
+          </div>
+          <div v-if="selectedCustomer.primary_contact?.name" class="text-sm text-muted-foreground">
+            <p>Contact: {{ selectedCustomer.primary_contact.name }}</p>
+          </div>
+          <div v-if="selectedCustomer.email" class="text-sm text-muted-foreground">
+            <p>Email: {{ selectedCustomer.email }}</p>
           </div>
         </div>
         <div v-else class="text-sm text-muted-foreground italic">No customer selected</div>
@@ -128,15 +142,13 @@ const displayTotals = computed(() => {
       <div v-if="items && items.length > 0" class="space-y-2 border-b pb-4">
         <h4 class="font-semibold text-sm uppercase text-muted-foreground">Items</h4>
         <div class="space-y-2">
-          <div
-            v-for="item in items"
-            :key="item.id"
-            class="flex justify-between text-sm"
-          >
+          <div v-for="item in items" :key="item.id" class="flex justify-between text-sm">
             <div class="flex-1">
               <p class="font-medium">{{ item.description || '—' }}</p>
               <p class="text-xs text-muted-foreground">
-                {{ formatNumber(item.quantity, 2) }}{{ (item as any).unit ? ` ${(item as any).unit}` : '' }} × {{ formatMoney(item.unit_price) }} @ {{ item.vat_rate }}%
+                {{ formatNumber(item.quantity, 2)
+                }}{{ (item as any).unit ? ` ${(item as any).unit}` : '' }} ×
+                {{ formatMoney(item.unit_price) }} @ {{ item.vat_rate }}%
               </p>
             </div>
             <div class="text-right">

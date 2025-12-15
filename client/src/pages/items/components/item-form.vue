@@ -38,7 +38,10 @@ const formSchema = toTypedSchema(
       .min(2, 'Name must be at least 2 characters')
       .max(255, 'Name must not exceed 255 characters')
       .default(props.item?.name ?? ''),
-    description: z.string().nullable().default(props.item?.description ?? null),
+    description: z
+      .string()
+      .nullable()
+      .default(props.item?.description ?? null),
     unit_price: z
       .number()
       .min(0, 'Unit price must be zero or greater')
@@ -48,7 +51,11 @@ const formSchema = toTypedSchema(
       .min(0, 'VAT rate must be zero or greater')
       .max(100, 'VAT rate may not be greater than 100%')
       .default(props.item?.vat_rate ?? 0),
-    unit: z.string().max(50, 'Unit must not exceed 50 characters').nullable().default(props.item?.unit ?? null),
+    unit: z
+      .string()
+      .max(50, 'Unit must not exceed 50 characters')
+      .nullable()
+      .default(props.item?.unit ?? null),
   }),
 )
 
@@ -67,19 +74,23 @@ const { isFieldDirty, handleSubmit, isSubmitting, resetForm } = useForm({
 })
 
 // Reset form when item changes
-watch(() => props.item, (newItem) => {
-  if (newItem) {
-    resetForm({
-      values: {
-        name: newItem.name ?? '',
-        description: newItem.description ?? null,
-        unit_price: getUnitPriceValue(newItem),
-        vat_rate: newItem.vat_rate ?? 0,
-        unit: newItem.unit ?? null,
-      },
-    })
-  }
-}, { deep: true })
+watch(
+  () => props.item,
+  (newItem) => {
+    if (newItem) {
+      resetForm({
+        values: {
+          name: newItem.name ?? '',
+          description: newItem.description ?? null,
+          unit_price: getUnitPriceValue(newItem),
+          vat_rate: newItem.vat_rate ?? 0,
+          unit: newItem.unit ?? null,
+        },
+      })
+    }
+  },
+  { deep: true },
+)
 
 const onSubmit = handleSubmit(async (values) => {
   try {
@@ -94,15 +105,13 @@ const onSubmit = handleSubmit(async (values) => {
     if (props.item?.id) {
       // Update existing item
       await updateItem(props.item.id, backendData)
-    }
-    else {
+    } else {
       // Create new item
       await createItem(backendData)
     }
 
     emits('close')
-  }
-  catch (error) {
+  } catch (error) {
     // Error handling is done in the composable
     // Just log for debugging
     console.error('Item form submission error:', error)
@@ -146,7 +155,14 @@ const onSubmit = handleSubmit(async (values) => {
       <UiFormItem>
         <UiFormLabel>VAT Rate (%)</UiFormLabel>
         <UiFormControl>
-          <UiInput type="number" step="0.01" min="0" max="100" placeholder="0.00" v-bind="componentField" />
+          <UiInput
+            type="number"
+            step="0.01"
+            min="0"
+            max="100"
+            placeholder="0.00"
+            v-bind="componentField"
+          />
         </UiFormControl>
         <UiFormMessage />
       </UiFormItem>
@@ -156,15 +172,19 @@ const onSubmit = handleSubmit(async (values) => {
       <UiFormItem>
         <UiFormLabel>Unit</UiFormLabel>
         <UiFormControl>
-          <UiInput type="text" placeholder="e.g., pcs, kg, m" maxlength="50" v-bind="componentField" />
+          <UiInput
+            type="text"
+            placeholder="e.g., pcs, kg, m"
+            maxlength="50"
+            v-bind="componentField"
+          />
         </UiFormControl>
         <UiFormMessage />
       </UiFormItem>
     </FormField>
 
     <UiButton type="submit" class="w-full" :disabled="isSubmitting">
-      {{ isSubmitting ? 'Submitting...' : (item ? 'Update Item' : 'Create Item') }}
+      {{ isSubmitting ? 'Submitting...' : item ? 'Update Item' : 'Create Item' }}
     </UiButton>
   </form>
 </template>
-

@@ -78,7 +78,9 @@ export interface PaginatedInvoicesResponse {
  * @param sorting - Array of sorting objects from TanStack Table
  * @returns Sort string for Spatie QueryBuilder (e.g., "invoice_number" or "-invoice_number" or "invoice_number,-date")
  */
-function convertSortingToQueryString(sorting: Array<{ id: string, desc: boolean }>): string | undefined {
+function convertSortingToQueryString(
+  sorting: Array<{ id: string; desc: boolean }>,
+): string | undefined {
   if (!sorting || sorting.length === 0) {
     return undefined
   }
@@ -118,7 +120,7 @@ export interface InvoiceFilters {
 export function useGetInvoicesQuery(
   page: MaybeRef<number> = 1,
   pageSize: MaybeRef<number> = 15,
-  sorting: MaybeRef<Array<{ id: string, desc: boolean }>> = [],
+  sorting: MaybeRef<Array<{ id: string; desc: boolean }>> = [],
   filters: MaybeRef<InvoiceFilters> = {},
   include: MaybeRef<string[]> = [],
 ) {
@@ -169,9 +171,11 @@ export function useGetInvoicesQuery(
         const filterParams: Record<string, any> = {}
 
         if (currentFilters.id !== undefined) filterParams.id = currentFilters.id
-        if (currentFilters.customer_id !== undefined) filterParams.customer_id = currentFilters.customer_id
+        if (currentFilters.customer_id !== undefined)
+          filterParams.customer_id = currentFilters.customer_id
         if (currentFilters.status) filterParams.status = currentFilters.status
-        if (currentFilters.invoice_number) filterParams.invoice_number = currentFilters.invoice_number
+        if (currentFilters.invoice_number)
+          filterParams.invoice_number = currentFilters.invoice_number
         if (currentFilters.date) filterParams.date = currentFilters.date
         if (currentFilters.date_due) filterParams.date_due = currentFilters.date_due
         if (currentFilters.between) filterParams.between = currentFilters.between
@@ -209,7 +213,11 @@ export function useGetInvoiceQuery(invoiceId: MaybeRef<number>, options?: { incl
   const invoiceIdRef = isRef(invoiceId) ? invoiceId : ref(invoiceId)
 
   return useQuery<IResponse<Invoice>, AxiosError>({
-    queryKey: ['invoice', computed(() => toValue(invoiceIdRef)), computed(() => options?.include?.join(',') || 'customer')],
+    queryKey: [
+      'invoice',
+      computed(() => toValue(invoiceIdRef)),
+      computed(() => options?.include?.join(',') || 'customer'),
+    ],
     queryFn: async (): Promise<IResponse<Invoice>> => {
       const currentInvoiceId = toValue(invoiceIdRef)
       const includes = ['customer', ...(options?.include || [])]
@@ -301,7 +309,11 @@ export function useUpdateInvoiceMutation() {
   const { axiosInstance } = useAxios()
   const queryClient = useQueryClient()
 
-  return useMutation<IResponse<Invoice>, AxiosError, { invoiceId: number, data: UpdateInvoiceRequest }>({
+  return useMutation<
+    IResponse<Invoice>,
+    AxiosError,
+    { invoiceId: number; data: UpdateInvoiceRequest }
+  >({
     mutationFn: async ({ invoiceId, data }): Promise<IResponse<Invoice>> => {
       const response = await axiosInstance.put(`/api/invoices/${invoiceId}`, data)
       return response.data
@@ -369,4 +381,3 @@ export function useGetInvoicePrerequisitesQuery() {
     staleTime: 5 * 60 * 1000, // Consider data fresh for 5 minutes
   })
 }
-

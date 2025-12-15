@@ -39,11 +39,26 @@ const sidebarUser = computed<SidebarUser>(() => {
 <template>
   <UiDropdownMenu>
     <UiDropdownMenuTrigger as-child>
-      <UiButton variant="ghost" size="icon" class="rounded-full" data-testid="default-layout_user-menu">
+      <UiButton
+        variant="ghost"
+        size="icon"
+        class="rounded-full"
+        data-testid="default-layout_user-menu"
+      >
         <UiAvatar class="size-8">
-          <UiAvatarImage v-if="sidebarUser.avatar" :src="sidebarUser.avatar" :alt="sidebarUser.name" />
+          <UiAvatarImage
+            v-if="sidebarUser.avatar"
+            :src="sidebarUser.avatar"
+            :alt="sidebarUser.name"
+          />
           <UiAvatarFallback>
-            {{ sidebarUser.name.split(' ').map((n: string) => n[0]).join('').toUpperCase() || 'U' }}
+            {{
+              sidebarUser.name
+                .split(' ')
+                .map((n: string) => n[0])
+                .join('')
+                .toUpperCase() || 'U'
+            }}
           </UiAvatarFallback>
         </UiAvatar>
       </UiButton>
@@ -52,9 +67,19 @@ const sidebarUser = computed<SidebarUser>(() => {
       <UiDropdownMenuLabel class="p-0 font-normal">
         <div class="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
           <UiAvatar class="size-8 rounded-lg">
-            <UiAvatarImage v-if="sidebarUser.avatar" :src="sidebarUser.avatar" :alt="sidebarUser.name" />
+            <UiAvatarImage
+              v-if="sidebarUser.avatar"
+              :src="sidebarUser.avatar"
+              :alt="sidebarUser.name"
+            />
             <UiAvatarFallback class="rounded-lg">
-              {{ sidebarUser.name.split(' ').map((n: string) => n[0]).join('').toUpperCase() || 'U' }}
+              {{
+                sidebarUser.name
+                  .split(' ')
+                  .map((n: string) => n[0])
+                  .join('')
+                  .toUpperCase() || 'U'
+              }}
             </UiAvatarFallback>
           </UiAvatar>
           <div class="grid flex-1 text-sm leading-tight text-left">
@@ -104,4 +129,3 @@ const sidebarUser = computed<SidebarUser>(() => {
     </UiDropdownMenuContent>
   </UiDropdownMenu>
 </template>
-

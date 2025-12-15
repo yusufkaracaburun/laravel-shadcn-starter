@@ -125,12 +125,19 @@ const markAsRead = (notification: Notification) => {
               <Badge :class="getTypeColor(notification.type)" class="text-xs">
                 {{ notification.type }}
               </Badge>
-              <Badge v-if="!notification.read" variant="default" class="text-xs" data-testid="notifications-content_unread-badge">
+              <Badge
+                v-if="!notification.read"
+                variant="default"
+                class="text-xs"
+                data-testid="notifications-content_unread-badge"
+              >
                 New
               </Badge>
             </div>
             <p class="text-sm text-muted-foreground">{{ notification.description }}</p>
-            <p class="text-xs text-muted-foreground">{{ formatTimestamp(notification.timestamp) }}</p>
+            <p class="text-xs text-muted-foreground">
+              {{ formatTimestamp(notification.timestamp) }}
+            </p>
           </div>
           <Button
             v-if="!notification.read"
@@ -146,4 +153,3 @@ const markAsRead = (notification: Notification) => {
     </UiCardContent>
   </UiCard>
 </template>
-

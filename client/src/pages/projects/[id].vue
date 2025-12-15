@@ -16,13 +16,7 @@ import Loading from '@/components/loading.vue'
 import Badge from '@/components/ui/badge/Badge.vue'
 import { Button } from '@/components/ui/button'
 import { StatusBadge } from '@/components/ui/status-badge'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { useGetProjectQuery } from '@/services/projects.service'
 
 import { categories, statuses } from './data/data'
@@ -40,8 +34,7 @@ const project = computed<Project | null>(() => projectResponse.value?.data ?? nu
 
 // Format date
 function formatDate(dateString: string | null): string {
-  if (!dateString)
-    return '—'
+  if (!dateString) return '—'
   return new Date(dateString).toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'long',
@@ -51,8 +44,7 @@ function formatDate(dateString: string | null): string {
 
 // Format datetime
 function formatDateTime(dateString: string | null): string {
-  if (!dateString)
-    return '—'
+  if (!dateString) return '—'
   return new Date(dateString).toLocaleString('en-US', {
     year: 'numeric',
     month: 'long',
@@ -92,8 +84,7 @@ function handleDeleteClose() {
 
 // Check if error is 404
 const isNotFound = computed(() => {
-  if (!isError.value || !error.value)
-    return false
+  if (!isError.value || !error.value) return false
   return (error.value as any)?.response?.status === 404
 })
 </script>
@@ -139,9 +130,7 @@ const isNotFound = computed(() => {
           subtitle="Error Loading Project"
           error="An error occurred while loading the project information. Please try again."
         />
-        <Button class="mt-4" @click="refetch()">
-          Retry
-        </Button>
+        <Button class="mt-4" @click="refetch()"> Retry </Button>
       </div>
     </div>
 
@@ -166,10 +155,7 @@ const isNotFound = computed(() => {
                   :class="getStatusInfo(project.status)!.color"
                   variant="secondary"
                 >
-                  <component
-                    :is="getStatusInfo(project.status)!.icon"
-                    class="mr-1 size-3"
-                  />
+                  <component :is="getStatusInfo(project.status)!.icon" class="mr-1 size-3" />
                   {{ getStatusInfo(project.status)!.label }}
                 </Badge>
                 <Badge variant="outline">
@@ -191,25 +177,19 @@ const isNotFound = computed(() => {
           </CardHeader>
           <CardContent class="space-y-4">
             <div>
-              <div class="text-sm font-medium text-muted-foreground mb-1">
-                Name
-              </div>
+              <div class="text-sm font-medium text-muted-foreground mb-1">Name</div>
               <div class="text-base">
                 {{ project.name }}
               </div>
             </div>
             <div v-if="project.description">
-              <div class="text-sm font-medium text-muted-foreground mb-1">
-                Description
-              </div>
+              <div class="text-sm font-medium text-muted-foreground mb-1">Description</div>
               <div class="text-base">
                 {{ project.description }}
               </div>
             </div>
             <div>
-              <div class="text-sm font-medium text-muted-foreground mb-1">
-                Category
-              </div>
+              <div class="text-sm font-medium text-muted-foreground mb-1">Category</div>
               <div class="text-base">
                 <Badge variant="outline">
                   {{ getCategoryLabel(project.category) }}
@@ -217,9 +197,7 @@ const isNotFound = computed(() => {
               </div>
             </div>
             <div>
-              <div class="text-sm font-medium text-muted-foreground mb-1">
-                Status
-              </div>
+              <div class="text-sm font-medium text-muted-foreground mb-1">Status</div>
               <div class="text-base">
                 <StatusBadge
                   v-if="getStatusInfo(project.status)"
@@ -294,9 +272,7 @@ const isNotFound = computed(() => {
               </div>
             </div>
             <div v-if="project.team_id">
-              <div class="text-sm font-medium text-muted-foreground mb-1">
-                Team ID
-              </div>
+              <div class="text-sm font-medium text-muted-foreground mb-1">Team ID</div>
               <div class="text-base">
                 {{ project.team_id }}
               </div>

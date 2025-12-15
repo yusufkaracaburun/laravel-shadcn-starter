@@ -62,9 +62,13 @@ export const columns: ColumnDef<User>[] = [
         return h('div', {}, '—')
       }
 
-      return h('div', { class: 'flex flex-wrap gap-1' }, roles.map((role: { name: string }) =>
-        h(Badge, { variant: 'outline', key: role.name }, () => role.name),
-      ))
+      return h(
+        'div',
+        { class: 'flex flex-wrap gap-1' },
+        roles.map((role: { name: string }) =>
+          h(Badge, { variant: 'outline', key: role.name }, () => role.name),
+        ),
+      )
     },
     filterFn: (row, _id, value) => {
       // value is an array of selected role names

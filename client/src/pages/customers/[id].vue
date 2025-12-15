@@ -4,7 +4,16 @@ meta:
 </route>
 
 <script setup lang="ts">
-import { ArrowLeft, User, FilePenLine, Trash2, Mail, Phone, MapPin, Building2 } from 'lucide-vue-next'
+import {
+  ArrowLeft,
+  User,
+  FilePenLine,
+  Trash2,
+  Mail,
+  Phone,
+  MapPin,
+  Building2,
+} from 'lucide-vue-next'
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
@@ -15,13 +24,7 @@ import Page from '@/components/global-layout/basic-page.vue'
 import Loading from '@/components/loading.vue'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { useGetCustomerQuery } from '@/services/customers.service'
 
 import CustomerDelete from './components/customer-delete.vue'
@@ -32,7 +35,13 @@ const router = useRouter()
 
 const customerId = computed(() => Number(route.params.id))
 
-const { data: customerResponse, isLoading, isError, error, refetch } = useGetCustomerQuery(customerId)
+const {
+  data: customerResponse,
+  isLoading,
+  isError,
+  error,
+  refetch,
+} = useGetCustomerQuery(customerId)
 
 const customer = computed<Customer | null>(() => customerResponse.value?.data ?? null)
 
@@ -68,8 +77,7 @@ function handleDeleteClose() {
 
 // Format date from "d-m-Y H:i:s" format
 function formatDateTime(dateString: string | null): string {
-  if (!dateString)
-    return '—'
+  if (!dateString) return '—'
   const [datePart, timePart] = dateString.split(' ')
   const [day, month, year] = datePart.split('-')
   const date = new Date(`${year}-${month}-${day} ${timePart}`)
@@ -91,21 +99,11 @@ function formatDateTime(dateString: string | null): string {
           <ArrowLeft class="mr-2 size-4" />
           Back
         </Button>
-        <Button
-          v-if="customer"
-          variant="outline"
-          size="sm"
-          @click="handleSelect('edit')"
-        >
+        <Button v-if="customer" variant="outline" size="sm" @click="handleSelect('edit')">
           <FilePenLine class="mr-2 size-4" />
           Edit
         </Button>
-        <Button
-          v-if="customer"
-          variant="destructive"
-          size="sm"
-          @click="handleSelect('delete')"
-        >
+        <Button v-if="customer" variant="destructive" size="sm" @click="handleSelect('delete')">
           <Trash2 class="mr-2 size-4" />
           Delete
         </Button>
@@ -163,7 +161,12 @@ function formatDateTime(dateString: string | null): string {
                   <span v-if="customer.zipcode">{{ customer.zipcode }}</span>
                   <span v-if="(customer.address || customer.zipcode) && customer.city"> </span>
                   <span v-if="customer.city">{{ customer.city }}</span>
-                  <span v-if="customer.country && (customer.city || customer.zipcode || customer.address)">, </span>
+                  <span
+                    v-if="
+                      customer.country && (customer.city || customer.zipcode || customer.address)
+                    "
+                    >,
+                  </span>
                   <span v-if="customer.country">{{ customer.country }}</span>
                 </p>
               </div>
@@ -227,12 +230,21 @@ function formatDateTime(dateString: string | null): string {
             <div v-if="customer.primary_contact.user" class="border-t pt-4">
               <p class="text-sm font-medium text-muted-foreground mb-2">Associated User</p>
               <div class="flex items-center gap-3">
-                <div v-if="customer.primary_contact.user.profile_photo_url" class="size-10 rounded-full overflow-hidden">
-                  <img :src="customer.primary_contact.user.profile_photo_url" :alt="customer.primary_contact.user.name" class="w-full h-full object-cover">
+                <div
+                  v-if="customer.primary_contact.user.profile_photo_url"
+                  class="size-10 rounded-full overflow-hidden"
+                >
+                  <img
+                    :src="customer.primary_contact.user.profile_photo_url"
+                    :alt="customer.primary_contact.user.name"
+                    class="w-full h-full object-cover"
+                  />
                 </div>
                 <div>
                   <p class="text-sm font-semibold">{{ customer.primary_contact.user.name }}</p>
-                  <p class="text-xs text-muted-foreground">{{ customer.primary_contact.user.email }}</p>
+                  <p class="text-xs text-muted-foreground">
+                    {{ customer.primary_contact.user.email }}
+                  </p>
                 </div>
               </div>
             </div>
@@ -257,15 +269,24 @@ function formatDateTime(dateString: string | null): string {
               <div class="flex items-center justify-between">
                 <div>
                   <p class="text-sm font-semibold">{{ contact.name }}</p>
-                  <p v-if="contact.email" class="text-xs text-muted-foreground">{{ contact.email }}</p>
+                  <p v-if="contact.email" class="text-xs text-muted-foreground">
+                    {{ contact.email }}
+                  </p>
                 </div>
                 <Badge v-if="contact.id === customer.primary_contact?.id" variant="default">
                   Primary
                 </Badge>
               </div>
               <div v-if="contact.user" class="mt-2 flex items-center gap-2">
-                <div v-if="contact.user.profile_photo_url" class="size-6 rounded-full overflow-hidden">
-                  <img :src="contact.user.profile_photo_url" :alt="contact.user.name" class="w-full h-full object-cover">
+                <div
+                  v-if="contact.user.profile_photo_url"
+                  class="size-6 rounded-full overflow-hidden"
+                >
+                  <img
+                    :src="contact.user.profile_photo_url"
+                    :alt="contact.user.name"
+                    class="w-full h-full object-cover"
+                  />
                 </div>
                 <p class="text-xs text-muted-foreground">{{ contact.user.name }}</p>
               </div>
@@ -309,4 +330,3 @@ function formatDateTime(dateString: string | null): string {
     </UiDialog>
   </Page>
 </template>
-

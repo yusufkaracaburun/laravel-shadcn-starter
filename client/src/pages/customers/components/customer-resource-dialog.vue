@@ -28,4 +28,3 @@ const description = computed(() =>
     <CustomerForm class="mt-2" :customer="customer" @close="$emit('close')" />
   </div>
 </template>
-

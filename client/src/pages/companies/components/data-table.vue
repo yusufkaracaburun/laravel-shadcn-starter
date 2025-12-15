@@ -12,7 +12,15 @@ const { table } = generateVueTable<Company>(props)
 </script>
 
 <template>
-  <DataTable :columns :data :loading :table :server-pagination="props.serverPagination" :sorting="props.sorting" :on-sorting-change="props.onSortingChange">
+  <DataTable
+    :columns
+    :data
+    :loading
+    :table
+    :server-pagination="props.serverPagination"
+    :sorting="props.sorting"
+    :on-sorting-change="props.onSortingChange"
+  >
     <template #toolbar>
       <DataTableToolbar :table class="w-full overflow-x-auto" />
     </template>

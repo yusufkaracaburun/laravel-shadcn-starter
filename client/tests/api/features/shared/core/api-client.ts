@@ -25,4 +25,3 @@ export class ApiClient {
     this.customers = new CustomerClient(request)
   }
 }
-

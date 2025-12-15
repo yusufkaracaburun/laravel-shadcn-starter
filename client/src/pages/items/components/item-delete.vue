@@ -23,12 +23,10 @@ async function handleRemove() {
     isDeleting.value = true
     await deleteItem(props.item.id)
     emits('close')
-  }
-  catch (error) {
+  } catch (error) {
     // Error handling is done in the composable
     console.error('Item deletion error:', error)
-  }
-  finally {
+  } finally {
     isDeleting.value = false
   }
 }
@@ -39,24 +37,18 @@ async function handleRemove() {
     <UiDialogHeader>
       <UiDialogTitle>Delete Item</UiDialogTitle>
       <UiDialogDescription class="mt-2">
-        Are you sure you want to delete <strong>{{ item.name }}</strong>? This action cannot be undone.
+        Are you sure you want to delete <strong>{{ item.name }}</strong
+        >? This action cannot be undone.
       </UiDialogDescription>
     </UiDialogHeader>
     <UiDialogFooter>
       <UiDialogClose as-child>
-        <UiButton variant="outline">
-          Cancel
-        </UiButton>
+        <UiButton variant="outline"> Cancel </UiButton>
       </UiDialogClose>
-      <UiButton
-        variant="destructive"
-        :disabled="isDeleting"
-        @click="handleRemove"
-      >
+      <UiButton variant="destructive" :disabled="isDeleting" @click="handleRemove">
         <UiSpinner v-if="isDeleting" class="mr-2" />
         Delete
       </UiButton>
     </UiDialogFooter>
   </div>
 </template>
-

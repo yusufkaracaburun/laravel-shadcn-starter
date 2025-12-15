@@ -1,6 +1,11 @@
 import type { APIResponse } from '@playwright/test'
 
-import type { CreateProjectRequest, UpdateProjectRequest, Project, PaginatedProjectsResponse } from './project-types'
+import type {
+  CreateProjectRequest,
+  UpdateProjectRequest,
+  Project,
+  PaginatedProjectsResponse,
+} from './project-types'
 import type { IResponse } from '../shared/types'
 import { BaseClient } from '../shared/core/base-client'
 
@@ -22,7 +27,10 @@ export class ProjectClient extends BaseClient {
    * @param perPage - Number of items per page (default: 15)
    * Returns IResponse<PaginatedProjectsResponse>
    */
-  async getProjectsTyped(page: number = 1, perPage: number = 15): Promise<IResponse<PaginatedProjectsResponse>> {
+  async getProjectsTyped(
+    page: number = 1,
+    perPage: number = 15,
+  ): Promise<IResponse<PaginatedProjectsResponse>> {
     const response = await this.getProjects(page, perPage)
     return response.json() as Promise<IResponse<PaginatedProjectsResponse>>
   }
@@ -85,7 +93,10 @@ export class ProjectClient extends BaseClient {
    * @param data - Project update data
    * Returns IResponse<Project>
    */
-  async updateProjectTyped(projectId: number, data: UpdateProjectRequest): Promise<IResponse<Project>> {
+  async updateProjectTyped(
+    projectId: number,
+    data: UpdateProjectRequest,
+  ): Promise<IResponse<Project>> {
     const response = await this.updateProject(projectId, data)
     return response.json() as Promise<IResponse<Project>>
   }
@@ -114,4 +125,3 @@ export class ProjectClient extends BaseClient {
     thisClient.csrfHandler.setToken(otherClient.csrfHandler.getToken())
   }
 }
-

@@ -8,7 +8,13 @@ import type { Company } from '@/services/companies.service'
 import { Button } from '@/components/ui/button'
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { useToast } from '@/composables/use-toast'
 import { useCreateCompanyMutation, useUpdateCompanyMutation } from '@/services/companies.service'
@@ -37,18 +43,30 @@ const formSchema = computed(() => {
     name: z.string().min(1, 'Name is required.').max(255, 'Name must not exceed 255 characters.'),
     email: z.string().email('Please enter a valid email address.').min(1, 'Email is required.'),
     phone: z.string().optional().nullable(),
-    industry: z.string().min(1, 'Industry is required.').refine(
-      (val) => ['technology', 'finance', 'healthcare', 'retail', 'manufacturing', 'education'].includes(val),
-      'Please select a valid industry.',
-    ),
-    status: z.string().min(1, 'Status is required.').refine(
-      (val) => ['active', 'inactive', 'pending'].includes(val),
-      'Please select a valid status.',
-    ),
-    employees: z.string().min(1, 'Employee size is required.').refine(
-      (val) => ['1-10', '11-50', '51-200', '201-500', '500+'].includes(val),
-      'Please select a valid employee size.',
-    ),
+    industry: z
+      .string()
+      .min(1, 'Industry is required.')
+      .refine(
+        (val) =>
+          ['technology', 'finance', 'healthcare', 'retail', 'manufacturing', 'education'].includes(
+            val,
+          ),
+        'Please select a valid industry.',
+      ),
+    status: z
+      .string()
+      .min(1, 'Status is required.')
+      .refine(
+        (val) => ['active', 'inactive', 'pending'].includes(val),
+        'Please select a valid status.',
+      ),
+    employees: z
+      .string()
+      .min(1, 'Employee size is required.')
+      .refine(
+        (val) => ['1-10', '11-50', '51-200', '201-500', '500+'].includes(val),
+        'Please select a valid employee size.',
+      ),
   })
 })
 
@@ -71,25 +89,28 @@ const form = useForm({
 const { handleSubmit, setFieldError, resetForm } = form
 
 // Watch for company changes to update form values
-watch(() => props.company, (company) => {
-  if (company) {
-    resetForm({
-      values: {
-        name: company.name || '',
-        email: company.email || '',
-        phone: company.phone || null,
-        industry: company.industry || '',
-        status: company.status || '',
-        employees: company.employees || '',
-      },
-    })
-  }
-  else {
-    resetForm({
-      values: getInitialValues(),
-    })
-  }
-}, { immediate: true })
+watch(
+  () => props.company,
+  (company) => {
+    if (company) {
+      resetForm({
+        values: {
+          name: company.name || '',
+          email: company.email || '',
+          phone: company.phone || null,
+          industry: company.industry || '',
+          status: company.status || '',
+          employees: company.employees || '',
+        },
+      })
+    } else {
+      resetForm({
+        values: getInitialValues(),
+      })
+    }
+  },
+  { immediate: true },
+)
 
 const onSubmit = handleSubmit(async (values) => {
   try {
@@ -110,8 +131,7 @@ const onSubmit = handleSubmit(async (values) => {
       })
 
       toast.showSuccess('Company updated successfully!')
-    }
-    else {
+    } else {
       // Create new company
       await createCompanyMutation.mutateAsync({
         name: values.name || '',
@@ -127,8 +147,7 @@ const onSubmit = handleSubmit(async (values) => {
 
     resetForm()
     emits('close')
-  }
-  catch (error: any) {
+  } catch (error: any) {
     // Store error with context
     const context = isEditMode.value ? 'updateCompany' : 'createCompany'
     errorStore.setError(error, { context })
@@ -140,7 +159,10 @@ const onSubmit = handleSubmit(async (values) => {
       Object.keys(backendErrors).forEach((field) => {
         const fieldErrors = backendErrors[field]
         if (Array.isArray(fieldErrors) && fieldErrors.length > 0) {
-          setFieldError(field as 'name' | 'email' | 'phone' | 'industry' | 'status' | 'employees', fieldErrors[0])
+          setFieldError(
+            field as 'name' | 'email' | 'phone' | 'industry' | 'status' | 'employees',
+            fieldErrors[0],
+          )
         }
       })
     }
@@ -153,8 +175,7 @@ const onSubmit = handleSubmit(async (values) => {
     if (Object.keys(validationErrors).length > 0) {
       const firstError = Object.values(validationErrors)[0]?.[0]
       toast.showError(firstError || message)
-    }
-    else {
+    } else {
       toast.showError(message)
     }
   }
@@ -190,9 +211,7 @@ const onSubmit = handleSubmit(async (values) => {
           <Input type="tel" v-bind="componentField" placeholder="+1-555-0000" />
         </FormControl>
         <FormMessage />
-        <p class="text-xs text-muted-foreground mt-1">
-          Optional: Company phone number
-        </p>
+        <p class="text-xs text-muted-foreground mt-1">Optional: Company phone number</p>
       </FormItem>
     </FormField>
 
@@ -228,11 +247,7 @@ const onSubmit = handleSubmit(async (values) => {
               <SelectValue placeholder="Select a status" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem
-                v-for="status in statuses"
-                :key="status.value"
-                :value="status.value"
-              >
+              <SelectItem v-for="status in statuses" :key="status.value" :value="status.value">
                 <div class="flex items-center gap-2">
                   <component :is="status.icon" class="size-4 shrink-0" />
                   {{ status.label }}
@@ -256,7 +271,10 @@ const onSubmit = handleSubmit(async (values) => {
               class="flex items-center space-x-2"
             >
               <RadioGroupItem :value="size.value" :id="size.value" />
-              <label :for="size.value" class="text-sm font-normal leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+              <label
+                :for="size.value"
+                class="text-sm font-normal leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              >
                 {{ size.label }}
               </label>
             </div>
@@ -266,8 +284,19 @@ const onSubmit = handleSubmit(async (values) => {
       </FormItem>
     </FormField>
 
-    <Button type="submit" class="w-full" :disabled="isEditMode ? updateCompanyMutation.isPending.value : createCompanyMutation.isPending.value">
-      <UiSpinner v-if="isEditMode ? updateCompanyMutation.isPending.value : createCompanyMutation.isPending.value" class="mr-2" />
+    <Button
+      type="submit"
+      class="w-full"
+      :disabled="
+        isEditMode ? updateCompanyMutation.isPending.value : createCompanyMutation.isPending.value
+      "
+    >
+      <UiSpinner
+        v-if="
+          isEditMode ? updateCompanyMutation.isPending.value : createCompanyMutation.isPending.value
+        "
+        class="mr-2"
+      />
       {{ isEditMode ? 'Update Company' : 'Create Company' }}
     </Button>
   </form>

@@ -31,7 +31,8 @@ export const columns: ColumnDef<Item>[] = [
       return h(
         'button',
         {
-          class: 'max-w-[500px] truncate font-medium text-left hover:underline cursor-pointer focus:outline-none focus:underline',
+          class:
+            'max-w-[500px] truncate font-medium text-left hover:underline cursor-pointer focus:outline-none focus:underline',
           onClick: () => {
             router.push({ name: '/items/[id]', params: { id: item.id.toString() } })
           },
@@ -65,10 +66,14 @@ export const columns: ColumnDef<Item>[] = [
       }
       // Fallback for number (backward compatibility)
       if (typeof priceValue === 'number') {
-        return h('div', { class: 'w-[100px]' }, new Intl.NumberFormat('en-US', {
-          style: 'currency',
-          currency: 'USD',
-        }).format(priceValue))
+        return h(
+          'div',
+          { class: 'w-[100px]' },
+          new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: 'USD',
+          }).format(priceValue),
+        )
       }
       return h('div', { class: 'w-[100px] text-muted-foreground' }, '-')
     },
@@ -101,7 +106,11 @@ export const columns: ColumnDef<Item>[] = [
         return h('div', { class: 'w-[100px] text-muted-foreground' }, '-')
       }
       const date = new Date(dateValue)
-      return h('div', { class: 'w-[100px]' }, date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }))
+      return h(
+        'div',
+        { class: 'w-[100px]' },
+        date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }),
+      )
     },
     enableSorting: true,
   },
@@ -110,4 +119,3 @@ export const columns: ColumnDef<Item>[] = [
     cell: ({ row }) => h(DataTableRowActions, { row }),
   },
 ]
-

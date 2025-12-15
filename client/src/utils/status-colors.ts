@@ -118,7 +118,10 @@ export function getInvoiceStatusColor(status: InvoiceStatusValue | string | unde
  * Generic status color getter that tries to match project or task status
  * Falls back to a default color if no match is found
  */
-export function getStatusColor(status: string | undefined, type: 'project' | 'task' = 'project'): string {
+export function getStatusColor(
+  status: string | undefined,
+  type: 'project' | 'task' = 'project',
+): string {
   if (!status) return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300'
 
   if (type === 'project') {
@@ -126,4 +129,3 @@ export function getStatusColor(status: string | undefined, type: 'project' | 'ta
   }
   return getTaskStatusColor(status as TaskStatusValue)
 }
-

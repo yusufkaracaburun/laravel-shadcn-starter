@@ -61,4 +61,3 @@ const customerDeleteBatchOpen = ref(false)
     </template>
   </DataTable>
 </template>
-

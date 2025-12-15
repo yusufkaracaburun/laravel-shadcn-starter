@@ -14,13 +14,7 @@ import Error from '@/components/custom-error.vue'
 import Page from '@/components/global-layout/basic-page.vue'
 import Loading from '@/components/loading.vue'
 import { Button } from '@/components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { useGetItemQuery } from '@/services/items.service'
 
 import ItemDelete from './components/item-delete.vue'
@@ -67,8 +61,7 @@ function handleDeleteClose() {
 
 // Format date
 function formatDate(dateString: string | null): string {
-  if (!dateString)
-    return '—'
+  if (!dateString) return '—'
   return new Date(dateString).toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'long',
@@ -78,8 +71,7 @@ function formatDate(dateString: string | null): string {
 
 // Format datetime
 function formatDateTime(dateString: string | null): string {
-  if (!dateString)
-    return '—'
+  if (!dateString) return '—'
   return new Date(dateString).toLocaleString('en-US', {
     year: 'numeric',
     month: 'long',
@@ -115,21 +107,11 @@ function formatPrice(price: number | { formatted: string } | undefined): string 
           <ArrowLeft class="mr-2 size-4" />
           Back
         </Button>
-        <Button
-          v-if="item"
-          variant="outline"
-          size="sm"
-          @click="handleSelect('edit')"
-        >
+        <Button v-if="item" variant="outline" size="sm" @click="handleSelect('edit')">
           <FilePenLine class="mr-2 size-4" />
           Edit
         </Button>
-        <Button
-          v-if="item"
-          variant="destructive"
-          size="sm"
-          @click="handleSelect('delete')"
-        >
+        <Button v-if="item" variant="destructive" size="sm" @click="handleSelect('delete')">
           <Trash2 class="mr-2 size-4" />
           Delete
         </Button>
@@ -216,4 +198,3 @@ function formatPrice(price: number | { formatted: string } | undefined): string 
     </UiDialog>
   </Page>
 </template>
-

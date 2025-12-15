@@ -10,4 +10,3 @@ export const invalidUser = {
   email: 'invalid@example.com',
   password: 'wrongpassword',
 }
-

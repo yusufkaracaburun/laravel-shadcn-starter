@@ -1,8 +1,4 @@
-import {
-  CheckCircle2,
-  Pause,
-  XCircle,
-} from 'lucide-vue-next'
+import { CheckCircle2, Pause, XCircle } from 'lucide-vue-next'
 import { h } from 'vue'
 
 import { getProjectStatusColor } from '@/utils/status-colors'
@@ -60,5 +56,3 @@ export const statuses = [
     },
   },
 ]
-
-

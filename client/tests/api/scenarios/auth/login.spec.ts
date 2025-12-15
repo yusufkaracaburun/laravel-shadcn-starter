@@ -77,7 +77,7 @@ test.describe('Login', { tag: ['@api', '@auth', '@login'] }, () => {
     // Assert: Should succeed because AuthClient.ensureCsrfCookie() is called internally
     expectSuccess(response)
     expect(response.status()).toBe(HttpStatus.OK)
-    
+
     // Verify login response contains user object
     const loginBody = await response.json()
     expect(loginBody).toHaveProperty('id')
@@ -109,7 +109,7 @@ test.describe('Login', { tag: ['@api', '@auth', '@login'] }, () => {
     // This verifies that the token was extracted and used correctly
     expectSuccess(loginResponse)
     expect(loginResponse.status()).toBe(HttpStatus.OK)
-    
+
     // Verify login response contains user object
     const loginBody = await loginResponse.json()
     expect(loginBody).toHaveProperty('id')
@@ -117,4 +117,3 @@ test.describe('Login', { tag: ['@api', '@auth', '@login'] }, () => {
     expect(loginBody).toHaveProperty('name')
   })
 })
-

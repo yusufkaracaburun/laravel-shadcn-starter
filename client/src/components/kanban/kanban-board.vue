@@ -43,11 +43,7 @@ const emit = defineEmits<{
   'task-created': [task: Task, columnId: string]
 }>()
 
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from '@/components/ui/avatar'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
@@ -76,11 +72,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import {
   Select,
   SelectContent,
@@ -89,17 +81,14 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from '@/components/ui/tooltip'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { useKanban } from '@/composables/use-kanban'
 import { cn } from '@/lib/utils'
 // Import TaskResourceDialog for tasks page integration
 import TaskResourceDialogWrapper from '@/pages/tasks/components/task-resource-dialog.vue'
 
-const { board, addTask, updateTask, removeTask, setColumns, removeColumn, updateColumn } = useKanban()
+const { board, addTask, updateTask, removeTask, setColumns, removeColumn, updateColumn } =
+  useKanban()
 
 // Generate task ID function (same as in useKanban)
 function generateTaskId(): string {
@@ -125,22 +114,29 @@ const df = new DateFormatter('en-US', {
 const dueDate = ref<DateValue | undefined>()
 const dueTime = ref<string | undefined>('00:00')
 
-watch(() => dueTime.value, (newVal) => {
-  if (!newVal)
-    return
-  if (dueDate.value) {
-    const [hours, minutes] = newVal.split(':').map(Number)
-    dueDate.value = new CalendarDateTime(
-      dueDate.value.year,
-      dueDate.value.month,
-      dueDate.value.day,
-      hours,
-      minutes,
-    )
-  }
-})
+watch(
+  () => dueTime.value,
+  (newVal) => {
+    if (!newVal) return
+    if (dueDate.value) {
+      const [hours, minutes] = newVal.split(':').map(Number)
+      dueDate.value = new CalendarDateTime(
+        dueDate.value.year,
+        dueDate.value.month,
+        dueDate.value.day,
+        hours,
+        minutes,
+      )
+    }
+  },
+)
 
-const showModalTask = ref<{ type: 'create' | 'edit', open: boolean, columnId: string | null, taskId?: string | null }>({
+const showModalTask = ref<{
+  type: 'create' | 'edit'
+  open: boolean
+  columnId: string | null
+  taskId?: string | null
+}>({
   type: 'create',
   open: false,
   columnId: null,
@@ -158,10 +154,12 @@ function resetData() {
   dueDate.value = undefined
   dueTime.value = '00:00'
 }
-watch(() => showModalTask.value.open, (newVal) => {
-  if (!newVal)
-    resetData()
-})
+watch(
+  () => showModalTask.value.open,
+  (newVal) => {
+    if (!newVal) resetData()
+  },
+)
 
 function openNewTask(colId: string) {
   // If using TaskForm, open TaskResourceDialog instead
@@ -169,10 +167,10 @@ function openNewTask(colId: string) {
     // Create a new task object with the column status
     const statusMap: Record<string, string> = {
       'in-progress': 'in progress',
-      'backlog': 'backlog',
-      'todo': 'todo',
-      'done': 'done',
-      'canceled': 'canceled',
+      backlog: 'backlog',
+      todo: 'todo',
+      done: 'done',
+      canceled: 'canceled',
     }
     selectedTableTask.value = {
       id: '', // Will be generated
@@ -187,7 +185,7 @@ function openNewTask(colId: string) {
     isEditDialogOpen.value = true
     return
   }
-  
+
   // Original kanban form logic
   showModalTask.value = { type: 'create', open: true, columnId: colId }
   newTask.title = ''
@@ -195,8 +193,7 @@ function openNewTask(colId: string) {
   newTask.priority = undefined
 }
 function createTask() {
-  if (!showModalTask.value.columnId || !newTask.title.trim())
-    return
+  if (!showModalTask.value.columnId || !newTask.title.trim()) return
   const payload: NewTask = {
     title: newTask.title.trim(),
     description: newTask.description?.trim(),
@@ -210,8 +207,7 @@ function createTask() {
 }
 
 function editTask() {
-  if (!showModalTask.value.columnId || !newTask.title.trim())
-    return
+  if (!showModalTask.value.columnId || !newTask.title.trim()) return
   const payload: Partial<Task> = {
     title: newTask.title.trim(),
     description: newTask.description?.trim(),
@@ -225,10 +221,9 @@ function editTask() {
 }
 
 function showEditTask(colId: string, taskId: string) {
-  const task = board.value.columns.find(c => c.id === colId)?.tasks.find(t => t.id === taskId)
-  if (!task)
-    return
-  
+  const task = board.value.columns.find((c) => c.id === colId)?.tasks.find((t) => t.id === taskId)
+  if (!task) return
+
   // If using TaskForm, convert to table task format
   if (props.useTaskForm) {
     // Convert kanban task to table task format
@@ -246,7 +241,7 @@ function showEditTask(colId: string, taskId: string) {
     isEditDialogOpen.value = true
     return
   }
-  
+
   // Original kanban form logic
   newTask.title = task.title
   newTask.description = task.description
@@ -270,13 +265,16 @@ function handleTaskFormUpdate(updatedTask: any) {
     done: 'done',
     canceled: 'canceled',
   }
-  
+
   const newColId = statusToColId[updatedTask.status] || updatedTask.status
   const taskId = updatedTask.id
-  
+
   // Check if this is a new task (no ID yet or empty string)
-  const isNewTask = !taskId || taskId === '' || (selectedTableTask.value && (!selectedTableTask.value.id || selectedTableTask.value.id === ''))
-  
+  const isNewTask =
+    !taskId ||
+    taskId === '' ||
+    (selectedTableTask.value && (!selectedTableTask.value.id || selectedTableTask.value.id === ''))
+
   if (isNewTask) {
     // Create new task
     const kanbanTask: Task = {
@@ -289,10 +287,10 @@ function handleTaskFormUpdate(updatedTask: any) {
       status: newColId,
       createdAt: updatedTask.createdAt || new Date(),
     }
-    
+
     // Add to the appropriate column
-    let col = board.value.columns.find(c => c.id === newColId)
-    
+    let col = board.value.columns.find((c) => c.id === newColId)
+
     // If column doesn't exist, create it
     if (!col) {
       const columnTitles: Record<string, string> = {
@@ -309,7 +307,7 @@ function handleTaskFormUpdate(updatedTask: any) {
       }
       board.value.columns.push(col)
     }
-    
+
     // Add task to column
     col.tasks.unshift(kanbanTask)
     setColumns([...board.value.columns])
@@ -321,18 +319,18 @@ function handleTaskFormUpdate(updatedTask: any) {
     // Find current column and task
     let currentCol: Column | undefined
     let currentTask: Task | undefined
-    
+
     for (const col of board.value.columns) {
-      const found = col.tasks.find(t => t.id === taskId)
+      const found = col.tasks.find((t) => t.id === taskId)
       if (found) {
         currentCol = col
         currentTask = found
         break
       }
     }
-    
+
     if (!currentTask) return
-    
+
     // Prepare update payload
     const payload: Partial<Task> = {
       title: updatedTask.title,
@@ -341,14 +339,14 @@ function handleTaskFormUpdate(updatedTask: any) {
       dueDate: updatedTask.dueDate,
       labels: updatedTask.labels || [],
     }
-    
+
     // If status changed, move to new column
     if (currentCol && currentCol.id !== newColId) {
       // Remove from old column
-      currentCol.tasks = currentCol.tasks.filter(t => t.id !== taskId)
-      
+      currentCol.tasks = currentCol.tasks.filter((t) => t.id !== taskId)
+
       // Add to new column
-      const newCol = board.value.columns.find(c => c.id === newColId)
+      const newCol = board.value.columns.find((c) => c.id === newColId)
       if (newCol) {
         newCol.tasks.unshift({ ...currentTask, ...payload, status: newColId })
       }
@@ -356,11 +354,11 @@ function handleTaskFormUpdate(updatedTask: any) {
       // Update in place
       Object.assign(currentTask, payload)
     }
-    
+
     setColumns([...board.value.columns])
     emit('task-updated', currentTask, newColId)
   }
-  
+
   isEditDialogOpen.value = false
   selectedTableTask.value = null
 }
@@ -372,14 +370,12 @@ function onColumnDrop() {
 
 function renameColumn(id: string) {
   const titleRef = document.getElementById(`col-title-${id}`) as HTMLElement
-  if (titleRef)
-    setTimeout(() => titleRef.focus(), 500)
+  if (titleRef) setTimeout(() => titleRef.focus(), 500)
 }
 
 function onUpdateColumn(evt: Event, id: string) {
   const target = evt.target as HTMLElement
-  if (!target.textContent?.trim())
-    return
+  if (!target.textContent?.trim()) return
   updateColumn(id, target.textContent.trim())
 }
 
@@ -395,23 +391,17 @@ function colorPriority(p?: Task['priority']) {
 }
 
 function iconPriority(p?: Task['priority']) {
-  if (!p)
-    return Equal
-  if (p === 'low')
-    return ChevronDown
-  if (p === 'medium')
-    return Equal
+  if (!p) return Equal
+  if (p === 'low') return ChevronDown
+  if (p === 'medium') return Equal
   return ChevronUp
 }
 
 function getLabelVariant(label: string): 'default' | 'secondary' | 'destructive' | 'outline' {
   const normalizedLabel = label.toLowerCase()
-  if (normalizedLabel === 'bug')
-    return 'destructive'
-  if (normalizedLabel === 'feature')
-    return 'default'
-  if (normalizedLabel === 'documentation')
-    return 'secondary'
+  if (normalizedLabel === 'bug') return 'destructive'
+  if (normalizedLabel === 'feature') return 'default'
+  if (normalizedLabel === 'documentation') return 'secondary'
   return 'outline'
 }
 
@@ -443,13 +433,19 @@ const timeAgoOptions = {
                 class="hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50 px-1 rounded"
                 @blur="onUpdateColumn($event, col.id)"
                 @keydown.enter.prevent
-              >{{ col.title }}</span>
+                >{{ col.title }}</span
+              >
               <Badge variant="secondary" class="h-5 min-w-5 px-1 font-mono tabular-nums">
                 {{ col.tasks.length }}
               </Badge>
             </CardTitle>
             <CardAction class="flex">
-              <Button size="icon-sm" variant="ghost" class="size-7 text-muted-foreground" @click="openNewTask(col.id)">
+              <Button
+                size="icon-sm"
+                variant="ghost"
+                class="size-7 text-muted-foreground"
+                @click="openNewTask(col.id)"
+              >
                 <Plus class="size-4" />
               </Button>
               <DropdownMenu>
@@ -464,7 +460,11 @@ const timeAgoOptions = {
                     Rename
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem variant="destructive" class="text-destructive" @click="removeColumn(col.id)">
+                  <DropdownMenuItem
+                    variant="destructive"
+                    class="text-destructive"
+                    @click="removeColumn(col.id)"
+                  >
                     <Trash2 class="size-4" />
                     Delete
                   </DropdownMenuItem>
@@ -484,14 +484,23 @@ const timeAgoOptions = {
               @end="onTaskDrop"
             >
               <template #item="{ element: t }: { element: Task }">
-                <div class="rounded-xl border bg-card px-3 py-2 shadow-sm hover:bg-accent/50 cursor-pointer" @click="showEditTask(col.id, t.id)">
+                <div
+                  class="rounded-xl border bg-card px-3 py-2 shadow-sm hover:bg-accent/50 cursor-pointer"
+                  @click="showEditTask(col.id, t.id)"
+                >
                   <div class="flex items-start justify-between gap-2">
                     <div class="text-[10px] text-muted-foreground">
                       {{ t.id }}
                     </div>
                     <DropdownMenu>
                       <DropdownMenuTrigger as-child>
-                        <Button size="icon-sm" variant="ghost" class="size-7 text-muted-foreground" title="More actions" @click.stop>
+                        <Button
+                          size="icon-sm"
+                          variant="ghost"
+                          class="size-7 text-muted-foreground"
+                          title="More actions"
+                          @click.stop
+                        >
                           <EllipsisVertical class="size-4" />
                         </Button>
                       </DropdownMenuTrigger>
@@ -510,7 +519,11 @@ const timeAgoOptions = {
                           Copy link
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem variant="destructive" class="text-destructive" @click="removeTask(col.id, t.id)">
+                        <DropdownMenuItem
+                          variant="destructive"
+                          class="text-destructive"
+                          @click="removeTask(col.id, t.id)"
+                        >
                           <Trash2 class="size-4" />
                           Delete
                         </DropdownMenuItem>
@@ -540,7 +553,10 @@ const timeAgoOptions = {
                         <MessageSquare class="size-3" />
                         <span>2</span>
                       </div>
-                      <div v-if="t.dueDate" class="flex items-center text-[10px] text-muted-foreground gap-1">
+                      <div
+                        v-if="t.dueDate"
+                        class="flex items-center text-[10px] text-muted-foreground gap-1"
+                      >
                         <Clock class="size-3" />
                         <span>{{ useTimeAgo(t.dueDate, timeAgoOptions) }}</span>
                       </div>
@@ -548,7 +564,11 @@ const timeAgoOptions = {
                     <div class="flex items-center gap-2">
                       <Tooltip v-if="t.priority">
                         <TooltipTrigger as-child>
-                          <component :is="iconPriority(t.priority)" class="size-4" :class="colorPriority(t.priority)" />
+                          <component
+                            :is="iconPriority(t.priority)"
+                            class="size-4"
+                            :class="colorPriority(t.priority)"
+                          />
                         </TooltipTrigger>
                         <TooltipContent class="capitalize">
                           {{ t.priority }}
@@ -556,9 +576,7 @@ const timeAgoOptions = {
                       </Tooltip>
                       <Avatar class="size-6">
                         <AvatarImage src="/avatars/avatartion.png" alt="avatar" />
-                        <AvatarFallback class="text-[10px]">
-                          DP
-                        </AvatarFallback>
+                        <AvatarFallback class="text-[10px]"> DP </AvatarFallback>
                       </Avatar>
                     </div>
                   </div>
@@ -567,7 +585,12 @@ const timeAgoOptions = {
             </Draggable>
           </CardContent>
           <CardFooter class="px-2 mt-auto">
-            <Button size="sm" variant="ghost" class="text-muted-foreground" @click="openNewTask(col.id)">
+            <Button
+              size="sm"
+              variant="ghost"
+              class="text-muted-foreground"
+              @click="openNewTask(col.id)"
+            >
               <Plus class="size-4" />
               Add Task
             </Button>
@@ -587,7 +610,9 @@ const timeAgoOptions = {
         </DialogDescription>
       </DialogHeader>
       <div class="flex flex-col gap-3">
-        <div class="grid items-baseline grid-cols-1 md:grid-cols-4 md:[&>label]:col-span-1 *:col-span-3 gap-3">
+        <div
+          class="grid items-baseline grid-cols-1 md:grid-cols-4 md:[&>label]:col-span-1 *:col-span-3 gap-3"
+        >
           <Label>Title</Label>
           <Input v-model="newTask.title" placeholder="Title" />
           <Label>Description</Label>
@@ -598,15 +623,9 @@ const timeAgoOptions = {
               <SelectValue placeholder="Select a priority" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="low">
-                Low
-              </SelectItem>
-              <SelectItem value="medium">
-                Medium
-              </SelectItem>
-              <SelectItem value="high">
-                High
-              </SelectItem>
+              <SelectItem value="low"> Low </SelectItem>
+              <SelectItem value="medium"> Medium </SelectItem>
+              <SelectItem value="high"> High </SelectItem>
             </SelectContent>
           </Select>
           <Label>Due Date</Label>
@@ -615,10 +634,12 @@ const timeAgoOptions = {
               <PopoverTrigger as-child>
                 <Button
                   variant="outline"
-                  :class="cn(
-                    'flex-1 justify-start text-left font-normal px-3',
-                    !dueDate && 'text-muted-foreground',
-                  )"
+                  :class="
+                    cn(
+                      'flex-1 justify-start text-left font-normal px-3',
+                      !dueDate && 'text-muted-foreground',
+                    )
+                  "
                 >
                   <CalendarIcon class="mr-2 size-4" />
                   {{ dueDate ? df.format(dueDate.toDate(getLocalTimeZone())) : 'Pick a date' }}
@@ -640,9 +661,7 @@ const timeAgoOptions = {
         </div>
       </div>
       <DialogFooter>
-        <Button variant="secondary" @click="showModalTask.open = false">
-          Cancel
-        </Button>
+        <Button variant="secondary" @click="showModalTask.open = false"> Cancel </Button>
         <Button @click="showModalTask.type === 'create' ? createTask() : editTask()">
           {{ showModalTask.type === 'create' ? 'Create' : 'Update' }}
         </Button>
@@ -655,7 +674,12 @@ const timeAgoOptions = {
     <DialogContent>
       <TaskResourceDialogWrapper
         :task="selectedTableTask"
-        @close="() => { isEditDialogOpen = false; selectedTableTask = null }"
+        @close="
+          () => {
+            isEditDialogOpen = false
+            selectedTableTask = null
+          }
+        "
         @task-updated="handleTaskFormUpdate"
         @task-created="handleTaskFormUpdate"
       />

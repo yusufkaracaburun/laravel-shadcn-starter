@@ -16,13 +16,7 @@ import Loading from '@/components/loading.vue'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import Badge from '@/components/ui/badge/Badge.vue'
 import { Button } from '@/components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { useGetUserQuery } from '@/services/users.service'
 
 import UserDelete from './components/user-delete.vue'
@@ -39,8 +33,7 @@ const user = computed<User | null>(() => userResponse.value?.data ?? null)
 
 // Get initials from name
 function getInitials(name: string): string {
-  if (!name || name === '—')
-    return '?'
+  if (!name || name === '—') return '?'
   const parts = name.trim().split(/\s+/)
   if (parts.length >= 2) {
     return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase()
@@ -50,8 +43,7 @@ function getInitials(name: string): string {
 
 // Format date
 function formatDate(dateString: string | null): string {
-  if (!dateString)
-    return '—'
+  if (!dateString) return '—'
   return new Date(dateString).toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'long',
@@ -61,8 +53,7 @@ function formatDate(dateString: string | null): string {
 
 // Format datetime
 function formatDateTime(dateString: string | null): string {
-  if (!dateString)
-    return '—'
+  if (!dateString) return '—'
   return new Date(dateString).toLocaleString('en-US', {
     year: 'numeric',
     month: 'long',
@@ -92,8 +83,7 @@ function handleDeleteClose() {
 
 // Check if error is 404
 const isNotFound = computed(() => {
-  if (!isError.value || !error.value)
-    return false
+  if (!isError.value || !error.value) return false
   return (error.value as any)?.response?.status === 404
 })
 </script>
@@ -139,9 +129,7 @@ const isNotFound = computed(() => {
           subtitle="Error Loading User"
           error="An error occurred while loading the user information. Please try again."
         />
-        <Button class="mt-4" @click="refetch()">
-          Retry
-        </Button>
+        <Button class="mt-4" @click="refetch()"> Retry </Button>
       </div>
     </div>
 
@@ -151,7 +139,11 @@ const isNotFound = computed(() => {
         <CardHeader>
           <div class="flex items-start gap-6">
             <Avatar class="size-24">
-              <AvatarImage v-if="user.profile_photo_url" :src="user.profile_photo_url" :alt="user.name" />
+              <AvatarImage
+                v-if="user.profile_photo_url"
+                :src="user.profile_photo_url"
+                :alt="user.name"
+              />
               <AvatarFallback class="text-2xl">
                 {{ getInitials(user.name) }}
               </AvatarFallback>
@@ -184,25 +176,19 @@ const isNotFound = computed(() => {
           </CardHeader>
           <CardContent class="space-y-4">
             <div>
-              <div class="text-sm font-medium text-muted-foreground mb-1">
-                Name
-              </div>
+              <div class="text-sm font-medium text-muted-foreground mb-1">Name</div>
               <div class="text-base">
                 {{ user.name }}
               </div>
             </div>
             <div>
-              <div class="text-sm font-medium text-muted-foreground mb-1">
-                Email
-              </div>
+              <div class="text-sm font-medium text-muted-foreground mb-1">Email</div>
               <div class="text-base">
                 {{ user.email }}
               </div>
             </div>
             <div>
-              <div class="text-sm font-medium text-muted-foreground mb-1">
-                Email Verification
-              </div>
+              <div class="text-sm font-medium text-muted-foreground mb-1">Email Verification</div>
               <div class="text-base">
                 <Badge :variant="user.email_verified_at ? 'default' : 'secondary'">
                   {{ user.email_verified_at ? 'Verified' : 'Unverified' }}
@@ -241,9 +227,7 @@ const isNotFound = computed(() => {
               </div>
             </div>
             <div v-if="user.current_team_id">
-              <div class="text-sm font-medium text-muted-foreground mb-1">
-                Current Team ID
-              </div>
+              <div class="text-sm font-medium text-muted-foreground mb-1">Current Team ID</div>
               <div class="text-base">
                 {{ user.current_team_id }}
               </div>
@@ -262,11 +246,7 @@ const isNotFound = computed(() => {
           </CardHeader>
           <CardContent>
             <div class="flex flex-wrap gap-2">
-              <Badge
-                v-for="role in user.roles"
-                :key="role.id"
-                variant="outline"
-              >
+              <Badge v-for="role in user.roles" :key="role.id" variant="outline">
                 {{ role.name }}
               </Badge>
             </div>
