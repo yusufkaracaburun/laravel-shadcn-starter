@@ -3759,7 +3759,7 @@ namespace PHPSTORM_META {
         registerArgumentsSet('routes', 
 'boost.browser-logs','login.store','logout','password.email','password.update',
 'register.store','verification.verify','verification.send','user-profile-information.update','user-password.update',
-'password.confirmation','password.confirm.store','generated::SKwycz7vCkmAcIte','generated::1xRi9G1ErOT5t1mX','api.users.current',
+'password.confirmation','password.confirm.store','api.users.current',
 'api.users.roles','api.users.user.index','api.users.user.store','api.users.user.show','api.users.user.update',
 'api.users.user.destroy','api.users.all','api.users.active','api.teams.teams.index','api.teams.teams.store',
 'api.teams.teams.show','api.teams.teams.update','api.teams.teams.destroy','api.teams.switch','api.companies.company.index',
@@ -3770,9 +3770,8 @@ namespace PHPSTORM_META {
 'api.payments.payments.store','api.payments.payments.show','api.payments.payments.update','api.payments.payments.destroy','api.customers.customers.index',
 'api.customers.customers.store','api.customers.customers.show','api.customers.customers.update','api.customers.customers.destroy','api.permissions.permissions.index',
 'api.permissions.permissions.store','api.permissions.permissions.show','api.permissions.permissions.update','api.permissions.permissions.destroy','api.roles.roles.index',
-'api.roles.roles.store','api.roles.roles.show','api.roles.roles.update','api.roles.roles.destroy','generated::W7emDr7ecQRSmdNS',
-'oauth.redirect','oauth.callback','login-link.store','login-link.login','oauth.destroy',
-'generated::DPUGH2FCMRUR2Izv','storage.local',);
+'api.roles.roles.store','api.roles.roles.show','api.roles.roles.update','api.roles.roles.destroy',
+'oauth.redirect','oauth.callback','login-link.store','login-link.login','oauth.destroy','storage.local',);
         registerArgumentsSet('views', 
 'errors.401','errors.402','errors.403','errors.404','errors.419',
 'errors.429','errors.500','errors.503','errors.layout','errors.minimal',
