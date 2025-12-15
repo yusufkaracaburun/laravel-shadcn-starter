@@ -1,20 +1,22 @@
 <script lang="ts" setup>
+import { computed, watch } from 'vue'
+import { useRouter } from 'vue-router'
 import { toTypedSchema } from '@vee-validate/zod'
 import { useForm } from 'vee-validate'
 import { z } from 'zod'
-import { computed, watch } from 'vue'
 
 import { FormField } from '@/components/ui/form'
-import { useGetCustomersQuery } from '@/services/customers.service'
 import { useInvoices } from '@/composables/use-invoices'
-import { useRouter } from 'vue-router'
+import { useGetCustomersQuery } from '@/services/customers.service'
 
 import type { Invoice } from '../data/schema'
+import { formatDateForInput } from '../utils/formatters'
+import CustomerSwitcher from './customer-switcher.vue'
 
 const props = defineProps<{
   invoice: Invoice | null
 }>()
-const emits = defineEmits(['close'])
+const emits = defineEmits(['close', 'submit'])
 
 const router = useRouter()
 
@@ -26,7 +28,10 @@ const customers = computed(() => customersResponse.value?.data?.data ?? [])
 
 const formSchema = toTypedSchema(
   z.object({
-    customer_id: z.number().min(1, 'Customer is required'),
+    customer_id: z.preprocess(
+      (val) => (val === undefined || val === null || val === '' ? undefined : Number(val)),
+      z.number().min(1, 'Customer is required'),
+    ),
     invoice_number: z.string().nullable().optional(),
     date: z.string().min(1, 'Date is required'),
     due_days: z.number().min(1, 'Due days must be at least 1'),
@@ -36,31 +41,9 @@ const formSchema = toTypedSchema(
   }),
 )
 
-// Format date for input field (YYYY-MM-DD)
-function formatDateForInput(dateString: string | null | undefined): string {
-  if (!dateString) return ''
-  // Try parsing as "d-m-Y H:i:s" format first
-  if (dateString.includes('-') && dateString.includes(' ')) {
-    const [datePart] = dateString.split(' ')
-    const [day, month, year] = datePart.split('-')
-    if (day && month && year && year.length === 4) {
-      return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`
-    }
-  }
-  // Try parsing as "Y-m-d" format
-  const date = new Date(dateString)
-  if (!isNaN(date.getTime())) {
-    const year = date.getFullYear()
-    const month = String(date.getMonth() + 1).padStart(2, '0')
-    const day = String(date.getDate()).padStart(2, '0')
-    return `${year}-${month}-${day}`
-  }
-  return dateString
-}
-
 // Compute initial values reactively
 const getInitialValues = () => ({
-  customer_id: props.invoice?.customer_id ?? 0,
+  customer_id: props.invoice?.customer_id ?? undefined,
   invoice_number: props.invoice?.invoice_number ?? null,
   date: formatDateForInput(props.invoice?.date),
   due_days: props.invoice?.due_days ?? 30,
@@ -104,7 +87,7 @@ watch(
     if (newInvoice) {
       resetForm({
         values: {
-          customer_id: newInvoice.customer_id ?? 0,
+          customer_id: newInvoice.customer_id ?? undefined,
           invoice_number: newInvoice.invoice_number ?? null,
           date: formatDateForInput(newInvoice.date),
           due_days: newInvoice.due_days ?? 30,
@@ -117,7 +100,7 @@ watch(
       // Reset to default values when invoice is null (create mode)
       resetForm({
         values: {
-          customer_id: 0,
+          customer_id: undefined,
           invoice_number: null,
           date: '',
           due_days: 30,
@@ -133,6 +116,10 @@ watch(
 
 const onSubmit = handleSubmit(async (formValues) => {
   try {
+    if (!formValues.customer_id) {
+      // Customer is required - validation should catch this, but double-check
+      return
+    }
     const backendData = {
       customer_id: formValues.customer_id,
       invoice_number: formValues.invoice_number || null,
@@ -161,6 +148,7 @@ const onSubmit = handleSubmit(async (formValues) => {
       }
     }
 
+    emits('submit', formValues)
     emits('close')
   } catch (error) {
     // Error handling is done in the composable
@@ -168,111 +156,95 @@ const onSubmit = handleSubmit(async (formValues) => {
     console.error('Invoice form submission error:', error)
   }
 })
+
+// Expose form values and methods for parent component
+defineExpose({
+  values,
+  handleSubmit: onSubmit,
+  isSubmitting,
+  resetForm,
+  setFieldValue,
+})
 </script>
 
 <template>
-  <form class="space-y-4" @submit="onSubmit">
-    <FormField v-slot="{ componentField }" name="customer_id" :validate-on-blur="!isFieldDirty">
-      <UiFormItem>
-        <UiFormLabel>Customer</UiFormLabel>
-        <UiFormControl>
-          <UiSelect
-            :model-value="componentField.modelValue?.toString()"
-            @update:model-value="(value) => componentField.onUpdate(Number(value))"
-          >
-            <UiSelectTrigger>
-              <UiSelectValue placeholder="Select a customer" />
-            </UiSelectTrigger>
-            <UiSelectContent>
-              <UiSelectItem
-                v-for="customer in customers"
-                :key="customer.id"
-                :value="customer.id.toString()"
-              >
-                {{ customer.name }}
-              </UiSelectItem>
-            </UiSelectContent>
-          </UiSelect>
-        </UiFormControl>
-        <UiFormMessage />
-      </UiFormItem>
-    </FormField>
+  <form class="space-y-6" @submit.prevent="onSubmit">
+    <!-- Invoice Details Section -->
+    <div class="space-y-4">
+      <h3 class="text-sm font-semibold text-muted-foreground uppercase">Invoice Details</h3>
 
-    <FormField v-slot="{ componentField }" name="invoice_number" :validate-on-blur="!isFieldDirty">
-      <UiFormItem>
-        <UiFormLabel>Invoice Number</UiFormLabel>
-        <UiFormControl>
-          <UiInput type="text" placeholder="INV-001" v-bind="componentField" />
-        </UiFormControl>
-        <UiFormMessage />
-      </UiFormItem>
-    </FormField>
-
-    <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
-      <FormField v-slot="{ componentField }" name="date" :validate-on-blur="!isFieldDirty">
+      <FormField v-slot="{ componentField }" name="customer_id" :validate-on-blur="!isFieldDirty">
         <UiFormItem>
-          <UiFormLabel>Date</UiFormLabel>
+          <UiFormLabel>Bill To</UiFormLabel>
           <UiFormControl>
-            <UiInput type="date" v-bind="componentField" />
+            <CustomerSwitcher :customers="customers" :selected-customer-id="componentField.modelValue"
+              @select="(customerId) => setFieldValue('customer_id', customerId)" />
           </UiFormControl>
           <UiFormMessage />
         </UiFormItem>
       </FormField>
 
-      <FormField v-slot="{ componentField }" name="due_days" :validate-on-blur="!isFieldDirty">
+      <FormField v-slot="{ componentField }" name="invoice_number" :validate-on-blur="!isFieldDirty">
         <UiFormItem>
-          <UiFormLabel>Due Days</UiFormLabel>
+          <UiFormLabel>Invoice Number</UiFormLabel>
           <UiFormControl>
-            <UiInput type="number" min="1" v-bind="componentField" />
+            <UiInput type="text" placeholder="INV-001" v-bind="componentField" />
           </UiFormControl>
           <UiFormMessage />
         </UiFormItem>
       </FormField>
     </div>
 
-    <FormField v-slot="{ componentField }" name="date_due" :validate-on-blur="!isFieldDirty">
-      <UiFormItem>
-        <UiFormLabel>Due Date</UiFormLabel>
-        <UiFormControl>
-          <UiInput type="date" v-bind="componentField" />
-        </UiFormControl>
-        <UiFormMessage />
-      </UiFormItem>
-    </FormField>
+    <!-- Dates Section -->
+    <div class="space-y-4">
+      <h3 class="text-sm font-semibold text-muted-foreground uppercase">Dates</h3>
 
-    <FormField v-slot="{ componentField }" name="status" :validate-on-blur="!isFieldDirty">
-      <UiFormItem>
-        <UiFormLabel>Status</UiFormLabel>
-        <UiFormControl>
-          <UiSelect v-bind="componentField">
-            <UiSelectTrigger>
-              <UiSelectValue placeholder="Select status" />
-            </UiSelectTrigger>
-            <UiSelectContent>
-              <UiSelectItem value="draft">Draft</UiSelectItem>
-              <UiSelectItem value="sent">Sent</UiSelectItem>
-              <UiSelectItem value="paid">Paid</UiSelectItem>
-              <UiSelectItem value="overdue">Overdue</UiSelectItem>
-              <UiSelectItem value="cancelled">Cancelled</UiSelectItem>
-            </UiSelectContent>
-          </UiSelect>
-        </UiFormControl>
-        <UiFormMessage />
-      </UiFormItem>
-    </FormField>
+      <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+        <FormField v-slot="{ componentField }" name="date" :validate-on-blur="!isFieldDirty">
+          <UiFormItem>
+            <UiFormLabel>Invoice Date</UiFormLabel>
+            <UiFormControl>
+              <UiInput type="date" v-bind="componentField" />
+            </UiFormControl>
+            <UiFormMessage />
+          </UiFormItem>
+        </FormField>
 
-    <FormField v-slot="{ componentField }" name="notes" :validate-on-blur="!isFieldDirty">
-      <UiFormItem>
-        <UiFormLabel>Notes</UiFormLabel>
-        <UiFormControl>
-          <UiTextarea placeholder="Additional notes..." v-bind="componentField" />
-        </UiFormControl>
-        <UiFormMessage />
-      </UiFormItem>
-    </FormField>
+        <FormField v-slot="{ componentField }" name="due_days" :validate-on-blur="!isFieldDirty">
+          <UiFormItem>
+            <UiFormLabel>Due Days</UiFormLabel>
+            <UiFormControl>
+              <UiInput type="number" min="1" v-bind="componentField" />
+            </UiFormControl>
+            <UiFormMessage />
+          </UiFormItem>
+        </FormField>
+      </div>
 
-    <UiButton type="submit" class="w-full" :disabled="isSubmitting">
-      {{ isSubmitting ? 'Submitting...' : invoice ? 'Update Invoice' : 'Create Invoice' }}
-    </UiButton>
+      <FormField v-slot="{ componentField }" name="date_due" :validate-on-blur="!isFieldDirty">
+        <UiFormItem>
+          <UiFormLabel>Due Date</UiFormLabel>
+          <UiFormControl>
+            <UiInput type="date" v-bind="componentField" />
+          </UiFormControl>
+          <UiFormMessage />
+        </UiFormItem>
+      </FormField>
+    </div>
+
+    <!-- Notes Section -->
+    <div class="space-y-4">
+      <h3 class="text-sm font-semibold text-muted-foreground uppercase">Notes</h3>
+
+      <FormField v-slot="{ componentField }" name="notes" :validate-on-blur="!isFieldDirty">
+        <UiFormItem>
+          <UiFormLabel>Notes</UiFormLabel>
+          <UiFormControl>
+            <UiTextarea placeholder="Additional notes..." v-bind="componentField" />
+          </UiFormControl>
+          <UiFormMessage />
+        </UiFormItem>
+      </FormField>
+    </div>
   </form>
 </template>
