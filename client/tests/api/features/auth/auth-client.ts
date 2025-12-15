@@ -1,9 +1,9 @@
 import type { APIResponse } from '@playwright/test'
 
-import { ApiEndpoints } from '../shared/enums'
+import type { IResponse, LoginCredentials, User } from '../shared/types'
+
 import { BaseClient } from '../shared/core/base-client'
-import type { LoginCredentials, User } from '../shared/types'
-import type { IResponse } from '../shared/types'
+import { ApiEndpoints } from '../shared/enums'
 
 /**
  * Client for authentication-related API endpoints
@@ -28,8 +28,8 @@ export class AuthClient extends BaseClient {
     emailOrCredentials: string | LoginCredentials,
     password?: string,
   ): Promise<APIResponse> {
-    const credentials: LoginCredentials =
-      typeof emailOrCredentials === 'string'
+    const credentials: LoginCredentials
+      = typeof emailOrCredentials === 'string'
         ? { email: emailOrCredentials, password: password! }
         : emailOrCredentials
 

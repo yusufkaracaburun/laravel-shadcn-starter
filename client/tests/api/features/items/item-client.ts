@@ -1,12 +1,13 @@
 import type { APIResponse } from '@playwright/test'
 
+import type { IResponse } from '../shared/types'
 import type {
   CreateItemRequest,
-  UpdateItemRequest,
   Item,
   PaginatedItemsResponse,
+  UpdateItemRequest,
 } from './item-types'
-import type { IResponse } from '../shared/types'
+
 import { BaseClient } from '../shared/core/base-client'
 
 export class ItemClient extends BaseClient {

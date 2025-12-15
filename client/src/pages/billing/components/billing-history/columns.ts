@@ -41,8 +41,9 @@ export const columns: ColumnDef<Billing>[] = [
     accessorKey: 'status',
     header: ({ column }) => h(DataTableColumnHeader<Billing>, { column, title: 'status' }),
     cell: ({ row }) => {
-      const status = statuses.find((status) => status.value === row.getValue('status'))
-      if (!status) return h('div', {}, row.getValue('status'))
+      const status = statuses.find(status => status.value === row.getValue('status'))
+      if (!status)
+        return h('div', {}, row.getValue('status'))
 
       const style = {
         color: status.color,

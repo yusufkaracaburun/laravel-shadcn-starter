@@ -17,7 +17,8 @@ function getFlatNavItems(navData: NavGroup[]): NavItem[] {
     group.items.forEach((item) => {
       if (item.items) {
         flatItems.push(...getFlatNavItems([item as unknown as NavGroup]))
-      } else {
+      }
+      else {
         flatItems.push(item)
       }
     })

@@ -3,9 +3,9 @@ import Page from '@/components/global-layout/basic-page.vue'
 import { useCompanies } from '@/composables/use-companies'
 
 import { columns } from './components/columns'
-import DataTable from './components/data-table.vue'
 import CompanyCreate from './components/company-create.vue'
 import CompanyImport from './components/company-import.vue'
+import DataTable from './components/data-table.vue'
 
 const { loading, companies, serverPagination, sorting, onSortingChange } = useCompanies()
 </script>

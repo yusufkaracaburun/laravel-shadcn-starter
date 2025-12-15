@@ -12,12 +12,11 @@ import Error from '@/components/custom-error.vue'
 import Page from '@/components/global-layout/basic-page.vue'
 import Loading from '@/components/loading.vue'
 import { Button } from '@/components/ui/button'
-import { useGetInvoiceQuery } from '@/services/invoices.service'
+import { useGetInvoicePrerequisitesQuery, useGetInvoiceQuery } from '@/services/invoices.service'
 
 import InvoiceEditorLayout from '../components/invoice-editor-layout.vue'
 import InvoiceForm from '../components/invoice-form.vue'
 import InvoicePreview from '../components/invoice-preview.vue'
-import { useGetInvoicePrerequisitesQuery } from '@/services/invoices.service'
 
 const route = useRoute()
 const router = useRouter()
@@ -39,7 +38,8 @@ const prerequisites = computed(() => prerequisitesResponse.value?.data ?? null)
 
 // Extract customers from prerequisites
 const customers = computed(() => {
-  if (!prerequisites.value?.customers) return []
+  if (!prerequisites.value?.customers)
+    return []
   const customersData = prerequisites.value.customers
   return Array.isArray(customersData) ? customersData : ((customersData as any).data ?? [])
 })
@@ -76,19 +76,23 @@ function handleClose() {
 }
 
 async function handleUpdate() {
-  if (!formRef.value) return
+  if (!formRef.value)
+    return
   isSubmitting.value = true
   try {
     await formRef.value.handleSubmit()
-  } catch (error) {
+  }
+  catch (error) {
     console.error('Error updating invoice:', error)
-  } finally {
+  }
+  finally {
     isSubmitting.value = false
   }
 }
 
 async function handleUpdateAndSend() {
-  if (!formRef.value) return
+  if (!formRef.value)
+    return
   isSubmitting.value = true
   try {
     // Update status to 'sent' before submitting
@@ -96,9 +100,11 @@ async function handleUpdateAndSend() {
     // Wait a tick for the value to update
     await nextTick()
     await formRef.value.handleSubmit()
-  } catch (error) {
+  }
+  catch (error) {
     console.error('Error updating and sending invoice:', error)
-  } finally {
+  }
+  finally {
     isSubmitting.value = false
   }
 }
@@ -139,11 +145,11 @@ async function handleUpdateAndSend() {
       </template>
 
       <template #actions>
-        <Button variant="outline" @click="handleUpdate" :disabled="isSubmitting">
+        <Button variant="outline" :disabled="isSubmitting" @click="handleUpdate">
           <Save class="mr-2 size-4" />
           Update
         </Button>
-        <Button @click="handleUpdateAndSend" :disabled="isSubmitting">
+        <Button :disabled="isSubmitting" @click="handleUpdateAndSend">
           <Send class="mr-2 size-4" />
           Update & Send
         </Button>

@@ -1,10 +1,11 @@
-import type { Company } from '../../features/companies/company-types'
 import type {
+  Company,
   CreateCompanyRequest,
   PaginatedCompaniesResponse,
   UpdateCompanyRequest,
 } from '../../features/companies/company-types'
 
+import { CompanyClient } from '../../features/companies/company-client'
 import { HttpStatus } from '../../features/shared/enums'
 import {
   expectError,
@@ -13,7 +14,6 @@ import {
   expectUnauthenticated,
   expectValidationErrors,
 } from '../../features/shared/helpers'
-import { CompanyClient } from '../../features/companies/company-client'
 import { expect, test } from '../../fixtures'
 
 /**

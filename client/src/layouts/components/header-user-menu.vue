@@ -8,8 +8,8 @@ import {
   Sparkles,
   UserRoundCog,
 } from 'lucide-vue-next'
-import { computed } from 'vue'
 import { storeToRefs } from 'pinia'
+import { computed } from 'vue'
 
 import type { User as SidebarUser } from '@/components/app-sidebar/types'
 

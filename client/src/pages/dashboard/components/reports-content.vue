@@ -62,7 +62,7 @@ const reports = ref<Report[]>([
   },
 ])
 
-const getStatusColor = (status: Report['status']) => {
+function getStatusColor(status: Report['status']) {
   switch (status) {
     case 'completed':
       return 'text-green-600'
@@ -75,7 +75,7 @@ const getStatusColor = (status: Report['status']) => {
   }
 }
 
-const formatDate = (dateString: string) => {
+function formatDate(dateString: string) {
   const date = new Date(dateString)
   return date.toLocaleDateString('en-US', {
     year: 'numeric',
@@ -100,7 +100,9 @@ const formatDate = (dateString: string) => {
               <TableHead>Type</TableHead>
               <TableHead>Date Generated</TableHead>
               <TableHead>Status</TableHead>
-              <TableHead class="text-right">Actions</TableHead>
+              <TableHead class="text-right">
+                Actions
+              </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -109,7 +111,9 @@ const formatDate = (dateString: string) => {
               :key="report.id"
               data-testid="reports-content_report-row"
             >
-              <TableCell class="font-medium">{{ report.name }}</TableCell>
+              <TableCell class="font-medium">
+                {{ report.name }}
+              </TableCell>
               <TableCell>{{ report.type }}</TableCell>
               <TableCell>{{ formatDate(report.dateGenerated) }}</TableCell>
               <TableCell>

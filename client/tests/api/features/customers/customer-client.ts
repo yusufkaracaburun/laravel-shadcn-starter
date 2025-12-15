@@ -1,12 +1,13 @@
 import type { APIResponse } from '@playwright/test'
 
+import type { IResponse } from '../shared/types'
 import type {
   CreateCustomerRequest,
-  UpdateCustomerRequest,
   Customer,
   PaginatedCustomersResponse,
+  UpdateCustomerRequest,
 } from './customer-types'
-import type { IResponse } from '../shared/types'
+
 import { BaseClient } from '../shared/core/base-client'
 
 export class CustomerClient extends BaseClient {

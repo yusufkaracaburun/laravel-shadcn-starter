@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { LayoutGrid, List, Grid3x3 } from 'lucide-vue-next'
+import { Grid3x3, LayoutGrid, List } from 'lucide-vue-next'
 
 import Page from '@/components/global-layout/basic-page.vue'
 import { Button } from '@/components/ui/button'
@@ -10,8 +10,8 @@ import { columns } from './components/columns'
 import DataTable from './components/data-table.vue'
 import ProjectCreate from './components/project-create.vue'
 import ProjectImport from './components/project-import.vue'
-import ProjectsKanbanWrapper from './components/projects-kanban-wrapper.vue'
 import ProjectsCardGrid from './components/projects-card-grid.vue'
+import ProjectsKanbanWrapper from './components/projects-kanban-wrapper.vue'
 
 type ViewMode = 'table' | 'kanban' | 'card'
 

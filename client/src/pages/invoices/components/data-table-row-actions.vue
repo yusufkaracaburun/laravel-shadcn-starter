@@ -5,15 +5,15 @@ import type { Component } from 'vue'
 import { Ellipsis, Eye, FilePenLine, Trash2 } from 'lucide-vue-next'
 import { useRouter } from 'vue-router'
 
-import type { Invoice } from '../data/schema'
+import type { TInvoice } from '../data/schema'
 
 import { invoiceSchema } from '../data/schema'
 import InvoiceDelete from './invoice-delete.vue'
 
-interface DataTableRowActionsProps {
-  row: Row<Invoice>
+interface IDataTableRowActionsProps {
+  row: Row<TInvoice>
 }
-const props = defineProps<DataTableRowActionsProps>()
+const props = defineProps<IDataTableRowActionsProps>()
 const invoice = computed(() => {
   const result = invoiceSchema.safeParse(props.row.original)
   if (result.success) {
@@ -21,7 +21,7 @@ const invoice = computed(() => {
   }
   // If validation fails, return the original data as-is (type assertion)
   // This handles cases where backend returns slightly different structure
-  return props.row.original as Invoice
+  return props.row.original as TInvoice
 })
 const router = useRouter()
 

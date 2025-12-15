@@ -3,10 +3,6 @@ import CustomerForm from '@/pages/customers/components/customer-form.vue'
 
 const emits = defineEmits(['close', 'created'])
 
-function handleClose() {
-  emits('close')
-}
-
 function handleCreated() {
   emits('created')
   emits('close')

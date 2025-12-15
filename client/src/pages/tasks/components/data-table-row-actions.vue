@@ -18,7 +18,8 @@ interface DataTableRowActionsProps {
 const task = computed(() => {
   try {
     return taskSchema.parse(props.row.original)
-  } catch (error) {
+  }
+  catch (error) {
     // If validation fails, return the original task with defaults
     return {
       ...props.row.original,
@@ -66,8 +67,12 @@ const isOpen = ref(false)
           </UiDropdownMenuItem>
         </UiDialogTrigger>
 
-        <UiDropdownMenuItem disabled> Make a copy </UiDropdownMenuItem>
-        <UiDropdownMenuItem disabled> Favorite </UiDropdownMenuItem>
+        <UiDropdownMenuItem disabled>
+          Make a copy
+        </UiDropdownMenuItem>
+        <UiDropdownMenuItem disabled>
+          Favorite
+        </UiDropdownMenuItem>
 
         <UiDropdownMenuSeparator />
 

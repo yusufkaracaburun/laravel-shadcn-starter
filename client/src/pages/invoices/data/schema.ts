@@ -18,7 +18,7 @@ export const moneySchema = z.union([
  */
 export const invoiceStatusSchema = z.enum(['draft', 'sent', 'paid', 'overdue', 'cancelled'])
 
-export type InvoiceStatus = z.infer<typeof invoiceStatusSchema>
+export type TInvoiceStatus = z.infer<typeof invoiceStatusSchema>
 
 /**
  * Invoice item schema matching backend InvoiceItemResource
@@ -39,7 +39,7 @@ export const invoiceItemSchema = z.object({
   updated_at: z.string(),
 })
 
-export type InvoiceItem = z.infer<typeof invoiceItemSchema>
+export type TInvoiceItem = z.infer<typeof invoiceItemSchema>
 
 /**
  * Invoice schema matching backend InvoiceResource
@@ -68,4 +68,4 @@ export const invoiceSchema = z.object({
   updated_at: z.string(), // Format: "d-m-Y H:i:s"
 })
 
-export type Invoice = z.infer<typeof invoiceSchema>
+export type TInvoice = z.infer<typeof invoiceSchema>

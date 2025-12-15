@@ -1,8 +1,9 @@
 import type { APIResponse } from '@playwright/test'
 
-import { ApiEndpoints } from '../shared/enums'
+import type { IResponse, Role, User } from '../shared/types'
+
 import { BaseClient } from '../shared/core/base-client'
-import type { IResponse, User, Role } from '../shared/types'
+import { ApiEndpoints } from '../shared/enums'
 
 /**
  * Create user request interface matching backend StoreUserRequest

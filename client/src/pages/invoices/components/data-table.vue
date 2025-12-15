@@ -1,26 +1,26 @@
 <script setup lang="ts">
+import { Trash2Icon } from 'lucide-vue-next'
+
 import type { DataTableProps } from '@/components/data-table/types'
 import type { InvoiceFilters } from '@/services/invoices.service'
-
-import { Trash2Icon } from 'lucide-vue-next'
 
 import BulkActions from '@/components/data-table/bulk-actions.vue'
 import DataTable from '@/components/data-table/data-table.vue'
 import { generateVueTable } from '@/components/data-table/use-generate-vue-table'
 
-import type { Invoice } from '../data/schema'
+import type { TInvoice } from '../data/schema'
 
-import InvoiceDeleteBatch from './invoice-delete-batch.vue'
 import DataTableToolbar from './data-table-toolbar.vue'
+import InvoiceDeleteBatch from './invoice-delete-batch.vue'
 
-interface ExtendedDataTableProps extends DataTableProps<Invoice> {
+interface IExtendedDataTableProps extends DataTableProps<TInvoice> {
   filters?: InvoiceFilters
   onFiltersChange?: (filters: InvoiceFilters) => void
   onClearFilters?: () => void
 }
 
-const props = defineProps<ExtendedDataTableProps>()
-const { table } = generateVueTable<Invoice>(props)
+const props = defineProps<IExtendedDataTableProps>()
+const { table } = generateVueTable<TInvoice>(props)
 
 const invoiceDeleteBatchOpen = ref(false)
 </script>

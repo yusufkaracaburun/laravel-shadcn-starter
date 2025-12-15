@@ -1,27 +1,20 @@
 <script setup lang="ts">
-import { MoreVertical, FileText } from 'lucide-vue-next'
+import { FileText, MoreVertical } from 'lucide-vue-next'
 import { useRouter } from 'vue-router'
 
 import type { Invoice } from '@/services/invoices.service'
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { StatusBadge } from '@/components/ui/status-badge'
 
 import { statuses } from '../data/data'
 import InvoiceDelete from './invoice-delete.vue'
 
-interface Props {
+interface IProps {
   invoice: Invoice
 }
 
-const props = defineProps<Props>()
+const props = defineProps<IProps>()
 const router = useRouter()
 
 const showComponent = shallowRef<typeof InvoiceDelete | null>(null)
@@ -63,10 +56,11 @@ function formatDate(dateString: string | null | undefined): string {
   }
   try {
     const date = new Date(dateString)
-    if (!isNaN(date.getTime())) {
+    if (!Number.isNaN(date.getTime())) {
       return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })
     }
-  } catch (error) {
+  }
+  catch {
     // Ignore parsing errors
   }
   return dateString
@@ -74,10 +68,8 @@ function formatDate(dateString: string | null | undefined): string {
 </script>
 
 <template>
-  <Card
-    class="hover:shadow-md transition-shadow cursor-pointer"
-    @click="router.push({ name: '/invoices/[id]', params: { id: invoice.id.toString() } })"
-  >
+  <Card class="hover:shadow-md transition-shadow cursor-pointer"
+    @click="router.push({ name: '/invoices/[id]', params: { id: invoice.id.toString() } })">
     <CardHeader>
       <div class="flex items-start justify-between">
         <div class="flex items-center gap-2">
@@ -94,8 +86,12 @@ function formatDate(dateString: string | null | undefined): string {
             </UiButton>
           </UiDropdownMenuTrigger>
           <UiDropdownMenuContent align="end" @click.stop>
-            <UiDropdownMenuItem @click.stop="handleSelect('view')"> View </UiDropdownMenuItem>
-            <UiDropdownMenuItem @click.stop="handleSelect('edit')"> Edit </UiDropdownMenuItem>
+            <UiDropdownMenuItem @click.stop="handleSelect('view')">
+              View
+            </UiDropdownMenuItem>
+            <UiDropdownMenuItem @click.stop="handleSelect('edit')">
+              Edit
+            </UiDropdownMenuItem>
             <UiDropdownMenuItem class="text-destructive" @click.stop="handleSelect('delete')">
               Delete
             </UiDropdownMenuItem>
@@ -103,12 +99,9 @@ function formatDate(dateString: string | null | undefined): string {
         </UiDropdownMenu>
       </div>
       <div class="flex items-center gap-2 mt-2">
-        <StatusBadge
-          :status="invoice.status"
-          type="invoice"
+        <StatusBadge :status="invoice.status" type="invoice"
           :icon="statuses.find((s) => s.value === invoice.status)?.icon"
-          :label="statuses.find((s) => s.value === invoice.status)?.label"
-        />
+          :label="statuses.find((s) => s.value === invoice.status)?.label" />
       </div>
     </CardHeader>
     <CardContent>
@@ -117,7 +110,7 @@ function formatDate(dateString: string | null | undefined): string {
           <span class="text-sm text-muted-foreground">Customer</span>
           <span class="text-sm font-medium truncate max-w-[150px]">{{
             invoice.customer.name || `Customer #${invoice.customer_id}`
-          }}</span>
+            }}</span>
         </div>
         <div class="flex items-center justify-between">
           <span class="text-sm text-muted-foreground">Date</span>

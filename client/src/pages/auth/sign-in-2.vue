@@ -2,10 +2,10 @@
 import { GalleryVerticalEnd } from 'lucide-vue-next'
 
 import { useAuth } from '@/composables/use-auth'
+import LoginForm2 from '@/pages/auth/components/LoginForm2.vue'
 import env from '@/utils/env'
 
 import { testusers } from '../../../tests/.data/users.data'
-import LoginForm2 from '@/pages/auth/components/LoginForm2.vue'
 import QuickLoginCard from './components/quick-login-card.vue'
 
 const { login, loading } = useAuth()
@@ -19,7 +19,8 @@ async function quickLogin(userKey: keyof typeof testusers) {
       email: user.email,
       password: user.password,
     })
-  } catch (error) {
+  }
+  catch (error) {
     // Error handling is done in useAuth composable
     console.error('Quick login failed:', error)
   }
@@ -56,7 +57,7 @@ async function quickLogin(userKey: keyof typeof testusers) {
         src="/placeholder.png"
         alt=""
         class="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
-      />
+      >
     </div>
   </div>
 </template>

@@ -15,13 +15,13 @@ import {
 import { Label } from '@/components/ui/label'
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
 
-import type { InvoiceItem } from '../data/schema'
+import type { TInvoiceItem } from '../data/schema'
 
 import { calculateItemTotals } from '../utils/calculations'
 import { formatMoney } from '../utils/formatters'
 
 const props = defineProps<{
-  item: InvoiceItem | null
+  item: TInvoiceItem | null
   invoiceId?: number
 }>()
 
@@ -44,8 +44,9 @@ const formSchema = toTypedSchema(
 )
 
 // Extract unit_price value - handle both Money object and number
-function getUnitPriceValue(item: InvoiceItem | null): number {
-  if (!item?.unit_price) return 0
+function getUnitPriceValue(item: TInvoiceItem | null): number {
+  if (!item?.unit_price)
+    return 0
   if (typeof item.unit_price === 'object' && 'amount' in item.unit_price) {
     const amount = Number.parseFloat(item.unit_price.amount)
     return amount / 100
@@ -242,23 +243,39 @@ function onCancel() {
     <div class="rounded-lg border bg-muted/50 p-4">
       <div class="grid grid-cols-3 gap-4 text-sm">
         <div>
-          <p class="text-muted-foreground">Excl. VAT</p>
-          <p class="font-semibold">{{ formatMoney(calculatedTotals.totalExclVat) }}</p>
+          <p class="text-muted-foreground">
+            Excl. VAT
+          </p>
+          <p class="font-semibold">
+            {{ formatMoney(calculatedTotals.totalExclVat) }}
+          </p>
         </div>
         <div>
-          <p class="text-muted-foreground">VAT</p>
-          <p class="font-semibold">{{ formatMoney(calculatedTotals.totalVat) }}</p>
+          <p class="text-muted-foreground">
+            VAT
+          </p>
+          <p class="font-semibold">
+            {{ formatMoney(calculatedTotals.totalVat) }}
+          </p>
         </div>
         <div>
-          <p class="text-muted-foreground">Incl. VAT</p>
-          <p class="font-semibold">{{ formatMoney(calculatedTotals.totalInclVat) }}</p>
+          <p class="text-muted-foreground">
+            Incl. VAT
+          </p>
+          <p class="font-semibold">
+            {{ formatMoney(calculatedTotals.totalInclVat) }}
+          </p>
         </div>
       </div>
     </div>
 
     <div class="flex justify-end gap-2">
-      <Button type="button" variant="outline" @click="onCancel"> Cancel </Button>
-      <Button type="submit" :disabled="isSubmitting"> {{ item ? 'Update' : 'Add' }} Item </Button>
+      <Button type="button" variant="outline" @click="onCancel">
+        Cancel
+      </Button>
+      <Button type="submit" :disabled="isSubmitting">
+        {{ item ? 'Update' : 'Add' }} Item
+      </Button>
     </div>
   </form>
 </template>

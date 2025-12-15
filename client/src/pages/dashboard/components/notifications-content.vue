@@ -69,7 +69,7 @@ const notifications = ref<Notification[]>([
   },
 ])
 
-const formatTimestamp = (timestamp: string) => {
+function formatTimestamp(timestamp: string) {
   const date = new Date(timestamp)
   const now = new Date()
   const diffInHours = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60))
@@ -77,15 +77,17 @@ const formatTimestamp = (timestamp: string) => {
   if (diffInHours < 1) {
     const diffInMinutes = Math.floor((now.getTime() - date.getTime()) / (1000 * 60))
     return `${diffInMinutes} minutes ago`
-  } else if (diffInHours < 24) {
+  }
+  else if (diffInHours < 24) {
     return `${diffInHours} hours ago`
-  } else {
+  }
+  else {
     const diffInDays = Math.floor(diffInHours / 24)
     return `${diffInDays} days ago`
   }
 }
 
-const getTypeColor = (type: Notification['type']) => {
+function getTypeColor(type: Notification['type']) {
   switch (type) {
     case 'success':
       return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300'
@@ -99,7 +101,7 @@ const getTypeColor = (type: Notification['type']) => {
   }
 }
 
-const markAsRead = (notification: Notification) => {
+function markAsRead(notification: Notification) {
   notification.read = true
 }
 </script>
@@ -121,7 +123,9 @@ const markAsRead = (notification: Notification) => {
         >
           <div class="flex-1 space-y-1">
             <div class="flex items-center gap-2">
-              <h4 class="font-semibold">{{ notification.title }}</h4>
+              <h4 class="font-semibold">
+                {{ notification.title }}
+              </h4>
               <Badge :class="getTypeColor(notification.type)" class="text-xs">
                 {{ notification.type }}
               </Badge>
@@ -134,7 +138,9 @@ const markAsRead = (notification: Notification) => {
                 New
               </Badge>
             </div>
-            <p class="text-sm text-muted-foreground">{{ notification.description }}</p>
+            <p class="text-sm text-muted-foreground">
+              {{ notification.description }}
+            </p>
             <p class="text-xs text-muted-foreground">
               {{ formatTimestamp(notification.timestamp) }}
             </p>
@@ -143,8 +149,8 @@ const markAsRead = (notification: Notification) => {
             v-if="!notification.read"
             variant="ghost"
             size="sm"
-            @click="markAsRead(notification)"
             data-testid="notifications-content_mark-read-button"
+            @click="markAsRead(notification)"
           >
             Mark as read
           </Button>

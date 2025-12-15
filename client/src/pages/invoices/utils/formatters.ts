@@ -45,7 +45,7 @@ export function formatMoney(value: any): string {
  * Format number with locale-aware formatting (respects current locale)
  */
 export function formatNumber(value: number | null | undefined, decimals: number = 2): string {
-  if (value === null || value === undefined || isNaN(value)) {
+  if (value === null || value === undefined || Number.isNaN(value)) {
     const i18n = getI18n()
     if (i18n) {
       return i18n.n(0, {
@@ -86,7 +86,7 @@ export function parseDutchNumber(value: string): number {
   // Replace dot thousand separators, then replace comma with dot for parsing
   const cleaned = value.replace(/\./g, '').replace(',', '.')
   const parsed = Number.parseFloat(cleaned)
-  return isNaN(parsed) ? 0 : parsed
+  return Number.isNaN(parsed) ? 0 : parsed
 }
 
 /**
@@ -94,7 +94,8 @@ export function parseDutchNumber(value: string): number {
  * Uses vue-i18n to respect current locale setting
  */
 export function formatDate(dateString: string | null | undefined): string {
-  if (!dateString) return '—'
+  if (!dateString)
+    return '—'
   try {
     const date = new Date(dateString)
     if (!isNaN(date.getTime())) {
@@ -109,7 +110,8 @@ export function formatDate(dateString: string | null | undefined): string {
         day: 'numeric',
       })
     }
-  } catch (error) {
+  }
+  catch {
     // Ignore parsing errors
   }
   return dateString
@@ -120,7 +122,8 @@ export function formatDate(dateString: string | null | undefined): string {
  * Uses vue-i18n to respect current locale setting
  */
 export function formatDateForPreview(dateString: string | null | undefined): string {
-  if (!dateString) return '—'
+  if (!dateString)
+    return '—'
   try {
     const date = new Date(dateString)
     if (!isNaN(date.getTime())) {
@@ -135,7 +138,8 @@ export function formatDateForPreview(dateString: string | null | undefined): str
         day: 'numeric',
       })
     }
-  } catch (error) {
+  }
+  catch {
     // Ignore parsing errors
   }
   return dateString
@@ -145,7 +149,8 @@ export function formatDateForPreview(dateString: string | null | undefined): str
  * Format date for input field (YYYY-MM-DD)
  */
 export function formatDateForInput(dateString: string | null | undefined): string {
-  if (!dateString) return ''
+  if (!dateString)
+    return ''
   // Try parsing as "d-m-Y H:i:s" format first
   if (dateString.includes('-') && dateString.includes(' ')) {
     const [datePart] = dateString.split(' ')

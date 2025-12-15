@@ -2,9 +2,10 @@ import type { APIResponse } from '@playwright/test'
 
 import { expect } from '@playwright/test'
 
-import { HttpStatus, isSuccessStatus } from '../enums'
 import type { IResponse, User } from '../types'
+
 import { testUser } from '../../../fixtures/data/user'
+import { HttpStatus, isSuccessStatus } from '../enums'
 
 /**
  * Common test helper functions
@@ -35,7 +36,8 @@ export function expectStatus(response: APIResponse, statusCode: number): void {
 export function expectError(response: APIResponse, statusCode?: number): void {
   if (statusCode) {
     expect(response.status()).toBe(statusCode)
-  } else {
+  }
+  else {
     expect(response.status()).toBeGreaterThanOrEqual(400)
   }
 }

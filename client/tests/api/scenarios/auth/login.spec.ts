@@ -1,13 +1,14 @@
+import type { User } from '../../features/shared/types'
+
+import { HttpStatus } from '../../features/shared/enums'
 import {
   expectCookiesSet,
+  expectIResponse,
   expectSuccess,
   expectValidationErrors,
   expectValidUser,
-  expectIResponse,
 } from '../../features/shared/helpers'
-import { test, expect, testUser, invalidUser } from '../../fixtures'
-import { HttpStatus } from '../../features/shared/enums'
-import type { User } from '../../features/shared/types'
+import { expect, invalidUser, test, testUser } from '../../fixtures'
 
 test.describe('Login', { tag: ['@api', '@auth', '@login'] }, () => {
   test('should login successfully and validate user data', async ({ authClient }) => {

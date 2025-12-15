@@ -1,24 +1,31 @@
 <script setup lang="ts">
-import { FormField } from '@/components/ui/form'
-import { UiFormItem, UiFormLabel, UiFormControl, UiFormMessage } from '@/components/ui/form'
-
 import type { Customer } from '@/services/customers.service'
+
+import {
+  FormField,
+  UiFormControl,
+  UiFormItem,
+  UiFormLabel,
+  UiFormMessage,
+} from '@/components/ui/form'
 
 import CustomerSwitcher from './customer-switcher.vue'
 
-interface Props {
+interface IProps {
   customers?: Customer[]
   isFieldDirty?: boolean | ((path: any) => boolean)
 }
 
-withDefaults(defineProps<Props>(), {
+withDefaults(defineProps<IProps>(), {
   isFieldDirty: false,
 })
 </script>
 
 <template>
   <div class="space-y-4">
-    <h3 class="text-sm font-semibold text-muted-foreground uppercase">Invoice Details</h3>
+    <h3 class="text-sm font-semibold text-muted-foreground uppercase">
+      Invoice Details
+    </h3>
     <FormField v-slot="{ componentField }" name="customer_id" :validate-on-blur="!isFieldDirty">
       <UiFormItem>
         <UiFormLabel>Bill To</UiFormLabel>

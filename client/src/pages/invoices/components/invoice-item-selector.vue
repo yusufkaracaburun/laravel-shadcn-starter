@@ -2,6 +2,8 @@
 import { Check, Plus, Search, X } from 'lucide-vue-next'
 import { computed, ref } from 'vue'
 
+import type { Item } from '@/services/items.service'
+
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -13,7 +15,6 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
-import type { Item } from '@/services/items.service'
 
 import { formatMoney } from '../utils/formatters'
 
@@ -59,7 +60,8 @@ const selectedCount = computed(() => selectedItems.value.size)
 function toggleItemSelection(itemId: number) {
   if (selectedItems.value.has(itemId)) {
     selectedItems.value.delete(itemId)
-  } else {
+  }
+  else {
     selectedItems.value.add(itemId)
   }
 }
@@ -70,14 +72,15 @@ function isItemSelected(itemId: number): boolean {
 
 function handleAddSelected() {
   const selectedItemsData = filteredItems.value
-    .filter((item) => selectedItems.value.has(item.id))
+    .filter(item => selectedItems.value.has(item.id))
     .map((item) => {
       // Extract unit_price value
       let unitPrice = 0
       if (typeof item.unit_price === 'object' && 'amount' in item.unit_price) {
         const amount = Number.parseFloat(item.unit_price.amount)
         unitPrice = amount / 100
-      } else if (typeof item.unit_price === 'number') {
+      }
+      else if (typeof item.unit_price === 'number') {
         unitPrice = item.unit_price
       }
 
@@ -167,7 +170,9 @@ function handleClose() {
               <Check v-if="isItemSelected(item.id)" class="size-3" />
             </div>
             <div class="flex-1">
-              <div class="font-medium">{{ item.name }}</div>
+              <div class="font-medium">
+                {{ item.name }}
+              </div>
               <div class="mt-1 flex gap-4 text-sm text-muted-foreground">
                 <span>Price: {{ formatMoney(item.unit_price) }}</span>
                 <span>VAT: {{ item.vat_rate }}%</span>
@@ -179,7 +184,9 @@ function handleClose() {
       </div>
 
       <DialogFooter>
-        <Button variant="outline" @click="handleClose"> Cancel </Button>
+        <Button variant="outline" @click="handleClose">
+          Cancel
+        </Button>
         <Button :disabled="selectedCount === 0" @click="handleAddSelected">
           <Plus class="mr-2 size-4" />
           Add

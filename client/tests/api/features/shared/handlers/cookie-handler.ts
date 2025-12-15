@@ -22,7 +22,8 @@ export class CookieHandler {
     let cookieHeadersArray: string[] = []
     if (Array.isArray(setCookieHeader)) {
       cookieHeadersArray = setCookieHeader
-    } else if (typeof setCookieHeader === 'string') {
+    }
+    else if (typeof setCookieHeader === 'string') {
       // Split on newlines to handle multiple cookies in a single string
       cookieHeadersArray = setCookieHeader.split('\n').filter(Boolean)
     }

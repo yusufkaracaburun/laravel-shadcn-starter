@@ -13,7 +13,6 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { StatusBadge } from '@/components/ui/status-badge'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -21,6 +20,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Progress } from '@/components/ui/progress'
+import { StatusBadge } from '@/components/ui/status-badge'
 
 import { categories, statuses } from '../data/data'
 import ProjectDelete from './project-delete.vue'
@@ -55,7 +55,8 @@ function handleSelect(command: TCommand) {
 }
 
 function formatDate(dateString: string | null): string {
-  if (!dateString) return '—'
+  if (!dateString)
+    return '—'
   return new Date(dateString).toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'short',
@@ -63,8 +64,8 @@ function formatDate(dateString: string | null): string {
   })
 }
 
-const status = computed(() => statuses.find((s) => s.value === props.project.status))
-const category = computed(() => categories.find((c) => c.value === props.project.category))
+const status = computed(() => statuses.find(s => s.value === props.project.status))
+const category = computed(() => categories.find(c => c.value === props.project.category))
 </script>
 
 <template>
@@ -90,12 +91,16 @@ const category = computed(() => categories.find((c) => c.value === props.project
             </UiButton>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuItem @click.stop="handleSelect('view')"> View </DropdownMenuItem>
+            <DropdownMenuItem @click.stop="handleSelect('view')">
+              View
+            </DropdownMenuItem>
             <UiDialogTrigger as-child>
-              <DropdownMenuItem @click.stop="handleSelect('edit')"> Edit </DropdownMenuItem>
+              <DropdownMenuItem @click.stop="handleSelect('edit')">
+                Edit
+              </DropdownMenuItem>
             </UiDialogTrigger>
             <UiDialogTrigger as-child>
-              <DropdownMenuItem @click.stop="handleSelect('delete')" class="text-destructive">
+              <DropdownMenuItem class="text-destructive" @click.stop="handleSelect('delete')">
                 Delete
               </DropdownMenuItem>
             </UiDialogTrigger>

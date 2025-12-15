@@ -4,11 +4,9 @@ meta:
 </route>
 
 <script setup lang="ts">
-import { ArrowLeft, Package, FilePenLine, Trash2 } from 'lucide-vue-next'
+import { ArrowLeft, FilePenLine, Package, Trash2 } from 'lucide-vue-next'
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-
-import type { Item } from './data/schema'
 
 import Error from '@/components/custom-error.vue'
 import Page from '@/components/global-layout/basic-page.vue'
@@ -16,6 +14,8 @@ import Loading from '@/components/loading.vue'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { useGetItemQuery } from '@/services/items.service'
+
+import type { Item } from './data/schema'
 
 import ItemDelete from './components/item-delete.vue'
 import ItemResourceDialog from './components/item-resource-dialog.vue'
@@ -61,7 +61,8 @@ function handleDeleteClose() {
 
 // Format date
 function formatDate(dateString: string | null): string {
-  if (!dateString) return '—'
+  if (!dateString)
+    return '—'
   return new Date(dateString).toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'long',
@@ -71,7 +72,8 @@ function formatDate(dateString: string | null): string {
 
 // Format datetime
 function formatDateTime(dateString: string | null): string {
-  if (!dateString) return '—'
+  if (!dateString)
+    return '—'
   return new Date(dateString).toLocaleString('en-US', {
     year: 'numeric',
     month: 'long',
@@ -83,7 +85,8 @@ function formatDateTime(dateString: string | null): string {
 
 // Format price - handles both Money object and number
 function formatPrice(price: number | { formatted: string } | undefined): string {
-  if (!price) return '—'
+  if (!price)
+    return '—'
   // Handle Money object from backend
   if (typeof price === 'object' && 'formatted' in price) {
     return price.formatted
@@ -144,20 +147,36 @@ function formatPrice(price: number | { formatted: string } | undefined): string 
         <CardContent>
           <div class="grid gap-4 md:grid-cols-2">
             <div>
-              <p class="text-sm font-medium text-muted-foreground">Unit Price</p>
-              <p class="text-lg font-semibold">{{ formatPrice(item.unit_price) }}</p>
+              <p class="text-sm font-medium text-muted-foreground">
+                Unit Price
+              </p>
+              <p class="text-lg font-semibold">
+                {{ formatPrice(item.unit_price) }}
+              </p>
             </div>
             <div>
-              <p class="text-sm font-medium text-muted-foreground">VAT Rate</p>
-              <p class="text-lg font-semibold">{{ item.vat_rate }}%</p>
+              <p class="text-sm font-medium text-muted-foreground">
+                VAT Rate
+              </p>
+              <p class="text-lg font-semibold">
+                {{ item.vat_rate }}%
+              </p>
             </div>
             <div v-if="item.unit">
-              <p class="text-sm font-medium text-muted-foreground">Unit</p>
-              <p class="text-lg font-semibold">{{ item.unit }}</p>
+              <p class="text-sm font-medium text-muted-foreground">
+                Unit
+              </p>
+              <p class="text-lg font-semibold">
+                {{ item.unit }}
+              </p>
             </div>
             <div>
-              <p class="text-sm font-medium text-muted-foreground">Item ID</p>
-              <p class="text-lg font-semibold">#{{ item.id }}</p>
+              <p class="text-sm font-medium text-muted-foreground">
+                Item ID
+              </p>
+              <p class="text-lg font-semibold">
+                #{{ item.id }}
+              </p>
             </div>
           </div>
         </CardContent>
@@ -170,12 +189,20 @@ function formatPrice(price: number | { formatted: string } | undefined): string 
         <CardContent>
           <div class="grid gap-4 md:grid-cols-2">
             <div>
-              <p class="text-sm font-medium text-muted-foreground">Created At</p>
-              <p class="text-sm">{{ formatDateTime(item.created_at) }}</p>
+              <p class="text-sm font-medium text-muted-foreground">
+                Created At
+              </p>
+              <p class="text-sm">
+                {{ formatDateTime(item.created_at) }}
+              </p>
             </div>
             <div>
-              <p class="text-sm font-medium text-muted-foreground">Updated At</p>
-              <p class="text-sm">{{ formatDateTime(item.updated_at) }}</p>
+              <p class="text-sm font-medium text-muted-foreground">
+                Updated At
+              </p>
+              <p class="text-sm">
+                {{ formatDateTime(item.updated_at) }}
+              </p>
             </div>
           </div>
         </CardContent>

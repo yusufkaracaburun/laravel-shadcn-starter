@@ -84,17 +84,17 @@ Marketing Campaign Q1,Launch Q1 marketing campaign,active,marketing,2024-01-10,2
 
 ## Common Problems
 
-**Problem:** Import fails with "missing required field"  
+**Problem:** Import fails with "missing required field"
 **Solution:** Make sure every row has a name, status, and category
 
-**Problem:** Import fails with "invalid status"  
+**Problem:** Import fails with "invalid status"
 **Solution:** Check that your status values match exactly: `active`, `on-hold`, `completed`, or `cancelled`
 
-**Problem:** Import fails with "invalid date format"  
+**Problem:** Import fails with "invalid date format"
 **Solution:** Use the format `YYYY-MM-DD` (e.g., `2024-01-15`)
 
-**Problem:** Import fails with "end date before start date"  
+**Problem:** Import fails with "end date before start date"
 **Solution:** Make sure your end date is the same as or after your start date
 
-**Problem:** Import fails with "invalid progress"  
+**Problem:** Import fails with "invalid progress"
 **Solution:** Progress must be a whole number between 0 and 100 (no decimals)

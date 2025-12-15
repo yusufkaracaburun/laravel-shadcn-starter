@@ -8,9 +8,9 @@ import DataTableColumnHeader from '@/components/data-table/column-header.vue'
 import { SelectColumn } from '@/components/data-table/table-columns'
 import { StatusBadge } from '@/components/ui/status-badge'
 
-import type { Invoice } from '../data/schema'
-import { statuses } from '../data/data'
+import type { TInvoice } from '../data/schema'
 
+import { statuses } from '../data/data'
 import DataTableRowActions from './data-table-row-actions.vue'
 
 /**
@@ -47,17 +47,17 @@ function formatDate(dateString: string | null | undefined): string {
   }
   // Try parsing as "Y-m-d" format
   const date = new Date(dateString)
-  if (!isNaN(date.getTime())) {
+  if (!Number.isNaN(date.getTime())) {
     return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })
   }
   return dateString
 }
 
-export const columns: ColumnDef<Invoice>[] = [
-  SelectColumn as ColumnDef<Invoice>,
+export const columns: ColumnDef<TInvoice>[] = [
+  SelectColumn as ColumnDef<TInvoice>,
   {
     accessorKey: 'invoice_number',
-    header: ({ column }) => h(DataTableColumnHeader<Invoice>, { column, title: 'Invoice Number' }),
+    header: ({ column }) => h(DataTableColumnHeader<TInvoice>, { column, title: 'Invoice Number' }),
     cell: ({ row }) => {
       const invoice = row.original
       const router = useRouter()
@@ -139,8 +139,9 @@ export const columns: ColumnDef<Invoice>[] = [
     header: ({ column }) => h(DataTableColumnHeader<Invoice>, { column, title: 'Status' }),
     cell: ({ row }) => {
       const statusValue = row.getValue('status') as string
-      const status = statuses.find((s) => s.value === statusValue)
-      if (!status) return null
+      const status = statuses.find(s => s.value === statusValue)
+      if (!status)
+        return null
       return h(StatusBadge, {
         status: status.value,
         type: 'invoice',

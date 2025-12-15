@@ -1,10 +1,11 @@
-import type { Project } from '../../features/projects/project-types'
 import type {
   CreateProjectRequest,
   PaginatedProjectsResponse,
+  Project,
   UpdateProjectRequest,
 } from '../../features/projects/project-types'
 
+import { ProjectClient } from '../../features/projects/project-client'
 import { HttpStatus } from '../../features/shared/enums'
 import {
   expectError,
@@ -13,7 +14,6 @@ import {
   expectUnauthenticated,
   expectValidationErrors,
 } from '../../features/shared/helpers'
-import { ProjectClient } from '../../features/projects/project-client'
 import { expect, test } from '../../fixtures'
 
 /**

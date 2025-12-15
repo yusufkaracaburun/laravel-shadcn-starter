@@ -1,10 +1,10 @@
 <script lang="ts" setup>
-import type { Invoice } from '../data/schema'
+import type { TInvoice } from '../data/schema'
 
 import InvoiceForm from './invoice-form.vue'
 
 const props = defineProps<{
-  invoice?: Invoice | null
+  invoice?: TInvoice | null
 }>()
 
 defineEmits(['close'])

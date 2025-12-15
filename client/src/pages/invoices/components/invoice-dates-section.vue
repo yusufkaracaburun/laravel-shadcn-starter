@@ -1,18 +1,20 @@
 <script setup lang="ts">
 import { FormField } from '@/components/ui/form'
 
-interface Props {
+interface IProps {
   isFieldDirty?: boolean | ((path: any) => boolean)
 }
 
-withDefaults(defineProps<Props>(), {
+withDefaults(defineProps<IProps>(), {
   isFieldDirty: false,
 })
 </script>
 
 <template>
   <div class="space-y-4">
-    <h3 class="text-sm font-semibold text-muted-foreground uppercase">Dates</h3>
+    <h3 class="text-sm font-semibold text-muted-foreground uppercase">
+      Dates
+    </h3>
 
     <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
       <FormField v-slot="{ componentField }" name="date" :validate-on-blur="!isFieldDirty">

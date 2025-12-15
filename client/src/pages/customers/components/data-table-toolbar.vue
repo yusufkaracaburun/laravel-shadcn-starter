@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import type { Table } from '@tanstack/vue-table'
-import type { CustomerFilters } from '@/services/customers.service'
 
 import { X } from 'lucide-vue-next'
+
+import type { CustomerFilters } from '@/services/customers.service'
 
 import DataTableViewOptions from '@/components/data-table/view-options.vue'
 import { Button } from '@/components/ui/button'

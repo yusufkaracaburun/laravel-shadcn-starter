@@ -1,16 +1,18 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 
-import { Card, CardContent, CardHeader } from '@/components/ui/card'
-import { StatusBadge } from '@/components/ui/status-badge'
 import type { Customer } from '@/services/customers.service'
 
-import { statuses } from '../data/data'
-import { formatDateForPreview, formatMoney, formatNumber } from '../utils/formatters'
-import type { InvoiceItem } from '../data/schema'
-import { calculateInvoiceTotals } from '../utils/calculations'
+import { Card, CardContent, CardHeader } from '@/components/ui/card'
+import { StatusBadge } from '@/components/ui/status-badge'
 
-interface Props {
+import type { TInvoiceItem } from '../data/schema'
+
+import { statuses } from '../data/data'
+import { calculateInvoiceTotals } from '../utils/calculations'
+import { formatDateForPreview, formatMoney, formatNumber } from '../utils/formatters'
+
+interface IProps {
   formValues: {
     customer_id?: number
     invoice_number?: string | null
@@ -24,12 +26,12 @@ interface Props {
     total_vat_21?: number | { formatted: string }
     total?: number | { formatted: string }
   }
-  items?: InvoiceItem[]
+  items?: TInvoiceItem[]
   customers?: Customer[]
   isLoading?: boolean
 }
 
-const props = withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<IProps>(), {
   isLoading: false,
 })
 
@@ -37,12 +39,13 @@ const props = withDefaults(defineProps<Props>(), {
 const customers = computed(() => props.customers ?? [])
 
 const selectedCustomer = computed(() => {
-  if (!props.formValues.customer_id) return null
-  return customers.value.find((c) => c.id === props.formValues.customer_id) || null
+  if (!props.formValues.customer_id)
+    return null
+  return customers.value.find(c => c.id === props.formValues.customer_id) || null
 })
 
 const currentStatus = computed(() => {
-  return statuses.find((s) => s.value === props.formValues.status) || statuses[0]
+  return statuses.find(s => s.value === props.formValues.status) || statuses[0]
 })
 
 // Calculate totals from items if provided
@@ -78,7 +81,9 @@ const displayTotals = computed(() => {
   <Card class="sticky top-4 h-fit">
     <CardHeader>
       <div class="flex items-center justify-between">
-        <h3 class="text-lg font-semibold">Invoice Preview</h3>
+        <h3 class="text-lg font-semibold">
+          Invoice Preview
+        </h3>
         <StatusBadge
           v-if="formValues.status"
           :status="formValues.status"
@@ -94,17 +99,23 @@ const displayTotals = computed(() => {
         <div v-if="formValues.invoice_number" class="text-2xl font-bold">
           {{ formValues.invoice_number }}
         </div>
-        <div v-else class="text-2xl font-bold text-muted-foreground">Invoice #—</div>
+        <div v-else class="text-2xl font-bold text-muted-foreground">
+          Invoice #—
+        </div>
 
         <div class="grid grid-cols-2 gap-4 text-sm">
           <div>
-            <p class="text-muted-foreground">Issue Date</p>
+            <p class="text-muted-foreground">
+              Issue Date
+            </p>
             <p class="font-medium">
               {{ formValues.date ? formatDateForPreview(formValues.date) : '—' }}
             </p>
           </div>
           <div>
-            <p class="text-muted-foreground">Due Date</p>
+            <p class="text-muted-foreground">
+              Due Date
+            </p>
             <p class="font-medium">
               {{ formValues.date_due ? formatDateForPreview(formValues.date_due) : '—' }}
             </p>
@@ -114,9 +125,13 @@ const displayTotals = computed(() => {
 
       <!-- Bill To Section -->
       <div class="space-y-2 border-b pb-4">
-        <h4 class="font-semibold text-sm uppercase text-muted-foreground">Bill To</h4>
+        <h4 class="font-semibold text-sm uppercase text-muted-foreground">
+          Bill To
+        </h4>
         <div v-if="selectedCustomer" class="space-y-1">
-          <p class="font-medium">{{ selectedCustomer.name }}</p>
+          <p class="font-medium">
+            {{ selectedCustomer.name }}
+          </p>
           <div
             v-if="selectedCustomer.formatted_address?.length"
             class="text-sm text-muted-foreground"
@@ -135,16 +150,22 @@ const displayTotals = computed(() => {
             <p>Email: {{ selectedCustomer.email }}</p>
           </div>
         </div>
-        <div v-else class="text-sm text-muted-foreground italic">No customer selected</div>
+        <div v-else class="text-sm text-muted-foreground italic">
+          No customer selected
+        </div>
       </div>
 
       <!-- Items Section -->
       <div v-if="items && items.length > 0" class="space-y-2 border-b pb-4">
-        <h4 class="font-semibold text-sm uppercase text-muted-foreground">Items</h4>
+        <h4 class="font-semibold text-sm uppercase text-muted-foreground">
+          Items
+        </h4>
         <div class="space-y-2">
           <div v-for="item in items" :key="item.id" class="flex justify-between text-sm">
             <div class="flex-1">
-              <p class="font-medium">{{ item.description || '—' }}</p>
+              <p class="font-medium">
+                {{ item.description || '—' }}
+              </p>
               <p class="text-xs text-muted-foreground">
                 {{ formatNumber(item.quantity, 2)
                 }}{{ (item as any).unit ? ` ${(item as any).unit}` : '' }} ×
@@ -152,7 +173,9 @@ const displayTotals = computed(() => {
               </p>
             </div>
             <div class="text-right">
-              <p class="font-medium">{{ formatMoney(item.total_incl_vat) }}</p>
+              <p class="font-medium">
+                {{ formatMoney(item.total_incl_vat) }}
+              </p>
             </div>
           </div>
         </div>
@@ -160,7 +183,9 @@ const displayTotals = computed(() => {
 
       <!-- Financial Summary -->
       <div class="space-y-3 border-b pb-4">
-        <h4 class="font-semibold text-sm uppercase text-muted-foreground">Summary</h4>
+        <h4 class="font-semibold text-sm uppercase text-muted-foreground">
+          Summary
+        </h4>
         <div class="space-y-2">
           <div class="flex justify-between text-sm">
             <span class="text-muted-foreground">Subtotal</span>
@@ -199,13 +224,19 @@ const displayTotals = computed(() => {
 
       <!-- Notes -->
       <div v-if="formValues.notes" class="space-y-2 border-t pt-4">
-        <h4 class="font-semibold text-sm uppercase text-muted-foreground">Notes</h4>
-        <p class="text-sm whitespace-pre-wrap">{{ formValues.notes }}</p>
+        <h4 class="font-semibold text-sm uppercase text-muted-foreground">
+          Notes
+        </h4>
+        <p class="text-sm whitespace-pre-wrap">
+          {{ formValues.notes }}
+        </p>
       </div>
 
       <!-- Loading State -->
       <div v-if="isLoading" class="flex items-center justify-center py-4">
-        <div class="text-sm text-muted-foreground">Updating preview...</div>
+        <div class="text-sm text-muted-foreground">
+          Updating preview...
+        </div>
       </div>
     </CardContent>
   </Card>

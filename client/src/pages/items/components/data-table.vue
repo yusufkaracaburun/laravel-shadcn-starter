@@ -1,8 +1,8 @@
 <script setup lang="ts">
+import { Trash2Icon } from 'lucide-vue-next'
+
 import type { DataTableProps } from '@/components/data-table/types'
 import type { ItemFilters } from '@/services/items.service'
-
-import { Trash2Icon } from 'lucide-vue-next'
 
 import BulkActions from '@/components/data-table/bulk-actions.vue'
 import DataTable from '@/components/data-table/data-table.vue'

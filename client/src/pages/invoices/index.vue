@@ -7,13 +7,13 @@ import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip
 import { useInvoices } from '@/composables/use-invoices'
 
 import { columns } from './components/columns'
+import DataTable from './components/data-table.vue'
 import InvoiceCreate from './components/invoice-create.vue'
 import InvoicesCardGrid from './components/invoices-card-grid.vue'
-import DataTable from './components/data-table.vue'
 
-type ViewMode = 'table' | 'card'
+type TViewMode = 'table' | 'card'
 
-const viewMode = ref<ViewMode>('table')
+const viewMode = ref<TViewMode>('table')
 const {
   loading,
   invoices,

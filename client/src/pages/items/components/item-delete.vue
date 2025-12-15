@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import type { Item } from '../data/schema'
-
 import { useItems } from '@/composables/use-items'
+
+import type { Item } from '../data/schema'
 
 const props = defineProps<{
   item: Item
@@ -23,10 +23,12 @@ async function handleRemove() {
     isDeleting.value = true
     await deleteItem(props.item.id)
     emits('close')
-  } catch (error) {
+  }
+  catch (error) {
     // Error handling is done in the composable
     console.error('Item deletion error:', error)
-  } finally {
+  }
+  finally {
     isDeleting.value = false
   }
 }
@@ -37,13 +39,14 @@ async function handleRemove() {
     <UiDialogHeader>
       <UiDialogTitle>Delete Item</UiDialogTitle>
       <UiDialogDescription class="mt-2">
-        Are you sure you want to delete <strong>{{ item.name }}</strong
-        >? This action cannot be undone.
+        Are you sure you want to delete <strong>{{ item.name }}</strong>? This action cannot be undone.
       </UiDialogDescription>
     </UiDialogHeader>
     <UiDialogFooter>
       <UiDialogClose as-child>
-        <UiButton variant="outline"> Cancel </UiButton>
+        <UiButton variant="outline">
+          Cancel
+        </UiButton>
       </UiDialogClose>
       <UiButton variant="destructive" :disabled="isDeleting" @click="handleRemove">
         <UiSpinner v-if="isDeleting" class="mr-2" />

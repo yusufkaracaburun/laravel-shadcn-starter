@@ -1,25 +1,26 @@
 <script setup lang="ts">
 import type { Table } from '@tanstack/vue-table'
-import type { InvoiceFilters } from '@/services/invoices.service'
 
 import { X } from 'lucide-vue-next'
+
+import type { InvoiceFilters } from '@/services/invoices.service'
 
 import DataTableViewOptions from '@/components/data-table/view-options.vue'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 
-import type { Invoice } from '../data/schema'
+import type { TInvoice } from '../data/schema'
 
 import InvoicesFilter from './invoices-filter.vue'
 
-interface DataTableToolbarProps {
-  table: Table<Invoice>
+interface IDataTableToolbarProps {
+  table: Table<TInvoice>
   filters: InvoiceFilters
   onFiltersChange: (filters: InvoiceFilters) => void
   onClearFilters: () => void
 }
 
-const props = defineProps<DataTableToolbarProps>()
+const props = defineProps<IDataTableToolbarProps>()
 
 const isFiltered = computed(() => {
   return props.table.getState().columnFilters.length > 0 || Object.keys(props.filters).length > 0

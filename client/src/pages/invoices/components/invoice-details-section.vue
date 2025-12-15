@@ -1,25 +1,27 @@
 <script setup lang="ts">
-import { FormField } from '@/components/ui/form'
 import {
+  FormField,
+  UiFormControl,
   UiFormItem,
   UiFormLabel,
-  UiFormControl,
-  UiInput,
   UiFormMessage,
+  UiInput,
 } from '@/components/ui/form'
 
-interface Props {
+interface IProps {
   isFieldDirty?: boolean | ((path: any) => boolean)
 }
 
-withDefaults(defineProps<Props>(), {
+withDefaults(defineProps<IProps>(), {
   isFieldDirty: false,
 })
 </script>
 
 <template>
   <div class="space-y-4">
-    <h3 class="text-sm font-semibold text-muted-foreground uppercase">Invoice Details</h3>
+    <h3 class="text-sm font-semibold text-muted-foreground uppercase">
+      Invoice Details
+    </h3>
     <FormField v-slot="{ componentField }" name="invoice_number" :validate-on-blur="!isFieldDirty">
       <UiFormItem>
         <UiFormLabel>Invoice Number</UiFormLabel>
