@@ -40,4 +40,10 @@ interface ItemServiceInterface extends BaseServiceInterface
      * Delete an item by model instance.
      */
     public function deleteItem(Item $item): bool;
+
+    /**
+     * Get all items without pagination.
+     * Returns a collection of all items.
+     */
+    public function getAll(): ItemCollection;
 }

@@ -37,6 +37,7 @@ final class InvoiceResource extends BaseResource
 
             'customer_id' => $this->customer_id,
             'customer' => new CustomerResource($this->whenLoaded('customer')),
+            'items' => InvoiceItemCollection::make($this->whenLoaded('items')),
 
             'created_at' => $this->formatDateTime($this->created_at),
             'updated_at' => $this->formatDateTime($this->updated_at),

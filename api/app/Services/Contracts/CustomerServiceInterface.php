@@ -40,4 +40,9 @@ interface CustomerServiceInterface extends BaseServiceInterface
      * Delete a customer by model instance.
      */
     public function deleteCustomer(Customer $customer): bool;
+
+    /**
+     * Get all customers without pagination.
+     */
+    public function getAll(): CustomerCollection;
 }

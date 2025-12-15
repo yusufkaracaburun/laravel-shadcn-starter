@@ -8,12 +8,14 @@ use App\Models\Invoice;
 use Illuminate\Http\JsonResponse;
 use App\Http\Responses\ApiResponse;
 use App\Http\Controllers\Controller;
+use App\Services\Contracts\ItemServiceInterface;
 use App\Http\Controllers\Concerns\UsesQueryBuilder;
 use App\Http\Requests\Invoices\IndexInvoiceRequest;
 use App\Http\Requests\Invoices\StoreInvoiceRequest;
 use App\Services\Contracts\InvoiceServiceInterface;
 use App\Http\Requests\Invoices\UpdateInvoiceRequest;
 use App\Http\Controllers\Concerns\UsesCachedResponses;
+use App\Services\Contracts\CustomerServiceInterface;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use App\Http\Controllers\Concerns\InvalidatesCachedModels;
 
@@ -25,7 +27,9 @@ final class InvoiceController extends Controller
     use UsesQueryBuilder;
 
     public function __construct(
-        private readonly InvoiceServiceInterface $invoiceService
+        private readonly InvoiceServiceInterface $invoiceService,
+        private readonly ItemServiceInterface $itemService,
+        private readonly CustomerServiceInterface $customerService
     ) {}
 
     /**
@@ -102,5 +106,31 @@ final class InvoiceController extends Controller
         $this->invoiceService->deleteInvoice($invoice);
 
         return ApiResponse::noContent('Invoice deleted successfully');
+    }
+
+    /**
+     * Get prerequisites for creating a new invoice.
+     * Returns all items, all customers, and the next invoice number.
+     *
+     * @authenticated
+     */
+    public function prerequisites(): JsonResponse
+    {
+        $this->authorize('create', Invoice::class);
+
+        // Get all items from ItemService
+        $items = $this->itemService->getAll();
+
+        // Get all customers from CustomerService
+        $customers = $this->customerService->getAll();
+
+        // Get next invoice number from InvoiceService
+        $nextInvoiceNumber = $this->invoiceService->getNextInvoiceNumber();
+
+        return ApiResponse::success([
+            'items' => $items,
+            'customers' => $customers,
+            'next_invoice_number' => $nextInvoiceNumber,
+        ]);
     }
 }

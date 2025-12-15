@@ -74,4 +74,11 @@ final class CustomerService extends BaseService implements CustomerServiceInterf
             throw new ModelNotFoundException('Customer not found');
         }
     }
+
+    public function getAll(): CustomerCollection
+    {
+        $customers = $this->customerRepository->all();
+
+        return new CustomerCollection($customers);
+    }
 }

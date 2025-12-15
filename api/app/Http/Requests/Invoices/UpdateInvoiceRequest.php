@@ -43,6 +43,14 @@ final class UpdateInvoiceRequest extends BaseFormRequest
             'total' => ['sometimes', 'numeric', 'min:0'],
 
             'notes' => ['nullable', 'string', 'max:2000'],
+
+            // Invoice items
+            'items' => ['nullable', 'array'],
+            'items.*.description' => ['nullable', 'string', 'max:2000'],
+            'items.*.quantity' => ['required_with:items', 'numeric', 'min:0.00001'],
+            'items.*.unit_price' => ['required_with:items', 'numeric', 'min:0'],
+            'items.*.vat_rate' => ['required_with:items', 'numeric', 'min:0', 'max:100'],
+            'items.*.sort_order' => ['nullable', 'integer', 'min:0'],
         ];
     }
 

@@ -40,4 +40,12 @@ interface InvoiceServiceInterface extends BaseServiceInterface
      * Delete an invoice by model instance.
      */
     public function deleteInvoice(Invoice $invoice): bool;
+
+    /**
+     * Get the next invoice number for a given year.
+     *
+     * @param  string  $prefix  Prefix for invoice number (default: 'INV')
+     * @param  int|null  $year  Year for invoice number (default: current year)
+     */
+    public function getNextInvoiceNumber(string $prefix = 'INV', ?int $year = null): string;
 }

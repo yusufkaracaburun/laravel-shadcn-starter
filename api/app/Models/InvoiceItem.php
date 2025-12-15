@@ -7,11 +7,13 @@ namespace App\Models;
 use App\Traits\HasMoneyTrait;
 use App\Observers\InvoiceItemObserver;
 use Cknow\Money\Casts\MoneyDecimalCast;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 
 /**
- * Invoice item model.
+ * InvoiceItem model.
  *
  * Represents a line item on an invoice.
  */
@@ -27,17 +29,19 @@ final class InvoiceItem extends BaseModel
      */
     public function invoice(): BelongsTo
     {
-        return $this->belongsTo(Invoice::class);
+        return $this->belongsTo(Invoice::class, 'invoice_id');
     }
 
     /**
-     * Get the item this invoice item is based on (if linked to an item).
+     * Scope a query to order items by sort_order.
      *
-     * @return BelongsTo<Item, covariant $this>
+     * @param  Builder<InvoiceItem>  $query
+     * @return Builder<InvoiceItem>
      */
-    public function item(): BelongsTo
+    #[Scope]
+    protected function scopeOrdered(Builder $query): Builder
     {
-        return $this->belongsTo(Item::class);
+        return $query->orderBy('sort_order')->orderBy('id');
     }
 
     /**
@@ -60,10 +64,11 @@ final class InvoiceItem extends BaseModel
         return [
             'quantity' => 'decimal:5',
             'unit_price' => MoneyDecimalCast::class,
-            'vat_rate' => 'decimal:0',
+            'vat_rate' => 'decimal:2',
             'total_excl_vat' => MoneyDecimalCast::class,
             'total_vat' => MoneyDecimalCast::class,
             'total_incl_vat' => MoneyDecimalCast::class,
+            'sort_order' => 'integer',
         ];
     }
 }

@@ -77,4 +77,11 @@ final class ItemService extends BaseService implements ItemServiceInterface
             throw new ModelNotFoundException('Item not found');
         }
     }
+
+    public function getAll(): ItemCollection
+    {
+        $items = $this->itemRepository->all();
+
+        return new ItemCollection($items);
+    }
 }
