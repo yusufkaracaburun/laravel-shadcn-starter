@@ -41,7 +41,7 @@ final class PermissionController extends Controller
         $this->authorize('viewAny', Permission::class);
 
         $validated = $request->validated();
-        $perPage = (int) ($validated['per_page'] ?? 10);
+        $perPage = (int) $validated['per_page'];
 
         $permissions = $this->permissionService->getPaginated($perPage);
 

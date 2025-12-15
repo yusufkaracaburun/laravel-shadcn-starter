@@ -41,7 +41,7 @@ final class ItemController extends Controller
         $this->authorize('viewAny', Item::class);
 
         $validated = $request->validated();
-        $perPage = (int) ($validated['per_page'] ?? 10);
+        $perPage = (int) $validated['per_page'];
 
         $items = $this->itemService->getPaginated($perPage);
 

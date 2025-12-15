@@ -42,7 +42,7 @@ final class CustomerController extends Controller
         $this->authorize('viewAny', Customer::class);
 
         $validated = $request->validated();
-        $perPage = (int) ($validated['per_page'] ?? 10);
+        $perPage = (int) $validated['per_page'];
 
         /** @var CustomerResource $customers */
         $customers = $this->customerService->getPaginated($perPage);

@@ -41,7 +41,7 @@ final class PaymentController extends Controller
         $this->authorize('viewAny', Payment::class);
 
         $validated = $request->validated();
-        $perPage = (int) ($validated['per_page'] ?? 10);
+        $perPage = (int) $validated['per_page'];
 
         $payments = $this->paymentService->getPaginated($perPage);
 

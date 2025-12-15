@@ -49,7 +49,7 @@ final class TeamController extends Controller
 
         $user->refresh();
 
-        $perPage = (int) ($validated['per_page'] ?? 10);
+        $perPage = (int) $validated['per_page'];
         $collection = $this->teamService->getPaginated($perPage, $user->id);
 
         return ApiResponse::success($collection);

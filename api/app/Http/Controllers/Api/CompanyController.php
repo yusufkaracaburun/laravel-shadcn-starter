@@ -44,7 +44,7 @@ final class CompanyController extends Controller
         $user->refresh();
         $teamId = $user->getAttributeValue('current_team_id');
 
-        $perPage = (int) ($validated['per_page'] ?? 10);
+        $perPage = (int) $validated['per_page'];
         $collection = $this->companyService->getPaginated($perPage, $teamId);
 
         return ApiResponse::success($collection);

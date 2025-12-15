@@ -40,7 +40,7 @@ final class RoleController extends Controller
         $this->authorize('viewAny', Role::class);
 
         $validated = $request->validated();
-        $perPage = (int) ($validated['per_page'] ?? 10);
+        $perPage = (int) $validated['per_page'];
 
         $roles = $this->roleService->getPaginated($perPage);
 

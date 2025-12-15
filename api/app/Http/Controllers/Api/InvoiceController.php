@@ -40,7 +40,8 @@ final class InvoiceController extends Controller
     {
         $this->authorize('viewAny', Invoice::class);
 
-        $perPage = (int) ($request->validated()['per_page'] ?? 10);
+        $validated = $request->validated();
+        $perPage = (int) $validated['per_page'];
 
         $invoices = $this->invoiceService->getPaginated($perPage);
 

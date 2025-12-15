@@ -45,7 +45,7 @@ final class UserController extends Controller
         $user->refresh();
         $teamId = $user->getAttributeValue('current_team_id');
 
-        $perPage = (int) ($validated['per_page'] ?? 10);
+        $perPage = (int) $validated['per_page'];
         $collection = $this->userService->getPaginated($perPage, $teamId);
 
         return ApiResponse::success($collection);
