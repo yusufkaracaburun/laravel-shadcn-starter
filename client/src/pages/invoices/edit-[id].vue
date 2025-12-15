@@ -17,6 +17,7 @@ import { useGetInvoiceQuery } from '@/services/invoices.service'
 import InvoiceEditorLayout from '../components/invoice-editor-layout.vue'
 import InvoiceForm from '../components/invoice-form.vue'
 import InvoicePreview from '../components/invoice-preview.vue'
+import { useGetInvoicePrerequisitesQuery } from '@/services/invoices.service'
 
 const route = useRoute()
 const router = useRouter()
@@ -25,6 +26,17 @@ const invoiceId = computed(() => Number(route.params.id))
 
 const { data: invoiceResponse, isLoading, isError, error } = useGetInvoiceQuery(invoiceId, {
   include: ['items'],
+})
+
+// Fetch prerequisites to get customers (same as create page)
+const { data: prerequisitesResponse } = useGetInvoicePrerequisitesQuery()
+const prerequisites = computed(() => prerequisitesResponse.value?.data ?? null)
+
+// Extract customers from prerequisites
+const customers = computed(() => {
+  if (!prerequisites.value?.customers) return []
+  const customersData = prerequisites.value.customers
+  return Array.isArray(customersData) ? customersData : (customersData as any).data ?? []
 })
 
 const invoice = computed(() => invoiceResponse.value?.data ?? null)
@@ -113,7 +125,7 @@ async function handleUpdateAndSend() {
       </template>
 
       <template #preview>
-        <InvoicePreview :form-values="formValues" :items="formItems" :is-loading="isSubmitting" />
+        <InvoicePreview :form-values="formValues" :items="formItems" :customers="customers" :is-loading="isSubmitting" />
       </template>
 
       <template #actions>

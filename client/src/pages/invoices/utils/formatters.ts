@@ -1,27 +1,74 @@
+import { getI18nInstance } from '@/plugins/i18n/setup'
+
+/**
+ * Get i18n instance for use in utility functions
+ */
+function getI18n() {
+  const instance = getI18nInstance()
+  if (instance) {
+    return instance.global
+  }
+  return null
+}
+
 /**
  * Format money value (handles both Money object and number)
- * Uses Dutch locale: thousand separator = dot (.), decimal separator = comma (,)
+ * Uses vue-i18n to respect current locale setting
  */
 export function formatMoney(value: any): string {
   if (typeof value === 'object' && value !== null && 'formatted' in value) {
     return value.formatted
   }
   if (typeof value === 'number') {
+    const i18n = getI18n()
+    if (i18n) {
+      return i18n.n(value, 'currency')
+    }
+    // Fallback to Dutch formatting if i18n not available
     return new Intl.NumberFormat('nl-NL', {
       style: 'currency',
       currency: 'EUR',
     }).format(value)
   }
-  return '€ 0,00'
+  const i18n = getI18n()
+  if (i18n) {
+    return i18n.n(0, 'currency')
+  }
+  // Fallback to Dutch formatting if i18n not available
+  return new Intl.NumberFormat('nl-NL', {
+    style: 'currency',
+    currency: 'EUR',
+  }).format(0)
 }
 
 /**
- * Format number with Dutch locale (thousand separator = dot, decimal separator = comma)
+ * Format number with locale-aware formatting (respects current locale)
  */
 export function formatNumber(value: number | null | undefined, decimals: number = 2): string {
   if (value === null || value === undefined || isNaN(value)) {
-    return '0,00'
+    const i18n = getI18n()
+    if (i18n) {
+      return i18n.n(0, {
+        style: 'decimal',
+        minimumFractionDigits: decimals,
+        maximumFractionDigits: decimals,
+      })
+    }
+    // Fallback to Dutch formatting if i18n not available
+    return new Intl.NumberFormat('nl-NL', {
+      minimumFractionDigits: decimals,
+      maximumFractionDigits: decimals,
+    }).format(0)
   }
+  const i18n = getI18n()
+  if (i18n) {
+    return i18n.n(value, {
+      style: 'decimal',
+      minimumFractionDigits: decimals,
+      maximumFractionDigits: decimals,
+    })
+  }
+  // Fallback to Dutch formatting if i18n not available
   return new Intl.NumberFormat('nl-NL', {
     minimumFractionDigits: decimals,
     maximumFractionDigits: decimals,
@@ -44,12 +91,18 @@ export function parseDutchNumber(value: string): number {
 
 /**
  * Format date for display (e.g., "March 10, 2025")
+ * Uses vue-i18n to respect current locale setting
  */
 export function formatDate(dateString: string | null | undefined): string {
   if (!dateString) return '—'
   try {
     const date = new Date(dateString)
     if (!isNaN(date.getTime())) {
+      const i18n = getI18n()
+      if (i18n) {
+        return i18n.d(date, 'long')
+      }
+      // Fallback to English formatting if i18n not available
       return date.toLocaleDateString('en-US', {
         year: 'numeric',
         month: 'long',
@@ -64,12 +117,18 @@ export function formatDate(dateString: string | null | undefined): string {
 
 /**
  * Format date for preview display (shorter format, e.g., "Mar 10, 2025")
+ * Uses vue-i18n to respect current locale setting
  */
 export function formatDateForPreview(dateString: string | null | undefined): string {
   if (!dateString) return '—'
   try {
     const date = new Date(dateString)
     if (!isNaN(date.getTime())) {
+      const i18n = getI18n()
+      if (i18n) {
+        return i18n.d(date, 'preview')
+      }
+      // Fallback to English formatting if i18n not available
       return date.toLocaleDateString('en-US', {
         year: 'numeric',
         month: 'short',

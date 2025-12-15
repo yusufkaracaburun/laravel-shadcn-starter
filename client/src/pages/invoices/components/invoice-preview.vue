@@ -3,7 +3,7 @@ import { computed } from 'vue'
 
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { StatusBadge } from '@/components/ui/status-badge'
-import { useGetCustomersQuery } from '@/services/customers.service'
+import type { Customer } from '@/services/customers.service'
 
 import { statuses } from '../data/data'
 import { formatDateForPreview, formatMoney, formatNumber } from '../utils/formatters'
@@ -25,6 +25,7 @@ interface Props {
     total?: number | { formatted: string }
   }
   items?: InvoiceItem[]
+  customers?: Customer[]
   isLoading?: boolean
 }
 
@@ -32,9 +33,8 @@ const props = withDefaults(defineProps<Props>(), {
   isLoading: false,
 })
 
-// Fetch customers to get customer details for preview
-const { data: customersResponse } = useGetCustomersQuery(1, 100, [], {}, [])
-const customers = computed(() => customersResponse.value?.data?.data ?? [])
+// Use customers from props (from prerequisites) or fallback to empty array
+const customers = computed(() => props.customers ?? [])
 
 const selectedCustomer = computed(() => {
   if (!props.formValues.customer_id) return null

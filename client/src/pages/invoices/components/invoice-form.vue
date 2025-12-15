@@ -9,11 +9,11 @@ import { Plus, Pencil, Trash2 } from 'lucide-vue-next'
 import { FormField } from '@/components/ui/form'
 import { Button } from '@/components/ui/button'
 import { useInvoices } from '@/composables/use-invoices'
-import { useGetCustomersQuery } from '@/services/customers.service'
 
 import type { Invoice, InvoiceItem } from '../data/schema'
 
 import type { Item } from '@/services/items.service'
+import type { Customer } from '@/services/customers.service'
 import { formatDateForInput, formatMoney, formatNumber } from '../utils/formatters'
 import CustomerSwitcher from './customer-switcher.vue'
 import InvoiceItemSelector from './invoice-item-selector.vue'
@@ -24,6 +24,7 @@ const props = defineProps<{
   invoice: Invoice | null
   nextInvoiceNumber?: string | null
   items?: Item[]
+  customers?: Customer[]
 }>()
 const emits = defineEmits(['close', 'submit'])
 
@@ -31,9 +32,8 @@ const router = useRouter()
 
 const { createInvoice, updateInvoice } = useInvoices()
 
-// Fetch customers for dropdown (with larger page size)
-const { data: customersResponse } = useGetCustomersQuery(1, 100, [], {}, [])
-const customers = computed(() => customersResponse.value?.data?.data ?? [])
+// Use customers from props (from prerequisites) or fallback to empty array
+const customers = computed(() => props.customers ?? [])
 
 const formSchema = toTypedSchema(
   z.object({

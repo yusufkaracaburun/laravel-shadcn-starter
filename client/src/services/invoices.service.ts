@@ -336,16 +336,17 @@ export function useDeleteInvoiceMutation() {
 
 /**
  * Invoice prerequisites interface
- * Note: items is a Laravel ResourceCollection which serializes to { data: Item[] }
+ * Note: items and customers are Laravel ResourceCollections which serialize to { data: T[] }
  */
 export interface InvoicePrerequisites {
   items: Item[] | { data: Item[] }
+  customers: Customer[] | { data: Customer[] }
   next_invoice_number: string
 }
 
 /**
  * Get prerequisites for creating a new invoice
- * Returns all items and the next invoice number
+ * Returns all items, all customers, and the next invoice number
  * @see api/app/Http/Controllers/Api/InvoiceController.php::prerequisites()
  */
 export function useGetInvoicePrerequisitesQuery() {

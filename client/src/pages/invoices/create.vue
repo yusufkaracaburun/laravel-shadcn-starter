@@ -30,6 +30,14 @@ const items = computed(() => {
   return Array.isArray(itemsData) ? itemsData : (itemsData as any).data ?? []
 })
 
+// Extract customers from prerequisites (CustomerCollection serializes to { data: Customer[] })
+const customers = computed(() => {
+  if (!prerequisites.value?.customers) return []
+  // Handle both array format and ResourceCollection format ({ data: [...] })
+  const customersData = prerequisites.value.customers
+  return Array.isArray(customersData) ? customersData : (customersData as any).data ?? []
+})
+
 const formRef = ref<InstanceType<typeof InvoiceForm> | null>(null)
 const isSubmitting = ref(false)
 
@@ -99,12 +107,13 @@ async function handleSaveAndSend() {
           :invoice="null"
           :next-invoice-number="prerequisites?.next_invoice_number ?? null"
           :items="items"
+          :customers="customers"
           @close="handleClose"
         />
       </template>
 
       <template #preview>
-        <InvoicePreview :form-values="formValues" :items="formItems" :is-loading="isSubmitting" />
+        <InvoicePreview :form-values="formValues" :items="formItems" :customers="customers" :is-loading="isSubmitting" />
       </template>
 
       <template #actions>
