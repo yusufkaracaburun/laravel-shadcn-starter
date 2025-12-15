@@ -2,9 +2,9 @@ import type { SortingState } from '@tanstack/vue-table'
 
 import type { ServerPagination } from '@/components/data-table/types'
 import type {
-  CreateInvoiceRequest,
-  InvoiceFilters,
-  UpdateInvoiceRequest,
+  ICreateInvoiceRequest,
+  IInvoiceFilters,
+  IUpdateInvoiceRequest,
 } from '@/services/invoices.service'
 
 import { useToast } from '@/composables/use-toast'
@@ -28,7 +28,7 @@ export function useInvoices() {
   const sorting = ref<SortingState>([])
 
   // Filters state
-  const filters = ref<InvoiceFilters>({})
+  const filters = ref<IInvoiceFilters>({})
 
   // Include relationships state
   const include = ref<string[]>(['customer'])
@@ -41,7 +41,7 @@ export function useInvoices() {
   }
 
   // Handler for filter changes
-  function onFiltersChange(newFilters: InvoiceFilters) {
+  function onFiltersChange(newFilters: IInvoiceFilters) {
     filters.value = newFilters
     // Reset to first page when filters change
     page.value = 1
@@ -134,7 +134,7 @@ export function useInvoices() {
   const updateInvoiceMutation = useUpdateInvoiceMutation()
   const deleteInvoiceMutation = useDeleteInvoiceMutation()
 
-  async function createInvoice(data: CreateInvoiceRequest) {
+  async function createInvoice(data: ICreateInvoiceRequest) {
     try {
       const response = await createInvoiceMutation.mutateAsync(data)
       toast.showSuccess('Invoice created successfully!')
@@ -160,7 +160,7 @@ export function useInvoices() {
     }
   }
 
-  async function updateInvoice(invoiceId: number, data: UpdateInvoiceRequest) {
+  async function updateInvoice(invoiceId: number, data: IUpdateInvoiceRequest) {
     try {
       const response = await updateInvoiceMutation.mutateAsync({ invoiceId, data })
       toast.showSuccess('Invoice updated successfully!')

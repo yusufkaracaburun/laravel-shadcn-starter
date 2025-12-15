@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import type { Invoice } from '@/services/invoices.service'
+import type { IInvoice } from '@/services/invoices.service'
 
 import Loading from '@/components/loading.vue'
 
 import InvoiceCard from './invoice-card.vue'
 
 interface IProps {
-  invoices: Invoice[]
+  invoices: IInvoice[]
   loading?: boolean
 }
 

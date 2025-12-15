@@ -110,7 +110,7 @@ const { values, isFieldDirty, handleSubmit, isSubmitting, resetForm, setFieldVal
 })
 
 // Local items state - used for both new and existing invoices
-interface TLocalInvoiceItem {
+interface ILocalInvoiceItem {
   description: string | null
   quantity: number
   unit_price: number
@@ -122,7 +122,7 @@ interface TLocalInvoiceItem {
   sort_order: number
   id?: number
 }
-const localItems = ref<TLocalInvoiceItem[]>([])
+const localItems = ref<ILocalInvoiceItem[]>([])
 const editingItemIndex = ref<number | null>(null)
 const showAddForm = ref(false)
 

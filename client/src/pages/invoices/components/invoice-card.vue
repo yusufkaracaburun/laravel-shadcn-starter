@@ -2,7 +2,7 @@
 import { FileText, MoreVertical } from 'lucide-vue-next'
 import { useRouter } from 'vue-router'
 
-import type { Invoice } from '@/services/invoices.service'
+import type { IInvoice } from '@/services/invoices.service'
 
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { StatusBadge } from '@/components/ui/status-badge'
@@ -11,7 +11,7 @@ import { statuses } from '../data/data'
 import InvoiceDelete from './invoice-delete.vue'
 
 interface IProps {
-  invoice: Invoice
+  invoice: IInvoice
 }
 
 const props = defineProps<IProps>()

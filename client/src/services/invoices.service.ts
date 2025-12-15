@@ -19,7 +19,7 @@ export type InvoiceStatus = 'draft' | 'sent' | 'paid' | 'overdue' | 'cancelled'
  * Note: Customer is loaded when include is used
  * Note: Items are loaded when include=items is used
  */
-export interface Invoice {
+export interface IInvoice {
   id: number
   customer_id: number
   customer?: Customer // When loaded via include
@@ -58,8 +58,8 @@ export interface Invoice {
  * @see https://laravel.com/docs/12.x/pagination#converting-results-to-json
  * @see api/app/Http/Controllers/Api/InvoiceController.php::index()
  */
-export interface PaginatedInvoicesResponse {
-  data: Invoice[]
+export interface IPaginatedInvoicesResponse {
+  data: IInvoice[]
   current_page: number
   per_page: number
   total: number
@@ -97,7 +97,7 @@ function convertSortingToQueryString(
  * Invoice filters interface matching backend filter structure
  * @see api/app/Http/Controllers/Api/InvoiceController.php::index()
  */
-export interface InvoiceFilters {
+export interface IInvoiceFilters {
   id?: number
   customer_id?: number
   status?: InvoiceStatus
@@ -121,7 +121,7 @@ export function useGetInvoicesQuery(
   page: MaybeRef<number> = 1,
   pageSize: MaybeRef<number> = 15,
   sorting: MaybeRef<Array<{ id: string, desc: boolean }>> = [],
-  filters: MaybeRef<InvoiceFilters> = {},
+  filters: MaybeRef<IInvoiceFilters> = {},
   include: MaybeRef<string[]> = [],
 ) {
   const { axiosInstance } = useAxios()
@@ -133,7 +133,7 @@ export function useGetInvoicesQuery(
   const filtersRef = isRef(filters) ? filters : ref(filters)
   const includeRef = isRef(include) ? include : ref(include)
 
-  return useQuery<IResponse<PaginatedInvoicesResponse>, AxiosError>({
+  return useQuery<IResponse<IPaginatedInvoicesResponse>, AxiosError>({
     queryKey: [
       'invoiceList',
       computed(() => toValue(pageRef)),
@@ -142,7 +142,7 @@ export function useGetInvoicesQuery(
       computed(() => JSON.stringify(toValue(filtersRef))),
       computed(() => JSON.stringify(toValue(includeRef))),
     ],
-    queryFn: async (): Promise<IResponse<PaginatedInvoicesResponse>> => {
+    queryFn: async (): Promise<IResponse<IPaginatedInvoicesResponse>> => {
       // Use toValue() to read current values in queryFn
       const currentPage = toValue(pageRef)
       const currentPageSize = toValue(pageSizeRef)
@@ -218,13 +218,13 @@ export function useGetInvoiceQuery(invoiceId: MaybeRef<number>, options?: { incl
   // Normalize MaybeRef parameter to ref for proper reactivity
   const invoiceIdRef = isRef(invoiceId) ? invoiceId : ref(invoiceId)
 
-  return useQuery<IResponse<Invoice>, AxiosError>({
+  return useQuery<IResponse<IInvoice>, AxiosError>({
     queryKey: [
       'invoice',
       computed(() => toValue(invoiceIdRef)),
       computed(() => options?.include?.join(',') || 'customer'),
     ],
-    queryFn: async (): Promise<IResponse<Invoice>> => {
+    queryFn: async (): Promise<IResponse<IInvoice>> => {
       const currentInvoiceId = toValue(invoiceIdRef)
       const includes = ['customer', ...(options?.include || [])]
       const response = await axiosInstance.get(`/api/invoices/${currentInvoiceId}`, {
@@ -253,7 +253,7 @@ export function useGetInvoiceQuery(invoiceId: MaybeRef<number>, options?: { incl
  * Create invoice request interface matching backend validation
  * @see api/app/Http/Requests/Invoices/InvoiceStoreRequest.php
  */
-export interface CreateInvoiceRequest {
+export interface ICreateInvoiceRequest {
   customer_id: number
   invoice_number?: string | null
   date: string // Format: "YYYY-MM-DD"
@@ -272,7 +272,7 @@ export interface CreateInvoiceRequest {
  * Update invoice request interface matching backend validation
  * @see api/app/Http/Requests/Invoices/InvoiceUpdateRequest.php
  */
-export interface UpdateInvoiceRequest {
+export interface IUpdateInvoiceRequest {
   customer_id?: number
   invoice_number?: string | null
   date?: string // Format: "YYYY-MM-DD"
@@ -295,8 +295,8 @@ export function useCreateInvoiceMutation() {
   const { axiosInstance } = useAxios()
   const queryClient = useQueryClient()
 
-  return useMutation<IResponse<Invoice>, AxiosError, CreateInvoiceRequest>({
-    mutationFn: async (data: CreateInvoiceRequest): Promise<IResponse<Invoice>> => {
+  return useMutation<IResponse<IInvoice>, AxiosError, ICreateInvoiceRequest>({
+    mutationFn: async (data: ICreateInvoiceRequest): Promise<IResponse<IInvoice>> => {
       const response = await axiosInstance.post('/api/invoices', data)
       return response.data
     },
@@ -316,11 +316,11 @@ export function useUpdateInvoiceMutation() {
   const queryClient = useQueryClient()
 
   return useMutation<
-    IResponse<Invoice>,
+    IResponse<IInvoice>,
     AxiosError,
-    { invoiceId: number, data: UpdateInvoiceRequest }
+    { invoiceId: number, data: IUpdateInvoiceRequest }
   >({
-    mutationFn: async ({ invoiceId, data }): Promise<IResponse<Invoice>> => {
+    mutationFn: async ({ invoiceId, data }): Promise<IResponse<IInvoice>> => {
       const response = await axiosInstance.put(`/api/invoices/${invoiceId}`, data)
       return response.data
     },
@@ -356,7 +356,7 @@ export function useDeleteInvoiceMutation() {
  * Invoice prerequisites interface
  * Note: items and customers are Laravel ResourceCollections which serialize to { data: T[] }
  */
-export interface InvoicePrerequisites {
+export interface IInvoicePrerequisites {
   items: Item[] | { data: Item[] }
   customers: Customer[] | { data: Customer[] }
   next_invoice_number: string
@@ -370,9 +370,9 @@ export interface InvoicePrerequisites {
 export function useGetInvoicePrerequisitesQuery() {
   const { axiosInstance } = useAxios()
 
-  return useQuery<IResponse<InvoicePrerequisites>, AxiosError>({
+  return useQuery<IResponse<IInvoicePrerequisites>, AxiosError>({
     queryKey: ['invoicePrerequisites'],
-    queryFn: async (): Promise<IResponse<InvoicePrerequisites>> => {
+    queryFn: async (): Promise<IResponse<IInvoicePrerequisites>> => {
       const response = await axiosInstance.get('/api/invoices/prerequisites')
       return response.data
     },

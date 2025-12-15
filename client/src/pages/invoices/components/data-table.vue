@@ -2,7 +2,7 @@
 import { Trash2Icon } from 'lucide-vue-next'
 
 import type { DataTableProps } from '@/components/data-table/types'
-import type { InvoiceFilters } from '@/services/invoices.service'
+import type { IInvoiceFilters } from '@/services/invoices.service'
 
 import BulkActions from '@/components/data-table/bulk-actions.vue'
 import DataTable from '@/components/data-table/data-table.vue'
@@ -14,8 +14,8 @@ import DataTableToolbar from './data-table-toolbar.vue'
 import InvoiceDeleteBatch from './invoice-delete-batch.vue'
 
 interface IExtendedDataTableProps extends DataTableProps<TInvoice> {
-  filters?: InvoiceFilters
-  onFiltersChange?: (filters: InvoiceFilters) => void
+  filters?: IInvoiceFilters
+  onFiltersChange?: (filters: IInvoiceFilters) => void
   onClearFilters?: () => void
 }
 

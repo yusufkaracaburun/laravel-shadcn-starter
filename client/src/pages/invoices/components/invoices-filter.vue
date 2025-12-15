@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Filter } from 'lucide-vue-next'
 
-import type { InvoiceFilters } from '@/services/invoices.service'
+import type { IInvoiceFilters } from '@/services/invoices.service'
 
 import { Button } from '@/components/ui/button'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
@@ -15,8 +15,8 @@ import {
 import { useGetCustomersQuery } from '@/services/customers.service'
 
 interface IInvoicesFilterProps {
-  filters: InvoiceFilters
-  onFiltersChange: (filters: InvoiceFilters) => void
+  filters: IInvoiceFilters
+  onFiltersChange: (filters: IInvoiceFilters) => void
   onClear: () => void
 }
 
@@ -26,7 +26,7 @@ const props = defineProps<IInvoicesFilterProps>()
 const { data: customersResponse } = useGetCustomersQuery(1, 100, [], {}, [])
 const customers = computed(() => customersResponse.value?.data?.data ?? [])
 
-const localFilters = ref<InvoiceFilters>({ ...props.filters })
+const localFilters = ref<IInvoiceFilters>({ ...props.filters })
 
 watch(
   () => props.filters,
@@ -36,7 +36,7 @@ watch(
   { deep: true },
 )
 
-function updateFilter(key: keyof InvoiceFilters, value: any) {
+function updateFilter(key: keyof IInvoiceFilters, value: any) {
   localFilters.value = {
     ...localFilters.value,
     [key]: value || undefined,
