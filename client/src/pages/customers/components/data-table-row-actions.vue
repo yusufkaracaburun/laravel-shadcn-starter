@@ -28,11 +28,9 @@ function handleSelect(command: TCommand) {
       break
     case 'edit':
       showComponent.value = CustomerResourceDialog
-      isOpen.value = true
       break
     case 'delete':
       showComponent.value = CustomerDelete
-      isOpen.value = true
       break
   }
 }
@@ -49,36 +47,30 @@ const isOpen = ref(false)
           <Ellipsis class="size-4" />
         </UiButton>
       </UiDropdownMenuTrigger>
-      <UiDropdownMenuContent align="end">
-        <UiDropdownMenuItem @click="handleSelect('view')">
-          <Eye class="mr-2 size-4" />
-          View
+      <UiDropdownMenuContent align="end" class="w-[160px]">
+        <UiDropdownMenuItem @select.stop="handleSelect('view')">
+          <span>View</span>
+          <UiDropdownMenuShortcut> <Eye class="size-4" /> </UiDropdownMenuShortcut>
         </UiDropdownMenuItem>
-        <UiDropdownMenuItem @click="handleSelect('edit')">
-          <FilePenLine class="mr-2 size-4" />
-          Edit
-        </UiDropdownMenuItem>
-        <UiDropdownMenuItem
-          class="text-destructive"
-          @click="handleSelect('delete')"
-        >
-          <Trash2 class="mr-2 size-4" />
-          Delete
-        </UiDropdownMenuItem>
+
+        <UiDialogTrigger as-child>
+          <UiDropdownMenuItem @select.stop="handleSelect('edit')">
+            <span>Edit</span>
+            <UiDropdownMenuShortcut> <FilePenLine class="size-4" /> </UiDropdownMenuShortcut>
+          </UiDropdownMenuItem>
+        </UiDialogTrigger>
+
+        <UiDialogTrigger as-child>
+          <UiDropdownMenuItem @select.stop="handleSelect('delete')">
+            <span>Delete</span>
+            <UiDropdownMenuShortcut> <Trash2 class="size-4" /> </UiDropdownMenuShortcut>
+          </UiDropdownMenuItem>
+        </UiDialogTrigger>
       </UiDropdownMenuContent>
     </UiDropdownMenu>
 
-    <UiDialogContent v-if="showComponent" class="sm:max-w-[425px]">
-      <CustomerResourceDialog
-        v-if="showComponent === CustomerResourceDialog"
-        :customer="customer"
-        @close="() => { isOpen = false; showComponent = null }"
-      />
-      <CustomerDelete
-        v-else-if="showComponent === CustomerDelete"
-        :customer="customer"
-        @close="() => { isOpen = false; showComponent = null }"
-      />
+    <UiDialogContent>
+      <component :is="showComponent" :customer="customer" @close="() => { isOpen = false; showComponent = null }" />
     </UiDialogContent>
   </UiDialog>
 </template>
