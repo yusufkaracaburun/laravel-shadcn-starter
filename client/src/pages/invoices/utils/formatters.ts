@@ -1,5 +1,6 @@
 /**
  * Format money value (handles both Money object and number)
+ * Uses Dutch locale: thousand separator = dot (.), decimal separator = comma (,)
  */
 export function formatMoney(value: any): string {
   if (typeof value === 'object' && value !== null && 'formatted' in value) {
@@ -11,7 +12,34 @@ export function formatMoney(value: any): string {
       currency: 'EUR',
     }).format(value)
   }
-  return '€0.00'
+  return '€ 0,00'
+}
+
+/**
+ * Format number with Dutch locale (thousand separator = dot, decimal separator = comma)
+ */
+export function formatNumber(value: number | null | undefined, decimals: number = 2): string {
+  if (value === null || value === undefined || isNaN(value)) {
+    return '0,00'
+  }
+  return new Intl.NumberFormat('nl-NL', {
+    minimumFractionDigits: decimals,
+    maximumFractionDigits: decimals,
+  }).format(value)
+}
+
+/**
+ * Parse Dutch formatted number string to number
+ * Handles both comma (Dutch) and dot (English) decimal separators
+ */
+export function parseDutchNumber(value: string): number {
+  if (!value || value.trim() === '') {
+    return 0
+  }
+  // Replace dot thousand separators, then replace comma with dot for parsing
+  const cleaned = value.replace(/\./g, '').replace(',', '.')
+  const parsed = Number.parseFloat(cleaned)
+  return isNaN(parsed) ? 0 : parsed
 }
 
 /**

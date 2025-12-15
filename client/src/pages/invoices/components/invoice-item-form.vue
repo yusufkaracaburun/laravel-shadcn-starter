@@ -25,7 +25,12 @@ const emits = defineEmits(['save', 'cancel'])
 const formSchema = toTypedSchema(
   z.object({
     description: z.string().nullable().optional(),
-    quantity: z.number().min(0.00001, 'Quantity must be greater than zero'),
+    quantity: z.number()
+      .min(0.01, 'Quantity must be greater than zero')
+      .refine((val) => {
+        const decimalPlaces = (val.toString().split('.')[1] || '').length
+        return decimalPlaces <= 2
+      }, 'Quantity must have a maximum of 2 decimal places'),
     unit_price: z.number().min(0, 'Unit price must be zero or greater'),
     unit: z.string().nullable().optional(),
     vat_rate: z.enum(['0', '9', '21']).default('21'),
@@ -109,26 +114,26 @@ function onCancel() {
 
 <template>
   <form class="space-y-4" @submit.prevent="onSubmit">
-    <!-- Name, Quantity and Unit - One Row -->
-    <div class="grid grid-cols-1 gap-4 md:grid-cols-5 md:items-start">
-      <!-- Name -->
-      <FormField v-slot="{ componentField }" name="description" :validate-on-blur="!isFieldDirty">
-        <UiFormItem class="md:col-span-3">
-          <UiFormLabel>Name</UiFormLabel>
-          <UiFormControl>
-            <UiInput type="text" placeholder="Item name" v-bind="componentField" />
-          </UiFormControl>
-          <UiFormMessage />
-        </UiFormItem>
-      </FormField>
+    <!-- Name - Full Width -->
+    <FormField v-slot="{ componentField }" name="description" :validate-on-blur="!isFieldDirty">
+      <UiFormItem>
+        <UiFormLabel>Name</UiFormLabel>
+        <UiFormControl>
+          <UiInput type="text" placeholder="Item name" v-bind="componentField" />
+        </UiFormControl>
+        <UiFormMessage />
+      </UiFormItem>
+    </FormField>
 
+    <!-- Quantity & Unit, Unit Price & VAT Rate - One Row -->
+    <div class="grid grid-cols-1 gap-4 md:grid-cols-2 md:items-start">
       <!-- Quantity and Unit - Input Group -->
       <FormField v-slot="{ componentField: quantityField }" name="quantity" :validate-on-blur="!isFieldDirty">
-        <UiFormItem class="md:col-span-2">
+        <UiFormItem>
           <UiFormLabel>Quantity & Unit</UiFormLabel>
           <UiFormControl>
             <InputGroup>
-              <InputGroupInput type="number" step="0.00001" min="0.00001" placeholder="1.00000" v-bind="quantityField" />
+              <InputGroupInput type="number" step="0.01" min="0.01" placeholder="1,00" v-bind="quantityField" />
               <FormField v-slot="{ componentField: unitField }" name="unit" :validate-on-blur="!isFieldDirty">
                 <InputGroupAddon align="inline-end">
                   <InputGroupInput type="text" placeholder="pcs" v-bind="unitField" class="w-20 text-center" />
@@ -146,42 +151,42 @@ function onCancel() {
           </div>
         </UiFormItem>
       </FormField>
-    </div>
 
-    <!-- Unit Price and VAT Rate - Side by Side -->
-    <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
-      <FormField v-slot="{ componentField }" name="unit_price" :validate-on-blur="!isFieldDirty">
+      <!-- Unit Price and VAT Rate - Input Group -->
+      <FormField v-slot="{ componentField: priceField }" name="unit_price" :validate-on-blur="!isFieldDirty">
         <UiFormItem>
-          <UiFormLabel>Unit Price</UiFormLabel>
+          <UiFormLabel>Unit Price & VAT Rate</UiFormLabel>
           <UiFormControl>
             <InputGroup>
               <InputGroupAddon>
                 <InputGroupText>€</InputGroupText>
               </InputGroupAddon>
-              <InputGroupInput type="number" step="0.01" min="0" placeholder="0.00" v-bind="componentField" />
+              <InputGroupInput type="number" step="0.01" min="0" placeholder="0,00" v-bind="priceField" />
+              <FormField v-slot="{ componentField: vatField }" name="vat_rate" :validate-on-blur="!isFieldDirty">
+                <InputGroupAddon align="inline-end" class="!p-0">
+                  <ToggleGroup type="single" variant="outline" class="flex h-full" v-bind="vatField">
+                    <ToggleGroupItem value="0" class="flex-1 rounded-none first:rounded-r-md" aria-label="VAT 0%">
+                      <span class="font-semibold text-xs">0%</span>
+                    </ToggleGroupItem>
+                    <ToggleGroupItem value="9" class="flex-1 rounded-none" aria-label="VAT 9%">
+                      <span class="font-semibold text-xs">9%</span>
+                    </ToggleGroupItem>
+                    <ToggleGroupItem value="21" class="flex-1 rounded-none last:rounded-r-md" aria-label="VAT 21%">
+                      <span class="font-semibold text-xs">21%</span>
+                    </ToggleGroupItem>
+                  </ToggleGroup>
+                </InputGroupAddon>
+              </FormField>
             </InputGroup>
           </UiFormControl>
-          <UiFormMessage />
-        </UiFormItem>
-      </FormField>
-
-      <FormField v-slot="{ componentField }" name="vat_rate" :validate-on-blur="!isFieldDirty">
-        <UiFormItem>
-          <UiFormLabel>VAT Rate</UiFormLabel>
-          <UiFormControl>
-            <ToggleGroup type="single" variant="outline" class="flex w-full" v-bind="componentField">
-              <ToggleGroupItem value="0" class="flex-1" aria-label="VAT 0%">
-                <span class="font-semibold">0%</span>
-              </ToggleGroupItem>
-              <ToggleGroupItem value="9" class="flex-1" aria-label="VAT 9%">
-                <span class="font-semibold">9%</span>
-              </ToggleGroupItem>
-              <ToggleGroupItem value="21" class="flex-1" aria-label="VAT 21%">
-                <span class="font-semibold">21%</span>
-              </ToggleGroupItem>
-            </ToggleGroup>
-          </UiFormControl>
-          <UiFormMessage />
+          <div class="space-y-1">
+            <FormField name="unit_price" :validate-on-blur="!isFieldDirty">
+              <UiFormMessage />
+            </FormField>
+            <FormField name="vat_rate" :validate-on-blur="!isFieldDirty">
+              <UiFormMessage />
+            </FormField>
+          </div>
         </UiFormItem>
       </FormField>
     </div>

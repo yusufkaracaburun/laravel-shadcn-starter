@@ -6,7 +6,7 @@ import { StatusBadge } from '@/components/ui/status-badge'
 import { useGetCustomersQuery } from '@/services/customers.service'
 
 import { statuses } from '../data/data'
-import { formatDateForPreview, formatMoney } from '../utils/formatters'
+import { formatDateForPreview, formatMoney, formatNumber } from '../utils/formatters'
 import type { InvoiceItem } from '../data/schema'
 import { calculateInvoiceTotals } from '../utils/calculations'
 
@@ -136,7 +136,7 @@ const displayTotals = computed(() => {
             <div class="flex-1">
               <p class="font-medium">{{ item.description || '—' }}</p>
               <p class="text-xs text-muted-foreground">
-                {{ item.quantity }}{{ (item as any).unit ? ` ${(item as any).unit}` : '' }} × {{ formatMoney(item.unit_price) }} @ {{ item.vat_rate }}%
+                {{ formatNumber(item.quantity, 2) }}{{ (item as any).unit ? ` ${(item as any).unit}` : '' }} × {{ formatMoney(item.unit_price) }} @ {{ item.vat_rate }}%
               </p>
             </div>
             <div class="text-right">

@@ -54,7 +54,7 @@ function formatMoney(value: any): string {
       currency: 'EUR',
     }).format(value)
   }
-  return '€0.00'
+  return '€ 0,00'
 }
 
 function formatDate(dateString: string | null | undefined): string {

@@ -126,7 +126,7 @@ function formatMoney(value: any): string {
       currency: 'EUR',
     }).format(value)
   }
-  return '€0.00'
+  return '€ 0,00'
 }
 </script>
 

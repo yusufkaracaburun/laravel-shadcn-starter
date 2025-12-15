@@ -14,7 +14,7 @@ import { useGetCustomersQuery } from '@/services/customers.service'
 import type { Invoice, InvoiceItem } from '../data/schema'
 
 import type { Item } from '@/services/items.service'
-import { formatDateForInput, formatMoney } from '../utils/formatters'
+import { formatDateForInput, formatMoney, formatNumber } from '../utils/formatters'
 import CustomerSwitcher from './customer-switcher.vue'
 import InvoiceItemSelector from './invoice-item-selector.vue'
 import InvoiceItemForm from './invoice-item-form.vue'
@@ -540,7 +540,7 @@ defineExpose({
               <tbody>
                 <tr v-for="(item, index) in localItems" :key="index" class="border-b hover:bg-muted/50">
                   <td class="p-2 font-medium">{{ item.description || '—' }}</td>
-                  <td class="p-2 text-right">{{ item.quantity }}</td>
+                  <td class="p-2 text-right">{{ formatNumber(item.quantity, 2) }}</td>
                   <td class="p-2 text-right">{{ item.unit || '—' }}</td>
                   <td class="p-2 text-right">{{ formatMoney(item.unit_price) }}</td>
                   <td class="p-2 text-right">{{ item.vat_rate }}%</td>
