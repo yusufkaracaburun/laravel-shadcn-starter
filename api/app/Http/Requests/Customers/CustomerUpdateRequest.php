@@ -36,7 +36,6 @@ final class CustomerUpdateRequest extends BaseFormRequest
                 'max:255',
                 Rule::unique('customers')->ignore($customer),
             ],
-            'password' => ['sometimes', 'string', 'min:8'],
             'phone' => ['nullable', new ValidPhoneNumber()],
         ];
     }
