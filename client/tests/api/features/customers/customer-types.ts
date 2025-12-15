@@ -82,6 +82,8 @@ export interface CreateCustomerRequest {
   kvk_number?: string | null
   vat_number?: string | null
   iban_number?: string | null
+  password?: string
+  password_confirmation?: string
 }
 
 /**

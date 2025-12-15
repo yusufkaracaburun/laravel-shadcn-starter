@@ -15,7 +15,11 @@ import { testUser } from '../../../fixtures/data/user'
  * Assert that response has successful status (200-299)
  */
 export function expectSuccess(response: APIResponse): void {
-  expect(isSuccessStatus(response.status())).toBe(true)
+  const status = response.status()
+  expect(
+    isSuccessStatus(status),
+    `Expected success status (200-299) but got ${status}. URL: ${response.url()}`,
+  ).toBe(true)
 }
 
 /**
