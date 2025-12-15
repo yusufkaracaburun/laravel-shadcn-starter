@@ -5,28 +5,28 @@ declare(strict_types=1);
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use App\Repositories\Concretes\TeamRepository;
-use App\Repositories\Concretes\UserRepository;
 use App\Repositories\Concretes\ItemRepository;
 use App\Repositories\Concretes\RoleRepository;
+use App\Repositories\Concretes\TeamRepository;
+use App\Repositories\Concretes\UserRepository;
+use App\Repositories\Concretes\CompanyRepository;
 use App\Repositories\Concretes\InvoiceRepository;
 use App\Repositories\Concretes\PaymentRepository;
-use App\Repositories\Concretes\CompanyRepository;
-use App\Repositories\Concretes\CustomerRepository;
-use App\Repositories\Concretes\PermissionRepository;
 use App\Repositories\Concretes\ProjectRepository;
+use App\Repositories\Concretes\CustomerRepository;
 use App\Repositories\Concretes\TestFinalRepository;
-use App\Repositories\Contracts\TeamRepositoryInterface;
-use App\Repositories\Contracts\UserRepositoryInterface;
+use App\Repositories\Concretes\PermissionRepository;
 use App\Repositories\Contracts\ItemRepositoryInterface;
 use App\Repositories\Contracts\RoleRepositoryInterface;
+use App\Repositories\Contracts\TeamRepositoryInterface;
+use App\Repositories\Contracts\UserRepositoryInterface;
+use App\Repositories\Contracts\CompanyRepositoryInterface;
 use App\Repositories\Contracts\InvoiceRepositoryInterface;
 use App\Repositories\Contracts\PaymentRepositoryInterface;
-use App\Repositories\Contracts\CompanyRepositoryInterface;
-use App\Repositories\Contracts\CustomerRepositoryInterface;
-use App\Repositories\Contracts\PermissionRepositoryInterface;
 use App\Repositories\Contracts\ProjectRepositoryInterface;
+use App\Repositories\Contracts\CustomerRepositoryInterface;
 use App\Repositories\Contracts\TestFinalRepositoryInterface;
+use App\Repositories\Contracts\PermissionRepositoryInterface;
 
 final class RepositoryServiceProvider extends ServiceProvider
 {

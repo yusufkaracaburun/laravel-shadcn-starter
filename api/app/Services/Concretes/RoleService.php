@@ -9,7 +9,6 @@ use App\Services\BaseService;
 use InvalidArgumentException;
 use App\Http\Resources\RoleResource;
 use App\Http\Resources\RoleCollection;
-use Illuminate\Database\Eloquent\Collection;
 use App\Services\Contracts\RoleServiceInterface;
 use App\Repositories\Contracts\RoleRepositoryInterface;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -28,7 +27,7 @@ final class RoleService extends BaseService implements RoleServiceInterface
     /**
      * Get all roles.
      */
-    public function getRoles(): \App\Http\Resources\RoleCollection
+    public function getRoles(): RoleCollection
     {
         $roles = $this->getFiltered();
 
@@ -38,7 +37,7 @@ final class RoleService extends BaseService implements RoleServiceInterface
     /**
      * Get all roles without pagination.
      */
-    public function getAllRoles(): \App\Http\Resources\RoleCollection
+    public function getAllRoles(): RoleCollection
     {
         $roles = $this->all();
 
@@ -140,7 +139,7 @@ final class RoleService extends BaseService implements RoleServiceInterface
     /**
      * Get non-system roles.
      */
-    public function getNonSystemRoles(): \App\Http\Resources\RoleCollection
+    public function getNonSystemRoles(): RoleCollection
     {
         $roles = $this->repo->getNonSystemRoles();
 

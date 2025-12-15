@@ -7,7 +7,6 @@ namespace App\Services\Concretes;
 use App\Services\BaseService;
 use App\Http\Resources\PermissionResource;
 use App\Http\Resources\PermissionCollection;
-use Illuminate\Database\Eloquent\Collection;
 use App\Services\Contracts\PermissionServiceInterface;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Repositories\Contracts\PermissionRepositoryInterface;
@@ -23,14 +22,14 @@ final class PermissionService extends BaseService implements PermissionServiceIn
         $this->setRepository($repo);
     }
 
-    public function getPermissions(): \App\Http\Resources\PermissionCollection
+    public function getPermissions(): PermissionCollection
     {
         $permissions = $this->getFiltered();
 
         return new PermissionCollection($permissions);
     }
 
-    public function getAllPermissions(): \App\Http\Resources\PermissionCollection
+    public function getAllPermissions(): PermissionCollection
     {
         $permissions = $this->all();
 

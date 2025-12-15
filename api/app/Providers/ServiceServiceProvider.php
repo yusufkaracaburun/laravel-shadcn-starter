@@ -4,27 +4,27 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
-use App\Services\Concretes\TeamService;
-use App\Services\Concretes\UserService;
 use App\Services\Concretes\ItemService;
 use App\Services\Concretes\RoleService;
-use App\Services\Concretes\InvoiceService;
-use App\Services\Concretes\PaymentService;
+use App\Services\Concretes\TeamService;
+use App\Services\Concretes\UserService;
 use Illuminate\Support\ServiceProvider;
 use App\Services\Concretes\CompanyService;
+use App\Services\Concretes\InvoiceService;
+use App\Services\Concretes\PaymentService;
+use App\Services\Concretes\ProjectService;
 use App\Services\Concretes\CustomerService;
 use App\Services\Concretes\PermissionService;
-use App\Services\Concretes\ProjectService;
 use App\Services\Contracts\ItemServiceInterface;
 use App\Services\Contracts\RoleServiceInterface;
-use App\Services\Contracts\InvoiceServiceInterface;
-use App\Services\Contracts\PaymentServiceInterface;
 use App\Services\Contracts\TeamServiceInterface;
 use App\Services\Contracts\UserServiceInterface;
+use App\Services\Contracts\CompanyServiceInterface;
+use App\Services\Contracts\InvoiceServiceInterface;
+use App\Services\Contracts\PaymentServiceInterface;
+use App\Services\Contracts\ProjectServiceInterface;
 use App\Services\Contracts\CustomerServiceInterface;
 use App\Services\Contracts\PermissionServiceInterface;
-use App\Services\Contracts\CompanyServiceInterface;
-use App\Services\Contracts\ProjectServiceInterface;
 
 final class ServiceServiceProvider extends ServiceProvider
 {
