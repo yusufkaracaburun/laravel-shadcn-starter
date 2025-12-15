@@ -6,6 +6,7 @@ import dayjs from 'dayjs'
 import DataTableColumnHeader from '@/components/data-table/column-header.vue'
 import { SelectColumn } from '@/components/data-table/table-columns'
 import { Badge } from '@/components/ui/badge'
+import { StatusBadge } from '@/components/ui/status-badge'
 
 import type { Task } from '../data/schema'
 
@@ -73,17 +74,12 @@ export const columns: ColumnDef<Task>[] = [
 
       if (!status) return null
 
-      return h(
-        Badge,
-        {
-          class: `flex w-fit items-center gap-2 ${status.color}`,
-          variant: 'secondary',
-        },
-        () => [
-          status.icon && h(status.icon, { class: 'h-3 w-3' }),
-          h('span', status.label),
-        ],
-      )
+      return h(StatusBadge, {
+        status: status.value,
+        type: 'task',
+        icon: status.icon,
+        label: status.label,
+      })
     },
     filterFn: (row, id, value) => {
       return value.includes(row.getValue(id))

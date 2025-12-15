@@ -8,7 +8,7 @@ import type { Company } from '@/services/companies.service'
 import DataTableColumnHeader from '@/components/data-table/column-header.vue'
 import { SelectColumn } from '@/components/data-table/table-columns'
 import { Copy } from '@/components/sva-ui/copy'
-import { Badge } from '@/components/ui/badge'
+import { StatusBadge } from '@/components/ui/status-badge'
 
 import { employeeSizes, industries, statuses } from '../data/data'
 import DataTableRowActions from './data-table-row-actions.vue'
@@ -80,17 +80,12 @@ export const columns: ColumnDef<Company>[] = [
       if (!status)
         return null
 
-      return h(
-        Badge,
-        {
-          class: `flex w-fit items-center gap-2 ${status.color}`,
-          variant: 'secondary',
-        },
-        () => [
-          status.icon && h(status.icon, { class: 'h-3 w-3' }),
-          h('span', status.label),
-        ],
-      )
+      return h(StatusBadge, {
+        status: status.value,
+        type: 'company',
+        icon: status.icon,
+        label: status.label,
+      })
     },
     filterFn: (row, id, value) => {
       return value.includes(row.getValue(id))

@@ -13,6 +13,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import { StatusBadge } from '@/components/ui/status-badge'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -106,15 +107,13 @@ const category = computed(() => categories.find(c => c.value === props.project.c
     </CardHeader>
     <CardContent class="space-y-4">
       <div class="flex items-center gap-2 flex-wrap">
-        <Badge
+        <StatusBadge
           v-if="status"
-          :class="status.color"
-          variant="secondary"
-          class="flex items-center gap-1"
-        >
-          <component :is="status.icon" class="size-3" />
-          {{ status.label }}
-        </Badge>
+          :status="status.value"
+          type="project"
+          :icon="status.icon"
+          :label="status.label"
+        />
         <Badge v-if="category" variant="outline">
           {{ category.label }}
         </Badge>

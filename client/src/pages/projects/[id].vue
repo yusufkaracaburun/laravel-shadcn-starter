@@ -15,6 +15,7 @@ import Page from '@/components/global-layout/basic-page.vue'
 import Loading from '@/components/loading.vue'
 import Badge from '@/components/ui/badge/Badge.vue'
 import { Button } from '@/components/ui/button'
+import { StatusBadge } from '@/components/ui/status-badge'
 import {
   Card,
   CardContent,
@@ -220,17 +221,13 @@ const isNotFound = computed(() => {
                 Status
               </div>
               <div class="text-base">
-                <Badge
+                <StatusBadge
                   v-if="getStatusInfo(project.status)"
-                  :class="getStatusInfo(project.status)!.color"
-                  variant="secondary"
-                >
-                  <component
-                    :is="getStatusInfo(project.status)!.icon"
-                    class="mr-1 size-3"
-                  />
-                  {{ getStatusInfo(project.status)!.label }}
-                </Badge>
+                  :status="project.status"
+                  type="project"
+                  :icon="getStatusInfo(project.status)!.icon"
+                  :label="getStatusInfo(project.status)!.label"
+                />
               </div>
             </div>
             <div>

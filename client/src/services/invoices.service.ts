@@ -1,0 +1,319 @@
+import type { AxiosError } from 'axios'
+
+import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query'
+
+import { useAxios } from '@/composables/use-axios'
+
+import type { IResponse } from './types/response.type'
+import type { Customer } from './customers.service'
+import type { Money } from './items.service'
+
+/**
+ * Invoice status enum matching backend InvoiceStatus
+ */
+export type InvoiceStatus = 'draft' | 'sent' | 'paid' | 'overdue' | 'cancelled'
+
+/**
+ * Invoice interface matching backend InvoiceResource exactly
+ * @see api/app/Http/Resources/InvoiceResource.php
+ * Note: Customer is loaded when include is used
+ */
+export interface Invoice {
+  id: number
+  customer_id: number
+  customer?: Customer // When loaded via include
+  invoice_number: string | null
+  date: string // Date format from backend
+  due_days: number
+  date_due: string // Date format from backend
+  status: InvoiceStatus
+  subtotal: Money | number
+  total_vat_0: Money | number
+  total_vat_9: Money | number
+  total_vat_21: Money | number
+  total: Money | number
+  notes: string | null
+  created_at: string // Format: "d-m-Y H:i:s"
+  updated_at: string // Format: "d-m-Y H:i:s"
+  [key: string]: unknown
+}
+
+/**
+ * Paginated invoices response interface matching Laravel's pagination JSON structure
+ * @see https://laravel.com/docs/12.x/pagination#converting-results-to-json
+ * @see api/app/Http/Controllers/Api/InvoiceController.php::index()
+ */
+export interface PaginatedInvoicesResponse {
+  data: Invoice[]
+  current_page: number
+  per_page: number
+  total: number
+  last_page: number
+  first_page_url: string
+  last_page_url: string
+  next_page_url: string | null
+  prev_page_url: string | null
+  path: string
+  from: number | null
+  to: number | null
+}
+
+/**
+ * Convert TanStack Table sorting format to Spatie QueryBuilder format
+ * @param sorting - Array of sorting objects from TanStack Table
+ * @returns Sort string for Spatie QueryBuilder (e.g., "invoice_number" or "-invoice_number" or "invoice_number,-date")
+ */
+function convertSortingToQueryString(sorting: Array<{ id: string, desc: boolean }>): string | undefined {
+  if (!sorting || sorting.length === 0) {
+    return undefined
+  }
+
+  return sorting
+    .map((sort) => {
+      const prefix = sort.desc ? '-' : ''
+      return `${prefix}${sort.id}`
+    })
+    .join(',')
+}
+
+/**
+ * Invoice filters interface matching backend filter structure
+ * @see api/app/Http/Controllers/Api/InvoiceController.php::index()
+ */
+export interface InvoiceFilters {
+  id?: number
+  customer_id?: number
+  status?: InvoiceStatus
+  invoice_number?: string
+  date?: string
+  date_due?: string
+  between?: string // Format: "YYYY-MM-DD,YYYY-MM-DD"
+  search?: string
+}
+
+/**
+ * List all invoices with pagination, sorting, and filtering
+ * @see api/app/Http/Controllers/Api/InvoiceController.php::index()
+ * @param page - Page number (default: 1) - can be a ref or number
+ * @param pageSize - Number of items per page (default: 15) - can be a ref or number
+ * @param sorting - Sorting state from TanStack Table (default: []) - can be a ref or array
+ * @param filters - Filter object (default: {}) - can be a ref or object
+ * @param include - Relationships to include (default: []) - can be a ref or array
+ */
+export function useGetInvoicesQuery(
+  page: MaybeRef<number> = 1,
+  pageSize: MaybeRef<number> = 15,
+  sorting: MaybeRef<Array<{ id: string, desc: boolean }>> = [],
+  filters: MaybeRef<InvoiceFilters> = {},
+  include: MaybeRef<string[]> = [],
+) {
+  const { axiosInstance } = useAxios()
+
+  // Normalize MaybeRef parameters to refs for proper reactivity
+  const pageRef = isRef(page) ? page : ref(page)
+  const pageSizeRef = isRef(pageSize) ? pageSize : ref(pageSize)
+  const sortingRef = isRef(sorting) ? sorting : ref(sorting)
+  const filtersRef = isRef(filters) ? filters : ref(filters)
+  const includeRef = isRef(include) ? include : ref(include)
+
+  return useQuery<IResponse<PaginatedInvoicesResponse>, AxiosError>({
+    queryKey: [
+      'invoiceList',
+      computed(() => toValue(pageRef)),
+      computed(() => toValue(pageSizeRef)),
+      computed(() => JSON.stringify(toValue(sortingRef))),
+      computed(() => JSON.stringify(toValue(filtersRef))),
+      computed(() => JSON.stringify(toValue(includeRef))),
+    ],
+    queryFn: async (): Promise<IResponse<PaginatedInvoicesResponse>> => {
+      // Use toValue() to read current values in queryFn
+      const currentPage = toValue(pageRef)
+      const currentPageSize = toValue(pageSizeRef)
+      const currentSorting = toValue(sortingRef)
+      const currentFilters = toValue(filtersRef)
+      const currentInclude = toValue(includeRef)
+      const sortParam = convertSortingToQueryString(currentSorting)
+
+      const params: Record<string, any> = {
+        page: currentPage,
+        per_page: currentPageSize,
+      }
+
+      // Add sort parameter if sorting is provided
+      if (sortParam) {
+        params.sort = sortParam
+      }
+
+      // Add include parameter if relationships are requested
+      if (currentInclude && currentInclude.length > 0) {
+        params.include = currentInclude.join(',')
+      }
+
+      // Add filter parameters if filters are provided
+      if (currentFilters && Object.keys(currentFilters).length > 0) {
+        const filterParams: Record<string, any> = {}
+
+        if (currentFilters.id !== undefined) filterParams.id = currentFilters.id
+        if (currentFilters.customer_id !== undefined) filterParams.customer_id = currentFilters.customer_id
+        if (currentFilters.status) filterParams.status = currentFilters.status
+        if (currentFilters.invoice_number) filterParams.invoice_number = currentFilters.invoice_number
+        if (currentFilters.date) filterParams.date = currentFilters.date
+        if (currentFilters.date_due) filterParams.date_due = currentFilters.date_due
+        if (currentFilters.between) filterParams.between = currentFilters.between
+        if (currentFilters.search) filterParams.search = currentFilters.search
+
+        if (Object.keys(filterParams).length > 0) {
+          params.filter = filterParams
+        }
+      }
+
+      const response = await axiosInstance.get('/api/invoices', { params })
+      return response.data
+    },
+    retry: (failureCount: number, error: AxiosError) => {
+      // Don't retry on 401 (unauthorized) - user is not authenticated
+      if (error.response?.status === 401) {
+        return false
+      }
+      // Retry up to 2 times for other errors
+      return failureCount < 2
+    },
+  })
+}
+
+/**
+ * Get a specific invoice by ID
+ * @see api/app/Http/Controllers/Api/InvoiceController.php::show()
+ * Note: Automatically loads customer relationship
+ */
+export function useGetInvoiceQuery(invoiceId: MaybeRef<number>) {
+  const { axiosInstance } = useAxios()
+
+  // Normalize MaybeRef parameter to ref for proper reactivity
+  const invoiceIdRef = isRef(invoiceId) ? invoiceId : ref(invoiceId)
+
+  return useQuery<IResponse<Invoice>, AxiosError>({
+    queryKey: ['invoice', computed(() => toValue(invoiceIdRef))],
+    queryFn: async (): Promise<IResponse<Invoice>> => {
+      const currentInvoiceId = toValue(invoiceIdRef)
+      const response = await axiosInstance.get(`/api/invoices/${currentInvoiceId}`, {
+        params: { include: 'customer' },
+      })
+      return response.data
+    },
+    retry: (failureCount: number, error: AxiosError) => {
+      // Don't retry on 401 (unauthorized) - user is not authenticated
+      if (error.response?.status === 401) {
+        return false
+      }
+      // Don't retry on 404 (not found) - invoice doesn't exist
+      if (error.response?.status === 404) {
+        return false
+      }
+      // Retry up to 2 times for other errors
+      return failureCount < 2
+    },
+    staleTime: 5 * 60 * 1000, // Consider data fresh for 5 minutes
+    enabled: computed(() => toValue(invoiceIdRef) > 0), // Only fetch if invoiceId is valid
+  })
+}
+
+/**
+ * Create invoice request interface matching backend validation
+ * @see api/app/Http/Requests/Invoices/InvoiceStoreRequest.php
+ */
+export interface CreateInvoiceRequest {
+  customer_id: number
+  invoice_number?: string | null
+  date: string // Format: "YYYY-MM-DD"
+  due_days?: number
+  date_due?: string // Format: "YYYY-MM-DD"
+  status?: InvoiceStatus
+  subtotal?: number
+  total_vat_0?: number
+  total_vat_9?: number
+  total_vat_21?: number
+  total?: number
+  notes?: string | null
+}
+
+/**
+ * Update invoice request interface matching backend validation
+ * @see api/app/Http/Requests/Invoices/InvoiceUpdateRequest.php
+ */
+export interface UpdateInvoiceRequest {
+  customer_id?: number
+  invoice_number?: string | null
+  date?: string // Format: "YYYY-MM-DD"
+  due_days?: number
+  date_due?: string // Format: "YYYY-MM-DD"
+  status?: InvoiceStatus
+  subtotal?: number
+  total_vat_0?: number
+  total_vat_9?: number
+  total_vat_21?: number
+  total?: number
+  notes?: string | null
+}
+
+/**
+ * Create a new invoice
+ * @see api/app/Http/Controllers/Api/InvoiceController.php::store()
+ */
+export function useCreateInvoiceMutation() {
+  const { axiosInstance } = useAxios()
+  const queryClient = useQueryClient()
+
+  return useMutation<IResponse<Invoice>, AxiosError, CreateInvoiceRequest>({
+    mutationFn: async (data: CreateInvoiceRequest): Promise<IResponse<Invoice>> => {
+      const response = await axiosInstance.post('/api/invoices', data)
+      return response.data
+    },
+    onSuccess: () => {
+      // Invalidate invoice list query to refresh the invoices list
+      queryClient.invalidateQueries({ queryKey: ['invoiceList'] })
+    },
+  })
+}
+
+/**
+ * Update an existing invoice
+ * @see api/app/Http/Controllers/Api/InvoiceController.php::update()
+ */
+export function useUpdateInvoiceMutation() {
+  const { axiosInstance } = useAxios()
+  const queryClient = useQueryClient()
+
+  return useMutation<IResponse<Invoice>, AxiosError, { invoiceId: number, data: UpdateInvoiceRequest }>({
+    mutationFn: async ({ invoiceId, data }): Promise<IResponse<Invoice>> => {
+      const response = await axiosInstance.put(`/api/invoices/${invoiceId}`, data)
+      return response.data
+    },
+    onSuccess: (_, variables) => {
+      // Invalidate invoice list query to refresh the invoices list
+      queryClient.invalidateQueries({ queryKey: ['invoiceList'] })
+      // Invalidate the specific invoice query to refresh the detail page
+      queryClient.invalidateQueries({ queryKey: ['invoice', variables.invoiceId] })
+    },
+  })
+}
+
+/**
+ * Delete an invoice
+ * @see api/app/Http/Controllers/Api/InvoiceController.php::destroy()
+ */
+export function useDeleteInvoiceMutation() {
+  const { axiosInstance } = useAxios()
+  const queryClient = useQueryClient()
+
+  return useMutation<void, AxiosError, number>({
+    mutationFn: async (invoiceId: number): Promise<void> => {
+      await axiosInstance.delete(`/api/invoices/${invoiceId}`)
+    },
+    onSuccess: () => {
+      // Invalidate invoice list query to refresh the invoices list
+      queryClient.invalidateQueries({ queryKey: ['invoiceList'] })
+    },
+  })
+}
+

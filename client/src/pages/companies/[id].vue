@@ -15,6 +15,7 @@ import Page from '@/components/global-layout/basic-page.vue'
 import Loading from '@/components/loading.vue'
 import Badge from '@/components/ui/badge/Badge.vue'
 import { Button } from '@/components/ui/button'
+import { StatusBadge } from '@/components/ui/status-badge'
 import {
   Card,
   CardContent,
@@ -233,17 +234,13 @@ const isNotFound = computed(() => {
                 Status
               </div>
               <div class="text-base">
-                <Badge
+                <StatusBadge
                   v-if="getStatusInfo(company.status)"
-                  :class="getStatusInfo(company.status)!.color"
-                  variant="secondary"
-                >
-                  <component
-                    :is="getStatusInfo(company.status)!.icon"
-                    class="mr-1 size-3"
-                  />
-                  {{ getStatusInfo(company.status)!.label }}
-                </Badge>
+                  :status="company.status"
+                  type="company"
+                  :icon="getStatusInfo(company.status)!.icon"
+                  :label="getStatusInfo(company.status)!.label"
+                />
               </div>
             </div>
             <div>

@@ -89,6 +89,7 @@ declare global {
   const useEcho: typeof import('../composables/use-echo').useEcho
   const useErrorStore: typeof import('../stores/error.store').useErrorStore
   const useId: typeof import('vue').useId
+  const useInvoices: typeof import('../composables/use-invoices').useInvoices
   const useItems: typeof import('../composables/use-items').useItems
   const useKanban: typeof import('../composables/use-kanban').useKanban
   const useLink: typeof import('vue-router')['useLink']
