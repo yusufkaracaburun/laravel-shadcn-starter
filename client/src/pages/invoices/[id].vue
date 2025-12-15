@@ -34,7 +34,9 @@ const router = useRouter()
 
 const invoiceId = computed(() => Number(route.params.id))
 
-const { data: invoiceResponse, isLoading, isError, error, refetch } = useGetInvoiceQuery(invoiceId)
+const { data: invoiceResponse, isLoading, isError, error, refetch } = useGetInvoiceQuery(invoiceId, {
+  include: ['items'],
+})
 
 const invoice = computed<Invoice | null>(() => invoiceResponse.value?.data ?? null)
 
@@ -267,6 +269,45 @@ function formatMoney(value: any): string {
               <p class="text-base font-semibold">Total</p>
               <p class="text-base font-bold">{{ formatMoney(invoice.total) }}</p>
             </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      <!-- Invoice Items -->
+      <Card v-if="invoice.items && invoice.items.length > 0">
+        <CardHeader>
+          <CardTitle>Invoice Items</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+              <thead>
+                <tr class="border-b">
+                  <th class="text-left p-2 font-medium text-muted-foreground">Description</th>
+                  <th class="text-right p-2 font-medium text-muted-foreground">Quantity</th>
+                  <th class="text-right p-2 font-medium text-muted-foreground">Unit Price</th>
+                  <th class="text-right p-2 font-medium text-muted-foreground">VAT Rate</th>
+                  <th class="text-right p-2 font-medium text-muted-foreground">Excl. VAT</th>
+                  <th class="text-right p-2 font-medium text-muted-foreground">VAT</th>
+                  <th class="text-right p-2 font-medium text-muted-foreground">Incl. VAT</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  v-for="item in invoice.items"
+                  :key="item.id"
+                  class="border-b hover:bg-muted/50"
+                >
+                  <td class="p-2 font-medium">{{ item.description || '—' }}</td>
+                  <td class="p-2 text-right">{{ item.quantity }}</td>
+                  <td class="p-2 text-right">{{ formatMoney(item.unit_price) }}</td>
+                  <td class="p-2 text-right">{{ item.vat_rate }}%</td>
+                  <td class="p-2 text-right">{{ formatMoney(item.total_excl_vat) }}</td>
+                  <td class="p-2 text-right">{{ formatMoney(item.total_vat) }}</td>
+                  <td class="p-2 text-right font-semibold">{{ formatMoney(item.total_incl_vat) }}</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </CardContent>
       </Card>

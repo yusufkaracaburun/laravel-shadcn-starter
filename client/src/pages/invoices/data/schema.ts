@@ -21,10 +21,32 @@ export const invoiceStatusSchema = z.enum(['draft', 'sent', 'paid', 'overdue', '
 export type InvoiceStatus = z.infer<typeof invoiceStatusSchema>
 
 /**
+ * Invoice item schema matching backend InvoiceItemResource
+ * @see api/app/Http/Resources/InvoiceItemResource.php
+ */
+export const invoiceItemSchema = z.object({
+  id: z.number(),
+  invoice_id: z.number(),
+  description: z.string().nullable(),
+  quantity: z.number(),
+  unit_price: moneySchema,
+  vat_rate: z.number(),
+  total_excl_vat: moneySchema,
+  total_vat: moneySchema,
+  total_incl_vat: moneySchema,
+  sort_order: z.number(),
+  created_at: z.string(),
+  updated_at: z.string(),
+})
+
+export type InvoiceItem = z.infer<typeof invoiceItemSchema>
+
+/**
  * Invoice schema matching backend InvoiceResource
  * @see api/app/Http/Resources/InvoiceResource.php
  * Backend returns snake_case fields
  * Note: Customer is loaded when include is used
+ * Note: Items are loaded when include=items is used
  */
 export const invoiceSchema = z.object({
   id: z.number(),
@@ -41,6 +63,7 @@ export const invoiceSchema = z.object({
   total_vat_21: moneySchema,
   total: moneySchema,
   notes: z.string().nullable(),
+  items: z.array(invoiceItemSchema).optional(), // Items are loaded when include=items is used
   created_at: z.string(), // Format: "d-m-Y H:i:s"
   updated_at: z.string(), // Format: "d-m-Y H:i:s"
 })

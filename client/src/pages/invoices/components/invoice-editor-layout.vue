@@ -1,7 +1,10 @@
 <script setup lang="ts">
+import { Eye, EyeOff } from 'lucide-vue-next'
 import { ref } from 'vue'
 
-const props = defineProps<{
+import { Button } from '@/components/ui/button'
+
+defineProps<{
   isLoading?: boolean
 }>()
 
@@ -21,11 +24,15 @@ function togglePreview() {
       </div>
       <div class="flex items-center gap-2">
         <slot name="header-actions" />
+        <Button variant="outline" size="sm" class="hidden lg:flex" @click="togglePreview">
+          <component :is="showPreview ? EyeOff : Eye" class="mr-2 size-4" />
+          {{ showPreview ? 'Hide Preview' : 'Show Preview' }}
+        </Button>
       </div>
     </div>
 
     <!-- Split Layout -->
-    <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
+    <div class="grid gap-6" :class="showPreview ? 'grid-cols-1 lg:grid-cols-2' : 'grid-cols-1'">
       <!-- Left Column: Form -->
       <div class="space-y-4">
         <slot name="form" />
@@ -43,14 +50,10 @@ function togglePreview() {
         <slot name="preview" />
       </div>
       <div class="mt-4 flex justify-center">
-        <button
-          class="text-sm text-muted-foreground hover:text-foreground"
-          @click="togglePreview"
-        >
+        <button class="text-sm text-muted-foreground hover:text-foreground" @click="togglePreview">
           {{ showPreview ? 'Hide Preview' : 'Show Preview' }}
         </button>
       </div>
     </div>
   </div>
 </template>
-

@@ -6,7 +6,7 @@ import { useAxios } from '@/composables/use-axios'
 
 import type { IResponse } from './types/response.type'
 import type { Customer } from './customers.service'
-import type { Money } from './items.service'
+import type { Item, Money } from './items.service'
 
 /**
  * Invoice status enum matching backend InvoiceStatus
@@ -17,6 +17,7 @@ export type InvoiceStatus = 'draft' | 'sent' | 'paid' | 'overdue' | 'cancelled'
  * Invoice interface matching backend InvoiceResource exactly
  * @see api/app/Http/Resources/InvoiceResource.php
  * Note: Customer is loaded when include is used
+ * Note: Items are loaded when include=items is used
  */
 export interface Invoice {
   id: number
@@ -33,6 +34,20 @@ export interface Invoice {
   total_vat_21: Money | number
   total: Money | number
   notes: string | null
+  items?: Array<{
+    id: number
+    invoice_id: number
+    description: string | null
+    quantity: number
+    unit_price: Money | number
+    vat_rate: number
+    total_excl_vat: Money | number
+    total_vat: Money | number
+    total_incl_vat: Money | number
+    sort_order: number
+    created_at: string
+    updated_at: string
+  }> // When loaded via include=items
   created_at: string // Format: "d-m-Y H:i:s"
   updated_at: string // Format: "d-m-Y H:i:s"
   [key: string]: unknown
@@ -185,19 +200,21 @@ export function useGetInvoicesQuery(
  * Get a specific invoice by ID
  * @see api/app/Http/Controllers/Api/InvoiceController.php::show()
  * Note: Automatically loads customer relationship
+ * @param include - Additional relationships to include (e.g., ['items'])
  */
-export function useGetInvoiceQuery(invoiceId: MaybeRef<number>) {
+export function useGetInvoiceQuery(invoiceId: MaybeRef<number>, options?: { include?: string[] }) {
   const { axiosInstance } = useAxios()
 
   // Normalize MaybeRef parameter to ref for proper reactivity
   const invoiceIdRef = isRef(invoiceId) ? invoiceId : ref(invoiceId)
 
   return useQuery<IResponse<Invoice>, AxiosError>({
-    queryKey: ['invoice', computed(() => toValue(invoiceIdRef))],
+    queryKey: ['invoice', computed(() => toValue(invoiceIdRef)), computed(() => options?.include?.join(',') || 'customer')],
     queryFn: async (): Promise<IResponse<Invoice>> => {
       const currentInvoiceId = toValue(invoiceIdRef)
+      const includes = ['customer', ...(options?.include || [])]
       const response = await axiosInstance.get(`/api/invoices/${currentInvoiceId}`, {
-        params: { include: 'customer' },
+        params: { include: includes.join(',') },
       })
       return response.data
     },
@@ -314,6 +331,41 @@ export function useDeleteInvoiceMutation() {
       // Invalidate invoice list query to refresh the invoices list
       queryClient.invalidateQueries({ queryKey: ['invoiceList'] })
     },
+  })
+}
+
+/**
+ * Invoice prerequisites interface
+ * Note: items is a Laravel ResourceCollection which serializes to { data: Item[] }
+ */
+export interface InvoicePrerequisites {
+  items: Item[] | { data: Item[] }
+  next_invoice_number: string
+}
+
+/**
+ * Get prerequisites for creating a new invoice
+ * Returns all items and the next invoice number
+ * @see api/app/Http/Controllers/Api/InvoiceController.php::prerequisites()
+ */
+export function useGetInvoicePrerequisitesQuery() {
+  const { axiosInstance } = useAxios()
+
+  return useQuery<IResponse<InvoicePrerequisites>, AxiosError>({
+    queryKey: ['invoicePrerequisites'],
+    queryFn: async (): Promise<IResponse<InvoicePrerequisites>> => {
+      const response = await axiosInstance.get('/api/invoices/prerequisites')
+      return response.data
+    },
+    retry: (failureCount: number, error: AxiosError) => {
+      // Don't retry on 401 (unauthorized) - user is not authenticated
+      if (error.response?.status === 401) {
+        return false
+      }
+      // Retry up to 2 times for other errors
+      return failureCount < 2
+    },
+    staleTime: 5 * 60 * 1000, // Consider data fresh for 5 minutes
   })
 }
 

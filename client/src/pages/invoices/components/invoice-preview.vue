@@ -7,6 +7,8 @@ import { useGetCustomersQuery } from '@/services/customers.service'
 
 import { statuses } from '../data/data'
 import { formatDateForPreview, formatMoney } from '../utils/formatters'
+import type { InvoiceItem } from '../data/schema'
+import { calculateInvoiceTotals } from '../utils/calculations'
 
 interface Props {
   formValues: {
@@ -22,6 +24,7 @@ interface Props {
     total_vat_21?: number | { formatted: string }
     total?: number | { formatted: string }
   }
+  items?: InvoiceItem[]
   isLoading?: boolean
 }
 
@@ -40,6 +43,34 @@ const selectedCustomer = computed(() => {
 
 const currentStatus = computed(() => {
   return statuses.find((s) => s.value === props.formValues.status) || statuses[0]
+})
+
+// Calculate totals from items if provided
+const calculatedTotals = computed(() => {
+  if (props.items && props.items.length > 0) {
+    return calculateInvoiceTotals(props.items)
+  }
+  return null
+})
+
+// Use calculated totals if available, otherwise use formValues
+const displayTotals = computed(() => {
+  if (calculatedTotals.value) {
+    return {
+      subtotal: calculatedTotals.value.subtotal,
+      total_vat_0: calculatedTotals.value.totalVat0,
+      total_vat_9: calculatedTotals.value.totalVat9,
+      total_vat_21: calculatedTotals.value.totalVat21,
+      total: calculatedTotals.value.total,
+    }
+  }
+  return {
+    subtotal: props.formValues.subtotal ?? 0,
+    total_vat_0: props.formValues.total_vat_0 ?? 0,
+    total_vat_9: props.formValues.total_vat_9 ?? 0,
+    total_vat_21: props.formValues.total_vat_21 ?? 0,
+    total: props.formValues.total ?? 0,
+  }
 })
 </script>
 
@@ -93,6 +124,28 @@ const currentStatus = computed(() => {
         <div v-else class="text-sm text-muted-foreground italic">No customer selected</div>
       </div>
 
+      <!-- Items Section -->
+      <div v-if="items && items.length > 0" class="space-y-2 border-b pb-4">
+        <h4 class="font-semibold text-sm uppercase text-muted-foreground">Items</h4>
+        <div class="space-y-2">
+          <div
+            v-for="item in items"
+            :key="item.id"
+            class="flex justify-between text-sm"
+          >
+            <div class="flex-1">
+              <p class="font-medium">{{ item.description || '—' }}</p>
+              <p class="text-xs text-muted-foreground">
+                {{ item.quantity }}{{ (item as any).unit ? ` ${(item as any).unit}` : '' }} × {{ formatMoney(item.unit_price) }} @ {{ item.vat_rate }}%
+              </p>
+            </div>
+            <div class="text-right">
+              <p class="font-medium">{{ formatMoney(item.total_incl_vat) }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <!-- Financial Summary -->
       <div class="space-y-3 border-b pb-4">
         <h4 class="font-semibold text-sm uppercase text-muted-foreground">Summary</h4>
@@ -100,25 +153,25 @@ const currentStatus = computed(() => {
           <div class="flex justify-between text-sm">
             <span class="text-muted-foreground">Subtotal</span>
             <span class="font-medium">
-              {{ formValues.subtotal ? formatMoney(formValues.subtotal) : formatMoney(0) }}
+              {{ formatMoney(displayTotals.subtotal) }}
             </span>
           </div>
           <div class="flex justify-between text-sm">
             <span class="text-muted-foreground">VAT 0%</span>
             <span class="font-medium">
-              {{ formValues.total_vat_0 ? formatMoney(formValues.total_vat_0) : formatMoney(0) }}
+              {{ formatMoney(displayTotals.total_vat_0) }}
             </span>
           </div>
           <div class="flex justify-between text-sm">
             <span class="text-muted-foreground">VAT 9%</span>
             <span class="font-medium">
-              {{ formValues.total_vat_9 ? formatMoney(formValues.total_vat_9) : formatMoney(0) }}
+              {{ formatMoney(displayTotals.total_vat_9) }}
             </span>
           </div>
           <div class="flex justify-between text-sm">
             <span class="text-muted-foreground">VAT 21%</span>
             <span class="font-medium">
-              {{ formValues.total_vat_21 ? formatMoney(formValues.total_vat_21) : formatMoney(0) }}
+              {{ formatMoney(displayTotals.total_vat_21) }}
             </span>
           </div>
         </div>
@@ -128,7 +181,7 @@ const currentStatus = computed(() => {
       <div class="flex justify-between border-t pt-4">
         <span class="text-lg font-semibold">Total</span>
         <span class="text-lg font-bold">
-          {{ formValues.total ? formatMoney(formValues.total) : formatMoney(0) }}
+          {{ formatMoney(displayTotals.total) }}
         </span>
       </div>
 

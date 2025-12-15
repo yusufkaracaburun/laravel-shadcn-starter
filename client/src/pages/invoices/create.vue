@@ -10,12 +10,25 @@ import { useRouter } from 'vue-router'
 
 import Page from '@/components/global-layout/basic-page.vue'
 import { Button } from '@/components/ui/button'
+import { useGetInvoicePrerequisitesQuery } from '@/services/invoices.service'
 
 import InvoiceEditorLayout from './components/invoice-editor-layout.vue'
 import InvoiceForm from './components/invoice-form.vue'
 import InvoicePreview from './components/invoice-preview.vue'
 
 const router = useRouter()
+
+// Fetch prerequisites when creating a new invoice
+const { data: prerequisitesResponse } = useGetInvoicePrerequisitesQuery()
+const prerequisites = computed(() => prerequisitesResponse.value?.data ?? null)
+
+// Extract items from prerequisites (ItemCollection serializes to { data: Item[] })
+const items = computed(() => {
+  if (!prerequisites.value?.items) return []
+  // Handle both array format and ResourceCollection format ({ data: [...] })
+  const itemsData = prerequisites.value.items
+  return Array.isArray(itemsData) ? itemsData : (itemsData as any).data ?? []
+})
 
 const formRef = ref<InstanceType<typeof InvoiceForm> | null>(null)
 const isSubmitting = ref(false)
@@ -31,6 +44,10 @@ const formValues = computed(() => {
     total_vat_21: 0,
     total: 0,
   }
+})
+
+const formItems = computed(() => {
+  return formRef.value?.items || []
 })
 
 function handleClose() {
@@ -77,11 +94,17 @@ async function handleSaveAndSend() {
 
     <InvoiceEditorLayout :is-loading="isSubmitting">
       <template #form>
-        <InvoiceForm ref="formRef" :invoice="null" @close="handleClose" />
+        <InvoiceForm
+          ref="formRef"
+          :invoice="null"
+          :next-invoice-number="prerequisites?.next_invoice_number ?? null"
+          :items="items"
+          @close="handleClose"
+        />
       </template>
 
       <template #preview>
-        <InvoicePreview :form-values="formValues" :is-loading="isSubmitting" />
+        <InvoicePreview :form-values="formValues" :items="formItems" :is-loading="isSubmitting" />
       </template>
 
       <template #actions>

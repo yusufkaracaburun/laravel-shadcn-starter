@@ -23,7 +23,9 @@ const router = useRouter()
 
 const invoiceId = computed(() => Number(route.params.id))
 
-const { data: invoiceResponse, isLoading, isError, error } = useGetInvoiceQuery(invoiceId)
+const { data: invoiceResponse, isLoading, isError, error } = useGetInvoiceQuery(invoiceId, {
+  include: ['items'],
+})
 
 const invoice = computed(() => invoiceResponse.value?.data ?? null)
 
@@ -44,6 +46,12 @@ const formValues = computed(() => {
     }
   }
   return values
+})
+
+const formItems = computed(() => {
+  // For existing invoices, use items from API (loaded via invoice.items)
+  // For form edits, use items from formRef if available
+  return formRef.value?.items || invoice.value?.items || []
 })
 
 function handleClose() {
@@ -105,7 +113,7 @@ async function handleUpdateAndSend() {
       </template>
 
       <template #preview>
-        <InvoicePreview :form-values="formValues" :is-loading="isSubmitting" />
+        <InvoicePreview :form-values="formValues" :items="formItems" :is-loading="isSubmitting" />
       </template>
 
       <template #actions>
