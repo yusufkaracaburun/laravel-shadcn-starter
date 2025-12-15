@@ -38,6 +38,7 @@ export const customerTypeSchema = z.enum(['business', 'private'])
  */
 export const customerSchema = z.object({
   id: z.number(),
+  number: z.string().nullable().optional(),
   type: customerTypeSchema,
   name: z.string(),
 
