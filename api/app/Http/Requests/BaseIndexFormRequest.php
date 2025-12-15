@@ -308,6 +308,6 @@ abstract class BaseIndexFormRequest extends BaseFormRequest
      */
     protected function getDefaultPerPage(): int
     {
-        return 25;
+        return 10;
     }
 }
