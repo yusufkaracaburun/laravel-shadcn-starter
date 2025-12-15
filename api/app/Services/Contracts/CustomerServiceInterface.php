@@ -5,20 +5,39 @@ declare(strict_types=1);
 namespace App\Services\Contracts;
 
 use App\Models\Customer;
-use Illuminate\Http\Request;
 use App\Services\BaseServiceInterface;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Pagination\LengthAwarePaginator;
+use App\Http\Resources\CustomerResource;
+use App\Http\Resources\CustomerCollection;
 
 interface CustomerServiceInterface extends BaseServiceInterface
 {
-    public function getFilteredCustomers(Request $request): LengthAwarePaginator;
+    /**
+     * Get paginated customers with QueryBuilder support.
+     * Supports filtering, sorting, and including relationships via request parameters.
+     */
+    public function getPaginated(int $perPage, ?int $teamId = null): CustomerCollection;
 
-    public function getById(int $id): Model|Customer|null;
+    /**
+     * Find a customer by ID with relationships loaded.
+     */
+    public function findById(int $customerId, ?int $teamId = null): CustomerResource;
 
-    public function create(array $data): Model|Customer;
+    /**
+     * Create a new customer with optional team context.
+     *
+     * @param  array<string, mixed>  $data
+     */
+    public function createCustomer(array $data, ?int $teamId = null): CustomerResource;
 
-    public function update(int $id, array $data): Model|Customer;
+    /**
+     * Update a customer by model instance.
+     *
+     * @param  array<string, mixed>  $data
+     */
+    public function updateCustomer(Customer $customer, array $data, ?int $teamId = null): CustomerResource;
 
-    public function delete(int $id): bool;
+    /**
+     * Delete a customer by model instance.
+     */
+    public function deleteCustomer(Customer $customer): bool;
 }

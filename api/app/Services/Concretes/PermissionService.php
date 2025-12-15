@@ -4,12 +4,10 @@ declare(strict_types=1);
 
 namespace App\Services\Concretes;
 
-use App\Models\Permission;
-use Illuminate\Http\Request;
 use App\Services\BaseService;
-use Illuminate\Database\Eloquent\Model;
+use App\Http\Resources\PermissionResource;
+use App\Http\Resources\PermissionCollection;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Pagination\LengthAwarePaginator;
 use App\Services\Contracts\PermissionServiceInterface;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Repositories\Contracts\PermissionRepositoryInterface;
@@ -25,39 +23,51 @@ final class PermissionService extends BaseService implements PermissionServiceIn
         $this->setRepository($repo);
     }
 
-    public function getPermissions(): Collection
+    public function getPermissions(): \App\Http\Resources\PermissionCollection
     {
-        return $this->getFiltered();
+        $permissions = $this->getFiltered();
+
+        return new PermissionCollection($permissions);
     }
 
-    public function getAllPermissions(): Collection
+    public function getAllPermissions(): \App\Http\Resources\PermissionCollection
     {
-        return $this->all();
+        $permissions = $this->all();
+
+        return new PermissionCollection($permissions);
     }
 
-    public function getFilteredPermissions(?Request $request = null, int $perPage = 25): LengthAwarePaginator
+    public function getPaginated(int $perPage): PermissionCollection
     {
-        return $this->paginate($perPage);
+        $paginated = $this->paginate($perPage);
+
+        return new PermissionCollection($paginated);
     }
 
-    public function getPermissionById(int $id): Model
+    public function findById(int $permissionId): PermissionResource
     {
         try {
-            return $this->findOrFail($id);
+            $permission = $this->findOrFail($permissionId);
+
+            return new PermissionResource($permission);
         } catch (ModelNotFoundException) {
             throw new ModelNotFoundException('Permission not found');
         }
     }
 
-    public function createPermission(array $data): Permission|Model
+    public function createPermission(array $data): PermissionResource
     {
-        return $this->create($data);
+        $permission = $this->create($data);
+
+        return new PermissionResource($permission);
     }
 
-    public function updatePermission(int $id, array $data): Permission|Model
+    public function updatePermission(int $id, array $data): PermissionResource
     {
         try {
-            return $this->update($id, $data);
+            $permission = $this->update($id, $data);
+
+            return new PermissionResource($permission);
         } catch (ModelNotFoundException) {
             throw new ModelNotFoundException('Permission not found');
         }
@@ -74,12 +84,12 @@ final class PermissionService extends BaseService implements PermissionServiceIn
         }
     }
 
-    public function assignRoles(int $permissionId, array $roleIds): Permission|Model
+    public function assignRoles(int $permissionId, array $roleIds): PermissionResource
     {
-        $permission = $this->getPermissionById($permissionId);
+        $permission = $this->findById($permissionId)->resource;
 
         $permission->syncRoles($roleIds);
 
-        return $permission->fresh();
+        return new PermissionResource($permission->fresh(['roles']));
     }
 }

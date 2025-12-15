@@ -5,20 +5,39 @@ declare(strict_types=1);
 namespace App\Services\Contracts;
 
 use App\Models\Payment;
-use Illuminate\Http\Request;
 use App\Services\BaseServiceInterface;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Pagination\LengthAwarePaginator;
+use App\Http\Resources\PaymentResource;
+use App\Http\Resources\PaymentCollection;
 
 interface PaymentServiceInterface extends BaseServiceInterface
 {
-    public function getFilteredPayments(Request $request): LengthAwarePaginator;
+    /**
+     * Get paginated payments with QueryBuilder support.
+     * Supports filtering, sorting, and including relationships via request parameters.
+     */
+    public function getPaginated(int $perPage, ?int $teamId = null): PaymentCollection;
 
-    public function getById(int $id): Payment|Model|null;
+    /**
+     * Find a payment by ID with relationships loaded.
+     */
+    public function findById(int $paymentId, ?int $teamId = null): PaymentResource;
 
-    public function create(array $data): Payment|Model;
+    /**
+     * Create a new payment with optional team context.
+     *
+     * @param  array<string, mixed>  $data
+     */
+    public function createPayment(array $data, ?int $teamId = null): PaymentResource;
 
-    public function update(int $id, array $data): Payment|Model;
+    /**
+     * Update a payment by model instance.
+     *
+     * @param  array<string, mixed>  $data
+     */
+    public function updatePayment(Payment $payment, array $data, ?int $teamId = null): PaymentResource;
 
-    public function delete(int $id): bool;
+    /**
+     * Delete a payment by model instance.
+     */
+    public function deletePayment(Payment $payment): bool;
 }

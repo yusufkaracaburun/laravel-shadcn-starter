@@ -5,16 +5,13 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Api;
 
 use App\Models\Item;
-use App\Filters\SearchFilter;
 use Illuminate\Http\JsonResponse;
 use App\Http\Responses\ApiResponse;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\ItemResource;
-use App\Http\Resources\ItemCollection;
-use Spatie\QueryBuilder\AllowedFilter;
 use App\Http\Requests\Items\IndexItemRequest;
 use App\Http\Requests\Items\StoreItemRequest;
 use App\Http\Requests\Items\UpdateItemRequest;
+use App\Services\Contracts\ItemServiceInterface;
 use App\Http\Controllers\Concerns\UsesQueryBuilder;
 use App\Http\Controllers\Concerns\UsesCachedResponses;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -26,6 +23,10 @@ final class ItemController extends Controller
     use InvalidatesCachedModels;
     use UsesCachedResponses;
     use UsesQueryBuilder;
+
+    public function __construct(
+        private readonly ItemServiceInterface $itemService
+    ) {}
 
     /**
      * Display a listing of items with QueryBuilder support.
@@ -39,34 +40,12 @@ final class ItemController extends Controller
     {
         $this->authorize('viewAny', Item::class);
 
-        $perPage = (int) ($request->input('per_page', 15));
+        $validated = $request->validated();
+        $perPage = (int) ($validated['per_page'] ?? 10);
 
-        $items = $this->buildQuery(
-            Item::query(),
-            allowedFilters: [
-                AllowedFilter::exact('id'),
-                AllowedFilter::exact('name'),
-                AllowedFilter::exact('unit'),
-                AllowedFilter::exact('unit_price'),
-                AllowedFilter::exact('vat_rate'),
-                AllowedFilter::scope('created_at', 'created_at'),
-                AllowedFilter::scope('updated_at', 'updated_at'),
-                AllowedFilter::scope('between', 'created_at'),
-                AllowedFilter::custom('search', new SearchFilter(['name', 'description'])),
-            ],
-            allowedSorts: [
-                'id',
-                'name',
-                'unit_price',
-                'vat_rate',
-                'unit',
-                'created_at',
-                'updated_at',
-            ],
-            allowedIncludes: ['invoiceLines']
-        )->paginate($perPage);
+        $items = $this->itemService->getPaginated($perPage);
 
-        return ApiResponse::success(new ItemCollection($items));
+        return ApiResponse::success($items);
     }
 
     /**
@@ -78,9 +57,9 @@ final class ItemController extends Controller
     {
         $this->authorize('create', Item::class);
 
-        $item = Item::create($request->validated());
+        $item = $this->itemService->createItem($request->validated());
 
-        return ApiResponse::created(new ItemResource($item));
+        return ApiResponse::created($item);
     }
 
     /**
@@ -92,7 +71,9 @@ final class ItemController extends Controller
     {
         $this->authorize('view', $item);
 
-        return ApiResponse::success(new ItemResource($item));
+        $itemResource = $this->itemService->findById($item->id);
+
+        return ApiResponse::success($itemResource);
     }
 
     /**
@@ -104,9 +85,9 @@ final class ItemController extends Controller
     {
         $this->authorize('update', $item);
 
-        $item->update($request->validated());
+        $itemResource = $this->itemService->updateItem($item, $request->validated());
 
-        return ApiResponse::success(new ItemResource($item));
+        return ApiResponse::success($itemResource);
     }
 
     /**
@@ -118,7 +99,7 @@ final class ItemController extends Controller
     {
         $this->authorize('delete', $item);
 
-        $item->delete();
+        $this->itemService->deleteItem($item);
 
         return ApiResponse::noContent('Item deleted successfully');
     }

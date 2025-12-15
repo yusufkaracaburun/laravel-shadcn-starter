@@ -5,33 +5,32 @@ declare(strict_types=1);
 namespace App\Services\Contracts;
 
 use App\Models\Role;
-use Illuminate\Http\Request;
+use App\Http\Resources\RoleResource;
+use App\Http\Resources\RoleCollection;
 use App\Services\BaseServiceInterface;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Pagination\LengthAwarePaginator;
 
 interface RoleServiceInterface extends BaseServiceInterface
 {
     /**
      * Get all roles.
      */
-    public function getRoles(): Collection;
+    public function getRoles(): Collection|RoleCollection;
 
     /**
      * Get all roles without pagination.
      */
-    public function getAllRoles(): Collection;
+    public function getAllRoles(): Collection|RoleCollection;
 
     /**
      * Get filtered roles with pagination.
      */
-    public function getFilteredRoles(?Request $request = null, int $perPage = 25): LengthAwarePaginator;
+    public function getPaginated(int $perPage): RoleCollection;
 
     /**
      * Get role by id.
      */
-    public function getRoleById(int $id): Role|Model;
+    public function getRoleById(int $id): RoleResource;
 
     /**
      * Get role by name.
@@ -41,12 +40,12 @@ interface RoleServiceInterface extends BaseServiceInterface
     /**
      * Create new role.
      */
-    public function createRole(array $data): Role|Model;
+    public function createRole(array $data): RoleResource;
 
     /**
      * Update role.
      */
-    public function updateRole(int $id, array $data): Role|Model;
+    public function updateRole(int $id, array $data): RoleResource;
 
     /**
      * Delete role.
@@ -56,10 +55,10 @@ interface RoleServiceInterface extends BaseServiceInterface
     /**
      * Assign permissions to role.
      */
-    public function assignPermissions(int $roleId, array $permissionIds): Role|Model;
+    public function assignPermissions(int $roleId, array $permissionIds): RoleResource;
 
     /**
      * Get non-system roles.
      */
-    public function getNonSystemRoles(): Collection;
+    public function getNonSystemRoles(): Collection|RoleCollection;
 }

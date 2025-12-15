@@ -23,6 +23,7 @@ final class CustomerResource extends BaseResource
             'id' => $this->id,
             'type' => $this->type,
             'name' => $this->name,
+            'number' => mb_str_pad((string) $this->id, 6, '0', STR_PAD_LEFT),
 
             // Address fields
             'address' => $this->address,

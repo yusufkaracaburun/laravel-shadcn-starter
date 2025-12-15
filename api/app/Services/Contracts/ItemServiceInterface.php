@@ -5,20 +5,39 @@ declare(strict_types=1);
 namespace App\Services\Contracts;
 
 use App\Models\Item;
-use Illuminate\Http\Request;
+use App\Http\Resources\ItemResource;
+use App\Http\Resources\ItemCollection;
 use App\Services\BaseServiceInterface;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Pagination\LengthAwarePaginator;
 
 interface ItemServiceInterface extends BaseServiceInterface
 {
-    public function getFilteredItems(Request $request): LengthAwarePaginator;
+    /**
+     * Get paginated items with QueryBuilder support.
+     * Supports filtering, sorting, and including relationships via request parameters.
+     */
+    public function getPaginated(int $perPage, ?int $teamId = null): ItemCollection;
 
-    public function getById(int $id): Item|Model|null;
+    /**
+     * Find an item by ID with relationships loaded.
+     */
+    public function findById(int $itemId, ?int $teamId = null): ItemResource;
 
-    public function create(array $data): Item|Model;
+    /**
+     * Create a new item with optional team context.
+     *
+     * @param  array<string, mixed>  $data
+     */
+    public function createItem(array $data, ?int $teamId = null): ItemResource;
 
-    public function update(int $id, array $data): Item|Model;
+    /**
+     * Update an item by model instance.
+     *
+     * @param  array<string, mixed>  $data
+     */
+    public function updateItem(Item $item, array $data, ?int $teamId = null): ItemResource;
 
-    public function delete(int $id): bool;
+    /**
+     * Delete an item by model instance.
+     */
+    public function deleteItem(Item $item): bool;
 }

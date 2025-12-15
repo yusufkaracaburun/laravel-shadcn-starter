@@ -5,16 +5,13 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Api;
 
 use App\Models\Payment;
-use App\Filters\SearchFilter;
 use Illuminate\Http\JsonResponse;
 use App\Http\Responses\ApiResponse;
 use App\Http\Controllers\Controller;
-use Spatie\QueryBuilder\AllowedFilter;
-use App\Http\Resources\PaymentResource;
-use App\Http\Resources\PaymentCollection;
 use App\Http\Controllers\Concerns\UsesQueryBuilder;
 use App\Http\Requests\Payments\IndexPaymentRequest;
 use App\Http\Requests\Payments\StorePaymentRequest;
+use App\Services\Contracts\PaymentServiceInterface;
 use App\Http\Requests\Payments\UpdatePaymentRequest;
 use App\Http\Controllers\Concerns\UsesCachedResponses;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -26,6 +23,10 @@ final class PaymentController extends Controller
     use InvalidatesCachedModels;
     use UsesCachedResponses;
     use UsesQueryBuilder;
+
+    public function __construct(
+        private readonly PaymentServiceInterface $paymentService
+    ) {}
 
     /**
      * Display a listing of payments with QueryBuilder support.
@@ -39,41 +40,12 @@ final class PaymentController extends Controller
     {
         $this->authorize('viewAny', Payment::class);
 
-        $perPage = (int) ($request->input('per_page', 15));
+        $validated = $request->validated();
+        $perPage = (int) ($validated['per_page'] ?? 10);
 
-        $payments = $this->buildQuery(
-            Payment::query(),
-            allowedFilters: [
-                AllowedFilter::exact('id'),
-                AllowedFilter::exact('payment_number'),
-                AllowedFilter::exact('invoice_id'),
-                AllowedFilter::exact('customer_id'),
-                AllowedFilter::exact('status'),
-                AllowedFilter::exact('method'),
-                AllowedFilter::exact('provider'),
-                AllowedFilter::scope('date', 'date'),
-                AllowedFilter::scope('paid_at', 'paid_at'),
-                AllowedFilter::scope('between', 'date'),
-                AllowedFilter::custom('search', new SearchFilter(Payment::$searchable)),
-            ],
-            allowedSorts: [
-                'id',
-                'payment_number',
-                'invoice_id',
-                'customer_id',
-                'status',
-                'date',
-                'paid_at',
-                'amount',
-                'method',
-                'provider',
-                'created_at',
-                'updated_at',
-            ],
-            allowedIncludes: ['customer', 'invoice']
-        )->paginate($perPage);
+        $payments = $this->paymentService->getPaginated($perPage);
 
-        return ApiResponse::success(new PaymentCollection($payments));
+        return ApiResponse::success($payments);
     }
 
     /**
@@ -85,9 +57,9 @@ final class PaymentController extends Controller
     {
         $this->authorize('create', Payment::class);
 
-        $payment = Payment::query()->create($request->validated());
+        $payment = $this->paymentService->createPayment($request->validated());
 
-        return ApiResponse::created(new PaymentResource($payment));
+        return ApiResponse::created($payment);
     }
 
     /**
@@ -99,9 +71,9 @@ final class PaymentController extends Controller
     {
         $this->authorize('view', $payment);
 
-        $payment->load(['customer', 'invoice']);
+        $paymentResource = $this->paymentService->findById($payment->id);
 
-        return ApiResponse::success(new PaymentResource($payment));
+        return ApiResponse::success($paymentResource);
     }
 
     /**
@@ -113,9 +85,9 @@ final class PaymentController extends Controller
     {
         $this->authorize('update', $payment);
 
-        $payment->update($request->validated());
+        $paymentResource = $this->paymentService->updatePayment($payment, $request->validated());
 
-        return ApiResponse::success(new PaymentResource($payment));
+        return ApiResponse::success($paymentResource);
     }
 
     /**
@@ -127,7 +99,7 @@ final class PaymentController extends Controller
     {
         $this->authorize('delete', $payment);
 
-        $payment->delete();
+        $this->paymentService->deletePayment($payment);
 
         return ApiResponse::noContent('Payment deleted successfully');
     }

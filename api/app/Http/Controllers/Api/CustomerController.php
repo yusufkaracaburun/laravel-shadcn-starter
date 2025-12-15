@@ -5,13 +5,12 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Api;
 
 use App\Models\Customer;
-use App\Filters\SearchFilter;
 use Illuminate\Http\JsonResponse;
 use App\Http\Responses\ApiResponse;
 use App\Http\Controllers\Controller;
-use Spatie\QueryBuilder\AllowedFilter;
 use App\Http\Resources\CustomerResource;
 use App\Http\Controllers\Concerns\UsesQueryBuilder;
+use App\Services\Contracts\CustomerServiceInterface;
 use App\Http\Requests\Customers\CustomerStoreRequest;
 use App\Http\Requests\Customers\IndexCustomerRequest;
 use App\Http\Controllers\Concerns\UsesCachedResponses;
@@ -26,6 +25,10 @@ final class CustomerController extends Controller
     use UsesCachedResponses;
     use UsesQueryBuilder;
 
+    public function __construct(
+        private readonly CustomerServiceInterface $customerService
+    ) {}
+
     /**
      * Display a listing of customers with QueryBuilder support.
      *
@@ -38,45 +41,13 @@ final class CustomerController extends Controller
     {
         $this->authorize('viewAny', Customer::class);
 
-        $perPage = (int) ($request->input('per_page', 15));
+        $validated = $request->validated();
+        $perPage = (int) ($validated['per_page'] ?? 10);
 
-        $customers = $this->buildQuery(
-            Customer::query(),
-            allowedFilters: [
-                AllowedFilter::exact('id'),
-                AllowedFilter::exact('type'),
-                AllowedFilter::exact('name'),
-                AllowedFilter::exact('email'),
-                AllowedFilter::exact('phone'),
-                AllowedFilter::exact('city'),
-                AllowedFilter::exact('country'),
-                AllowedFilter::exact('kvk_number'),
-                AllowedFilter::exact('vat_number'),
-                AllowedFilter::exact('iban_number'),
-                AllowedFilter::scope('created_at', 'created_at'),
-                AllowedFilter::scope('between', 'created_at'),
-                AllowedFilter::custom('search', new SearchFilter(Customer::$searchable)),
-            ],
-            allowedSorts: [
-                'id',
-                'type',
-                'name',
-                'address',
-                'zipcode',
-                'city',
-                'country',
-                'email',
-                'phone',
-                'kvk_number',
-                'vat_number',
-                'iban_number',
-                'created_at',
-                'updated_at',
-            ],
-            allowedIncludes: ['contacts', 'primaryContact', 'invoices']
-        )->paginate($perPage);
+        /** @var CustomerResource $customers */
+        $customers = $this->customerService->getPaginated($perPage);
 
-        return ApiResponse::success(CustomerResource::collection($customers));
+        return ApiResponse::success($customers);
     }
 
     /**
@@ -88,9 +59,9 @@ final class CustomerController extends Controller
     {
         $this->authorize('create', Customer::class);
 
-        $customer = Customer::query()->create($request->validated());
+        $customer = $this->customerService->createCustomer($request->validated());
 
-        return ApiResponse::created(new CustomerResource($customer));
+        return ApiResponse::created($customer);
     }
 
     /**
@@ -102,9 +73,9 @@ final class CustomerController extends Controller
     {
         $this->authorize('view', $customer);
 
-        $customer->load(['contacts', 'primaryContact', 'invoices']);
+        $customerResource = $this->customerService->findById($customer->id);
 
-        return ApiResponse::success(new CustomerResource($customer));
+        return ApiResponse::success($customerResource);
     }
 
     /**
@@ -116,9 +87,9 @@ final class CustomerController extends Controller
     {
         $this->authorize('update', $customer);
 
-        $customer->update($request->validated());
+        $customerResource = $this->customerService->updateCustomer($customer, $request->validated());
 
-        return ApiResponse::success(new CustomerResource($customer));
+        return ApiResponse::success($customerResource);
     }
 
     /**
@@ -130,7 +101,7 @@ final class CustomerController extends Controller
     {
         $this->authorize('delete', $customer);
 
-        $customer->delete();
+        $this->customerService->deleteCustomer($customer);
 
         return ApiResponse::noContent('Customer deleted successfully');
     }

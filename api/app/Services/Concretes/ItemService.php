@@ -5,16 +5,17 @@ declare(strict_types=1);
 namespace App\Services\Concretes;
 
 use App\Models\Item;
-use Illuminate\Http\Request;
 use App\Services\BaseService;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Pagination\LengthAwarePaginator;
+use App\Http\Resources\ItemResource;
+use App\Http\Resources\ItemCollection;
 use App\Services\Contracts\ItemServiceInterface;
 use App\Repositories\Contracts\ItemRepositoryInterface;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 final class ItemService extends BaseService implements ItemServiceInterface
 {
+    private readonly ItemRepositoryInterface $itemRepository;
+
     /**
      * Create a new class instance.
      */
@@ -22,45 +23,54 @@ final class ItemService extends BaseService implements ItemServiceInterface
         ItemRepositoryInterface $repo
     ) {
         $this->setRepository($repo);
+        $this->itemRepository = $repo;
     }
 
-    public function getFilteredItems(Request $request): LengthAwarePaginator
+    public function getPaginated(int $perPage, ?int $teamId = null): ItemCollection
     {
-        return $this->repository->paginateFiltered($request);
+        $request = request();
+        $request->query->set('per_page', (string) $perPage);
+
+        $this->itemRepository->withRequest($request);
+
+        $paginated = $this->itemRepository->query()->paginate($perPage);
+
+        return new ItemCollection($paginated);
     }
 
-    public function getById(int $id): Model
+    public function findById(int $itemId, ?int $teamId = null): ItemResource
     {
         try {
-            return $this->repository->findOrFail($id);
+            $item = $this->itemRepository->findOrFail($itemId);
+
+            return new ItemResource($item);
         } catch (ModelNotFoundException) {
             throw new ModelNotFoundException('Item not found');
         }
     }
 
-    public function findOrFail(int $id, array $columns = ['*']): Model|Item
+    public function createItem(array $data, ?int $teamId = null): ItemResource
     {
-        return $this->repository->findOrFail($id, $columns);
+        $item = $this->itemRepository->create($data);
+
+        return new ItemResource($item);
     }
 
-    public function create(array $data): Item|Model
-    {
-        return $this->repository->create($data);
-    }
-
-    public function update(int $id, array $data): Item|Model
+    public function updateItem(Item $item, array $data, ?int $teamId = null): ItemResource
     {
         try {
-            return $this->repository->update($id, $data);
+            $updated = $this->itemRepository->update($item->id, $data);
+
+            return new ItemResource($updated);
         } catch (ModelNotFoundException) {
             throw new ModelNotFoundException('Item not found');
         }
     }
 
-    public function delete(int $id): bool
+    public function deleteItem(Item $item): bool
     {
         try {
-            $this->repository->delete($id);
+            $this->itemRepository->delete($item->id);
 
             return true;
         } catch (ModelNotFoundException) {

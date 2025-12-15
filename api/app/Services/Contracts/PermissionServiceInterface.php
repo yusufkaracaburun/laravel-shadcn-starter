@@ -4,28 +4,32 @@ declare(strict_types=1);
 
 namespace App\Services\Contracts;
 
-use App\Models\Permission;
-use Illuminate\Http\Request;
 use App\Services\BaseServiceInterface;
-use Illuminate\Database\Eloquent\Model;
+use App\Http\Resources\PermissionResource;
+use App\Http\Resources\PermissionCollection;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Pagination\LengthAwarePaginator;
 
 interface PermissionServiceInterface extends BaseServiceInterface
 {
-    public function getPermissions(): Collection;
+    public function getPermissions(): Collection|PermissionCollection;
 
-    public function getAllPermissions(): Collection;
+    public function getAllPermissions(): Collection|PermissionCollection;
 
-    public function getFilteredPermissions(?Request $request = null, int $perPage = 25): LengthAwarePaginator;
+    public function getPaginated(int $perPage): PermissionCollection;
 
-    public function getPermissionById(int $id): Permission|Model;
+    public function findById(int $permissionId): PermissionResource;
 
-    public function createPermission(array $data): Permission|Model;
+    /**
+     * @param  array<string, mixed>  $data
+     */
+    public function createPermission(array $data): PermissionResource;
 
-    public function updatePermission(int $id, array $data): Permission|Model;
+    /**
+     * @param  array<string, mixed>  $data
+     */
+    public function updatePermission(int $id, array $data): PermissionResource;
 
     public function deletePermission(int $id): bool;
 
-    public function assignRoles(int $permissionId, array $roleIds): Permission|Model;
+    public function assignRoles(int $permissionId, array $roleIds): PermissionResource;
 }

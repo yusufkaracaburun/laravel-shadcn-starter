@@ -5,20 +5,39 @@ declare(strict_types=1);
 namespace App\Services\Contracts;
 
 use App\Models\Invoice;
-use Illuminate\Http\Request;
 use App\Services\BaseServiceInterface;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Pagination\LengthAwarePaginator;
+use App\Http\Resources\InvoiceResource;
+use App\Http\Resources\InvoiceCollection;
 
 interface InvoiceServiceInterface extends BaseServiceInterface
 {
-    public function getFilteredInvoices(Request $request): LengthAwarePaginator;
+    /**
+     * Get paginated invoices with QueryBuilder support.
+     * Supports filtering, sorting, and including relationships via request parameters.
+     */
+    public function getPaginated(int $perPage, ?int $teamId = null): InvoiceCollection;
 
-    public function getById(int $id): Invoice|Model|null;
+    /**
+     * Find an invoice by ID with relationships loaded.
+     */
+    public function findById(int $invoiceId, ?int $teamId = null): InvoiceResource;
 
-    public function create(array $data): Invoice|Model;
+    /**
+     * Create a new invoice with optional team context.
+     *
+     * @param  array<string, mixed>  $data
+     */
+    public function createInvoice(array $data, ?int $teamId = null): InvoiceResource;
 
-    public function update(int $id, array $data): Invoice|Model;
+    /**
+     * Update an invoice by model instance.
+     *
+     * @param  array<string, mixed>  $data
+     */
+    public function updateInvoice(Invoice $invoice, array $data, ?int $teamId = null): InvoiceResource;
 
-    public function delete(int $id): bool;
+    /**
+     * Delete an invoice by model instance.
+     */
+    public function deleteInvoice(Invoice $invoice): bool;
 }

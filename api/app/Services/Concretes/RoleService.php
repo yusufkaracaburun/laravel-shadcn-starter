@@ -5,12 +5,11 @@ declare(strict_types=1);
 namespace App\Services\Concretes;
 
 use App\Models\Role;
-use Illuminate\Http\Request;
 use App\Services\BaseService;
 use InvalidArgumentException;
-use Illuminate\Database\Eloquent\Model;
+use App\Http\Resources\RoleResource;
+use App\Http\Resources\RoleCollection;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Pagination\LengthAwarePaginator;
 use App\Services\Contracts\RoleServiceInterface;
 use App\Repositories\Contracts\RoleRepositoryInterface;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
@@ -29,34 +28,42 @@ final class RoleService extends BaseService implements RoleServiceInterface
     /**
      * Get all roles.
      */
-    public function getRoles(): Collection
+    public function getRoles(): \App\Http\Resources\RoleCollection
     {
-        return $this->getFiltered();
+        $roles = $this->getFiltered();
+
+        return new RoleCollection($roles);
     }
 
     /**
      * Get all roles without pagination.
      */
-    public function getAllRoles(): Collection
+    public function getAllRoles(): \App\Http\Resources\RoleCollection
     {
-        return $this->all();
+        $roles = $this->all();
+
+        return new RoleCollection($roles);
     }
 
     /**
      * Get filtered roles with pagination.
      */
-    public function getFilteredRoles(?Request $request = null, int $perPage = 25): LengthAwarePaginator
+    public function getPaginated(int $perPage): RoleCollection
     {
-        return $this->paginate($perPage);
+        $paginated = $this->paginate($perPage);
+
+        return new RoleCollection($paginated);
     }
 
     /**
      * Get role by id.
      */
-    public function getRoleById(int $id): Model
+    public function getRoleById(int $id): RoleResource
     {
         try {
-            return $this->findOrFail($id);
+            $role = $this->findOrFail($id);
+
+            return new RoleResource($role);
         } catch (ModelNotFoundException) {
             throw new ModelNotFoundException('Role not found');
         }
@@ -73,15 +80,17 @@ final class RoleService extends BaseService implements RoleServiceInterface
     /**
      * Create new role.
      */
-    public function createRole(array $data): Role|Model
+    public function createRole(array $data): RoleResource
     {
-        return $this->create($data);
+        $role = $this->create($data);
+
+        return new RoleResource($role);
     }
 
     /**
      * Update role.
      */
-    public function updateRole(int $id, array $data): Role|Model
+    public function updateRole(int $id, array $data): RoleResource
     {
         try {
             $role = $this->findOrFail($id);
@@ -89,7 +98,9 @@ final class RoleService extends BaseService implements RoleServiceInterface
             // Prevent updating system roles
             throw_if($role->is_system, InvalidArgumentException::class, 'Cannot update system roles');
 
-            return $this->update($id, $data);
+            $updated = $this->update($id, $data);
+
+            return new RoleResource($updated);
         } catch (ModelNotFoundException) {
             throw new ModelNotFoundException('Role not found');
         }
@@ -117,20 +128,22 @@ final class RoleService extends BaseService implements RoleServiceInterface
     /**
      * Assign permissions to role.
      */
-    public function assignPermissions(int $roleId, array $permissionIds): Role|Model
+    public function assignPermissions(int $roleId, array $permissionIds): RoleResource
     {
-        $role = $this->getRoleById($roleId);
+        $role = $this->getRoleById($roleId)->resource;
 
         $role->syncPermissions($permissionIds);
 
-        return $role->fresh(['permissions']);
+        return new RoleResource($role->fresh(['permissions']));
     }
 
     /**
      * Get non-system roles.
      */
-    public function getNonSystemRoles(): Collection
+    public function getNonSystemRoles(): \App\Http\Resources\RoleCollection
     {
-        return $this->repo->getNonSystemRoles();
+        $roles = $this->repo->getNonSystemRoles();
+
+        return new RoleCollection($roles);
     }
 }

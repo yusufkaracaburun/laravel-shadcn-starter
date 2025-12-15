@@ -5,15 +5,12 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\JsonResponse;
-use Spatie\Permission\Models\Role;
 use App\Http\Responses\ApiResponse;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\RoleResource;
-use Spatie\QueryBuilder\AllowedFilter;
-use Spatie\Permission\Models\Permission;
 use App\Http\Requests\Roles\IndexRoleRequest;
 use App\Http\Requests\Roles\StoreRoleRequest;
 use App\Http\Requests\Roles\UpdateRoleRequest;
+use App\Services\Contracts\RoleServiceInterface;
 use App\Http\Controllers\Concerns\UsesQueryBuilder;
 use App\Http\Controllers\Concerns\UsesCachedResponses;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -25,6 +22,10 @@ final class RoleController extends Controller
     use InvalidatesCachedModels;
     use UsesCachedResponses;
     use UsesQueryBuilder;
+
+    public function __construct(
+        private readonly RoleServiceInterface $roleService
+    ) {}
 
     /**
      * Display a listing of roles with QueryBuilder support.
@@ -38,25 +39,12 @@ final class RoleController extends Controller
     {
         $this->authorize('viewAny', Role::class);
 
-        $perPage = (int) ($request->input('per_page', 15));
+        $validated = $request->validated();
+        $perPage = (int) ($validated['per_page'] ?? 10);
 
-        $roles = $this->buildQuery(
-            Role::query(),
-            allowedFilters: [
-                AllowedFilter::exact('id'),
-                AllowedFilter::exact('name'),
-                AllowedFilter::exact('is_system'),
-            ],
-            allowedSorts: [
-                'id',
-                'name',
-                'is_system',
-                'created_at',
-            ],
-            allowedIncludes: ['users', 'permissions', 'usersCount', 'permissionsCount']
-        )->paginate($perPage);
+        $roles = $this->roleService->getPaginated($perPage);
 
-        return ApiResponse::success(RoleResource::collection($roles));
+        return ApiResponse::success($roles);
     }
 
     /**
@@ -72,15 +60,13 @@ final class RoleController extends Controller
         $permissionIds = $data['permission_ids'] ?? [];
         unset($data['permission_ids']);
 
-        $role = Role::create($data);
+        $role = $this->roleService->createRole($data);
 
         if (! empty($permissionIds)) {
-            $permissions = Permission::query()->whereIn('id', $permissionIds)->get();
-            $role->permissions()->sync($permissions);
-            $role->load('permissions');
+            $role = $this->roleService->assignPermissions($role->resource->id, $permissionIds);
         }
 
-        return ApiResponse::created(new RoleResource($role));
+        return ApiResponse::created($role);
     }
 
     /**
@@ -92,9 +78,9 @@ final class RoleController extends Controller
     {
         $this->authorize('view', $role);
 
-        $role->load(['users', 'permissions']);
+        $roleResource = $this->roleService->getRoleById($role->id);
 
-        return ApiResponse::success(new RoleResource($role));
+        return ApiResponse::success($roleResource);
     }
 
     /**
@@ -110,15 +96,13 @@ final class RoleController extends Controller
         $permissionIds = $data['permission_ids'] ?? null;
         unset($data['permission_ids']);
 
-        $role->update($data);
+        $roleResource = $this->roleService->updateRole($role->id, $data);
 
         if ($permissionIds !== null) {
-            $permissions = Permission::query()->whereIn('id', $permissionIds)->get();
-            $role->permissions()->sync($permissions);
-            $role->load('permissions');
+            $roleResource = $this->roleService->assignPermissions($role->id, $permissionIds);
         }
 
-        return ApiResponse::success(new RoleResource($role));
+        return ApiResponse::success($roleResource);
     }
 
     /**
@@ -130,7 +114,7 @@ final class RoleController extends Controller
     {
         $this->authorize('delete', $role);
 
-        $role->delete();
+        $this->roleService->deleteRole($role->id);
 
         return ApiResponse::noContent('Role deleted successfully');
     }

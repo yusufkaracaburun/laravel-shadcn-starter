@@ -5,14 +5,12 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\JsonResponse;
-use Spatie\Permission\Models\Role;
 use App\Http\Responses\ApiResponse;
 use App\Http\Controllers\Controller;
-use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\Permission\Models\Permission;
-use App\Http\Resources\PermissionResource;
 use App\Http\Controllers\Concerns\UsesQueryBuilder;
 use App\Http\Controllers\Concerns\UsesCachedResponses;
+use App\Services\Contracts\PermissionServiceInterface;
 use App\Http\Requests\Permissions\IndexPermissionRequest;
 use App\Http\Requests\Permissions\StorePermissionRequest;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -26,6 +24,10 @@ final class PermissionController extends Controller
     use UsesCachedResponses;
     use UsesQueryBuilder;
 
+    public function __construct(
+        private readonly PermissionServiceInterface $permissionService
+    ) {}
+
     /**
      * Display a listing of permissions with QueryBuilder support.
      *
@@ -38,24 +40,12 @@ final class PermissionController extends Controller
     {
         $this->authorize('viewAny', Permission::class);
 
-        $perPage = (int) ($request->input('per_page', 15));
+        $validated = $request->validated();
+        $perPage = (int) ($validated['per_page'] ?? 10);
 
-        $permissions = $this->buildQuery(
-            Permission::query(),
-            allowedFilters: [
-                AllowedFilter::exact('id'),
-                AllowedFilter::exact('name'),
-                AllowedFilter::exact('guard_name'),
-            ],
-            allowedSorts: [
-                'id',
-                'name',
-                'guard_name',
-            ],
-            allowedIncludes: ['roles', 'users']
-        )->paginate($perPage);
+        $permissions = $this->permissionService->getPaginated($perPage);
 
-        return ApiResponse::success(PermissionResource::collection($permissions));
+        return ApiResponse::success($permissions);
     }
 
     /**
@@ -71,15 +61,13 @@ final class PermissionController extends Controller
         $roleIds = $data['role_ids'] ?? [];
         unset($data['role_ids']);
 
-        $permission = Permission::create($data);
+        $permission = $this->permissionService->createPermission($data);
 
         if (! empty($roleIds)) {
-            $roles = Role::query()->whereIn('id', $roleIds)->get();
-            $permission->roles()->sync($roles);
-            $permission->load('roles');
+            $permission = $this->permissionService->assignRoles($permission->resource->id, $roleIds);
         }
 
-        return ApiResponse::created(new PermissionResource($permission));
+        return ApiResponse::created($permission);
     }
 
     /**
@@ -91,9 +79,9 @@ final class PermissionController extends Controller
     {
         $this->authorize('view', $permission);
 
-        $permission->load(['roles', 'users']);
+        $permissionResource = $this->permissionService->findById($permission->id);
 
-        return ApiResponse::success(new PermissionResource($permission));
+        return ApiResponse::success($permissionResource);
     }
 
     /**
@@ -109,15 +97,13 @@ final class PermissionController extends Controller
         $roleIds = $data['role_ids'] ?? null;
         unset($data['role_ids']);
 
-        $permission->update($data);
+        $permissionResource = $this->permissionService->updatePermission($permission->id, $data);
 
         if ($roleIds !== null) {
-            $roles = Role::query()->whereIn('id', $roleIds)->get();
-            $permission->roles()->sync($roles);
-            $permission->load('roles');
+            $permissionResource = $this->permissionService->assignRoles($permission->id, $roleIds);
         }
 
-        return ApiResponse::success(new PermissionResource($permission));
+        return ApiResponse::success($permissionResource);
     }
 
     /**
@@ -129,7 +115,7 @@ final class PermissionController extends Controller
     {
         $this->authorize('delete', $permission);
 
-        $permission->delete();
+        $this->permissionService->deletePermission($permission->id);
 
         return ApiResponse::noContent('Permission deleted successfully');
     }

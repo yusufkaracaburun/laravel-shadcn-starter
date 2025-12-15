@@ -5,16 +5,17 @@ declare(strict_types=1);
 namespace App\Services\Concretes;
 
 use App\Models\Invoice;
-use Illuminate\Http\Request;
 use App\Services\BaseService;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Pagination\LengthAwarePaginator;
+use App\Http\Resources\InvoiceResource;
+use App\Http\Resources\InvoiceCollection;
 use App\Services\Contracts\InvoiceServiceInterface;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Repositories\Contracts\InvoiceRepositoryInterface;
 
 final class InvoiceService extends BaseService implements InvoiceServiceInterface
 {
+    private readonly InvoiceRepositoryInterface $invoiceRepository;
+
     /**
      * Create a new class instance.
      */
@@ -22,45 +23,54 @@ final class InvoiceService extends BaseService implements InvoiceServiceInterfac
         InvoiceRepositoryInterface $repo
     ) {
         $this->setRepository($repo);
+        $this->invoiceRepository = $repo;
     }
 
-    public function getFilteredInvoices(Request $request): LengthAwarePaginator
+    public function getPaginated(int $perPage, ?int $teamId = null): InvoiceCollection
     {
-        return $this->repository->paginateFiltered($request);
+        $request = request();
+        $request->query->set('per_page', (string) $perPage);
+
+        $this->invoiceRepository->withRequest($request);
+
+        $paginated = $this->invoiceRepository->query()->paginate($perPage);
+
+        return new InvoiceCollection($paginated);
     }
 
-    public function getById(int $id): Model
+    public function findById(int $invoiceId, ?int $teamId = null): InvoiceResource
     {
         try {
-            return $this->repository->findOrFail($id);
+            $invoice = $this->invoiceRepository->findOrFail($invoiceId);
+
+            return new InvoiceResource($invoice);
         } catch (ModelNotFoundException) {
             throw new ModelNotFoundException('Invoice not found');
         }
     }
 
-    public function findOrFail(int $id, array $columns = ['*']): Model|Invoice
+    public function createInvoice(array $data, ?int $teamId = null): InvoiceResource
     {
-        return $this->repository->findOrFail($id, $columns);
+        $invoice = $this->invoiceRepository->create($data);
+
+        return new InvoiceResource($invoice);
     }
 
-    public function create(array $data): Invoice|Model
-    {
-        return $this->repository->create($data);
-    }
-
-    public function update(int $id, array $data): Invoice|Model
+    public function updateInvoice(Invoice $invoice, array $data, ?int $teamId = null): InvoiceResource
     {
         try {
-            return $this->repository->update($id, $data);
+            $updated = $this->invoiceRepository->update($invoice->id, $data);
+
+            return new InvoiceResource($updated);
         } catch (ModelNotFoundException) {
             throw new ModelNotFoundException('Invoice not found');
         }
     }
 
-    public function delete(int $id): bool
+    public function deleteInvoice(Invoice $invoice): bool
     {
         try {
-            $this->repository->delete($id);
+            $this->invoiceRepository->delete($invoice->id);
 
             return true;
         } catch (ModelNotFoundException) {
