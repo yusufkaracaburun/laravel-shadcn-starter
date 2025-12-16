@@ -1,13 +1,7 @@
 <script setup lang="ts">
 import type { Customer } from '@/services/customers.service'
 
-import {
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form'
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 
 import CustomerSwitcher from './customer-switcher.vue'
 
@@ -23,9 +17,7 @@ withDefaults(defineProps<IProps>(), {
 
 <template>
   <div class="space-y-4">
-    <h3 class="text-sm font-semibold text-muted-foreground uppercase">
-      Invoice Details
-    </h3>
+    <h3 class="text-sm font-semibold text-muted-foreground uppercase">Invoice Details</h3>
     <FormField v-slot="{ componentField }" name="customer_id" :validate-on-blur="!isFieldDirty">
       <FormItem>
         <FormLabel>Bill To</FormLabel>

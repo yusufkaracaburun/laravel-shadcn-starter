@@ -172,3 +172,56 @@ export function formatDateForInput(dateString: string | null | undefined): strin
   }
   return dateString
 }
+
+/**
+ * Format date and time for display (e.g., "March 10, 2025 at 08:20 AM")
+ * Uses vue-i18n to respect current locale setting
+ */
+export function formatDateTime(dateString: string | null | undefined): string {
+  if (!dateString)
+    return '—'
+  try {
+    // Try parsing as "d-m-Y H:i:s" format first
+    if (dateString.includes('-') && dateString.includes(' ')) {
+      const [datePart, timePart] = dateString.split(' ')
+      const [day, month, year] = datePart.split('-')
+      if (day && month && year && year.length === 4) {
+        const date = new Date(`${year}-${month}-${day} ${timePart}`)
+        if (!isNaN(date.getTime())) {
+          const i18n = getI18n()
+          if (i18n) {
+            return i18n.d(date, 'long')
+          }
+          // Fallback to English formatting if i18n not available
+          return date.toLocaleString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+          })
+        }
+      }
+    }
+    // Try parsing as ISO format
+    const date = new Date(dateString)
+    if (!isNaN(date.getTime())) {
+      const i18n = getI18n()
+      if (i18n) {
+        return i18n.d(date, 'long')
+      }
+      // Fallback to English formatting if i18n not available
+      return date.toLocaleString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+      })
+    }
+  }
+  catch {
+    // Ignore parsing errors
+  }
+  return dateString
+}

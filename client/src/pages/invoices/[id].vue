@@ -4,6 +4,8 @@ meta:
 </route>
 
 <script setup lang="ts">
+import type { ComputedRef } from 'vue'
+
 import {
   ArrowLeft,
   Calendar,
@@ -19,6 +21,8 @@ import {
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
+import type { IInvoiceActivity, IInvoiceEmail, IInvoicePayment } from '@/services/invoices.service'
+
 import Error from '@/components/custom-error.vue'
 import Page from '@/components/global-layout/basic-page.vue'
 import Loading from '@/components/loading.vue'
@@ -30,9 +34,12 @@ import { useGetInvoiceQuery } from '@/services/invoices.service'
 
 import type { TInvoice } from './data/schema'
 
+import InvoiceActivitySection from './components/invoice-activity-section.vue'
 import InvoiceDelete from './components/invoice-delete.vue'
+import InvoiceEmailsSection from './components/invoice-emails-section.vue'
+import InvoicePaymentsSection from './components/invoice-payments-section.vue'
 import { statuses } from './data/data'
-import { formatDateForPreview, formatMoney, formatNumber } from './utils/formatters'
+import { formatDateForPreview, formatDateTime, formatMoney, formatNumber } from './utils/formatters'
 
 const route = useRoute()
 const router = useRouter()
@@ -56,10 +63,17 @@ const {
   error,
   refetch,
 } = useGetInvoiceQuery(invoiceId, {
-  include: ['items'],
+  include: ['items', 'payments', 'activities', 'emails'],
 })
 
-const invoice = computed<TInvoice | null>(() => invoiceResponse.value?.data ?? null)
+const invoice = computed(() => invoiceResponse.value?.data ?? null) as ComputedRef<
+  | (TInvoice & {
+    payments?: IInvoicePayment[]
+    activities?: IInvoiceActivity[]
+    emails?: IInvoiceEmail[]
+  })
+  | null
+>
 
 // Normalize items structure - backend returns items as { data: [...] } but we expect an array
 const invoiceItems = computed(() => {
@@ -78,6 +92,25 @@ const invoiceItems = computed(() => {
     return invoice.value.items
   }
   return []
+})
+
+// Normalize payments, activities, and emails arrays
+const invoicePayments = computed(() => {
+  if (!invoice.value?.payments)
+    return []
+  return Array.isArray(invoice.value.payments) ? invoice.value.payments : []
+})
+
+const invoiceActivities = computed(() => {
+  if (!invoice.value?.activities)
+    return []
+  return Array.isArray(invoice.value.activities) ? invoice.value.activities : []
+})
+
+const invoiceEmails = computed(() => {
+  if (!invoice.value?.emails)
+    return []
+  return Array.isArray(invoice.value.emails) ? invoice.value.emails : []
 })
 
 const showComponent = shallowRef<typeof InvoiceDelete | null>(null)
@@ -101,44 +134,6 @@ function handleDeleteClose() {
   isDialogOpen.value = false
   // Navigate back to invoices list after deletion
   router.push('/invoices')
-}
-
-// Format date from "d-m-Y H:i:s" format
-function formatDateTime(dateString: string | null): string {
-  if (!dateString)
-    return '—'
-  try {
-    // Try parsing as "d-m-Y H:i:s" format first
-    if (dateString.includes('-') && dateString.includes(' ')) {
-      const [datePart, timePart] = dateString.split(' ')
-      const [day, month, year] = datePart.split('-')
-      if (day && month && year && year.length === 4) {
-        const date = new Date(`${year}-${month}-${day} ${timePart}`)
-        return date.toLocaleString('en-US', {
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric',
-          hour: '2-digit',
-          minute: '2-digit',
-        })
-      }
-    }
-    // Try parsing as ISO format
-    const date = new Date(dateString)
-    if (!Number.isNaN(date.getTime())) {
-      return date.toLocaleString('en-US', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-      })
-    }
-  }
-  catch {
-    // Ignore parsing errors
-  }
-  return dateString
 }
 
 function formatDate(dateString: string | null): string {
@@ -522,6 +517,15 @@ function formatCurrency(value: any): string {
                 </div>
               </CardContent>
             </Card>
+
+            <!-- Payments -->
+            <InvoicePaymentsSection :payments="invoicePayments" />
+
+            <!-- Activity Log -->
+            <InvoiceActivitySection :activities="invoiceActivities" />
+
+            <!-- Sent Emails -->
+            <InvoiceEmailsSection :emails="invoiceEmails" />
           </div>
         </div>
       </div>

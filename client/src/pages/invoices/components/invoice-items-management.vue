@@ -80,9 +80,7 @@ function handleAddItem() {
 <template>
   <div class="space-y-4">
     <div class="flex items-center justify-between">
-      <h3 class="text-sm font-semibold text-muted-foreground uppercase">
-        Invoice Items
-      </h3>
+      <h3 class="text-sm font-semibold text-muted-foreground uppercase">Invoice Items</h3>
       <div class="flex gap-2">
         <InvoiceItemSelector
           :invoice-id="invoiceId || 0"
@@ -121,9 +119,7 @@ function handleAddItem() {
         v-if="items.length === 0 && !showAddForm"
         class="flex flex-col items-center justify-center py-8 text-center"
       >
-        <p class="text-sm text-muted-foreground mb-4">
-          No items added yet
-        </p>
+        <p class="text-sm text-muted-foreground mb-4">No items added yet</p>
       </div>
 
       <div v-else-if="items.length > 0" class="space-y-2">

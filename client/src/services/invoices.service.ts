@@ -14,10 +14,102 @@ import type { IResponse } from './types/response.type'
 export type InvoiceStatus = 'draft' | 'sent' | 'paid' | 'overdue' | 'cancelled'
 
 /**
+ * Payment status enum matching backend PaymentStatus
+ */
+export type PaymentStatus = 'pending' | 'paid' | 'failed' | 'refunded' | 'cancelled'
+
+/**
+ * Email status enum matching backend EmailStatus
+ */
+export type EmailStatus = 'pending' | 'sent' | 'failed'
+
+/**
+ * Payment interface matching backend PaymentResource
+ * @see api/app/Http/Resources/PaymentResource.php
+ */
+export interface IInvoicePayment {
+  id: number
+  payment_number: string | null
+  invoice_id: number
+  customer_id: number
+  date: string
+  amount: Money | number
+  method: string | null
+  provider: string | null
+  provider_reference: string | null
+  status_formatted: {
+    id: string
+    value: string
+    label: string
+    color: string | null
+    style: string | null
+  }
+  status: PaymentStatus
+  paid_at: string | null
+  refunded_at: string | null
+  created_at: string
+  updated_at: string
+}
+
+/**
+ * Activity interface matching backend ActivityResource
+ * @see api/app/Http/Resources/ActivityResource.php
+ */
+export interface IInvoiceActivity {
+  id: number
+  log_name: string | null
+  description: string
+  subject_id: number
+  subject_type: string
+  causer_id: number | null
+  causer_type: string | null
+  causer: {
+    id: number
+    name: string
+    email: string | null
+  } | null
+  properties: {
+    old: Record<string, any>
+    attributes: Record<string, any>
+  }
+  event: string | null
+  batch_uuid: string | null
+  created_at: string
+  updated_at: string
+}
+
+/**
+ * Email interface matching backend InvoiceEmailResource
+ * @see api/app/Http/Resources/InvoiceEmailResource.php
+ */
+export interface IInvoiceEmail {
+  id: number
+  invoice_id: number
+  to: string
+  subject: string
+  body: string | null
+  status_formatted: {
+    id: string
+    value: string
+    label: string
+    color: string | null
+    style: string | null
+  }
+  status: EmailStatus
+  sent_at: string | null
+  opened_at: string | null
+  clicked_at: string | null
+  error_message: string | null
+  created_at: string
+  updated_at: string
+}
+
+/**
  * Invoice interface matching backend InvoiceResource exactly
  * @see api/app/Http/Resources/InvoiceResource.php
  * Note: Customer is loaded when include is used
  * Note: Items are loaded when include=items is used
+ * Note: Payments, activities, and emails are loaded when include is used
  */
 export interface IInvoice {
   id: number
@@ -67,6 +159,9 @@ export interface IInvoice {
           updated_at: string
         }>
       } // When loaded via include=items - backend returns paginated structure
+  payments?: IInvoicePayment[] // When loaded via include=payments
+  activities?: IInvoiceActivity[] // When loaded via include=activities
+  emails?: IInvoiceEmail[] // When loaded via include=emails
   created_at: string // Format: "d-m-Y H:i:s"
   updated_at: string // Format: "d-m-Y H:i:s"
   [key: string]: unknown

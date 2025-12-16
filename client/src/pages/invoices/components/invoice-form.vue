@@ -38,7 +38,7 @@ const customers = computed(() => props.customers ?? [])
 const formSchema = toTypedSchema(
   z.object({
     customer_id: z.preprocess(
-      val => (val === undefined || val === null || val === '' ? undefined : Number(val)),
+      (val) => (val === undefined || val === null || val === '' ? undefined : Number(val)),
       z.number().min(1, 'Customer is required'),
     ),
     invoice_number: z.string().nullable().optional(),
@@ -74,8 +74,7 @@ function calculateDueDate(invoiceDate: string, dueDays: number): string {
       const day = String(dueDate.getDate()).padStart(2, '0')
       return `${year}-${month}-${day}`
     }
-  }
-  catch {
+  } catch {
     // Ignore date parsing errors
   }
   return ''
@@ -88,8 +87,7 @@ function getInitialValues() {
   let calculatedDueDate = ''
   if (props.invoice?.date_due) {
     calculatedDueDate = formatDateForInput(props.invoice.date_due)
-  }
-  else {
+  } else {
     calculatedDueDate = calculateDueDate(invoiceDate, dueDays)
   }
 
@@ -104,7 +102,16 @@ function getInitialValues() {
   }
 }
 
-const { values, isFieldDirty, handleSubmit, isSubmitting, resetForm, setFieldValue, setFieldError, errors } = useForm({
+const {
+  values,
+  isFieldDirty,
+  handleSubmit,
+  isSubmitting,
+  resetForm,
+  setFieldValue,
+  setFieldError,
+  errors,
+} = useForm({
   validationSchema: formSchema,
   initialValues: getInitialValues(),
 })
@@ -137,8 +144,7 @@ watch(
         let unitPrice = 0
         if (typeof item.unit_price === 'object' && 'amount' in item.unit_price) {
           unitPrice = Number.parseFloat(item.unit_price.amount) / 100
-        }
-        else if (typeof item.unit_price === 'number') {
+        } else if (typeof item.unit_price === 'number') {
           unitPrice = item.unit_price
         }
 
@@ -149,22 +155,19 @@ watch(
 
         if (typeof item.total_excl_vat === 'object' && 'amount' in item.total_excl_vat) {
           totalExclVat = Number.parseFloat(item.total_excl_vat.amount) / 100
-        }
-        else if (typeof item.total_excl_vat === 'number') {
+        } else if (typeof item.total_excl_vat === 'number') {
           totalExclVat = item.total_excl_vat
         }
 
         if (typeof item.total_vat === 'object' && 'amount' in item.total_vat) {
           totalVat = Number.parseFloat(item.total_vat.amount) / 100
-        }
-        else if (typeof item.total_vat === 'number') {
+        } else if (typeof item.total_vat === 'number') {
           totalVat = item.total_vat
         }
 
         if (typeof item.total_incl_vat === 'object' && 'amount' in item.total_incl_vat) {
           totalInclVat = Number.parseFloat(item.total_incl_vat.amount) / 100
-        }
-        else if (typeof item.total_incl_vat === 'number') {
+        } else if (typeof item.total_incl_vat === 'number') {
           totalInclVat = item.total_incl_vat
         }
 
@@ -188,8 +191,7 @@ watch(
           sort_order: item.sort_order,
         }
       })
-    }
-    else {
+    } else {
       // Reset if no items or new invoice
       localItems.value = []
     }
@@ -203,8 +205,8 @@ function handleItemsSelected(itemsData: any[]) {
   // Add multiple items to local state
   itemsData.forEach((itemData) => {
     // Ensure vat_rate is a number
-    const vatRate
-      = typeof itemData.vat_rate === 'string'
+    const vatRate =
+      typeof itemData.vat_rate === 'string'
         ? Number.parseInt(itemData.vat_rate)
         : Number(itemData.vat_rate)
     const totals = calculateItemTotals(itemData.quantity, itemData.unit_price, vatRate)
@@ -222,8 +224,8 @@ function handleItemsSelected(itemsData: any[]) {
 
 function handleItemSave(itemData: any, itemIdOrIndex?: number) {
   // Ensure vat_rate is a number
-  const vatRate
-    = typeof itemData.vat_rate === 'string'
+  const vatRate =
+    typeof itemData.vat_rate === 'string'
       ? Number.parseInt(itemData.vat_rate)
       : Number(itemData.vat_rate)
   const totals = calculateItemTotals(itemData.quantity, itemData.unit_price, vatRate)
@@ -238,8 +240,7 @@ function handleItemSave(itemData: any, itemIdOrIndex?: number) {
       total_incl_vat: totals.totalInclVat,
       sort_order: localItems.value[itemIdOrIndex].sort_order ?? itemIdOrIndex,
     }
-  }
-  else {
+  } else {
     // Add new item
     localItems.value.push({
       ...itemData,
@@ -312,8 +313,7 @@ watch(
           notes: newInvoice.notes ?? null,
         },
       })
-    }
-    else {
+    } else {
       // Reset to default values when invoice is null (create mode)
       const todayDate = getTodayDate()
       const defaultDueDays = 30
@@ -342,7 +342,7 @@ const onSubmit = handleSubmit(async (formValues) => {
     }
 
     // Prepare items data from local state
-    const itemsData = localItems.value.map(item => ({
+    const itemsData = localItems.value.map((item) => ({
       description: item.description || null,
       quantity: item.quantity,
       unit_price: item.unit_price,
@@ -369,16 +369,14 @@ const onSubmit = handleSubmit(async (formValues) => {
       await updateInvoice(props.invoice.id, backendData)
       // Navigate to invoice detail page
       router.push({ name: '/invoices/[id]', params: { id: props.invoice.id.toString() } })
-    }
-    else {
+    } else {
       // Create new invoice
       const response = await createInvoice(backendData)
       // Navigate to the new invoice detail page
       const newInvoice = response?.data
       if (newInvoice?.id) {
         router.push({ name: '/invoices/[id]', params: { id: newInvoice.id.toString() } })
-      }
-      else {
+      } else {
         // Fallback: navigate to invoices list
         router.push('/invoices')
       }
@@ -386,8 +384,7 @@ const onSubmit = handleSubmit(async (formValues) => {
 
     emits('submit', formValues)
     emits('close')
-  }
-  catch (error: any) {
+  } catch (error: any) {
     // Handle backend validation errors (422)
     if (error.response?.status === 422) {
       const backendErrors = error.response.data.errors || {}
@@ -412,7 +409,7 @@ const invoiceTotals = computed(() => calculateInvoiceTotals(localItems.value))
 
 // Convert localItems to InvoiceItem format for preview
 const itemsForPreview = computed(() => {
-  return localItems.value.map(item => ({
+  return localItems.value.map((item) => ({
     id: item.id || 0,
     invoice_id: props.invoice?.id || 0,
     description: item.description,
@@ -450,9 +447,17 @@ defineExpose({
     <InvoiceDatesSection :is-field-dirty="isFieldDirty" />
 
     <InvoiceItemsManagement
-      :items="localItems" :editing-item-index="editingItemIndex" :show-add-form="showAddForm"
-      :invoice-totals="invoiceTotals" :invoice-id="invoice?.id" :catalog-items="items" @save="handleItemSave"
-      @cancel="cancelItemEdit" @edit="startEditItem" @delete="handleItemDelete" @items-selected="handleItemsSelected"
+      :items="localItems"
+      :editing-item-index="editingItemIndex"
+      :show-add-form="showAddForm"
+      :invoice-totals="invoiceTotals"
+      :invoice-id="invoice?.id"
+      :catalog-items="items"
+      @save="handleItemSave"
+      @cancel="cancelItemEdit"
+      @edit="startEditItem"
+      @delete="handleItemDelete"
+      @items-selected="handleItemsSelected"
       @add-item="startAddItem"
     />
 

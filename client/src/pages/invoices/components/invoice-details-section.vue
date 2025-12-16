@@ -13,9 +13,7 @@ withDefaults(defineProps<IProps>(), {
 
 <template>
   <div class="space-y-4">
-    <h3 class="text-sm font-semibold text-muted-foreground uppercase">
-      Invoice Details
-    </h3>
+    <h3 class="text-sm font-semibold text-muted-foreground uppercase">Invoice Details</h3>
     <FormField v-slot="{ componentField }" name="invoice_number" :validate-on-blur="!isFieldDirty">
       <FormItem>
         <FormLabel>Invoice Number</FormLabel>
