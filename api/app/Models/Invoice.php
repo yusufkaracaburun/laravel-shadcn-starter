@@ -81,6 +81,26 @@ final class Invoice extends BaseModel
     }
 
     /**
+     * Get all emails sent for this invoice.
+     *
+     * @return HasMany<InvoiceEmail>
+     */
+    public function emails(): HasMany
+    {
+        return $this->hasMany(InvoiceEmail::class);
+    }
+
+    /**
+     * Get all activity logs for this invoice.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
+     */
+    public function activities()
+    {
+        return $this->morphMany(\Spatie\Activitylog\Models\Activity::class, 'subject');
+    }
+
+    /**
      * Boot the model.
      */
     protected static function booted(): void

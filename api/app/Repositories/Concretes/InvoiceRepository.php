@@ -94,7 +94,7 @@ final class InvoiceRepository extends QueryableRepository implements InvoiceRepo
      */
     public function getAllowedIncludes(): array
     {
-        return ['customer', 'items', 'payments'];
+        return ['customer', 'items', 'payments', 'emails', 'activities'];
     }
 
     /**
@@ -122,7 +122,7 @@ final class InvoiceRepository extends QueryableRepository implements InvoiceRepo
     public function findOrFail(int $id, array $columns = ['*']): Invoice
     {
         return Invoice::query()
-            ->with(['customer', 'items'])
+            ->with(['customer', 'items', 'payments', 'emails', 'activities.causer'])
             ->findOrFail($id, $columns);
     }
 
