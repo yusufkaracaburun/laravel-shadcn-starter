@@ -16,8 +16,8 @@ import {
   Printer,
   Receipt,
   Trash2,
-  User,
   Hash,
+  User,
 } from 'lucide-vue-next'
 import { computed, ref, shallowRef } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
@@ -561,10 +561,54 @@ function downloadPDF() {
                           <summary class="cursor-pointer text-gray-700 hover:text-gray-900 font-medium p-1 -m-1">
                             View details
                           </summary>
-                          <div class="mt-2 space-y-1">
-                            <div v-for="(value, key) in payment" :key="key" class="text-gray-700">
-                              <span class="font-medium">{{ key }}:</span>
-                              <span class="ml-1">{{ value }}</span>
+                          <div class="mt-2 space-y-1 text-gray-700">
+                            <div>
+                              <span class="font-medium">ID:</span>
+                              <span class="ml-1">{{ payment.id }}</span>
+                            </div>
+                            <div v-if="payment.payment_number">
+                              <span class="font-medium">Payment Number:</span>
+                              <span class="ml-1">{{ payment.payment_number }}</span>
+                            </div>
+                            <div>
+                              <span class="font-medium">Date:</span>
+                              <span class="ml-1">{{ formatDate(payment.date) }}</span>
+                            </div>
+                            <div>
+                              <span class="font-medium">Amount:</span>
+                              <span class="ml-1">{{ formatCurrency(payment.amount) }}</span>
+                            </div>
+                            <div v-if="payment.method">
+                              <span class="font-medium">Method:</span>
+                              <span class="ml-1">{{ payment.method }}</span>
+                            </div>
+                            <div v-if="payment.provider">
+                              <span class="font-medium">Provider:</span>
+                              <span class="ml-1">{{ payment.provider }}</span>
+                            </div>
+                            <div v-if="payment.provider_reference">
+                              <span class="font-medium">Provider Reference:</span>
+                              <span class="ml-1">{{ payment.provider_reference }}</span>
+                            </div>
+                            <div>
+                              <span class="font-medium">Status:</span>
+                              <span class="ml-1">{{ payment.status_formatted?.label || payment.status }}</span>
+                            </div>
+                            <div v-if="payment.paid_at">
+                              <span class="font-medium">Paid At:</span>
+                              <span class="ml-1">{{ formatDateTime(payment.paid_at) }}</span>
+                            </div>
+                            <div v-if="payment.refunded_at">
+                              <span class="font-medium">Refunded At:</span>
+                              <span class="ml-1">{{ formatDateTime(payment.refunded_at) }}</span>
+                            </div>
+                            <div>
+                              <span class="font-medium">Created At:</span>
+                              <span class="ml-1">{{ formatDateTime(payment.created_at) }}</span>
+                            </div>
+                            <div>
+                              <span class="font-medium">Updated At:</span>
+                              <span class="ml-1">{{ formatDateTime(payment.updated_at) }}</span>
                             </div>
                           </div>
                         </details>
