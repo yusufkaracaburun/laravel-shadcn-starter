@@ -12,11 +12,11 @@ import { useRoute } from 'vue-router'
 import type { IInvoiceActivity, IInvoiceEmail, IInvoicePayment } from '@/services/invoices.service'
 
 import Error from '@/components/custom-error.vue'
-import InvoiceNavbar from '@/components/InvoiceNavbar.vue'
+import InvoiceNavbar from '@/pages/invoices/components/invoice-navbar.vue'
 import Loading from '@/components/loading.vue'
-import InvoicePreview from '@/components/InvoicePreview.vue'
+import InvoicePreview from '@/pages/invoices/components/invoice-preview.vue'
 import { Button } from '@/components/ui/button'
-import InvoiceSidebar from '@/components/InvoiceSidebar.vue'
+import InvoiceSidebar from '@/pages/invoices/components/invoice-sidebar.vue'
 import { useGetInvoiceQuery } from '@/services/invoices.service'
 
 const route = useRoute()
@@ -97,7 +97,7 @@ const invoiceItems = computed(() => {
         <div class="flex-1 m-8">
           <InvoicePreview :invoice="invoice" :invoice-items="invoiceItems" />
         </div>
-        <div class="w-1/4 bg-white">
+        <div class="w-1/4 bg-white min-h-screen">
           <InvoiceSidebar :invoice="invoice" />
         </div>
       </div>

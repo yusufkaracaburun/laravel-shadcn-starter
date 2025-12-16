@@ -72,16 +72,17 @@ function formatCurrency(value: any): string {
 </script>
 
 <template>
-  <div class="flex-1 bg-white shadow-sm print:shadow-none print:max-w-none print:mx-0 p-8 print:p-0">
-    <Accordion type="single" collapsible class="w-full mb-4" default-value="item-activity">
+  <div class="print:max-w-none print:mx-0 pl-4 print:p-0">
+    <Accordion type="single" collapsible class="w-full" default-value="item-activity">
+
       <AccordionItem value="item-activity">
-        <AccordionTrigger class="flex items-center justify-between p-6 cursor-pointer select-none">
-          <h3 class="text-lg font-semibold text-gray-900 flex items-center gap-2">
-            <Clock class="w-5 h-5 text-gray-600" />
+        <AccordionTrigger class="flex items-center justify-between cursor-pointer select-none">
+          <h4 class="text-base font-semibold text-gray-900 flex items-center gap-2">
+            <Clock class="w-4 h-4 text-gray-600" />
             Activity Timeline
-          </h3>
+          </h4>
         </AccordionTrigger>
-        <AccordionContent class="p-4 border-t border-gray-200">
+        <AccordionContent class="pt-2 pl-2 border-t border-gray-200">
           <div v-if="invoiceActivities.length === 0" class="text-center py-8">
             <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-gray-200 mb-3">
               <Clock class="w-6 h-6 text-gray-400" />
@@ -128,11 +129,10 @@ function formatCurrency(value: any): string {
                         View changes
                       </summary>
                       <div class="mt-2 space-y-1">
-                        <div v-for="(value, key) in activity.properties.attributes" :key="key"
-                          class="text-gray-700">
+                        <div v-for="(value, key) in activity.properties.attributes" :key="key" class="text-gray-700">
                           <span class="font-medium">{{ key.replace(/_/g, ' ') }}:</span>
                           <span class="ml-1">{{ typeof value === 'object' ? JSON.stringify(value) : value
-                            }}</span>
+                          }}</span>
                         </div>
                       </div>
                     </details>
@@ -143,26 +143,24 @@ function formatCurrency(value: any): string {
           </div>
         </AccordionContent>
       </AccordionItem>
-    </Accordion>
 
-    <!-- Payments Section -->
-    <Accordion type="single" collapsible class="w-full mb-4">
       <AccordionItem value="item-payments">
-        <AccordionTrigger class="flex items-center justify-between p-6 cursor-pointer select-none">
-          <h3 class="text-lg font-semibold text-gray-900 flex items-center gap-2">
-            <CreditCard class="w-5 h-5 text-gray-600" />
+        <AccordionTrigger class="flex items-center justify-between cursor-pointer select-none">
+          <h4 class="text-base font-semibold text-gray-900 flex items-center gap-2">
+            <CreditCard class="w-4 h-4 text-gray-600" />
             Payments
-          </h3>
+          </h4>
         </AccordionTrigger>
-        <AccordionContent class="p-4 border-t border-gray-200">
+        <AccordionContent class="pt-2 pl-2 border-t border-gray-200">
           <div v-if="invoicePayments.length === 0" class="text-center py-8">
             <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-gray-200 mb-3">
-              <CreditCard class="w-6 h-6 text-gray-400" />
+              <Clock class="w-6 h-6 text-gray-400" />
             </div>
             <p class="text-sm text-gray-500">
               No payments yet
             </p>
           </div>
+
           <div v-else class="space-y-4">
             <div v-for="payment in invoicePayments" :key="payment.id" class="relative flex gap-3 pb-3 last:pb-0">
               <!-- Payment content -->
@@ -172,8 +170,7 @@ function formatCurrency(value: any): string {
                     <span class="font-medium text-gray-900">{{ formatCurrency(payment.amount) }}</span>
                     <div
                       :class="`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getPaymentStatusColor(payment.status)}`">
-                      <component :is="statuses.find((s) => s.value === payment.status)?.icon"
-                        class="w-3 h-3 mr-1" />
+                      <component :is="statuses.find((s) => s.value === payment.status)?.icon" class="w-3 h-3 mr-1" />
                       {{ payment.status_formatted?.label || payment.status }}
                     </div>
                   </div>
@@ -239,25 +236,19 @@ function formatCurrency(value: any): string {
           </div>
         </AccordionContent>
       </AccordionItem>
-    </Accordion>
 
-    <!-- Emails Section -->
-    <Accordion type="single" collapsible class="w-full">
       <AccordionItem value="item-emails">
-        <AccordionTrigger class="flex items-center justify-between p-6 cursor-pointer select-none">
-          <h3 class="text-lg font-semibold text-gray-900 flex items-center gap-2">
-            <Mail class="w-5 h-5 text-gray-600" />
+        <AccordionTrigger class="flex items-center justify-between cursor-pointer select-none">
+          <h4 class="text-base font-semibold text-gray-900 flex items-center gap-2">
+            <Mail class="w-4 h-4 text-gray-600" />
             Emails
-          </h3>
+          </h4>
         </AccordionTrigger>
-        <AccordionContent class="p-4 border-t border-gray-200">
+        <AccordionContent class="pt-2 pl-2 border-t border-gray-200">
           <div v-if="invoiceEmails.length === 0" class="text-center py-8">
             <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-gray-200 mb-3">
               <Mail class="w-6 h-6 text-gray-400" />
             </div>
-            <p class="text-sm text-gray-500">
-              No emails sent yet
-            </p>
           </div>
           <div v-else class="space-y-4">
             <div v-for="email in invoiceEmails" :key="email.id" class="relative flex gap-3 pb-3 last:pb-0">
