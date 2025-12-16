@@ -30,7 +30,12 @@ import { Card } from '@/components/ui/card'
 import { Dialog, DialogContent } from '@/components/ui/dialog'
 import { StatusBadge } from '@/components/ui/status-badge'
 import { useGetInvoiceQuery } from '@/services/invoices.service'
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '@/components/ui/accordion'
 
 import type { TInvoice } from './data/schema'
 
@@ -331,7 +336,7 @@ function downloadPDF() {
             <thead>
               <tr class="bg-gray-50">
                 <th class="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-900">
-                  Description
+                  Name
                 </th>
                 <th class="border border-gray-300 px-4 py-3 text-right font-semibold text-gray-900">
                   Qty
@@ -441,16 +446,15 @@ function downloadPDF() {
 
       <!-- Activity Timeline Sidebar -->
       <div class="w-full lg:w-80 shrink-0 print:hidden">
-        <Card class="bg-white rounded-lg p-0">
-          <details open>
-            <summary class="flex items-center justify-between p-6 cursor-pointer select-none">
+        <Accordion type="single" collapsible class="w-full rounded-lg shadow-sm" default-value="item-activity">
+          <AccordionItem value="item-activity">
+            <AccordionTrigger class="flex items-center justify-between p-6 cursor-pointer select-none">
               <h3 class="text-lg font-semibold text-gray-900 flex items-center gap-2">
                 <Clock class="w-5 h-5 text-gray-600" />
                 Activity Timeline
               </h3>
-              <!-- Optional: Add a chevron icon here for visual indication of expand/collapse -->
-            </summary>
-            <div class="p-4 border-t border-gray-200">
+            </AccordionTrigger>
+            <AccordionContent class="p-4 border-t border-gray-200">
               <div v-if="invoiceActivities.length === 0" class="text-center py-8">
                 <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-gray-200 mb-3">
                   <Clock class="w-6 h-6 text-gray-400" />
@@ -509,21 +513,20 @@ function downloadPDF() {
                   </div>
                 </div>
               </div>
-            </div>
-          </details>
-        </Card>
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
 
         <!-- Payments Section -->
-        <Card class="bg-white rounded-lg p-0 mt-4">
-          <details>
-            <summary class="flex items-center justify-between p-6 cursor-pointer select-none">
+        <Accordion type="single" collapsible class="w-full mt-4 rounded-lg shadow-sm">
+          <AccordionItem value="item-payments">
+            <AccordionTrigger class="flex items-center justify-between p-6 cursor-pointer select-none">
               <h3 class="text-lg font-semibold text-gray-900 flex items-center gap-2">
                 <CreditCard class="w-5 h-5 text-gray-600" />
                 Payments
               </h3>
-              <!-- Optional: Add a chevron icon here -->
-            </summary>
-            <div class="p-4 border-t border-gray-200">
+            </AccordionTrigger>
+            <AccordionContent class="p-4 border-t border-gray-200">
               <div v-if="invoicePayments.length === 0" class="text-center py-8">
                 <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-gray-200 mb-3">
                   <CreditCard class="w-6 h-6 text-gray-400" />
@@ -542,21 +545,20 @@ function downloadPDF() {
                   <p class="text-gray-700">{{ payment.notes || 'No notes' }}</p>
                 </div>
               </div>
-            </div>
-          </details>
-        </Card>
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
 
         <!-- Emails Section -->
-        <Card class="bg-white rounded-lg p-0 mt-4">
-          <details>
-            <summary class="flex items-center justify-between p-6 cursor-pointer select-none">
+        <Accordion type="single" collapsible class="w-full mt-4 rounded-lg shadow-sm">
+          <AccordionItem value="item-emails">
+            <AccordionTrigger class="flex items-center justify-between p-6 cursor-pointer select-none">
               <h3 class="text-lg font-semibold text-gray-900 flex items-center gap-2">
                 <Mail class="w-5 h-5 text-gray-600" />
                 Emails
               </h3>
-              <!-- Optional: Add a chevron icon here -->
-            </summary>
-            <div class="p-4 border-t border-gray-200">
+            </AccordionTrigger>
+            <AccordionContent class="p-4 border-t border-gray-200">
               <div v-if="invoiceEmails.length === 0" class="text-center py-8">
                 <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-gray-200 mb-3">
                   <Mail class="w-6 h-6 text-gray-400" />
@@ -578,9 +580,9 @@ function downloadPDF() {
                   </p>
                 </div>
               </div>
-            </div>
-          </details>
-        </Card>
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
       </div>
     </div>
     <Dialog v-model:open="isDialogOpen" class="print:hidden">
