@@ -8,15 +8,11 @@ import type { ComputedRef } from 'vue'
 
 import {
   ArrowLeft,
-  Calendar,
-  Clock,
+  Download,
   FilePenLine,
-  Mail,
-  MapPin,
-  Phone,
+  Printer,
   Receipt,
   Trash2,
-  User,
 } from 'lucide-vue-next'
 import { computed, ref, shallowRef } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
@@ -24,29 +20,17 @@ import { useRoute, useRouter } from 'vue-router'
 import type { IInvoiceActivity, IInvoiceEmail, IInvoicePayment } from '@/services/invoices.service'
 
 import Error from '@/components/custom-error.vue'
-import Page from '@/components/global-layout/basic-page.vue'
 import Loading from '@/components/loading.vue'
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from '@/components/ui/accordion'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Dialog, DialogContent } from '@/components/ui/dialog'
-import { Separator } from '@/components/ui/separator'
 import { StatusBadge } from '@/components/ui/status-badge'
 import { useGetInvoiceQuery } from '@/services/invoices.service'
 
 import type { TInvoice } from './data/schema'
 
-import InvoiceActivitySection from './components/invoice-activity-section.vue'
 import InvoiceDelete from './components/invoice-delete.vue'
-import InvoiceEmailsSection from './components/invoice-emails-section.vue'
-import InvoicePaymentsSection from './components/invoice-payments-section.vue'
 import { statuses } from './data/data'
-import { formatDateForPreview, formatDateTime, formatMoney, formatNumber } from './utils/formatters'
+import { formatDateForPreview, formatMoney, formatNumber } from './utils/formatters'
 
 const route = useRoute()
 const router = useRouter()
@@ -102,27 +86,7 @@ const invoiceItems = computed(() => {
   return []
 })
 
-// Normalize payments, activities, and emails arrays
-const invoicePayments = computed(() => {
-  if (!invoice.value?.payments) {
-    return []
-  }
-  return Array.isArray(invoice.value.payments) ? invoice.value.payments : []
-})
-
-const invoiceActivities = computed(() => {
-  if (!invoice.value?.activities) {
-    return []
-  }
-  return Array.isArray(invoice.value.activities) ? invoice.value.activities : []
-})
-
-const invoiceEmails = computed(() => {
-  if (!invoice.value?.emails) {
-    return []
-  }
-  return Array.isArray(invoice.value.emails) ? invoice.value.emails : []
-})
+// Note: Payment, activity, and email sections are removed from the invoice layout for cleaner PDF export
 
 const showComponent = shallowRef<typeof InvoiceDelete | null>(null)
 const isDialogOpen = ref(false)
@@ -164,393 +128,301 @@ function formatDate(dateString: string | null): string {
 function formatCurrency(value: any): string {
   return formatMoney(value)
 }
+
+function printInvoice() {
+  window.print()
+}
+
+function downloadPDF() {
+  // For now, we'll use print functionality
+  // In a real implementation, you might use a library like jsPDF or html2pdf
+  printInvoice()
+}
 </script>
 
 <template>
-  <Page title="Invoice Details" description="View and manage invoice information" sticky>
-    <template #actions>
-      <div class="flex items-center gap-2">
-        <Button variant="outline" size="sm" @click="router.back()">
-          <ArrowLeft class="mr-2 size-4" />
-          Back
-        </Button>
-        <Button v-if="invoice" variant="outline" size="sm" @click="handleSelect('edit')">
-          <FilePenLine class="mr-2 size-4" />
-          Edit
-        </Button>
-        <Button v-if="invoice" variant="destructive" size="sm" @click="handleSelect('delete')">
-          <Trash2 class="mr-2 size-4" />
-          Delete
-        </Button>
+  <div class="min-h-screen bg-white">
+    <!-- Navigation Bar (Hidden in Print) -->
+    <div class="print:hidden bg-white border-b border-gray-200 px-6 py-4">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-4">
+          <Button variant="outline" @click="router.back()">
+            <ArrowLeft class="mr-2 size-4" />
+            Back
+          </Button>
+          <div class="flex items-center gap-2">
+            <StatusBadge v-if="invoice" :status="invoice!.status" type="invoice"
+              :icon="statuses.find((s) => s.value === invoice!.status)?.icon"
+              :label="statuses.find((s) => s.value === invoice!.status)?.label" />
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <Button variant="outline" @click="printInvoice">
+            <Printer class="mr-2 size-4" />
+            Print
+          </Button>
+          <Button variant="outline" @click="downloadPDF">
+            <Download class="mr-2 size-4" />
+            Download PDF
+          </Button>
+          <Button v-if="invoice" variant="outline" @click="handleSelect('edit')">
+            <FilePenLine class="mr-2 size-4" />
+            Edit
+          </Button>
+          <Button v-if="invoice" variant="destructive" @click="handleSelect('delete')">
+            <Trash2 class="mr-2 size-4" />
+            Delete
+          </Button>
+        </div>
       </div>
-    </template>
-
-    <div v-if="isLoading" class="flex items-center justify-center min-h-[400px]">
-      <Loading />
     </div>
 
-    <div v-else-if="isError" class="flex items-center justify-center min-h-[400px]">
-      <div class="text-center">
-        <Error :code="(error as any)?.response?.status || 500" subtitle="Failed to load invoice" :error="(error as any)?.message || 'We couldn\'t load the invoice details. Please try again.'
-          " />
-        <Button class="mt-4" @click="refetch">Try Again</Button>
+    <!-- Invoice Content -->
+    <div class="max-w-4xl mx-auto bg-white shadow-sm print:shadow-none print:max-w-none print:mx-0">
+      <!-- Loading State -->
+      <div v-if="isLoading" class="flex items-center justify-center min-h-[400px]">
+        <Loading />
       </div>
-    </div>
 
-    <div v-else-if="invoice" class="space-y-6">
-      <!-- Header Section -->
-      <div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-        <div class="space-y-1">
-          <div class="flex items-center gap-3">
-            <div class="flex size-10 items-center justify-center rounded-lg bg-primary/10">
-              <Receipt class="size-5 text-primary" />
+      <!-- Error State -->
+      <div v-else-if="isError" class="flex items-center justify-center min-h-[400px]">
+        <div class="text-center">
+          <Error :code="(error as any)?.response?.status || 500" subtitle="Failed to load invoice" :error="(error as any)?.message || 'We couldn\'t load the invoice details. Please try again.'
+            " />
+          <Button class="mt-4 print:hidden" @click="refetch">Try Again</Button>
+        </div>
+      </div>
+
+      <!-- Invoice Content -->
+      <div v-else-if="invoice" class="p-8 print:p-0">
+        <!-- Invoice Header -->
+        <div class="border-b-2 border-gray-900 pb-8 mb-8">
+          <div class="flex justify-between items-start">
+            <!-- Company Information -->
+            <div class="flex-1">
+              <div class="flex items-center gap-3 mb-4">
+                <div class="w-12 h-12 bg-primary rounded-lg flex items-center justify-center">
+                  <Receipt class="w-6 h-6 text-white" />
+                </div>
+                <div>
+                  <h1 class="text-3xl font-bold text-gray-900">Your Company Name</h1>
+                  <p class="text-gray-600">123 Business Street<br>City, State 12345<br>Phone: (555) 123-4567<br>Email:
+                    info@company.com</p>
+                </div>
+              </div>
             </div>
+
+            <!-- Invoice Details -->
+            <div class="text-right">
+              <h2 class="text-4xl font-bold text-gray-900 mb-2">INVOICE</h2>
+              <div class="space-y-2">
+                <div>
+                  <span class="font-semibold text-gray-700">Invoice #:</span>
+                  <span class="ml-2 text-gray-900">{{ invoice.invoice_number || `#${invoice.id}` }}</span>
+                </div>
+                <div>
+                  <span class="font-semibold text-gray-700">Date:</span>
+                  <span class="ml-2 text-gray-900">{{ formatDate(invoice.date) }}</span>
+                </div>
+                <div>
+                  <span class="font-semibold text-gray-700">Due Date:</span>
+                  <span class="ml-2 text-gray-900">{{ formatDate(invoice.date_due) }}</span>
+                </div>
+                <div>
+                  <span class="font-semibold text-gray-700">Terms:</span>
+                  <span class="ml-2 text-gray-900">{{ invoice.due_days }} days</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bill To Section -->
+        <div class="mb-8">
+          <div class="grid grid-cols-2 gap-8">
+            <!-- Bill To -->
             <div>
-              <p class="text-sm font-medium text-muted-foreground">Invoice</p>
-              <h1 class="text-3xl font-bold tracking-tight">
-                {{ invoice.invoice_number || `#${invoice.id}` }}
-              </h1>
+              <h3 class="text-lg font-semibold text-gray-900 mb-3">Bill To:</h3>
+              <div class="text-gray-700">
+                <p class="font-semibold text-lg mb-1">{{ invoice.customer?.name || `Customer #${invoice.customer_id}` }}
+                </p>
+                <p v-if="invoice.customer?.type" class="text-sm text-gray-600 mb-2">{{ invoice.customer.type }}</p>
+
+                <div v-if="invoice.customer?.formatted_address?.length" class="text-sm space-y-1">
+                  <p v-for="(line, index) in invoice.customer.formatted_address" :key="index">{{ line }}</p>
+                </div>
+                <p v-else-if="invoice.customer?.address" class="text-sm">{{ invoice.customer.address }}</p>
+
+                <div class="mt-3 space-y-1 text-sm">
+                  <p v-if="invoice.customer?.primary_contact?.name">
+                    <span class="font-medium">Contact:</span> {{ invoice.customer.primary_contact.name }}
+                  </p>
+                  <p v-if="invoice.customer?.email">
+                    <span class="font-medium">Email:</span> {{ invoice.customer.email }}
+                  </p>
+                  <p v-if="invoice.customer?.phone">
+                    <span class="font-medium">Phone:</span> {{ invoice.customer.phone }}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Ship To (if different) -->
+            <div>
+              <h3 class="text-lg font-semibold text-gray-900 mb-3">Ship To:</h3>
+              <div class="text-gray-700">
+                <p class="text-sm">Same as billing address</p>
+                <!-- You can add shipping address logic here if needed -->
+              </div>
             </div>
           </div>
         </div>
-        <div v-if="invoice" class="flex items-center gap-2">
-          <StatusBadge :status="invoice!.status" type="invoice"
-            :icon="statuses.find((s) => s.value === invoice!.status)?.icon"
-            :label="statuses.find((s) => s.value === invoice!.status)?.label" class="text-sm" />
-        </div>
-      </div>
 
-      <!-- Key Information Cards -->
-      <div class="grid gap-4 sm:grid-cols-3">
-        <Card>
-          <CardContent class="pt-6">
-            <div class="flex items-center gap-3">
-              <div class="flex size-10 items-center justify-center rounded-lg bg-blue-500/10">
-                <Calendar class="size-5 text-blue-600 dark:text-blue-400" />
-              </div>
-              <div class="flex-1 min-w-0">
-                <p class="text-xs font-medium text-muted-foreground mb-1">Issue Date</p>
-                <p class="text-sm font-semibold text-foreground truncate">{{ formatDate(invoice.date) }}</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent class="pt-6">
-            <div class="flex items-center gap-3">
-              <div class="flex size-10 items-center justify-center rounded-lg bg-orange-500/10">
-                <Calendar class="size-5 text-orange-600 dark:text-orange-400" />
-              </div>
-              <div class="flex-1 min-w-0">
-                <p class="text-xs font-medium text-muted-foreground mb-1">Due Date</p>
-                <p class="text-sm font-semibold text-foreground truncate">{{ formatDate(invoice.date_due) }}</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent class="pt-6">
-            <div class="flex items-center gap-3">
-              <div class="flex size-10 items-center justify-center rounded-lg bg-green-500/10">
-                <Clock class="size-5 text-green-600 dark:text-green-400" />
-              </div>
-              <div class="flex-1 min-w-0">
-                <p class="text-xs font-medium text-muted-foreground mb-1">Payment Terms</p>
-                <p class="text-sm font-semibold text-foreground truncate">{{ invoice.due_days }} days</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      <!-- Main Content Grid -->
-      <div class="grid gap-6 lg:grid-cols-3">
-        <!-- Left Column: Main Content -->
-        <div class="lg:col-span-2 space-y-6">
-          <!-- Customer Information -->
-          <Card v-if="invoice.customer">
-            <CardHeader>
-              <CardTitle class="text-lg font-semibold"> Bill To </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div class="space-y-4">
-                <div>
-                  <button
-                    class="text-lg font-semibold hover:text-primary transition-colors text-left group flex items-center gap-2"
-                    @click="
-                      router.push({
-                        name: '/customers/[id]',
-                        params: { id: invoice.customer_id.toString() },
-                      })
-                      ">
-                    {{ invoice.customer.name || `Customer #${invoice.customer_id}` }}
-                    <ArrowLeft class="size-4 -rotate-180 opacity-0 group-hover:opacity-100 transition-opacity" />
-                  </button>
-                  <p v-if="invoice.customer.type" class="text-sm text-muted-foreground mt-1">
-                    {{ invoice.customer.type }}
-                  </p>
-                </div>
-
-                <Separator />
-
-                <div class="grid gap-4 sm:grid-cols-2">
-                  <div v-if="invoice.customer.formatted_address?.length || invoice.customer.address" class="space-y-2">
-                    <div class="flex items-start gap-2 text-sm">
-                      <MapPin class="size-4 shrink-0 mt-0.5 text-muted-foreground" />
-                      <div class="space-y-1">
-                        <p v-if="invoice.customer.formatted_address?.length" class="text-muted-foreground">
-                          <span v-for="(line, index) in invoice.customer.formatted_address" :key="index" class="block">
-                            {{ line }}
-                          </span>
-                        </p>
-                        <p v-else-if="invoice.customer.address" class="text-muted-foreground">
-                          {{ invoice.customer.address }}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="space-y-3">
-                    <div v-if="invoice.customer.primary_contact?.name" class="flex items-center gap-2 text-sm">
-                      <User class="size-4 shrink-0 text-muted-foreground" />
-                      <span class="text-muted-foreground">{{ invoice.customer.primary_contact.name }}</span>
-                    </div>
-
-                    <div v-if="invoice.customer.email" class="flex items-center gap-2 text-sm">
-                      <Mail class="size-4 shrink-0 text-muted-foreground" />
-                      <a :href="`mailto:${invoice.customer.email}`"
-                        class="text-muted-foreground hover:text-primary hover:underline transition-colors">
-                        {{ invoice.customer.email }}
-                      </a>
-                    </div>
-
-                    <div v-if="invoice.customer.phone" class="flex items-center gap-2 text-sm">
-                      <Phone class="size-4 shrink-0 text-muted-foreground" />
-                      <a :href="`tel:${invoice.customer.phone}`"
-                        class="text-muted-foreground hover:text-primary hover:underline transition-colors">
-                        {{ invoice.customer.phone }}
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          <!-- Invoice Items -->
-          <Card>
-            <CardHeader>
-              <CardTitle class="text-lg font-semibold"> Invoice Items </CardTitle>
-            </CardHeader>
-            <CardContent class="p-0">
-              <div v-if="invoiceItems.length > 0" class="overflow-x-auto">
-                <table class="w-full">
-                  <thead>
-                    <tr class="border-b bg-muted/50">
-                      <th class="text-left p-4 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                        Description
-                      </th>
-                      <th class="text-right p-4 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                        Qty
-                      </th>
-                      <th class="text-right p-4 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                        Unit Price
-                      </th>
-                      <th class="text-right p-4 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                        VAT
-                      </th>
-                      <th class="text-right p-4 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                        Total
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr v-for="(item, index) in invoiceItems" :key="item.id"
-                      class="border-b transition-colors hover:bg-muted/30"
-                      :class="index % 2 === 0 ? 'bg-background' : 'bg-muted/20'">
-                      <td class="p-4">
-                        <div class="font-medium text-foreground">
-                          {{ item.description || '—' }}
-                        </div>
-                        <div v-if="item.unit" class="mt-1 text-xs text-muted-foreground">
-                          {{ item.unit }}
-                        </div>
-                      </td>
-                      <td class="p-4 text-right">
-                        <span class="text-sm font-medium text-foreground">
-                          {{ formatNumber(item.quantity, 2) }}
-                        </span>
-                      </td>
-                      <td class="p-4 text-right">
-                        <span class="text-sm text-muted-foreground">
-                          {{ formatCurrency(item.unit_price) }}
-                        </span>
-                      </td>
-                      <td class="p-4 text-right">
-                        <div class="flex flex-col items-end gap-0.5">
-                          <span class="text-sm font-medium text-foreground">{{ item.vat_rate }}%</span>
-                          <span class="text-xs text-muted-foreground">
-                            {{ formatCurrency(item.total_vat) }}
-                          </span>
-                        </div>
-                      </td>
-                      <td class="p-4 text-right">
-                        <span class="text-sm font-semibold text-foreground">
-                          {{ formatCurrency(item.total_incl_vat) }}
-                        </span>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              <div v-else class="p-12 text-center">
-                <div class="inline-flex items-center justify-center size-12 rounded-full bg-muted mb-4">
-                  <Receipt class="size-6 text-muted-foreground" />
-                </div>
-                <p class="text-sm font-medium text-muted-foreground">No items added to this invoice.</p>
-                <p class="text-xs text-muted-foreground mt-1">Add items to see them listed here.</p>
-              </div>
-            </CardContent>
-          </Card>
-
-          <!-- Notes Section -->
-          <Card v-if="invoice.notes">
-            <CardHeader>
-              <CardTitle class="text-lg font-semibold"> Additional Notes </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div class="text-sm text-muted-foreground whitespace-pre-wrap leading-relaxed">
-                {{ invoice.notes }}
-              </div>
-            </CardContent>
-          </Card>
+        <!-- Invoice Items Table -->
+        <div class="mb-8">
+          <table class="w-full border-collapse">
+            <thead>
+              <tr class="bg-gray-50">
+                <th class="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-900">Description</th>
+                <th class="border border-gray-300 px-4 py-3 text-right font-semibold text-gray-900">Qty</th>
+                <th class="border border-gray-300 px-4 py-3 text-right font-semibold text-gray-900">Unit Price</th>
+                <th class="border border-gray-300 px-4 py-3 text-right font-semibold text-gray-900">VAT Rate</th>
+                <th class="border border-gray-300 px-4 py-3 text-right font-semibold text-gray-900">VAT Amount</th>
+                <th class="border border-gray-300 px-4 py-3 text-right font-semibold text-gray-900">Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(item, index) in invoiceItems" :key="item.id"
+                :class="index % 2 === 0 ? 'bg-white' : 'bg-gray-50'">
+                <td class="border border-gray-300 px-4 py-3">
+                  <div class="font-medium text-gray-900">{{ item.description || '—' }}</div>
+                  <div v-if="item.unit" class="text-sm text-gray-600 mt-1">{{ item.unit }}</div>
+                </td>
+                <td class="border border-gray-300 px-4 py-3 text-right text-gray-900">{{ formatNumber(item.quantity, 2)
+                }}</td>
+                <td class="border border-gray-300 px-4 py-3 text-right text-gray-900">{{ formatCurrency(item.unit_price)
+                }}</td>
+                <td class="border border-gray-300 px-4 py-3 text-right text-gray-900">{{ item.vat_rate }}%</td>
+                <td class="border border-gray-300 px-4 py-3 text-right text-gray-900">{{ formatCurrency(item.total_vat)
+                }}</td>
+                <td class="border border-gray-300 px-4 py-3 text-right font-semibold text-gray-900">{{
+                  formatCurrency(item.total_incl_vat) }}</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
 
-        <!-- Right Column: Summary (Sticky) -->
-        <div class="lg:col-span-1">
-          <div class="sticky top-4 space-y-6">
-            <!-- Financial Summary -->
-            <Card>
-              <CardHeader>
-                <CardTitle class="text-lg font-semibold"> Financial Summary </CardTitle>
-              </CardHeader>
-              <CardContent class="space-y-3">
-                <div class="flex items-center justify-between">
-                  <span class="text-sm text-muted-foreground">Subtotal</span>
-                  <span class="text-sm font-medium text-foreground">
-                    {{ formatCurrency(invoice.subtotal) }}
-                  </span>
-                </div>
+        <!-- Totals Section -->
+        <div class="flex justify-end mb-8">
+          <div class="w-80">
+            <div class="border-t border-gray-900 pt-4 space-y-3">
+              <div class="flex justify-between text-gray-700">
+                <span>Subtotal:</span>
+                <span>{{ formatCurrency(invoice.subtotal) }}</span>
+              </div>
 
-                <Separator />
+              <div
+                v-if="invoice?.total_vat_0 && (typeof invoice.total_vat_0 === 'number' ? invoice.total_vat_0 > 0 : true)"
+                class="flex justify-between text-gray-700">
+                <span>VAT 0%:</span>
+                <span>{{ formatCurrency(invoice.total_vat_0) }}</span>
+              </div>
+              <div
+                v-if="invoice?.total_vat_9 && (typeof invoice.total_vat_9 === 'number' ? invoice.total_vat_9 > 0 : true)"
+                class="flex justify-between text-gray-700">
+                <span>VAT 9%:</span>
+                <span>{{ formatCurrency(invoice.total_vat_9) }}</span>
+              </div>
+              <div
+                v-if="invoice?.total_vat_21 && (typeof invoice.total_vat_21 === 'number' ? invoice.total_vat_21 > 0 : true)"
+                class="flex justify-between text-gray-700">
+                <span>VAT 21%:</span>
+                <span>{{ formatCurrency(invoice.total_vat_21) }}</span>
+              </div>
 
-                <div v-if="
-                  invoice?.total_vat_0 &&
-                  (typeof invoice.total_vat_0 === 'number' ? invoice.total_vat_0 > 0 : true)
-                " class="flex items-center justify-between text-sm">
-                  <span class="text-muted-foreground">VAT 0%</span>
-                  <span class="font-medium text-foreground">{{
-                    formatCurrency(invoice.total_vat_0)
-                  }}</span>
-                </div>
-                <div v-if="
-                  invoice?.total_vat_9 &&
-                  (typeof invoice.total_vat_9 === 'number' ? invoice.total_vat_9 > 0 : true)
-                " class="flex items-center justify-between text-sm">
-                  <span class="text-muted-foreground">VAT 9%</span>
-                  <span class="font-medium text-foreground">{{
-                    formatCurrency(invoice.total_vat_9)
-                  }}</span>
-                </div>
-                <div v-if="
-                  invoice?.total_vat_21 &&
-                  (typeof invoice.total_vat_21 === 'number' ? invoice.total_vat_21 > 0 : true)
-                " class="flex items-center justify-between text-sm">
-                  <span class="text-muted-foreground">VAT 21%</span>
-                  <span class="font-medium text-foreground">{{
-                    formatCurrency(invoice.total_vat_21)
-                  }}</span>
-                </div>
-
-                <Separator />
-
-                <div class="flex items-center justify-between rounded-lg bg-primary/5 p-3 -mx-3">
-                  <span class="text-base font-semibold text-foreground">Total</span>
-                  <span class="text-xl font-bold text-primary">
-                    {{ formatCurrency(invoice.total) }}
-                  </span>
-                </div>
-              </CardContent>
-            </Card>
-
-            <!-- Metadata -->
-            <Card class="bg-muted/30">
-              <CardHeader>
-                <CardTitle class="text-sm font-semibold text-muted-foreground">
-                  Metadata
-                </CardTitle>
-              </CardHeader>
-              <CardContent class="space-y-3 text-sm">
-                <div>
-                  <p class="text-xs font-medium text-muted-foreground mb-1">Invoice ID</p>
-                  <p class="font-mono text-sm font-medium text-foreground">#{{ invoice.id }}</p>
-                </div>
-                <Separator />
-                <div>
-                  <p class="text-xs font-medium text-muted-foreground mb-1">Created</p>
-                  <p class="text-sm text-foreground">
-                    {{ formatDateTime(invoice.created_at) }}
-                  </p>
-                </div>
-                <div v-if="invoice.updated_at !== invoice.created_at">
-                  <p class="text-xs font-medium text-muted-foreground mb-1">Updated</p>
-                  <p class="text-sm text-foreground">
-                    {{ formatDateTime(invoice.updated_at) }}
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Accordion type="multiple" class="w-full space-y-6">
-              <!-- Payments -->
-              <AccordionItem value="payments" class="border-none">
-                <AccordionTrigger class="hover:no-underline text-lg font-semibold text-foreground py-0">
-                  Payments
-                </AccordionTrigger>
-                <AccordionContent>
-                  <InvoicePaymentsSection :payments="invoicePayments" />
-                </AccordionContent>
-              </AccordionItem>
-
-              <!-- Activity Log -->
-              <AccordionItem value="activity-log" class="border-none">
-                <AccordionTrigger class="hover:no-underline text-lg font-semibold text-foreground py-0">
-                  Activity Log
-                </AccordionTrigger>
-                <AccordionContent>
-                  <InvoiceActivitySection :activities="invoiceActivities" />
-                </AccordionContent>
-              </AccordionItem>
-
-              <!-- Sent Emails -->
-              <AccordionItem value="sent-emails" class="border-none">
-                <AccordionTrigger class="hover:no-underline text-lg font-semibold text-foreground py-0">
-                  Sent Emails
-                </AccordionTrigger>
-                <AccordionContent>
-                  <InvoiceEmailsSection :emails="invoiceEmails" />
-                </AccordionContent>
-              </AccordionItem>
-            </Accordion>
+              <div class="border-t-2 border-gray-900 pt-3 flex justify-between text-xl font-bold text-gray-900">
+                <span>Total:</span>
+                <span>{{ formatCurrency(invoice.total) }}</span>
+              </div>
+            </div>
           </div>
+        </div>
+
+        <!-- Notes Section -->
+        <div v-if="invoice.notes" class="mb-8">
+          <h3 class="text-lg font-semibold text-gray-900 mb-3">Notes:</h3>
+          <div class="bg-gray-50 p-4 rounded border text-gray-700 whitespace-pre-wrap">
+            {{ invoice.notes }}
+          </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="border-t border-gray-300 pt-6 text-center text-sm text-gray-600">
+          <p>Thank you for your business! Payment is due within {{ invoice.due_days }} days.</p>
+          <p class="mt-2">Please make checks payable to "Your Company Name" and include the invoice number on your
+            payment.</p>
         </div>
       </div>
     </div>
 
-    <Dialog v-model:open="isDialogOpen">
+    <!-- Dialog for Delete (Hidden in Print) -->
+    <Dialog v-model:open="isDialogOpen" class="print:hidden">
       <DialogContent v-if="showComponent && invoice" class="sm:max-w-[425px]">
         <InvoiceDelete v-if="showComponent === InvoiceDelete" :invoice="invoice" @close="handleDeleteClose" />
       </DialogContent>
     </Dialog>
-  </Page>
+  </div>
 </template>
+
+<style scoped>
+@media print {
+  @page {
+    margin: 0.5in;
+    size: letter;
+  }
+
+  body {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .print\\:hidden {
+    display: none !important;
+  }
+
+  .print\\:shadow-none {
+    box-shadow: none !important;
+  }
+
+  .print\\:max-w-none {
+    max-width: none !important;
+  }
+
+  .print\\:mx-0 {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+  }
+
+  .print\\:p-0 {
+    padding: 0 !important;
+  }
+}
+
+/* Ensure proper table printing */
+table {
+  page-break-inside: avoid;
+}
+
+tr {
+  page-break-inside: avoid;
+  page-break-after: auto;
+}
+
+thead {
+  display: table-header-group;
+}
+
+tbody {
+  display: table-row-group;
+}
+</style>
