@@ -43,26 +43,29 @@ export function formatMoney(value: any): string {
 
 /**
  * Format number with locale-aware formatting (respects current locale)
+ * Accepts number, string, null, or undefined
  */
-export function formatNumber(value: number | null | undefined, decimals: number = 2): string {
-  if (value === null || value === undefined || Number.isNaN(value)) {
-    const i18n = getI18n()
-    if (i18n) {
-      return i18n.n(0, {
-        style: 'decimal',
-        minimumFractionDigits: decimals,
-        maximumFractionDigits: decimals,
-      })
-    }
-    // Fallback to Dutch formatting if i18n not available
-    return new Intl.NumberFormat('nl-NL', {
-      minimumFractionDigits: decimals,
-      maximumFractionDigits: decimals,
-    }).format(0)
+export function formatNumber(value: number | string | null | undefined, decimals: number = 2): string {
+  // Convert value to number if it's a string
+  let numValue: number
+  if (typeof value === 'string') {
+    numValue = Number.parseFloat(value)
   }
+  else if (value === null || value === undefined) {
+    numValue = 0
+  }
+  else {
+    numValue = Number(value)
+  }
+
+  // Handle NaN case
+  if (Number.isNaN(numValue)) {
+    numValue = 0
+  }
+
   const i18n = getI18n()
   if (i18n) {
-    return i18n.n(value, {
+    return i18n.n(numValue, {
       style: 'decimal',
       minimumFractionDigits: decimals,
       maximumFractionDigits: decimals,
@@ -72,7 +75,7 @@ export function formatNumber(value: number | null | undefined, decimals: number 
   return new Intl.NumberFormat('nl-NL', {
     minimumFractionDigits: decimals,
     maximumFractionDigits: decimals,
-  }).format(value)
+  }).format(numValue)
 }
 
 /**
