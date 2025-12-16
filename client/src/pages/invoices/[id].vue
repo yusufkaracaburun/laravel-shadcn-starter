@@ -17,6 +17,7 @@ import {
   Receipt,
   Trash2,
   User,
+  Hash,
 } from 'lucide-vue-next'
 import { computed, ref, shallowRef } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
@@ -26,16 +27,15 @@ import type { IInvoiceActivity, IInvoiceEmail, IInvoicePayment } from '@/service
 import Error from '@/components/custom-error.vue'
 import Loading from '@/components/loading.vue'
 import { Button } from '@/components/ui/button'
-import { Card } from '@/components/ui/card'
 import { Dialog, DialogContent } from '@/components/ui/dialog'
-import { StatusBadge } from '@/components/ui/status-badge'
-import { useGetInvoiceQuery } from '@/services/invoices.service'
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion'
+import { StatusBadge } from '@/components/ui/status-badge'
+import { useGetInvoiceQuery } from '@/services/invoices.service'
 
 import type { TInvoice } from './data/schema'
 
@@ -446,7 +446,7 @@ function downloadPDF() {
 
       <!-- Activity Timeline Sidebar -->
       <div class="w-full lg:w-80 shrink-0 print:hidden">
-        <Accordion type="single" collapsible class="w-full rounded-lg shadow-sm" default-value="item-activity">
+        <Accordion type="single" collapsible class="w-full rounded-lg shadow-sm bg-white" default-value="item-activity">
           <AccordionItem value="item-activity">
             <AccordionTrigger class="flex items-center justify-between p-6 cursor-pointer select-none">
               <h3 class="text-lg font-semibold text-gray-900 flex items-center gap-2">
@@ -474,7 +474,7 @@ function downloadPDF() {
                   </div>
 
                   <!-- Activity content -->
-                  <div class="flex-1 min-w-0 pb-4">
+                  <div class="flex-1 min-w-0">
                     <div class="bg-white rounded-lg border border-gray-100 p-3">
                       <p class="text-sm text-gray-900 font-medium mb-1">
                         {{ activity.description }}
@@ -518,7 +518,7 @@ function downloadPDF() {
         </Accordion>
 
         <!-- Payments Section -->
-        <Accordion type="single" collapsible class="w-full mt-4 rounded-lg shadow-sm">
+        <Accordion type="single" collapsible class="w-full mt-4 rounded-lg shadow-sm bg-white">
           <AccordionItem value="item-payments">
             <AccordionTrigger class="flex items-center justify-between p-6 cursor-pointer select-none">
               <h3 class="text-lg font-semibold text-gray-900 flex items-center gap-2">
@@ -536,13 +536,41 @@ function downloadPDF() {
                 </p>
               </div>
               <div v-else class="space-y-4">
-                <div v-for="payment in invoicePayments" :key="payment.id"
-                  class="bg-gray-50 rounded-lg border border-gray-100 p-4 text-sm">
-                  <div class="flex justify-between items-center mb-1">
-                    <span class="font-medium text-gray-900">{{ formatCurrency(payment.amount) }}</span>
-                    <span class="text-gray-500">{{ formatDate(payment.date) }}</span>
+                <div v-for="payment in invoicePayments" :key="payment.id" class="relative flex gap-3 pb-3 last:pb-0">
+                  <!-- Payment content -->
+                  <div class="flex-1 min-w-0">
+                    <div class="bg-white rounded-lg border border-gray-100 p-3">
+                      <div class="flex justify-between items-start mb-1">
+                        <span class="font-medium text-gray-900">{{ formatCurrency(payment.amount) }}</span>
+                        <div
+                          class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                          {{ payment.status_formatted?.label || payment.status }}
+                        </div>
+                      </div>
+
+                      <div class="flex items-center gap-2 text-xs text-gray-500 mb-2">
+                        <Hash class="w-3 h-3" />
+                        <span>{{ payment.payment_number }}</span>
+                        <span class="text-gray-300">•</span>
+                        <span>{{ formatDateTime(payment.date) }}</span>
+                      </div>
+
+                      <!-- Show properties changes if available -->
+                      <div class="mt-2 pt-2 border-t border-gray-100">
+                        <details class="text-xs rounded-md border border-gray-200 bg-white p-1 mt-2">
+                          <summary class="cursor-pointer text-gray-700 hover:text-gray-900 font-medium p-1 -m-1">
+                            View details
+                          </summary>
+                          <div class="mt-2 space-y-1">
+                            <div v-for="(value, key) in payment" :key="key" class="text-gray-700">
+                              <span class="font-medium">{{ key }}:</span>
+                              <span class="ml-1">{{ value }}</span>
+                            </div>
+                          </div>
+                        </details>
+                      </div>
+                    </div>
                   </div>
-                  <p class="text-gray-700">{{ payment.notes || 'No notes' }}</p>
                 </div>
               </div>
             </AccordionContent>
@@ -550,7 +578,7 @@ function downloadPDF() {
         </Accordion>
 
         <!-- Emails Section -->
-        <Accordion type="single" collapsible class="w-full mt-4 rounded-lg shadow-sm">
+        <Accordion type="single" collapsible class="w-full mt-4 rounded-lg shadow-sm bg-white">
           <AccordionItem value="item-emails">
             <AccordionTrigger class="flex items-center justify-between p-6 cursor-pointer select-none">
               <h3 class="text-lg font-semibold text-gray-900 flex items-center gap-2">
@@ -568,16 +596,23 @@ function downloadPDF() {
                 </p>
               </div>
               <div v-else class="space-y-4">
-                <div v-for="email in invoiceEmails" :key="email.id"
-                  class="bg-gray-50 rounded-lg border border-gray-100 p-4 text-sm">
-                  <div class="flex justify-between items-center mb-1">
-                    <span class="font-medium text-gray-900">{{ email.subject || 'No Subject' }}</span>
-                    <span class="text-gray-500">{{ formatDateTime(email.created_at) }}</span>
+                <div v-for="email in invoiceEmails" :key="email.id" class="relative flex gap-3 pb-3 last:pb-0">
+                  <!-- Empty div for timeline line consistency (can be styled as needed) -->
+                  <div class="flex flex-col items-center">
+                    <div class="w-3.5 h-3.5 bg-blue-500 rounded-full ring-4 ring-blue-100 shadow-sm"></div>
+                    <!-- No connecting line needed between emails unless explicitly requested -->
                   </div>
-                  <p class="text-gray-700">To: {{ email.to }}</p>
-                  <p v-if="email.attachments?.length" class="text-gray-700 mt-1">
-                    Attachments: {{ email.attachments.length }}
-                  </p>
+
+                  <!-- Email content -->
+                  <div class="flex-1 min-w-0">
+                    <div class="bg-white rounded-lg border border-gray-100 p-3">
+                      <div class="flex justify-between items-start mb-1">
+                        <span class="font-medium text-gray-900">{{ email.subject || 'No Subject' }}</span>
+                        <span class="text-xs text-gray-500">{{ formatDateTime(email.created_at) }}</span>
+                      </div>
+                      <p class="text-gray-700 text-sm">To: {{ email.to }}</p>
+                    </div>
+                  </div>
                 </div>
               </div>
             </AccordionContent>
