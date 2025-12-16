@@ -35,7 +35,8 @@ function formatCurrency(value: any): string {
 </script>
 
 <template>
-  <div class="bg-white shadow-sm border border-gray-200 print:shadow-none print:max-w-none print:mx-0 p-8 print:p-0">
+  <div
+    class="bg-white shadow-sm border border-gray-200 print:shadow-none print:max-w-none print:mx-0 p-8 print:p-0 m-8">
     <!-- Invoice Header -->
     <div class="border-b-2 border-gray-200 pb-8 mb-8">
       <div class="flex justify-between items-start">

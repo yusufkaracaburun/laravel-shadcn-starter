@@ -58,7 +58,7 @@ function downloadPDF() {
 </script>
 
 <template>
-  <div class="print:hidden bg-white px-6 py-4">
+  <div class="print:hidden bg-white p-4">
     <div class="flex items-center justify-between">
       <div class="flex items-center gap-4">
         <Button variant="outline" @click="router.back()">
