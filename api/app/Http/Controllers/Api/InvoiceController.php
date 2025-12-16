@@ -14,8 +14,8 @@ use App\Http\Requests\Invoices\IndexInvoiceRequest;
 use App\Http\Requests\Invoices\StoreInvoiceRequest;
 use App\Services\Contracts\InvoiceServiceInterface;
 use App\Http\Requests\Invoices\UpdateInvoiceRequest;
-use App\Http\Controllers\Concerns\UsesCachedResponses;
 use App\Services\Contracts\CustomerServiceInterface;
+use App\Http\Controllers\Concerns\UsesCachedResponses;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use App\Http\Controllers\Concerns\InvalidatesCachedModels;
 

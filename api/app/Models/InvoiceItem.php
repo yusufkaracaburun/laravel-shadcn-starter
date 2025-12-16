@@ -33,6 +33,16 @@ final class InvoiceItem extends BaseModel
     }
 
     /**
+     * Boot the model.
+     */
+    protected static function booted(): void
+    {
+        self::saving(function (InvoiceItem $item): void {
+            $item->calculateItemTotals();
+        });
+    }
+
+    /**
      * Scope a query to order items by sort_order.
      *
      * @param  Builder<InvoiceItem>  $query
@@ -42,16 +52,6 @@ final class InvoiceItem extends BaseModel
     protected function scopeOrdered(Builder $query): Builder
     {
         return $query->orderBy('sort_order')->orderBy('id');
-    }
-
-    /**
-     * Boot the model.
-     */
-    protected static function booted(): void
-    {
-        self::saving(function (InvoiceItem $item): void {
-            $item->calculateItemTotals();
-        });
     }
 
     /**

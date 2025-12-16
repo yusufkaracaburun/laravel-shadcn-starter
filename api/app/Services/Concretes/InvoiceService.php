@@ -65,6 +65,7 @@ final class InvoiceService extends BaseService implements InvoiceServiceInterfac
                 if (! isset($itemData['sort_order'])) {
                     $itemData['sort_order'] = $index;
                 }
+
                 $invoice->items()->create($itemData);
             }
 
@@ -99,6 +100,7 @@ final class InvoiceService extends BaseService implements InvoiceServiceInterfac
                         if (! isset($itemData['sort_order'])) {
                             $itemData['sort_order'] = $index;
                         }
+
                         $updated->items()->create($itemData);
                     }
                 }
@@ -128,9 +130,9 @@ final class InvoiceService extends BaseService implements InvoiceServiceInterfac
 
     public function getNextInvoiceNumber(string $prefix = 'INV', ?int $year = null): string
     {
-        $year = $year ?? now()->year;
+        $year ??= now()->year;
 
-        $lastNumber = Invoice::whereYear('date', $year)
+        $lastNumber = Invoice::query()->whereYear('date', $year)
             ->latest('date')
             ->value('invoice_number');
 
