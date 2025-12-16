@@ -11,11 +11,13 @@ use App\Observers\InvoiceObserver;
 use Spatie\Activitylog\LogOptions;
 use App\Traits\HasInvoiceNumberTrait;
 use Cknow\Money\Casts\MoneyDecimalCast;
+use Spatie\Activitylog\Models\Activity;
 use Illuminate\Database\Eloquent\Builder;
 use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 
 /**
@@ -93,11 +95,11 @@ final class Invoice extends BaseModel
     /**
      * Get all activity logs for this invoice.
      *
-     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
+     * @return MorphMany
      */
     public function activities()
     {
-        return $this->morphMany(\Spatie\Activitylog\Models\Activity::class, 'subject');
+        return $this->morphMany(Activity::class, 'subject');
     }
 
     /**

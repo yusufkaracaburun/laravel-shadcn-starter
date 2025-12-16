@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Http\Resources;
 
-use App\Models\InvoiceEmail;
 use App\Enums\EmailStatus;
+use App\Models\InvoiceEmail;
 use Illuminate\Http\Request;
 
 /**
@@ -25,7 +25,7 @@ final class InvoiceEmailResource extends BaseResource
             'invoice_id' => $this->invoice_id,
             'to' => $this->to,
             'subject' => $this->subject,
-            'body' => $this->body ? substr($this->body, 0, 200) . (strlen($this->body) > 200 ? '...' : '') : null,
+            'body' => $this->body ? mb_substr($this->body, 0, 200).(mb_strlen($this->body) > 200 ? '...' : '') : null,
             'status_formatted' => EmailStatus::toArrayItem($this->status),
             'status' => $this->status,
             'sent_at' => $this->formatDateTime($this->sent_at),
@@ -38,4 +38,3 @@ final class InvoiceEmailResource extends BaseResource
         ];
     }
 }
-

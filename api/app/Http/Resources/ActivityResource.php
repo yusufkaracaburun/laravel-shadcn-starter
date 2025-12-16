@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Http\Resources;
 
-use Spatie\Activitylog\Models\Activity;
 use Illuminate\Http\Request;
+use Spatie\Activitylog\Models\Activity;
 
 /**
  * @mixin Activity
@@ -31,13 +31,11 @@ final class ActivityResource extends BaseResource
             'subject_type' => $this->subject_type,
             'causer_id' => $this->causer_id,
             'causer_type' => $this->causer_type,
-            'causer' => $this->whenLoaded('causer', function () {
-                return $this->causer ? [
-                    'id' => $this->causer->id,
-                    'name' => $this->causer->name ?? $this->causer->email ?? 'System',
-                    'email' => $this->causer->email ?? null,
-                ] : null;
-            }),
+            'causer' => $this->whenLoaded('causer', fn (): ?array => $this->causer ? [
+                'id' => $this->causer->id,
+                'name' => $this->causer->name ?? $this->causer->email ?? 'System',
+                'email' => $this->causer->email ?? null,
+            ] : null),
             'properties' => [
                 'old' => $oldValues,
                 'attributes' => $newValues,
@@ -49,4 +47,3 @@ final class ActivityResource extends BaseResource
         ];
     }
 }
-
