@@ -76,7 +76,6 @@ const invoiceItems = computed(() => {
 <template>
   <div class="min-h-screen">
     <InvoiceNavbar :invoice="invoice" :invoice-id="invoiceId" />
-
     <!-- Main Content Area: Loading, Error, or Invoice -->
     <div v-if="isLoading" class="flex items-center justify-center min-h-[400px]">
       <Loading />

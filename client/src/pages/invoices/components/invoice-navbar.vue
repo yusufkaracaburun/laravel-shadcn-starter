@@ -92,10 +92,11 @@ function downloadPDF() {
     </div>
   </div>
 
+  <div class="border-b border-gray-200"></div>
+
   <Dialog v-model:open="isDialogOpen" class="print:hidden">
     <DialogContent v-if="showComponent && props.invoice" class="sm:max-w-[425px]">
       <InvoiceDelete v-if="showComponent === InvoiceDelete" :invoice="props.invoice" @close="handleDeleteClose" />
     </DialogContent>
   </Dialog>
 </template>
-
