@@ -82,7 +82,7 @@ function formatCurrency(value: any): string {
             Activity Timeline
           </h4>
         </AccordionTrigger>
-        <AccordionContent class="pt-2 pl-2 border-t border-gray-200">
+        <AccordionContent class="pt-2 border-t border-gray-200">
           <div v-if="invoiceActivities.length === 0" class="text-center py-8">
             <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-gray-200 mb-3">
               <Clock class="w-6 h-6 text-gray-400" />
@@ -92,7 +92,7 @@ function formatCurrency(value: any): string {
             </p>
           </div>
 
-          <div v-else class="space-y-4">
+          <div v-else class="px-1">
             <div v-for="(activity, index) in invoiceActivities" :key="activity.id"
               class="relative flex gap-3 pb-3 last:pb-0">
               <!-- Timeline line -->
@@ -151,7 +151,7 @@ function formatCurrency(value: any): string {
             Payments
           </h4>
         </AccordionTrigger>
-        <AccordionContent class="pt-2 pl-2 border-t border-gray-200">
+        <AccordionContent class="pt-2 border-t border-gray-200">
           <div v-if="invoicePayments.length === 0" class="text-center py-8">
             <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-gray-200 mb-3">
               <Clock class="w-6 h-6 text-gray-400" />
@@ -161,7 +161,7 @@ function formatCurrency(value: any): string {
             </p>
           </div>
 
-          <div v-else class="space-y-4">
+          <div v-else class="px-1">
             <div v-for="payment in invoicePayments" :key="payment.id" class="relative flex gap-3 pb-3 last:pb-0">
               <!-- Payment content -->
               <div class="flex-1 min-w-0">
@@ -244,21 +244,14 @@ function formatCurrency(value: any): string {
             Emails
           </h4>
         </AccordionTrigger>
-        <AccordionContent class="pt-2 pl-2 border-t border-gray-200">
+        <AccordionContent class="pt-2 border-t border-gray-200">
           <div v-if="invoiceEmails.length === 0" class="text-center py-8">
             <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-gray-200 mb-3">
               <Mail class="w-6 h-6 text-gray-400" />
             </div>
           </div>
-          <div v-else class="space-y-4">
+          <div v-else class="px-1">
             <div v-for="email in invoiceEmails" :key="email.id" class="relative flex gap-3 pb-3 last:pb-0">
-              <!-- Empty div for timeline line consistency (can be styled as needed) -->
-              <div class="flex flex-col items-center">
-                <div class="w-3.5 h-3.5 bg-blue-500 rounded-full ring-4 ring-blue-100 shadow-sm"></div>
-                <!-- No connecting line needed between emails unless explicitly requested -->
-              </div>
-
-              <!-- Email content -->
               <div class="flex-1 min-w-0">
                 <div class="bg-white rounded-lg border border-gray-100 p-3">
                   <div class="flex justify-between items-start mb-1">

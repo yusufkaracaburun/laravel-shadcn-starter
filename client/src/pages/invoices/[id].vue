@@ -92,12 +92,12 @@ const invoiceItems = computed(() => {
       </div>
     </div>
 
-    <div v-else-if="invoice" class="w-full min-h-screen bg-sidebar">
+    <div v-else-if="invoice" class="w-full min-h-screen">
       <div class="flex flex-row gap-4">
-        <div class="flex-1 m-8">
+        <div class="flex-1 m-4">
           <InvoicePreview :invoice="invoice" :invoice-items="invoiceItems" />
         </div>
-        <div class="w-1/4 bg-white min-h-screen">
+        <div class="w-1/4 min-h-screen">
           <InvoiceSidebar :invoice="invoice" />
         </div>
       </div>

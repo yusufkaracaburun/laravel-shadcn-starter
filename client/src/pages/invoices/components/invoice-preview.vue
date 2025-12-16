@@ -35,9 +35,9 @@ function formatCurrency(value: any): string {
 </script>
 
 <template>
-  <div class="flex-1 bg-white shadow-sm print:shadow-none print:max-w-none print:mx-0 p-8 print:p-0">
+  <div class="bg-white shadow-sm border border-gray-200 print:shadow-none print:max-w-none print:mx-0 p-8 print:p-0">
     <!-- Invoice Header -->
-    <div class="border-b-2 border-gray-900 pb-8 mb-8">
+    <div class="border-b-2 border-gray-200 pb-8 mb-8">
       <div class="flex justify-between items-start">
         <!-- Company Information -->
         <div class="flex-1">
@@ -164,8 +164,7 @@ function formatCurrency(value: any): string {
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(item, index) in invoiceItems" :key="item.id"
-            :class="index % 2 === 0 ? 'bg-white' : 'bg-gray-50'">
+          <tr v-for="(item, index) in invoiceItems" :key="item.id" :class="index % 2 === 0 ? 'bg-white' : 'bg-gray-50'">
             <td class="border border-gray-300 px-4 py-3">
               <div class="font-medium text-gray-900">
                 {{ item.description || '—' }}
@@ -203,14 +202,12 @@ function formatCurrency(value: any): string {
             <span>{{ formatCurrency(invoice.subtotal) }}</span>
           </div>
 
-          <div
-            v-if="invoice?.total_vat_0 && (typeof invoice.total_vat_0 === 'number' ? invoice.total_vat_0 > 0 : true)"
+          <div v-if="invoice?.total_vat_0 && (typeof invoice.total_vat_0 === 'number' ? invoice.total_vat_0 > 0 : true)"
             class="flex justify-between text-gray-700">
             <span>VAT 0%:</span>
             <span>{{ formatCurrency(invoice.total_vat_0) }}</span>
           </div>
-          <div
-            v-if="invoice?.total_vat_9 && (typeof invoice.total_vat_9 === 'number' ? invoice.total_vat_9 > 0 : true)"
+          <div v-if="invoice?.total_vat_9 && (typeof invoice.total_vat_9 === 'number' ? invoice.total_vat_9 > 0 : true)"
             class="flex justify-between text-gray-700">
             <span>VAT 9%:</span>
             <span>{{ formatCurrency(invoice.total_vat_9) }}</span>
@@ -241,7 +238,7 @@ function formatCurrency(value: any): string {
     </div>
 
     <!-- Footer -->
-    <div class="border-t border-gray-300 pt-6 text-center text-sm text-gray-600">
+    <div class="border-t border-gray-200 pt-6 text-center text-sm text-gray-600">
       <p>
         Thank you for your business! Payment is due within {{ invoice.due_days }} days.
       </p>
