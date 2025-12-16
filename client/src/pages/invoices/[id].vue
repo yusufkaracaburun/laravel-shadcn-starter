@@ -47,10 +47,10 @@ const {
 
 const invoice = computed(() => invoiceResponse.value?.data ?? null) as ComputedRef<
   | (TInvoice & {
-    payments?: IInvoicePayment[]
-    activities?: IInvoiceActivity[]
-    emails?: IInvoiceEmail[]
-  })
+      payments?: IInvoicePayment[]
+      activities?: IInvoiceActivity[]
+      emails?: IInvoiceEmail[]
+    })
   | null
 >
 
@@ -88,8 +88,13 @@ const invoiceItems = computed(() => {
 
       <div v-else-if="isError" class="flex items-center justify-center min-h-[400px]">
         <div class="text-center">
-          <Error :code="(error as any)?.response?.status || 500" subtitle="Failed to load invoice" :error="(error as any)?.message || 'We couldn\'t load the invoice details. Please try again.'
-            " />
+          <Error
+            :code="(error as any)?.response?.status || 500"
+            subtitle="Failed to load invoice"
+            :error="
+              (error as any)?.message || 'We couldn\'t load the invoice details. Please try again.'
+            "
+          />
           <Button class="mt-4 print:hidden" @click="refetch"> Try Again </Button>
         </div>
       </div>
