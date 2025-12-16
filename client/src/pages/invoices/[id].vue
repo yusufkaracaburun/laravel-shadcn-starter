@@ -27,6 +27,7 @@ import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent } from '@/components/ui/dialog'
 import { StatusBadge } from '@/components/ui/status-badge'
 import { useGetInvoiceQuery } from '@/services/invoices.service'
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
 
 import type { TInvoice } from './data/schema'
 
@@ -128,7 +129,8 @@ function formatDate(dateString: string | null): string {
     if (!Number.isNaN(date.getTime())) {
       return formatDateForPreview(dateString)
     }
-  } catch {
+  }
+  catch {
     // Ignore parsing errors
   }
   return dateString
@@ -160,13 +162,9 @@ function downloadPDF() {
             Back
           </Button>
           <div class="flex items-center gap-2">
-            <StatusBadge
-              v-if="invoice"
-              :status="invoice!.status"
-              type="invoice"
+            <StatusBadge v-if="invoice" :status="invoice!.status" type="invoice"
               :icon="statuses.find((s) => s.value === invoice!.status)?.icon"
-              :label="statuses.find((s) => s.value === invoice!.status)?.label"
-            />
+              :label="statuses.find((s) => s.value === invoice!.status)?.label" />
           </div>
         </div>
         <div class="flex items-center gap-2">
@@ -197,12 +195,8 @@ function downloadPDF() {
 
     <div v-else-if="isError" class="flex items-center justify-center min-h-[400px]">
       <div class="text-center">
-        <Error
-          :code="(error as any)?.response?.status || 500"
-          subtitle="Failed to load invoice"
-          :error="(error as any)?.message || 'We couldn\'t load the invoice details. Please try again.'
-          "
-        />
+        <Error :code="(error as any)?.response?.status || 500" subtitle="Failed to load invoice" :error="(error as any)?.message || 'We couldn\'t load the invoice details. Please try again.'
+          " />
         <Button class="mt-4 print:hidden" @click="refetch">
           Try Again
         </Button>
@@ -222,16 +216,22 @@ function downloadPDF() {
                   <Receipt class="w-6 h-6 text-white" />
                 </div>
                 <div>
-                  <h1 class="text-3xl font-bold text-gray-900">Your Company Name</h1>
-                  <p class="text-gray-600">123 Business Street<br>City, State 12345<br>Phone: (555) 123-4567<br>Email:
-                    info@company.com</p>
+                  <h1 class="text-3xl font-bold text-gray-900">
+                    Your Company Name
+                  </h1>
+                  <p class="text-gray-600">
+                    123 Business Street<br>City, State 12345<br>Phone: (555) 123-4567<br>Email:
+                    info@company.com
+                  </p>
                 </div>
               </div>
             </div>
 
             <!-- Invoice Details -->
             <div class="text-right">
-              <h2 class="text-4xl font-bold text-gray-900 mb-2">INVOICE</h2>
+              <h2 class="text-4xl font-bold text-gray-900 mb-2">
+                INVOICE
+              </h2>
               <div class="space-y-2">
                 <div>
                   <span class="font-semibold text-gray-700">Invoice #:</span>
@@ -259,16 +259,25 @@ function downloadPDF() {
           <div class="grid grid-cols-2 gap-8">
             <!-- Bill To -->
             <div>
-              <h3 class="text-lg font-semibold text-gray-900 mb-3">Bill To:</h3>
+              <h3 class="text-lg font-semibold text-gray-900 mb-3">
+                Bill To:
+              </h3>
               <div class="text-gray-700">
-                <p class="font-semibold text-lg mb-1">{{ invoice.customer?.name || `Customer #${invoice.customer_id}` }}
+                <p class="font-semibold text-lg mb-1">
+                  {{ invoice.customer?.name || `Customer #${invoice.customer_id}` }}
                 </p>
-                <p v-if="invoice.customer?.type" class="text-sm text-gray-600 mb-2">{{ invoice.customer.type }}</p>
+                <p v-if="invoice.customer?.type" class="text-sm text-gray-600 mb-2">
+                  {{ invoice.customer.type }}
+                </p>
 
                 <div v-if="invoice.customer?.formatted_address?.length" class="text-sm space-y-1">
-                  <p v-for="(line, index) in invoice.customer.formatted_address" :key="index">{{ line }}</p>
+                  <p v-for="(line, index) in invoice.customer.formatted_address" :key="index">
+                    {{ line }}
+                  </p>
                 </div>
-                <p v-else-if="invoice.customer?.address" class="text-sm">{{ invoice.customer.address }}</p>
+                <p v-else-if="invoice.customer?.address" class="text-sm">
+                  {{ invoice.customer.address }}
+                </p>
 
                 <div class="mt-3 space-y-1 text-sm">
                   <p v-if="invoice.customer?.primary_contact?.name">
@@ -286,9 +295,13 @@ function downloadPDF() {
 
             <!-- Ship To (if different) -->
             <div>
-              <h3 class="text-lg font-semibold text-gray-900 mb-3">Ship To:</h3>
+              <h3 class="text-lg font-semibold text-gray-900 mb-3">
+                Ship To:
+              </h3>
               <div class="text-gray-700">
-                <p class="text-sm">Same as billing address</p>
+                <p class="text-sm">
+                  Same as billing address
+                </p>
                 <!-- You can add shipping address logic here if needed -->
               </div>
             </div>
@@ -300,30 +313,52 @@ function downloadPDF() {
           <table class="w-full border-collapse">
             <thead>
               <tr class="bg-gray-50">
-                <th class="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-900">Description</th>
-                <th class="border border-gray-300 px-4 py-3 text-right font-semibold text-gray-900">Qty</th>
-                <th class="border border-gray-300 px-4 py-3 text-right font-semibold text-gray-900">Unit Price</th>
-                <th class="border border-gray-300 px-4 py-3 text-right font-semibold text-gray-900">VAT Rate</th>
-                <th class="border border-gray-300 px-4 py-3 text-right font-semibold text-gray-900">VAT Amount</th>
-                <th class="border border-gray-300 px-4 py-3 text-right font-semibold text-gray-900">Total</th>
+                <th class="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-900">
+                  Description
+                </th>
+                <th class="border border-gray-300 px-4 py-3 text-right font-semibold text-gray-900">
+                  Qty
+                </th>
+                <th class="border border-gray-300 px-4 py-3 text-right font-semibold text-gray-900">
+                  Unit Price
+                </th>
+                <th class="border border-gray-300 px-4 py-3 text-right font-semibold text-gray-900">
+                  VAT Rate
+                </th>
+                <th class="border border-gray-300 px-4 py-3 text-right font-semibold text-gray-900">
+                  VAT Amount
+                </th>
+                <th class="border border-gray-300 px-4 py-3 text-right font-semibold text-gray-900">
+                  Total
+                </th>
               </tr>
             </thead>
             <tbody>
               <tr v-for="(item, index) in invoiceItems" :key="item.id"
                 :class="index % 2 === 0 ? 'bg-white' : 'bg-gray-50'">
                 <td class="border border-gray-300 px-4 py-3">
-                  <div class="font-medium text-gray-900">{{ item.description || '—' }}</div>
-                  <div v-if="item.unit" class="text-sm text-gray-600 mt-1">{{ item.unit }}</div>
+                  <div class="font-medium text-gray-900">
+                    {{ item.description || '—' }}
+                  </div>
+                  <div v-if="item.unit" class="text-sm text-gray-600 mt-1">
+                    {{ item.unit }}
+                  </div>
                 </td>
-                <td class="border border-gray-300 px-4 py-3 text-right text-gray-900">{{ formatNumber(item.quantity, 2)
-                  }}</td>
-                <td class="border border-gray-300 px-4 py-3 text-right text-gray-900">{{ formatCurrency(item.unit_price)
-                  }}</td>
-                <td class="border border-gray-300 px-4 py-3 text-right text-gray-900">{{ item.vat_rate }}%</td>
-                <td class="border border-gray-300 px-4 py-3 text-right text-gray-900">{{ formatCurrency(item.total_vat)
-                  }}</td>
-                <td class="border border-gray-300 px-4 py-3 text-right font-semibold text-gray-900">{{
-                  formatCurrency(item.total_incl_vat) }}</td>
+                <td class="border border-gray-300 px-4 py-3 text-right text-gray-900">
+                  {{ formatNumber(item.quantity, 2) }}
+                </td>
+                <td class="border border-gray-300 px-4 py-3 text-right text-gray-900">
+                  {{ formatCurrency(item.unit_price) }}
+                </td>
+                <td class="border border-gray-300 px-4 py-3 text-right text-gray-900">
+                  {{ item.vat_rate }}%
+                </td>
+                <td class="border border-gray-300 px-4 py-3 text-right text-gray-900">
+                  {{ formatCurrency(item.total_vat) }}
+                </td>
+                <td class="border border-gray-300 px-4 py-3 text-right font-semibold text-gray-900">
+                  {{ formatCurrency(item.total_incl_vat) }}
+                </td>
               </tr>
             </tbody>
           </table>
@@ -367,7 +402,9 @@ function downloadPDF() {
 
         <!-- Notes Section -->
         <div v-if="invoice.notes" class="mb-8">
-          <h3 class="text-lg font-semibold text-gray-900 mb-3">Notes:</h3>
+          <h3 class="text-lg font-semibold text-gray-900 mb-3">
+            Notes:
+          </h3>
           <div class="bg-gray-50 p-4 rounded border text-gray-700 whitespace-pre-wrap">
             {{ invoice.notes }}
           </div>
@@ -375,15 +412,19 @@ function downloadPDF() {
 
         <!-- Footer -->
         <div class="border-t border-gray-300 pt-6 text-center text-sm text-gray-600">
-          <p>Thank you for your business! Payment is due within {{ invoice.due_days }} days.</p>
-          <p class="mt-2">Please make checks payable to "Your Company Name" and include the invoice number on your
-            payment.          </p>
+          <p>
+            Thank you for your business! Payment is due within {{ invoice.due_days }} days.
+          </p>
+          <p class="mt-2">
+            Please make checks payable to "Your Company Name" and include the invoice number on your
+            payment.
+          </p>
         </div>
       </div>
 
       <!-- Activity Timeline Sidebar -->
-      <div class="w-[320px] shrink-0 print:hidden">
-        <div class="bg-gray-50 rounded-lg p-6 sticky top-8">
+      <div class="w-full lg:w-80 shrink-0 print:hidden">
+        <div class="bg-white rounded-lg p-6">
           <h3 class="text-lg font-semibold text-gray-900 mb-6 flex items-center gap-2">
             <Clock class="w-5 h-5 text-gray-600" />
             Activity Timeline
@@ -393,22 +434,26 @@ function downloadPDF() {
             <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-gray-200 mb-3">
               <Clock class="w-6 h-6 text-gray-400" />
             </div>
-            <p class="text-sm text-gray-500">No activity yet</p>
+            <p class="text-sm text-gray-500">
+              No activity yet
+            </p>
           </div>
 
-          <div v-else class="space-y-4 max-h-96 overflow-y-auto">
+          <div v-else class="space-y-4">
             <div v-for="(activity, index) in invoiceActivities" :key="activity.id"
               class="relative flex gap-4 pb-4 last:pb-0">
               <!-- Timeline line -->
               <div class="flex flex-col items-center">
-                <div class="w-3 h-3 bg-blue-500 rounded-full border-2 border-white shadow-sm"></div>
-                <div v-if="index < invoiceActivities.length - 1" class="w-0.5 h-full bg-gray-200 mt-2"></div>
+                <div class="w-3.5 h-3.5 bg-blue-500 rounded-full ring-4 ring-blue-100 shadow-sm"></div>
+                <div v-if="index < invoiceActivities.length - 1" class="w-0.5 h-full bg-gray-300 mt-2"></div>
               </div>
 
               <!-- Activity content -->
               <div class="flex-1 min-w-0 pb-4">
-                <div class="bg-white rounded-lg p-3 shadow-sm border border-gray-100">
-                  <p class="text-sm text-gray-900 font-medium mb-1">{{ activity.description }}</p>
+                <div class="bg-white rounded-lg border border-gray-100 p-4">
+                  <p class="text-sm text-gray-900 font-medium mb-1">
+                    {{ activity.description }}
+                  </p>
 
                   <div class="flex items-center gap-2 text-xs text-gray-500 mb-2">
                     <User class="w-3 h-3" />
@@ -426,8 +471,8 @@ function downloadPDF() {
                   <!-- Show properties changes if available -->
                   <div v-if="activity.properties && Object.keys(activity.properties.attributes || {}).length > 0"
                     class="mt-2 pt-2 border-t border-gray-100">
-                    <details class="text-xs">
-                      <summary class="cursor-pointer text-gray-600 hover:text-gray-800 font-medium">
+                    <details class="text-xs rounded-md border border-gray-200 bg-white p-2 mt-2">
+                      <summary class="cursor-pointer text-gray-700 hover:text-gray-900 font-medium p-1 -m-1">
                         View changes
                       </summary>
                       <div class="mt-2 space-y-1">
@@ -511,4 +556,3 @@ tbody {
   display: table-row-group;
 }
 </style>
-
