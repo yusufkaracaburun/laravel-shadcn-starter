@@ -12,10 +12,10 @@ import {
   CreditCard,
   Download,
   FilePenLine,
+  Hash,
   Mail,
   Printer,
   Receipt,
-  Hash,
   Trash2,
   User,
 } from 'lucide-vue-next'
@@ -27,15 +27,16 @@ import type { IInvoiceActivity, IInvoiceEmail, IInvoicePayment } from '@/service
 import Error from '@/components/custom-error.vue'
 import Loading from '@/components/loading.vue'
 import { Button } from '@/components/ui/button'
-import { Dialog, DialogContent } from '@/components/ui/dialog'
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion'
+import { Dialog, DialogContent } from '@/components/ui/dialog'
 import { StatusBadge } from '@/components/ui/status-badge'
 import { useGetInvoiceQuery } from '@/services/invoices.service'
+import { getPaymentStatusColor } from '@/utils/status-colors'
 
 import type { TInvoice } from './data/schema'
 
@@ -543,7 +544,9 @@ function downloadPDF() {
                       <div class="flex justify-between items-start mb-1">
                         <span class="font-medium text-gray-900">{{ formatCurrency(payment.amount) }}</span>
                         <div
-                          class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                          :class="`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getPaymentStatusColor(payment.status)}`">
+                          <component :is="statuses.find((s) => s.value === payment.status)?.icon"
+                            class="w-3 h-3 mr-1" />
                           {{ payment.status_formatted?.label || payment.status }}
                         </div>
                       </div>
