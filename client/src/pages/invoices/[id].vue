@@ -8,11 +8,13 @@ import type { ComputedRef } from 'vue'
 
 import {
   ArrowLeft,
+  Clock,
   Download,
   FilePenLine,
   Printer,
   Receipt,
   Trash2,
+  User,
 } from 'lucide-vue-next'
 import { computed, ref, shallowRef } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
@@ -30,7 +32,7 @@ import type { TInvoice } from './data/schema'
 
 import InvoiceDelete from './components/invoice-delete.vue'
 import { statuses } from './data/data'
-import { formatDateForPreview, formatMoney, formatNumber } from './utils/formatters'
+import { formatDateForPreview, formatDateTime, formatMoney, formatNumber } from './utils/formatters'
 
 const route = useRoute()
 const router = useRouter()
@@ -86,7 +88,13 @@ const invoiceItems = computed(() => {
   return []
 })
 
-// Note: Payment, activity, and email sections are removed from the invoice layout for cleaner PDF export
+// Activity logs for the timeline sidebar
+const invoiceActivities = computed(() => {
+  if (!invoice.value?.activities) {
+    return []
+  }
+  return Array.isArray(invoice.value.activities) ? invoice.value.activities : []
+})
 
 const showComponent = shallowRef<typeof InvoiceDelete | null>(null)
 const isDialogOpen = ref(false)
@@ -125,6 +133,7 @@ function formatDate(dateString: string | null): string {
   }
   return dateString
 }
+
 function formatCurrency(value: any): string {
   return formatMoney(value)
 }
@@ -151,9 +160,13 @@ function downloadPDF() {
             Back
           </Button>
           <div class="flex items-center gap-2">
-            <StatusBadge v-if="invoice" :status="invoice!.status" type="invoice"
+            <StatusBadge
+              v-if="invoice"
+              :status="invoice!.status"
+              type="invoice"
               :icon="statuses.find((s) => s.value === invoice!.status)?.icon"
-              :label="statuses.find((s) => s.value === invoice!.status)?.label" />
+              :label="statuses.find((s) => s.value === invoice!.status)?.label"
+            />
           </div>
         </div>
         <div class="flex items-center gap-2">
@@ -177,24 +190,28 @@ function downloadPDF() {
       </div>
     </div>
 
-    <!-- Invoice Content -->
-    <div class="max-w-4xl mx-auto bg-white shadow-sm print:shadow-none print:max-w-none print:mx-0">
-      <!-- Loading State -->
-      <div v-if="isLoading" class="flex items-center justify-center min-h-[400px]">
-        <Loading />
-      </div>
+    <!-- Main Content Area: Loading, Error, or Invoice -->
+    <div v-if="isLoading" class="flex items-center justify-center min-h-[400px]">
+      <Loading />
+    </div>
 
-      <!-- Error State -->
-      <div v-else-if="isError" class="flex items-center justify-center min-h-[400px]">
-        <div class="text-center">
-          <Error :code="(error as any)?.response?.status || 500" subtitle="Failed to load invoice" :error="(error as any)?.message || 'We couldn\'t load the invoice details. Please try again.'
-            " />
-          <Button class="mt-4 print:hidden" @click="refetch">Try Again</Button>
-        </div>
+    <div v-else-if="isError" class="flex items-center justify-center min-h-[400px]">
+      <div class="text-center">
+        <Error
+          :code="(error as any)?.response?.status || 500"
+          subtitle="Failed to load invoice"
+          :error="(error as any)?.message || 'We couldn\'t load the invoice details. Please try again.'
+          "
+        />
+        <Button class="mt-4 print:hidden" @click="refetch">
+          Try Again
+        </Button>
       </div>
+    </div>
 
-      <!-- Invoice Content -->
-      <div v-else-if="invoice" class="p-8 print:p-0">
+    <div v-else-if="invoice" class="max-w-7xl mx-auto flex gap-8 p-8 print:p-0 print:gap-0 print:flex-col lg:flex-row">
+      <!-- Main Invoice Content Wrapper -->
+      <div class="flex-1 bg-white shadow-sm print:shadow-none print:max-w-none print:mx-0 p-8 print:p-0">
         <!-- Invoice Header -->
         <div class="border-b-2 border-gray-900 pb-8 mb-8">
           <div class="flex justify-between items-start">
@@ -299,12 +316,12 @@ function downloadPDF() {
                   <div v-if="item.unit" class="text-sm text-gray-600 mt-1">{{ item.unit }}</div>
                 </td>
                 <td class="border border-gray-300 px-4 py-3 text-right text-gray-900">{{ formatNumber(item.quantity, 2)
-                }}</td>
+                  }}</td>
                 <td class="border border-gray-300 px-4 py-3 text-right text-gray-900">{{ formatCurrency(item.unit_price)
-                }}</td>
+                  }}</td>
                 <td class="border border-gray-300 px-4 py-3 text-right text-gray-900">{{ item.vat_rate }}%</td>
                 <td class="border border-gray-300 px-4 py-3 text-right text-gray-900">{{ formatCurrency(item.total_vat)
-                }}</td>
+                  }}</td>
                 <td class="border border-gray-300 px-4 py-3 text-right font-semibold text-gray-900">{{
                   formatCurrency(item.total_incl_vat) }}</td>
               </tr>
@@ -360,12 +377,80 @@ function downloadPDF() {
         <div class="border-t border-gray-300 pt-6 text-center text-sm text-gray-600">
           <p>Thank you for your business! Payment is due within {{ invoice.due_days }} days.</p>
           <p class="mt-2">Please make checks payable to "Your Company Name" and include the invoice number on your
-            payment.</p>
+            payment.          </p>
+        </div>
+      </div>
+
+      <!-- Activity Timeline Sidebar -->
+      <div class="w-[320px] shrink-0 print:hidden">
+        <div class="bg-gray-50 rounded-lg p-6 sticky top-8">
+          <h3 class="text-lg font-semibold text-gray-900 mb-6 flex items-center gap-2">
+            <Clock class="w-5 h-5 text-gray-600" />
+            Activity Timeline
+          </h3>
+
+          <div v-if="invoiceActivities.length === 0" class="text-center py-8">
+            <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-gray-200 mb-3">
+              <Clock class="w-6 h-6 text-gray-400" />
+            </div>
+            <p class="text-sm text-gray-500">No activity yet</p>
+          </div>
+
+          <div v-else class="space-y-4 max-h-96 overflow-y-auto">
+            <div v-for="(activity, index) in invoiceActivities" :key="activity.id"
+              class="relative flex gap-4 pb-4 last:pb-0">
+              <!-- Timeline line -->
+              <div class="flex flex-col items-center">
+                <div class="w-3 h-3 bg-blue-500 rounded-full border-2 border-white shadow-sm"></div>
+                <div v-if="index < invoiceActivities.length - 1" class="w-0.5 h-full bg-gray-200 mt-2"></div>
+              </div>
+
+              <!-- Activity content -->
+              <div class="flex-1 min-w-0 pb-4">
+                <div class="bg-white rounded-lg p-3 shadow-sm border border-gray-100">
+                  <p class="text-sm text-gray-900 font-medium mb-1">{{ activity.description }}</p>
+
+                  <div class="flex items-center gap-2 text-xs text-gray-500 mb-2">
+                    <User class="w-3 h-3" />
+                    <span>{{ activity.causer?.name || 'System' }}</span>
+                    <span class="text-gray-300">•</span>
+                    <span>{{ formatDateTime(activity.created_at) }}</span>
+                  </div>
+
+                  <!-- Event badge -->
+                  <div v-if="activity.event"
+                    class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                    {{ activity.event }}
+                  </div>
+
+                  <!-- Show properties changes if available -->
+                  <div v-if="activity.properties && Object.keys(activity.properties.attributes || {}).length > 0"
+                    class="mt-2 pt-2 border-t border-gray-100">
+                    <details class="text-xs">
+                      <summary class="cursor-pointer text-gray-600 hover:text-gray-800 font-medium">
+                        View changes
+                      </summary>
+                      <div class="mt-2 space-y-1">
+                        <div v-for="(value, key) in activity.properties.attributes" :key="key" class="text-gray-700">
+                          <span class="font-medium">{{ key.replace(/_/g, ' ') }}:</span>
+                          <span class="ml-1">{{ typeof value === 'object' ? JSON.stringify(value) : value }}</span>
+                        </div>
+                      </div>
+                    </details>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div v-if="invoiceActivities.length > 0" class="mt-4 pt-4 border-t border-gray-200">
+              <p class="text-xs text-gray-500 text-center">
+                {{ invoiceActivities.length }} activit{{ invoiceActivities.length === 1 ? 'y' : 'ies' }} logged
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-
-    <!-- Dialog for Delete (Hidden in Print) -->
     <Dialog v-model:open="isDialogOpen" class="print:hidden">
       <DialogContent v-if="showComponent && invoice" class="sm:max-w-[425px]">
         <InvoiceDelete v-if="showComponent === InvoiceDelete" :invoice="invoice" @close="handleDeleteClose" />
@@ -426,3 +511,4 @@ tbody {
   display: table-row-group;
 }
 </style>
+
