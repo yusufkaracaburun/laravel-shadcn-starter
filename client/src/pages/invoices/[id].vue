@@ -175,9 +175,9 @@ function downloadPDF() {
 </script>
 
 <template>
-  <div class="min-h-screen bg-white">
+  <div class="min-h-screen">
     <!-- Navigation Bar (Hidden in Print) -->
-    <div class="print:hidden bg-white border-b border-gray-200 px-6 py-4">
+    <div class="print:hidden bg-white px-6 py-4">
       <div class="flex items-center justify-between">
         <div class="flex items-center gap-4">
           <Button variant="outline" @click="router.back()">
@@ -226,10 +226,9 @@ function downloadPDF() {
       </div>
     </div>
 
-    <div v-else-if="invoice" class="w-full min-h-screen bg-gray-100 print:bg-white">
-      <div class="max-w-7xl mx-auto flex gap-8 p-8 print:p-0 print:gap-0 print:flex-col lg:flex-row">
-        <!-- Main Invoice Content Wrapper -->
-        <div class="flex-1 bg-white shadow-sm print:shadow-none print:max-w-none print:mx-0 p-8 print:p-0">
+    <div v-else-if="invoice" class="w-full min-h-screen">
+      <div class="max-w-7xl mx-auto flex print:p-0 print:gap-0 print:flex-col lg:flex-row">
+        <div class="flex-1 shadow-sm print:shadow-none print:max-w-none print:mx-0 p-8 me-8 print:p-0">
           <!-- Invoice Header -->
           <div class="border-b-2 border-gray-900 pb-8 mb-8">
             <div class="flex justify-between items-start">
@@ -445,10 +444,7 @@ function downloadPDF() {
             </p>
           </div>
         </div>
-
-        <!-- Activity Timeline Sidebar -->
-        <div
-          class="w-full lg:w-80 shrink-0 print:hidden rounded-lg shadow-sm bg-white p-4 sticky top-8 self-start h-fit">
+        <div class="flex-1 bg-white shadow-sm print:shadow-none print:max-w-none print:mx-0 p-8 print:p-0">
           <Accordion type="single" collapsible class="w-full mb-4" default-value="item-activity">
             <AccordionItem value="item-activity">
               <AccordionTrigger class="flex items-center justify-between p-6 cursor-pointer select-none">
@@ -508,7 +504,7 @@ function downloadPDF() {
                                 class="text-gray-700">
                                 <span class="font-medium">{{ key.replace(/_/g, ' ') }}:</span>
                                 <span class="ml-1">{{ typeof value === 'object' ? JSON.stringify(value) : value
-                                }}</span>
+                                  }}</span>
                               </div>
                             </div>
                           </details>
@@ -587,7 +583,8 @@ function downloadPDF() {
                                 <span v-if="payment.provider" class="font-medium">Provider:</span>
                                 <span v-if="payment.provider">{{ payment.provider }}</span>
 
-                                <span v-if="payment.provider_reference" class="font-medium">Provider Reference:</span>
+                                <span v-if="payment.provider_reference" class="font-medium">Provider
+                                  Reference:</span>
                                 <span v-if="payment.provider_reference">{{ payment.provider_reference }}</span>
 
                                 <span class="font-medium">Status:</span>
