@@ -75,6 +75,7 @@ const invoiceItems = computed(() => {
 
 <template>
   <div class="min-h-screen">
+    <InvoiceNavbar :invoice="invoice" :invoice-id="invoiceId" />
     <div v-if="isLoading" class="flex items-center justify-center min-h-[400px]">
       <Loading />
     </div>
@@ -92,7 +93,6 @@ const invoiceItems = computed(() => {
     <div v-else-if="invoice" class="flex flex-1 flex-col items-center justify-center">
       <div class="w-full flex flex-row">
         <div class="flex-1">
-          <InvoiceNavbar :invoice="invoice" :invoice-id="invoiceId" />
           <InvoicePreview :invoice="invoice" :invoice-items="invoiceItems" />
         </div>
         <div class="w-1/4 min-h-screen border-l border-gray-200">
