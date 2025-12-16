@@ -72,7 +72,7 @@ function formatCurrency(value: any): string {
 </script>
 
 <template>
-  <div class="print:max-w-none print:mx-0 pl-4 print:p-0">
+  <div class="print:max-w-none print:mx-0 print:p-0 p-4">
     <Accordion type="single" collapsible class="w-full" default-value="item-activity">
 
       <AccordionItem value="item-activity">
@@ -258,7 +258,35 @@ function formatCurrency(value: any): string {
                     <span class="font-medium text-gray-900">{{ email.subject || 'No Subject' }}</span>
                     <span class="text-xs text-gray-500">{{ formatDateTime(email.created_at) }}</span>
                   </div>
-                  <p class="text-gray-700 text-sm">To: {{ email.to }}</p>
+
+                  <div class="mt-2 pt-2 border-t border-gray-100">
+                    <details class="text-xs rounded-md border border-gray-200 bg-white p-1 mt-2">
+                      <summary class="cursor-pointer text-gray-700 hover:text-gray-900 font-medium p-1 -m-1">
+                        View details
+                      </summary>
+                      <div class="mt-2 space-y-1 text-gray-700">
+                        <div class="grid grid-cols-[auto_1fr] gap-x-2">
+                          <span class="font-medium">Subject:</span>
+                          <span>{{ email.subject || 'N/A' }}</span>
+
+                          <span class="font-medium">To:</span>
+                          <span>{{ email.to || 'N/A' }}</span>
+
+                          <span v-if="email.cc" class="font-medium">CC:</span>
+                          <span v-if="email.cc">{{ email.cc }}</span>
+
+                          <span v-if="email.bcc" class="font-medium">BCC:</span>
+                          <span v-if="email.bcc">{{ email.bcc }}</span>
+
+                          <span class="font-medium">Created At:</span>
+                          <span>{{ formatDateTime(email.created_at) }}</span>
+
+                          <span class="font-medium">Updated At:</span>
+                          <span>{{ formatDateTime(email.updated_at) }}</span>
+                        </div>
+                      </div>
+                    </details>
+                  </div>
                 </div>
               </div>
             </div>
