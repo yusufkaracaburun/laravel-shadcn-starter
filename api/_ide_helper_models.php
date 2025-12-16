@@ -196,7 +196,7 @@ namespace App\Models{
 
 namespace App\Models{
 /**
- * Invoice item model.
+ * InvoiceItem model.
  * 
  * Represents a line item on an invoice.
  *
@@ -215,11 +215,11 @@ namespace App\Models{
  * @property int|null $item_id
  * @property string|null $unit
  * @property-read \App\Models\Invoice $invoice
- * @property-read \App\Models\Item|null $item
  * @method static \Database\Factories\InvoiceItemFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem scopeOrdered()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem whereDescription($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem whereId($value)

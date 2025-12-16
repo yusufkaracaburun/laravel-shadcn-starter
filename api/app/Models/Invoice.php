@@ -8,9 +8,11 @@ use App\Enums\InvoiceStatus;
 use App\Traits\HasDatesScope;
 use App\Traits\HasMoneyTrait;
 use App\Observers\InvoiceObserver;
+use Spatie\Activitylog\LogOptions;
 use App\Traits\HasInvoiceNumberTrait;
 use Cknow\Money\Casts\MoneyDecimalCast;
 use Illuminate\Database\Eloquent\Builder;
+use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -27,6 +29,7 @@ final class Invoice extends BaseModel
     use HasDatesScope;
     use HasInvoiceNumberTrait;
     use HasMoneyTrait;
+    use LogsActivity;
 
     /**
      * Searchable fields for this model.
@@ -39,6 +42,13 @@ final class Invoice extends BaseModel
         'customer.name',
         'customer.email',
     ];
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnlyDirty()
+            ->dontSubmitEmptyLogs();
+    }
 
     /**
      * Get the customer this invoice belongs to.
