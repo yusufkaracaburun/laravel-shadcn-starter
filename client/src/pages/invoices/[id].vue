@@ -74,31 +74,29 @@ const invoiceItems = computed(() => {
 </script>
 
 <template>
-  <div class="min-h-screen">
-    <InvoiceNavbar :invoice="invoice" :invoice-id="invoiceId" />
-    <!-- Main Content Area: Loading, Error, or Invoice -->
-    <div v-if="isLoading" class="flex items-center justify-center min-h-[400px]">
-      <Loading />
-    </div>
+  <InvoiceNavbar :invoice="invoice" :invoice-id="invoiceId" />
+  <!-- Main Content Area: Loading, Error, or Invoice -->
+  <div v-if="isLoading" class="flex items-center justify-center min-h-[400px]">
+    <Loading />
+  </div>
 
-    <div v-else-if="isError" class="flex items-center justify-center min-h-[400px]">
-      <div class="text-center">
-        <Error :code="(error as any)?.response?.status || 500" subtitle="Failed to load invoice" :error="(error as any)?.message || 'We couldn\'t load the invoice details. Please try again.'
-          " />
-        <Button class="mt-4 print:hidden" @click="refetch">
-          Try Again
-        </Button>
+  <div v-else-if="isError" class="flex items-center justify-center min-h-[400px]">
+    <div class="text-center">
+      <Error :code="(error as any)?.response?.status || 500" subtitle="Failed to load invoice" :error="(error as any)?.message || 'We couldn\'t load the invoice details. Please try again.'
+        " />
+      <Button class="mt-4 print:hidden" @click="refetch">
+        Try Again
+      </Button>
+    </div>
+  </div>
+
+  <div v-else-if="invoice" class="w-full min-h-screen">
+    <div class="flex flex-row gap-4">
+      <div class="flex-1 m-4">
+        <InvoicePreview :invoice="invoice" :invoice-items="invoiceItems" />
       </div>
-    </div>
-
-    <div v-else-if="invoice" class="w-full min-h-screen">
-      <div class="flex flex-row gap-4">
-        <div class="flex-1 m-4">
-          <InvoicePreview :invoice="invoice" :invoice-items="invoiceItems" />
-        </div>
-        <div class="w-1/4 min-h-screen">
-          <InvoiceSidebar :invoice="invoice" />
-        </div>
+      <div class="w-1/4 min-h-screen border-l border-gray-200">
+        <InvoiceSidebar :invoice="invoice" />
       </div>
     </div>
   </div>
