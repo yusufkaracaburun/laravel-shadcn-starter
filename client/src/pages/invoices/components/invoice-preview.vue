@@ -5,7 +5,12 @@ import { computed } from 'vue'
 import { Receipt } from 'lucide-vue-next'
 
 import type { TInvoice } from '@/pages/invoices/data/schema'
-import { formatDateForPreview, formatDateTime, formatMoney, formatNumber } from '@/pages/invoices/utils/formatters'
+import {
+  formatDateForPreview,
+  formatDateTime,
+  formatMoney,
+  formatNumber,
+} from '@/pages/invoices/utils/formatters'
 import type { IInvoiceItem } from '@/services/invoices.service'
 
 const props = defineProps<{
@@ -22,8 +27,7 @@ function formatDate(dateString: string | null): string {
     if (!Number.isNaN(date.getTime())) {
       return formatDateForPreview(dateString)
     }
-  }
-  catch {
+  } catch {
     // Ignore parsing errors
   }
   return dateString
@@ -36,7 +40,8 @@ function formatCurrency(value: any): string {
 
 <template>
   <div
-    class="bg-white shadow-sm border border-gray-200 print:shadow-none print:max-w-none print:mx-0 p-8 print:p-0 m-8">
+    class="bg-white shadow-sm border border-gray-200 print:shadow-none print:max-w-none print:mx-0 p-8 print:p-0 m-8"
+  >
     <!-- Invoice Header -->
     <div class="border-b-2 border-gray-200 pb-8 mb-8">
       <div class="flex justify-between items-start">
@@ -47,11 +52,9 @@ function formatCurrency(value: any): string {
               <Receipt class="w-6 h-6 text-white" />
             </div>
             <div>
-              <h1 class="text-3xl font-bold text-gray-900">
-                Your Company Name
-              </h1>
+              <h1 class="text-3xl font-bold text-gray-900">Your Company Name</h1>
               <p class="text-gray-600">
-                123 Business Street<br>City, State 12345<br>Phone: (555) 123-4567<br>Email:
+                123 Business Street<br />City, State 12345<br />Phone: (555) 123-4567<br />Email:
                 info@company.com
               </p>
             </div>
@@ -60,13 +63,13 @@ function formatCurrency(value: any): string {
 
         <!-- Invoice Details -->
         <div class="text-right">
-          <h2 class="text-4xl font-bold text-gray-900 mb-2">
-            INVOICE
-          </h2>
+          <h2 class="text-4xl font-bold text-gray-900 mb-2">INVOICE</h2>
           <div class="space-y-2">
             <div>
               <span class="font-semibold text-gray-700">Invoice #:</span>
-              <span class="ml-2 text-gray-900">{{ invoice.invoice_number || `#${invoice.id}` }}</span>
+              <span class="ml-2 text-gray-900">{{
+                invoice.invoice_number || `#${invoice.id}`
+              }}</span>
             </div>
             <div>
               <span class="font-semibold text-gray-700">Date:</span>
@@ -90,9 +93,7 @@ function formatCurrency(value: any): string {
       <div class="grid grid-cols-2 gap-8">
         <!-- Bill To -->
         <div>
-          <h3 class="text-lg font-semibold text-gray-900 mb-3">
-            Bill To:
-          </h3>
+          <h3 class="text-lg font-semibold text-gray-900 mb-3">Bill To:</h3>
           <div class="text-gray-700">
             <p class="font-semibold text-lg mb-1">
               {{ invoice.customer?.name || `Customer #${invoice.customer_id}` }}
@@ -112,7 +113,8 @@ function formatCurrency(value: any): string {
 
             <div class="mt-3 space-y-1 text-sm">
               <p v-if="invoice.customer?.primary_contact?.name">
-                <span class="font-medium">Contact:</span> {{ invoice.customer.primary_contact.name }}
+                <span class="font-medium">Contact:</span>
+                {{ invoice.customer.primary_contact.name }}
               </p>
               <p v-if="invoice.customer?.email">
                 <span class="font-medium">Email:</span> {{ invoice.customer.email }}
@@ -126,13 +128,9 @@ function formatCurrency(value: any): string {
 
         <!-- Ship To (if different) -->
         <div>
-          <h3 class="text-lg font-semibold text-gray-900 mb-3">
-            Ship To:
-          </h3>
+          <h3 class="text-lg font-semibold text-gray-900 mb-3">Ship To:</h3>
           <div class="text-gray-700">
-            <p class="text-sm">
-              Same as billing address
-            </p>
+            <p class="text-sm">Same as billing address</p>
             <!-- You can add shipping address logic here if needed -->
           </div>
         </div>
@@ -165,7 +163,11 @@ function formatCurrency(value: any): string {
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(item, index) in invoiceItems" :key="item.id" :class="index % 2 === 0 ? 'bg-white' : 'bg-gray-50'">
+          <tr
+            v-for="(item, index) in invoiceItems"
+            :key="item.id"
+            :class="index % 2 === 0 ? 'bg-white' : 'bg-gray-50'"
+          >
             <td class="border border-gray-300 px-4 py-3">
               <div class="font-medium text-gray-900">
                 {{ item.description || '—' }}
@@ -203,24 +205,40 @@ function formatCurrency(value: any): string {
             <span>{{ formatCurrency(invoice.subtotal) }}</span>
           </div>
 
-          <div v-if="invoice?.total_vat_0 && (typeof invoice.total_vat_0 === 'number' ? invoice.total_vat_0 > 0 : true)"
-            class="flex justify-between text-gray-700">
+          <div
+            v-if="
+              invoice?.total_vat_0 &&
+              (typeof invoice.total_vat_0 === 'number' ? invoice.total_vat_0 > 0 : true)
+            "
+            class="flex justify-between text-gray-700"
+          >
             <span>VAT 0%:</span>
             <span>{{ formatCurrency(invoice.total_vat_0) }}</span>
           </div>
-          <div v-if="invoice?.total_vat_9 && (typeof invoice.total_vat_9 === 'number' ? invoice.total_vat_9 > 0 : true)"
-            class="flex justify-between text-gray-700">
+          <div
+            v-if="
+              invoice?.total_vat_9 &&
+              (typeof invoice.total_vat_9 === 'number' ? invoice.total_vat_9 > 0 : true)
+            "
+            class="flex justify-between text-gray-700"
+          >
             <span>VAT 9%:</span>
             <span>{{ formatCurrency(invoice.total_vat_9) }}</span>
           </div>
           <div
-            v-if="invoice?.total_vat_21 && (typeof invoice.total_vat_21 === 'number' ? invoice.total_vat_21 > 0 : true)"
-            class="flex justify-between text-gray-700">
+            v-if="
+              invoice?.total_vat_21 &&
+              (typeof invoice.total_vat_21 === 'number' ? invoice.total_vat_21 > 0 : true)
+            "
+            class="flex justify-between text-gray-700"
+          >
             <span>VAT 21%:</span>
             <span>{{ formatCurrency(invoice.total_vat_21) }}</span>
           </div>
 
-          <div class="border-t-2 border-gray-900 pt-3 flex justify-between text-xl font-bold text-gray-900">
+          <div
+            class="border-t-2 border-gray-900 pt-3 flex justify-between text-xl font-bold text-gray-900"
+          >
             <span>Total:</span>
             <span>{{ formatCurrency(invoice.total) }}</span>
           </div>
@@ -230,9 +248,7 @@ function formatCurrency(value: any): string {
 
     <!-- Notes Section -->
     <div v-if="invoice.notes" class="mb-8">
-      <h3 class="text-lg font-semibold text-gray-900 mb-3">
-        Notes:
-      </h3>
+      <h3 class="text-lg font-semibold text-gray-900 mb-3">Notes:</h3>
       <div class="bg-gray-50 p-4 rounded border text-gray-700 whitespace-pre-wrap">
         {{ invoice.notes }}
       </div>
@@ -240,9 +256,7 @@ function formatCurrency(value: any): string {
 
     <!-- Footer -->
     <div class="border-t border-gray-200 pt-6 text-center text-sm text-gray-600">
-      <p>
-        Thank you for your business! Payment is due within {{ invoice.due_days }} days.
-      </p>
+      <p>Thank you for your business! Payment is due within {{ invoice.due_days }} days.</p>
       <p class="mt-2">
         Please make checks payable to "Your Company Name" and include the invoice number on your
         payment.

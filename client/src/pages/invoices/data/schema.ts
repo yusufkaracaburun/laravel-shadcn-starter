@@ -28,10 +28,14 @@ export const invoiceItemSchema = z.object({
   id: z.number(),
   invoice_id: z.number(),
   description: z.string().nullable(),
-  quantity: z.union([z.number(), z.string()]).transform((val) => typeof val === 'string' ? Number.parseFloat(val) : val),
+  quantity: z
+    .union([z.number(), z.string()])
+    .transform((val) => (typeof val === 'string' ? Number.parseFloat(val) : val)),
   unit: z.string().nullable().optional(),
   unit_price: moneySchema,
-  vat_rate: z.union([z.number(), z.string()]).transform((val) => typeof val === 'string' ? Number.parseFloat(val) : val),
+  vat_rate: z
+    .union([z.number(), z.string()])
+    .transform((val) => (typeof val === 'string' ? Number.parseFloat(val) : val)),
   total_excl_vat: moneySchema,
   total_vat: moneySchema,
   total_incl_vat: moneySchema,
@@ -64,10 +68,12 @@ export const invoiceSchema = z.object({
   total_vat_21: moneySchema,
   total: moneySchema,
   notes: z.string().nullable(),
-  items: z.union([
-    z.array(invoiceItemSchema), // Direct array
-    z.object({ data: z.array(invoiceItemSchema) }), // Paginated structure
-  ]).optional(), // Items are loaded when include=items is used
+  items: z
+    .union([
+      z.array(invoiceItemSchema), // Direct array
+      z.object({ data: z.array(invoiceItemSchema) }), // Paginated structure
+    ])
+    .optional(), // Items are loaded when include=items is used
   created_at: z.string(), // Format: "d-m-Y H:i:s"
   updated_at: z.string(), // Format: "d-m-Y H:i:s"
 })

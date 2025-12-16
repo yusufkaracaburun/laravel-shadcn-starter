@@ -73,12 +73,8 @@ function handleSelect(command: TCommand) {
             </UiButton>
           </UiDropdownMenuTrigger>
           <UiDropdownMenuContent align="end" @click.stop>
-            <UiDropdownMenuItem @click.stop="handleSelect('view')">
-              View
-            </UiDropdownMenuItem>
-            <UiDropdownMenuItem @click.stop="handleSelect('edit')">
-              Edit
-            </UiDropdownMenuItem>
+            <UiDropdownMenuItem @click.stop="handleSelect('view')"> View </UiDropdownMenuItem>
+            <UiDropdownMenuItem @click.stop="handleSelect('edit')"> Edit </UiDropdownMenuItem>
             <UiDropdownMenuItem class="text-destructive" @click.stop="handleSelect('delete')">
               Delete
             </UiDropdownMenuItem>

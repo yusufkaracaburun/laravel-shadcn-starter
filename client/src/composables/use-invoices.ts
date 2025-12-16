@@ -117,8 +117,7 @@ export function useInvoices() {
     try {
       const invoicesResponse = await fetchInvoices()
       return invoicesResponse.data
-    }
-    catch (error: any) {
+    } catch (error: any) {
       // Store error with context
       errorStore.setError(error, { context: 'fetchInvoices' })
 
@@ -139,8 +138,7 @@ export function useInvoices() {
       const response = await createInvoiceMutation.mutateAsync(data)
       toast.showSuccess('Invoice created successfully!')
       return response
-    }
-    catch (error: any) {
+    } catch (error: any) {
       // Store error with context
       errorStore.setError(error, { context: 'createInvoice' })
 
@@ -152,8 +150,7 @@ export function useInvoices() {
       if (Object.keys(validationErrors).length > 0) {
         const firstError = Object.values(validationErrors)[0]?.[0]
         toast.showError(firstError || message)
-      }
-      else {
+      } else {
         toast.showError(message)
       }
       throw error
@@ -165,8 +162,7 @@ export function useInvoices() {
       const response = await updateInvoiceMutation.mutateAsync({ invoiceId, data })
       toast.showSuccess('Invoice updated successfully!')
       return response
-    }
-    catch (error: any) {
+    } catch (error: any) {
       // Store error with context
       errorStore.setError(error, { context: 'updateInvoice' })
 
@@ -178,8 +174,7 @@ export function useInvoices() {
       if (Object.keys(validationErrors).length > 0) {
         const firstError = Object.values(validationErrors)[0]?.[0]
         toast.showError(firstError || message)
-      }
-      else {
+      } else {
         toast.showError(message)
       }
       throw error
@@ -190,8 +185,7 @@ export function useInvoices() {
     try {
       await deleteInvoiceMutation.mutateAsync(invoiceId)
       toast.showSuccess('Invoice deleted successfully!')
-    }
-    catch (error: any) {
+    } catch (error: any) {
       // Store error with context
       errorStore.setError(error, { context: 'deleteInvoice' })
 

@@ -53,8 +53,7 @@ function handleSelect(command: TCommand) {
 
 // Format price - handles both Money object and number
 function formatPrice(price: number | { formatted: string } | undefined): string {
-  if (!price)
-    return '$0.00'
+  if (!price) return '$0.00'
   // Handle Money object from backend
   if (typeof price === 'object' && 'formatted' in price) {
     return price.formatted
@@ -91,12 +90,8 @@ function formatPrice(price: number | { formatted: string } | undefined): string 
             </UiButton>
           </UiDropdownMenuTrigger>
           <UiDropdownMenuContent align="end" @click.stop>
-            <UiDropdownMenuItem @click.stop="handleSelect('view')">
-              View
-            </UiDropdownMenuItem>
-            <UiDropdownMenuItem @click.stop="handleSelect('edit')">
-              Edit
-            </UiDropdownMenuItem>
+            <UiDropdownMenuItem @click.stop="handleSelect('view')"> View </UiDropdownMenuItem>
+            <UiDropdownMenuItem @click.stop="handleSelect('edit')"> Edit </UiDropdownMenuItem>
             <UiDropdownMenuItem class="text-destructive" @click.stop="handleSelect('delete')">
               Delete
             </UiDropdownMenuItem>
@@ -115,9 +110,7 @@ function formatPrice(price: number | { formatted: string } | undefined): string 
         </div>
         <div class="flex items-center justify-between">
           <span class="text-sm text-muted-foreground">VAT Rate</span>
-          <Badge variant="outline">
-            {{ item.vat_rate }}%
-          </Badge>
+          <Badge variant="outline"> {{ item.vat_rate }}% </Badge>
         </div>
         <div v-if="item.unit" class="flex items-center justify-between">
           <span class="text-sm text-muted-foreground">Unit</span>

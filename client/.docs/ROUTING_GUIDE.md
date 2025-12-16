@@ -181,8 +181,7 @@ async function login() {
   const redirect = router.currentRoute.value.query.redirect as string
   if (redirect && !redirect.startsWith('//')) {
     router.push(redirect) // Go to original destination
-  }
-  else {
+  } else {
     router.push('/dashboard') // Default
   }
 }
@@ -548,10 +547,8 @@ function performSearch() {
 
 <template>
   <div>
-    <input v-model="searchQuery" @keyup.enter="performSearch">
-    <button @click="performSearch">
-      Search
-    </button>
+    <input v-model="searchQuery" @keyup.enter="performSearch" />
+    <button @click="performSearch">Search</button>
     <p>Page: {{ page }}</p>
   </div>
 </template>
@@ -573,9 +570,8 @@ const authStore = useAuthStore()
 const teamId = computed(() => Number(route.params.team))
 const user = computed(() => authStore.user)
 const team = computed(() => {
-  if (!user.value?.teams)
-    return null
-  return user.value.teams.find(t => t.id === teamId.value) || user.value.currentTeam
+  if (!user.value?.teams) return null
+  return user.value.teams.find((t) => t.id === teamId.value) || user.value.currentTeam
 })
 </script>
 

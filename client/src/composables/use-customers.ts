@@ -117,8 +117,7 @@ export function useCustomers() {
     try {
       const customersResponse = await fetchCustomers()
       return customersResponse.data
-    }
-    catch (error: any) {
+    } catch (error: any) {
       // Store error with context
       errorStore.setError(error, { context: 'fetchCustomers' })
 
@@ -139,8 +138,7 @@ export function useCustomers() {
       const response = await createCustomerMutation.mutateAsync(data)
       toast.showSuccess('Customer created successfully!')
       return response
-    }
-    catch (error: any) {
+    } catch (error: any) {
       // Store error with context
       errorStore.setError(error, { context: 'createCustomer' })
 
@@ -152,8 +150,7 @@ export function useCustomers() {
       if (Object.keys(validationErrors).length > 0) {
         const firstError = Object.values(validationErrors)[0]?.[0]
         toast.showError(firstError || message)
-      }
-      else {
+      } else {
         toast.showError(message)
       }
       throw error
@@ -165,8 +162,7 @@ export function useCustomers() {
       const response = await updateCustomerMutation.mutateAsync({ customerId, data })
       toast.showSuccess('Customer updated successfully!')
       return response
-    }
-    catch (error: any) {
+    } catch (error: any) {
       // Store error with context
       errorStore.setError(error, { context: 'updateCustomer' })
 
@@ -178,8 +174,7 @@ export function useCustomers() {
       if (Object.keys(validationErrors).length > 0) {
         const firstError = Object.values(validationErrors)[0]?.[0]
         toast.showError(firstError || message)
-      }
-      else {
+      } else {
         toast.showError(message)
       }
       throw error
@@ -190,8 +185,7 @@ export function useCustomers() {
     try {
       await deleteCustomerMutation.mutateAsync(customerId)
       toast.showSuccess('Customer deleted successfully!')
-    }
-    catch (error: any) {
+    } catch (error: any) {
       // Store error with context
       errorStore.setError(error, { context: 'deleteCustomer' })
 

@@ -47,7 +47,7 @@ const formSchema = computed(() => {
       .string()
       .min(1, 'Industry is required.')
       .refine(
-        val =>
+        (val) =>
           ['technology', 'finance', 'healthcare', 'retail', 'manufacturing', 'education'].includes(
             val,
           ),
@@ -57,14 +57,14 @@ const formSchema = computed(() => {
       .string()
       .min(1, 'Status is required.')
       .refine(
-        val => ['active', 'inactive', 'pending'].includes(val),
+        (val) => ['active', 'inactive', 'pending'].includes(val),
         'Please select a valid status.',
       ),
     employees: z
       .string()
       .min(1, 'Employee size is required.')
       .refine(
-        val => ['1-10', '11-50', '51-200', '201-500', '500+'].includes(val),
+        (val) => ['1-10', '11-50', '51-200', '201-500', '500+'].includes(val),
         'Please select a valid employee size.',
       ),
   })
@@ -103,8 +103,7 @@ watch(
           employees: company.employees || '',
         },
       })
-    }
-    else {
+    } else {
       resetForm({
         values: getInitialValues(),
       })
@@ -132,8 +131,7 @@ const onSubmit = handleSubmit(async (values) => {
       })
 
       toast.showSuccess('Company updated successfully!')
-    }
-    else {
+    } else {
       // Create new company
       await createCompanyMutation.mutateAsync({
         name: values.name || '',
@@ -149,8 +147,7 @@ const onSubmit = handleSubmit(async (values) => {
 
     resetForm()
     emits('close')
-  }
-  catch (error: any) {
+  } catch (error: any) {
     // Store error with context
     const context = isEditMode.value ? 'updateCompany' : 'createCompany'
     errorStore.setError(error, { context })
@@ -178,8 +175,7 @@ const onSubmit = handleSubmit(async (values) => {
     if (Object.keys(validationErrors).length > 0) {
       const firstError = Object.values(validationErrors)[0]?.[0]
       toast.showError(firstError || message)
-    }
-    else {
+    } else {
       toast.showError(message)
     }
   }
@@ -215,9 +211,7 @@ const onSubmit = handleSubmit(async (values) => {
           <Input type="tel" v-bind="componentField" placeholder="+1-555-0000" />
         </FormControl>
         <FormMessage />
-        <p class="text-xs text-muted-foreground mt-1">
-          Optional: Company phone number
-        </p>
+        <p class="text-xs text-muted-foreground mt-1">Optional: Company phone number</p>
       </FormItem>
     </FormField>
 

@@ -14,7 +14,12 @@ import type { TInvoice } from '@/pages/invoices/data/schema'
 import InvoiceDelete from '@/pages/invoices/components/invoice-delete.vue'
 import { statuses } from '@/pages/invoices/data/data'
 import { getPaymentStatusColor } from '@/utils/status-colors'
-import { formatDateForPreview, formatDateTime, formatMoney, formatNumber } from '@/pages/invoices/utils/formatters'
+import {
+  formatDateForPreview,
+  formatDateTime,
+  formatMoney,
+  formatNumber,
+} from '@/pages/invoices/utils/formatters'
 
 const props = defineProps<{
   invoice: TInvoice | null
@@ -66,9 +71,13 @@ function downloadPDF() {
           Back
         </Button>
         <div class="flex items-center gap-2">
-          <StatusBadge v-if="props.invoice" :status="props.invoice!.status" type="invoice"
+          <StatusBadge
+            v-if="props.invoice"
+            :status="props.invoice!.status"
+            type="invoice"
             :icon="statuses.find((s) => s.value === props.invoice!.status)?.icon"
-            :label="statuses.find((s) => s.value === props.invoice!.status)?.label" />
+            :label="statuses.find((s) => s.value === props.invoice!.status)?.label"
+          />
         </div>
       </div>
       <div class="flex items-center gap-2">
@@ -96,7 +105,11 @@ function downloadPDF() {
 
   <Dialog v-model:open="isDialogOpen" class="print:hidden">
     <DialogContent v-if="showComponent && props.invoice" class="sm:max-w-[425px]">
-      <InvoiceDelete v-if="showComponent === InvoiceDelete" :invoice="props.invoice" @close="handleDeleteClose" />
+      <InvoiceDelete
+        v-if="showComponent === InvoiceDelete"
+        :invoice="props.invoice"
+        @close="handleDeleteClose"
+      />
     </DialogContent>
   </Dialog>
 </template>

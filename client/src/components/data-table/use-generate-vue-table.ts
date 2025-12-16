@@ -22,8 +22,8 @@ import type { DataTableProps } from './types'
 export function generateVueTable<T>(props: DataTableProps<T>) {
   // Use external sorting state if provided, otherwise create internal one
   const internalSorting = ref<SortingState>([])
-  const sorting
-    = props.sorting !== undefined
+  const sorting =
+    props.sorting !== undefined
       ? isRef(props.sorting)
         ? props.sorting
         : ref(props.sorting)
@@ -85,9 +85,9 @@ export function generateVueTable<T>(props: DataTableProps<T>) {
         console.warn('onSortingChange', sorting.value)
       }
     },
-    onColumnFiltersChange: updaterOrValue => valueUpdater(updaterOrValue, columnFilters),
-    onColumnVisibilityChange: updaterOrValue => valueUpdater(updaterOrValue, columnVisibility),
-    onRowSelectionChange: updaterOrValue => valueUpdater(updaterOrValue, rowSelection),
+    onColumnFiltersChange: (updaterOrValue) => valueUpdater(updaterOrValue, columnFilters),
+    onColumnVisibilityChange: (updaterOrValue) => valueUpdater(updaterOrValue, columnVisibility),
+    onRowSelectionChange: (updaterOrValue) => valueUpdater(updaterOrValue, rowSelection),
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -114,8 +114,7 @@ export function generateVueTable<T>(props: DataTableProps<T>) {
       enumerable: true,
     })
     tableConfig.manualPagination = true
-  }
-  else {
+  } else {
     tableConfig.getPaginationRowModel = getPaginationRowModel()
   }
 

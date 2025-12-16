@@ -58,7 +58,7 @@ export interface PaginatedItemsResponse {
  * @returns Sort string for Spatie QueryBuilder (e.g., "name" or "-name" or "name,-unit_price")
  */
 function convertSortingToQueryString(
-  sorting: Array<{ id: string, desc: boolean }>,
+  sorting: Array<{ id: string; desc: boolean }>,
 ): string | undefined {
   if (!sorting || sorting.length === 0) {
     return undefined
@@ -98,7 +98,7 @@ export interface ItemFilters {
 export function useGetItemsQuery(
   page: MaybeRef<number> = 1,
   pageSize: MaybeRef<number> = 10,
-  sorting: MaybeRef<Array<{ id: string, desc: boolean }>> = [],
+  sorting: MaybeRef<Array<{ id: string; desc: boolean }>> = [],
   filters: MaybeRef<ItemFilters> = {},
 ) {
   const { axiosInstance } = useAxios()
@@ -139,24 +139,16 @@ export function useGetItemsQuery(
       if (currentFilters && Object.keys(currentFilters).length > 0) {
         const filterParams: Record<string, any> = {}
 
-        if (currentFilters.name)
-          filterParams.name = currentFilters.name
-        if (currentFilters.description)
-          filterParams.description = currentFilters.description
-        if (currentFilters.unit)
-          filterParams.unit = currentFilters.unit
+        if (currentFilters.name) filterParams.name = currentFilters.name
+        if (currentFilters.description) filterParams.description = currentFilters.description
+        if (currentFilters.unit) filterParams.unit = currentFilters.unit
         if (currentFilters.unit_price !== undefined)
           filterParams.unit_price = currentFilters.unit_price
-        if (currentFilters.vat_rate !== undefined)
-          filterParams.vat_rate = currentFilters.vat_rate
-        if (currentFilters.created_at)
-          filterParams.created_at = currentFilters.created_at
-        if (currentFilters.updated_at)
-          filterParams.updated_at = currentFilters.updated_at
-        if (currentFilters.search)
-          filterParams.search = currentFilters.search
-        if (currentFilters.between)
-          filterParams.between = currentFilters.between
+        if (currentFilters.vat_rate !== undefined) filterParams.vat_rate = currentFilters.vat_rate
+        if (currentFilters.created_at) filterParams.created_at = currentFilters.created_at
+        if (currentFilters.updated_at) filterParams.updated_at = currentFilters.updated_at
+        if (currentFilters.search) filterParams.search = currentFilters.search
+        if (currentFilters.between) filterParams.between = currentFilters.between
 
         if (Object.keys(filterParams).length > 0) {
           params.filter = filterParams
@@ -263,7 +255,7 @@ export function useUpdateItemMutation() {
   const { axiosInstance } = useAxios()
   const queryClient = useQueryClient()
 
-  return useMutation<IResponse<Item>, AxiosError, { itemId: number, data: UpdateItemRequest }>({
+  return useMutation<IResponse<Item>, AxiosError, { itemId: number; data: UpdateItemRequest }>({
     mutationFn: async ({ itemId, data }): Promise<IResponse<Item>> => {
       const response = await axiosInstance.put(`/api/items/${itemId}`, data)
       return response.data

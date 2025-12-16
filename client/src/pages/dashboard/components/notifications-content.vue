@@ -77,11 +77,9 @@ function formatTimestamp(timestamp: string) {
   if (diffInHours < 1) {
     const diffInMinutes = Math.floor((now.getTime() - date.getTime()) / (1000 * 60))
     return `${diffInMinutes} minutes ago`
-  }
-  else if (diffInHours < 24) {
+  } else if (diffInHours < 24) {
     return `${diffInHours} hours ago`
-  }
-  else {
+  } else {
     const diffInDays = Math.floor(diffInHours / 24)
     return `${diffInDays} days ago`
   }

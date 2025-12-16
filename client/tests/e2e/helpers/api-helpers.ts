@@ -31,7 +31,7 @@ export interface CsrfData {
 export function createHeaders(customHeaders?: Record<string, string>): Record<string, string> {
   return {
     'Content-Type': 'application/json',
-    'Accept': 'application/json',
+    Accept: 'application/json',
     ...customHeaders,
   }
 }
@@ -51,8 +51,7 @@ export function extractCookieValue(cookieHeader: string | string[] | undefined):
   let cookies: string[] = []
   if (Array.isArray(cookieHeader)) {
     cookies = cookieHeader
-  }
-  else if (cookieHeader) {
+  } else if (cookieHeader) {
     cookies = [cookieHeader]
   }
 
@@ -76,9 +75,9 @@ export function buildAuthenticatedHeaders(
 ): Record<string, string> {
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
-    'Accept': 'application/json',
-    'Origin': apiURL,
-    'Referer': `${apiURL}/`,
+    Accept: 'application/json',
+    Origin: apiURL,
+    Referer: `${apiURL}/`,
     ...customHeaders,
   }
 
@@ -113,7 +112,7 @@ export async function getCsrfCookie(request: APIRequestContext): Promise<APIResp
     try {
       if (attempt > 0) {
         // Wait before retry with exponential backoff
-        await new Promise(resolve => setTimeout(resolve, attempt * 100))
+        await new Promise((resolve) => setTimeout(resolve, attempt * 100))
       }
 
       const response = await request.get(buildUrl('/sanctum/csrf-cookie'), {
@@ -126,8 +125,7 @@ export async function getCsrfCookie(request: APIRequestContext): Promise<APIResp
       }
 
       return response
-    }
-    catch (error) {
+    } catch (error) {
       lastError = error as Error
       if (attempt < 2) {
         continue
@@ -183,8 +181,7 @@ export async function getCsrfTokenAndCookies(
         // Decode URL-encoding to get the encrypted value for X-XSRF-TOKEN header
         // This is the encrypted session token that Laravel will decrypt
         token = decodeURIComponent(urlEncodedValue)
-      }
-      catch {
+      } catch {
         // If decoding fails, use raw value (shouldn't happen with valid cookies)
         token = urlEncodedValue
       }
@@ -240,8 +237,7 @@ export async function getCsrfTokenAndCookies(
       const rawValue = match[1].trim()
       try {
         token = decodeURIComponent(rawValue)
-      }
-      catch {
+      } catch {
         token = rawValue
       }
     }
@@ -373,7 +369,7 @@ export function createAuthApi(request: APIRequestContext) {
    */
   const getCsrfData = async (): Promise<CsrfData> => {
     // Small random delay to stagger requests when tests run in parallel
-    await new Promise(resolve => setTimeout(resolve, Math.random() * 300))
+    await new Promise((resolve) => setTimeout(resolve, Math.random() * 300))
 
     // Get CSRF token and cookies, sending existing session cookies to maintain session
     // getCsrfTokenAndCookies already merges cookies, so we just use the result
@@ -399,7 +395,7 @@ export function createAuthApi(request: APIRequestContext) {
         const baseDelay = 300
         const exponentialDelay = baseDelay * 2 ** (attempt - 1)
         const jitter = Math.random() * 200
-        await new Promise(resolve => setTimeout(resolve, exponentialDelay + jitter))
+        await new Promise((resolve) => setTimeout(resolve, exponentialDelay + jitter))
       }
 
       const response = await fn()

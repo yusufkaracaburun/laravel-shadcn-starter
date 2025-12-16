@@ -139,9 +139,8 @@ export const columns: ColumnDef<TInvoice>[] = [
     header: ({ column }) => h(DataTableColumnHeader<Invoice>, { column, title: 'Status' }),
     cell: ({ row }) => {
       const statusValue = row.getValue('status') as string
-      const status = statuses.find(s => s.value === statusValue)
-      if (!status)
-        return null
+      const status = statuses.find((s) => s.value === statusValue)
+      if (!status) return null
       return h(StatusBadge, {
         status: status.value,
         type: 'invoice',

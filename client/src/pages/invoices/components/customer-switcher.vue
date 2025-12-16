@@ -12,9 +12,8 @@ interface IProps {
 const props = defineProps<IProps>()
 
 const selectedCustomer = computed(() => {
-  if (!props.selectedCustomerId)
-    return null
-  return props.customers.find(c => c.id === props.selectedCustomerId) || null
+  if (!props.selectedCustomerId) return null
+  return props.customers.find((c) => c.id === props.selectedCustomerId) || null
 })
 
 const isOpen = ref(false)
@@ -88,9 +87,7 @@ function handleCustomerCreated() {
         align="start"
         :side-offset="4"
       >
-        <UiDropdownMenuLabel class="text-xs text-muted-foreground">
-          Customers
-        </UiDropdownMenuLabel>
+        <UiDropdownMenuLabel class="text-xs text-muted-foreground"> Customers </UiDropdownMenuLabel>
         <template v-if="customers.length > 0">
           <UiDropdownMenuItem
             v-for="customer in customers"
@@ -127,9 +124,7 @@ function handleCustomerCreated() {
             <div class="flex items-center justify-center border rounded-md size-6 bg-background">
               <Plus class="size-4" />
             </div>
-            <div class="font-medium text-muted-foreground">
-              Add customer
-            </div>
+            <div class="font-medium text-muted-foreground">Add customer</div>
           </UiDropdownMenuItem>
         </UiDialogTrigger>
       </UiDropdownMenuContent>

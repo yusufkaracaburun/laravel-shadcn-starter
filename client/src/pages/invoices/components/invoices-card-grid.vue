@@ -21,9 +21,7 @@ withDefaults(defineProps<IProps>(), {
   </div>
   <div v-else-if="invoices.length === 0" class="flex items-center justify-center min-h-[400px]">
     <div class="text-center">
-      <p class="text-muted-foreground">
-        No invoices found.
-      </p>
+      <p class="text-muted-foreground">No invoices found.</p>
     </div>
   </div>
   <div v-else class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">

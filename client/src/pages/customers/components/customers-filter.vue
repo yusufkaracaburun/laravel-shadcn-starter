@@ -75,15 +75,9 @@ const hasActiveFilters = computed(() => {
               <SelectValue placeholder="All types" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">
-                All types
-              </SelectItem>
-              <SelectItem value="business">
-                Business
-              </SelectItem>
-              <SelectItem value="private">
-                Private
-              </SelectItem>
+              <SelectItem value=""> All types </SelectItem>
+              <SelectItem value="business"> Business </SelectItem>
+              <SelectItem value="private"> Private </SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -96,7 +90,7 @@ const hasActiveFilters = computed(() => {
             placeholder="Filter by city"
             class="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
             @input="updateFilter('city', ($event.target as HTMLInputElement).value)"
-          >
+          />
         </div>
 
         <div class="space-y-2">
@@ -107,7 +101,7 @@ const hasActiveFilters = computed(() => {
             placeholder="Filter by country"
             class="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
             @input="updateFilter('country', ($event.target as HTMLInputElement).value)"
-          >
+          />
         </div>
 
         <Button v-if="hasActiveFilters" variant="ghost" class="w-full" @click="clearFilters">
