@@ -104,7 +104,7 @@ function getInitialValues() {
   }
 }
 
-const { values, isFieldDirty, handleSubmit, isSubmitting, resetForm, setFieldValue } = useForm({
+const { values, isFieldDirty, handleSubmit, isSubmitting, resetForm, setFieldValue, setFieldError, errors } = useForm({
   validationSchema: formSchema,
   initialValues: getInitialValues(),
 })
@@ -387,9 +387,22 @@ const onSubmit = handleSubmit(async (formValues) => {
     emits('submit', formValues)
     emits('close')
   }
-  catch (error) {
-    // Error handling is done in the composable
-    // Just log for debugging
+  catch (error: any) {
+    // Handle backend validation errors (422)
+    if (error.response?.status === 422) {
+      const backendErrors = error.response.data.errors || {}
+      // Set field errors from backend response
+      Object.keys(backendErrors).forEach((field) => {
+        const fieldErrors = backendErrors[field]
+        if (Array.isArray(fieldErrors) && fieldErrors.length > 0) {
+          // Map backend field names to form field names if needed
+          const formFieldName = field === 'invoice_number' ? 'invoice_number' : field
+          setFieldError(formFieldName as any, fieldErrors[0])
+        }
+      })
+    }
+    // Error handling is also done in the composable (toast messages)
+    // Log for debugging
     console.error('Invoice form submission error:', error)
   }
 })
@@ -424,6 +437,7 @@ defineExpose({
   resetForm,
   setFieldValue,
   items: itemsForPreview, // Expose items for preview
+  errors, // Expose errors for preview component
 })
 </script>
 
@@ -435,10 +449,12 @@ defineExpose({
 
     <InvoiceDatesSection :is-field-dirty="isFieldDirty" />
 
-    <InvoiceItemsManagement :items="localItems" :editing-item-index="editingItemIndex" :show-add-form="showAddForm"
+    <InvoiceItemsManagement
+      :items="localItems" :editing-item-index="editingItemIndex" :show-add-form="showAddForm"
       :invoice-totals="invoiceTotals" :invoice-id="invoice?.id" :catalog-items="items" @save="handleItemSave"
       @cancel="cancelItemEdit" @edit="startEditItem" @delete="handleItemDelete" @items-selected="handleItemsSelected"
-      @add-item="startAddItem" />
+      @add-item="startAddItem"
+    />
 
     <InvoiceNotesSection :is-field-dirty="isFieldDirty" />
   </form>

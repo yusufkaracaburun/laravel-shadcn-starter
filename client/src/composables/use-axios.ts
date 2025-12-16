@@ -53,9 +53,6 @@ export function useAxios() {
       if (status === 403) {
         toast.showError('You are not authorized to access this page')
       }
-      else if (status === 422) {
-        toast.showError('Validation error')
-      }
       else if (status === 500) {
         const message = error.response?.data?.message || 'Internal server error'
         toast.showError(message)

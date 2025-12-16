@@ -75,7 +75,7 @@ export const defaultToasterProps = {
   position: 'bottom-right' as const,
   theme: 'system' as const,
   richColors: true,
-  expand: true,
+  expand: false,
   closeButton: true,
 }
 

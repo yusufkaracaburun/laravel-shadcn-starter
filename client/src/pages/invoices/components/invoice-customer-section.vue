@@ -2,11 +2,11 @@
 import type { Customer } from '@/services/customers.service'
 
 import {
+  FormControl,
   FormField,
-  UiFormControl,
-  UiFormItem,
-  UiFormLabel,
-  UiFormMessage,
+  FormItem,
+  FormLabel,
+  FormMessage,
 } from '@/components/ui/form'
 
 import CustomerSwitcher from './customer-switcher.vue'
@@ -27,17 +27,17 @@ withDefaults(defineProps<IProps>(), {
       Invoice Details
     </h3>
     <FormField v-slot="{ componentField }" name="customer_id" :validate-on-blur="!isFieldDirty">
-      <UiFormItem>
-        <UiFormLabel>Bill To</UiFormLabel>
-        <UiFormControl>
+      <FormItem>
+        <FormLabel>Bill To</FormLabel>
+        <FormControl>
           <CustomerSwitcher
             :customers="customers ?? []"
             :selected-customer-id="componentField.modelValue"
             @select="componentField['onUpdate:modelValue']"
           />
-        </UiFormControl>
-        <UiFormMessage />
-      </UiFormItem>
+        </FormControl>
+        <FormMessage />
+      </FormItem>
     </FormField>
   </div>
 </template>

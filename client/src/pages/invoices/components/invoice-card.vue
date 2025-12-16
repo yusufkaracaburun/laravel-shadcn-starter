@@ -68,8 +68,10 @@ function formatDate(dateString: string | null | undefined): string {
 </script>
 
 <template>
-  <Card class="hover:shadow-md transition-shadow cursor-pointer"
-    @click="router.push({ name: '/invoices/[id]', params: { id: invoice.id.toString() } })">
+  <Card
+    class="hover:shadow-md transition-shadow cursor-pointer"
+    @click="router.push({ name: '/invoices/[id]', params: { id: invoice.id.toString() } })"
+  >
     <CardHeader>
       <div class="flex items-start justify-between">
         <div class="flex items-center gap-2">
@@ -99,9 +101,11 @@ function formatDate(dateString: string | null | undefined): string {
         </UiDropdownMenu>
       </div>
       <div class="flex items-center gap-2 mt-2">
-        <StatusBadge :status="invoice.status" type="invoice"
+        <StatusBadge
+          :status="invoice.status" type="invoice"
           :icon="statuses.find((s) => s.value === invoice.status)?.icon"
-          :label="statuses.find((s) => s.value === invoice.status)?.label" />
+          :label="statuses.find((s) => s.value === invoice.status)?.label"
+        />
       </div>
     </CardHeader>
     <CardContent>
@@ -110,7 +114,7 @@ function formatDate(dateString: string | null | undefined): string {
           <span class="text-sm text-muted-foreground">Customer</span>
           <span class="text-sm font-medium truncate max-w-[150px]">{{
             invoice.customer.name || `Customer #${invoice.customer_id}`
-            }}</span>
+          }}</span>
         </div>
         <div class="flex items-center justify-between">
           <span class="text-sm text-muted-foreground">Date</span>

@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { FormField } from '@/components/ui/form'
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
+import { Textarea } from '@/components/ui/textarea'
 
 interface IProps {
   isFieldDirty?: boolean | ((path: any) => boolean)
@@ -17,13 +18,13 @@ withDefaults(defineProps<IProps>(), {
     </h3>
 
     <FormField v-slot="{ componentField }" name="notes" :validate-on-blur="!isFieldDirty">
-      <UiFormItem>
-        <UiFormLabel>Notes</UiFormLabel>
-        <UiFormControl>
-          <UiTextarea placeholder="Additional notes..." v-bind="componentField" />
-        </UiFormControl>
-        <UiFormMessage />
-      </UiFormItem>
+      <FormItem>
+        <FormLabel>Notes</FormLabel>
+        <FormControl>
+          <Textarea placeholder="Additional notes..." v-bind="componentField" />
+        </FormControl>
+        <FormMessage />
+      </FormItem>
     </FormField>
   </div>
 </template>

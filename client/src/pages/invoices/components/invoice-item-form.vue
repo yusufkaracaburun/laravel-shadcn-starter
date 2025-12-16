@@ -5,7 +5,8 @@ import { computed, watch } from 'vue'
 import { z } from 'zod'
 
 import { Button } from '@/components/ui/button'
-import { FormField } from '@/components/ui/form'
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
 import {
   InputGroup,
   InputGroupAddon,
@@ -118,13 +119,13 @@ function onCancel() {
   <form class="space-y-4" @submit.prevent="onSubmit">
     <!-- Name - Full Width -->
     <FormField v-slot="{ componentField }" name="description" :validate-on-blur="!isFieldDirty">
-      <UiFormItem>
-        <UiFormLabel>Name</UiFormLabel>
-        <UiFormControl>
-          <UiInput type="text" placeholder="Item name" v-bind="componentField" />
-        </UiFormControl>
-        <UiFormMessage />
-      </UiFormItem>
+      <FormItem>
+        <FormLabel>Name</FormLabel>
+        <FormControl>
+          <Input type="text" placeholder="Item name" v-bind="componentField" />
+        </FormControl>
+        <FormMessage />
+      </FormItem>
     </FormField>
 
     <!-- Quantity & Unit, Unit Price & VAT Rate - One Row -->
@@ -135,9 +136,9 @@ function onCancel() {
         name="quantity"
         :validate-on-blur="!isFieldDirty"
       >
-        <UiFormItem>
-          <UiFormLabel>Quantity & Unit</UiFormLabel>
-          <UiFormControl>
+        <FormItem>
+          <FormLabel>Quantity & Unit</FormLabel>
+          <FormControl>
             <InputGroup>
               <InputGroupInput
                 type="number"
@@ -161,16 +162,16 @@ function onCancel() {
                 </InputGroupAddon>
               </FormField>
             </InputGroup>
-          </UiFormControl>
+          </FormControl>
           <div class="space-y-1">
             <FormField name="quantity" :validate-on-blur="!isFieldDirty">
-              <UiFormMessage />
+              <FormMessage />
             </FormField>
             <FormField name="unit" :validate-on-blur="!isFieldDirty">
-              <UiFormMessage />
+              <FormMessage />
             </FormField>
           </div>
-        </UiFormItem>
+        </FormItem>
       </FormField>
 
       <!-- Unit Price and VAT Rate - Input Group -->
@@ -179,9 +180,9 @@ function onCancel() {
         name="unit_price"
         :validate-on-blur="!isFieldDirty"
       >
-        <UiFormItem>
-          <UiFormLabel>Unit Price & VAT Rate</UiFormLabel>
-          <UiFormControl>
+        <FormItem>
+          <FormLabel>Unit Price & VAT Rate</FormLabel>
+          <FormControl>
             <InputGroup>
               <InputGroupAddon>
                 <InputGroupText>€</InputGroupText>
@@ -226,16 +227,16 @@ function onCancel() {
                 </InputGroupAddon>
               </FormField>
             </InputGroup>
-          </UiFormControl>
+          </FormControl>
           <div class="space-y-1">
             <FormField name="unit_price" :validate-on-blur="!isFieldDirty">
-              <UiFormMessage />
+              <FormMessage />
             </FormField>
             <FormField name="vat_rate" :validate-on-blur="!isFieldDirty">
-              <UiFormMessage />
+              <FormMessage />
             </FormField>
           </div>
-        </UiFormItem>
+        </FormItem>
       </FormField>
     </div>
 
