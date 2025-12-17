@@ -95,54 +95,54 @@ interface ILocalInvoiceItem {
 const localItems = ref<ILocalInvoiceItem[]>(
   props.modelValue?.items && props.modelValue.items.length > 0
     ? props.modelValue.items.map((item) => {
-        let unitPrice = 0
-        if (typeof item.unit_price === 'object' && 'amount' in item.unit_price) {
-          unitPrice = Number.parseFloat(item.unit_price.amount) / 100
-        } else if (typeof item.unit_price === 'number') {
-          unitPrice = item.unit_price
-        }
+      let unitPrice = 0
+      if (typeof item.unit_price === 'object' && 'amount' in item.unit_price) {
+        unitPrice = Number.parseFloat(item.unit_price.amount) / 100
+      } else if (typeof item.unit_price === 'number') {
+        unitPrice = item.unit_price
+      }
 
-        let totalExclVat = 0
-        let totalVat = 0
-        let totalInclVat = 0
+      let totalExclVat = 0
+      let totalVat = 0
+      let totalInclVat = 0
 
-        if (typeof item.total_excl_vat === 'object' && 'amount' in item.total_excl_vat) {
-          totalExclVat = Number.parseFloat(item.total_excl_vat.amount) / 100
-        } else if (typeof item.total_excl_vat === 'number') {
-          totalExclVat = item.total_excl_vat
-        }
+      if (typeof item.total_excl_vat === 'object' && 'amount' in item.total_excl_vat) {
+        totalExclVat = Number.parseFloat(item.total_excl_vat.amount) / 100
+      } else if (typeof item.total_excl_vat === 'number') {
+        totalExclVat = item.total_excl_vat
+      }
 
-        if (typeof item.total_vat === 'object' && 'amount' in item.total_vat) {
-          totalVat = Number.parseFloat(item.total_vat.amount) / 100
-        } else if (typeof item.total_vat === 'number') {
-          totalVat = item.total_vat
-        }
+      if (typeof item.total_vat === 'object' && 'amount' in item.total_vat) {
+        totalVat = Number.parseFloat(item.total_vat.amount) / 100
+      } else if (typeof item.total_vat === 'number') {
+        totalVat = item.total_vat
+      }
 
-        if (typeof item.total_incl_vat === 'object' && 'amount' in item.total_incl_vat) {
-          totalInclVat = Number.parseFloat(item.total_incl_vat.amount) / 100
-        } else if (typeof item.total_incl_vat === 'number') {
-          totalInclVat = item.total_incl_vat
-        }
+      if (typeof item.total_incl_vat === 'object' && 'amount' in item.total_incl_vat) {
+        totalInclVat = Number.parseFloat(item.total_incl_vat.amount) / 100
+      } else if (typeof item.total_incl_vat === 'number') {
+        totalInclVat = item.total_incl_vat
+      }
 
-        if (totalExclVat === 0 && unitPrice > 0 && item.quantity > 0) {
-          const calculated = calculateItemTotals(item.quantity, unitPrice, item.vat_rate)
-          totalExclVat = calculated.totalExclVat
-          totalVat = calculated.totalVat
-          totalInclVat = calculated.totalInclVat
-        }
+      if (totalExclVat === 0 && unitPrice > 0 && item.quantity > 0) {
+        const calculated = calculateItemTotals(item.quantity, unitPrice, item.vat_rate)
+        totalExclVat = calculated.totalExclVat
+        totalVat = calculated.totalVat
+        totalInclVat = calculated.totalInclVat
+      }
 
-        return {
-          description: item.description,
-          quantity: item.quantity,
-          unit_price: unitPrice,
-          vat_rate: item.vat_rate,
-          unit: (item as any).unit ?? null,
-          total_excl_vat: totalExclVat,
-          total_vat: totalVat,
-          total_incl_vat: totalInclVat,
-          sort_order: item.sort_order,
-        }
-      })
+      return {
+        description: item.description,
+        quantity: item.quantity,
+        unit_price: unitPrice,
+        vat_rate: item.vat_rate,
+        unit: (item as any).unit ?? null,
+        total_excl_vat: totalExclVat,
+        total_vat: totalVat,
+        total_incl_vat: totalInclVat,
+        sort_order: item.sort_order,
+      }
+    })
     : [],
 )
 const editingItemIndex = ref<number | null>(null)
@@ -421,20 +421,10 @@ watch(
 
     <InvoiceDatesSection :is-field-dirty="isFieldDirty" />
 
-    <InvoiceItemsManagement
-      :items="localItems"
-      :editing-item-index="editingItemIndex"
-      :show-add-form="showAddForm"
-      :invoice-totals="invoiceTotals"
-      :invoice-id="invoice?.id"
-      :catalog-items="items"
-      @save="handleItemSave"
-      @cancel="cancelItemEdit"
-      @edit="startEditItem"
-      @delete="handleItemDelete"
-      @items-selected="handleItemsSelected"
-      @add-item="startAddItem"
-    />
+    <InvoiceItemsManagement :items="localItems" :editing-item-index="editingItemIndex" :show-add-form="showAddForm"
+      :invoice-totals="invoiceTotals" :invoice-id="invoice?.id" :catalog-items="items" @save="handleItemSave"
+      @cancel="cancelItemEdit" @edit="startEditItem" @delete="handleItemDelete" @items-selected="handleItemsSelected"
+      @add-item="startAddItem" />
 
     <InvoiceNotesSection :is-field-dirty="isFieldDirty" />
   </form>
