@@ -12,7 +12,7 @@ import {
   formatNumber,
 } from '@/pages/invoices/utils/formatters'
 import type { IInvoiceItem } from '@/services/invoices.service'
-import { statuses } from '../../../../.tmp/shadcn-vue-admin/src/pages/tasks/data/data';
+import { statuses } from '../../../../.tmp/shadcn-vue-admin/src/pages/tasks/data/data'
 
 const props = defineProps<{
   formValues: TInvoice | null
@@ -41,7 +41,8 @@ function formatCurrency(value: any): string {
 
 <template>
   <div
-    class="bg-white shadow-sm border border-gray-200 print:shadow-none print:max-w-none print:mx-0 p-8 print:p-0 m-8">
+    class="bg-white shadow-sm border border-gray-200 print:shadow-none print:max-w-none print:mx-0 p-8 print:p-0 m-8"
+  >
     <!-- Invoice Header -->
     <div class="border-b-2 border-gray-200 pb-8 mb-8">
       <div class="flex justify-between items-start">
@@ -70,19 +71,19 @@ function formatCurrency(value: any): string {
               <span class="ml-2 text-gray-900">{{
                 props.formValues?.invoice_number ||
                 (props.formValues?.id ? `#${props.formValues.id}` : '—')
-                }}</span>
+              }}</span>
             </div>
             <div>
               <span class="font-semibold text-gray-700">Date:</span>
               <span class="ml-2 text-gray-900">{{
                 formatDate(props.formValues?.date || null)
-                }}</span>
+              }}</span>
             </div>
             <div>
               <span class="font-semibold text-gray-700">Due Date:</span>
               <span class="ml-2 text-gray-900">{{
                 formatDate(props.formValues?.date_due || null)
-                }}</span>
+              }}</span>
             </div>
             <div>
               <span class="font-semibold text-gray-700">Terms:</span>
@@ -110,7 +111,10 @@ function formatCurrency(value: any): string {
               {{ props.formValues.customer.type }}
             </p>
 
-            <div v-if="props.formValues?.customer?.formatted_address?.length" class="text-sm space-y-1">
+            <div
+              v-if="props.formValues?.customer?.formatted_address?.length"
+              class="text-sm space-y-1"
+            >
               <p v-for="(line, index) in props.formValues.customer.formatted_address" :key="index">
                 {{ line }}
               </p>
@@ -171,7 +175,11 @@ function formatCurrency(value: any): string {
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(item, index) in invoiceItems" :key="item.id" :class="index % 2 === 0 ? 'bg-white' : 'bg-gray-50'">
+          <tr
+            v-for="(item, index) in invoiceItems"
+            :key="item.id"
+            :class="index % 2 === 0 ? 'bg-white' : 'bg-gray-50'"
+          >
             <td class="border border-gray-300 px-4 py-3">
               <div class="font-medium text-gray-900">
                 {{ item.description || '—' }}
@@ -209,41 +217,52 @@ function formatCurrency(value: any): string {
             <span>{{ formatCurrency(props.formValues?.subtotal) }}</span>
           </div>
 
-          <div v-if="
-            props.formValues?.total_vat_0 &&
-            (typeof props.formValues.total_vat_0 === 'object'
-              ? Number.parseFloat(props.formValues.total_vat_0.amount) > 0
-              : typeof props.formValues.total_vat_0 === 'number'
-                ? props.formValues.total_vat_0 > 0
-                : false)
-          " class="flex justify-between text-gray-700">
+          <div
+            v-if="
+              props.formValues?.total_vat_0 &&
+              (typeof props.formValues.total_vat_0 === 'object'
+                ? Number.parseFloat(props.formValues.total_vat_0.amount) > 0
+                : typeof props.formValues.total_vat_0 === 'number'
+                  ? props.formValues.total_vat_0 > 0
+                  : false)
+            "
+            class="flex justify-between text-gray-700"
+          >
             <span>VAT 0%:</span>
             <span>{{ formatCurrency(props.formValues.total_vat_0) }}</span>
           </div>
-          <div v-if="
-            props.formValues?.total_vat_9 &&
-            (typeof props.formValues.total_vat_9 === 'object'
-              ? Number.parseFloat(props.formValues.total_vat_9.amount) > 0
-              : typeof props.formValues.total_vat_9 === 'number'
-                ? props.formValues.total_vat_9 > 0
-                : false)
-          " class="flex justify-between text-gray-700">
+          <div
+            v-if="
+              props.formValues?.total_vat_9 &&
+              (typeof props.formValues.total_vat_9 === 'object'
+                ? Number.parseFloat(props.formValues.total_vat_9.amount) > 0
+                : typeof props.formValues.total_vat_9 === 'number'
+                  ? props.formValues.total_vat_9 > 0
+                  : false)
+            "
+            class="flex justify-between text-gray-700"
+          >
             <span>VAT 9%:</span>
             <span>{{ formatCurrency(props.formValues.total_vat_9) }}</span>
           </div>
-          <div v-if="
-            props.formValues?.total_vat_21 &&
-            (typeof props.formValues.total_vat_21 === 'object'
-              ? Number.parseFloat(props.formValues.total_vat_21.amount) > 0
-              : typeof props.formValues.total_vat_21 === 'number'
-                ? props.formValues.total_vat_21 > 0
-                : false)
-          " class="flex justify-between text-gray-700">
+          <div
+            v-if="
+              props.formValues?.total_vat_21 &&
+              (typeof props.formValues.total_vat_21 === 'object'
+                ? Number.parseFloat(props.formValues.total_vat_21.amount) > 0
+                : typeof props.formValues.total_vat_21 === 'number'
+                  ? props.formValues.total_vat_21 > 0
+                  : false)
+            "
+            class="flex justify-between text-gray-700"
+          >
             <span>VAT 21%:</span>
             <span>{{ formatCurrency(props.formValues.total_vat_21) }}</span>
           </div>
 
-          <div class="border-t-2 border-gray-900 pt-3 flex justify-between text-xl font-bold text-gray-900">
+          <div
+            class="border-t-2 border-gray-900 pt-3 flex justify-between text-xl font-bold text-gray-900"
+          >
             <span>Total:</span>
             <span>{{ formatCurrency(props.formValues?.total) }}</span>
           </div>

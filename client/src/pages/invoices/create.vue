@@ -14,7 +14,6 @@ import { useGetInvoicePrerequisitesQuery } from '@/services/invoices.service'
 
 import InvoiceEditorLayout from './components/invoice-editor-layout.vue'
 import InvoiceForm from './components/invoice-form.vue'
-import InvoicePreview from './components/invoice-preview.vue'
 
 const router = useRouter()
 
@@ -64,11 +63,15 @@ const currentFormValues = ref<TInvoice>({
 })
 const currentFormItems = ref([])
 
-watch(prerequisites, (newVal) => {
-  if (newVal?.next_invoice_number) {
-    currentFormValues.value.invoice_number = newVal.next_invoice_number
-  }
-}, { immediate: true })
+watch(
+  prerequisites,
+  (newVal) => {
+    if (newVal?.next_invoice_number) {
+      currentFormValues.value.invoice_number = newVal.next_invoice_number
+    }
+  },
+  { immediate: true },
+)
 
 function handleClose() {
   router.push('/invoices')
@@ -114,14 +117,15 @@ async function handleSaveAndSend() {
 
     <InvoiceEditorLayout :is-loading="isSubmitting">
       <template #form>
-        <InvoiceForm ref="formRef" v-model:model-value="currentFormValues"
-          :next-invoice-number="prerequisites?.next_invoice_number ?? null" :items="items" :customers="customers"
-          @close="handleClose" @update:formItems="(items) => (currentFormItems = items)" />
-      </template>
-
-      <template #preview>
-        <InvoicePreview :form-values="currentFormValues" :items="currentFormItems" :customers="customers"
-          :is-loading="isSubmitting" />
+        <InvoiceForm
+          ref="formRef"
+          v-model:model-value="currentFormValues"
+          :next-invoice-number="prerequisites?.next_invoice_number ?? null"
+          :items="items"
+          :customers="customers"
+          @close="handleClose"
+          @update:formItems="(items) => (currentFormItems = items)"
+        />
       </template>
 
       <template #actions>
