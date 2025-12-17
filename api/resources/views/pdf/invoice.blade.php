@@ -42,6 +42,285 @@
                 <td class="text-right">{{ $item->total_excl_vat->format() }}</td>
             </tr>
         @endforeach
+        @foreach ($invoice->items as $item)
+            <tr>
+                <td>{{ $item->description }}</td>
+                <td class="text-center">{{ $item->quantity }}</td>
+                <td class="text-center">{{ number_format($item->vat_rate, 0) }}%</td>
+                <td class="text-right">{{ $item->unit_price->format() }}</td>
+                <td class="text-right">{{ $item->total_excl_vat->format() }}</td>
+            </tr>
+        @endforeach
+        @foreach ($invoice->items as $item)
+            <tr>
+                <td>{{ $item->description }}</td>
+                <td class="text-center">{{ $item->quantity }}</td>
+                <td class="text-center">{{ number_format($item->vat_rate, 0) }}%</td>
+                <td class="text-right">{{ $item->unit_price->format() }}</td>
+                <td class="text-right">{{ $item->total_excl_vat->format() }}</td>
+            </tr>
+        @endforeach
+        @foreach ($invoice->items as $item)
+            <tr>
+                <td>{{ $item->description }}</td>
+                <td class="text-center">{{ $item->quantity }}</td>
+                <td class="text-center">{{ number_format($item->vat_rate, 0) }}%</td>
+                <td class="text-right">{{ $item->unit_price->format() }}</td>
+                <td class="text-right">{{ $item->total_excl_vat->format() }}</td>
+            </tr>
+        @endforeach
+        @foreach ($invoice->items as $item)
+            <tr>
+                <td>{{ $item->description }}</td>
+                <td class="text-center">{{ $item->quantity }}</td>
+                <td class="text-center">{{ number_format($item->vat_rate, 0) }}%</td>
+                <td class="text-right">{{ $item->unit_price->format() }}</td>
+                <td class="text-right">{{ $item->total_excl_vat->format() }}</td>
+            </tr>
+        @endforeach
+        @foreach ($invoice->items as $item)
+            <tr>
+                <td>{{ $item->description }}</td>
+                <td class="text-center">{{ $item->quantity }}</td>
+                <td class="text-center">{{ number_format($item->vat_rate, 0) }}%</td>
+                <td class="text-right">{{ $item->unit_price->format() }}</td>
+                <td class="text-right">{{ $item->total_excl_vat->format() }}</td>
+            </tr>
+        @endforeach
+        @foreach ($invoice->items as $item)
+            <tr>
+                <td>{{ $item->description }}</td>
+                <td class="text-center">{{ $item->quantity }}</td>
+                <td class="text-center">{{ number_format($item->vat_rate, 0) }}%</td>
+                <td class="text-right">{{ $item->unit_price->format() }}</td>
+                <td class="text-right">{{ $item->total_excl_vat->format() }}</td>
+            </tr>
+        @endforeach
+        @foreach ($invoice->items as $item)
+            <tr>
+                <td>{{ $item->description }}</td>
+                <td class="text-center">{{ $item->quantity }}</td>
+                <td class="text-center">{{ number_format($item->vat_rate, 0) }}%</td>
+                <td class="text-right">{{ $item->unit_price->format() }}</td>
+                <td class="text-right">{{ $item->total_excl_vat->format() }}</td>
+            </tr>
+        @endforeach
+        @foreach ($invoice->items as $item)
+            <tr>
+                <td>{{ $item->description }}</td>
+                <td class="text-center">{{ $item->quantity }}</td>
+                <td class="text-center">{{ number_format($item->vat_rate, 0) }}%</td>
+                <td class="text-right">{{ $item->unit_price->format() }}</td>
+                <td class="text-right">{{ $item->total_excl_vat->format() }}</td>
+            </tr>
+        @endforeach
+        @foreach ($invoice->items as $item)
+            <tr>
+                <td>{{ $item->description }}</td>
+                <td class="text-center">{{ $item->quantity }}</td>
+                <td class="text-center">{{ number_format($item->vat_rate, 0) }}%</td>
+                <td class="text-right">{{ $item->unit_price->format() }}</td>
+                <td class="text-right">{{ $item->total_excl_vat->format() }}</td>
+            </tr>
+        @endforeach
+        @foreach ($invoice->items as $item)
+            <tr>
+                <td>{{ $item->description }}</td>
+                <td class="text-center">{{ $item->quantity }}</td>
+                <td class="text-center">{{ number_format($item->vat_rate, 0) }}%</td>
+                <td class="text-right">{{ $item->unit_price->format() }}</td>
+                <td class="text-right">{{ $item->total_excl_vat->format() }}</td>
+            </tr>
+        @endforeach
+        @foreach ($invoice->items as $item)
+            <tr>
+                <td>{{ $item->description }}</td>
+                <td class="text-center">{{ $item->quantity }}</td>
+                <td class="text-center">{{ number_format($item->vat_rate, 0) }}%</td>
+                <td class="text-right">{{ $item->unit_price->format() }}</td>
+                <td class="text-right">{{ $item->total_excl_vat->format() }}</td>
+            </tr>
+        @endforeach
+        @foreach ($invoice->items as $item)
+            <tr>
+                <td>{{ $item->description }}</td>
+                <td class="text-center">{{ $item->quantity }}</td>
+                <td class="text-center">{{ number_format($item->vat_rate, 0) }}%</td>
+                <td class="text-right">{{ $item->unit_price->format() }}</td>
+                <td class="text-right">{{ $item->total_excl_vat->format() }}</td>
+            </tr>
+        @endforeach
+        @foreach ($invoice->items as $item)
+            <tr>
+                <td>{{ $item->description }}</td>
+                <td class="text-center">{{ $item->quantity }}</td>
+                <td class="text-center">{{ number_format($item->vat_rate, 0) }}%</td>
+                <td class="text-right">{{ $item->unit_price->format() }}</td>
+                <td class="text-right">{{ $item->total_excl_vat->format() }}</td>
+            </tr>
+        @endforeach
+        @foreach ($invoice->items as $item)
+            <tr>
+                <td>{{ $item->description }}</td>
+                <td class="text-center">{{ $item->quantity }}</td>
+                <td class="text-center">{{ number_format($item->vat_rate, 0) }}%</td>
+                <td class="text-right">{{ $item->unit_price->format() }}</td>
+                <td class="text-right">{{ $item->total_excl_vat->format() }}</td>
+            </tr>
+        @endforeach
+        @foreach ($invoice->items as $item)
+            <tr>
+                <td>{{ $item->description }}</td>
+                <td class="text-center">{{ $item->quantity }}</td>
+                <td class="text-center">{{ number_format($item->vat_rate, 0) }}%</td>
+                <td class="text-right">{{ $item->unit_price->format() }}</td>
+                <td class="text-right">{{ $item->total_excl_vat->format() }}</td>
+            </tr>
+        @endforeach
+        @foreach ($invoice->items as $item)
+            <tr>
+                <td>{{ $item->description }}</td>
+                <td class="text-center">{{ $item->quantity }}</td>
+                <td class="text-center">{{ number_format($item->vat_rate, 0) }}%</td>
+                <td class="text-right">{{ $item->unit_price->format() }}</td>
+                <td class="text-right">{{ $item->total_excl_vat->format() }}</td>
+            </tr>
+        @endforeach
+        @foreach ($invoice->items as $item)
+            <tr>
+                <td>{{ $item->description }}</td>
+                <td class="text-center">{{ $item->quantity }}</td>
+                <td class="text-center">{{ number_format($item->vat_rate, 0) }}%</td>
+                <td class="text-right">{{ $item->unit_price->format() }}</td>
+                <td class="text-right">{{ $item->total_excl_vat->format() }}</td>
+            </tr>
+        @endforeach
+        @foreach ($invoice->items as $item)
+            <tr>
+                <td>{{ $item->description }}</td>
+                <td class="text-center">{{ $item->quantity }}</td>
+                <td class="text-center">{{ number_format($item->vat_rate, 0) }}%</td>
+                <td class="text-right">{{ $item->unit_price->format() }}</td>
+                <td class="text-right">{{ $item->total_excl_vat->format() }}</td>
+            </tr>
+        @endforeach
+        @foreach ($invoice->items as $item)
+            <tr>
+                <td>{{ $item->description }}</td>
+                <td class="text-center">{{ $item->quantity }}</td>
+                <td class="text-center">{{ number_format($item->vat_rate, 0) }}%</td>
+                <td class="text-right">{{ $item->unit_price->format() }}</td>
+                <td class="text-right">{{ $item->total_excl_vat->format() }}</td>
+            </tr>
+        @endforeach
+        @foreach ($invoice->items as $item)
+            <tr>
+                <td>{{ $item->description }}</td>
+                <td class="text-center">{{ $item->quantity }}</td>
+                <td class="text-center">{{ number_format($item->vat_rate, 0) }}%</td>
+                <td class="text-right">{{ $item->unit_price->format() }}</td>
+                <td class="text-right">{{ $item->total_excl_vat->format() }}</td>
+            </tr>
+        @endforeach
+        @foreach ($invoice->items as $item)
+            <tr>
+                <td>{{ $item->description }}</td>
+                <td class="text-center">{{ $item->quantity }}</td>
+                <td class="text-center">{{ number_format($item->vat_rate, 0) }}%</td>
+                <td class="text-right">{{ $item->unit_price->format() }}</td>
+                <td class="text-right">{{ $item->total_excl_vat->format() }}</td>
+            </tr>
+        @endforeach
+        @foreach ($invoice->items as $item)
+            <tr>
+                <td>{{ $item->description }}</td>
+                <td class="text-center">{{ $item->quantity }}</td>
+                <td class="text-center">{{ number_format($item->vat_rate, 0) }}%</td>
+                <td class="text-right">{{ $item->unit_price->format() }}</td>
+                <td class="text-right">{{ $item->total_excl_vat->format() }}</td>
+            </tr>
+        @endforeach
+        @foreach ($invoice->items as $item)
+            <tr>
+                <td>{{ $item->description }}</td>
+                <td class="text-center">{{ $item->quantity }}</td>
+                <td class="text-center">{{ number_format($item->vat_rate, 0) }}%</td>
+                <td class="text-right">{{ $item->unit_price->format() }}</td>
+                <td class="text-right">{{ $item->total_excl_vat->format() }}</td>
+            </tr>
+        @endforeach
+        @foreach ($invoice->items as $item)
+            <tr>
+                <td>{{ $item->description }}</td>
+                <td class="text-center">{{ $item->quantity }}</td>
+                <td class="text-center">{{ number_format($item->vat_rate, 0) }}%</td>
+                <td class="text-right">{{ $item->unit_price->format() }}</td>
+                <td class="text-right">{{ $item->total_excl_vat->format() }}</td>
+            </tr>
+        @endforeach
+        @foreach ($invoice->items as $item)
+            <tr>
+                <td>{{ $item->description }}</td>
+                <td class="text-center">{{ $item->quantity }}</td>
+                <td class="text-center">{{ number_format($item->vat_rate, 0) }}%</td>
+                <td class="text-right">{{ $item->unit_price->format() }}</td>
+                <td class="text-right">{{ $item->total_excl_vat->format() }}</td>
+            </tr>
+        @endforeach
+        @foreach ($invoice->items as $item)
+            <tr>
+                <td>{{ $item->description }}</td>
+                <td class="text-center">{{ $item->quantity }}</td>
+                <td class="text-center">{{ number_format($item->vat_rate, 0) }}%</td>
+                <td class="text-right">{{ $item->unit_price->format() }}</td>
+                <td class="text-right">{{ $item->total_excl_vat->format() }}</td>
+            </tr>
+        @endforeach
+        @foreach ($invoice->items as $item)
+            <tr>
+                <td>{{ $item->description }}</td>
+                <td class="text-center">{{ $item->quantity }}</td>
+                <td class="text-center">{{ number_format($item->vat_rate, 0) }}%</td>
+                <td class="text-right">{{ $item->unit_price->format() }}</td>
+                <td class="text-right">{{ $item->total_excl_vat->format() }}</td>
+            </tr>
+        @endforeach
+        @foreach ($invoice->items as $item)
+            <tr>
+                <td>{{ $item->description }}</td>
+                <td class="text-center">{{ $item->quantity }}</td>
+                <td class="text-center">{{ number_format($item->vat_rate, 0) }}%</td>
+                <td class="text-right">{{ $item->unit_price->format() }}</td>
+                <td class="text-right">{{ $item->total_excl_vat->format() }}</td>
+            </tr>
+        @endforeach
+        @foreach ($invoice->items as $item)
+            <tr>
+                <td>{{ $item->description }}</td>
+                <td class="text-center">{{ $item->quantity }}</td>
+                <td class="text-center">{{ number_format($item->vat_rate, 0) }}%</td>
+                <td class="text-right">{{ $item->unit_price->format() }}</td>
+                <td class="text-right">{{ $item->total_excl_vat->format() }}</td>
+            </tr>
+        @endforeach
+        @foreach ($invoice->items as $item)
+            <tr>
+                <td>{{ $item->description }}</td>
+                <td class="text-center">{{ $item->quantity }}</td>
+                <td class="text-center">{{ number_format($item->vat_rate, 0) }}%</td>
+                <td class="text-right">{{ $item->unit_price->format() }}</td>
+                <td class="text-right">{{ $item->total_excl_vat->format() }}</td>
+            </tr>
+        @endforeach
+        @foreach ($invoice->items as $item)
+            <tr>
+                <td>{{ $item->description }}</td>
+                <td class="text-center">{{ $item->quantity }}</td>
+                <td class="text-center">{{ number_format($item->vat_rate, 0) }}%</td>
+                <td class="text-right">{{ $item->unit_price->format() }}</td>
+                <td class="text-right">{{ $item->total_excl_vat->format() }}</td>
+            </tr>
+        @endforeach
         </tbody>
     </table>
 
