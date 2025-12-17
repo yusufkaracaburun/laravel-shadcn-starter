@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Api;
 
 use App\Models\Invoice;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\JsonResponse;
 use App\Http\Responses\ApiResponse;
 use App\Http\Controllers\Controller;
@@ -132,5 +133,16 @@ final class InvoiceController extends Controller
             'customers' => $customers,
             'next_invoice_number' => $nextInvoiceNumber,
         ]);
+    }
+
+    public function downloadPdf(Invoice $invoice)
+    {
+        $invoice = $this->invoiceService->findById($invoice->id);
+
+        return Pdf::loadView('pdf.invoice', [
+            'invoice' => $invoice,
+        ])
+            ->setPaper('a4')
+            ->download("factuur_{$invoice->id}.pdf");
     }
 }

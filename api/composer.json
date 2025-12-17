@@ -7,6 +7,7 @@
     "license": "MIT",
     "require": {
         "php": "^8.3",
+        "barryvdh/laravel-dompdf": "^3.1",
         "brick/phonenumber": "^0.8.0",
         "cknow/laravel-money": "^8.4",
         "farayaz/laravel-spy": "^1.3",

@@ -161,7 +161,11 @@ namespace App\Models{
  * @property string|null $notes
  * @property \Carbon\CarbonImmutable|null $created_at
  * @property \Carbon\CarbonImmutable|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \Spatie\Activitylog\Models\Activity> $activities
+ * @property-read int|null $activities_count
  * @property-read \App\Models\Customer $customer
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\InvoiceEmail> $emails
+ * @property-read int|null $emails_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\InvoiceItem> $items
  * @property-read int|null $items_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Payment> $payments
@@ -192,6 +196,44 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Invoice whereUpdatedAt($value)
  */
 	final class Invoice extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * InvoiceEmail model.
+ * 
+ * Represents an email sent for an invoice.
+ *
+ * @property int $id
+ * @property int $invoice_id
+ * @property string $to
+ * @property string $subject
+ * @property string|null $body
+ * @property \App\Enums\EmailStatus $status
+ * @property \Carbon\CarbonImmutable|null $sent_at
+ * @property \Carbon\CarbonImmutable|null $opened_at
+ * @property \Carbon\CarbonImmutable|null $clicked_at
+ * @property string|null $error_message
+ * @property \Carbon\CarbonImmutable|null $created_at
+ * @property \Carbon\CarbonImmutable|null $updated_at
+ * @property-read \App\Models\Invoice $invoice
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceEmail newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceEmail newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceEmail query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceEmail whereBody($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceEmail whereClickedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceEmail whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceEmail whereErrorMessage($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceEmail whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceEmail whereInvoiceId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceEmail whereOpenedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceEmail whereSentAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceEmail whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceEmail whereSubject($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceEmail whereTo($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceEmail whereUpdatedAt($value)
+ */
+	final class InvoiceEmail extends \Eloquent {}
 }
 
 namespace App\Models{
