@@ -46,7 +46,7 @@ body {
    ========================= */
 .pdf-footer {
     position: fixed;
-    bottom: -40mm;        /* exact gelijk aan @page margin-bottom */
+    bottom: -30mm;        /* exact gelijk aan @page margin-bottom */
     left: -20mm;
     right: -20mm;
 
