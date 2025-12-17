@@ -1,12 +1,8 @@
 <div class="pdf-footer">
     <table width="100%">
         <tr>
-            <td>
-                Laravel · info@bedrijf.nl
-            </td>
-            <td class="text-right">
-                Pagina <span class="page-number"></span> van <span class="page-count"></span>
-            </td>
+            <td>Bedrijfsnaam · info@bedrijf.nl · BTW nummer</td>
+            <td class="text-right"></td>
         </tr>
     </table>
 </div>

@@ -2,38 +2,25 @@
 
 @section('content')
 
-    {{-- HEADER --}}
-    <div class="invoice-header">
-        <table>
-            <tr>
-                <td>
-                    <h1>Factuur</h1>
-                    <p class="text-muted">
-                        Factuur #{{ $invoice->invoice_number }}<br>
-                        Datum {{ $invoice->date->format('d-m-Y') }}<br>
-                        Vervaldatum {{ $invoice->date_due->format('d-m-Y') }}
-                    </p>
-                </td>
-                <td class="company-details">
-                    <strong>Bedrijfsnaam</strong><br>
-                    Bedrijfsadres<br>
-                    Bedrijfsplaats<br>
-                    BTW nummer
-                </td>
-            </tr>
-        </table>
-    </div>
+    <table width="100%" class="mb-20">
+        <tr>
+            <td width="50%">
+                <h2>Klant</h2>
+                {{ $invoice->customer->name }}<br>
+                {{ $invoice->customer->address }}<br>
+                {{ $invoice->customer->zipcode }} {{ $invoice->customer->city }}
+            </td>
 
-    {{-- CUSTOMER --}}
-    <div class="customer-block">
-        <h2>Klant</h2>
-        {{ $invoice->customer->name }}<br>
-        {{ $invoice->customer->address }}<br>
-        {{ $invoice->customer->zipcode }} {{ $invoice->customer->city }}
-    </div>
+            <td width="50%" class="text-right">
+                <strong>Factuur</strong><br>
+                Factuur #{{ $invoice->invoice_number }}<br>
+                Datum {{ $invoice->date->format('d-m-Y') }}<br>
+                Vervaldatum {{ $invoice->date_due->format('d-m-Y') }}
+            </td>
+        </tr>
+    </table>
 
-    {{-- ITEMS --}}
-    <table>
+    <table class="mb-30">
         <thead>
         <tr>
             <th>Omschrijving</th>
@@ -56,16 +43,13 @@
         </tbody>
     </table>
 
-    {{-- TOTALS --}}
-    <div class="totals">
+    <div class="totals mb-30">
         <table>
-            {{-- Subtotaal --}}
             <tr>
                 <td>Subtotaal (excl. BTW)</td>
                 <td class="text-right">{{ $invoice->subtotal->format() }}</td>
             </tr>
 
-            {{-- BTW per tarief als er waarde is --}}
             @if (! $invoice->total_vat_0->isZero())
                 <tr>
                     <td>BTW 0%</td>
@@ -87,27 +71,20 @@
                 </tr>
             @endif
 
-            {{-- Totaal incl. BTW --}}
             <tr>
                 <td><strong>Totaal (incl. BTW)</strong></td>
-                <td class="text-right"><strong>{{ $invoice->total->format() }}</strong></td>
+                <td class="text-right">
+                    <strong>{{ $invoice->total->format() }}</strong>
+                </td>
             </tr>
         </table>
     </div>
 
-    {{-- NOTES --}}
     @if ($invoice->notes)
         <div class="notes">
             <h3>Opmerkingen</h3>
             <p>{{ $invoice->notes }}</p>
         </div>
     @endif
-
-    <div style="clear: both;"></div>
-
-    {{-- FOOTER --}}
-    <div class="footer">
-        Vragen over deze factuur? Neem gerust contact op.
-    </div>
 
 @endsection

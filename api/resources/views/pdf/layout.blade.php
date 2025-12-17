@@ -4,24 +4,32 @@
     <meta charset="utf-8">
     <title>Factuur</title>
 
-    {{-- Base styles --}}
-    @include('pdf.styles.base')
-
-    {{-- Theme styles --}}
-    @include('pdf.styles.' . ($invoice->template ?? 'minimal'))
+    <style>
+        {!! file_get_contents(resource_path('views/pdf/styles/base.css')) !!}
+        {!! file_get_contents(resource_path('views/pdf/styles/' . ($invoice->template ?? 'modern') . '.css')) !!}
+    </style>
 </head>
 <body>
 
-{{-- HEADER (every page) --}}
 @include('pdf.partials.header')
-
-{{-- FOOTER (every page) --}}
 @include('pdf.partials.footer')
 
-{{-- CONTENT --}}
 <main class="pdf-content">
     @yield('content')
 </main>
+
+<script type="text/php">
+    if (isset($pdf)) {
+        $pdf->page_text(
+            20,
+            800,
+            "Pagina {PAGE_NUM} van {PAGE_COUNT}",
+            null,
+            9,
+            [0.4, 0.4, 0.4]
+        );
+    }
+</script>
 
 </body>
 </html>
