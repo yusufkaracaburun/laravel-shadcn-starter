@@ -20,7 +20,7 @@
             </tr>
         @endif
 
-        @if (! $data->total_vat_21->isZero())
+        @if ($data->total_vat_21->getAmount() > 0)
             <tr>
                 <td>BTW 21%</td>
                 <td class="text-right">{{ $data->total_vat_21->format() }}</td>
