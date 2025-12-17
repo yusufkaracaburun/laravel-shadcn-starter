@@ -289,6 +289,7 @@ function formatCurrency(value: any): string {
             >
               <Mail class="w-6 h-6 text-gray-400" />
             </div>
+            <p class="text-sm text-gray-500">No emails yet</p>
           </div>
           <div v-else class="px-1">
             <div

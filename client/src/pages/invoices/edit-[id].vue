@@ -51,12 +51,16 @@ const isSubmitting = ref(false)
 const currentFormValues = ref({})
 const currentFormItems = ref([])
 
-watch(invoice, (newInvoice) => {
-  if (newInvoice) {
-    currentFormValues.value = { ...newInvoice }
-    currentFormItems.value = newInvoice.items || []
-  }
-}, { immediate: true })
+watch(
+  invoice,
+  (newInvoice) => {
+    if (newInvoice) {
+      currentFormValues.value = { ...newInvoice }
+      currentFormItems.value = newInvoice.items || []
+    }
+  },
+  { immediate: true },
+)
 
 function handleClose() {
   router.push({ name: '/invoices/[id]', params: { id: invoiceId.value.toString() } })
@@ -113,7 +117,7 @@ async function handleUpdateAndSend() {
 
     <InvoiceEditorLayout v-else-if="invoice" :is-loading="isSubmitting">
       <template #form>
-                <InvoiceForm
+        <InvoiceForm
           ref="formRef"
           :invoice="currentFormValues"
           @close="handleClose"

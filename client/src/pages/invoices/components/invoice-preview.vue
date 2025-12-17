@@ -36,10 +36,20 @@ function formatDate(dateString: string | null): string {
 function formatCurrency(value: any): string {
   return formatMoney(value)
 }
+
+const pdfUrl = computed(
+  () =>
+    `/api/invoices/${props.invoice?.id}/pdf/preview#toolbar=1&navpanes=0&scrollbar=0&statusbar=0&view=Fit&zoom=100`,
+)
 </script>
 
 <template>
+  <div v-if="pdfUrl" style="height: calc(100vh - 16px)">
+    <iframe :src="pdfUrl" style="width: 100%; height: 100%; border: 0" />
+  </div>
+
   <div
+    v-else
     class="bg-white shadow-sm border border-gray-200 print:shadow-none print:max-w-none print:mx-0 p-8 print:p-0 m-8"
   >
     <!-- Invoice Header -->

@@ -435,13 +435,21 @@ defineExpose({
   errors, // Expose errors for preview component
 })
 
-watch(values, (newValues) => {
-  emits('update:modelValue', newValues as TInvoice)
-}, { deep: true })
+watch(
+  values,
+  (newValues) => {
+    emits('update:modelValue', newValues as TInvoice)
+  },
+  { deep: true },
+)
 
-watch(localItems, (newItems) => {
-  emits('update:formItems', itemsForPreview.value)
-}, { deep: true })
+watch(
+  localItems,
+  (newItems) => {
+    emits('update:formItems', itemsForPreview.value)
+  },
+  { deep: true },
+)
 </script>
 
 <template>
