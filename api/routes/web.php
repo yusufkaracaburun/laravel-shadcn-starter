@@ -26,5 +26,4 @@ Route::middleware('auth')->group(function (): void {
 Route::get('/invoices/{invoice}/html', [InvoiceController::class, 'asHtml'])
     ->middleware('auth:sanctum');
 
-Route::get('/invoices/{invoice}/pdf/preview', [InvoiceController::class, 'previewPdf'])
-    ->middleware('auth:sanctum');
+Route::get('/invoices/{invoice}/pdf/preview', [InvoiceController::class, 'previewPdf']);
