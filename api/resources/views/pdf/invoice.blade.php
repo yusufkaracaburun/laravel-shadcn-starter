@@ -91,7 +91,4 @@
         </div>
     @endif
 
-    {{-- 🔒 FOOTER GUARD (VERPLICHT) --}}
-    <div class="footer-guard"></div>
-
 @endsection

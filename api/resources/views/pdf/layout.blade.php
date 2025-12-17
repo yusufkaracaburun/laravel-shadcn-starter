@@ -4,13 +4,9 @@
     <meta charset="utf-8">
     <title>Factuur</title>
 
-    @php
-        $template = $invoice->template ?? 'modern';
-    @endphp
-
     <style>
         {!! file_get_contents(resource_path('views/pdf/styles/base.css')) !!}
-        {!! file_get_contents(resource_path("views/pdf/styles/{$template}.css")) !!}
+        {!! file_get_contents(resource_path('views/pdf/styles/' . ($invoice->template ?? 'modern') . '.css')) !!}
     </style>
 </head>
 <body>
@@ -25,12 +21,11 @@
 <script type="text/php">
     if (isset($pdf)) {
         $pdf->page_text(
-            20,
-            $pdf->get_height() - 28,
+            500,
+            820,
             "Pagina {PAGE_NUM} van {PAGE_COUNT}",
             null,
-            9,
-            [0.4, 0.4, 0.4]
+            9
         );
     }
 </script>

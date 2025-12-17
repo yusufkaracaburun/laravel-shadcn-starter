@@ -1,8 +1,9 @@
+/* =========================
+   PAGE SETUP
+   ========================= */
 @page {
-    margin-top: 40mm;
-    margin-bottom: 40mm;
-    margin-left: 20mm;
-    margin-right: 20mm;
+    /* ruimte reserveren voor header + footer */
+    margin: 40mm 20mm 30mm 20mm; /* top right bottom left */
 }
 
 body {
@@ -16,25 +17,23 @@ body {
 /* =========================
    CONTENT
    ========================= */
+/* GEEN extra marges hier – @page regelt alles */
 .pdf-content {
     position: relative;
 }
 
-/* VOORKOM overlap met footer */
-.avoid-footer {
-    page-break-after: always;
-}
-
 /* =========================
-   HEADER
+   HEADER (every page)
    ========================= */
 .pdf-header {
     position: fixed;
-    top: -40mm;
-    left: 0;
-    right: 0;
+    top: -40mm;           /* exact gelijk aan @page margin-top */
+    left: -20mm;
+    right: -20mm;
+
     height: 40mm;
     padding: 8mm 20mm;
+
     background: #fff;
 }
 
@@ -43,15 +42,17 @@ body {
 }
 
 /* =========================
-   FOOTER
+   FOOTER (every page)
    ========================= */
 .pdf-footer {
     position: fixed;
-    bottom: -40mm;
-    left: 0;
-    right: 0;
-    height: 40mm;
+    bottom: -30mm;        /* exact gelijk aan @page margin-bottom */
+    left: -20mm;
+    right: -20mm;
+
+    height: 20mm;
     padding: 8mm 20mm;
+
     font-size: 9px;
     color: #777;
     background: yellow;
@@ -65,15 +66,30 @@ table {
     border-collapse: collapse;
 }
 
-tr {
-    page-break-inside: avoid;
+thead {
+    display: table-header-group; /* header herhalen per pagina */
 }
 
-th, td {
+tr {
+    page-break-inside: avoid;    /* geen halve rijen */
+}
+
+th,
+td {
     vertical-align: top;
 }
 
-.footer-guard {
-    height: 30mm;
-    page-break-inside: avoid;
+/* =========================
+   HELPERS
+   ========================= */
+.text-right {
+    text-align: right;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.text-muted {
+    color: #777;
 }
