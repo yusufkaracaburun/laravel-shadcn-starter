@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Http\Controllers\Api\InvoiceController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\User\OauthController;
 
