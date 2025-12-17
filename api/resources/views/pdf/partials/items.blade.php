@@ -14,7 +14,7 @@
         <tbody>
         @foreach ($items as $item)
             <tr>
-                <td>{{ $item->description }}</td>
+                <td>{{ $item->name }}</td>
                 <td class="text-center">{{ number_format($item->quantity, 2) }}</td>
                 <td class="text-center">uur</td>
                 <td class="text-right">{{ $item->unit_price->format() }}</td>
