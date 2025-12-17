@@ -36,22 +36,11 @@ function formatDate(dateString: string | null): string {
 function formatCurrency(value: any): string {
   return formatMoney(value)
 }
-
-const pdfUrl = computed(
-  () =>
-    `/api/invoices/${props.invoice?.id}/pdf/preview#toolbar=1&navpanes=0&scrollbar=0&statusbar=0&view=Fit&zoom=100`,
-)
 </script>
 
 <template>
-  <div v-if="pdfUrl" style="height: calc(100vh - 16px)">
-    <iframe :src="pdfUrl" style="width: 100%; height: 100%; border: 0" />
-  </div>
-
   <div
-    v-else
-    class="bg-white shadow-sm border border-gray-200 print:shadow-none print:max-w-none print:mx-0 p-8 print:p-0 m-8"
-  >
+    class="bg-white shadow-sm border border-gray-200 print:shadow-none print:max-w-none print:mx-0 p-8 print:p-0 m-8">
     <!-- Invoice Header -->
     <div class="border-b-2 border-gray-200 pb-8 mb-8">
       <div class="flex justify-between items-start">
@@ -79,7 +68,7 @@ const pdfUrl = computed(
               <span class="font-semibold text-gray-700">Invoice #:</span>
               <span class="ml-2 text-gray-900">{{
                 invoice.invoice_number || `#${invoice.id}`
-              }}</span>
+                }}</span>
             </div>
             <div>
               <span class="font-semibold text-gray-700">Date:</span>
@@ -173,11 +162,7 @@ const pdfUrl = computed(
           </tr>
         </thead>
         <tbody>
-          <tr
-            v-for="(item, index) in invoiceItems"
-            :key="item.id"
-            :class="index % 2 === 0 ? 'bg-white' : 'bg-gray-50'"
-          >
+          <tr v-for="(item, index) in invoiceItems" :key="item.id" :class="index % 2 === 0 ? 'bg-white' : 'bg-gray-50'">
             <td class="border border-gray-300 px-4 py-3">
               <div class="font-medium text-gray-900">
                 {{ item.description || '—' }}
@@ -215,40 +200,29 @@ const pdfUrl = computed(
             <span>{{ formatCurrency(invoice.subtotal) }}</span>
           </div>
 
-          <div
-            v-if="
-              invoice?.total_vat_0 &&
-              (typeof invoice.total_vat_0 === 'number' ? invoice.total_vat_0 > 0 : true)
-            "
-            class="flex justify-between text-gray-700"
-          >
+          <div v-if="
+            invoice?.total_vat_0 &&
+            (typeof invoice.total_vat_0 === 'number' ? invoice.total_vat_0 > 0 : true)
+          " class="flex justify-between text-gray-700">
             <span>VAT 0%:</span>
             <span>{{ formatCurrency(invoice.total_vat_0) }}</span>
           </div>
-          <div
-            v-if="
-              invoice?.total_vat_9 &&
-              (typeof invoice.total_vat_9 === 'number' ? invoice.total_vat_9 > 0 : true)
-            "
-            class="flex justify-between text-gray-700"
-          >
+          <div v-if="
+            invoice?.total_vat_9 &&
+            (typeof invoice.total_vat_9 === 'number' ? invoice.total_vat_9 > 0 : true)
+          " class="flex justify-between text-gray-700">
             <span>VAT 9%:</span>
             <span>{{ formatCurrency(invoice.total_vat_9) }}</span>
           </div>
-          <div
-            v-if="
-              invoice?.total_vat_21 &&
-              (typeof invoice.total_vat_21 === 'number' ? invoice.total_vat_21 > 0 : true)
-            "
-            class="flex justify-between text-gray-700"
-          >
+          <div v-if="
+            invoice?.total_vat_21 &&
+            (typeof invoice.total_vat_21 === 'number' ? invoice.total_vat_21 > 0 : true)
+          " class="flex justify-between text-gray-700">
             <span>VAT 21%:</span>
             <span>{{ formatCurrency(invoice.total_vat_21) }}</span>
           </div>
 
-          <div
-            class="border-t-2 border-gray-900 pt-3 flex justify-between text-xl font-bold text-gray-900"
-          >
+          <div class="border-t-2 border-gray-900 pt-3 flex justify-between text-xl font-bold text-gray-900">
             <span>Total:</span>
             <span>{{ formatCurrency(invoice.total) }}</span>
           </div>

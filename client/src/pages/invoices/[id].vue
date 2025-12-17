@@ -14,7 +14,6 @@ import type { IInvoiceActivity, IInvoiceEmail, IInvoicePayment } from '@/service
 import Error from '@/components/custom-error.vue'
 import InvoiceNavbar from '@/pages/invoices/components/invoice-navbar.vue'
 import Loading from '@/components/loading.vue'
-import InvoicePreview from '@/pages/invoices/components/invoice-preview.vue'
 import { Button } from '@/components/ui/button'
 import InvoiceSidebar from '@/pages/invoices/components/invoice-sidebar.vue'
 import DocumentLayout from '@/layouts/document-layout.vue'
@@ -47,32 +46,17 @@ const {
 
 const invoice = computed(() => invoiceResponse.value?.data ?? null) as ComputedRef<
   | (TInvoice & {
-      payments?: IInvoicePayment[]
-      activities?: IInvoiceActivity[]
-      emails?: IInvoiceEmail[]
-    })
+    payments?: IInvoicePayment[]
+    activities?: IInvoiceActivity[]
+    emails?: IInvoiceEmail[]
+  })
   | null
 >
 
-// Normalize items structure - backend returns items as { data: [...] } but we expect an array
-const invoiceItems = computed(() => {
-  if (!invoice.value?.items) {
-    return []
-  }
-  // Handle paginated structure: items: { data: [...] }
-  if (
-    typeof invoice.value.items === 'object' &&
-    'data' in invoice.value.items &&
-    Array.isArray(invoice.value.items.data)
-  ) {
-    return invoice.value.items.data
-  }
-  // Handle direct array structure: items: [...]
-  if (Array.isArray(invoice.value.items)) {
-    return invoice.value.items
-  }
-  return []
-})
+const pdfUrl = computed(
+  () =>
+    `/api/invoices/${invoiceId.value}/pdf/preview#toolbar=1&navpanes=0&scrollbar=0&statusbar=0&view=Fit&zoom=100`,
+)
 </script>
 
 <template>
@@ -88,13 +72,8 @@ const invoiceItems = computed(() => {
 
       <div v-else-if="isError" class="flex items-center justify-center min-h-[400px]">
         <div class="text-center">
-          <Error
-            :code="(error as any)?.response?.status || 500"
-            subtitle="Failed to load invoice"
-            :error="
-              (error as any)?.message || 'We couldn\'t load the invoice details. Please try again.'
-            "
-          />
+          <Error :code="(error as any)?.response?.status || 500" subtitle="Failed to load invoice" :error="(error as any)?.message || 'We couldn\'t load the invoice details. Please try again.'
+            " />
           <Button class="mt-4 print:hidden" @click="refetch"> Try Again </Button>
         </div>
       </div>
@@ -102,7 +81,9 @@ const invoiceItems = computed(() => {
       <div v-else-if="invoice" class="flex flex-1 flex-col items-center justify-center">
         <div class="w-full flex flex-row">
           <div class="flex-1">
-            <InvoicePreview :invoice="invoice" :invoice-items="invoiceItems" />
+            <div v-if="pdfUrl" style="height: calc(100vh - 16px)">
+              <iframe :src="pdfUrl" style="width: 100%; height: 100%; border: 0" />
+            </div>
           </div>
           <div class="w-1/4 min-h-screen border-l border-gray-200">
             <InvoiceSidebar :invoice="invoice" />
