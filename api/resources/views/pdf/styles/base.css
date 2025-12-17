@@ -1,0 +1,59 @@
+@page {
+margin-top: 40mm;
+margin-bottom: 40mm;
+margin-left: 20mm;
+margin-right: 20mm;
+}
+
+body {
+font-family: DejaVu Sans, sans-serif;
+font-size: 11px;
+color: #333;
+margin: 0;
+line-height: 1.5;
+}
+
+/* NIET extra marges geven, @page regelt dit */
+.pdf-content {
+position: relative;
+}
+
+/* HEADER in de top-marge */
+.pdf-header {
+position: fixed;
+top: -40mm;        /* EXACT gelijk aan margin-top */
+left: 0;
+right: 0;
+
+height: 40mm;
+padding: 8mm 20mm;
+background: #fff;
+}
+
+.pdf-logo {
+max-height: 16mm;
+max-width: 60mm;
+}
+
+/* FOOTER in de bottom-marge */
+.pdf-footer {
+position: fixed;
+bottom: -40mm;     /* EXACT gelijk aan margin-bottom */
+left: 0;
+right: 0;
+
+height: 40mm;
+padding: 8mm 20mm;
+font-size: 9px;
+color: #777;
+background: #fff;
+}
+
+/* Helpers */
+.text-right { text-align: right; }
+.text-center { text-align: center; }
+
+/* Tables */
+table { width: 100%; border-collapse: collapse; }
+th, td { vertical-align: top; }
+tr { page-break-inside: avoid; }

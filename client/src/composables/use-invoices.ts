@@ -11,10 +11,12 @@ import { useToast } from '@/composables/use-toast'
 import {
   useCreateInvoiceMutation,
   useDeleteInvoiceMutation,
+  useDownloadInvoicePdfMutation,
   useGetInvoicesQuery,
   useUpdateInvoiceMutation,
 } from '@/services/invoices.service'
 import { useErrorStore } from '@/stores/error.store'
+import { downloadBlobFromAxiosResponse } from '@/utils/blob'
 
 export function useInvoices() {
   const toast = useToast()
@@ -117,7 +119,8 @@ export function useInvoices() {
     try {
       const invoicesResponse = await fetchInvoices()
       return invoicesResponse.data
-    } catch (error: any) {
+    }
+    catch (error: any) {
       // Store error with context
       errorStore.setError(error, { context: 'fetchInvoices' })
 
@@ -132,13 +135,15 @@ export function useInvoices() {
   const createInvoiceMutation = useCreateInvoiceMutation()
   const updateInvoiceMutation = useUpdateInvoiceMutation()
   const deleteInvoiceMutation = useDeleteInvoiceMutation()
+  const downloadInvoicePdfMutation = useDownloadInvoicePdfMutation()
 
   async function createInvoice(data: ICreateInvoiceRequest) {
     try {
       const response = await createInvoiceMutation.mutateAsync(data)
       toast.showSuccess('Invoice created successfully!')
       return response
-    } catch (error: any) {
+    }
+    catch (error: any) {
       // Store error with context
       errorStore.setError(error, { context: 'createInvoice' })
 
@@ -150,7 +155,8 @@ export function useInvoices() {
       if (Object.keys(validationErrors).length > 0) {
         const firstError = Object.values(validationErrors)[0]?.[0]
         toast.showError(firstError || message)
-      } else {
+      }
+      else {
         toast.showError(message)
       }
       throw error
@@ -162,7 +168,8 @@ export function useInvoices() {
       const response = await updateInvoiceMutation.mutateAsync({ invoiceId, data })
       toast.showSuccess('Invoice updated successfully!')
       return response
-    } catch (error: any) {
+    }
+    catch (error: any) {
       // Store error with context
       errorStore.setError(error, { context: 'updateInvoice' })
 
@@ -174,7 +181,8 @@ export function useInvoices() {
       if (Object.keys(validationErrors).length > 0) {
         const firstError = Object.values(validationErrors)[0]?.[0]
         toast.showError(firstError || message)
-      } else {
+      }
+      else {
         toast.showError(message)
       }
       throw error
@@ -185,13 +193,29 @@ export function useInvoices() {
     try {
       await deleteInvoiceMutation.mutateAsync(invoiceId)
       toast.showSuccess('Invoice deleted successfully!')
-    } catch (error: any) {
+    }
+    catch (error: any) {
       // Store error with context
       errorStore.setError(error, { context: 'deleteInvoice' })
 
       // Use error store utilities for messages
       const message = errorStore.getErrorMessage(error)
       toast.showError(message)
+      throw error
+    }
+  }
+
+  async function downloadInvoicePdf(invoiceId: number) {
+    try {
+      const response = await downloadInvoicePdfMutation.mutateAsync(invoiceId)
+
+      downloadBlobFromAxiosResponse(response, `factuur_${invoiceId}.pdf`)
+
+      toast.showSuccess('Invoice PDF downloaded successfully!')
+    }
+    catch (error: any) {
+      errorStore.setError(error, { context: 'downloadInvoicePdf' })
+      toast.showError(errorStore.getErrorMessage(error))
       throw error
     }
   }
@@ -214,5 +238,7 @@ export function useInvoices() {
     updateInvoiceMutation,
     deleteInvoice,
     deleteInvoiceMutation,
+    downloadInvoicePdf,
+    downloadInvoicePdfMutation,
   }
 }

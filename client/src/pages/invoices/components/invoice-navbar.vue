@@ -3,23 +3,23 @@ import { ArrowLeft, Download, FilePenLine, Printer, Trash2 } from 'lucide-vue-ne
 import { computed, ref, shallowRef } from 'vue'
 import { useRouter } from 'vue-router'
 
+import type { TInvoice } from '@/pages/invoices/data/schema'
+
 import Error from '@/components/custom-error.vue'
 import Loading from '@/components/loading.vue'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent } from '@/components/ui/dialog'
 import { StatusBadge } from '@/components/ui/status-badge'
-
-import type { TInvoice } from '@/pages/invoices/data/schema'
-
+import { useInvoices } from '@/composables/use-invoices'
 import InvoiceDelete from '@/pages/invoices/components/invoice-delete.vue'
 import { statuses } from '@/pages/invoices/data/data'
-import { getPaymentStatusColor } from '@/utils/status-colors'
 import {
   formatDateForPreview,
   formatDateTime,
   formatMoney,
   formatNumber,
 } from '@/pages/invoices/utils/formatters'
+import { getPaymentStatusColor } from '@/utils/status-colors'
 
 const props = defineProps<{
   invoice: TInvoice | null
@@ -30,6 +30,8 @@ const router = useRouter()
 
 const showComponent = shallowRef<typeof InvoiceDelete | null>(null)
 const isDialogOpen = ref(false)
+
+const { downloadInvoicePdf } = useInvoices()
 
 type TCommand = 'edit' | 'delete'
 
@@ -56,9 +58,7 @@ function printInvoice() {
 }
 
 function downloadPDF() {
-  // For now, we'll use print functionality
-  // In a real implementation, you might use a library like jsPDF or html2pdf
-  printInvoice()
+  downloadInvoicePdf(props.invoiceId)
 }
 </script>
 
@@ -71,13 +71,9 @@ function downloadPDF() {
           Back
         </Button>
         <div class="flex items-center gap-2">
-          <StatusBadge
-            v-if="props.invoice"
-            :status="props.invoice!.status"
-            type="invoice"
+          <StatusBadge v-if="props.invoice" :status="props.invoice!.status" type="invoice"
             :icon="statuses.find((s) => s.value === props.invoice!.status)?.icon"
-            :label="statuses.find((s) => s.value === props.invoice!.status)?.label"
-          />
+            :label="statuses.find((s) => s.value === props.invoice!.status)?.label" />
         </div>
       </div>
       <div class="flex items-center gap-2">
@@ -101,15 +97,11 @@ function downloadPDF() {
     </div>
   </div>
 
-  <div class="border-b border-gray-200"></div>
+  <div class="border-b border-gray-200" />
 
   <Dialog v-model:open="isDialogOpen" class="print:hidden">
     <DialogContent v-if="showComponent && props.invoice" class="sm:max-w-[425px]">
-      <InvoiceDelete
-        v-if="showComponent === InvoiceDelete"
-        :invoice="props.invoice"
-        @close="handleDeleteClose"
-      />
+      <InvoiceDelete v-if="showComponent === InvoiceDelete" :invoice="props.invoice" @close="handleDeleteClose" />
     </DialogContent>
   </Dialog>
 </template>

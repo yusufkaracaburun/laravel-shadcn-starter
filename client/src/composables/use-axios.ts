@@ -93,7 +93,7 @@ function initializeAxios() {
     timeout: env.VITE_SERVER_API_TIMEOUT,
     withCredentials: true,
     headers: {
-      Accept: 'application/json',
+      'Accept': 'application/json',
       'X-Requested-With': 'XMLHttpRequest',
     },
   })
