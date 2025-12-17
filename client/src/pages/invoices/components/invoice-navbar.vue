@@ -71,9 +71,13 @@ function downloadPDF() {
           Back
         </Button>
         <div class="flex items-center gap-2">
-          <StatusBadge v-if="props.invoice" :status="props.invoice!.status" type="invoice"
+          <StatusBadge
+            v-if="props.invoice"
+            :status="props.invoice!.status"
+            type="invoice"
             :icon="statuses.find((s) => s.value === props.invoice!.status)?.icon"
-            :label="statuses.find((s) => s.value === props.invoice!.status)?.label" />
+            :label="statuses.find((s) => s.value === props.invoice!.status)?.label"
+          />
         </div>
       </div>
       <div class="flex items-center gap-2">
@@ -101,7 +105,11 @@ function downloadPDF() {
 
   <Dialog v-model:open="isDialogOpen" class="print:hidden">
     <DialogContent v-if="showComponent && props.invoice" class="sm:max-w-[425px]">
-      <InvoiceDelete v-if="showComponent === InvoiceDelete" :invoice="props.invoice" @close="handleDeleteClose" />
+      <InvoiceDelete
+        v-if="showComponent === InvoiceDelete"
+        :invoice="props.invoice"
+        @close="handleDeleteClose"
+      />
     </DialogContent>
   </Dialog>
 </template>

@@ -21,12 +21,12 @@ import InvoiceItemsManagement from './invoice-items-management.vue'
 import InvoiceNotesSection from './invoice-notes-section.vue'
 
 const props = defineProps<{
-  invoice: TInvoice | null
+  modelValue: TInvoice | null
   nextInvoiceNumber?: string | null
   items?: Item[]
   customers?: Customer[]
 }>()
-const emits = defineEmits(['close', 'submit'])
+const emits = defineEmits(['close', 'submit', 'update:modelValue', 'update:formItems'])
 
 const router = useRouter()
 
@@ -82,23 +82,23 @@ function calculateDueDate(invoiceDate: string, dueDays: number): string {
 
 // Compute initial values reactively
 function getInitialValues() {
-  const invoiceDate = formatDateForInput(props.invoice?.date) || getTodayDate()
-  const dueDays = props.invoice?.due_days ?? 30
+  const invoiceDate = formatDateForInput(props.modelValue?.date) || getTodayDate()
+  const dueDays = props.modelValue?.due_days ?? 30
   let calculatedDueDate = ''
-  if (props.invoice?.date_due) {
-    calculatedDueDate = formatDateForInput(props.invoice.date_due)
+  if (props.modelValue?.date_due) {
+    calculatedDueDate = formatDateForInput(props.modelValue.date_due)
   } else {
     calculatedDueDate = calculateDueDate(invoiceDate, dueDays)
   }
 
   return {
-    customer_id: props.invoice?.customer_id ?? undefined,
-    invoice_number: props.invoice?.invoice_number ?? props.nextInvoiceNumber ?? null,
+    customer_id: props.modelValue?.customer_id ?? undefined,
+    invoice_number: props.modelValue?.invoice_number ?? props.nextInvoiceNumber ?? null,
     date: invoiceDate,
     due_days: dueDays,
     date_due: calculatedDueDate,
-    status: props.invoice?.status ?? 'draft',
-    notes: props.invoice?.notes ?? null,
+    status: props.modelValue?.status ?? 'draft',
+    notes: props.modelValue?.notes ?? null,
   }
 }
 
@@ -135,7 +135,7 @@ const showAddForm = ref(false)
 
 // Initialize local items from invoice items when editing existing invoice
 watch(
-  () => props.invoice,
+  () => props.modelValue,
   (newInvoice) => {
     if (newInvoice?.items && newInvoice.items.length > 0) {
       // Convert invoice items to local format
@@ -298,7 +298,7 @@ watch(
 
 // Reset form when invoice or nextInvoiceNumber changes
 watch(
-  () => [props.invoice, props.nextInvoiceNumber],
+  () => [props.modelValue, props.nextInvoiceNumber],
   (values) => {
     const [newInvoice, nextInvoiceNumber] = values as [TInvoice | null, string | null | undefined]
     if (newInvoice) {
@@ -364,11 +364,11 @@ const onSubmit = handleSubmit(async (formValues) => {
     // Always include items
     backendData.items = itemsData || []
 
-    if (props.invoice?.id) {
+    if (props.modelValue?.id) {
       // Update existing invoice
-      await updateInvoice(props.invoice.id, backendData)
+      await updateInvoice(props.modelValue.id, backendData)
       // Navigate to invoice detail page
-      router.push({ name: '/invoices/[id]', params: { id: props.invoice.id.toString() } })
+      router.push({ name: '/invoices/[id]', params: { id: props.modelValue.id.toString() } })
     } else {
       // Create new invoice
       const response = await createInvoice(backendData)
@@ -411,7 +411,7 @@ const invoiceTotals = computed(() => calculateInvoiceTotals(localItems.value))
 const itemsForPreview = computed(() => {
   return localItems.value.map((item) => ({
     id: item.id || 0,
-    invoice_id: props.invoice?.id || 0,
+    invoice_id: props.modelValue?.id || 0,
     description: item.description,
     quantity: item.quantity,
     unit_price: item.unit_price,
@@ -428,14 +428,20 @@ const itemsForPreview = computed(() => {
 
 // Expose form values and methods for parent component
 defineExpose({
-  values,
   handleSubmit: onSubmit,
   isSubmitting,
   resetForm,
   setFieldValue,
-  items: itemsForPreview, // Expose items for preview
   errors, // Expose errors for preview component
 })
+
+watch(values, (newValues) => {
+  emits('update:modelValue', newValues as TInvoice)
+}, { deep: true })
+
+watch(localItems, (newItems) => {
+  emits('update:formItems', itemsForPreview.value)
+}, { deep: true })
 </script>
 
 <template>

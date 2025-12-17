@@ -128,22 +128,6 @@ export interface IInvoice {
   notes: string | null
   items?:
     | Array<{
-      id: number
-      invoice_id: number
-      description: string | null
-      quantity: number
-      unit: string | null
-      unit_price: Money | number
-      vat_rate: number
-      total_excl_vat: Money | number
-      total_vat: Money | number
-      total_incl_vat: Money | number
-      sort_order: number
-      created_at: string
-      updated_at: string
-    }>
-    | {
-      data: Array<{
         id: number
         invoice_id: number
         description: string | null
@@ -158,7 +142,23 @@ export interface IInvoice {
         created_at: string
         updated_at: string
       }>
-    } // When loaded via include=items - backend returns paginated structure
+    | {
+        data: Array<{
+          id: number
+          invoice_id: number
+          description: string | null
+          quantity: number
+          unit: string | null
+          unit_price: Money | number
+          vat_rate: number
+          total_excl_vat: Money | number
+          total_vat: Money | number
+          total_incl_vat: Money | number
+          sort_order: number
+          created_at: string
+          updated_at: string
+        }>
+      } // When loaded via include=items - backend returns paginated structure
   payments?: IInvoicePayment[] // When loaded via include=payments
   activities?: IInvoiceActivity[] // When loaded via include=activities
   emails?: IInvoiceEmail[] // When loaded via include=emails
@@ -193,7 +193,7 @@ export interface IPaginatedInvoicesResponse {
  * @returns Sort string for Spatie QueryBuilder (e.g., "invoice_number" or "-invoice_number" or "invoice_number,-date")
  */
 function convertSortingToQueryString(
-  sorting: Array<{ id: string, desc: boolean }>,
+  sorting: Array<{ id: string; desc: boolean }>,
 ): string | undefined {
   if (!sorting || sorting.length === 0) {
     return undefined
@@ -234,7 +234,7 @@ export interface IInvoiceFilters {
 export function useGetInvoicesQuery(
   page: MaybeRef<number> = 1,
   pageSize: MaybeRef<number> = 15,
-  sorting: MaybeRef<Array<{ id: string, desc: boolean }>> = [],
+  sorting: MaybeRef<Array<{ id: string; desc: boolean }>> = [],
   filters: MaybeRef<IInvoiceFilters> = {},
   include: MaybeRef<string[]> = [],
 ) {
@@ -284,22 +284,16 @@ export function useGetInvoicesQuery(
       if (currentFilters && Object.keys(currentFilters).length > 0) {
         const filterParams: Record<string, any> = {}
 
-        if (currentFilters.id !== undefined)
-          filterParams.id = currentFilters.id
+        if (currentFilters.id !== undefined) filterParams.id = currentFilters.id
         if (currentFilters.customer_id !== undefined)
           filterParams.customer_id = currentFilters.customer_id
-        if (currentFilters.status)
-          filterParams.status = currentFilters.status
+        if (currentFilters.status) filterParams.status = currentFilters.status
         if (currentFilters.invoice_number)
           filterParams.invoice_number = currentFilters.invoice_number
-        if (currentFilters.date)
-          filterParams.date = currentFilters.date
-        if (currentFilters.date_due)
-          filterParams.date_due = currentFilters.date_due
-        if (currentFilters.between)
-          filterParams.between = currentFilters.between
-        if (currentFilters.search)
-          filterParams.search = currentFilters.search
+        if (currentFilters.date) filterParams.date = currentFilters.date
+        if (currentFilters.date_due) filterParams.date_due = currentFilters.date_due
+        if (currentFilters.between) filterParams.between = currentFilters.between
+        if (currentFilters.search) filterParams.search = currentFilters.search
 
         if (Object.keys(filterParams).length > 0) {
           params.filter = filterParams
@@ -432,7 +426,7 @@ export function useUpdateInvoiceMutation() {
   return useMutation<
     IResponse<IInvoice>,
     AxiosError,
-    { invoiceId: number, data: IUpdateInvoiceRequest }
+    { invoiceId: number; data: IUpdateInvoiceRequest }
   >({
     mutationFn: async ({ invoiceId, data }): Promise<IResponse<IInvoice>> => {
       const response = await axiosInstance.put(`/api/invoices/${invoiceId}`, data)
@@ -475,11 +469,7 @@ export function useDownloadInvoicePdfMutation() {
 
   return useMutation<AxiosResponse<Blob>, AxiosError, number>({
     mutationFn: (invoiceId: number) =>
-      axiosInstance.post(
-        `/api/invoices/${invoiceId}/pdf`,
-        {},
-        { responseType: 'blob' },
-      ),
+      axiosInstance.post(`/api/invoices/${invoiceId}/pdf`, {}, { responseType: 'blob' }),
   })
 }
 

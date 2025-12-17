@@ -14,9 +14,9 @@ import Loading from '@/components/loading.vue'
 import { Button } from '@/components/ui/button'
 import { useGetInvoicePrerequisitesQuery, useGetInvoiceQuery } from '@/services/invoices.service'
 
-import InvoiceEditorLayout from '../components/invoice-editor-layout.vue'
-import InvoiceForm from '../components/invoice-form.vue'
-import InvoicePreview from '../components/invoice-preview.vue'
+import InvoiceEditorLayout from './components/invoice-editor-layout.vue'
+import InvoiceForm from './components/invoice-form.vue'
+import InvoicePreview from './components/invoice-preview.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -48,27 +48,15 @@ const invoice = computed(() => invoiceResponse.value?.data ?? null)
 const formRef = ref<InstanceType<typeof InvoiceForm> | null>(null)
 const isSubmitting = ref(false)
 
-const formValues = computed(() => {
-  const values = formRef.value?.values || {}
-  // Include financial data from invoice if editing
-  if (invoice.value) {
-    return {
-      ...values,
-      subtotal: invoice.value.subtotal,
-      total_vat_0: invoice.value.total_vat_0,
-      total_vat_9: invoice.value.total_vat_9,
-      total_vat_21: invoice.value.total_vat_21,
-      total: invoice.value.total,
-    }
-  }
-  return values
-})
+const currentFormValues = ref({})
+const currentFormItems = ref([])
 
-const formItems = computed(() => {
-  // For existing invoices, use items from API (loaded via invoice.items)
-  // For form edits, use items from formRef if available
-  return formRef.value?.items || invoice.value?.items || []
-})
+watch(invoice, (newInvoice) => {
+  if (newInvoice) {
+    currentFormValues.value = { ...newInvoice }
+    currentFormItems.value = newInvoice.items || []
+  }
+}, { immediate: true })
 
 function handleClose() {
   router.push({ name: '/invoices/[id]', params: { id: invoiceId.value.toString() } })
@@ -125,13 +113,19 @@ async function handleUpdateAndSend() {
 
     <InvoiceEditorLayout v-else-if="invoice" :is-loading="isSubmitting">
       <template #form>
-        <InvoiceForm ref="formRef" :invoice="invoice" @close="handleClose" />
+                <InvoiceForm
+          ref="formRef"
+          :invoice="currentFormValues"
+          @close="handleClose"
+          @update:formValues="(values) => (currentFormValues = values)"
+          @update:formItems="(items) => (currentFormItems = items)"
+        />
       </template>
 
       <template #preview>
         <InvoicePreview
-          :form-values="formValues"
-          :items="formItems"
+          :form-values="currentFormValues"
+          :items="currentFormItems"
           :customers="customers"
           :is-loading="isSubmitting"
         />
