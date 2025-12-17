@@ -105,18 +105,12 @@ export function formatCalculatedTotals(totals: {
   totalVat21: number
   total: number
 }) {
-  const formattedSubtotal = formatMoney(totals.subtotal)
-  const formattedTotalVat0 = formatMoney(totals.totalVat0)
-  const formattedTotalVat9 = formatMoney(totals.totalVat9)
-  const formattedTotalVat21 = formatMoney(totals.totalVat21)
-  const formattedTotal = formatMoney(totals.total)
-
   return {
-    subtotal: formattedSubtotal,
-    totalVat0: formattedTotalVat0,
-    totalVat9: formattedTotalVat9,
-    totalVat21: formattedTotalVat21,
-    total: formattedTotal,
+    subtotal: toMoneyObject(totals.subtotal),
+    totalVat0: toMoneyObject(totals.totalVat0),
+    totalVat9: toMoneyObject(totals.totalVat9),
+    totalVat21: toMoneyObject(totals.totalVat21),
+    total: toMoneyObject(totals.total),
   }
 }
 

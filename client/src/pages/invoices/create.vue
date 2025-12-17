@@ -40,7 +40,7 @@ const customers = computed(() => {
 const formRef = ref<InstanceType<typeof InvoiceForm> | null>(null)
 const isSubmitting = ref(false)
 
-import type { TInvoice } from '../data/schema'
+import type { TInvoice } from './data/schema'
 
 const currentFormValues = ref<TInvoice>({
   id: 0, // Default ID

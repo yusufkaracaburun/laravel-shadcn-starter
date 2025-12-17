@@ -12,6 +12,7 @@ import InvoiceTotalsSummary from './invoice-totals-summary.vue'
 
 interface IInvoiceItem {
   id?: number
+  name: string | null
   description: string | null
   quantity: number
   unit: string | null

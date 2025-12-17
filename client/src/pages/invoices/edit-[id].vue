@@ -7,12 +7,16 @@ meta:
 import { ArrowLeft, Save, Send } from 'lucide-vue-next'
 import { computed, nextTick, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import { useToast } from '@/composables/use-toast'
+
+import type { TInvoiceForm, TInvoiceItem } from './data/schema'
 
 import Error from '@/components/custom-error.vue'
 import Page from '@/components/global-layout/basic-page.vue'
 import Loading from '@/components/loading.vue'
 import { Button } from '@/components/ui/button'
 import { useGetInvoicePrerequisitesQuery, useGetInvoiceQuery } from '@/services/invoices.service'
+import { useGetItemsQuery } from '@/services/items.service'
 
 import InvoiceEditorLayout from './components/invoice-editor-layout.vue'
 import InvoiceForm from './components/invoice-form.vue'
@@ -20,6 +24,7 @@ import InvoicePreview from './components/invoice-preview.vue'
 
 const route = useRoute()
 const router = useRouter()
+const { toast } = useToast()
 
 const invoiceId = computed(() => Number(route.params.id))
 
@@ -43,20 +48,24 @@ const customers = computed(() => {
   return Array.isArray(customersData) ? customersData : ((customersData as any).data ?? [])
 })
 
+const { data: itemsResponse } = useGetItemsQuery()
+const items = computed(() => itemsResponse.value?.data || [])
+
 const invoice = computed(() => invoiceResponse.value?.data ?? null)
 
 const formRef = ref<InstanceType<typeof InvoiceForm> | null>(null)
 const isSubmitting = ref(false)
 
-const currentFormValues = ref({})
-const currentFormItems = ref([])
+const currentFormValues = ref<TInvoiceForm | any>(null) // This will be updated via v-model from InvoiceForm
+const currentFormItems = ref<TInvoiceItem[]>([]) // This will be updated via @update:formItems from InvoiceForm
 
+// Initial setup for currentFormValues and currentFormItems when invoice data loads
 watch(
   invoice,
   (newInvoice) => {
     if (newInvoice) {
       currentFormValues.value = { ...newInvoice }
-      currentFormItems.value = newInvoice.items || []
+      currentFormItems.value = (newInvoice.items as any)?.data || newInvoice.items || []
     }
   },
   { immediate: true },
@@ -71,8 +80,16 @@ async function handleUpdate() {
   isSubmitting.value = true
   try {
     await formRef.value.handleSubmit()
-  } catch (error) {
-    console.error('Error updating invoice:', error)
+    toast({
+      title: 'Invoice updated',
+    })
+  } catch (validationError) {
+    console.error('Validation Error:', validationError)
+    toast({
+      title: 'Validation Error',
+      description: 'Please correct the form errors.',
+      variant: 'destructive',
+    })
   } finally {
     isSubmitting.value = false
   }
@@ -82,13 +99,19 @@ async function handleUpdateAndSend() {
   if (!formRef.value) return
   isSubmitting.value = true
   try {
-    // Update status to 'sent' before submitting
     formRef.value.setFieldValue('status', 'sent')
-    // Wait a tick for the value to update
     await nextTick()
     await formRef.value.handleSubmit()
-  } catch (error) {
-    console.error('Error updating and sending invoice:', error)
+    toast({
+      title: 'Invoice updated and sent',
+    })
+  } catch (validationError) {
+    console.error('Validation Error:', validationError)
+    toast({
+      title: 'Validation Error',
+      description: 'Please correct the form errors.',
+      variant: 'destructive',
+    })
   } finally {
     isSubmitting.value = false
   }
@@ -119,9 +142,9 @@ async function handleUpdateAndSend() {
       <template #form>
         <InvoiceForm
           ref="formRef"
-          :invoice="currentFormValues"
-          @close="handleClose"
-          @update:formValues="(values) => (currentFormValues = values)"
+          v-model:model-value="currentFormValues"
+          :items="items"
+          :customers="customers"
           @update:formItems="(items) => (currentFormItems = items)"
         />
       </template>

@@ -54,7 +54,8 @@ function handleDelete(index: number) {
       <tbody>
         <tr v-for="(item, index) in items" :key="index" class="border-b hover:bg-muted/50">
           <td class="p-2 font-medium">
-            {{ item.description || '—' }}
+            {{ item.name || '—' }}
+            <div class="text-xs text-muted-foreground">{{ item.description || '—' }}</div>
           </td>
           <td class="p-2 text-right">
             {{ formatNumber(item.quantity, 2) }}

@@ -93,3 +93,4 @@ export const invoiceFormSchema = z.object({
 })
 
 export type TInvoice = z.infer<typeof invoiceSchema>
+export type TInvoiceForm = z.infer<typeof invoiceFormSchema>
