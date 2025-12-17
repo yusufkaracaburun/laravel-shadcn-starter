@@ -5,7 +5,7 @@ meta:
 
 <script setup lang="ts">
 import { ArrowLeft, Save, Send } from 'lucide-vue-next'
-import { computed, nextTick, ref } from 'vue'
+import { computed, nextTick, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 
 import Page from '@/components/global-layout/basic-page.vue'
@@ -47,7 +47,7 @@ const currentFormValues = ref<TInvoice>({
   id: 0, // Default ID
   customer_id: 0, // Default customer_id
   customer: null,
-  invoice_number: null,
+  invoice_number: prerequisites.value?.next_invoice_number ?? null,
   date: new Date().toISOString().split('T')[0], // Current date
   due_days: 30,
   date_due: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 30 days from now
@@ -63,6 +63,12 @@ const currentFormValues = ref<TInvoice>({
   updated_at: '',
 })
 const currentFormItems = ref([])
+
+watch(prerequisites, (newVal) => {
+  if (newVal?.next_invoice_number) {
+    currentFormValues.value.invoice_number = newVal.next_invoice_number
+  }
+}, { immediate: true })
 
 function handleClose() {
   router.push('/invoices')
