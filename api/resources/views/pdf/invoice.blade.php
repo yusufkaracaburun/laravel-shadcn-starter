@@ -2,6 +2,7 @@
 
 @section('content')
 
+    {{-- KLANT + FACTUUR INFO --}}
     <table width="100%" class="mb-20">
         <tr>
             <td width="50%">
@@ -20,6 +21,7 @@
         </tr>
     </table>
 
+    {{-- ITEMS --}}
     <table class="mb-30">
         <thead>
         <tr>
@@ -43,6 +45,7 @@
         </tbody>
     </table>
 
+    {{-- TOTALS --}}
     <div class="totals mb-30">
         <table>
             <tr>
@@ -80,11 +83,15 @@
         </table>
     </div>
 
+    {{-- NOTES --}}
     @if ($invoice->notes)
-        <div class="notes">
+        <div class="notes mb-20">
             <h3>Opmerkingen</h3>
             <p>{{ $invoice->notes }}</p>
         </div>
     @endif
+
+    {{-- 🔒 FOOTER GUARD (VERPLICHT) --}}
+    <div class="footer-guard"></div>
 
 @endsection

@@ -13,18 +13,26 @@ body {
     line-height: 1.5;
 }
 
-/* NIET extra marges geven, @page regelt dit */
+/* =========================
+   CONTENT
+   ========================= */
 .pdf-content {
     position: relative;
 }
 
-/* HEADER in de top-marge */
+/* VOORKOM overlap met footer */
+.avoid-footer {
+    page-break-after: always;
+}
+
+/* =========================
+   HEADER
+   ========================= */
 .pdf-header {
     position: fixed;
-    top: -40mm; /* EXACT gelijk aan margin-top */
+    top: -40mm;
     left: 0;
     right: 0;
-
     height: 40mm;
     padding: 8mm 20mm;
     background: #fff;
@@ -32,42 +40,40 @@ body {
 
 .pdf-logo {
     max-height: 16mm;
-    max-width: 60mm;
 }
 
-/* FOOTER in de bottom-marge */
+/* =========================
+   FOOTER
+   ========================= */
 .pdf-footer {
     position: fixed;
-    bottom: -40mm; /* EXACT gelijk aan margin-bottom */
+    bottom: -40mm;
     left: 0;
     right: 0;
-
     height: 40mm;
     padding: 8mm 20mm;
     font-size: 9px;
     color: #777;
-    background: #fff;
+    background: yellow;
 }
 
-/* Helpers */
-.text-right {
-    text-align: right;
-}
-
-.text-center {
-    text-align: center;
-}
-
-/* Tables */
+/* =========================
+   TABLES
+   ========================= */
 table {
     width: 100%;
     border-collapse: collapse;
+}
+
+tr {
+    page-break-inside: avoid;
 }
 
 th, td {
     vertical-align: top;
 }
 
-tr {
+.footer-guard {
+    height: 30mm;
     page-break-inside: avoid;
 }

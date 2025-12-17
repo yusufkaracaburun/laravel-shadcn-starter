@@ -135,6 +135,19 @@ final class InvoiceController extends Controller
         ]);
     }
 
+
+    public function previewPdf(Invoice $invoice)
+    {
+        $invoice = $this->invoiceService->findById($invoice->id);
+
+        $pdf = Pdf::loadView('pdf.invoice', ['invoice' => $invoice])
+            ->setPaper('a4');
+
+        return response($pdf->output(), 200)
+            ->header('Content-Type', 'application/pdf')
+            ->header('Content-Disposition', 'inline; filename="factuur_'.$invoice->invoice_number.'.pdf"');
+    }
+
     public function downloadPdf(Invoice $invoice)
     {
         $invoice = $this->invoiceService->findById($invoice->id);
@@ -143,6 +156,6 @@ final class InvoiceController extends Controller
             'invoice' => $invoice,
         ])
             ->setPaper('a4')
-            ->download("factuur_{$invoice->id}.pdf");
+            ->download("factuur_{$invoice->invoice_number}.pdf");
     }
 }
