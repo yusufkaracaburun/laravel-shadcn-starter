@@ -10,7 +10,11 @@ import type { Item } from '@/services/items.service'
 
 import { useInvoices } from '@/composables/use-invoices'
 
-import type { TInvoice, TInvoiceItem } from '../data/schema'
+import { mapObjectDeep } from '@/utils/form'
+
+import { getTodayDate, calculateDueDate } from '@/utils/date'
+
+import { invoiceFormSchema, type TInvoice, type TInvoiceItem } from '../data/schema'
 
 import { calculateInvoiceTotals, calculateItemTotals } from '../utils/calculations'
 import { formatDateForInput } from '../utils/formatters'
@@ -35,50 +39,10 @@ const { createInvoice, updateInvoice } = useInvoices()
 // Use customers from props (from prerequisites) or fallback to empty array
 const customers = computed(() => props.customers ?? [])
 
-const formSchema = toTypedSchema(
-  z.object({
-    customer_id: z.preprocess(
-      (val) => (val === undefined || val === null || val === '' ? undefined : Number(val)),
-      z.number().min(1, 'Customer is required'),
-    ),
-    invoice_number: z.string().nullable().optional(),
-    date: z.string().min(1, 'Date is required'),
-    due_days: z.number().min(1, 'Due days must be at least 1'),
-    date_due: z.string().min(1, 'Due date is required'),
-    status: z.enum(['draft', 'sent', 'paid', 'overdue', 'cancelled']),
-    notes: z.string().nullable().optional(),
-  }),
-)
+const formSchema = toTypedSchema(invoiceFormSchema)
 
-// Helper function to get today's date in YYYY-MM-DD format
-function getTodayDate() {
-  const today = new Date()
-  const year = today.getFullYear()
-  const month = String(today.getMonth() + 1).padStart(2, '0')
-  const day = String(today.getDate()).padStart(2, '0')
-  return `${year}-${month}-${day}`
-}
 
 // Helper function to calculate due date from invoice date and due days
-function calculateDueDate(invoiceDate: string, dueDays: number): string {
-  if (!invoiceDate || !dueDays) {
-    return ''
-  }
-  try {
-    const dateObj = new Date(invoiceDate)
-    if (!Number.isNaN(dateObj.getTime())) {
-      const dueDate = new Date(dateObj)
-      dueDate.setDate(dueDate.getDate() + dueDays)
-      const year = dueDate.getFullYear()
-      const month = String(dueDate.getMonth() + 1).padStart(2, '0')
-      const day = String(dueDate.getDate()).padStart(2, '0')
-      return `${year}-${month}-${day}`
-    }
-  } catch {
-    // Ignore date parsing errors
-  }
-  return ''
-}
 
 // Compute initial values reactively
 function getInitialValues() {
@@ -129,77 +93,61 @@ interface ILocalInvoiceItem {
   sort_order: number
   id?: number
 }
-const localItems = ref<ILocalInvoiceItem[]>([])
+const localItems = ref<ILocalInvoiceItem[]>(
+  props.modelValue?.items && props.modelValue.items.length > 0
+    ? props.modelValue.items.map((item) => {
+      let unitPrice = 0
+      if (typeof item.unit_price === 'object' && 'amount' in item.unit_price) {
+        unitPrice = Number.parseFloat(item.unit_price.amount) / 100
+      } else if (typeof item.unit_price === 'number') {
+        unitPrice = item.unit_price
+      }
+
+      let totalExclVat = 0
+      let totalVat = 0
+      let totalInclVat = 0
+
+      if (typeof item.total_excl_vat === 'object' && 'amount' in item.total_excl_vat) {
+        totalExclVat = Number.parseFloat(item.total_excl_vat.amount) / 100
+      } else if (typeof item.total_excl_vat === 'number') {
+        totalExclVat = item.total_excl_vat
+      }
+
+      if (typeof item.total_vat === 'object' && 'amount' in item.total_vat) {
+        totalVat = Number.parseFloat(item.total_vat.amount) / 100
+      } else if (typeof item.total_vat === 'number') {
+        totalVat = item.total_vat
+      }
+
+      if (typeof item.total_incl_vat === 'object' && 'amount' in item.total_incl_vat) {
+        totalInclVat = Number.parseFloat(item.total_incl_vat.amount) / 100
+      } else if (typeof item.total_incl_vat === 'number') {
+        totalInclVat = item.total_incl_vat
+      }
+
+      if (totalExclVat === 0 && unitPrice > 0 && item.quantity > 0) {
+        const calculated = calculateItemTotals(item.quantity, unitPrice, item.vat_rate)
+        totalExclVat = calculated.totalExclVat
+        totalVat = calculated.totalVat
+        totalInclVat = calculated.totalInclVat
+      }
+
+      return {
+        description: item.description,
+        quantity: item.quantity,
+        unit_price: unitPrice,
+        vat_rate: item.vat_rate,
+        unit: (item as any).unit ?? null,
+        total_excl_vat: totalExclVat,
+        total_vat: totalVat,
+        total_incl_vat: totalInclVat,
+        sort_order: item.sort_order,
+      }
+    })
+    : [],
+)
 const editingItemIndex = ref<number | null>(null)
 const showAddForm = ref(false)
-
-// Initialize local items from invoice items when editing existing invoice
-watch(
-  () => props.modelValue,
-  (newInvoice) => {
-    if (newInvoice?.items && newInvoice.items.length > 0) {
-      // Convert invoice items to local format
-      localItems.value = newInvoice.items.map((item) => {
-        // Extract unit_price value
-        let unitPrice = 0
-        if (typeof item.unit_price === 'object' && 'amount' in item.unit_price) {
-          unitPrice = Number.parseFloat(item.unit_price.amount) / 100
-        } else if (typeof item.unit_price === 'number') {
-          unitPrice = item.unit_price
-        }
-
-        // Extract totals from API response or recalculate if missing/invalid
-        let totalExclVat = 0
-        let totalVat = 0
-        let totalInclVat = 0
-
-        if (typeof item.total_excl_vat === 'object' && 'amount' in item.total_excl_vat) {
-          totalExclVat = Number.parseFloat(item.total_excl_vat.amount) / 100
-        } else if (typeof item.total_excl_vat === 'number') {
-          totalExclVat = item.total_excl_vat
-        }
-
-        if (typeof item.total_vat === 'object' && 'amount' in item.total_vat) {
-          totalVat = Number.parseFloat(item.total_vat.amount) / 100
-        } else if (typeof item.total_vat === 'number') {
-          totalVat = item.total_vat
-        }
-
-        if (typeof item.total_incl_vat === 'object' && 'amount' in item.total_incl_vat) {
-          totalInclVat = Number.parseFloat(item.total_incl_vat.amount) / 100
-        } else if (typeof item.total_incl_vat === 'number') {
-          totalInclVat = item.total_incl_vat
-        }
-
-        // Recalculate if totals are missing or zero (shouldn't happen, but safety check)
-        if (totalExclVat === 0 && unitPrice > 0 && item.quantity > 0) {
-          const calculated = calculateItemTotals(item.quantity, unitPrice, item.vat_rate)
-          totalExclVat = calculated.totalExclVat
-          totalVat = calculated.totalVat
-          totalInclVat = calculated.totalInclVat
-        }
-
-        return {
-          description: item.description,
-          quantity: item.quantity,
-          unit_price: unitPrice,
-          vat_rate: item.vat_rate,
-          unit: (item as any).unit ?? null,
-          total_excl_vat: totalExclVat,
-          total_vat: totalVat,
-          total_incl_vat: totalInclVat,
-          sort_order: item.sort_order,
-        }
-      })
-    } else {
-      // Reset if no items or new invoice
-      localItems.value = []
-    }
-    editingItemIndex.value = null
-    showAddForm.value = false
-  },
-  { immediate: true, deep: true },
-)
 
 function handleItemsSelected(itemsData: any[]) {
   // Add multiple items to local state
@@ -302,33 +250,25 @@ watch(
   (values) => {
     const [newInvoice, nextInvoiceNumber] = values as [TInvoice | null, string | null | undefined]
     if (newInvoice) {
-      resetForm({
-        values: {
-          customer_id: newInvoice.customer_id ?? undefined,
-          invoice_number: newInvoice.invoice_number ?? null,
-          date: formatDateForInput(newInvoice.date),
-          due_days: newInvoice.due_days ?? 30,
-          date_due: formatDateForInput(newInvoice.date_due),
-          status: newInvoice.status ?? 'draft',
-          notes: newInvoice.notes ?? null,
-        },
-      })
+      setFieldValue('customer_id', newInvoice.customer_id ?? undefined)
+      setFieldValue('invoice_number', newInvoice.invoice_number ?? null)
+      setFieldValue('date', formatDateForInput(newInvoice.date))
+      setFieldValue('due_days', newInvoice.due_days ?? 30)
+      setFieldValue('date_due', formatDateForInput(newInvoice.date_due))
+      setFieldValue('status', newInvoice.status ?? 'draft')
+      setFieldValue('notes', newInvoice.notes ?? null)
     } else {
       // Reset to default values when invoice is null (create mode)
       const todayDate = getTodayDate()
       const defaultDueDays = 30
       const calculatedDueDate = calculateDueDate(todayDate, defaultDueDays)
-      resetForm({
-        values: {
-          customer_id: undefined,
-          invoice_number: (nextInvoiceNumber ?? null) as string | null,
-          date: todayDate,
-          due_days: defaultDueDays,
-          date_due: calculatedDueDate,
-          status: 'draft',
-          notes: null,
-        },
-      })
+      setFieldValue('customer_id', undefined)
+      setFieldValue('invoice_number', (nextInvoiceNumber ?? null) as string | null)
+      setFieldValue('date', todayDate)
+      setFieldValue('due_days', defaultDueDays)
+      setFieldValue('date_due', calculatedDueDate)
+      setFieldValue('status', 'draft')
+      setFieldValue('notes', null)
     }
   },
   { deep: true, immediate: true },
@@ -351,7 +291,7 @@ const onSubmit = handleSubmit(async (formValues) => {
       sort_order: item.sort_order ?? 0,
     }))
 
-    const backendData: any = {
+    let backendData: any = {
       customer_id: formValues.customer_id,
       invoice_number: formValues.invoice_number || null,
       date: formValues.date,
@@ -360,6 +300,18 @@ const onSubmit = handleSubmit(async (formValues) => {
       status: formValues.status,
       notes: formValues.notes || null,
     }
+
+    // Convert empty strings to null recursively
+    backendData = mapObjectDeep(backendData, (value) => (value === '' ? null : value))
+
+    // Add calculated totals to backendData
+    backendData.subtotal = invoiceTotals.value.subtotal.amount
+    backendData.total_vat_0 = invoiceTotals.value.total_vat_0.amount
+    backendData.total_vat_9 = invoiceTotals.value.total_vat_9.amount
+    backendData.total_vat_21 = invoiceTotals.value.total_vat_21.amount
+    backendData.total = invoiceTotals.value.total.amount
+    backendData.total_excl_vat = invoiceTotals.value.total_excl_vat.amount
+    backendData.total_vat = invoiceTotals.value.total_vat.amount
 
     // Always include items
     backendData.items = itemsData || []
@@ -436,9 +388,22 @@ defineExpose({
 })
 
 watch(
-  values,
-  (newValues) => {
-    emits('update:modelValue', newValues as TInvoice)
+  [values, invoiceTotals, itemsForPreview],
+  ([newValues, newInvoiceTotals, newItemsForPreview]) => {
+    emits(
+      'update:modelValue',
+      {
+        ...(newValues as TInvoice),
+        subtotal: newInvoiceTotals.subtotal,
+        total_vat_0: newInvoiceTotals.total_vat_0,
+        total_vat_9: newInvoiceTotals.total_vat_9,
+        total_vat_21: newInvoiceTotals.total_vat_21,
+        total: newInvoiceTotals.total,
+        total_excl_vat: newInvoiceTotals.total_excl_vat,
+        total_vat: newInvoiceTotals.total_vat,
+        items: newItemsForPreview as TInvoiceItem[],
+      } as TInvoice,
+    )
   },
   { deep: true },
 )
@@ -460,20 +425,10 @@ watch(
 
     <InvoiceDatesSection :is-field-dirty="isFieldDirty" />
 
-    <InvoiceItemsManagement
-      :items="localItems"
-      :editing-item-index="editingItemIndex"
-      :show-add-form="showAddForm"
-      :invoice-totals="invoiceTotals"
-      :invoice-id="invoice?.id"
-      :catalog-items="items"
-      @save="handleItemSave"
-      @cancel="cancelItemEdit"
-      @edit="startEditItem"
-      @delete="handleItemDelete"
-      @items-selected="handleItemsSelected"
-      @add-item="startAddItem"
-    />
+    <InvoiceItemsManagement :items="localItems" :editing-item-index="editingItemIndex" :show-add-form="showAddForm"
+      :invoice-totals="invoiceTotals" :invoice-id="invoice?.id" :catalog-items="items" @save="handleItemSave"
+      @cancel="cancelItemEdit" @edit="startEditItem" @delete="handleItemDelete" @items-selected="handleItemsSelected"
+      @add-item="startAddItem" />
 
     <InvoiceNotesSection :is-field-dirty="isFieldDirty" />
   </form>

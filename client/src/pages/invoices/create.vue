@@ -58,6 +58,8 @@ const currentFormValues = ref<TInvoice>({
   total: { amount: '0.00', currency: 'EUR', formatted: '€0.00' },
   notes: null,
   items: [],
+  total_excl_vat: { amount: '0.00', currency: 'EUR', formatted: '€0.00' },
+  total_vat: { amount: '0.00', currency: 'EUR', formatted: '€0.00' },
   created_at: '',
   updated_at: '',
 })
@@ -117,15 +119,9 @@ async function handleSaveAndSend() {
 
     <InvoiceEditorLayout :is-loading="isSubmitting">
       <template #form>
-        <InvoiceForm
-          ref="formRef"
-          v-model:model-value="currentFormValues"
-          :next-invoice-number="prerequisites?.next_invoice_number ?? null"
-          :items="items"
-          :customers="customers"
-          @close="handleClose"
-          @update:formItems="(items) => (currentFormItems = items)"
-        />
+        <InvoiceForm ref="formRef" v-model:model-value="currentFormValues"
+          :next-invoice-number="prerequisites?.next_invoice_number ?? null" :items="items" :customers="customers"
+          @close="handleClose" @update:formItems="(items) => (currentFormItems = items)" />
       </template>
 
       <template #actions>

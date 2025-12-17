@@ -27,6 +27,7 @@ export type TInvoiceStatus = z.infer<typeof invoiceStatusSchema>
 export const invoiceItemSchema = z.object({
   id: z.number(),
   invoice_id: z.number(),
+  name: z.string(),
   description: z.string().nullable(),
   quantity: z
     .union([z.number(), z.string()])
@@ -77,5 +78,19 @@ export const invoiceSchema = z.object({
   created_at: z.string(), // Format: "d-m-Y H:i:s"
   updated_at: z.string(), // Format: "d-m-Y H:i:s"
 })
+
+export const invoiceFormSchema = z.object({
+  customer_id: z.preprocess(
+    (val) => (val === undefined || val === null || val === '' ? undefined : Number(val)),
+    z.number().min(1, 'Customer is required'),
+  ),
+  invoice_number: z.string().nullable().optional(),
+  date: z.string().min(1, 'Date is required'),
+  due_days: z.number().min(1, 'Due days must be at least 1'),
+  date_due: z.string().min(1, 'Due date is required'),
+  status: invoiceStatusSchema,
+  notes: z.string().nullable().optional(),
+})
+
 
 export type TInvoice = z.infer<typeof invoiceSchema>
