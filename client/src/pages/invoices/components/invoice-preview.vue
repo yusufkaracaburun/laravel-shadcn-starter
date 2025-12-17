@@ -12,6 +12,7 @@ import {
   formatNumber,
 } from '@/pages/invoices/utils/formatters'
 import type { IInvoiceItem } from '@/services/invoices.service'
+import { statuses } from '../../../../.tmp/shadcn-vue-admin/src/pages/tasks/data/data';
 
 const props = defineProps<{
   formValues: TInvoice | null
@@ -67,16 +68,21 @@ function formatCurrency(value: any): string {
             <div>
               <span class="font-semibold text-gray-700">Invoice #:</span>
               <span class="ml-2 text-gray-900">{{
-                props.formValues?.invoice_number || (props.formValues?.id ? `#${props.formValues.id}` : '—')
+                props.formValues?.invoice_number ||
+                (props.formValues?.id ? `#${props.formValues.id}` : '—')
                 }}</span>
             </div>
             <div>
               <span class="font-semibold text-gray-700">Date:</span>
-              <span class="ml-2 text-gray-900">{{ formatDate(props.formValues?.date || null) }}</span>
+              <span class="ml-2 text-gray-900">{{
+                formatDate(props.formValues?.date || null)
+                }}</span>
             </div>
             <div>
               <span class="font-semibold text-gray-700">Due Date:</span>
-              <span class="ml-2 text-gray-900">{{ formatDate(props.formValues?.date_due || null) }}</span>
+              <span class="ml-2 text-gray-900">{{
+                formatDate(props.formValues?.date_due || null)
+                }}</span>
             </div>
             <div>
               <span class="font-semibold text-gray-700">Terms:</span>
@@ -95,7 +101,10 @@ function formatCurrency(value: any): string {
           <h3 class="text-lg font-semibold text-gray-900 mb-3">Bill To:</h3>
           <div class="text-gray-700">
             <p class="font-semibold text-lg mb-1">
-              {{ props.formValues?.customer?.name || (props.formValues?.customer_id ? `Customer #${props.formValues.customer_id}` : '—') }}
+              {{
+                props.formValues?.customer?.name ||
+                (props.formValues?.customer_id ? `Customer #${props.formValues.customer_id}` : '—')
+              }}
             </p>
             <p v-if="props.formValues?.customer?.type" class="text-sm text-gray-600 mb-2">
               {{ props.formValues.customer.type }}
@@ -202,21 +211,33 @@ function formatCurrency(value: any): string {
 
           <div v-if="
             props.formValues?.total_vat_0 &&
-            (typeof props.formValues.total_vat_0 === 'object' ? Number.parseFloat(props.formValues.total_vat_0.amount) > 0 : (typeof props.formValues.total_vat_0 === 'number' ? props.formValues.total_vat_0 > 0 : false))
+            (typeof props.formValues.total_vat_0 === 'object'
+              ? Number.parseFloat(props.formValues.total_vat_0.amount) > 0
+              : typeof props.formValues.total_vat_0 === 'number'
+                ? props.formValues.total_vat_0 > 0
+                : false)
           " class="flex justify-between text-gray-700">
             <span>VAT 0%:</span>
             <span>{{ formatCurrency(props.formValues.total_vat_0) }}</span>
           </div>
           <div v-if="
             props.formValues?.total_vat_9 &&
-            (typeof props.formValues.total_vat_9 === 'object' ? Number.parseFloat(props.formValues.total_vat_9.amount) > 0 : (typeof props.formValues.total_vat_9 === 'number' ? props.formValues.total_vat_9 > 0 : false))
+            (typeof props.formValues.total_vat_9 === 'object'
+              ? Number.parseFloat(props.formValues.total_vat_9.amount) > 0
+              : typeof props.formValues.total_vat_9 === 'number'
+                ? props.formValues.total_vat_9 > 0
+                : false)
           " class="flex justify-between text-gray-700">
             <span>VAT 9%:</span>
             <span>{{ formatCurrency(props.formValues.total_vat_9) }}</span>
           </div>
           <div v-if="
             props.formValues?.total_vat_21 &&
-            (typeof props.formValues.total_vat_21 === 'object' ? Number.parseFloat(props.formValues.total_vat_21.amount) > 0 : (typeof props.formValues.total_vat_21 === 'number' ? props.formValues.total_vat_21 > 0 : false))
+            (typeof props.formValues.total_vat_21 === 'object'
+              ? Number.parseFloat(props.formValues.total_vat_21.amount) > 0
+              : typeof props.formValues.total_vat_21 === 'number'
+                ? props.formValues.total_vat_21 > 0
+                : false)
           " class="flex justify-between text-gray-700">
             <span>VAT 21%:</span>
             <span>{{ formatCurrency(props.formValues.total_vat_21) }}</span>
@@ -240,7 +261,10 @@ function formatCurrency(value: any): string {
 
     <!-- Footer -->
     <div class="border-t border-gray-200 pt-6 text-center text-sm text-gray-600">
-      <p>Thank you for your business! Payment is due within {{ props.formValues?.due_days || '—' }} days.</p>
+      <p>
+        Thank you for your business! Payment is due within
+        {{ props.formValues?.due_days || '—' }} days.
+      </p>
       <p class="mt-2">
         Please make checks payable to "Your Company Name" and include the invoice number on your
         payment.
