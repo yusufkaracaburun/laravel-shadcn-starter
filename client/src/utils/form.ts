@@ -8,10 +8,6 @@ export function mapObjectDeep<T extends object>(obj: T, mapper: (value: any) => 
   }
 
   return Object.fromEntries(
-    Object.entries(obj).map(([key, value]) => [
-      key,
-      mapObjectDeep(value, mapper),
-    ]),
+    Object.entries(obj).map(([key, value]) => [key, mapObjectDeep(value, mapper)]),
   ) as T
 }
-

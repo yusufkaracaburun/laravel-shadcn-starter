@@ -104,18 +104,34 @@ export function formatCalculatedTotals(totals: {
   totalVat9: number
   totalVat21: number
   total: number
-}): {
-  subtotal: string
-  totalVat0: string
-  totalVat9: string
-  totalVat21: string
-  total: string
-} {
+}) {
+  const formattedSubtotal = formatMoney(totals.subtotal)
+  const formattedTotalVat0 = formatMoney(totals.totalVat0)
+  const formattedTotalVat9 = formatMoney(totals.totalVat9)
+  const formattedTotalVat21 = formatMoney(totals.totalVat21)
+  const formattedTotal = formatMoney(totals.total)
+
   return {
-    subtotal: formatMoney(totals.subtotal),
-    totalVat0: formatMoney(totals.totalVat0),
-    totalVat9: formatMoney(totals.totalVat9),
-    totalVat21: formatMoney(totals.totalVat21),
-    total: formatMoney(totals.total),
+    subtotal: formattedSubtotal,
+    totalVat0: formattedTotalVat0,
+    totalVat9: formattedTotalVat9,
+    totalVat21: formattedTotalVat21,
+    total: formattedTotal,
+  }
+}
+
+/**
+ * Converts a number to a Money object format.
+ */
+export function toMoneyObject(value: number): {
+  amount: string
+  currency: string
+  formatted: string
+} {
+  const formatted = formatMoney(value)
+  return {
+    amount: value.toFixed(2),
+    currency: 'EUR', // Assuming EUR as default currency based on other code
+    formatted: formatted,
   }
 }

@@ -119,9 +119,15 @@ async function handleSaveAndSend() {
 
     <InvoiceEditorLayout :is-loading="isSubmitting">
       <template #form>
-        <InvoiceForm ref="formRef" v-model:model-value="currentFormValues"
-          :next-invoice-number="prerequisites?.next_invoice_number ?? null" :items="items" :customers="customers"
-          @close="handleClose" @update:formItems="(items) => (currentFormItems = items)" />
+        <InvoiceForm
+          ref="formRef"
+          v-model:model-value="currentFormValues"
+          :next-invoice-number="prerequisites?.next_invoice_number ?? null"
+          :items="items"
+          :customers="customers"
+          @close="handleClose"
+          @update:formItems="(items) => (currentFormItems = items)"
+        />
       </template>
 
       <template #actions>

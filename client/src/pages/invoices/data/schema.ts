@@ -92,5 +92,4 @@ export const invoiceFormSchema = z.object({
   notes: z.string().nullable().optional(),
 })
 
-
 export type TInvoice = z.infer<typeof invoiceSchema>
