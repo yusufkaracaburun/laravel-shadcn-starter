@@ -41,7 +41,7 @@ final class LoginLink extends BaseModel
     {
         return [
             'expires_at' => 'datetime',
-            'used_at' => 'datetime',
+            'used_at'    => 'datetime',
         ];
     }
 }

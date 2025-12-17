@@ -8,12 +8,6 @@
 
     @include('pdf.partials.totals', ['data' => $invoice])
 
-    {{-- NOTES --}}
-    @if ($invoice->notes)
-        <div class="notes mb-20">
-            <h3>Opmerkingen</h3>
-            <p>{{ $invoice->notes }}</p>
-        </div>
-    @endif
+    @include('pdf.partials.notes', ['notes' => $invoice->notes])
 
 @endsection

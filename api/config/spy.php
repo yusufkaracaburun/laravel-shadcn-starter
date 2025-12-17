@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-if (! function_exists('spy_parse_env_array')) {
+if (!function_exists('spy_parse_env_array')) {
     function spy_parse_env_array($key, $default = ''): array
     {
         return array_filter(array_map(trim(...), explode(',', (string) env($key, $default))));

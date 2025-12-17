@@ -84,7 +84,7 @@ trait AsFakeAction
 
     protected static function getFakeResolvedInstanceKey(): string
     {
-        return 'Action:AsFake:'.static::class;
+        return 'Action:AsFake:' . static::class;
     }
 
     // @codeCoverageIgnoreEnd

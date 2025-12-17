@@ -68,11 +68,11 @@ abstract class BaseResource extends JsonResource
     {
         return match (static::$case) {
             'camel' => collect($data)->mapWithKeys(
-                fn ($v, $k): array => [str($k)->camel()->value() => $v]
+                fn ($v, $k): array => [str($k)->camel()->value() => $v],
             )->toArray(),
 
             'snake' => collect($data)->mapWithKeys(
-                fn ($v, $k): array => [str($k)->snake()->value() => $v]
+                fn ($v, $k): array => [str($k)->snake()->value() => $v],
             )->toArray(),
 
             default => $data,
@@ -84,9 +84,9 @@ abstract class BaseResource extends JsonResource
      */
     protected function withDebug(array $data): array
     {
-        if (! app()->environment('production')) {
+        if (!app()->environment('production')) {
             $data['_debug'] = [
-                'resource' => static::class,
+                'resource'         => static::class,
                 'loaded_relations' => array_keys($this->resource->getRelations()),
             ];
         }

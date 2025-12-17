@@ -22,15 +22,15 @@ final class IndexItemRequest extends BaseIndexFormRequest
     public function messages(): array
     {
         return array_merge(parent::messages(), [
-            'filter.id.exists' => 'The selected item does not exist.',
-            'filter.name.string' => 'The name must be a valid string.',
-            'filter.unit.string' => 'The unit must be a valid string.',
+            'filter.id.exists'          => 'The selected item does not exist.',
+            'filter.name.string'        => 'The name must be a valid string.',
+            'filter.unit.string'        => 'The unit must be a valid string.',
             'filter.description.string' => 'The description must be a valid string.',
             'filter.unit_price.numeric' => 'The unit price must be a valid number.',
-            'filter.vat_rate.numeric' => 'The VAT rate must be a valid number.',
-            'filter.created_at.date' => 'The created at filter must be a valid date.',
-            'filter.updated_at.date' => 'The updated at filter must be a valid date.',
-            'filter.between' => 'The between filter must include a valid start and end date (e.g. 2025-01-01,2025-01-31).',
+            'filter.vat_rate.numeric'   => 'The VAT rate must be a valid number.',
+            'filter.created_at.date'    => 'The created at filter must be a valid date.',
+            'filter.updated_at.date'    => 'The updated at filter must be a valid date.',
+            'filter.between'            => 'The between filter must include a valid start and end date (e.g. 2025-01-01,2025-01-31).',
         ]);
     }
 
@@ -42,15 +42,15 @@ final class IndexItemRequest extends BaseIndexFormRequest
     public function attributes(): array
     {
         return array_merge(parent::attributes(), [
-            'filter.id' => 'item ID',
-            'filter.name' => 'name',
+            'filter.id'          => 'item ID',
+            'filter.name'        => 'name',
             'filter.description' => 'description',
-            'filter.unit_price' => 'unit price',
-            'filter.vat_rate' => 'VAT rate',
-            'filter.unit' => 'unit',
-            'filter.created_at' => 'created at',
-            'filter.updated_at' => 'updated at',
-            'filter.between' => 'date range',
+            'filter.unit_price'  => 'unit price',
+            'filter.vat_rate'    => 'VAT rate',
+            'filter.unit'        => 'unit',
+            'filter.created_at'  => 'created at',
+            'filter.updated_at'  => 'updated at',
+            'filter.between'     => 'date range',
         ]);
     }
 
@@ -63,13 +63,13 @@ final class IndexItemRequest extends BaseIndexFormRequest
     {
         return array_merge(parent::filterRules(), [
             // Common scalar filters
-            'filter.name' => ['sometimes', 'string', 'max:255'],
+            'filter.name'        => ['sometimes', 'string', 'max:255'],
             'filter.description' => ['sometimes', 'string'],
-            'filter.unit' => ['sometimes', 'string', 'max:50'],
+            'filter.unit'        => ['sometimes', 'string', 'max:50'],
 
             // Numeric filters
             'filter.unit_price' => ['sometimes', 'numeric', 'min:0'],
-            'filter.vat_rate' => ['sometimes', 'numeric', 'min:0', 'max:100'],
+            'filter.vat_rate'   => ['sometimes', 'numeric', 'min:0', 'max:100'],
 
             // Date filters
             'filter.created_at' => ['sometimes', 'date'],

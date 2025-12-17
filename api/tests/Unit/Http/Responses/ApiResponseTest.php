@@ -46,7 +46,7 @@ test('success response handles JsonResource correctly', function (): void {
         public function toArray($request): array
         {
             return [
-                'id' => $this->resource->id,
+                'id'   => $this->resource->id,
                 'name' => $this->resource->name,
             ];
         }

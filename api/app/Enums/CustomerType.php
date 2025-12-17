@@ -25,7 +25,7 @@ enum CustomerType: string
     {
         return match ($this) {
             self::BUSINESS => 'primary',
-            self::PRIVATE => 'secondary',
+            self::PRIVATE  => 'secondary',
         };
     }
 
@@ -36,7 +36,7 @@ enum CustomerType: string
     {
         return match ($this) {
             self::BUSINESS => 'badge badge-light-primary',
-            self::PRIVATE => 'badge badge-light-secondary',
+            self::PRIVATE  => 'badge badge-light-secondary',
         };
     }
 

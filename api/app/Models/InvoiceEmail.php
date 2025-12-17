@@ -32,9 +32,9 @@ final class InvoiceEmail extends BaseModel
     protected function casts(): array
     {
         return [
-            'status' => EmailStatus::class,
-            'sent_at' => 'datetime',
-            'opened_at' => 'datetime',
+            'status'     => EmailStatus::class,
+            'sent_at'    => 'datetime',
+            'opened_at'  => 'datetime',
             'clicked_at' => 'datetime',
         ];
     }

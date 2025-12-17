@@ -27,7 +27,7 @@ final class UserController extends Controller
     use UsesQueryBuilder;
 
     public function __construct(
-        private readonly UserServiceInterface $userService
+        private readonly UserServiceInterface $userService,
     ) {}
 
     /**
@@ -194,7 +194,7 @@ final class UserController extends Controller
             $query,
             allowedFilters: ['id', 'name', 'email'],
             allowedSorts: ['id', 'name', 'email', 'created_at'],
-            allowedIncludes: ['teams', 'currentTeam', 'ownedTeams', 'roles']
+            allowedIncludes: ['teams', 'currentTeam', 'ownedTeams', 'roles'],
         )->get();
 
         return ApiResponse::success(UserResource::collection($users));
@@ -225,7 +225,7 @@ final class UserController extends Controller
             $query,
             allowedFilters: ['id', 'name', 'email'],
             allowedSorts: ['id', 'name', 'email', 'created_at'],
-            allowedIncludes: ['teams', 'currentTeam', 'ownedTeams', 'roles']
+            allowedIncludes: ['teams', 'currentTeam', 'ownedTeams', 'roles'],
         )->get();
 
         return ApiResponse::success(UserResource::collection($users));
@@ -244,11 +244,11 @@ final class UserController extends Controller
         $roles = $this->buildQuery(
             Role::query()->where('guard_name', 'web'),
             allowedFilters: ['name'],
-            allowedSorts: ['id', 'name', 'created_at']
+            allowedSorts: ['id', 'name', 'created_at'],
         )
             ->get(['id', 'name'])
             ->map(fn ($role): array => [
-                'id' => $role->id,
+                'id'   => $role->id,
                 'name' => $role->name,
             ]);
 

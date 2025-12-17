@@ -37,16 +37,16 @@ final class PaymentSeeder extends Seeder
 
             foreach ($splitAmounts as $index => $amount) {
                 $status = match ($index) {
-                    0 => fake()->randomElement([PaymentStatus::PAID, PaymentStatus::PENDING]),
-                    1 => fake()->randomElement([PaymentStatus::PAID, PaymentStatus::FAILED, PaymentStatus::REFUNDED]),
+                    0       => fake()->randomElement([PaymentStatus::PAID, PaymentStatus::PENDING]),
+                    1       => fake()->randomElement([PaymentStatus::PAID, PaymentStatus::FAILED, PaymentStatus::REFUNDED]),
                     default => PaymentStatus::PENDING,
                 };
 
                 Payment::factory()->create([
-                    'invoice_id' => $invoice->id,
+                    'invoice_id'  => $invoice->id,
                     'customer_id' => $invoice->customer_id,
-                    'amount' => $amount,
-                    'status' => $status,
+                    'amount'      => $amount,
+                    'status'      => $status,
                 ]);
             }
         });
@@ -54,9 +54,9 @@ final class PaymentSeeder extends Seeder
         Payment::factory()
             ->count(5)
             ->state(fn (): array => [
-                'invoice_id' => null,
+                'invoice_id'  => null,
                 'customer_id' => null,
-                'status' => fake()->randomElement(PaymentStatus::cases()),
+                'status'      => fake()->randomElement(PaymentStatus::cases()),
             ])
             ->create();
     }

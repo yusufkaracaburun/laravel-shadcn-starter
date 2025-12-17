@@ -24,11 +24,11 @@ final class IndexPermissionRequest extends BaseIndexFormRequest
         return array_merge(
             parent::messages(),
             [
-                'filter.id.integer' => 'Filter ID must be a number.',
-                'filter.id.exists' => 'The selected permission does not exist.',
-                'filter.name.string' => 'Filter name must be a string.',
+                'filter.id.integer'        => 'Filter ID must be a number.',
+                'filter.id.exists'         => 'The selected permission does not exist.',
+                'filter.name.string'       => 'Filter name must be a string.',
                 'filter.guard_name.string' => 'Filter guard name must be a string.',
-            ]
+            ],
         );
     }
 
@@ -42,10 +42,10 @@ final class IndexPermissionRequest extends BaseIndexFormRequest
         return array_merge(
             parent::attributes(),
             [
-                'filter.id' => 'permission ID filter',
-                'filter.name' => 'name filter',
+                'filter.id'         => 'permission ID filter',
+                'filter.name'       => 'name filter',
                 'filter.guard_name' => 'guard name filter',
-            ]
+            ],
         );
     }
 
@@ -59,10 +59,10 @@ final class IndexPermissionRequest extends BaseIndexFormRequest
         return array_merge(
             parent::filterRules(),
             [
-                'filter.id' => 'sometimes|integer|exists:permissions,id',
-                'filter.name' => 'sometimes|string|max:255',
+                'filter.id'         => 'sometimes|integer|exists:permissions,id',
+                'filter.name'       => 'sometimes|string|max:255',
                 'filter.guard_name' => 'sometimes|string|max:255',
-            ]
+            ],
         );
     }
 

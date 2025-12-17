@@ -98,9 +98,9 @@ final readonly class StatusUpdated implements ShouldBroadcastNow
     {
         return [
             'entity_type' => $this->entityType,
-            'entity_id' => $this->entityId,
-            'status' => $this->status,
-            'updated_at' => now()->toIso8601String(),
+            'entity_id'   => $this->entityId,
+            'status'      => $this->status,
+            'updated_at'  => now()->toIso8601String(),
         ];
     }
 }

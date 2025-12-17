@@ -29,16 +29,16 @@ final class PaymentFactory extends Factory
         $enum = PaymentStatus::tryFrom($status);
 
         return [
-            'invoice_id' => Invoice::factory(),
-            'customer_id' => Customer::factory(),
-            'payment_number' => 'PAY-'.now()->year.'-'.mb_strtoupper(Str::random(8)),
-            'amount' => $this->faker->randomFloat(2, 10, 5000),
-            'method' => $this->faker->randomElement(['ideal', 'credit_card', 'bank_transfer', 'paypal']),
-            'provider' => $this->faker->randomElement(['mollie', 'stripe', 'adyen', 'manual']),
+            'invoice_id'         => Invoice::factory(),
+            'customer_id'        => Customer::factory(),
+            'payment_number'     => 'PAY-' . now()->year . '-' . mb_strtoupper(Str::random(8)),
+            'amount'             => $this->faker->randomFloat(2, 10, 5000),
+            'method'             => $this->faker->randomElement(['ideal', 'credit_card', 'bank_transfer', 'paypal']),
+            'provider'           => $this->faker->randomElement(['mollie', 'stripe', 'adyen', 'manual']),
             'provider_reference' => mb_strtoupper(Str::random(12)),
-            'status' => $status,
-            'paid_at' => $enum && $enum->isPaid() ? $this->faker->dateTimeBetween('-1 month', 'now') : null,
-            'refunded_at' => $enum && $enum->isRefunded() ? $this->faker->dateTimeBetween('-1 week', 'now') : null,
+            'status'             => $status,
+            'paid_at'            => $enum && $enum->isPaid() ? $this->faker->dateTimeBetween('-1 month', 'now') : null,
+            'refunded_at'        => $enum && $enum->isRefunded() ? $this->faker->dateTimeBetween('-1 week', 'now') : null,
         ];
     }
 
@@ -48,7 +48,7 @@ final class PaymentFactory extends Factory
     public function paid(): static
     {
         return $this->state(fn (): array => [
-            'status' => PaymentStatus::PAID,
+            'status'  => PaymentStatus::PAID,
             'paid_at' => now(),
         ]);
     }
@@ -59,8 +59,8 @@ final class PaymentFactory extends Factory
     public function refunded(): static
     {
         return $this->state(fn (): array => [
-            'status' => PaymentStatus::REFUNDED,
-            'paid_at' => now()->subDays(3),
+            'status'      => PaymentStatus::REFUNDED,
+            'paid_at'     => now()->subDays(3),
             'refunded_at' => now(),
         ]);
     }
@@ -71,7 +71,7 @@ final class PaymentFactory extends Factory
     public function pending(): static
     {
         return $this->state(fn (): array => [
-            'status' => PaymentStatus::PENDING,
+            'status'  => PaymentStatus::PENDING,
             'paid_at' => null,
         ]);
     }
@@ -82,7 +82,7 @@ final class PaymentFactory extends Factory
     public function failed(): static
     {
         return $this->state(fn (): array => [
-            'status' => PaymentStatus::FAILED,
+            'status'  => PaymentStatus::FAILED,
             'paid_at' => null,
         ]);
     }
@@ -93,7 +93,7 @@ final class PaymentFactory extends Factory
     public function cancelled(): static
     {
         return $this->state(fn (): array => [
-            'status' => PaymentStatus::CANCELLED,
+            'status'  => PaymentStatus::CANCELLED,
             'paid_at' => null,
         ]);
     }

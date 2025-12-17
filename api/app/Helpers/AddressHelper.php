@@ -22,10 +22,10 @@ final class AddressHelper
     public static function formatAddress(?string $address, ?string $zipcode, ?string $city): array
     {
         return [
-            'short' => self::shortAddress($address, $zipcode, $city),
-            'inline' => self::inlineAddress($address, $zipcode, $city),
+            'short'     => self::shortAddress($address, $zipcode, $city),
+            'inline'    => self::inlineAddress($address, $zipcode, $city),
             'multiline' => self::multilineAddress($address, $zipcode, $city),
-            'full' => self::fullAddress($address, $zipcode, $city),
+            'full'      => self::fullAddress($address, $zipcode, $city),
         ];
     }
 
@@ -68,7 +68,7 @@ final class AddressHelper
     {
         $lines = [];
 
-        if (! in_array($address, [null, '', '0'], true)) {
+        if (!in_array($address, [null, '', '0'], true)) {
             $lines[] = mb_rtrim($address, ',');
         }
 
@@ -92,7 +92,7 @@ final class AddressHelper
     {
         $parts = [];
 
-        if (! in_array($address, [null, '', '0'], true)) {
+        if (!in_array($address, [null, '', '0'], true)) {
             $parts[] = $address;
         }
 

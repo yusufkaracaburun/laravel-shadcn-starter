@@ -1,37 +1,19 @@
 {{-- TOTALS --}}
-<div class="totals mb-30">
-    <table>
+<div class="totals">
+    <table class="totals-table">
         <tr>
-            <td>Subtotaal (excl. BTW)</td>
-            <td class="text-right">{{ $data->subtotal->format() }}</td>
+            <td>Subtotal</td>
+            <td>VAT 0%</td>
+            <td>VAT 9%</td>
+            <td>VAT 21%</td>
+            <td>Total</td>
         </tr>
-
-        @if (! $data->total_vat_0->isZero())
-            <tr>
-                <td>BTW 0%</td>
-                <td class="text-right">{{ $data->total_vat_0->format() }}</td>
-            </tr>
-        @endif
-
-        @if (! $data->total_vat_9->isZero())
-            <tr>
-                <td>BTW 9%</td>
-                <td class="text-right">{{ $data->total_vat_9->format() }}</td>
-            </tr>
-        @endif
-
-        @if ($data->total_vat_21->getAmount() > 0)
-            <tr>
-                <td>BTW 21%</td>
-                <td class="text-right">{{ $data->total_vat_21->format() }}</td>
-            </tr>
-        @endif
-
-        <tr>
-            <td><strong>Totaal (incl. BTW)</strong></td>
-            <td class="text-right">
-                <strong>{{ $data->total->format() }}</strong>
-            </td>
+        <tr class="totals-values">
+            <td>{{ $data->subtotal->format() }}</td>
+            <td>{{ $data->total_vat_0->format() }}</td>
+            <td>{{ $data->total_vat_9->format() }}</td>
+            <td>{{ $data->total_vat_21->format() }}</td>
+            <td>{{ $data->total->format() }}</td>
         </tr>
     </table>
 </div>

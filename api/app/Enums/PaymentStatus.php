@@ -27,10 +27,10 @@ enum PaymentStatus: string
     public function color(): string
     {
         return match ($this) {
-            self::PENDING => 'warning',
-            self::PAID => 'success',
-            self::FAILED => 'danger',
-            self::REFUNDED => 'info',
+            self::PENDING   => 'warning',
+            self::PAID      => 'success',
+            self::FAILED    => 'danger',
+            self::REFUNDED  => 'info',
             self::CANCELLED => 'secondary',
         };
     }
@@ -41,10 +41,10 @@ enum PaymentStatus: string
     public function style(): string
     {
         return match ($this) {
-            self::PENDING => 'badge badge-light-warning',
-            self::PAID => 'badge badge-light-success',
-            self::FAILED => 'badge badge-light-danger',
-            self::REFUNDED => 'badge badge-light-info',
+            self::PENDING   => 'badge badge-light-warning',
+            self::PAID      => 'badge badge-light-success',
+            self::FAILED    => 'badge badge-light-danger',
+            self::REFUNDED  => 'badge badge-light-info',
             self::CANCELLED => 'badge badge-light-secondary',
         };
     }

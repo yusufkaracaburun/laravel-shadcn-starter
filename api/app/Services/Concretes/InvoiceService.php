@@ -20,7 +20,7 @@ final class InvoiceService extends BaseService implements InvoiceServiceInterfac
      * Create a new class instance.
      */
     public function __construct(
-        InvoiceRepositoryInterface $repo
+        InvoiceRepositoryInterface $repo,
     ) {
         $this->setRepository($repo);
         $this->invoiceRepository = $repo;
@@ -59,21 +59,19 @@ final class InvoiceService extends BaseService implements InvoiceServiceInterfac
         $invoice = $this->invoiceRepository->create($data);
 
         // Create invoice items if provided
-        if (! empty($items)) {
-            foreach ($items as $index => $itemData) {
-                // Set default sort_order if not provided
-                if (! isset($itemData['sort_order'])) {
-                    $itemData['sort_order'] = $index;
-                }
-
-                $invoice->items()->create($itemData);
+        foreach ($items as $index => $itemData) {
+            // Set default sort_order if not provided
+            if (!isset($itemData['sort_order'])) {
+                $itemData['sort_order'] = $index;
             }
 
-            // Recalculate invoice totals
-            $invoice->refresh();
-            $invoice->calculateInvoiceTotals();
-            $invoice->save();
+            $invoice->items()->create($itemData);
         }
+
+        // Recalculate invoice totals
+        $invoice->refresh();
+        $invoice->calculateInvoiceTotals();
+        $invoice->save();
 
         return new InvoiceResource($invoice);
     }
@@ -94,10 +92,10 @@ final class InvoiceService extends BaseService implements InvoiceServiceInterfac
                 $updated->items()->delete();
 
                 // Create new items
-                if (! empty($items)) {
+                if (!empty($items)) {
                     foreach ($items as $index => $itemData) {
                         // Set default sort_order if not provided
-                        if (! isset($itemData['sort_order'])) {
+                        if (!isset($itemData['sort_order'])) {
                             $itemData['sort_order'] = $index;
                         }
 

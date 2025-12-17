@@ -22,7 +22,7 @@ final class ResponseCache
     {
         return self::cache(self::tags($endpoint, $userId, $teamId))->get(
             self::key($endpoint, $userId, $teamId),
-            $default
+            $default,
         );
     }
 
@@ -36,7 +36,7 @@ final class ResponseCache
         return self::cache(self::tags($endpoint, $userId, $teamId))->put(
             self::key($endpoint, $userId, $teamId),
             $value,
-            $ttl
+            $ttl,
         );
     }
 
@@ -50,7 +50,7 @@ final class ResponseCache
         return self::cache(self::tags($endpoint, $userId, $teamId))->remember(
             self::key($endpoint, $userId, $teamId),
             $ttl,
-            $callback
+            $callback,
         );
     }
 
@@ -60,7 +60,7 @@ final class ResponseCache
     public static function forget(string $endpoint, ?int $userId = null, ?int $teamId = null): bool
     {
         return self::cache(self::tags($endpoint, $userId, $teamId))->forget(
-            self::key($endpoint, $userId, $teamId)
+            self::key($endpoint, $userId, $teamId),
         );
     }
 

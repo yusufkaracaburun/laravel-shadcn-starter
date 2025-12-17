@@ -80,7 +80,7 @@ abstract class BaseIndexFormRequest extends BaseFormRequest
             $this->filterRules(),
             $this->sortRules(),
             $this->includeRules(),
-            $this->fieldRules()
+            $this->fieldRules(),
         );
     }
 
@@ -95,16 +95,16 @@ abstract class BaseIndexFormRequest extends BaseFormRequest
             parent::messages(),
             [
                 'per_page.integer' => 'Per page must be a number.',
-                'per_page.min' => 'Per page must be at least 1.',
-                'per_page.max' => 'Per page cannot exceed 100.',
-                'page.integer' => 'Page must be a number.',
-                'page.min' => 'Page must be at least 1.',
-                'filter.array' => 'Filter must be an array.',
-                'sort.string' => 'Sort must be a string.',
-                'sort.in' => 'Invalid sort field. Available: '.implode(', ', $this->getAllowedSorts()),
-                'include.string' => 'Include must be a comma-separated string.',
-                'fields.array' => 'Fields must be an array.',
-            ]
+                'per_page.min'     => 'Per page must be at least 1.',
+                'per_page.max'     => 'Per page cannot exceed 100.',
+                'page.integer'     => 'Page must be a number.',
+                'page.min'         => 'Page must be at least 1.',
+                'filter.array'     => 'Filter must be an array.',
+                'sort.string'      => 'Sort must be a string.',
+                'sort.in'          => 'Invalid sort field. Available: ' . implode(', ', $this->getAllowedSorts()),
+                'include.string'   => 'Include must be a comma-separated string.',
+                'fields.array'     => 'Fields must be an array.',
+            ],
         );
     }
 
@@ -118,9 +118,9 @@ abstract class BaseIndexFormRequest extends BaseFormRequest
         return array_merge(
             parent::attributes(),
             [
-                'per_page' => 'items per page',
+                'per_page'      => 'items per page',
                 'filter.search' => 'search term',
-            ]
+            ],
         );
     }
 
@@ -133,7 +133,7 @@ abstract class BaseIndexFormRequest extends BaseFormRequest
     {
         return [
             'per_page' => 'sometimes|integer|min:1|max:100',
-            'page' => 'sometimes|integer|min:1',
+            'page'     => 'sometimes|integer|min:1',
         ];
     }
 
@@ -147,8 +147,8 @@ abstract class BaseIndexFormRequest extends BaseFormRequest
     protected function filterRules(): array
     {
         return [
-            'filter' => 'sometimes|array',
-            'filter.search' => ['sometimes', 'string', 'max:255'],
+            'filter'         => 'sometimes|array',
+            'filter.search'  => ['sometimes', 'string', 'max:255'],
             'filter.between' => ['sometimes', 'string', 'regex:/^\d{4}-\d{2}-\d{2},\d{4}-\d{2}-\d{2}$/'],
         ];
     }
@@ -196,8 +196,8 @@ abstract class BaseIndexFormRequest extends BaseFormRequest
                     $requestedIncludes = array_map(trim(...), explode(',', $value));
 
                     foreach ($requestedIncludes as $include) {
-                        if (! in_array($include, $allowedIncludes)) {
-                            $fail("The include '{$include}' is not allowed. Allowed includes: ".implode(', ', $allowedIncludes));
+                        if (!in_array($include, $allowedIncludes)) {
+                            $fail("The include '{$include}' is not allowed. Allowed includes: " . implode(', ', $allowedIncludes));
                         }
                     }
                 },
@@ -228,8 +228,8 @@ abstract class BaseIndexFormRequest extends BaseFormRequest
                         $requestedFields = array_map(trim(...), explode(',', $fieldString));
 
                         foreach ($requestedFields as $field) {
-                            if (! in_array($field, $allowedFields)) {
-                                $fail("The field '{$field}' is not allowed. Allowed fields: ".implode(', ', $allowedFields));
+                            if (!in_array($field, $allowedFields)) {
+                                $fail("The field '{$field}' is not allowed. Allowed fields: " . implode(', ', $allowedFields));
                             }
                         }
                     }
@@ -252,7 +252,7 @@ abstract class BaseIndexFormRequest extends BaseFormRequest
      */
     protected function convertBooleanFilters(): void
     {
-        if (! $this->has('filter')) {
+        if (!$this->has('filter')) {
             return;
         }
 
@@ -290,11 +290,11 @@ abstract class BaseIndexFormRequest extends BaseFormRequest
     protected function passedValidation(): void
     {
         // Set default values if not provided
-        if (! $this->has('per_page')) {
+        if (!$this->has('per_page')) {
             $this->merge(['per_page' => $this->getDefaultPerPage()]);
         }
 
-        if (! $this->has('page')) {
+        if (!$this->has('page')) {
             $this->merge(['page' => 1]);
         }
 

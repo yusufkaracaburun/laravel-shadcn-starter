@@ -30,14 +30,14 @@ final class CustomerFactory extends Factory
             'name' => $type === CustomerType::BUSINESS->value
                 ? fake()->company()
                 : fake()->name(),
-            'address' => fake()->streetAddress(),
-            'zipcode' => mb_strtoupper(fake()->bothify('#### ??')),
-            'city' => fake()->city(),
-            'country' => fake()->countryCode(),
-            'email' => fake()->unique()->safeEmail(),
-            'phone' => PhoneNumber::getExampleNumber('NL'),
-            'kvk_number' => $type === CustomerType::BUSINESS->value ? fake()->numerify('########') : null,
-            'vat_number' => $type === CustomerType::BUSINESS->value ? fake()->bothify('NL#########B##') : null,
+            'address'     => fake()->streetAddress(),
+            'zipcode'     => mb_strtoupper(fake()->bothify('#### ??')),
+            'city'        => fake()->city(),
+            'country'     => fake()->countryCode(),
+            'email'       => fake()->unique()->safeEmail(),
+            'phone'       => PhoneNumber::getExampleNumber('NL'),
+            'kvk_number'  => $type === CustomerType::BUSINESS->value ? fake()->numerify('########') : null,
+            'vat_number'  => $type === CustomerType::BUSINESS->value ? fake()->bothify('NL#########B##') : null,
             'iban_number' => fake()->optional()->iban('NL'),
         ];
     }
@@ -48,11 +48,11 @@ final class CustomerFactory extends Factory
     public function business(): static
     {
         return $this->state(fn (): array => [
-            'type' => CustomerType::BUSINESS,
-            'name' => fake()->company(),
+            'type'       => CustomerType::BUSINESS,
+            'name'       => fake()->company(),
             'kvk_number' => fake()->numerify('########'),
             'vat_number' => fake()->bothify('NL#########B##'),
-            'email' => fake()->companyEmail(),
+            'email'      => fake()->companyEmail(),
         ]);
     }
 
@@ -62,11 +62,11 @@ final class CustomerFactory extends Factory
     public function private(): static
     {
         return $this->state(fn (): array => [
-            'type' => CustomerType::PRIVATE,
-            'name' => fake()->name(),
+            'type'       => CustomerType::PRIVATE,
+            'name'       => fake()->name(),
             'kvk_number' => null,
             'vat_number' => null,
-            'email' => fake()->unique()->safeEmail(),
+            'email'      => fake()->unique()->safeEmail(),
         ]);
     }
 }

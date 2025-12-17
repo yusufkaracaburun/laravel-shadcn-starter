@@ -65,7 +65,7 @@ final readonly class NotificationCreated implements ShouldBroadcastNow
 
         if ($this->userId) {
             return [
-                new PrivateChannel('user.'.$this->userId),
+                new PrivateChannel('user.' . $this->userId),
             ];
         }
 
@@ -90,11 +90,11 @@ final readonly class NotificationCreated implements ShouldBroadcastNow
     public function broadcastWith(): array
     {
         return [
-            'message' => $this->message,
-            'type' => $this->type,
-            'title' => $this->title,
+            'message'     => $this->message,
+            'type'        => $this->type,
+            'title'       => $this->title,
             'description' => $this->description,
-            'data' => $this->data,
+            'data'        => $this->data,
         ];
     }
 }

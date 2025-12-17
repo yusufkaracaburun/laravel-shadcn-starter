@@ -47,7 +47,7 @@ final class ValidPhoneNumber implements ValidationRule
             $region = config('app.phone_default_region', 'NL');
             $number = PhoneNumber::parse($value, $region);
 
-            if (! $number->isValidNumber()) {
+            if (!$number->isValidNumber()) {
                 $fail('Vul een geldig Nederlands telefoonnummer in.', null);
             }
         } catch (PhoneNumberParseException) {

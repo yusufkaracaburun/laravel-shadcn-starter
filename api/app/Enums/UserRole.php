@@ -56,10 +56,10 @@ enum UserRole: string
     {
         return match ($this) {
             self::SUPER_ADMIN => 'danger',
-            self::ADMIN => 'warning',
-            self::MANAGER => 'info',
-            self::USER => 'secondary',
-            self::CUSTOMER => 'primary',
+            self::ADMIN       => 'warning',
+            self::MANAGER     => 'info',
+            self::USER        => 'secondary',
+            self::CUSTOMER    => 'primary',
         };
     }
 
@@ -70,10 +70,10 @@ enum UserRole: string
     {
         return match ($this) {
             self::SUPER_ADMIN => 'badge badge-light-danger',
-            self::ADMIN => 'badge badge-light-warning',
-            self::MANAGER => 'badge badge-light-info',
-            self::USER => 'badge badge-light-secondary',
-            self::CUSTOMER => 'badge badge-light-primary',
+            self::ADMIN       => 'badge badge-light-warning',
+            self::MANAGER     => 'badge badge-light-info',
+            self::USER        => 'badge badge-light-secondary',
+            self::CUSTOMER    => 'badge badge-light-primary',
         };
     }
 

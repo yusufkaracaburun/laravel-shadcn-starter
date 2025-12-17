@@ -5,10 +5,13 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Api;
 
 use App\Models\Invoice;
+use Illuminate\Http\Response;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\JsonResponse;
 use App\Http\Responses\ApiResponse;
+use Illuminate\Contracts\View\View;
 use App\Http\Controllers\Controller;
+use Illuminate\Contracts\View\Factory;
 use App\Services\Contracts\ItemServiceInterface;
 use App\Http\Controllers\Concerns\UsesQueryBuilder;
 use App\Http\Requests\Invoices\IndexInvoiceRequest;
@@ -30,7 +33,7 @@ final class InvoiceController extends Controller
     public function __construct(
         private readonly InvoiceServiceInterface $invoiceService,
         private readonly ItemServiceInterface $itemService,
-        private readonly CustomerServiceInterface $customerService
+        private readonly CustomerServiceInterface $customerService,
     ) {}
 
     /**
@@ -129,13 +132,13 @@ final class InvoiceController extends Controller
         $nextInvoiceNumber = $this->invoiceService->getNextInvoiceNumber();
 
         return ApiResponse::success([
-            'items' => $items,
-            'customers' => $customers,
+            'items'               => $items,
+            'customers'           => $customers,
             'next_invoice_number' => $nextInvoiceNumber,
         ]);
     }
 
-    public function asHtml(Invoice $invoice): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+    public function asHtml(Invoice $invoice): Factory|View
     {
         $invoice = $this->invoiceService->findById($invoice->id);
 
@@ -153,10 +156,10 @@ final class InvoiceController extends Controller
 
         return response($pdf->output(), 200)
             ->header('Content-Type', 'application/pdf')
-            ->header('Content-Disposition', 'inline; filename="factuur_'.$invoice->invoice_number.'.pdf"');
+            ->header('Content-Disposition', 'inline; filename="factuur_' . $invoice->invoice_number . '.pdf"');
     }
 
-    public function downloadPdf(Invoice $invoice): \Illuminate\Http\Response
+    public function downloadPdf(Invoice $invoice): Response
     {
         $invoice = $this->invoiceService->findById($invoice->id);
 

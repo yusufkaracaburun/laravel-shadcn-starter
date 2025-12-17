@@ -22,11 +22,11 @@ final class ItemFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => fake()->unique()->jobTitle(),
+            'name'        => fake()->unique()->jobTitle(),
             'description' => fake()->text(),
-            'unit_price' => fake()->randomFloat(2, 1, 1000),
-            'vat_rate' => 21,
-            'unit' => 'uur',
+            'unit_price'  => fake()->randomFloat(2, 1, 1000),
+            'vat_rate'    => 21,
+            'unit'        => 'uur',
         ];
     }
 }

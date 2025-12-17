@@ -33,11 +33,11 @@ final readonly class SearchFilter implements Filter
                     [$relation, $column] = explode('.', $field, 2);
 
                     $query->orWhereHas($relation, function (Builder $relationQuery) use ($column, $searchValue): void {
-                        $relationQuery->where($column, 'like', '%'.$searchValue.'%');
+                        $relationQuery->where($column, 'like', '%' . $searchValue . '%');
                     });
                 } else {
                     // Normal column on the model
-                    $query->orWhere($field, 'like', '%'.$searchValue.'%');
+                    $query->orWhere($field, 'like', '%' . $searchValue . '%');
                 }
             }
         });

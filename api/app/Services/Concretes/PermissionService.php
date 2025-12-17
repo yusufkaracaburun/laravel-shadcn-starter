@@ -17,7 +17,7 @@ final class PermissionService extends BaseService implements PermissionServiceIn
      * Create a new class instance.
      */
     public function __construct(
-        PermissionRepositoryInterface $repo
+        PermissionRepositoryInterface $repo,
     ) {
         $this->setRepository($repo);
     }

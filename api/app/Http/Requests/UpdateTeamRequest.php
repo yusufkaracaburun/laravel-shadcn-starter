@@ -25,7 +25,7 @@ final class UpdateTeamRequest extends FormRequest
             $permissionRegistrar->setPermissionsTeamId(null);
             $permissionRegistrar->forgetCachedPermissions();
 
-            if (! $user->relationLoaded('roles')) {
+            if (!$user->relationLoaded('roles')) {
                 $user->load('roles');
             }
 
@@ -53,7 +53,7 @@ final class UpdateTeamRequest extends FormRequest
         $this->route('team');
 
         return [
-            'name' => ['sometimes', 'required', 'string', 'max:255'],
+            'name'          => ['sometimes', 'required', 'string', 'max:255'],
             'personal_team' => ['sometimes', 'boolean'],
         ];
     }

@@ -19,7 +19,7 @@ abstract class AbstractExceptionHandler implements ExceptionHandlerInterface
 {
     public function __construct(
         protected ExceptionLoggerService $logger,
-        protected ExceptionResponseBuilder $responseBuilder
+        protected ExceptionResponseBuilder $responseBuilder,
     ) {}
 
     /**
@@ -69,7 +69,7 @@ abstract class AbstractExceptionHandler implements ExceptionHandlerInterface
             $exception,
             $request,
             $this->getLogLevel(),
-            $this->getLogContext($exception, $request)
+            $this->getLogContext($exception, $request),
         );
     }
 
@@ -91,7 +91,7 @@ abstract class AbstractExceptionHandler implements ExceptionHandlerInterface
         return $this->responseBuilder->build(
             $this->getStatusCode($exception),
             $this->getMessage($exception, $request),
-            $this->getExtraData($exception, $request)
+            $this->getExtraData($exception, $request),
         );
     }
 }

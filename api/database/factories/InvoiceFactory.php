@@ -27,18 +27,18 @@ final class InvoiceFactory extends Factory
     public function definition(): array
     {
         return [
-            'customer_id' => Customer::factory(),
-            'invoice_number' => 'INV-'.fake()->unique()->randomNumber(5),
-            'date' => fake()->dateTimeBetween('-1 month', 'now'),
-            'due_days' => 30,
-            'date_due' => now()->addDays(30),
-            'status' => InvoiceStatus::DRAFT->value,
-            'subtotal' => 0,
-            'total_vat_0' => 0,
-            'total_vat_9' => 0,
-            'total_vat_21' => 0,
-            'total' => 0,
-            'notes' => fake()->optional()->text(),
+            'customer_id'    => Customer::factory(),
+            'invoice_number' => 'INV-' . fake()->unique()->randomNumber(5),
+            'date'           => fake()->dateTimeBetween('-1 month', 'now'),
+            'due_days'       => 30,
+            'date_due'       => now()->addDays(30),
+            'status'         => InvoiceStatus::DRAFT->value,
+            'subtotal'       => 0,
+            'total_vat_0'    => 0,
+            'total_vat_9'    => 0,
+            'total_vat_21'   => 0,
+            'total'          => 0,
+            'notes'          => fake()->optional()->text(),
         ];
     }
 
@@ -67,15 +67,16 @@ final class InvoiceFactory extends Factory
                     $totalIncl = $subtotal->add($vatAmount);
 
                     $inv_items[] = InvoiceItem::factory()->create([
-                        'invoice_id' => $invoice->id,
-                        'item_id' => $item->id,
-                        'description' => $item->name,
-                        'quantity' => fake()->randomFloat(2, 1, 5),
-                        'unit_price' => $item->unit_price,
-                        'vat_rate' => $item->vat_rate,
-                        'unit' => $item->unit,
+                        'invoice_id'     => $invoice->id,
+                        'item_id'        => $item->id,
+                        'name'           => $item->name,
+                        'description'    => $item->description,
+                        'quantity'       => fake()->randomFloat(2, 1, 5),
+                        'unit_price'     => $item->unit_price,
+                        'vat_rate'       => $item->vat_rate,
+                        'unit'           => $item->unit,
                         'total_excl_vat' => $subtotal,
-                        'total_vat' => $vatAmount,
+                        'total_vat'      => $vatAmount,
                         'total_incl_vat' => $totalIncl,
                     ]);
                 }
@@ -89,15 +90,15 @@ final class InvoiceFactory extends Factory
                     $total_incl_vat = $total_excl_vat + $total_vat;
 
                     $inv_items[] = InvoiceItem::factory()->create([
-                        'invoice_id' => $invoice->id,
-                        'item_id' => null,
-                        'description' => fake()->sentence(3),
-                        'quantity' => $quantity,
-                        'unit_price' => $unit_price,
-                        'vat_rate' => $vat_rate,
-                        'unit' => 'stuk',
+                        'invoice_id'     => $invoice->id,
+                        'item_id'        => null,
+                        'description'    => fake()->sentence(3),
+                        'quantity'       => $quantity,
+                        'unit_price'     => $unit_price,
+                        'vat_rate'       => $vat_rate,
+                        'unit'           => 'stuk',
                         'total_excl_vat' => $total_excl_vat,
-                        'total_vat' => $total_vat,
+                        'total_vat'      => $total_vat,
                         'total_incl_vat' => $total_incl_vat,
                     ]);
                 }

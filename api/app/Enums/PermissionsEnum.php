@@ -32,7 +32,7 @@ enum PermissionsEnum: string
     public static function values(string $feature): array
     {
         return collect(self::cases())
-            ->map(fn (self $case): string => $case->value.' '.$feature)
+            ->map(fn (self $case): string => $case->value . ' ' . $feature)
             ->values()
             ->all();
     }

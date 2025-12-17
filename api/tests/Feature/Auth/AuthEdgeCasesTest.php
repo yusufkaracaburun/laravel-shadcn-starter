@@ -13,8 +13,8 @@ beforeEach(function (): void {
 
     foreach ($emails as $email) {
         foreach ($ips as $ip) {
-            $throttleKey = Str::transliterate(Str::lower($email)).'|'.$ip;
-            RateLimiter::clear('login:'.$throttleKey);
+            $throttleKey = Str::transliterate(Str::lower($email)) . '|' . $ip;
+            RateLimiter::clear('login:' . $throttleKey);
         }
     }
 });
@@ -25,14 +25,14 @@ test('user cannot login with empty email', function (): void {
     // When email is empty, rate limiter uses IP only (per best practices)
     $ips = ['127.0.0.1', '::1'];
     foreach ($ips as $ip) {
-        RateLimiter::clear('login:'.$ip);
+        RateLimiter::clear('login:' . $ip);
     }
 
     // Get CSRF cookie first
     $this->get('/sanctum/csrf-cookie');
 
     $response = $this->postJson('/login', [
-        'email' => '',
+        'email'    => '',
         'password' => 'password123',
     ]);
 
@@ -42,13 +42,13 @@ test('user cannot login with empty email', function (): void {
 
 test('user cannot login with empty password', function (): void {
     /** @var TestCase $this */
-    $uniqueEmail = 'empty-password-'.uniqid().'@example.com';
+    $uniqueEmail = 'empty-password-' . uniqid() . '@example.com';
 
     // Get CSRF cookie first
     $this->get('/sanctum/csrf-cookie');
 
     $response = $this->postJson('/login', [
-        'email' => $uniqueEmail,
+        'email'    => $uniqueEmail,
         'password' => '',
     ]);
 
@@ -62,9 +62,9 @@ test('user cannot register with empty name', function (): void {
     $this->get('/sanctum/csrf-cookie');
 
     $response = $this->postJson('/register', [
-        'name' => '',
-        'email' => 'test@example.com',
-        'password' => 'password123',
+        'name'                  => '',
+        'email'                 => 'test@example.com',
+        'password'              => 'password123',
         'password_confirmation' => 'password123',
     ]);
 
@@ -78,9 +78,9 @@ test('user cannot register with name exceeding max length', function (): void {
     $this->get('/sanctum/csrf-cookie');
 
     $response = $this->postJson('/register', [
-        'name' => str_repeat('a', 256),
-        'email' => 'test@example.com',
-        'password' => 'password123',
+        'name'                  => str_repeat('a', 256),
+        'email'                 => 'test@example.com',
+        'password'              => 'password123',
         'password_confirmation' => 'password123',
     ]);
 
@@ -94,9 +94,9 @@ test('user cannot register with email exceeding max length', function (): void {
     $this->get('/sanctum/csrf-cookie');
 
     $response = $this->postJson('/register', [
-        'name' => 'Test User',
-        'email' => str_repeat('a', 250).'@example.com',
-        'password' => 'password123',
+        'name'                  => 'Test User',
+        'email'                 => str_repeat('a', 250) . '@example.com',
+        'password'              => 'password123',
         'password_confirmation' => 'password123',
     ]);
 
@@ -110,9 +110,9 @@ test('user cannot register with password less than 8 characters', function (): v
     $this->get('/sanctum/csrf-cookie');
 
     $response = $this->postJson('/register', [
-        'name' => 'Test User',
-        'email' => 'test@example.com',
-        'password' => 'short',
+        'name'                  => 'Test User',
+        'email'                 => 'test@example.com',
+        'password'              => 'short',
         'password_confirmation' => 'short',
     ]);
 
@@ -126,9 +126,9 @@ test('user can register with exactly 8 character password', function (): void {
     $this->get('/sanctum/csrf-cookie');
 
     $response = $this->postJson('/register', [
-        'name' => 'Test User',
-        'email' => 'test8@example.com',
-        'password' => '12345678',
+        'name'                  => 'Test User',
+        'email'                 => 'test8@example.com',
+        'password'              => '12345678',
         'password_confirmation' => '12345678',
     ]);
 
@@ -141,16 +141,16 @@ test('user can login after registration with correct credentials', function (): 
     $this->get('/sanctum/csrf-cookie');
 
     $registerResponse = $this->postJson('/register', [
-        'name' => 'Test User',
-        'email' => 'testlogin@example.com',
-        'password' => 'password123',
+        'name'                  => 'Test User',
+        'email'                 => 'testlogin@example.com',
+        'password'              => 'password123',
         'password_confirmation' => 'password123',
     ]);
 
     $registerResponse->assertStatus(201);
 
     $loginResponse = $this->postJson('/login', [
-        'email' => 'testlogin@example.com',
+        'email'    => 'testlogin@example.com',
         'password' => 'password123',
     ]);
 
@@ -163,16 +163,16 @@ test('user cannot login after registration with wrong password', function (): vo
     $this->get('/sanctum/csrf-cookie');
 
     $registerResponse = $this->postJson('/register', [
-        'name' => 'Test User',
-        'email' => 'testwrong@example.com',
-        'password' => 'password123',
+        'name'                  => 'Test User',
+        'email'                 => 'testwrong@example.com',
+        'password'              => 'password123',
         'password_confirmation' => 'password123',
     ]);
 
     $registerResponse->assertStatus(201);
 
     $loginResponse = $this->postJson('/login', [
-        'email' => 'testwrong@example.com',
+        'email'    => 'testwrong@example.com',
         'password' => 'wrongpassword',
     ]);
 

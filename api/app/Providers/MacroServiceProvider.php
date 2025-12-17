@@ -67,16 +67,16 @@ final class MacroServiceProvider extends ServiceProvider
             $q3Index = floor($count * 0.75);
 
             return [
-                'count' => $count,
-                'min' => $values->min(),
-                'max' => $values->max(),
-                'mean' => round($mean, 2),
-                'median' => round($median, 2),
-                'std_dev' => round($stdDev, 2),
+                'count'    => $count,
+                'min'      => $values->min(),
+                'max'      => $values->max(),
+                'mean'     => round($mean, 2),
+                'median'   => round($median, 2),
+                'std_dev'  => round($stdDev, 2),
                 'variance' => round($variance, 2),
-                'q1' => $values[$q1Index],
-                'q3' => $values[$q3Index],
-                'iqr' => $values[$q3Index] - $values[$q1Index],
+                'q1'       => $values[$q1Index],
+                'q3'       => $values[$q3Index],
+                'iqr'      => $values[$q3Index] - $values[$q1Index],
             ];
         });
     }
@@ -152,20 +152,20 @@ final class MacroServiceProvider extends ServiceProvider
         ]));
         Request::macro('validateDateRange', fn ($startField = 'start_date', $endField = 'end_date') => $this->validate([
             $startField => ['required', 'date'],
-            $endField => ['required', 'date', 'after_or_equal:'.$startField],
+            $endField   => ['required', 'date', 'after_or_equal:' . $startField],
         ]));
         Request::macro('validateCurrency', function ($field, $min = 0, $max = null) {
             $rules = [
                 $field => [
                     'required',
                     'numeric',
-                    'min:'.$min,
+                    'min:' . $min,
                     'regex:/^\d+(\.\d{1,2})?$/',
                 ],
             ];
 
             if ($max !== null) {
-                $rules[$field][] = 'max:'.$max;
+                $rules[$field][] = 'max:' . $max;
             }
 
             return $this->validate($rules);

@@ -33,7 +33,7 @@ final class LoginLinkController extends Controller
         ]);
 
         $email = $validated['email'];
-        $key = self::RATE_LIMIT_PREFIX.$email;
+        $key = self::RATE_LIMIT_PREFIX . $email;
         $rateLimitAttempts = (int) config('login-link.rate_limit_attempts', 1);
         $rateLimitDecay = (int) config('login-link.rate_limit_decay', 60);
 
@@ -52,8 +52,8 @@ final class LoginLinkController extends Controller
         RateLimiter::hit($key, $rateLimitDecay);
 
         $magicLink = LoginLink::query()->create([
-            'user_id' => $user->id,
-            'token' => Str::random(64),
+            'user_id'    => $user->id,
+            'token'      => Str::random(64),
             'expires_at' => now()->addMinutes((int) config('login-link.expiration_minutes', 15)),
         ]);
 

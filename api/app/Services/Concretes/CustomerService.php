@@ -17,7 +17,7 @@ final class CustomerService extends BaseService implements CustomerServiceInterf
     private readonly CustomerRepositoryInterface $customerRepository;
 
     public function __construct(
-        CustomerRepositoryInterface $repo
+        CustomerRepositoryInterface $repo,
     ) {
         $this->setRepository($repo);
         $this->customerRepository = $repo;

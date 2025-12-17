@@ -127,7 +127,7 @@ final class UserPolicy extends BasePolicy
     private function belongsToSameTeam(User $user, User $model): bool
     {
         // Both must have a current team
-        if (! $user->current_team_id || ! $model->current_team_id) {
+        if (!$user->current_team_id || !$model->current_team_id) {
             return false;
         }
 

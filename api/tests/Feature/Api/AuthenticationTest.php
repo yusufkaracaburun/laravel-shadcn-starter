@@ -16,8 +16,8 @@ beforeEach(function (): void {
 
     foreach ($emails as $email) {
         foreach ($ips as $ip) {
-            $throttleKey = Str::transliterate(Str::lower($email)).'|'.$ip;
-            RateLimiter::clear('login:'.$throttleKey);
+            $throttleKey = Str::transliterate(Str::lower($email)) . '|' . $ip;
+            RateLimiter::clear('login:' . $throttleKey);
         }
     }
 });
@@ -31,10 +31,10 @@ test('user can get csrf cookie', function (): void {
 
 test('user can login with valid credentials', function (): void {
     /** @var TestCase $this */
-    $uniqueEmail = 'api-valid-login-'.uniqid().'@example.com';
+    $uniqueEmail = 'api-valid-login-' . uniqid() . '@example.com';
 
     $user = User::factory()->create([
-        'email' => $uniqueEmail,
+        'email'    => $uniqueEmail,
         'password' => Hash::make('password123'),
     ]);
 
@@ -43,7 +43,7 @@ test('user can login with valid credentials', function (): void {
 
     // Then login
     $response = $this->postJson('/login', [
-        'email' => $uniqueEmail,
+        'email'    => $uniqueEmail,
         'password' => 'password123',
     ]);
 
@@ -78,16 +78,16 @@ test('user can login with valid credentials', function (): void {
             ->where('data.id', $user->id)
             ->where('data.email', $user->email)
             ->where('data.name', $user->name)
-            ->has('extra')
+            ->has('extra'),
         );
 });
 
 test('user cannot login with invalid credentials', function (): void {
     /** @var TestCase $this */
-    $uniqueEmail = 'api-invalid-login-'.uniqid().'@example.com';
+    $uniqueEmail = 'api-invalid-login-' . uniqid() . '@example.com';
 
     User::factory()->create([
-        'email' => $uniqueEmail,
+        'email'    => $uniqueEmail,
         'password' => Hash::make('password123'),
     ]);
 
@@ -95,7 +95,7 @@ test('user cannot login with invalid credentials', function (): void {
     $this->get('/sanctum/csrf-cookie');
 
     $response = $this->postJson('/login', [
-        'email' => $uniqueEmail,
+        'email'    => $uniqueEmail,
         'password' => 'wrong-password',
     ]);
 
@@ -109,9 +109,9 @@ test('user can register with valid data', function (): void {
     $this->get('/sanctum/csrf-cookie');
 
     $response = $this->postJson('/register', [
-        'name' => 'John Doe',
-        'email' => 'john@example.com',
-        'password' => 'password123',
+        'name'                  => 'John Doe',
+        'email'                 => 'john@example.com',
+        'password'              => 'password123',
         'password_confirmation' => 'password123',
     ]);
 
@@ -119,7 +119,7 @@ test('user can register with valid data', function (): void {
 
     $this->assertDatabaseHas('users', [
         'email' => 'john@example.com',
-        'name' => 'John Doe',
+        'name'  => 'John Doe',
     ]);
 });
 
@@ -132,7 +132,7 @@ test('user can logout when authenticated', function (): void {
 
     // Login to establish session
     $this->postJson('/login', [
-        'email' => $user->email,
+        'email'    => $user->email,
         'password' => 'password', // Default factory password
     ]);
 

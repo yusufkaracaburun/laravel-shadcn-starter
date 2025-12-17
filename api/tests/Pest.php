@@ -61,14 +61,14 @@ function clearLoginRateLimiter(string $email = 'test@example.com', string $ip = 
 
     if ($email !== '') {
         // Match the exact format from FortifyServiceProvider for non-empty emails
-        $throttleKey = Str::transliterate(Str::lower($email)).'|'.$ip;
-        RateLimiter::clear('login:'.$throttleKey);
+        $throttleKey = Str::transliterate(Str::lower($email)) . '|' . $ip;
+        RateLimiter::clear('login:' . $throttleKey);
         // Also try IPv6 format
-        $throttleKeyV6 = Str::transliterate(Str::lower($email)).'|::1';
-        RateLimiter::clear('login:'.$throttleKeyV6);
+        $throttleKeyV6 = Str::transliterate(Str::lower($email)) . '|::1';
+        RateLimiter::clear('login:' . $throttleKeyV6);
     } else {
         // For empty emails, rate limiter uses IP only
-        RateLimiter::clear('login:'.$ip);
+        RateLimiter::clear('login:' . $ip);
         RateLimiter::clear('login::1');
     }
 }

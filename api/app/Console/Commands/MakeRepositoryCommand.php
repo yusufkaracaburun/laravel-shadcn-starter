@@ -33,7 +33,7 @@ final class MakeRepositoryCommand extends Command
         $isQueryable = $this->option('queryable');
 
         // Ensure name ends with Repository
-        if (! str_ends_with($name, 'Repository')) {
+        if (!str_ends_with($name, 'Repository')) {
             $name .= 'Repository';
         }
 
@@ -73,7 +73,7 @@ final class MakeRepositoryCommand extends Command
         $stub = $isQueryable ? 'repository-queryable.stub' : 'repository.stub';
         $stubPath = base_path("stubs/{$stub}");
 
-        if (! file_exists($stubPath)) {
+        if (!file_exists($stubPath)) {
             $this->error("Stub file not found: {$stubPath}");
 
             return;
@@ -83,7 +83,7 @@ final class MakeRepositoryCommand extends Command
         $content = $this->replacePlaceholders($stubContent, $name, $modelName, $isQueryable);
 
         $directory = app_path('Repositories/Concretes');
-        if (! is_dir($directory)) {
+        if (!is_dir($directory)) {
             mkdir($directory, 0755, true);
         }
 
@@ -100,7 +100,7 @@ final class MakeRepositoryCommand extends Command
     {
         $stubPath = base_path('stubs/repository-interface.stub');
 
-        if (! file_exists($stubPath)) {
+        if (!file_exists($stubPath)) {
             $this->error("Stub file not found: {$stubPath}");
 
             return;
@@ -110,7 +110,7 @@ final class MakeRepositoryCommand extends Command
         $content = $this->replacePlaceholders($stubContent, $name, $modelName, $isQueryable);
 
         $directory = app_path('Repositories/Contracts');
-        if (! is_dir($directory)) {
+        if (!is_dir($directory)) {
             mkdir($directory, 0755, true);
         }
 
@@ -127,7 +127,7 @@ final class MakeRepositoryCommand extends Command
     {
         $providerPath = app_path('Providers/RepositoryServiceProvider.php');
 
-        if (! file_exists($providerPath)) {
+        if (!file_exists($providerPath)) {
             $this->error("RepositoryServiceProvider not found at: {$providerPath}");
 
             return;
@@ -148,7 +148,7 @@ final class MakeRepositoryCommand extends Command
         }
 
         // Add use statements if they don't exist
-        if (! str_contains($content, "use {$interfaceFQN}")) {
+        if (!str_contains($content, "use {$interfaceFQN}")) {
             // Find the position right before the class declaration
             // Look for the last use statement followed by blank lines and then class
             $pattern = '/(use [^;]+;)(\s*\n)(\s*\n)(\s*(?:final\s+)?class)/';
@@ -214,13 +214,13 @@ final class MakeRepositoryCommand extends Command
     private function replacePlaceholders(string $content, string $repositoryName, string $modelName, ?bool $isQueryable = null): string
     {
         $replacements = [
-            '{{ namespace }}' => 'App\\Repositories\\Concretes',
-            '{{ interfaceNamespace }}' => 'App\\Repositories\\Contracts',
-            '{{ class }}' => $repositoryName,
-            '{{ interface }}' => "{$repositoryName}Interface",
-            '{{ model }}' => $modelName,
-            '{{ modelNamespace }}' => "App\\Models\\{$modelName}",
-            '{{ baseRepository }}' => $isQueryable ? 'QueryableRepository' : 'BaseRepository',
+            '{{ namespace }}'               => 'App\\Repositories\\Concretes',
+            '{{ interfaceNamespace }}'      => 'App\\Repositories\\Contracts',
+            '{{ class }}'                   => $repositoryName,
+            '{{ interface }}'               => "{$repositoryName}Interface",
+            '{{ model }}'                   => $modelName,
+            '{{ modelNamespace }}'          => "App\\Models\\{$modelName}",
+            '{{ baseRepository }}'          => $isQueryable ? 'QueryableRepository' : 'BaseRepository',
             '{{ baseRepositoryInterface }}' => $isQueryable ? 'QueryableRepositoryInterface' : 'BaseRepositoryInterface',
         ];
 

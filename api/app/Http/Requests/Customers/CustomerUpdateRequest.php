@@ -28,7 +28,7 @@ final class CustomerUpdateRequest extends BaseFormRequest
         $customer = $this->route('customer');
 
         return [
-            'name' => ['sometimes', 'string', 'max:255'],
+            'name'  => ['sometimes', 'string', 'max:255'],
             'email' => [
                 'sometimes',
                 'string',

@@ -31,7 +31,7 @@ trait UsesQueryBuilder
         array $allowedFilters = [],
         array $allowedSorts = [],
         array $allowedIncludes = [],
-        array $allowedFields = []
+        array $allowedFields = [],
     ): QueryBuilder {
         $query = QueryBuilder::for($subject);
 

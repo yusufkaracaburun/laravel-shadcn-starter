@@ -49,8 +49,8 @@ test('authenticated user can access current user endpoint', function (): void {
                     ->where('name', $user->name)
                     ->whereType('teams', 'array')
                     ->whereType('currentTeam', ['array', 'null'])
-                    ->etc()
+                    ->etc(),
                 )
-                ->has('extra')
+                ->has('extra'),
         );
 });

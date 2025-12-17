@@ -62,13 +62,13 @@ final class InvoiceItem extends BaseModel
     protected function casts(): array
     {
         return [
-            'quantity' => 'decimal:5',
-            'unit_price' => MoneyDecimalCast::class,
-            'vat_rate' => 'decimal:2',
+            'quantity'       => 'decimal:5',
+            'unit_price'     => MoneyDecimalCast::class,
+            'vat_rate'       => 'decimal:2',
             'total_excl_vat' => MoneyDecimalCast::class,
-            'total_vat' => MoneyDecimalCast::class,
+            'total_vat'      => MoneyDecimalCast::class,
             'total_incl_vat' => MoneyDecimalCast::class,
-            'sort_order' => 'integer',
+            'sort_order'     => 'integer',
         ];
     }
 }

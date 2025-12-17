@@ -26,7 +26,7 @@ enum UserCompanyRole: string
     public function color(): string
     {
         return match ($this) {
-            self::ADMIN => 'danger',
+            self::ADMIN  => 'danger',
             self::EDITOR => 'warning',
             self::VIEWER => 'secondary',
         };
@@ -38,7 +38,7 @@ enum UserCompanyRole: string
     public function style(): string
     {
         return match ($this) {
-            self::ADMIN => 'badge badge-light-danger',
+            self::ADMIN  => 'badge badge-light-danger',
             self::EDITOR => 'badge badge-light-warning',
             self::VIEWER => 'badge badge-light-secondary',
         };

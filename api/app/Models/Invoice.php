@@ -124,14 +124,14 @@ final class Invoice extends BaseModel
     protected function casts(): array
     {
         return [
-            'date' => 'date',
-            'date_due' => 'date',
-            'status' => InvoiceStatus::class,
-            'subtotal' => MoneyDecimalCast::class,
-            'total_vat_0' => MoneyDecimalCast::class,
-            'total_vat_9' => MoneyDecimalCast::class,
+            'date'         => 'date',
+            'date_due'     => 'date',
+            'status'       => InvoiceStatus::class,
+            'subtotal'     => MoneyDecimalCast::class,
+            'total_vat_0'  => MoneyDecimalCast::class,
+            'total_vat_9'  => MoneyDecimalCast::class,
             'total_vat_21' => MoneyDecimalCast::class,
-            'total' => MoneyDecimalCast::class,
+            'total'        => MoneyDecimalCast::class,
         ];
     }
 

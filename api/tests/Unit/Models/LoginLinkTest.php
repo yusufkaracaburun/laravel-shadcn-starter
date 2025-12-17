@@ -13,8 +13,8 @@ test('login link can be created', function (): void {
 
     // Act
     $loginLink = LoginLink::query()->create([
-        'user_id' => $user->id,
-        'token' => 'test-token-123',
+        'user_id'    => $user->id,
+        'token'      => 'test-token-123',
         'expires_at' => now()->addMinutes(15),
     ]);
 
@@ -29,8 +29,8 @@ test('login link has user relationship', function (): void {
     // Arrange
     $user = User::factory()->create();
     $loginLink = LoginLink::query()->create([
-        'user_id' => $user->id,
-        'token' => 'test-token',
+        'user_id'    => $user->id,
+        'token'      => 'test-token',
         'expires_at' => now()->addMinutes(15),
     ]);
 
@@ -50,8 +50,8 @@ test('login link expires_at is cast to datetime', function (): void {
 
     // Act
     $loginLink = LoginLink::query()->create([
-        'user_id' => $user->id,
-        'token' => 'test-token',
+        'user_id'    => $user->id,
+        'token'      => 'test-token',
         'expires_at' => $expiresAt,
     ]);
 
@@ -64,8 +64,8 @@ test('login link used_at is cast to datetime', function (): void {
     // Arrange
     $user = User::factory()->create();
     $loginLink = LoginLink::query()->create([
-        'user_id' => $user->id,
-        'token' => 'test-token',
+        'user_id'    => $user->id,
+        'token'      => 'test-token',
         'expires_at' => now()->addMinutes(15),
     ]);
 
@@ -80,13 +80,13 @@ test('login link prunable returns expired links', function (): void {
     // Arrange
     $user = User::factory()->create();
     LoginLink::query()->create([
-        'user_id' => $user->id,
-        'token' => 'expired-token',
+        'user_id'    => $user->id,
+        'token'      => 'expired-token',
         'expires_at' => now()->subDay(),
     ]);
     LoginLink::query()->create([
-        'user_id' => $user->id,
-        'token' => 'valid-token',
+        'user_id'    => $user->id,
+        'token'      => 'valid-token',
         'expires_at' => now()->addMinutes(15),
     ]);
 

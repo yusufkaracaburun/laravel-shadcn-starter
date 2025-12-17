@@ -29,7 +29,7 @@ final class CurrentTeamResolver implements PermissionsTeamResolver
         // Otherwise, resolve from authenticated user's current_team_id
         $user = Auth::user();
 
-        if (! $user) {
+        if (!$user) {
             return null;
         }
 

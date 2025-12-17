@@ -26,7 +26,7 @@ final class CustomerController extends Controller
     use UsesQueryBuilder;
 
     public function __construct(
-        private readonly CustomerServiceInterface $customerService
+        private readonly CustomerServiceInterface $customerService,
     ) {}
 
     /**

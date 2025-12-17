@@ -22,11 +22,11 @@ trait HasInvoiceNumberTrait
      */
     public function generateInvoiceNumber(string $prefix = 'INV'): void
     {
-        if (! $this instanceof Invoice) {
+        if (!$this instanceof Invoice) {
             return;
         }
 
-        if (! $this->invoice_number) {
+        if (!$this->invoice_number) {
             $year = now()->year;
 
             $lastNumber = self::whereYear('date', $year)

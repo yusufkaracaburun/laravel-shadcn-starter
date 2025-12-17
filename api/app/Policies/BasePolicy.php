@@ -29,7 +29,7 @@ abstract class BasePolicy
         // Clear permission cache and roles relation to ensure fresh check
         $permissionRegistrar->forgetCachedPermissions();
 
-        if (! $user->relationLoaded('roles')) {
+        if (!$user->relationLoaded('roles')) {
             $user->load('roles');
         }
 

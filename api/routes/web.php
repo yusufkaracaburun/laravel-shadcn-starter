@@ -7,7 +7,7 @@ use App\Http\Controllers\User\OauthController;
 use App\Http\Controllers\Api\InvoiceController;
 
 // Load authentication routes
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
 
 /*
 |--------------------------------------------------------------------------

@@ -33,12 +33,12 @@ final class MakeServiceCommand extends Command
         $modelName = $this->option('model') ?? $this->guessModelName($name);
 
         // Ensure name ends with Service
-        if (! str_ends_with($name, 'Service')) {
+        if (!str_ends_with($name, 'Service')) {
             $name .= 'Service';
         }
 
         // Ensure repository name ends with RepositoryInterface
-        if (! str_ends_with($repositoryName, 'RepositoryInterface')) {
+        if (!str_ends_with($repositoryName, 'RepositoryInterface')) {
             if (str_ends_with($repositoryName, 'Repository')) {
                 $repositoryName .= 'Interface';
             } else {
@@ -95,7 +95,7 @@ final class MakeServiceCommand extends Command
     {
         $stubPath = base_path('stubs/service.stub');
 
-        if (! file_exists($stubPath)) {
+        if (!file_exists($stubPath)) {
             $this->error("Stub file not found: {$stubPath}");
 
             return;
@@ -105,7 +105,7 @@ final class MakeServiceCommand extends Command
         $content = $this->replacePlaceholders($stubContent, $name, $repositoryName, $modelName);
 
         $directory = app_path('Services/Concretes');
-        if (! is_dir($directory)) {
+        if (!is_dir($directory)) {
             mkdir($directory, 0755, true);
         }
 
@@ -122,7 +122,7 @@ final class MakeServiceCommand extends Command
     {
         $stubPath = base_path('stubs/service-interface.stub');
 
-        if (! file_exists($stubPath)) {
+        if (!file_exists($stubPath)) {
             $this->error("Stub file not found: {$stubPath}");
 
             return;
@@ -132,7 +132,7 @@ final class MakeServiceCommand extends Command
         $content = $this->replacePlaceholders($stubContent, $name, $repositoryName, $modelName);
 
         $directory = app_path('Services/Contracts');
-        if (! is_dir($directory)) {
+        if (!is_dir($directory)) {
             mkdir($directory, 0755, true);
         }
 
@@ -149,7 +149,7 @@ final class MakeServiceCommand extends Command
     {
         $providerPath = app_path('Providers/ServiceServiceProvider.php');
 
-        if (! file_exists($providerPath)) {
+        if (!file_exists($providerPath)) {
             $this->error("ServiceServiceProvider not found at: {$providerPath}");
 
             return;
@@ -170,7 +170,7 @@ final class MakeServiceCommand extends Command
         }
 
         // Add use statements if they don't exist
-        if (! str_contains($content, "use {$interfaceFQN}")) {
+        if (!str_contains($content, "use {$interfaceFQN}")) {
             // Find the position right before the class declaration
             // Look for the last use statement followed by blank lines and then class
             $pattern = '/(use [^;]+;)(\s*\n)(\s*\n)(\s*(?:final\s+)?class)/';
@@ -240,14 +240,14 @@ final class MakeServiceCommand extends Command
         $repositoryShortName = class_basename($repositoryName);
 
         $replacements = [
-            '{{ namespace }}' => 'App\\Services\\Concretes',
-            '{{ interfaceNamespace }}' => 'App\\Services\\Contracts',
-            '{{ class }}' => $serviceName,
-            '{{ interface }}' => "{$serviceName}Interface",
-            '{{ repository }}' => $repositoryShortName,
+            '{{ namespace }}'           => 'App\\Services\\Concretes',
+            '{{ interfaceNamespace }}'  => 'App\\Services\\Contracts',
+            '{{ class }}'               => $serviceName,
+            '{{ interface }}'           => "{$serviceName}Interface",
+            '{{ repository }}'          => $repositoryShortName,
             '{{ repositoryNamespace }}' => "App\\Repositories\\Contracts\\{$repositoryName}",
-            '{{ model }}' => $modelName,
-            '{{ modelNamespace }}' => "App\\Models\\{$modelName}",
+            '{{ model }}'               => $modelName,
+            '{{ modelNamespace }}'      => "App\\Models\\{$modelName}",
         ];
 
         return str_replace(array_keys($replacements), array_values($replacements), $content);

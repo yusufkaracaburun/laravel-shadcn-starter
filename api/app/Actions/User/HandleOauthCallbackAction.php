@@ -25,7 +25,7 @@ final readonly class HandleOauthCallbackAction
     {
         return match (true) {
             $authenticatedUser instanceof User => $this->handleAuthenticatedUser($provider, $socialiteUser, $authenticatedUser),
-            default => $this->handleUnauthenticatedUser($provider, $socialiteUser),
+            default                            => $this->handleUnauthenticatedUser($provider, $socialiteUser),
         };
     }
 
@@ -47,7 +47,7 @@ final readonly class HandleOauthCallbackAction
 
             return match (true) {
                 $existingUser instanceof User => $this->handleExistingUser($existingUser, $provider, $socialiteUser),
-                default => $this->createNewUser($socialiteUser, $provider),
+                default                       => $this->createNewUser($socialiteUser, $provider),
             };
         });
     }
@@ -56,22 +56,22 @@ final readonly class HandleOauthCallbackAction
     {
         try {
             Validator::validate([
-                'provider' => $provider,
+                'provider'    => $provider,
                 'provider_id' => $socialiteUser->getId(),
-                'email' => $socialiteUser->getEmail(),
+                'email'       => $socialiteUser->getEmail(),
             ], [
                 'provider' => [
                     'required',
                     'max:255',
                     Rule::unique('oauth_connections')->where(
                         fn (Builder $query) => $query->where('provider', $provider)
-                            ->where('provider_id', $socialiteUser->getId())
+                            ->where('provider_id', $socialiteUser->getId()),
                     ),
                 ],
                 'email' => ['required', 'email', Rule::in([$user->email])],
             ], [
                 'provider.unique' => __('This account from :provider is already connected to another account.', ['provider' => $provider]),
-                'email.in' => __('The email address from this :provider does not match your account email.', ['provider' => $provider]),
+                'email.in'        => __('The email address from this :provider does not match your account email.', ['provider' => $provider]),
             ]);
         } catch (ValidationException) {
             throw_if($socialiteUser->getEmail() !== $user->email, OAuthAccountLinkingException::emailMismatch($provider));
@@ -84,7 +84,7 @@ final readonly class HandleOauthCallbackAction
     {
         throw_unless(
             $user->oauthConnections()->where('provider', $provider)->exists(),
-            OAuthAccountLinkingException::existingConnection()
+            OAuthAccountLinkingException::existingConnection(),
         );
 
         $this->updateUserProfile($user, $socialiteUser, $provider);
@@ -96,9 +96,9 @@ final readonly class HandleOauthCallbackAction
     {
         $randomPassword = str()->random(32);
         $user = (new CreateNewUser())->create([
-            'name' => (string) $socialiteUser->getName(),
-            'email' => (string) $socialiteUser->getEmail(),
-            'password' => $randomPassword,
+            'name'                  => (string) $socialiteUser->getName(),
+            'email'                 => (string) $socialiteUser->getEmail(),
+            'password'              => $randomPassword,
             'password_confirmation' => $randomPassword,
         ]);
 

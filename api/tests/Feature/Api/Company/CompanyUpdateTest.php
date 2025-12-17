@@ -28,7 +28,7 @@ test('authenticated user can update company', function (): void {
     Sanctum::actingAs($user, ['*']);
 
     $updateData = [
-        'name' => 'Updated Company Name',
+        'name'   => 'Updated Company Name',
         'status' => 'inactive',
     ];
 
@@ -41,12 +41,12 @@ test('authenticated user can update company', function (): void {
                 ->has('data', fn (AssertableJson $json): AssertableJson => $json->where('name', $updateData['name'])
                     ->where('status', $updateData['status'])
                     ->etc())
-                ->etc()
+                ->etc(),
         );
 
     $this->assertDatabaseHas('companies', [
-        'id' => $company->id,
-        'name' => $updateData['name'],
+        'id'     => $company->id,
+        'name'   => $updateData['name'],
         'status' => $updateData['status'],
     ]);
 });
@@ -59,9 +59,9 @@ test('company update requires valid data', function (): void {
     Sanctum::actingAs($user, ['*']);
 
     $response = $this->putJson("/api/company/{$company->id}", [
-        'email' => 'invalid-email',
+        'email'    => 'invalid-email',
         'industry' => 'invalid-industry',
-        'status' => 'invalid-status',
+        'status'   => 'invalid-status',
     ]);
 
     $response->assertUnprocessable()
@@ -92,7 +92,7 @@ test('company update allows same email for same company', function (): void {
     Sanctum::actingAs($user, ['*']);
 
     $response = $this->putJson("/api/company/{$company->id}", [
-        'name' => 'Updated Name',
+        'name'  => 'Updated Name',
         'email' => 'test@example.com', // Same email should be allowed
     ]);
 

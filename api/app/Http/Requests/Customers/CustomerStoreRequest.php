@@ -23,7 +23,7 @@ final class CustomerStoreRequest extends BaseFormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:255'],
+            'name'  => ['required', 'string', 'max:255'],
             'email' => ['nullable', 'string', 'email', 'max:255', 'unique:customers'],
             'phone' => ['nullable', new ValidPhoneNumber()],
         ];

@@ -116,8 +116,8 @@ final class User extends Authenticatable implements HasMedia
         $teamId = $team instanceof Team ? $team->id : $team;
 
         // Verify user belongs to this team
-        throw_if(! $this->teams()->where('teams.id', $teamId)->exists() &&
-            ! $this->ownedTeams()->where('id', $teamId)->exists(), InvalidArgumentException::class, 'User does not belong to this team');
+        throw_if(!$this->teams()->where('teams.id', $teamId)->exists() &&
+            !$this->ownedTeams()->where('id', $teamId)->exists(), InvalidArgumentException::class, 'User does not belong to this team');
 
         $oldTeamId = $this->current_team_id;
         $this->update(['current_team_id' => $teamId]);
@@ -175,8 +175,8 @@ final class User extends Authenticatable implements HasMedia
     {
         return [
             'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-            'status' => UserStatus::class,
+            'password'          => 'hashed',
+            'status'            => UserStatus::class,
         ];
     }
 }

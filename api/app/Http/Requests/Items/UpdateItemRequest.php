@@ -38,7 +38,7 @@ final class UpdateItemRequest extends BaseFormRequest
 
             // Price & VAT
             'unit_price' => ['sometimes', 'numeric', 'min:0'],
-            'vat_rate' => ['sometimes', 'numeric', 'min:0', 'max:100'],
+            'vat_rate'   => ['sometimes', 'numeric', 'min:0', 'max:100'],
 
             // Unit (optional)
             'unit' => ['sometimes', 'nullable', 'string', 'max:50'],
@@ -53,11 +53,11 @@ final class UpdateItemRequest extends BaseFormRequest
     public function attributes(): array
     {
         return array_merge(parent::attributes(), [
-            'name' => 'item name',
+            'name'        => 'item name',
             'description' => 'description',
-            'unit_price' => 'unit price',
-            'vat_rate' => 'VAT rate',
-            'unit' => 'unit',
+            'unit_price'  => 'unit price',
+            'vat_rate'    => 'VAT rate',
+            'unit'        => 'unit',
         ]);
     }
 
@@ -69,9 +69,9 @@ final class UpdateItemRequest extends BaseFormRequest
     public function messages(): array
     {
         return array_merge(parent::messages(), [
-            'name.unique' => 'An item with this name already exists.',
+            'name.unique'    => 'An item with this name already exists.',
             'unit_price.min' => 'The unit price must be zero or greater.',
-            'vat_rate.max' => 'The VAT rate may not be greater than 100%.',
+            'vat_rate.max'   => 'The VAT rate may not be greater than 100%.',
         ]);
     }
 }

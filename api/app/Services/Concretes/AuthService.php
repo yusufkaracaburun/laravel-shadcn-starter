@@ -33,8 +33,8 @@ final class AuthService extends BaseService implements AuthServiceInterface
     {
         /** @var User $user */
         $user = $this->repository->create([
-            'name' => $data['name'],
-            'email' => $data['email'],
+            'name'     => $data['name'],
+            'email'    => $data['email'],
             'password' => Hash::make($data['password']),
         ]);
 
@@ -46,8 +46,8 @@ final class AuthService extends BaseService implements AuthServiceInterface
         // Note: JWT functionality removed - using Sanctum instead
         // If JWT is needed, install tymon/jwt-auth package
         return [
-            'user' => new UserResource($user->load('roles', 'permissions')),
-            'api_token' => $token ?? null, // JWT token generation removed
+            'user'       => new UserResource($user->load('roles', 'permissions')),
+            'api_token'  => $token ?? null, // JWT token generation removed
             'token_type' => 'Bearer',
         ];
     }

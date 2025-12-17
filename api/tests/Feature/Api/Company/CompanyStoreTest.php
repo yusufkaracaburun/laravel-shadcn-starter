@@ -11,10 +11,10 @@ use Illuminate\Testing\Fluent\AssertableJson;
 test('unauthenticated users cannot create companies', function (): void {
     /** @var TestCase $this */
     $response = $this->postJson('/api/company', [
-        'name' => 'Test Company',
-        'email' => 'test@example.com',
-        'industry' => 'technology',
-        'status' => 'active',
+        'name'      => 'Test Company',
+        'email'     => 'test@example.com',
+        'industry'  => 'technology',
+        'status'    => 'active',
         'employees' => '1-10',
     ]);
 
@@ -28,11 +28,11 @@ test('authenticated user can create new company', function (): void {
     Sanctum::actingAs($user, ['*']);
 
     $companyData = [
-        'name' => 'Test Company',
-        'email' => 'test@example.com',
-        'phone' => '+1234567890',
-        'industry' => 'technology',
-        'status' => 'active',
+        'name'      => 'Test Company',
+        'email'     => 'test@example.com',
+        'phone'     => '+1234567890',
+        'industry'  => 'technology',
+        'status'    => 'active',
         'employees' => '1-10',
     ];
 
@@ -49,12 +49,12 @@ test('authenticated user can create new company', function (): void {
                     ->where('employees', $companyData['employees'])
                     ->etc())
                 ->has('extra')
-                ->etc()
+                ->etc(),
         );
 
     $this->assertDatabaseHas('companies', [
-        'email' => $companyData['email'],
-        'name' => $companyData['name'],
+        'email'   => $companyData['email'],
+        'name'    => $companyData['name'],
         'team_id' => $user->current_team_id,
     ]);
 });
@@ -66,10 +66,10 @@ test('company creation requires valid data', function (): void {
     Sanctum::actingAs($user, ['*']);
 
     $response = $this->postJson('/api/company', [
-        'name' => '',
-        'email' => 'invalid-email',
-        'industry' => 'invalid-industry',
-        'status' => 'invalid-status',
+        'name'      => '',
+        'email'     => 'invalid-email',
+        'industry'  => 'invalid-industry',
+        'status'    => 'invalid-status',
         'employees' => 'invalid-size',
     ]);
 
@@ -85,10 +85,10 @@ test('company creation requires unique email', function (): void {
     Sanctum::actingAs($user, ['*']);
 
     $response = $this->postJson('/api/company', [
-        'name' => 'Test Company',
-        'email' => 'existing@example.com',
-        'industry' => 'technology',
-        'status' => 'active',
+        'name'      => 'Test Company',
+        'email'     => 'existing@example.com',
+        'industry'  => 'technology',
+        'status'    => 'active',
         'employees' => '1-10',
     ]);
 
@@ -103,10 +103,10 @@ test('company can be created with optional phone', function (): void {
     Sanctum::actingAs($user, ['*']);
 
     $response = $this->postJson('/api/company', [
-        'name' => 'Test Company',
-        'email' => 'test@example.com',
-        'industry' => 'technology',
-        'status' => 'active',
+        'name'      => 'Test Company',
+        'email'     => 'test@example.com',
+        'industry'  => 'technology',
+        'status'    => 'active',
         'employees' => '1-10',
     ]);
 
@@ -118,6 +118,6 @@ test('company can be created with optional phone', function (): void {
                     ->where('email', 'test@example.com')
                     ->where('phone', null)
                     ->etc())
-                ->etc()
+                ->etc(),
         );
 });

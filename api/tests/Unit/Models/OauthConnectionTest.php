@@ -14,11 +14,11 @@ test('oauth connection can be created', function (): void {
 
     // Act
     $connection = OauthConnection::query()->create([
-        'user_id' => $user->id,
-        'provider' => 'github',
+        'user_id'     => $user->id,
+        'provider'    => 'github',
         'provider_id' => '12345',
-        'data' => ['name' => 'Test User'],
-        'token' => 'access-token',
+        'data'        => ['name' => 'Test User'],
+        'token'       => 'access-token',
     ]);
 
     // Assert
@@ -33,8 +33,8 @@ test('oauth connection has user relationship', function (): void {
     // Arrange
     $user = User::factory()->create();
     $connection = OauthConnection::query()->create([
-        'user_id' => $user->id,
-        'provider' => 'github',
+        'user_id'     => $user->id,
+        'provider'    => 'github',
         'provider_id' => '12345',
     ]);
 
@@ -54,10 +54,10 @@ test('oauth connection data is cast to collection', function (): void {
 
     // Act
     $connection = OauthConnection::query()->create([
-        'user_id' => $user->id,
-        'provider' => 'github',
+        'user_id'     => $user->id,
+        'provider'    => 'github',
         'provider_id' => '12345',
-        'data' => $data,
+        'data'        => $data,
     ]);
 
     // Assert
@@ -73,10 +73,10 @@ test('oauth connection expires_at is cast to datetime', function (): void {
 
     // Act
     $connection = OauthConnection::query()->create([
-        'user_id' => $user->id,
-        'provider' => 'github',
+        'user_id'     => $user->id,
+        'provider'    => 'github',
         'provider_id' => '12345',
-        'expires_at' => $expiresAt,
+        'expires_at'  => $expiresAt,
     ]);
 
     // Assert
@@ -89,10 +89,10 @@ test('oauth connection can store refresh token', function (): void {
 
     // Act
     $connection = OauthConnection::query()->create([
-        'user_id' => $user->id,
-        'provider' => 'github',
-        'provider_id' => '12345',
-        'token' => 'access-token',
+        'user_id'       => $user->id,
+        'provider'      => 'github',
+        'provider_id'   => '12345',
+        'token'         => 'access-token',
         'refresh_token' => 'refresh-token-123',
     ]);
 

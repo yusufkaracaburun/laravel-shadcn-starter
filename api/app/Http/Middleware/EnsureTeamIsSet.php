@@ -25,7 +25,7 @@ final class EnsureTeamIsSet
     {
         $user = Auth::user();
 
-        if (! $user) {
+        if (!$user) {
             return response()->json([
                 'message' => 'Unauthenticated.',
             ], Response::HTTP_UNAUTHORIZED);
@@ -49,7 +49,7 @@ final class EnsureTeamIsSet
             return $next($request);
         }
 
-        if (! $user->current_team_id) {
+        if (!$user->current_team_id) {
             return response()->json([
                 'message' => 'No active team selected. Please select a team first.',
             ], Response::HTTP_FORBIDDEN);

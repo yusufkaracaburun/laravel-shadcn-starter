@@ -24,13 +24,13 @@ final class InvoiceItemFactory extends Factory
     public function definition(): array
     {
         return [
-            'invoice_id' => Invoice::factory(),
-            'item_id' => Item::factory(),
+            'invoice_id'  => Invoice::factory(),
+            'item_id'     => Item::factory(),
             'description' => fake()->words(3, true),
-            'quantity' => fake()->randomFloat(5, 1, 10), // 5 decimalen
-            'unit_price' => fake()->randomFloat(5, 50, 500),
-            'vat_rate' => fake()->randomElement([0, 9, 21]),
-            'unit' => fake()->randomElement(['stuk', 'uur', 'kg']),
+            'quantity'    => fake()->randomFloat(5, 1, 10), // 5 decimalen
+            'unit_price'  => fake()->randomFloat(5, 50, 500),
+            'vat_rate'    => fake()->randomElement([0, 9, 21]),
+            'unit'        => fake()->randomElement(['stuk', 'uur', 'kg']),
             // totalen hoef je niet te vullen -> HasMoneyTrait berekent ze
         ];
     }
@@ -42,7 +42,7 @@ final class InvoiceItemFactory extends Factory
     {
         // Factuurregel zonder gekoppeld artikel (losse beschrijving)
         return $this->state(fn (): array => [
-            'item_id' => null,
+            'item_id'     => null,
             'description' => fake()->sentence(3),
         ]);
     }

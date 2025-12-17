@@ -38,7 +38,7 @@ test('authenticated user can view project', function (): void {
                     ->has('updated_at')
                     ->etc())
                 ->has('extra')
-                ->etc()
+                ->etc(),
         );
 });
 

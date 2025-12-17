@@ -61,11 +61,11 @@ final class Payment extends BaseModel
     protected function casts(): array
     {
         return [
-            'status' => PaymentStatus::class,
-            'date' => 'datetime',
-            'paid_at' => 'datetime',
+            'status'      => PaymentStatus::class,
+            'date'        => 'datetime',
+            'paid_at'     => 'datetime',
             'refunded_at' => 'datetime',
-            'amount' => MoneyDecimalCast::class,
+            'amount'      => MoneyDecimalCast::class,
         ];
     }
 }

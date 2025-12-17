@@ -32,7 +32,7 @@ final class TeamController extends Controller
     use UsesQueryBuilder;
 
     public function __construct(
-        private readonly TeamServiceInterface $teamService
+        private readonly TeamServiceInterface $teamService,
     ) {}
 
     /**
@@ -99,12 +99,12 @@ final class TeamController extends Controller
 
         // Add user to team as owner (if not already attached)
         $team = $teamResource->resource;
-        if (! $currentUser->teams()->where('teams.id', $team->id)->exists()) {
+        if (!$currentUser->teams()->where('teams.id', $team->id)->exists()) {
             $currentUser->teams()->attach($team->id, ['role' => 'owner']);
         }
 
         // Set as current team if user has no current team
-        if (! $currentUser->current_team_id) {
+        if (!$currentUser->current_team_id) {
             $currentUser->update(['current_team_id' => $team->id]);
         }
 
@@ -222,7 +222,7 @@ final class TeamController extends Controller
         $user->makeVisible(['current_team_id']);
 
         return ApiResponse::success([
-            'user' => $user,
+            'user'         => $user,
             'current_team' => $user->currentTeam,
         ]);
     }
@@ -240,7 +240,7 @@ final class TeamController extends Controller
         // Clear permission cache and roles relation to ensure fresh check
         $permissionRegistrar->forgetCachedPermissions();
 
-        if (! $user->relationLoaded('roles')) {
+        if (!$user->relationLoaded('roles')) {
             $user->load('roles');
         }
 

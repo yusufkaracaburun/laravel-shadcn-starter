@@ -20,12 +20,12 @@ final class TeamResource extends BaseResource
     protected function resolvePayload(Request $request): array
     {
         return [
-            'id' => $this->id,
-            'name' => $this->name,
+            'id'            => $this->id,
+            'name'          => $this->name,
             'personal_team' => (bool) $this->personal_team, // Ensure boolean, not null
-            'user_id' => $this->user_id,
-            'created_at' => $this->formatTimestamp($this->created_at),
-            'updated_at' => $this->formatTimestamp($this->updated_at),
+            'user_id'       => $this->user_id,
+            'created_at'    => $this->formatTimestamp($this->created_at),
+            'updated_at'    => $this->formatTimestamp($this->updated_at),
         ];
     }
 }

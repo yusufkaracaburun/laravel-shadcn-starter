@@ -16,7 +16,7 @@ final class ProjectService extends BaseService implements ProjectServiceInterfac
     private readonly ProjectRepositoryInterface $projectRepository;
 
     public function __construct(
-        ProjectRepositoryInterface $repository
+        ProjectRepositoryInterface $repository,
     ) {
         $this->setRepository($repository);
         $this->projectRepository = $repository;

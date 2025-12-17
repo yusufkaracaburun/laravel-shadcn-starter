@@ -17,6 +17,7 @@ return new class extends Migration
         Schema::create('invoice_items', function (Blueprint $table): void {
             $table->id();
             $table->foreignIdFor(Invoice::class)->constrained()->cascadeOnDelete();
+            $table->string('name')->nullable();
             $table->string('description')->nullable();
             $table->decimal('quantity', 10, 5)->default(1);
             $table->money('unit_price')->default(0);

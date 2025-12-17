@@ -31,7 +31,7 @@ test('authenticated user can update user', function (): void {
     Sanctum::actingAs($user, ['*']);
 
     $updateData = [
-        'name' => 'Updated Name',
+        'name'  => 'Updated Name',
         'email' => 'updated@example.com',
     ];
 
@@ -45,12 +45,12 @@ test('authenticated user can update user', function (): void {
                     ->where('email', $updateData['email'])
                     ->etc())
                 ->has('extra')
-                ->etc()
+                ->etc(),
         );
 
     $this->assertDatabaseHas('users', [
-        'id' => $targetUser->id,
-        'name' => $updateData['name'],
+        'id'    => $targetUser->id,
+        'name'  => $updateData['name'],
         'email' => $updateData['email'],
     ]);
 });
@@ -80,10 +80,10 @@ test('user can be updated with profile photo', function (): void {
     $file = UploadedFile::fake()->image('avatar.jpg', 100, 100);
 
     $response = $this->post("/api/user/{$targetUser->id}", [
-        'name' => 'Updated Name',
-        'email' => 'updated@example.com',
+        'name'          => 'Updated Name',
+        'email'         => 'updated@example.com',
         'profile_photo' => $file,
-        '_method' => 'PUT',
+        '_method'       => 'PUT',
     ]);
 
     $response->assertOk()
@@ -94,7 +94,7 @@ test('user can be updated with profile photo', function (): void {
                     ->where('email', 'updated@example.com')
                     ->has('profile_photo_url')
                     ->etc())
-                ->etc()
+                ->etc(),
         );
 
     $targetUser->refresh();
@@ -113,7 +113,7 @@ test('user can update profile photo without changing other fields', function ():
 
     $response = $this->post("/api/user/{$targetUser->id}", [
         'profile_photo' => $file,
-        '_method' => 'PUT',
+        '_method'       => 'PUT',
     ]);
 
     $response->assertOk();
@@ -132,7 +132,7 @@ test('user can update password', function (): void {
     Sanctum::actingAs($user, ['*']);
 
     $response = $this->putJson("/api/user/{$targetUser->id}", [
-        'password' => 'newpassword123',
+        'password'              => 'newpassword123',
         'password_confirmation' => 'newpassword123',
     ]);
 
@@ -159,7 +159,7 @@ test('user can update role', function (): void {
         ->assertJson(
             fn (AssertableJson $json): AssertableJson => $json->where('success', true)
                 ->where('code', 200)
-                ->etc()
+                ->etc(),
         );
 
     // Note: Role checking might require team context, so we just verify update was successful

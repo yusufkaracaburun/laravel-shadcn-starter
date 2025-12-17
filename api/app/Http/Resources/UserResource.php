@@ -21,12 +21,12 @@ final class UserResource extends BaseResource
     protected function resolvePayload(Request $request): array
     {
         return [
-            'id' => $this->id,
-            'name' => $this->name,
+            'id'    => $this->id,
+            'name'  => $this->name,
             'email' => $this->email,
 
             'email_verified_at' => $this->formatTimestamp($this->email_verified_at),
-            'current_team_id' => $this->current_team_id,
+            'current_team_id'   => $this->current_team_id,
 
             'created_at' => $this->formatTimestamp($this->created_at),
             'updated_at' => $this->formatTimestamp($this->updated_at),
@@ -34,17 +34,17 @@ final class UserResource extends BaseResource
             'profile_photo_url' => $this->profile_photo_url,
 
             'roles' => $this->whenLoaded('roles', fn () => $this->roles->map(fn ($role): array => [
-                'id' => $role->id,
+                'id'   => $role->id,
                 'name' => $role->name,
-            ])->values()
+            ])->values(),
             ),
 
             'teams' => $this->when(
                 $this->relationLoaded('teams') || $this->relationLoaded('ownedTeams'),
-                fn () => TeamResource::collection($this->getAllTeams())
+                fn () => TeamResource::collection($this->getAllTeams()),
             ),
 
-            'currentTeam' => $this->whenLoaded('currentTeam', fn (): TeamResource => new TeamResource($this->currentTeam)
+            'currentTeam' => $this->whenLoaded('currentTeam', fn (): TeamResource => new TeamResource($this->currentTeam),
             ),
         ];
     }

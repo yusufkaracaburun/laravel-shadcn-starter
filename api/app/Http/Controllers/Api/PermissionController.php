@@ -25,7 +25,7 @@ final class PermissionController extends Controller
     use UsesQueryBuilder;
 
     public function __construct(
-        private readonly PermissionServiceInterface $permissionService
+        private readonly PermissionServiceInterface $permissionService,
     ) {}
 
     /**
@@ -63,7 +63,7 @@ final class PermissionController extends Controller
 
         $permission = $this->permissionService->createPermission($data);
 
-        if (! empty($roleIds)) {
+        if (!empty($roleIds)) {
             $permission = $this->permissionService->assignRoles($permission->resource->id, $roleIds);
         }
 

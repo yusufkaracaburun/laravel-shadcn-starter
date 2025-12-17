@@ -20,7 +20,7 @@ final class HttpExceptionHandler extends AbstractExceptionHandler
 
     protected function getStatusCode(Throwable $exception): int
     {
-        if (! $exception instanceof HttpException) {
+        if (!$exception instanceof HttpException) {
             return 500;
         }
 

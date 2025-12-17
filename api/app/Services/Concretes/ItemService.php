@@ -20,7 +20,7 @@ final class ItemService extends BaseService implements ItemServiceInterface
      * Create a new class instance.
      */
     public function __construct(
-        ItemRepositoryInterface $repo
+        ItemRepositoryInterface $repo,
     ) {
         $this->setRepository($repo);
         $this->itemRepository = $repo;

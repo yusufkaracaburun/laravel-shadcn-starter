@@ -26,7 +26,7 @@ final class CompanyController extends Controller
     use UsesQueryBuilder;
 
     public function __construct(
-        private readonly CompanyServiceInterface $companyService
+        private readonly CompanyServiceInterface $companyService,
     ) {}
 
     /**

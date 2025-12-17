@@ -45,8 +45,8 @@ test('user service can create a user', function (): void {
     $service = resolve(UserServiceInterface::class);
 
     $user = $service->create([
-        'name' => 'Test User',
-        'email' => 'test@example.com',
+        'name'     => 'Test User',
+        'email'    => 'test@example.com',
         'password' => bcrypt('password'),
     ]);
 

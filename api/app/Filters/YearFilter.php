@@ -37,7 +37,7 @@ final readonly class YearFilter implements Filter
      * @param  string  $defaultColumn  The default column to filter by (default: 'date')
      */
     public function __construct(
-        private string $defaultColumn = 'date'
+        private string $defaultColumn = 'date',
     ) {}
 
     /**

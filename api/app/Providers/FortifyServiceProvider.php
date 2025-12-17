@@ -55,7 +55,7 @@ final class FortifyServiceProvider extends ServiceProvider
             // If email is empty, rate limit by IP only to prevent enumeration attacks
             // Otherwise, rate limit by email|IP combination
             $throttleKey = $email !== ''
-                ? Str::transliterate(Str::lower($email)).'|'.$request->ip()
+                ? Str::transliterate(Str::lower($email)) . '|' . $request->ip()
                 : $request->ip();
 
             $limit = app()->isLocal() ? 1000 : 5;

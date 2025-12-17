@@ -23,18 +23,18 @@ final class IndexPaymentRequest extends BaseIndexFormRequest
     public function messages(): array
     {
         return array_merge(parent::messages(), [
-            'filter.id.exists' => 'The selected payment does not exist.',
+            'filter.id.exists'             => 'The selected payment does not exist.',
             'filter.payment_number.string' => 'The payment number must be a valid string.',
-            'filter.invoice_id.integer' => 'The invoice ID must be a number.',
-            'filter.invoice_id.exists' => 'The selected invoice does not exist.',
-            'filter.customer_id.integer' => 'The customer ID must be a number.',
-            'filter.customer_id.exists' => 'The selected customer does not exist.',
-            'filter.method.string' => 'The method must be a valid string.',
-            'filter.provider.string' => 'The provider must be a valid string.',
-            'filter.status.in' => 'The status must be one of: '.implode(', ', PaymentStatus::values()),
-            'filter.date.date' => 'The date filter must be a valid date.',
-            'filter.paid_at.date' => 'The paid at filter must be a valid date.',
-            'filter.between' => 'The between filter must include a valid start and end date (e.g. 2025-01-01,2025-01-31).',
+            'filter.invoice_id.integer'    => 'The invoice ID must be a number.',
+            'filter.invoice_id.exists'     => 'The selected invoice does not exist.',
+            'filter.customer_id.integer'   => 'The customer ID must be a number.',
+            'filter.customer_id.exists'    => 'The selected customer does not exist.',
+            'filter.method.string'         => 'The method must be a valid string.',
+            'filter.provider.string'       => 'The provider must be a valid string.',
+            'filter.status.in'             => 'The status must be one of: ' . implode(', ', PaymentStatus::values()),
+            'filter.date.date'             => 'The date filter must be a valid date.',
+            'filter.paid_at.date'          => 'The paid at filter must be a valid date.',
+            'filter.between'               => 'The between filter must include a valid start and end date (e.g. 2025-01-01,2025-01-31).',
         ]);
     }
 
@@ -46,16 +46,16 @@ final class IndexPaymentRequest extends BaseIndexFormRequest
     public function attributes(): array
     {
         return array_merge(parent::attributes(), [
-            'filter.id' => 'payment ID',
+            'filter.id'             => 'payment ID',
             'filter.payment_number' => 'payment number',
-            'filter.invoice_id' => 'invoice ID',
-            'filter.customer_id' => 'customer ID',
-            'filter.status' => 'payment status',
-            'filter.date' => 'payment date',
-            'filter.paid_at' => 'paid at',
-            'filter.between' => 'date range',
-            'filter.method' => 'method',
-            'filter.provider' => 'provider',
+            'filter.invoice_id'     => 'invoice ID',
+            'filter.customer_id'    => 'customer ID',
+            'filter.status'         => 'payment status',
+            'filter.date'           => 'payment date',
+            'filter.paid_at'        => 'paid at',
+            'filter.between'        => 'date range',
+            'filter.method'         => 'method',
+            'filter.provider'       => 'provider',
         ]);
     }
 
@@ -68,13 +68,13 @@ final class IndexPaymentRequest extends BaseIndexFormRequest
     {
         return array_merge(parent::filterRules(), [
             'filter.payment_number' => ['sometimes', 'string', 'max:50'],
-            'filter.invoice_id' => ['sometimes', 'integer', 'exists:invoices,id'],
-            'filter.customer_id' => ['sometimes', 'integer', 'exists:customers,id'],
-            'filter.status' => ['sometimes', 'in:'.implode(',', PaymentStatus::values())],
-            'filter.date' => ['sometimes', 'date'],
-            'filter.paid_at' => ['sometimes', 'date'],
-            'filter.method' => ['sometimes', 'string'],
-            'filter.provider' => ['sometimes', 'string'],
+            'filter.invoice_id'     => ['sometimes', 'integer', 'exists:invoices,id'],
+            'filter.customer_id'    => ['sometimes', 'integer', 'exists:customers,id'],
+            'filter.status'         => ['sometimes', 'in:' . implode(',', PaymentStatus::values())],
+            'filter.date'           => ['sometimes', 'date'],
+            'filter.paid_at'        => ['sometimes', 'date'],
+            'filter.method'         => ['sometimes', 'string'],
+            'filter.provider'       => ['sometimes', 'string'],
         ]);
     }
 

@@ -26,8 +26,8 @@ enum EmailStatus: string
     {
         return match ($this) {
             self::PENDING => 'warning',
-            self::SENT => 'success',
-            self::FAILED => 'danger',
+            self::SENT    => 'success',
+            self::FAILED  => 'danger',
         };
     }
 
@@ -38,8 +38,8 @@ enum EmailStatus: string
     {
         return match ($this) {
             self::PENDING => 'badge badge-light-warning',
-            self::SENT => 'badge badge-light-success',
-            self::FAILED => 'badge badge-light-danger',
+            self::SENT    => 'badge badge-light-success',
+            self::FAILED  => 'badge badge-light-danger',
         };
     }
 
@@ -50,8 +50,8 @@ enum EmailStatus: string
     {
         return match ($this) {
             self::PENDING => 'Pending',
-            self::SENT => 'Sent',
-            self::FAILED => 'Failed',
+            self::SENT    => 'Sent',
+            self::FAILED  => 'Failed',
         };
     }
 }

@@ -135,8 +135,8 @@ final class Customer extends BaseModel
             get: fn (): array => AddressHelper::formatAddress(
                 $this->address,
                 $this->zipcode,
-                $this->city
-            )
+                $this->city,
+            ),
         );
     }
 

@@ -25,43 +25,43 @@ return [
     ],
 
     'github' => [
-        'client_id' => env('GITHUB_CLIENT_ID'),
+        'client_id'     => env('GITHUB_CLIENT_ID'),
         'client_secret' => env('GITHUB_CLIENT_SECRET'),
-        'redirect' => env('GITHUB_REDIRECT_URI', '/auth/callback/github'),
+        'redirect'      => env('GITHUB_REDIRECT_URI', '/auth/callback/github'),
     ],
 
     'google' => [
-        'client_id' => env('GOOGLE_CLIENT_ID'),
+        'client_id'     => env('GOOGLE_CLIENT_ID'),
         'client_secret' => env('GOOGLE_CLIENT_SECRET'),
-        'redirect' => env('GOOGLE_REDIRECT_URI', '/auth/callback/google'),
+        'redirect'      => env('GOOGLE_REDIRECT_URI', '/auth/callback/google'),
     ],
 
     'x' => [
-        'client_id' => env('X_CLIENT_ID'),
+        'client_id'     => env('X_CLIENT_ID'),
         'client_secret' => env('X_CLIENT_SECRET'),
-        'redirect' => env('X_REDIRECT_URI', '/auth/callback/x'),
+        'redirect'      => env('X_REDIRECT_URI', '/auth/callback/x'),
     ],
 
     'gitlab' => [
-        'client_id' => env('GITLAB_CLIENT_ID'),
+        'client_id'     => env('GITLAB_CLIENT_ID'),
         'client_secret' => env('GITLAB_CLIENT_SECRET'),
-        'redirect' => env('GITLAB_REDIRECT_URI', '/auth/callback/gitlab'),
+        'redirect'      => env('GITLAB_REDIRECT_URI', '/auth/callback/gitlab'),
     ],
 
     'bitbucket' => [
-        'client_id' => env('BITBUCKET_CLIENT_ID'),
+        'client_id'     => env('BITBUCKET_CLIENT_ID'),
         'client_secret' => env('BITBUCKET_CLIENT_SECRET'),
-        'redirect' => env('BITBUCKET_REDIRECT_URI', '/auth/callback/bitbucket'),
+        'redirect'      => env('BITBUCKET_REDIRECT_URI', '/auth/callback/bitbucket'),
     ],
 
     'discord' => [
-        'client_id' => env('DISCORD_CLIENT_ID'),
+        'client_id'     => env('DISCORD_CLIENT_ID'),
         'client_secret' => env('DISCORD_CLIENT_SECRET'),
-        'redirect' => env('DISCORD_REDIRECT_URI', '/auth/callback/discord'),
+        'redirect'      => env('DISCORD_REDIRECT_URI', '/auth/callback/discord'),
     ],
 
     'ses' => [
-        'key' => env('AWS_ACCESS_KEY_ID'),
+        'key'    => env('AWS_ACCESS_KEY_ID'),
         'secret' => env('AWS_SECRET_ACCESS_KEY'),
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
@@ -69,7 +69,7 @@ return [
     'slack' => [
         'notifications' => [
             'bot_user_oauth_token' => env('SLACK_BOT_USER_OAUTH_TOKEN'),
-            'channel' => env('SLACK_BOT_USER_DEFAULT_CHANNEL'),
+            'channel'              => env('SLACK_BOT_USER_DEFAULT_CHANNEL'),
         ],
     ],
 

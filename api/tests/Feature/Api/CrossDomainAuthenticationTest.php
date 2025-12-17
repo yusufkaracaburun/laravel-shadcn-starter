@@ -28,8 +28,8 @@ beforeEach(function (): void {
 
     foreach ($emails as $email) {
         foreach ($ips as $ip) {
-            $throttleKey = Str::transliterate(Str::lower($email)).'|'.$ip;
-            RateLimiter::clear('login:'.$throttleKey);
+            $throttleKey = Str::transliterate(Str::lower($email)) . '|' . $ip;
+            RateLimiter::clear('login:' . $throttleKey);
         }
     }
 });
@@ -67,19 +67,19 @@ test('csrf cookie works with different frontend origins', function (): void {
 });
 
 test('cross-domain authentication flow works with session cookies', function (): void {
-    $uniqueEmail = 'cross-domain-'.uniqid().'@example.com';
+    $uniqueEmail = 'cross-domain-' . uniqid() . '@example.com';
     $password = 'password123';
 
     // Create user
     $user = User::factory()->create([
-        'email' => $uniqueEmail,
+        'email'    => $uniqueEmail,
         'password' => Hash::make($password),
     ]);
 
     // Step 1: Get CSRF cookie with cross-domain origin
     $csrfResponse = $this->withHeaders([
-        'Origin' => 'http://localhost:5173',
-        'Accept' => 'application/json',
+        'Origin'           => 'http://localhost:5173',
+        'Accept'           => 'application/json',
         'X-Requested-With' => 'XMLHttpRequest',
     ])->get('/sanctum/csrf-cookie');
 
@@ -88,11 +88,11 @@ test('cross-domain authentication flow works with session cookies', function ():
 
     // Step 2: Login with credentials (session cookie should be set)
     $loginResponse = $this->withHeaders([
-        'Origin' => 'http://localhost:5173',
-        'Accept' => 'application/json',
+        'Origin'           => 'http://localhost:5173',
+        'Accept'           => 'application/json',
         'X-Requested-With' => 'XMLHttpRequest',
     ])->postJson('/login', [
-        'email' => $uniqueEmail,
+        'email'    => $uniqueEmail,
         'password' => $password,
     ]);
 
@@ -109,6 +109,7 @@ test('cross-domain authentication flow works with session cookies', function ():
     foreach ($cookies as $cookie) {
         if (str_contains((string) $cookie->getName(), 'session') || str_contains((string) $cookie->getName(), 'laravel')) {
             $hasSessionCookie = true;
+
             break;
         }
     }
@@ -117,8 +118,8 @@ test('cross-domain authentication flow works with session cookies', function ():
 
     // Step 3: Access authenticated endpoint (should work with session)
     $userResponse = $this->withHeaders([
-        'Origin' => 'http://localhost:5173',
-        'Accept' => 'application/json',
+        'Origin'           => 'http://localhost:5173',
+        'Accept'           => 'application/json',
         'X-Requested-With' => 'XMLHttpRequest',
     ])->getJson('/api/user/current');
 
@@ -128,18 +129,18 @@ test('cross-domain authentication flow works with session cookies', function ():
                 ->where('code', 200)
                 ->has('data', fn (AssertableJson $json): AssertableJson => $json->where('id', $user->id)
                     ->where('email', $user->email)
-                    ->etc()
+                    ->etc(),
                 )
-                ->etc()
+                ->etc(),
         );
 });
 
 test('session persists across multiple authenticated requests', function (): void {
-    $uniqueEmail = 'session-persistence-'.uniqid().'@example.com';
+    $uniqueEmail = 'session-persistence-' . uniqid() . '@example.com';
     $password = 'password123';
 
     $user = User::factory()->create([
-        'email' => $uniqueEmail,
+        'email'    => $uniqueEmail,
         'password' => Hash::make($password),
     ]);
 
@@ -154,7 +155,7 @@ test('session persists across multiple authenticated requests', function (): voi
         'Origin' => 'http://localhost:5173',
         'Accept' => 'application/json',
     ])->postJson('/login', [
-        'email' => $uniqueEmail,
+        'email'    => $uniqueEmail,
         'password' => $password,
     ])->assertStatus(200);
 
@@ -169,19 +170,19 @@ test('session persists across multiple authenticated requests', function (): voi
             ->assertJson(fn (AssertableJson $json): AssertableJson => $json->where('success', true)
                 ->has('data', fn (AssertableJson $json): AssertableJson => $json->where('id', $user->id)
                     ->where('email', $user->email)
-                    ->etc()
+                    ->etc(),
                 )
-                ->etc()
+                ->etc(),
             );
     }
 });
 
 test('CORS headers are present on authenticated API requests', function (): void {
-    $uniqueEmail = 'cors-headers-'.uniqid().'@example.com';
+    $uniqueEmail = 'cors-headers-' . uniqid() . '@example.com';
     $password = 'password123';
 
     $user = User::factory()->create([
-        'email' => $uniqueEmail,
+        'email'    => $uniqueEmail,
         'password' => Hash::make($password),
     ]);
 
@@ -196,7 +197,7 @@ test('CORS headers are present on authenticated API requests', function (): void
         'Origin' => 'http://localhost:5173',
         'Accept' => 'application/json',
     ])->postJson('/login', [
-        'email' => $uniqueEmail,
+        'email'    => $uniqueEmail,
         'password' => $password,
     ])->assertStatus(200);
 
@@ -211,11 +212,11 @@ test('CORS headers are present on authenticated API requests', function (): void
 });
 
 test('authentication works with 127.0.0.1 frontend to localhost backend', function (): void {
-    $uniqueEmail = 'mixed-origins-'.uniqid().'@example.com';
+    $uniqueEmail = 'mixed-origins-' . uniqid() . '@example.com';
     $password = 'password123';
 
     $user = User::factory()->create([
-        'email' => $uniqueEmail,
+        'email'    => $uniqueEmail,
         'password' => Hash::make($password),
     ]);
 
@@ -233,7 +234,7 @@ test('authentication works with 127.0.0.1 frontend to localhost backend', functi
         'Origin' => 'http://127.0.0.1:5173',
         'Accept' => 'application/json',
     ])->postJson('/login', [
-        'email' => $uniqueEmail,
+        'email'    => $uniqueEmail,
         'password' => $password,
     ]);
 
@@ -248,18 +249,18 @@ test('authentication works with 127.0.0.1 frontend to localhost backend', functi
     $userResponse->assertOk()
         ->assertJson(fn (AssertableJson $json): AssertableJson => $json->where('success', true)
             ->has('data', fn (AssertableJson $json): AssertableJson => $json->where('id', $user->id)
-                ->etc()
+                ->etc(),
             )
-            ->etc()
+            ->etc(),
         );
 });
 
 test('logout clears session and requires re-authentication', function (): void {
-    $uniqueEmail = 'logout-test-'.uniqid().'@example.com';
+    $uniqueEmail = 'logout-test-' . uniqid() . '@example.com';
     $password = 'password123';
 
     $user = User::factory()->create([
-        'email' => $uniqueEmail,
+        'email'    => $uniqueEmail,
         'password' => Hash::make($password),
     ]);
 
@@ -274,7 +275,7 @@ test('logout clears session and requires re-authentication', function (): void {
         'Origin' => 'http://localhost:5173',
         'Accept' => 'application/json',
     ])->postJson('/login', [
-        'email' => $uniqueEmail,
+        'email'    => $uniqueEmail,
         'password' => $password,
     ])->assertStatus(200);
 
@@ -306,8 +307,8 @@ test('unauthenticated requests to protected routes return 401', function (): voi
 
 test('CORS preflight requests work correctly', function (): void {
     $response = $this->withHeaders([
-        'Origin' => 'http://localhost:5173',
-        'Access-Control-Request-Method' => 'POST',
+        'Origin'                         => 'http://localhost:5173',
+        'Access-Control-Request-Method'  => 'POST',
         'Access-Control-Request-Headers' => 'Content-Type, X-XSRF-TOKEN',
     ])->options('/login');
 

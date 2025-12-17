@@ -28,9 +28,8 @@ tbody td {
 }
 
 .totals {
-    width: 45%;
+    width: 50%;
     float: right;
-    margin-top: 20px;
     background: #f8fafc;
-    padding: 15px;
+    padding: 10px;
 }
