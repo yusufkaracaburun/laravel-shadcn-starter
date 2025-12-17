@@ -2,22 +2,20 @@
    PAGE SETUP
    ========================= */
 @page {
-    /* ruimte reserveren voor header + footer */
-    margin: 40mm 20mm 30mm 20mm; /* top right bottom left */
+    margin: 30mm 0 30mm 0; /* top right bottom left */
 }
 
 body {
     font-family: DejaVu Sans, sans-serif;
     font-size: 11px;
     color: #333;
-    margin: 0;
+    margin: 0 20mm; /* content links/rechts 20mm */
     line-height: 1.5;
 }
 
 /* =========================
    CONTENT
    ========================= */
-/* GEEN extra marges hier – @page regelt alles */
 .pdf-content {
     position: relative;
 }
@@ -27,18 +25,22 @@ body {
    ========================= */
 .pdf-header {
     position: fixed;
-    top: -40mm;           /* exact gelijk aan @page margin-top */
-    left: -20mm;
-    right: -20mm;
+    top: -30mm;        /* exact = @page margin-top */
+    left: 0;
+    right: 0;
 
-    height: 40mm;
-    padding: 8mm 20mm;
-
+    height: 30mm;      /* exact = @page margin-top */
     background: #fff;
+}
+
+/* Binnen-marge gelijk aan body margin */
+.pdf-header-inner {
+    padding: 8mm 20mm;
 }
 
 .pdf-logo {
     max-height: 16mm;
+    display: block;
 }
 
 /* =========================
@@ -46,17 +48,19 @@ body {
    ========================= */
 .pdf-footer {
     position: fixed;
-    bottom: -30mm;        /* exact gelijk aan @page margin-bottom */
-    left: -20mm;
-    right: -20mm;
+    bottom: -30mm;     /* exact = @page margin-bottom */
+    left: 0;
+    right: 0;
 
-    height: 20mm;
-    padding: 8mm 20mm;
+    height: 30mm;      /* exact = @page margin-bottom */
+    background: #fff;
+}
 
+/* Binnen-marge gelijk aan body margin */
+.pdf-footer-inner {
+    padding: 6mm 20mm;
     font-size: 9px;
     color: #777;
-    background: #fff;
-    border-top: 1px solid #ddd;
 }
 
 /* =========================
@@ -68,11 +72,11 @@ table {
 }
 
 thead {
-    display: table-header-group; /* header herhalen per pagina */
+    display: table-header-group;
 }
 
 tr {
-    page-break-inside: avoid;    /* geen halve rijen */
+    page-break-inside: avoid;
 }
 
 th,
@@ -83,14 +87,6 @@ td {
 /* =========================
    HELPERS
    ========================= */
-.text-right {
-    text-align: right;
-}
-
-.text-center {
-    text-align: center;
-}
-
-.text-muted {
-    color: #777;
-}
+.text-right { text-align: right; }
+.text-center { text-align: center; }
+.text-muted { color: #777; }
