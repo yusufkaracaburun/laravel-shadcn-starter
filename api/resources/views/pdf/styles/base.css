@@ -110,28 +110,28 @@ tbody tr:last-of-type td {
    ADDRESS
    ========================= */
 .address {
-
+    margin-bottom: 30px;
 }
 
 .customer {
 
 }
 .invoice-info {
-
+    text-align: right;
+    font-size: 10px;
 }
 
 /* =========================
    ITEMS
    ========================= */
 .items {
-
+    margin-bottom: 30px;
 }
 
 /* =========================
    TOTALS
    ========================= */
 .totals {
-    margin-top: 20px;
     margin-bottom: 30px;
 }
 
