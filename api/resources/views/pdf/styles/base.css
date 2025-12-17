@@ -36,6 +36,7 @@ body {
 /* Binnen-marge gelijk aan body margin */
 .pdf-header-inner {
     padding: 8mm 20mm;
+    margin-left:-8mm
 }
 
 .pdf-logo {
@@ -84,6 +85,13 @@ td {
     vertical-align: top;
 }
 
+tbody tr td {
+    border-bottom: 1px solid #e5e7eb;
+}
+
+tbody tr:last-of-type td {
+    border-bottom: none;
+}
 /* =========================
    HELPERS
    ========================= */
