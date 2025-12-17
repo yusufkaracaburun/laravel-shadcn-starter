@@ -244,6 +244,7 @@ namespace App\Models{
  *
  * @property int $id
  * @property int $invoice_id
+ * @property string|null $name
  * @property string|null $description
  * @property numeric $quantity
  * @property \Cknow\Money\Money $unit_price
@@ -267,6 +268,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem whereInvoiceId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem whereItemId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem whereQuantity($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem whereSortOrder($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem whereTotalExclVat($value)

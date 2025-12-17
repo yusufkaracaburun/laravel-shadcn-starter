@@ -3,7 +3,11 @@
     "name": "laravel/laravel",
     "type": "project",
     "description": "The skeleton application for the Laravel framework.",
-    "keywords": ["laravel", "framework", "api"],
+    "keywords": [
+        "laravel",
+        "framework",
+        "api"
+    ],
     "license": "MIT",
     "require": {
         "php": "^8.3",
@@ -19,7 +23,7 @@
         "laravel/socialite": "^5.16",
         "laravel/tinker": "^2.10.1",
         "pinkary-project/type-guard": "^0.1.0",
-        "resend/resend-php": "^0.14.0",
+        "resend/resend-laravel": "^1.1",
         "spatie/laravel-activitylog": "^4.10",
         "spatie/laravel-medialibrary": "^11.17",
         "spatie/laravel-permission": "^6.0",
