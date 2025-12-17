@@ -41,22 +41,28 @@ const customers = computed(() => {
 const formRef = ref<InstanceType<typeof InvoiceForm> | null>(null)
 const isSubmitting = ref(false)
 
-const formValues = computed(() => {
-  const values = formRef.value?.values || {}
-  // For new invoices, show zero amounts
-  return {
-    ...values,
-    subtotal: 0,
-    total_vat_0: 0,
-    total_vat_9: 0,
-    total_vat_21: 0,
-    total: 0,
-  }
-})
+import type { TInvoice } from '../data/schema'
 
-const formItems = computed(() => {
-  return formRef.value?.items || []
+const currentFormValues = ref<TInvoice>({
+  id: 0, // Default ID
+  customer_id: 0, // Default customer_id
+  customer: null,
+  invoice_number: null,
+  date: new Date().toISOString().split('T')[0], // Current date
+  due_days: 30,
+  date_due: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 30 days from now
+  status: 'draft',
+  subtotal: { amount: '0.00', currency: 'EUR', formatted: '€0.00' },
+  total_vat_0: { amount: '0.00', currency: 'EUR', formatted: '€0.00' },
+  total_vat_9: { amount: '0.00', currency: 'EUR', formatted: '€0.00' },
+  total_vat_21: { amount: '0.00', currency: 'EUR', formatted: '€0.00' },
+  total: { amount: '0.00', currency: 'EUR', formatted: '€0.00' },
+  notes: null,
+  items: [],
+  created_at: '',
+  updated_at: '',
 })
+const currentFormItems = ref([])
 
 function handleClose() {
   router.push('/invoices')
@@ -102,23 +108,14 @@ async function handleSaveAndSend() {
 
     <InvoiceEditorLayout :is-loading="isSubmitting">
       <template #form>
-        <InvoiceForm
-          ref="formRef"
-          :invoice="null"
-          :next-invoice-number="prerequisites?.next_invoice_number ?? null"
-          :items="items"
-          :customers="customers"
-          @close="handleClose"
-        />
+        <InvoiceForm ref="formRef" v-model:model-value="currentFormValues"
+          :next-invoice-number="prerequisites?.next_invoice_number ?? null" :items="items" :customers="customers"
+          @close="handleClose" @update:formItems="(items) => (currentFormItems = items)" />
       </template>
 
       <template #preview>
-        <InvoicePreview
-          :form-values="formValues"
-          :items="formItems"
-          :customers="customers"
-          :is-loading="isSubmitting"
-        />
+        <InvoicePreview :form-values="currentFormValues" :items="currentFormItems" :customers="customers"
+          :is-loading="isSubmitting" />
       </template>
 
       <template #actions>

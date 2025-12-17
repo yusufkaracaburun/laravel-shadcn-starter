@@ -14,8 +14,8 @@ import {
 import type { IInvoiceItem } from '@/services/invoices.service'
 
 const props = defineProps<{
-  invoice: TInvoice | null
-  invoiceItems: IInvoiceItem[]
+  formValues: TInvoice | null
+  items: IInvoiceItem[]
 }>()
 
 function formatDate(dateString: string | null): string {
@@ -67,20 +67,20 @@ function formatCurrency(value: any): string {
             <div>
               <span class="font-semibold text-gray-700">Invoice #:</span>
               <span class="ml-2 text-gray-900">{{
-                invoice.invoice_number || `#${invoice.id}`
+                props.formValues?.invoice_number || (props.formValues?.id ? `#${props.formValues.id}` : '—')
                 }}</span>
             </div>
             <div>
               <span class="font-semibold text-gray-700">Date:</span>
-              <span class="ml-2 text-gray-900">{{ formatDate(invoice.date) }}</span>
+              <span class="ml-2 text-gray-900">{{ formatDate(props.formValues?.date || null) }}</span>
             </div>
             <div>
               <span class="font-semibold text-gray-700">Due Date:</span>
-              <span class="ml-2 text-gray-900">{{ formatDate(invoice.date_due) }}</span>
+              <span class="ml-2 text-gray-900">{{ formatDate(props.formValues?.date_due || null) }}</span>
             </div>
             <div>
               <span class="font-semibold text-gray-700">Terms:</span>
-              <span class="ml-2 text-gray-900">{{ invoice.due_days }} days</span>
+              <span class="ml-2 text-gray-900">{{ props.formValues?.due_days || '—' }} days</span>
             </div>
           </div>
         </div>
@@ -95,31 +95,31 @@ function formatCurrency(value: any): string {
           <h3 class="text-lg font-semibold text-gray-900 mb-3">Bill To:</h3>
           <div class="text-gray-700">
             <p class="font-semibold text-lg mb-1">
-              {{ invoice.customer?.name || `Customer #${invoice.customer_id}` }}
+              {{ props.formValues?.customer?.name || (props.formValues?.customer_id ? `Customer #${props.formValues.customer_id}` : '—') }}
             </p>
-            <p v-if="invoice.customer?.type" class="text-sm text-gray-600 mb-2">
-              {{ invoice.customer.type }}
+            <p v-if="props.formValues?.customer?.type" class="text-sm text-gray-600 mb-2">
+              {{ props.formValues.customer.type }}
             </p>
 
-            <div v-if="invoice.customer?.formatted_address?.length" class="text-sm space-y-1">
-              <p v-for="(line, index) in invoice.customer.formatted_address" :key="index">
+            <div v-if="props.formValues?.customer?.formatted_address?.length" class="text-sm space-y-1">
+              <p v-for="(line, index) in props.formValues.customer.formatted_address" :key="index">
                 {{ line }}
               </p>
             </div>
-            <p v-else-if="invoice.customer?.address" class="text-sm">
-              {{ invoice.customer.address }}
+            <p v-else-if="props.formValues?.customer?.address" class="text-sm">
+              {{ props.formValues.customer.address }}
             </p>
 
             <div class="mt-3 space-y-1 text-sm">
-              <p v-if="invoice.customer?.primary_contact?.name">
+              <p v-if="props.formValues?.customer?.primary_contact?.name">
                 <span class="font-medium">Contact:</span>
-                {{ invoice.customer.primary_contact.name }}
+                {{ props.formValues.customer.primary_contact.name }}
               </p>
-              <p v-if="invoice.customer?.email">
-                <span class="font-medium">Email:</span> {{ invoice.customer.email }}
+              <p v-if="props.formValues?.customer?.email">
+                <span class="font-medium">Email:</span> {{ props.formValues.customer.email }}
               </p>
-              <p v-if="invoice.customer?.phone">
-                <span class="font-medium">Phone:</span> {{ invoice.customer.phone }}
+              <p v-if="props.formValues?.customer?.phone">
+                <span class="font-medium">Phone:</span> {{ props.formValues.customer.phone }}
               </p>
             </div>
           </div>
@@ -197,50 +197,50 @@ function formatCurrency(value: any): string {
         <div class="border-t border-gray-900 pt-4 space-y-3">
           <div class="flex justify-between text-gray-700">
             <span>Subtotal:</span>
-            <span>{{ formatCurrency(invoice.subtotal) }}</span>
+            <span>{{ formatCurrency(props.formValues?.subtotal) }}</span>
           </div>
 
           <div v-if="
-            invoice?.total_vat_0 &&
-            (typeof invoice.total_vat_0 === 'number' ? invoice.total_vat_0 > 0 : true)
+            props.formValues?.total_vat_0 &&
+            (typeof props.formValues.total_vat_0 === 'object' ? Number.parseFloat(props.formValues.total_vat_0.amount) > 0 : (typeof props.formValues.total_vat_0 === 'number' ? props.formValues.total_vat_0 > 0 : false))
           " class="flex justify-between text-gray-700">
             <span>VAT 0%:</span>
-            <span>{{ formatCurrency(invoice.total_vat_0) }}</span>
+            <span>{{ formatCurrency(props.formValues.total_vat_0) }}</span>
           </div>
           <div v-if="
-            invoice?.total_vat_9 &&
-            (typeof invoice.total_vat_9 === 'number' ? invoice.total_vat_9 > 0 : true)
+            props.formValues?.total_vat_9 &&
+            (typeof props.formValues.total_vat_9 === 'object' ? Number.parseFloat(props.formValues.total_vat_9.amount) > 0 : (typeof props.formValues.total_vat_9 === 'number' ? props.formValues.total_vat_9 > 0 : false))
           " class="flex justify-between text-gray-700">
             <span>VAT 9%:</span>
-            <span>{{ formatCurrency(invoice.total_vat_9) }}</span>
+            <span>{{ formatCurrency(props.formValues.total_vat_9) }}</span>
           </div>
           <div v-if="
-            invoice?.total_vat_21 &&
-            (typeof invoice.total_vat_21 === 'number' ? invoice.total_vat_21 > 0 : true)
+            props.formValues?.total_vat_21 &&
+            (typeof props.formValues.total_vat_21 === 'object' ? Number.parseFloat(props.formValues.total_vat_21.amount) > 0 : (typeof props.formValues.total_vat_21 === 'number' ? props.formValues.total_vat_21 > 0 : false))
           " class="flex justify-between text-gray-700">
             <span>VAT 21%:</span>
-            <span>{{ formatCurrency(invoice.total_vat_21) }}</span>
+            <span>{{ formatCurrency(props.formValues.total_vat_21) }}</span>
           </div>
 
           <div class="border-t-2 border-gray-900 pt-3 flex justify-between text-xl font-bold text-gray-900">
             <span>Total:</span>
-            <span>{{ formatCurrency(invoice.total) }}</span>
+            <span>{{ formatCurrency(props.formValues?.total) }}</span>
           </div>
         </div>
       </div>
     </div>
 
     <!-- Notes Section -->
-    <div v-if="invoice.notes" class="mb-8">
+    <div v-if="props.formValues?.notes" class="mb-8">
       <h3 class="text-lg font-semibold text-gray-900 mb-3">Notes:</h3>
       <div class="bg-gray-50 p-4 rounded border text-gray-700 whitespace-pre-wrap">
-        {{ invoice.notes }}
+        {{ props.formValues.notes }}
       </div>
     </div>
 
     <!-- Footer -->
     <div class="border-t border-gray-200 pt-6 text-center text-sm text-gray-600">
-      <p>Thank you for your business! Payment is due within {{ invoice.due_days }} days.</p>
+      <p>Thank you for your business! Payment is due within {{ props.formValues?.due_days || '—' }} days.</p>
       <p class="mt-2">
         Please make checks payable to "Your Company Name" and include the invoice number on your
         payment.
