@@ -2,11 +2,26 @@
 <html lang="nl">
 <head>
     <meta charset="utf-8">
-    <title>Default layout</title>
+    <title>Factuur</title>
 
-    @include('pdf.styles.' . ($invoice->template ?? 'classic'))
+    {{-- Base styles --}}
+    @include('pdf.styles.base')
+
+    {{-- Theme styles --}}
+    @include('pdf.styles.' . ($invoice->template ?? 'minimal'))
 </head>
 <body>
-@yield('content')
+
+{{-- HEADER (every page) --}}
+@include('pdf.partials.header')
+
+{{-- FOOTER (every page) --}}
+@include('pdf.partials.footer')
+
+{{-- CONTENT --}}
+<main class="pdf-content">
+    @yield('content')
+</main>
+
 </body>
 </html>
