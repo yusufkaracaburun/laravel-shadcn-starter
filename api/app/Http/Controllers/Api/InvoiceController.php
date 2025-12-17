@@ -135,6 +135,14 @@ final class InvoiceController extends Controller
         ]);
     }
 
+    public function asHtml(Invoice $invoice): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+    {
+        $invoice = $this->invoiceService->findById($invoice->id);
+
+        return view('pdf.invoice', [
+            'invoice' => $invoice,
+        ]);
+    }
 
     public function previewPdf(Invoice $invoice)
     {
@@ -148,7 +156,7 @@ final class InvoiceController extends Controller
             ->header('Content-Disposition', 'inline; filename="factuur_'.$invoice->invoice_number.'.pdf"');
     }
 
-    public function downloadPdf(Invoice $invoice)
+    public function downloadPdf(Invoice $invoice): \Illuminate\Http\Response
     {
         $invoice = $this->invoiceService->findById($invoice->id);
 

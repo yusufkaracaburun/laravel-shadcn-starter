@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-use App\Http\Controllers\Api\InvoiceController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\User\OauthController;
+use App\Http\Controllers\Api\InvoiceController;
 
 // Load authentication routes
 require __DIR__.'/auth.php';
@@ -22,3 +22,9 @@ require __DIR__.'/auth.php';
 Route::middleware('auth')->group(function (): void {
     Route::delete('/auth/destroy/{provider}', [OauthController::class, 'destroy'])->name('oauth.destroy');
 });
+
+Route::get('/invoices/{invoice}/html', [InvoiceController::class, 'asHtml'])
+    ->middleware('auth:sanctum');
+
+Route::get('/invoices/{invoice}/pdf/preview', [InvoiceController::class, 'previewPdf'])
+    ->middleware('auth:sanctum');

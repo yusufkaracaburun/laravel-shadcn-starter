@@ -1,69 +1,106 @@
 /* =========================
-   PAGE SETUP
+   SHARED BASICS
    ========================= */
-@page {
-    margin: 30mm 0 30mm 0; /* top right bottom left */
-}
-
 body {
     font-family: DejaVu Sans, sans-serif;
     font-size: 11px;
     color: #333;
-    margin: 0 20mm; /* content links/rechts 20mm */
     line-height: 1.5;
 }
 
-/* =========================
-   CONTENT
-   ========================= */
 .pdf-content {
     position: relative;
 }
 
-/* =========================
-   HEADER (every page)
-   ========================= */
-.pdf-header {
+.pdf-header,
+.pdf-footer {
     position: fixed;
-    top: -30mm;        /* exact = @page margin-top */
     left: 0;
     right: 0;
-
-    height: 30mm;      /* exact = @page margin-top */
     background: #fff;
 }
 
-/* Binnen-marge gelijk aan body margin */
-.pdf-header-inner {
-    padding: 8mm 20mm;
-    margin-left:-8mm
+/* =========================
+   SCREEN (HTML PREVIEW)
+   ========================= */
+@media screen {
+
+    body {
+        margin: 30mm 20mm;
+    }
+
+    .pdf-header {
+        top: 0;
+        height: 30mm;
+        border-bottom: 1px solid #ddd;
+    }
+
+    .pdf-footer {
+        bottom: 0;
+        height: 30mm;
+        border-top: 1px solid #ddd;
+        font-size: 8px;
+        color: #777;
+    }
+
+    .pdf-header-inner {
+        padding: 8mm 20mm;
+    }
+
+    .pdf-footer-inner {
+        padding: 6mm 20mm;
+    }
 }
 
+/* =========================
+   PRINT / PDF (Dompdf)
+   ========================= */
+@media print {
+
+    @page {
+        margin: 30mm 0 30mm 0;
+    }
+
+    body {
+        margin: 0 20mm;
+    }
+
+    .pdf-header {
+        top: -30mm;      /* exact = @page margin-top */
+        height: 30mm;
+    }
+
+    .pdf-footer {
+        bottom: -30mm;   /* exact = @page margin-bottom */
+        height: 30mm;
+        font-size: 8px;
+        color: #777;
+        border-top: 1px solid #ddd;
+    }
+
+    .pdf-header-inner {
+        padding: 8mm 20mm;
+    }
+
+    .pdf-footer-inner {
+        padding: 6mm 20mm;
+    }
+}
+
+/* =========================
+   HEADER
+   ========================= */
 .pdf-logo {
     max-height: 16mm;
     display: block;
 }
 
 /* =========================
-   FOOTER (every page)
+   FOOTER TABLE
    ========================= */
-.pdf-footer {
-    position: fixed;
-    bottom: -30mm;     /* exact = @page margin-bottom */
-    left: 0;
-    right: 0;
-
-    height: 30mm;      /* exact = @page margin-bottom */
-    background: #fff;
-    font-size: 8px;
-    color: #777;
-}
-
-/* Binnen-marge gelijk aan body margin */
-.pdf-footer-inner {
-    padding: 6mm 20mm;
+.pdf-footer-inner table {
+    width: 100%;
     border-collapse: collapse;
-    margin-left:-8mm
 }
 
 .pdf-footer-inner td {
@@ -104,34 +141,6 @@ tbody tr td {
 
 tbody tr:last-of-type td {
     border-bottom: none;
-}
-
-/* =========================
-   ADDRESS
-   ========================= */
-.address {
-
-}
-
-.customer {
-
-}
-.invoice-info {
-
-}
-
-/* =========================
-   ITEMS
-   ========================= */
-.items {
-
-}
-
-/* =========================
-   TOTALS
-   ========================= */
-.totals {
-
 }
 
 /* =========================
