@@ -11,11 +11,11 @@ export function authGuard(router: Router) {
     const { isLogin } = storeToRefs(authStore)
 
     // If the page requires login but the user is not logged in, redirect to the login page and record the original target page.
-    // if (to.meta.auth && !unref(isLogin) && to.name !== '/auth/sign-in') {
-    //   return {
-    //     name: '/auth/sign-in',
-    //     query: { redirect: to.fullPath },
-    //   }
-    // }
+    if (to.meta.auth && !unref(isLogin) && to.name !== '/auth/sign-in') {
+      return {
+        name: '/auth/sign-in',
+        query: { redirect: to.fullPath },
+      }
+    }
   })
 }
