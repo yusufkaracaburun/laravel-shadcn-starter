@@ -41,6 +41,7 @@ export function useAuth() {
 
   async function login(credentials: LoginRequest) {
     try {
+      await logout()
       await loginMutation.mutateAsync(credentials)
 
       // Fetch current user after successful login
