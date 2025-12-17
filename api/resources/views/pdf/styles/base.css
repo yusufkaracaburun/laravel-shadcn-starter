@@ -55,13 +55,21 @@ body {
 
     height: 30mm;      /* exact = @page margin-bottom */
     background: #fff;
+    font-size: 9px;
+    color: #777;
 }
 
 /* Binnen-marge gelijk aan body margin */
 .pdf-footer-inner {
     padding: 6mm 20mm;
-    font-size: 9px;
-    color: #777;
+    border-collapse: collapse;
+}
+
+.pdf-footer-inner td {
+    border: none;
+    padding: 0;
+    vertical-align: middle;
+    width: 33.3333%;
 }
 
 /* =========================
@@ -82,9 +90,7 @@ tr {
 
 th,
 td {
-    text-align: left;
     vertical-align: top;
-    padding: 5px;
 }
 
 td:last-child {
@@ -98,6 +104,35 @@ tbody tr td {
 tbody tr:last-of-type td {
     border-bottom: none;
 }
+
+/* =========================
+   ADDRESS
+   ========================= */
+.address {
+
+}
+
+.customer {
+
+}
+.invoice-info {
+
+}
+
+/* =========================
+   ITEMS
+   ========================= */
+.items {
+
+}
+
+/* =========================
+   TOTALS
+   ========================= */
+.totals {
+
+}
+
 /* =========================
    HELPERS
    ========================= */
