@@ -63,6 +63,7 @@ body {
 .pdf-footer-inner {
     padding: 6mm 20mm;
     border-collapse: collapse;
+    margin-left:-8mm
 }
 
 .pdf-footer-inner td {
