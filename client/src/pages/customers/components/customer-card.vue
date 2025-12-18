@@ -5,13 +5,7 @@ import { useRouter } from 'vue-router'
 import type { Customer } from '@/services/customers.service'
 
 import { Badge } from '@/components/ui/badge'
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 
 import CustomerDelete from './customer-delete.vue'
 import CustomerResourceDialog from './customer-resource-dialog.vue'

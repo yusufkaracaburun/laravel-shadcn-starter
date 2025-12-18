@@ -15,94 +15,85 @@ import type { IResponse } from '@/services/types/response.type'
 
 import { useAxios } from '@/composables/use-axios'
 
-import { defaultAxiosQueryOptions, defaultAxiosQueryOptionsWith404 } from './query-utils'
+import type { ISorting } from './query-utils'
 
-function convertSortingToQueryString(
-  sorting: Array<{ id: string, desc: boolean }>,
-): string | undefined {
-  if (!sorting || sorting.length === 0) {
-    return undefined
-  }
-
-  return sorting
-    .map((sort) => {
-      const prefix = sort.desc ? '-' : ''
-      return `${prefix}${sort.id}`
-    })
-    .join(',')
-}
+import {
+  convertSortingToQueryString,
+  defaultAxiosQueryOptions,
+  defaultAxiosQueryOptionsWith404,
+} from './query-utils'
 
 export function useGetInvoicePrerequisitesQuery() {
   const { axiosInstance } = useAxios()
 
-  return useQuery(
-    {
-      queryKey: ['invoicePrerequisites'],
-      queryFn: async (): Promise<IResponse<IInvoicePrerequisites>> => {
-        const response = await axiosInstance.get('/api/invoices/prerequisites')
-        return response.data
-      },
-      staleTime: 5 * 60 * 1000,
-      ...defaultAxiosQueryOptions(),
+  return useQuery({
+    queryKey: ['invoicePrerequisites'],
+    queryFn: async (): Promise<IResponse<IInvoicePrerequisites>> => {
+      const response = await axiosInstance.get('/api/invoices/prerequisites')
+      return response.data
     },
-  )
+    staleTime: 5 * 60 * 1000,
+    ...defaultAxiosQueryOptions(),
+  })
 }
 
 export function useGetInvoicesQuery(
   page: Ref<number> = ref(1),
   pageSize: Ref<number> = ref(15),
-  sorting: Ref<Array<{ id: string, desc: boolean }>> = ref([]),
+  sorting: Ref<Array<ISorting>> = ref([]),
   filters: Ref<IInvoiceFilters> = ref({}),
   include: Ref<string[]> = ref([]),
 ) {
   const { axiosInstance } = useAxios()
 
-  return useQuery(
-    {
-      queryKey: [
-        'invoiceList',
-        computed(() => toValue(page)),
-        computed(() => toValue(pageSize)),
-        computed(() => JSON.stringify(toValue(sorting))),
-        computed(() => JSON.stringify(toValue(filters))),
-        computed(() => JSON.stringify(toValue(include))),
-      ],
-      queryFn: async (): Promise<IResponse<IPaginatedInvoicesResponse>> => {
-        const params: Record<string, any> = {
-          sort: convertSortingToQueryString(toValue(sorting)),
-          page: toValue(page),
-          per_page: toValue(pageSize),
-          include: toValue(include),
-          filter: toValue(filters),
-        }
+  return useQuery({
+    queryKey: [
+      'invoiceList',
+      computed(() => toValue(page)),
+      computed(() => toValue(pageSize)),
+      computed(() => JSON.stringify(toValue(sorting))),
+      computed(() => JSON.stringify(toValue(filters))),
+      computed(() => JSON.stringify(toValue(include))),
+    ],
+    queryFn: async (): Promise<IResponse<IPaginatedInvoicesResponse>> => {
+      const params: Record<string, any> = {
+        sort: convertSortingToQueryString(toValue(sorting)),
+        page: toValue(page),
+        per_page: toValue(pageSize),
+        include: toValue(include),
+        filter: toValue(filters),
+      }
 
-        const response = await axiosInstance.get('/api/invoices', { params })
-        return response.data
-      },
-      staleTime: 5 * 60 * 1000,
-      enabled: computed(() => toValue(page) > 0 && toValue(pageSize) > 0),
-      ...defaultAxiosQueryOptions(),
+      const response = await axiosInstance.get('/api/invoices', { params })
+      return response.data
     },
-  )
+    staleTime: 5 * 60 * 1000,
+    enabled: computed(() => toValue(page) > 0 && toValue(pageSize) > 0),
+    ...defaultAxiosQueryOptions(),
+  })
 }
 
 export function useGetInvoiceQuery(id: Ref<number>, options?: { include?: string[] }) {
   const { axiosInstance } = useAxios()
 
-  return useQuery(
-    {
-      queryKey: ['getInvoice', computed(() => toValue(id)), computed(() => options?.include?.join(',') || 'customer')],
-      queryFn: async (): Promise<IResponse<IInvoice>> => {
-        const currentId = toValue(id)
-        const includes = ['customer', ...(options?.include || [])]
-        const response = await axiosInstance.get(`/api/invoices/${currentId}`, { params: { include: includes.join(',') } })
-        return response.data
-      },
-      staleTime: 5 * 60 * 1000,
-      enabled: computed(() => toValue(id) > 0),
-      ...defaultAxiosQueryOptionsWith404(),
+  return useQuery({
+    queryKey: [
+      'getInvoice',
+      computed(() => toValue(id)),
+      computed(() => options?.include?.join(',') || 'customer'),
+    ],
+    queryFn: async (): Promise<IResponse<IInvoice>> => {
+      const currentId = toValue(id)
+      const includes = ['customer', ...(options?.include || [])]
+      const response = await axiosInstance.get(`/api/invoices/${currentId}`, {
+        params: { include: includes.join(',') },
+      })
+      return response.data
     },
-  )
+    staleTime: 5 * 60 * 1000,
+    enabled: computed(() => toValue(id) > 0),
+    ...defaultAxiosQueryOptionsWith404(),
+  })
 }
 
 export function useCreateInvoiceMutation() {
@@ -128,11 +119,7 @@ export function useUpdateInvoiceMutation() {
   const { axiosInstance } = useAxios()
   const queryClient = useQueryClient()
 
-  return useMutation<
-    IResponse<IInvoice>,
-    AxiosError,
-    { id: number, data: IUpdateInvoiceRequest }
-  >({
+  return useMutation<IResponse<IInvoice>, AxiosError, { id: number, data: IUpdateInvoiceRequest }>({
     mutationKey: ['updateInvoice'],
     mutationFn: async ({ id, data }): Promise<IResponse<IInvoice>> => {
       const response = await axiosInstance.put(`/api/invoices/${id}`, data)

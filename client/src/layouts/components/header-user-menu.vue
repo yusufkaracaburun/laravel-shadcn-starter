@@ -1,12 +1,5 @@
 <script setup lang="ts">
-import {
-  BadgeCheck,
-  Bell,
-  CreditCard,
-  LogOut,
-  Sparkles,
-  UserRoundCog,
-} from 'lucide-vue-next'
+import { BadgeCheck, Bell, CreditCard, LogOut, Sparkles, UserRoundCog } from 'lucide-vue-next'
 import { storeToRefs } from 'pinia'
 import { computed } from 'vue'
 

@@ -4,11 +4,7 @@ import { Receipt } from 'lucide-vue-next'
 import type { TInvoice } from '@/pages/invoices/data/schema'
 import type { IInvoiceItem } from '@/services/invoices.service'
 
-import {
-  formatDateForPreview,
-  formatMoney,
-  formatNumber,
-} from '@/pages/invoices/utils/formatters'
+import { formatDateForPreview, formatMoney, formatNumber } from '@/pages/invoices/utils/formatters'
 
 const props = defineProps<{
   formValues: TInvoice | null
