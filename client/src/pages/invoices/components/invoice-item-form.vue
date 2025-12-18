@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { toTypedSchema } from '@vee-validate/zod'
 import { useForm } from 'vee-validate'
-import { computed, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { z } from 'zod'
 
 import { Button } from '@/components/ui/button'
@@ -57,19 +57,41 @@ function getUnitPriceValue(item: TInvoiceItem | null): number {
   return 0
 }
 
+// Local refs for string inputs to handle comma as decimal separator
+const localQuantity = ref('')
+const localUnitPrice = ref('')
+
 function getInitialValues() {
   const vatRate = props.item?.vat_rate ?? 21
-  // Convert number to string for enum validation, then transform back to number
-  // Default to '21' if vatRate is not 0, 9, or 21
   const vatRateStr: '0' | '9' | '21' = vatRate === 0 ? '0' : vatRate === 9 ? '9' : '21'
+
+  // Set local string refs for quantity and unit_price
+  localQuantity.value = (props.item?.quantity ?? 1).toString().replace('.', ',')
+  localUnitPrice.value = getUnitPriceValue(props.item).toString().replace('.', ',')
+
   return {
     description: props.item?.description ?? null,
     quantity: props.item?.quantity ?? 1,
     unit_price: getUnitPriceValue(props.item),
     unit: (props.item as any)?.unit ?? null,
-    vat_rate: vatRateStr, // Defaults to '21' when no item or vat_rate is not 0 or 9
+    vat_rate: vatRateStr,
   }
 }
+
+// Watch for changes in localQuantity and localUnitPrice to update form fields
+watch(localQuantity, (newValue) => {
+  const parsedValue = Number.parseFloat(newValue.replace(',', '.'))
+  if (!Number.isNaN(parsedValue)) {
+    setFieldValue('quantity', parsedValue)
+  }
+})
+
+watch(localUnitPrice, (newValue) => {
+  const parsedValue = Number.parseFloat(newValue.replace(',', '.'))
+  if (!Number.isNaN(parsedValue)) {
+    setFieldValue('unit_price', parsedValue)
+  }
+})
 
 // Make initial values reactive
 const initialValues = computed(() => getInitialValues())
@@ -91,7 +113,11 @@ watch(
   () => {
     const newValues = getInitialValues()
     resetForm({
-      values: newValues,
+      values: {
+        ...newValues,
+        quantity: Number.parseFloat(newValues.quantity.toString().replace(',', '.')),
+        unit_price: Number.parseFloat(newValues.unit_price.toString().replace(',', '.')),
+      },
     })
     // Explicitly set the vat_rate field to ensure ToggleGroup receives the correct value
     setFieldValue('vat_rate', newValues.vat_rate)
@@ -105,7 +131,7 @@ const onSubmit = handleSubmit(async (formValues) => {
     quantity: formValues.quantity,
     unit_price: formValues.unit_price,
     unit: formValues.unit || null,
-    vat_rate: Number.parseInt(formValues.vat_rate), // Convert string to number for submission
+    vat_rate: Number.parseInt(formValues.vat_rate),
   })
 })
 
@@ -140,11 +166,12 @@ function onCancel() {
           <FormControl>
             <InputGroup>
               <InputGroupInput
-                type="number"
+                type="text"
+                inputmode="decimal"
                 step="0.01"
                 min="0.01"
                 placeholder="1,00"
-                v-bind="quantityField"
+                v-model="localQuantity"
               />
               <FormField
                 v-slot="{ componentField: unitField }"
@@ -187,11 +214,12 @@ function onCancel() {
                 <InputGroupText>€</InputGroupText>
               </InputGroupAddon>
               <InputGroupInput
-                type="number"
+                type="text"
+                inputmode="decimal"
                 step="0.01"
                 min="0"
                 placeholder="0,00"
-                v-bind="priceField"
+                v-model="localUnitPrice"
               />
               <FormField
                 v-slot="{ componentField: vatField }"
@@ -269,3 +297,4 @@ function onCancel() {
     </div>
   </form>
 </template>
+

@@ -16,7 +16,6 @@ import Page from '@/components/global-layout/basic-page.vue'
 import Loading from '@/components/loading.vue'
 import { Button } from '@/components/ui/button'
 import { useGetInvoicePrerequisitesQuery, useGetInvoiceQuery } from '@/services/invoices.service'
-import { useGetItemsQuery } from '@/services/items.service'
 
 import InvoiceEditorLayout from './components/invoice-editor-layout.vue'
 import InvoiceForm from './components/invoice-form.vue'
@@ -48,8 +47,12 @@ const customers = computed(() => {
   return Array.isArray(customersData) ? customersData : ((customersData as any).data ?? [])
 })
 
-const { data: itemsResponse } = useGetItemsQuery()
-const items = computed(() => itemsResponse.value?.data || [])
+// Extract items from prerequisites
+const items = computed(() => {
+  if (!prerequisites.value?.items) return []
+  const itemsData = prerequisites.value.items
+  return Array.isArray(itemsData) ? itemsData : ((itemsData as any).data ?? [])
+})
 
 const invoice = computed(() => invoiceResponse.value?.data ?? null)
 
@@ -131,31 +134,18 @@ async function handleUpdateAndSend() {
       <Loading />
     </div>
 
-    <Error
-      v-else-if="isError"
-      :error="error"
-      title="Failed to load invoice"
-      description="We couldn't load the invoice details. Please try again."
-    />
+    <Error v-else-if="isError" :error="error" title="Failed to load invoice"
+      description="We couldn't load the invoice details. Please try again." />
 
     <InvoiceEditorLayout v-else-if="invoice" :is-loading="isSubmitting">
       <template #form>
-        <InvoiceForm
-          ref="formRef"
-          v-model:model-value="currentFormValues"
-          :items="items"
-          :customers="customers"
-          @update:formItems="(items) => (currentFormItems = items)"
-        />
+        <InvoiceForm ref="formRef" v-model:model-value="currentFormValues" :items="items" :customers="customers"
+          @update:formItems="(items) => (currentFormItems = items)" />
       </template>
 
       <template #preview>
-        <InvoicePreview
-          :form-values="currentFormValues"
-          :items="currentFormItems"
-          :customers="customers"
-          :is-loading="isSubmitting"
-        />
+        <InvoicePreview :form-values="currentFormValues" :items="currentFormItems" :customers="customers"
+          :is-loading="isSubmitting" />
       </template>
 
       <template #actions>

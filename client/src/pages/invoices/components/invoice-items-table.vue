@@ -55,7 +55,6 @@ function handleDelete(index: number) {
         <tr v-for="(item, index) in items" :key="index" class="border-b hover:bg-muted/50">
           <td class="p-2 font-medium">
             {{ item.name || '—' }}
-            <div class="text-xs text-muted-foreground">{{ item.description || '—' }}</div>
           </td>
           <td class="p-2 text-right">
             {{ formatNumber(item.quantity, 2) }}
@@ -72,20 +71,10 @@ function handleDelete(index: number) {
           </td>
           <td class="p-2 text-right">
             <div class="flex justify-end gap-1">
-              <Button
-                v-if="editingItemIndex !== index"
-                variant="ghost"
-                size="sm"
-                @click="handleEdit(item, index)"
-              >
+              <Button v-if="editingItemIndex !== index" variant="ghost" size="sm" @click="handleEdit(item, index)">
                 <Pencil class="size-4" />
               </Button>
-              <Button
-                v-if="editingItemIndex !== index"
-                variant="ghost"
-                size="sm"
-                @click="handleDelete(index)"
-              >
+              <Button v-if="editingItemIndex !== index" variant="ghost" size="sm" @click="handleDelete(index)">
                 <Trash2 class="size-4" />
               </Button>
             </div>

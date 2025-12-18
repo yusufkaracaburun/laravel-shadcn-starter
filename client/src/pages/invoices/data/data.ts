@@ -5,6 +5,14 @@ import { getInvoiceStatusColor } from '@/utils/status-colors'
 
 export const statuses = [
   {
+    value: 'pending',
+    label: 'Pending',
+    icon: h(CircleDot),
+    get color() {
+      return getInvoiceStatusColor(this.value)
+    },
+  },
+  {
     value: 'draft',
     label: 'Draft',
     icon: h(CircleDot),

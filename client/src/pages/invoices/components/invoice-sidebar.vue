@@ -145,7 +145,7 @@ function closeEmailDialog() {
                           <span class="font-medium">{{ key.replace(/_/g, ' ') }}:</span>
                           <span class="ml-1">{{
                             typeof value === 'object' ? JSON.stringify(value) : value
-                            }}</span>
+                          }}</span>
                         </div>
                       </div>
                     </details>
@@ -180,7 +180,7 @@ function closeEmailDialog() {
                   <div class="flex justify-between items-start mb-1">
                     <span class="text-sm text-gray-900 font-bold mb-1">{{
                       formatCurrency(payment.amount)
-                      }}</span>
+                    }}</span>
                     <div
                       :class="`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getPaymentStatusColor(payment.status)}`">
                       <component :is="statuses.find((s) => s.value === payment.status)?.icon" class="w-3 h-3 mr-1" />
@@ -228,7 +228,7 @@ function closeEmailDialog() {
                           <span v-if="payment.provider_reference" class="font-medium">Provider Reference:</span>
                           <span v-if="payment.provider_reference">{{
                             payment.provider_reference
-                            }}</span>
+                          }}</span>
 
                           <span class="font-medium">Status:</span>
                           <span>{{ payment.status_formatted?.label || payment.status }}</span>
@@ -239,7 +239,7 @@ function closeEmailDialog() {
                           <span v-if="payment.refunded_at" class="font-medium">Refunded At:</span>
                           <span v-if="payment.refunded_at">{{
                             formatDateTime(payment.refunded_at)
-                            }}</span>
+                          }}</span>
 
                           <span class="font-medium">Created At:</span>
                           <span>{{ formatDateTime(payment.created_at) }}</span>
@@ -278,7 +278,7 @@ function closeEmailDialog() {
                   <div class="flex justify-between items-start mb-1">
                     <span class="text-sm text-gray-900 font-bold mb-1">{{
                       email.subject || 'No Subject'
-                    }}</span>
+                      }}</span>
                     <div class="flex items-center gap-2 text-xs text-gray-500">
                       <span class="text-gray-300">•</span>
                       <span>{{ formatDateTime(email.created_at) }}</span>
