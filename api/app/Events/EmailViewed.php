@@ -20,6 +20,6 @@ final class EmailViewed extends BaseViewEmailEvent
     public function __construct(public SentEmail $sentEmail, public string $ipAddress)
     {
         parent::__construct($sentEmail, $ipAddress);
-        Log::channel('mail')->debug('EmailViewed event fired', ['sent_email_id' => $this->sentEmail->id, 'ip_address' => $this->ipAddress]);
+        Log::debug('EmailViewed event fired', ['sent_email_id' => $this->sentEmail->id, 'ip_address' => $this->ipAddress]);
     }
 }

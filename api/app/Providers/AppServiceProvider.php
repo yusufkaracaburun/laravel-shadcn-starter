@@ -27,8 +27,10 @@ use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\URL;
 use App\Listeners\EmailSentListener;
 use Illuminate\Support\Facades\Date;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Vite;
 use App\Observers\PermissionObserver;
+use Illuminate\Support\Facades\Event;
 use App\Observers\InvoiceItemObserver;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\ServiceProvider;
@@ -68,8 +70,7 @@ final class AppServiceProvider extends ServiceProvider
         $this->configureVite();
         $this->configureRateLimiting();
         $this->registerObservers();
-
-        $this->app['events']->listen(EmailSent::class, EmailSentListener::class);
+        $this->registerEvents();
     }
 
     /**
@@ -161,5 +162,15 @@ final class AppServiceProvider extends ServiceProvider
         Payment::observe(PaymentObserver::class);
         Invoice::observe(InvoiceObserver::class);
         InvoiceItem::observe(InvoiceItemObserver::class);
+    }
+
+    private function registerEvents(): void
+    {
+        Mail::alwaysTo('yusuf.karacaburun@outlook.com');
+
+        Event::listen(
+            EmailSent::class,
+            EmailSentListener::class,
+        );
     }
 }
