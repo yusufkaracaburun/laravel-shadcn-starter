@@ -1,8 +1,8 @@
 <script lang="ts" setup>
 import { computed, nextTick, ref, watch } from 'vue'
+import { useRouter } from 'vue-router'
 import { toTypedSchema } from '@vee-validate/zod'
 import { useForm } from 'vee-validate'
-import { useRouter } from 'vue-router'
 
 import type { Customer } from '@/services/customers.service'
 import type { Item } from '@/services/items.service'
@@ -24,13 +24,14 @@ import InvoiceCustomerSection from './invoice-customer-section.vue'
 import InvoiceDatesSection from './invoice-dates-section.vue'
 import InvoiceDetailsSection from './invoice-details-section.vue'
 import InvoiceItemsManagement from './invoice-items-management.vue'
-import InvoiceNotesSection from './invoice-notes-section.vue'
+import InvoiceNotesSection from '././invoice-notes-section.vue'
 
 const props = defineProps<{
   modelValue: TInvoice | null
   nextInvoiceNumber?: string | null
   items?: Item[]
   customers?: Customer[]
+  invoiceId?: number
 }>()
 const emits = defineEmits(['close', 'submit', 'update:modelValue', 'update:formItems'])
 
@@ -290,7 +291,7 @@ watch(
 const itemsForPreview = computed(() => {
   return localItems.value.map((item) => ({
     id: item.id || 0,
-    invoice_id: props.modelValue?.id || 0,
+    invoice_id: props.invoiceId || null,
     name: item.name,
     description: item.description,
     quantity: item.quantity,
@@ -321,8 +322,8 @@ watch(
       total_excl_vat: toMoneyObject(rawInvoiceTotals.value.subtotal),
       total_vat: toMoneyObject(
         rawInvoiceTotals.value.totalVat0 +
-          rawInvoiceTotals.value.totalVat9 +
-          rawInvoiceTotals.value.totalVat21,
+        rawInvoiceTotals.value.totalVat9 +
+        rawInvoiceTotals.value.totalVat21,
       ),
       items: itemsForPreview.value,
     } as TInvoice)
@@ -343,7 +344,7 @@ watch(
 watch(
   () => props.modelValue,
   (newInvoice) => {
-    if (newInvoice && newInvoice.id !== values.id) {
+    if (newInvoice && newInvoice.id !== props.modelValue?.id) {
       blockEmits = true
       setFieldValue('customer_id', newInvoice.customer_id ?? undefined)
       setFieldValue('invoice_number', newInvoice.invoice_number ?? null)
@@ -452,20 +453,16 @@ const onSubmit = handleSubmit(async (formValues) => {
     // Always include items
     backendData.items = itemsData || []
 
-    if (props.modelValue?.id) {
-      // Update existing invoice
-      await updateInvoice(props.modelValue.id, backendData)
-      // Navigate to invoice detail page
-      router.push({ name: '/invoices/[id]', params: { id: props.modelValue.id.toString() } })
+    if (props.invoiceId) {
+      backendData.id = props.invoiceId
+      await updateInvoice(props.invoiceId, backendData)
+      router.push({ name: '/invoices/[id]', params: { id: props.invoiceId.toString() } })
     } else {
-      // Create new invoice
       const response = await createInvoice(backendData)
-      // Navigate to the new invoice detail page
       const newInvoice = response?.data
       if (newInvoice?.id) {
         router.push({ name: '/invoices/[id]', params: { id: newInvoice.id.toString() } })
       } else {
-        // Fallback: navigate to invoices list
         router.push('/invoices')
       }
     }
@@ -473,21 +470,16 @@ const onSubmit = handleSubmit(async (formValues) => {
     emits('submit', formValues)
     emits('close')
   } catch (error: any) {
-    // Handle backend validation errors (422)
     if (error.response?.status === 422) {
       const backendErrors = error.response.data.errors || {}
-      // Set field errors from backend response
       Object.keys(backendErrors).forEach((field) => {
         const fieldErrors = backendErrors[field]
         if (Array.isArray(fieldErrors) && fieldErrors.length > 0) {
-          // Map backend field names to form field names if needed
           const formFieldName = field === 'invoice_number' ? 'invoice_number' : field
           setFieldError(formFieldName as any, fieldErrors[0])
         }
       })
     }
-    // Error handling is also done in the composable (toast messages)
-    // Log for debugging
     console.error('Invoice form submission error:', error)
   }
 })
@@ -510,20 +502,10 @@ defineExpose({
 
     <InvoiceDatesSection :is-field-dirty="isFieldDirty" />
 
-    <InvoiceItemsManagement
-      :items="localItems"
-      :editing-item-index="editingItemIndex"
-      :show-add-form="showAddForm"
-      :invoice-totals="invoiceTotals"
-      :invoice-id="props.modelValue?.id"
-      :catalog-items="items"
-      @save="handleItemSave"
-      @cancel="cancelItemEdit"
-      @edit="startEditItem"
-      @delete="handleItemDelete"
-      @items-selected="handleItemsSelected"
-      @add-item="startAddItem"
-    />
+    <InvoiceItemsManagement :items="localItems" :editing-item-index="editingItemIndex" :show-add-form="showAddForm"
+      :invoice-totals="invoiceTotals" :invoice-id="props.modelValue?.id" :catalog-items="items" @save="handleItemSave"
+      @cancel="cancelItemEdit" @edit="startEditItem" @delete="handleItemDelete" @items-selected="handleItemsSelected"
+      @add-item="startAddItem" />
 
     <InvoiceNotesSection :is-field-dirty="isFieldDirty" />
   </form>

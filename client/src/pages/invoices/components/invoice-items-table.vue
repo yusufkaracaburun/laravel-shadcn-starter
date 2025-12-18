@@ -42,13 +42,27 @@ function handleDelete(index: number) {
     <table class="w-full text-sm">
       <thead>
         <tr class="border-b">
-          <th class="text-left p-2 font-medium text-muted-foreground">Name</th>
-          <th class="text-right p-2 font-medium text-muted-foreground">Quantity</th>
-          <th class="text-right p-2 font-medium text-muted-foreground">Unit</th>
-          <th class="text-right p-2 font-medium text-muted-foreground">Unit Price</th>
-          <th class="text-right p-2 font-medium text-muted-foreground">VAT Rate</th>
-          <th class="text-right p-2 font-medium text-muted-foreground">Incl. VAT</th>
-          <th class="text-right p-2 font-medium text-muted-foreground">Actions</th>
+          <th class="text-left p-2 font-medium text-muted-foreground">
+            Name
+          </th>
+          <th class="text-right p-2 font-medium text-muted-foreground">
+            Quantity
+          </th>
+          <th class="text-right p-2 font-medium text-muted-foreground">
+            Unit
+          </th>
+          <th class="text-right p-2 font-medium text-muted-foreground">
+            Unit Price
+          </th>
+          <th class="text-right p-2 font-medium text-muted-foreground">
+            VAT Rate
+          </th>
+          <th class="text-right p-2 font-medium text-muted-foreground">
+            Incl. VAT
+          </th>
+          <th class="text-right p-2 font-medium text-muted-foreground">
+            Actions
+          </th>
         </tr>
       </thead>
       <tbody>
@@ -71,10 +85,20 @@ function handleDelete(index: number) {
           </td>
           <td class="p-2 text-right">
             <div class="flex justify-end gap-1">
-              <Button v-if="editingItemIndex !== index" variant="ghost" size="sm" @click="handleEdit(item, index)">
+              <Button
+                v-if="editingItemIndex !== index"
+                variant="ghost"
+                size="sm"
+                @click="handleEdit(item, index)"
+              >
                 <Pencil class="size-4" />
               </Button>
-              <Button v-if="editingItemIndex !== index" variant="ghost" size="sm" @click="handleDelete(index)">
+              <Button
+                v-if="editingItemIndex !== index"
+                variant="ghost"
+                size="sm"
+                @click="handleDelete(index)"
+              >
                 <Trash2 class="size-4" />
               </Button>
             </div>

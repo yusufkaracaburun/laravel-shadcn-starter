@@ -10,6 +10,13 @@ import {
   AccordionTrigger,
 } from '@/components/ui/accordion'
 
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
+
 import SentEmailDialog from './sent-email-dialog.vue'
 import type { IInvoiceActivity, IInvoiceEmail, IInvoicePayment } from '@/services/invoices.service'
 import type { TInvoice } from '@/pages/invoices/data/schema'
@@ -101,18 +108,14 @@ function closeEmailDialog() {
           <div v-else class="px-1">
             <div v-for="(activity, index) in invoiceActivities" :key="activity.id"
               class="relative flex gap-3 pb-3 last:pb-0">
-              <!-- Timeline line -->
-              <div class="flex flex-col items-center">
-                <div class="w-3.5 h-3.5 bg-blue-500 rounded-full ring-4 ring-blue-100 shadow-sm"></div>
-                <div v-if="index < invoiceActivities.length - 1" class="w-0.5 h-full bg-gray-300 mt-2"></div>
-              </div>
-
               <!-- Activity content -->
               <div class="flex-1 min-w-0">
                 <div class="bg-white rounded-lg border border-gray-100 p-3">
-                  <p class="text-sm text-gray-900 font-bold mb-1">
-                    {{ activity.description }}
-                  </p>
+                  <div class="flex justify-between items-start mb-1">
+                    <span class="text-sm text-gray-900 font-bold mb-1">{{
+                      activity.description
+                      }}</span>
+                  </div>
 
                   <div class="flex justify-between items-start mb-1 text-xs text-gray-500">
                     <div class="flex items-center gap-2">
@@ -123,12 +126,6 @@ function closeEmailDialog() {
                       <span class="text-gray-300">•</span>
                       <span>{{ formatDateTime(activity.created_at) }}</span>
                     </div>
-                  </div>
-
-                  <!-- Event badge -->
-                  <div v-if="activity.event"
-                    class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                    {{ activity.event }}
                   </div>
 
                   <!-- Show properties changes if available -->
@@ -143,9 +140,18 @@ function closeEmailDialog() {
                       <div class="mt-2 space-y-1">
                         <div v-for="(value, key) in activity.properties.attributes" :key="key" class="text-gray-700">
                           <span class="font-medium">{{ key.replace(/_/g, ' ') }}:</span>
-                          <span class="ml-1">{{
-                            typeof value === 'object' ? JSON.stringify(value) : value
-                          }}</span>
+                          <TooltipProvider>
+                            <Tooltip>
+                              <TooltipTrigger as-child>
+                                <span class="ml-1">{{
+                                  typeof value === 'object' ? JSON.stringify(value) : value
+                                }}</span>
+                              </TooltipTrigger>
+                              <TooltipContent>
+                                <p>Old Value: {{ activity.properties.old?.[key] }}</p>
+                              </TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
                         </div>
                       </div>
                     </details>
@@ -278,7 +284,7 @@ function closeEmailDialog() {
                   <div class="flex justify-between items-start mb-1">
                     <span class="text-sm text-gray-900 font-bold mb-1">{{
                       email.subject || 'No Subject'
-                      }}</span>
+                    }}</span>
                     <div class="flex items-center gap-2 text-xs text-gray-500">
                       <span class="text-gray-300">•</span>
                       <span>{{ formatDateTime(email.created_at) }}</span>

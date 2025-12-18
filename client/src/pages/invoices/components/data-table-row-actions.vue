@@ -57,34 +57,36 @@ const isOpen = ref(false)
       <UiDropdownMenuContent align="end" class="w-[160px]">
         <UiDropdownMenuItem @select.stop="handleSelect('view')">
           <span>View</span>
-          <UiDropdownMenuShortcut> <Eye class="size-4" /> </UiDropdownMenuShortcut>
+          <UiDropdownMenuShortcut>
+            <Eye class="size-4" />
+          </UiDropdownMenuShortcut>
         </UiDropdownMenuItem>
 
         <UiDropdownMenuItem @select.stop="handleSelect('edit')">
           <span>Edit</span>
-          <UiDropdownMenuShortcut> <FilePenLine class="size-4" /> </UiDropdownMenuShortcut>
+          <UiDropdownMenuShortcut>
+            <FilePenLine class="size-4" />
+          </UiDropdownMenuShortcut>
         </UiDropdownMenuItem>
 
         <UiDialogTrigger as-child>
           <UiDropdownMenuItem @select.stop="handleSelect('delete')">
             <span>Delete</span>
-            <UiDropdownMenuShortcut> <Trash2 class="size-4" /> </UiDropdownMenuShortcut>
+            <UiDropdownMenuShortcut>
+              <Trash2 class="size-4" />
+            </UiDropdownMenuShortcut>
           </UiDropdownMenuItem>
         </UiDialogTrigger>
       </UiDropdownMenuContent>
     </UiDropdownMenu>
 
     <UiDialogContent>
-      <component
-        :is="showComponent"
-        :invoice="invoice"
-        @close="
-          () => {
-            isOpen = false
-            showComponent = null
-          }
-        "
-      />
+      <component :is="showComponent" :invoice="invoice" @close="
+        () => {
+          isOpen = false
+          showComponent = null
+        }
+      " />
     </UiDialogContent>
   </UiDialog>
 </template>

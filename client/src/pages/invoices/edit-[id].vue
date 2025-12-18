@@ -7,12 +7,13 @@ meta:
 import { ArrowLeft, Save, Send } from 'lucide-vue-next'
 import { computed, nextTick, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+
 import { useToast } from '@/composables/use-toast'
 
-import type { TInvoiceForm, TInvoiceItem } from './data/schema'
-
-import Error from '@/components/custom-error.vue'
 import Page from '@/components/global-layout/basic-page.vue'
+import Error from '@/components/custom-error.vue'
+
+import type { TInvoiceForm, TInvoiceItem } from '../data/schema'
 import Loading from '@/components/loading.vue'
 import { Button } from '@/components/ui/button'
 import { useGetInvoicePrerequisitesQuery, useGetInvoiceQuery } from '@/services/invoices.service'
@@ -23,9 +24,9 @@ import InvoicePreview from './components/invoice-preview.vue'
 
 const route = useRoute()
 const router = useRouter()
-const { toast } = useToast()
+const { toast, showSuccess } = useToast()
 
-const invoiceId = computed(() => Number(route.params.id))
+const invoiceId = computed(() => Number(route.params.id as string))
 
 const {
   data: invoiceResponse,
@@ -60,7 +61,7 @@ const formRef = ref<InstanceType<typeof InvoiceForm> | null>(null)
 const isSubmitting = ref(false)
 
 const currentFormValues = ref<TInvoiceForm | any>(null) // This will be updated via v-model from InvoiceForm
-const currentFormItems = ref<TInvoiceItem[]>([]) // This will be updated via @update:formItems from InvoiceForm
+const currentFormItems = ref<TInvoiceItem[]>([]) // This will be updated via @update:form-items from InvoiceForm
 
 // Initial setup for currentFormValues and currentFormItems when invoice data loads
 watch(
@@ -83,9 +84,7 @@ async function handleUpdate() {
   isSubmitting.value = true
   try {
     await formRef.value.handleSubmit()
-    toast({
-      title: 'Invoice updated',
-    })
+    showSuccess('Invoice updated')
   } catch (validationError) {
     console.error('Validation Error:', validationError)
     toast({
@@ -105,9 +104,7 @@ async function handleUpdateAndSend() {
     formRef.value.setFieldValue('status', 'sent')
     await nextTick()
     await formRef.value.handleSubmit()
-    toast({
-      title: 'Invoice updated and sent',
-    })
+    showSuccess('Invoice updated and sent')
   } catch (validationError) {
     console.error('Validation Error:', validationError)
     toast({
@@ -134,13 +131,23 @@ async function handleUpdateAndSend() {
       <Loading />
     </div>
 
-    <Error v-else-if="isError" :error="error" title="Failed to load invoice"
-      description="We couldn't load the invoice details. Please try again." />
+    <Error
+      v-else-if="isError"
+      :error="error?.message || 'Unknown error'"
+      title="Failed to load invoice"
+      description="We couldn't load the invoice details. Please try again."
+    />
 
     <InvoiceEditorLayout v-else-if="invoice" :is-loading="isSubmitting">
       <template #form>
-        <InvoiceForm ref="formRef" v-model:model-value="currentFormValues" :items="items" :customers="customers"
-          @update:formItems="(items) => (currentFormItems = items)" />
+        <InvoiceForm
+          ref="formRef"
+          v-model:model-value="currentFormValues"
+          :items="items"
+          :customers="customers"
+          :invoice-id="invoiceId"
+          @update:form-items="(items) => (currentFormItems = items)"
+        />
       </template>
 
       <template #preview>

@@ -84,7 +84,7 @@ export const invoiceFormSchema = z.object({
     (val) => (val === undefined || val === null || val === '' ? undefined : Number(val)),
     z.number().min(1, 'Customer is required'),
   ),
-  invoice_number: z.string().nullable().optional(),
+  invoice_number: z.string(),
   date: z.string().min(1, 'Date is required'),
   due_days: z.number().min(1, 'Due days must be at least 1'),
   date_due: z.string().min(1, 'Due date is required'),

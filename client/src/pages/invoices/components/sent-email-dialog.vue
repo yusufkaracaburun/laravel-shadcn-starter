@@ -35,7 +35,9 @@ function closeDialog() {
       </DialogHeader>
 
       <div v-if="email" class="p-6 space-y-4 text-gray-700 max-h-[80vh] overflow-y-auto">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between text-sm border-b pb-4">
+        <div
+          class="flex flex-col sm:flex-row sm:items-center justify-between text-sm border-b pb-4"
+        >
           <div class="flex items-center gap-2">
             <span class="font-semibold">From:</span>
             <span>{{ email.sender_name }} &lt;{{ email.sender_email }}&gt;</span>
