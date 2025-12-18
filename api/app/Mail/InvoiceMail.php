@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Mail;
 
-use App\Models\Invoice;
-use Illuminate\Mail\Mailables\Attachment;
-use Illuminate\Support\Facades\Log;
 use Throwable;
+use App\Models\Invoice;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Mail\Mailables\Attachment;
 
 final class InvoiceMail extends BaseMail
 {
@@ -21,16 +21,26 @@ final class InvoiceMail extends BaseMail
      *
      * @return array<int, Attachment>
      */
-//    public function attachments(): array
-//    {
-//        $response = $this->invoice->generatePdf()->stream();
-//        $name = 'invoice_' . $this->invoice->invoice_number . '.pdf';
-//
-//        return [
-//            Attachment::fromData(fn () => $response, $name)
-//                ->withMime('application/pdf'),
-//        ];
-//    }
+    public function attachments(): array
+    {
+        $response = $this->invoice->generatePdf()->stream();
+        $name = 'invoice_' . $this->invoice->invoice_number . '.pdf';
+
+        return [
+            Attachment::fromData(fn () => $response, $name)
+                ->withMime('application/pdf'),
+        ];
+    }
+
+    /**
+     * Handle a queued email's failure.
+     */
+    public function failed(Throwable $exception): void
+    {
+        Log::error('InvoiceMail failed', [
+            'message' => $exception->getMessage(),
+        ]);
+    }
 
     protected function getModel(): Invoice
     {
@@ -45,15 +55,5 @@ final class InvoiceMail extends BaseMail
     protected function getContentMarkdown(): string
     {
         return 'emails.invoices.sent';
-    }
-
-    /**
-     * Handle a queued email's failure.
-     */
-    public function failed(Throwable $exception): void
-    {
-        Log::error('InvoiceMail failed', [
-            'message' => $exception->getMessage()
-        ]);
     }
 }

@@ -166,8 +166,6 @@ final class AppServiceProvider extends ServiceProvider
 
     private function registerEvents(): void
     {
-        Mail::alwaysTo('yusuf.karacaburun@outlook.com');
-
         Event::listen(
             EmailSent::class,
             EmailSentListener::class,
