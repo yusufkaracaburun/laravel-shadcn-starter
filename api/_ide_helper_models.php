@@ -206,19 +206,19 @@ namespace App\Models{
  *
  * @property int $id
  * @property int $invoice_id
+ * @property int|null $item_id
  * @property string|null $name
  * @property string|null $description
  * @property numeric $quantity
  * @property \Cknow\Money\Money $unit_price
  * @property numeric $vat_rate
+ * @property string|null $unit
  * @property \Cknow\Money\Money $total_excl_vat
  * @property \Cknow\Money\Money $total_vat
  * @property \Cknow\Money\Money $total_incl_vat
  * @property int $sort_order
  * @property \Carbon\CarbonImmutable|null $created_at
  * @property \Carbon\CarbonImmutable|null $updated_at
- * @property int|null $item_id
- * @property string|null $unit
  * @property-read \App\Models\Invoice $invoice
  * @method static \Database\Factories\InvoiceItemFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem newModelQuery()
@@ -486,7 +486,9 @@ namespace App\Models{
  * @property string|null $sender_name
  * @property \Carbon\CarbonImmutable|null $clicked_at
  * @property \Carbon\CarbonImmutable|null $opened_at
- * @property-read \Illuminate\Database\Eloquent\Model|\Eloquent $emailable
+ * @property string|null $emailable_type
+ * @property int|null $emailable_id
+ * @property-read \Illuminate\Database\Eloquent\Model|\Eloquent|null $emailable
  * @property-read mixed $domains_in_context
  * @property-read mixed $recipient
  * @property-read \jdavidbakr\MailTracker\Model\[type] $report_class
@@ -501,6 +503,8 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|SentEmail whereClicks($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|SentEmail whereContent($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|SentEmail whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SentEmail whereEmailableId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SentEmail whereEmailableType($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|SentEmail whereHash($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|SentEmail whereHeaders($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|SentEmail whereId($value)

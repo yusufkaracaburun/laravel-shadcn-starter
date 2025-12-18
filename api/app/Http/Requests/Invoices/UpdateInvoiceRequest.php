@@ -46,7 +46,7 @@ final class UpdateInvoiceRequest extends BaseFormRequest
 
             // Invoice items
             'items'               => ['nullable', 'array'],
-            'items.*.name'        => ['required', 'string', 'max:2000'],
+            'items.*.name'        => ['required_with:items', 'string', 'max:2000'],
             'items.*.description' => ['nullable', 'string', 'max:2000'],
             'items.*.quantity'    => ['required_with:items', 'numeric', 'min:0.00001'],
             'items.*.unit_price'  => ['required_with:items', 'numeric', 'min:0'],

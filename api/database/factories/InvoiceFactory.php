@@ -92,6 +92,7 @@ final class InvoiceFactory extends Factory
                     $inv_items[] = InvoiceItem::factory()->create([
                         'invoice_id'     => $invoice->id,
                         'item_id'        => null,
+                        'name'           => $item->name,
                         'description'    => fake()->sentence(3),
                         'quantity'       => $quantity,
                         'unit_price'     => $unit_price,
@@ -136,11 +137,27 @@ final class InvoiceFactory extends Factory
     }
 
     /**
+     * State: sent invoice.
+     */
+    public function sent(): static
+    {
+        return $this->state(fn (): array => ['status' => InvoiceStatus::SENT->value]);
+    }
+
+    /**
      * State: paid invoice.
      */
     public function paid(): static
     {
         return $this->state(fn (): array => ['status' => InvoiceStatus::PAID->value]);
+    }
+
+    /**
+     * State: unpaid invoice.
+     */
+    public function unpaid(): static
+    {
+        return $this->state(fn (): array => ['status' => InvoiceStatus::UNPAID->value]);
     }
 
     /**
