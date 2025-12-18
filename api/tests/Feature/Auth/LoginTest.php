@@ -21,18 +21,18 @@ beforeEach(function (): void {
 
     foreach ($emails as $email) {
         foreach ($ips as $ip) {
-            $throttleKey = Str::transliterate(Str::lower($email)).'|'.$ip;
-            RateLimiter::clear('login:'.$throttleKey);
+            $throttleKey = Str::transliterate(Str::lower($email)) . '|' . $ip;
+            RateLimiter::clear('login:' . $throttleKey);
         }
     }
 });
 
 test('user can login with valid credentials', function (): void {
     /** @var TestCase $this */
-    $uniqueEmail = 'valid-login-'.uniqid().'@example.com';
+    $uniqueEmail = 'valid-login-' . uniqid() . '@example.com';
 
     $user = User::factory()->create([
-        'email' => $uniqueEmail,
+        'email'    => $uniqueEmail,
         'password' => Hash::make('password123'),
     ]);
 
@@ -40,7 +40,7 @@ test('user can login with valid credentials', function (): void {
     $this->get('/sanctum/csrf-cookie');
 
     $response = $this->postJson('/login', [
-        'email' => $uniqueEmail,
+        'email'    => $uniqueEmail,
         'password' => 'password123',
     ]);
 
@@ -57,10 +57,10 @@ test('user can login with valid credentials', function (): void {
 
 test('user cannot login with invalid credentials', function (): void {
     /** @var TestCase $this */
-    $uniqueEmail = 'invalid-login-'.uniqid().'@example.com';
+    $uniqueEmail = 'invalid-login-' . uniqid() . '@example.com';
 
     $user = User::factory()->create([
-        'email' => $uniqueEmail,
+        'email'    => $uniqueEmail,
         'password' => Hash::make('password123'),
     ]);
 
@@ -68,7 +68,7 @@ test('user cannot login with invalid credentials', function (): void {
     $this->get('/sanctum/csrf-cookie');
 
     $response = $this->postJson('/login', [
-        'email' => $uniqueEmail,
+        'email'    => $uniqueEmail,
         'password' => 'wrong-password',
     ]);
 
@@ -78,13 +78,13 @@ test('user cannot login with invalid credentials', function (): void {
 
 test('user cannot login with non-existent email', function (): void {
     /** @var TestCase $this */
-    $uniqueEmail = 'nonexistent-'.uniqid().'@example.com';
+    $uniqueEmail = 'nonexistent-' . uniqid() . '@example.com';
 
     // Get CSRF cookie first
     $this->get('/sanctum/csrf-cookie');
 
     $response = $this->postJson('/login', [
-        'email' => $uniqueEmail,
+        'email'    => $uniqueEmail,
         'password' => 'password123',
     ]);
 
@@ -96,7 +96,7 @@ test('login requires email field', function (): void {
     /** @var TestCase $this */
     // Use a unique email in the request body to avoid rate limiting
     // Even though email is missing, Fortify might still rate limit by IP
-    $uniqueEmail = 'no-email-field-'.uniqid().'@example.com';
+    $uniqueEmail = 'no-email-field-' . uniqid() . '@example.com';
 
     // Get CSRF cookie first
     $this->get('/sanctum/csrf-cookie');
@@ -112,7 +112,7 @@ test('login requires email field', function (): void {
 test('login requires password field', function (): void {
     /** @var TestCase $this */
     // Use a unique email to avoid rate limiting from previous tests
-    $uniqueEmail = 'password-field-test-'.uniqid().'@example.com';
+    $uniqueEmail = 'password-field-test-' . uniqid() . '@example.com';
 
     // Get CSRF cookie first
     $this->get('/sanctum/csrf-cookie');
@@ -128,13 +128,13 @@ test('login requires password field', function (): void {
 test('login requires valid email format', function (): void {
     /** @var TestCase $this */
     // Use a unique invalid email to avoid rate limiting
-    $uniqueInvalidEmail = 'invalid-email-'.uniqid();
+    $uniqueInvalidEmail = 'invalid-email-' . uniqid();
 
     // Get CSRF cookie first
     $this->get('/sanctum/csrf-cookie');
 
     $response = $this->postJson('/login', [
-        'email' => $uniqueInvalidEmail,
+        'email'    => $uniqueInvalidEmail,
         'password' => 'password123',
     ]);
 
@@ -153,7 +153,7 @@ test('user can logout when authenticated', function (): void {
 
     // Login to establish session
     $this->postJson('/login', [
-        'email' => $user->email,
+        'email'    => $user->email,
         'password' => 'password123',
     ]);
 

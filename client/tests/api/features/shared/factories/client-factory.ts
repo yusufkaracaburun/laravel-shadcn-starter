@@ -23,4 +23,3 @@ export class ClientFactory {
     return new ApiClient(request)
   }
 }
-

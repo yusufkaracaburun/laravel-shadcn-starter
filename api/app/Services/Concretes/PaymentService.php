@@ -20,7 +20,7 @@ final class PaymentService extends BaseService implements PaymentServiceInterfac
      * Create a new class instance.
      */
     public function __construct(
-        PaymentRepositoryInterface $repo
+        PaymentRepositoryInterface $repo,
     ) {
         $this->setRepository($repo);
         $this->paymentRepository = $repo;

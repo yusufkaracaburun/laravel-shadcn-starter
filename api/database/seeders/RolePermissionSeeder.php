@@ -52,16 +52,16 @@ final class RolePermissionSeeder extends Seeder
     private function createPermissions(): array
     {
         $modules = [
-            'students' => ['view', 'create', 'update', 'delete'],
-            'teachers' => ['view', 'create', 'update', 'delete'],
+            'students'   => ['view', 'create', 'update', 'delete'],
+            'teachers'   => ['view', 'create', 'update', 'delete'],
             'attendance' => ['view', 'create', 'update', 'delete'],
-            'invoices' => ['view', 'create', 'update', 'delete'],
-            'payments' => ['view', 'create', 'update', 'delete'],
-            'customers' => ['view', 'create', 'update', 'delete'],
-            'teams' => ['view', 'create', 'update', 'delete', 'manage'],
-            'users' => ['view', 'create', 'update', 'delete'],
-            'items' => ['view', 'create', 'update', 'delete'],
-            'projects' => ['view', 'create', 'update', 'delete'],
+            'invoices'   => ['view', 'create', 'update', 'delete'],
+            'payments'   => ['view', 'create', 'update', 'delete'],
+            'customers'  => ['view', 'create', 'update', 'delete'],
+            'teams'      => ['view', 'create', 'update', 'delete', 'manage'],
+            'users'      => ['view', 'create', 'update', 'delete'],
+            'items'      => ['view', 'create', 'update', 'delete'],
+            'projects'   => ['view', 'create', 'update', 'delete'],
         ];
 
         $permissions = [];
@@ -85,9 +85,9 @@ final class RolePermissionSeeder extends Seeder
     {
         $roles = [
             'super-admin' => 'Super Administrator with full access',
-            'admin' => 'Administrator with management access',
-            'customer' => 'Customer with limited access',
-            'contractor' => 'Contractor with project access',
+            'admin'       => 'Administrator with management access',
+            'customer'    => 'Customer with limited access',
+            'contractor'  => 'Contractor with project access',
         ];
 
         $createdRoles = [];
@@ -180,14 +180,14 @@ final class RolePermissionSeeder extends Seeder
     private function createAdminUser(array $roles): User
     {
         $admin = User::query()->firstOrCreate(['email' => 'admin@example.com'], [
-            'name' => 'Admin User',
-            'password' => Hash::make('password'),
+            'name'              => 'Admin User',
+            'password'          => Hash::make('password'),
             'email_verified_at' => now(),
         ]);
 
         $admin->refresh();
 
-        if (isset($roles['super-admin']) && ! $admin->hasRole($roles['super-admin'])) {
+        if (isset($roles['super-admin']) && !$admin->hasRole($roles['super-admin'])) {
             $this->assignGlobalRole($admin, $roles['super-admin']);
         }
 
@@ -202,7 +202,7 @@ final class RolePermissionSeeder extends Seeder
     private function createTeams(User $admin): array
     {
         return [Team::query()->firstOrCreate(['name' => 'Default Team'], [
-            'user_id' => $admin->id,
+            'user_id'       => $admin->id,
             'personal_team' => false,
         ])];
     }
@@ -215,13 +215,13 @@ final class RolePermissionSeeder extends Seeder
      */
     private function assignTeamScopedRoles(User $admin, array $teams, array $roles): void
     {
-        if ($teams === [] || ! isset($roles['admin'])) {
+        if ($teams === [] || !isset($roles['admin'])) {
             return;
         }
 
         $team = $teams[0];
 
-        if (! $admin->teams()->where('teams.id', $team->id)->exists()) {
+        if (!$admin->teams()->where('teams.id', $team->id)->exists()) {
             $admin->teams()->attach($team->id, ['role' => 'owner']);
         }
 

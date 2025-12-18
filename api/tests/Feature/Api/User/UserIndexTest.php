@@ -41,7 +41,7 @@ test('authenticated user can list all users with pagination', function (): void 
                 ->where('data.total', fn ($total): bool => $total > 0)
                 ->has('data.first_page_url')
                 ->has('data.last_page_url')
-                ->etc()
+                ->etc(),
         );
 });
 
@@ -64,7 +64,7 @@ test('pagination uses default per_page of 15', function (): void {
                 ->where('data.total', fn ($total): bool => $total > 0)
                 ->whereType('data.last_page', 'integer')
                 ->where('data.last_page', fn ($lastPage): bool => $lastPage > 0)
-                ->etc()
+                ->etc(),
         );
 });
 
@@ -87,7 +87,7 @@ test('pagination accepts custom per_page parameter', function (): void {
                 ->where('data.total', fn ($total): bool => $total > 0)
                 ->whereType('data.last_page', 'integer')
                 ->where('data.last_page', fn ($lastPage): bool => $lastPage > 0)
-                ->etc()
+                ->etc(),
         );
 });
 
@@ -110,7 +110,7 @@ test('pagination page navigation works correctly', function (): void {
                 ->where('data.last_page', fn ($lastPage): bool => $lastPage > 0)
                 ->whereType('data.total', 'integer')
                 ->where('data.total', fn ($total): bool => $total > 0)
-                ->etc()
+                ->etc(),
         );
 
     // Second page
@@ -123,7 +123,7 @@ test('pagination page navigation works correctly', function (): void {
                 ->where('data.current_page', fn ($page): bool => $page > 0)
                 ->whereType('data.last_page', 'integer')
                 ->where('data.last_page', fn ($lastPage): bool => $lastPage > 0)
-                ->etc()
+                ->etc(),
         );
 
     // Last page
@@ -136,7 +136,7 @@ test('pagination page navigation works correctly', function (): void {
                 ->where('data.current_page', fn ($page): bool => $page > 0)
                 ->whereType('data.last_page', 'integer')
                 ->where('data.last_page', fn ($lastPage): bool => $lastPage > 0)
-                ->etc()
+                ->etc(),
         );
 });
 
@@ -167,6 +167,6 @@ test('pagination per_page validation rejects invalid values', function (): void 
                 ->where('data.per_page', fn ($perPage): bool => $perPage > 0)
                 ->whereType('data.total', 'integer')
                 ->where('data.total', fn ($total): bool => $total > 0)
-                ->etc()
+                ->etc(),
         );
 });

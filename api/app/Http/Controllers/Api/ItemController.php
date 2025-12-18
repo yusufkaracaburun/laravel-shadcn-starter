@@ -25,7 +25,7 @@ final class ItemController extends Controller
     use UsesQueryBuilder;
 
     public function __construct(
-        private readonly ItemServiceInterface $itemService
+        private readonly ItemServiceInterface $itemService,
     ) {}
 
     /**

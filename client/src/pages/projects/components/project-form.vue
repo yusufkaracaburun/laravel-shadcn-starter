@@ -24,12 +24,25 @@ const formSchema = toTypedSchema(
       .min(2)
       .max(100)
       .default(props.project?.name ?? ''),
-    description: z.string().nullable().default(props.project?.description ?? null),
+    description: z
+      .string()
+      .nullable()
+      .default(props.project?.description ?? null),
     status: z.string().default(props.project?.status ?? ''),
     category: z.string().default(props.project?.category ?? ''),
-    startDate: z.string().nullable().default(props.project?.startDate ?? props.project?.start_date ?? null),
-    endDate: z.string().nullable().default(props.project?.endDate ?? props.project?.end_date ?? null),
-    progress: z.number().min(0).max(100).default(props.project?.progress ?? 0),
+    startDate: z
+      .string()
+      .nullable()
+      .default(props.project?.startDate ?? props.project?.start_date ?? null),
+    endDate: z
+      .string()
+      .nullable()
+      .default(props.project?.endDate ?? props.project?.end_date ?? null),
+    progress: z
+      .number()
+      .min(0)
+      .max(100)
+      .default(props.project?.progress ?? 0),
   }),
 )
 
@@ -53,15 +66,13 @@ const onSubmit = handleSubmit(async (values) => {
     if (props.project?.id) {
       // Update existing project
       await updateProject(props.project.id, backendData)
-    }
-    else {
+    } else {
       // Create new project
       await createProject(backendData)
     }
 
     emits('close')
-  }
-  catch (error) {
+  } catch (error) {
     // Error handling is done in the composable
     // Just log for debugging
     console.error('Project form submission error:', error)
@@ -126,11 +137,7 @@ const onSubmit = handleSubmit(async (values) => {
             </UiSelectTrigger>
             <UiSelectContent>
               <UiSelectGroup>
-                <UiSelectItem
-                  v-for="status in statuses"
-                  :key="status.value"
-                  :value="status.value"
-                >
+                <UiSelectItem v-for="status in statuses" :key="status.value" :value="status.value">
                   <div class="flex items-center gap-2">
                     <component :is="status.icon" class="size-4 shrink-0" />
                     {{ status.label }}
@@ -175,8 +182,7 @@ const onSubmit = handleSubmit(async (values) => {
     </FormField>
 
     <UiButton type="submit" class="w-full" :disabled="isSubmitting">
-      {{ isSubmitting ? 'Submitting...' : (project ? 'Update Project' : 'Create Project') }}
+      {{ isSubmitting ? 'Submitting...' : project ? 'Update Project' : 'Create Project' }}
     </UiButton>
   </form>
 </template>
-

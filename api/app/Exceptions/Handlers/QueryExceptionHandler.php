@@ -22,7 +22,7 @@ final class QueryExceptionHandler extends AbstractExceptionHandler
 
     protected function getStatusCode(Throwable $exception): int
     {
-        if (! $exception instanceof QueryException) {
+        if (!$exception instanceof QueryException) {
             return Response::HTTP_INTERNAL_SERVER_ERROR;
         }
 
@@ -36,22 +36,22 @@ final class QueryExceptionHandler extends AbstractExceptionHandler
 
     protected function getMessage(Throwable $exception, Request $request): string
     {
-        if (! $exception instanceof QueryException) {
+        if (!$exception instanceof QueryException) {
             return 'A database error occurred. Please try again later.';
         }
 
         $errorCode = $exception->errorInfo[1] ?? null;
 
         return match ($errorCode) {
-            1451 => 'Cannot delete this resource because it is referenced by other records.',
-            1062 => 'A record with this information already exists.',
+            1451    => 'Cannot delete this resource because it is referenced by other records.',
+            1062    => 'A record with this information already exists.',
             default => 'A database error occurred. Please try again later.',
         };
     }
 
     protected function getLogContext(Throwable $exception, Request $request): array
     {
-        if (! $exception instanceof QueryException) {
+        if (!$exception instanceof QueryException) {
             return [];
         }
 

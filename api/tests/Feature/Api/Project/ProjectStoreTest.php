@@ -10,8 +10,8 @@ use Illuminate\Testing\Fluent\AssertableJson;
 test('unauthenticated users cannot create projects', function (): void {
     /** @var TestCase $this */
     $response = $this->postJson('/api/project', [
-        'name' => 'Test Project',
-        'status' => 'active',
+        'name'     => 'Test Project',
+        'status'   => 'active',
         'category' => 'development',
     ]);
 
@@ -25,13 +25,13 @@ test('authenticated user can create new project', function (): void {
     Sanctum::actingAs($user, ['*']);
 
     $projectData = [
-        'name' => 'Test Project',
+        'name'        => 'Test Project',
         'description' => 'Test project description',
-        'status' => 'active',
-        'category' => 'development',
-        'start_date' => '2024-01-01',
-        'end_date' => '2024-12-31',
-        'progress' => 50,
+        'status'      => 'active',
+        'category'    => 'development',
+        'start_date'  => '2024-01-01',
+        'end_date'    => '2024-12-31',
+        'progress'    => 50,
     ];
 
     $response = $this->postJson('/api/project', $projectData);
@@ -47,12 +47,12 @@ test('authenticated user can create new project', function (): void {
                     ->where('progress', $projectData['progress'])
                     ->etc())
                 ->has('extra')
-                ->etc()
+                ->etc(),
         );
 
     $this->assertDatabaseHas('projects', [
-        'name' => $projectData['name'],
-        'status' => $projectData['status'],
+        'name'    => $projectData['name'],
+        'status'  => $projectData['status'],
         'team_id' => $user->current_team_id,
     ]);
 });
@@ -64,8 +64,8 @@ test('project creation requires valid data', function (): void {
     Sanctum::actingAs($user, ['*']);
 
     $response = $this->postJson('/api/project', [
-        'name' => '',
-        'status' => 'invalid-status',
+        'name'     => '',
+        'status'   => 'invalid-status',
         'category' => 'invalid-category',
         'progress' => 150, // Invalid: exceeds max
     ]);
@@ -81,8 +81,8 @@ test('project can be created with optional fields', function (): void {
     Sanctum::actingAs($user, ['*']);
 
     $response = $this->postJson('/api/project', [
-        'name' => 'Test Project',
-        'status' => 'active',
+        'name'     => 'Test Project',
+        'status'   => 'active',
         'category' => 'design',
     ]);
 
@@ -95,7 +95,7 @@ test('project can be created with optional fields', function (): void {
                     ->where('start_date', null)
                     ->where('end_date', null)
                     ->etc())
-                ->etc()
+                ->etc(),
         );
 });
 
@@ -106,11 +106,11 @@ test('project end_date must be after or equal to start_date', function (): void 
     Sanctum::actingAs($user, ['*']);
 
     $response = $this->postJson('/api/project', [
-        'name' => 'Test Project',
-        'status' => 'active',
-        'category' => 'development',
+        'name'       => 'Test Project',
+        'status'     => 'active',
+        'category'   => 'development',
         'start_date' => '2024-12-31',
-        'end_date' => '2024-01-01', // Before start_date
+        'end_date'   => '2024-01-01', // Before start_date
     ]);
 
     $response->assertUnprocessable()

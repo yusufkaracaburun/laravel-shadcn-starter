@@ -102,4 +102,3 @@ export interface UpdateCustomerRequest {
   vat_number?: string | null
   iban_number?: string | null
 }
-

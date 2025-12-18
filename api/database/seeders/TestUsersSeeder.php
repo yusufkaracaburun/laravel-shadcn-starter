@@ -20,9 +20,9 @@ final class TestUsersSeeder extends Seeder
         $superAdmin = User::factory()
             ->systemUser()
             ->create([
-                'name' => 'Super Admin example',
-                'email' => 'super@admin.com',
-                'password' => Hash::make('password'),
+                'name'       => 'Super Admin example',
+                'email'      => 'super@admin.com',
+                'password'   => Hash::make('password'),
                 'created_at' => now()->subMonths(3),
             ]);
         $superAdmin->assignRole(UserRole::SUPER_ADMIN->value);
@@ -32,9 +32,9 @@ final class TestUsersSeeder extends Seeder
         $admin = User::factory()
             ->systemUser()
             ->create([
-                'name' => 'Admin example',
-                'email' => 'admin@demo.com',
-                'password' => Hash::make('password'),
+                'name'       => 'Admin example',
+                'email'      => 'admin@demo.com',
+                'password'   => Hash::make('password'),
                 'created_at' => now()->subMonths(3),
             ]);
         $admin->assignRole(UserRole::ADMIN->value);
@@ -45,9 +45,9 @@ final class TestUsersSeeder extends Seeder
             $manager = User::factory()
                 ->systemUser()
                 ->create([
-                    'name' => 'Manager '.($idx + 1).' example',
-                    'email' => $email,
-                    'password' => Hash::make('password'),
+                    'name'       => 'Manager ' . ($idx + 1) . ' example',
+                    'email'      => $email,
+                    'password'   => Hash::make('password'),
                     'created_at' => now()->subMonths(3),
                 ]);
             $manager->assignRole(UserRole::MANAGER->value);
@@ -59,9 +59,9 @@ final class TestUsersSeeder extends Seeder
             $user = User::factory()
                 ->systemUser()
                 ->create([
-                    'name' => "User {$i} example",
-                    'email' => "user{$i}@demo.com",
-                    'password' => Hash::make('password'),
+                    'name'       => "User {$i} example",
+                    'email'      => "user{$i}@demo.com",
+                    'password'   => Hash::make('password'),
                     'created_at' => now()->subMonths(3),
                 ]);
             $user->assignRole(UserRole::USER->value);

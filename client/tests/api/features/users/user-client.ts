@@ -1,8 +1,9 @@
 import type { APIResponse } from '@playwright/test'
 
-import { ApiEndpoints } from '../shared/enums'
+import type { IResponse, Role, User } from '../shared/types'
+
 import { BaseClient } from '../shared/core/base-client'
-import type { IResponse, User, Role } from '../shared/types'
+import { ApiEndpoints } from '../shared/enums'
 
 /**
  * Create user request interface matching backend StoreUserRequest
@@ -103,7 +104,10 @@ export class UserClient extends BaseClient {
    * @param perPage - Number of items per page (default: 15)
    * Returns IResponse<PaginatedUsersResponse>
    */
-  async getUsersTyped(page: number = 1, perPage: number = 15): Promise<IResponse<PaginatedUsersResponse>> {
+  async getUsersTyped(
+    page: number = 1,
+    perPage: number = 15,
+  ): Promise<IResponse<PaginatedUsersResponse>> {
     const response = await this.getUsers(page, perPage)
     return response.json() as Promise<IResponse<PaginatedUsersResponse>>
   }
@@ -182,4 +186,3 @@ export class UserClient extends BaseClient {
     return this.delete(endpoint)
   }
 }
-

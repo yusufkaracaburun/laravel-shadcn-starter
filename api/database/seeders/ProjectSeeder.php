@@ -18,7 +18,7 @@ final class ProjectSeeder extends Seeder
         // Get the first team (or create one if none exists)
         $team = Team::query()->first();
 
-        if (! $team) {
+        if (!$team) {
             $this->command->warn('No team found. Projects will be created without team_id.');
         }
 

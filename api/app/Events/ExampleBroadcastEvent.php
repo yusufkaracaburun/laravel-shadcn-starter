@@ -58,7 +58,7 @@ final class ExampleBroadcastEvent implements ShouldBroadcastNow
     public function broadcastWith(): array
     {
         return [
-            'message' => $this->message,
+            'message'   => $this->message,
             'timestamp' => now()->toIso8601String(),
         ];
     }

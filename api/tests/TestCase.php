@@ -132,14 +132,14 @@ abstract class TestCase extends BaseTestCase
         foreach ($emails as $email) {
             foreach ($ips as $ip) {
                 // Match the exact format from FortifyServiceProvider for non-empty emails
-                $throttleKey = Str::transliterate(Str::lower($email)).'|'.$ip;
-                RateLimiter::clear('login:'.$throttleKey);
+                $throttleKey = Str::transliterate(Str::lower($email)) . '|' . $ip;
+                RateLimiter::clear('login:' . $throttleKey);
             }
         }
 
         // Also clear IP-only rate limiters (for empty email cases)
         foreach ($ips as $ip) {
-            RateLimiter::clear('login:'.$ip);
+            RateLimiter::clear('login:' . $ip);
         }
     }
 }

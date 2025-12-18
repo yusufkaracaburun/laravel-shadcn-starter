@@ -32,14 +32,14 @@ final class AuthServiceProvider extends ServiceProvider
      * @var array<class-string, class-string>
      */
     private array $policies = [
-        Team::class => TeamPolicy::class,
-        User::class => UserPolicy::class,
+        Team::class       => TeamPolicy::class,
+        User::class       => UserPolicy::class,
         Permission::class => PermissionPolicy::class,
-        Role::class => RolePolicy::class,
-        Item::class => ItemPolicy::class,
-        Payment::class => PaymentPolicy::class,
-        Invoice::class => InvoicePolicy::class,
-        Customer::class => CustomerPolicy::class,
+        Role::class       => RolePolicy::class,
+        Item::class       => ItemPolicy::class,
+        Payment::class    => PaymentPolicy::class,
+        Invoice::class    => InvoicePolicy::class,
+        Customer::class   => CustomerPolicy::class,
     ];
 
     /**
@@ -82,7 +82,7 @@ final class AuthServiceProvider extends ServiceProvider
         // @phpstan-ignore-next-line - $ability parameter is required by Gate::before signature but unused
         Gate::before(function ($user, string $_ability): ?true {
             // Check for super-admin role with team context cleared (global role)
-            if (! $user) {
+            if (!$user) {
                 return null;
             }
 
@@ -93,7 +93,7 @@ final class AuthServiceProvider extends ServiceProvider
             // Clear permission cache and roles relation to ensure fresh check
             $permissionRegistrar->forgetCachedPermissions();
 
-            if (! $user->relationLoaded('roles')) {
+            if (!$user->relationLoaded('roles')) {
                 $user->load('roles');
             }
 

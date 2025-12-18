@@ -25,7 +25,7 @@ final class CompanyIndexRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'page' => ['sometimes', 'integer', 'min:1'],
+            'page'     => ['sometimes', 'integer', 'min:1'],
             'per_page' => ['sometimes', 'integer', 'min:1', 'max:100'],
         ];
     }
@@ -33,7 +33,7 @@ final class CompanyIndexRequest extends FormRequest
     protected function prepareForValidation(): void
     {
         $this->merge([
-            'page' => $this->integer('page', 1),
+            'page'     => $this->integer('page', 1),
             'per_page' => $this->integer('per_page', 10),
         ]);
     }

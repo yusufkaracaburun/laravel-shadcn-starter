@@ -7,6 +7,7 @@ import DataTableColumnHeader from '@/components/data-table/column-header.vue'
 import { SelectColumn } from '@/components/data-table/table-columns'
 import { Badge } from '@/components/ui/badge'
 import { Progress } from '@/components/ui/progress'
+import { StatusBadge } from '@/components/ui/status-badge'
 
 import type { Project } from '../data/schema'
 
@@ -34,7 +35,8 @@ export const columns: ColumnDef<Project>[] = [
       return h(
         'button',
         {
-          class: 'max-w-[500px] truncate font-medium text-left hover:underline cursor-pointer focus:outline-none focus:underline',
+          class:
+            'max-w-[500px] truncate font-medium text-left hover:underline cursor-pointer focus:outline-none focus:underline',
           onClick: () => {
             router.push({ name: '/projects/[id]', params: { id: project.id.toString() } })
           },
@@ -50,7 +52,7 @@ export const columns: ColumnDef<Project>[] = [
     accessorKey: 'category',
     header: ({ column }) => h(DataTableColumnHeader<Project>, { column, title: 'Category' }),
     cell: ({ row }) => {
-      const category = categories.find(category => category.value === row.getValue('category'))
+      const category = categories.find((category) => category.value === row.getValue('category'))
 
       return h('div', { class: 'flex items-center' }, [
         category ? h(Badge, { variant: 'outline' }, () => category.label) : null,
@@ -64,22 +66,16 @@ export const columns: ColumnDef<Project>[] = [
     accessorKey: 'status',
     header: ({ column }) => h(DataTableColumnHeader<Project>, { column, title: 'Status' }),
     cell: ({ row }) => {
-      const status = statuses.find(status => status.value === row.getValue('status'))
+      const status = statuses.find((status) => status.value === row.getValue('status'))
 
-      if (!status)
-        return null
+      if (!status) return null
 
-      return h(
-        Badge,
-        {
-          class: `flex w-fit items-center gap-2 ${status.color}`,
-          variant: 'secondary',
-        },
-        () => [
-          status.icon && h(status.icon, { class: 'h-3 w-3' }),
-          h('span', status.label),
-        ],
-      )
+      return h(StatusBadge, {
+        status: status.value,
+        type: 'project',
+        icon: status.icon,
+        label: status.label,
+      })
     },
     filterFn: (row, id, value) => {
       return value.includes(row.getValue(id))
@@ -105,7 +101,11 @@ export const columns: ColumnDef<Project>[] = [
         return h('div', { class: 'w-[100px] text-muted-foreground' }, '-')
       }
       const date = new Date(dateValue)
-      return h('div', { class: 'w-[100px]' }, date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }))
+      return h(
+        'div',
+        { class: 'w-[100px]' },
+        date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }),
+      )
     },
   },
   {
@@ -117,7 +117,11 @@ export const columns: ColumnDef<Project>[] = [
         return h('div', { class: 'w-[100px] text-muted-foreground' }, '-')
       }
       const date = new Date(dateValue)
-      return h('div', { class: 'w-[100px]' }, date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }))
+      return h(
+        'div',
+        { class: 'w-[100px]' },
+        date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }),
+      )
     },
   },
   {

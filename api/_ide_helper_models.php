@@ -161,7 +161,11 @@ namespace App\Models{
  * @property string|null $notes
  * @property \Carbon\CarbonImmutable|null $created_at
  * @property \Carbon\CarbonImmutable|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \Spatie\Activitylog\Models\Activity> $activities
+ * @property-read int|null $activities_count
  * @property-read \App\Models\Customer $customer
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\InvoiceEmail> $emails
+ * @property-read int|null $emails_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\InvoiceItem> $items
  * @property-read int|null $items_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Payment> $payments
@@ -196,12 +200,51 @@ namespace App\Models{
 
 namespace App\Models{
 /**
- * Invoice item model.
+ * InvoiceEmail model.
+ * 
+ * Represents an email sent for an invoice.
+ *
+ * @property int $id
+ * @property int $invoice_id
+ * @property string $to
+ * @property string $subject
+ * @property string|null $body
+ * @property \App\Enums\EmailStatus $status
+ * @property \Carbon\CarbonImmutable|null $sent_at
+ * @property \Carbon\CarbonImmutable|null $opened_at
+ * @property \Carbon\CarbonImmutable|null $clicked_at
+ * @property string|null $error_message
+ * @property \Carbon\CarbonImmutable|null $created_at
+ * @property \Carbon\CarbonImmutable|null $updated_at
+ * @property-read \App\Models\Invoice $invoice
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceEmail newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceEmail newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceEmail query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceEmail whereBody($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceEmail whereClickedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceEmail whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceEmail whereErrorMessage($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceEmail whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceEmail whereInvoiceId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceEmail whereOpenedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceEmail whereSentAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceEmail whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceEmail whereSubject($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceEmail whereTo($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceEmail whereUpdatedAt($value)
+ */
+	final class InvoiceEmail extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * InvoiceItem model.
  * 
  * Represents a line item on an invoice.
  *
  * @property int $id
  * @property int $invoice_id
+ * @property string|null $name
  * @property string|null $description
  * @property numeric $quantity
  * @property \Cknow\Money\Money $unit_price
@@ -215,16 +258,17 @@ namespace App\Models{
  * @property int|null $item_id
  * @property string|null $unit
  * @property-read \App\Models\Invoice $invoice
- * @property-read \App\Models\Item|null $item
  * @method static \Database\Factories\InvoiceItemFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem scopeOrdered()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem whereDescription($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem whereInvoiceId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem whereItemId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem whereQuantity($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem whereSortOrder($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem whereTotalExclVat($value)

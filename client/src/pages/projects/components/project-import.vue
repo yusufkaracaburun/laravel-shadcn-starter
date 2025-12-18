@@ -55,14 +55,15 @@ function onSubmit() {
       <UiDialogHeader>
         <UiDialogTitle>Import Projects</UiDialogTitle>
         <UiDialogDescription>
-          Import projects quickly from a CSV file. Download the example file to see the correct format.
+          Import projects quickly from a CSV file. Download the example file to see the correct
+          format.
         </UiDialogDescription>
       </UiDialogHeader>
 
       <div class="space-y-4">
         <div class="flex items-center justify-between rounded-lg border p-3">
           <div class="space-y-0.5">
-            <UiLabel class="text-base font-medium">Example CSV File</UiLabel>
+            <UiLabel class="text-base font-medium"> Example CSV File </UiLabel>
             <p class="text-sm text-muted-foreground">
               Download a template with the correct format and example data
             </p>
@@ -78,7 +79,8 @@ function onSubmit() {
           <UiInput id="file" v-model="file" type="file" accept=".csv" />
           <span v-if="error" class="text-sm text-destructive">{{ error }}</span>
           <p class="text-xs text-muted-foreground">
-            Required columns: name, status, category. Optional: description, start_date, end_date, progress
+            Required columns: name, status, category. Optional: description, start_date, end_date,
+            progress
           </p>
         </div>
       </div>
@@ -89,4 +91,3 @@ function onSubmit() {
     </UiDialogContent>
   </UiDialog>
 </template>
-

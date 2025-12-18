@@ -8,12 +8,16 @@ use App\Enums\InvoiceStatus;
 use App\Traits\HasDatesScope;
 use App\Traits\HasMoneyTrait;
 use App\Observers\InvoiceObserver;
+use Spatie\Activitylog\LogOptions;
 use App\Traits\HasInvoiceNumberTrait;
 use Cknow\Money\Casts\MoneyDecimalCast;
+use Spatie\Activitylog\Models\Activity;
 use Illuminate\Database\Eloquent\Builder;
+use Spatie\Activitylog\Traits\LogsActivity;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 
 /**
@@ -27,6 +31,7 @@ final class Invoice extends BaseModel
     use HasDatesScope;
     use HasInvoiceNumberTrait;
     use HasMoneyTrait;
+    use LogsActivity;
 
     /**
      * Searchable fields for this model.
@@ -39,6 +44,13 @@ final class Invoice extends BaseModel
         'customer.name',
         'customer.email',
     ];
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnlyDirty()
+            ->dontSubmitEmptyLogs();
+    }
 
     /**
      * Get the customer this invoice belongs to.
@@ -71,6 +83,26 @@ final class Invoice extends BaseModel
     }
 
     /**
+     * Get all emails sent for this invoice.
+     *
+     * @return HasMany<InvoiceEmail>
+     */
+    public function emails(): HasMany
+    {
+        return $this->hasMany(InvoiceEmail::class);
+    }
+
+    /**
+     * Get all activity logs for this invoice.
+     *
+     * @return MorphMany
+     */
+    public function activities()
+    {
+        return $this->morphMany(Activity::class, 'subject');
+    }
+
+    /**
      * Boot the model.
      */
     protected static function booted(): void
@@ -92,14 +124,14 @@ final class Invoice extends BaseModel
     protected function casts(): array
     {
         return [
-            'date' => 'date',
-            'date_due' => 'date',
-            'status' => InvoiceStatus::class,
-            'subtotal' => MoneyDecimalCast::class,
-            'total_vat_0' => MoneyDecimalCast::class,
-            'total_vat_9' => MoneyDecimalCast::class,
+            'date'         => 'date',
+            'date_due'     => 'date',
+            'status'       => InvoiceStatus::class,
+            'subtotal'     => MoneyDecimalCast::class,
+            'total_vat_0'  => MoneyDecimalCast::class,
+            'total_vat_9'  => MoneyDecimalCast::class,
             'total_vat_21' => MoneyDecimalCast::class,
-            'total' => MoneyDecimalCast::class,
+            'total'        => MoneyDecimalCast::class,
         ];
     }
 

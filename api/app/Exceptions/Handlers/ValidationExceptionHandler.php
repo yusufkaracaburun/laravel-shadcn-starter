@@ -40,24 +40,24 @@ final class ValidationExceptionHandler extends AbstractExceptionHandler
      */
     protected function buildResponse(Throwable $exception, Request $request): JsonResponse
     {
-        if (! $exception instanceof ValidationException) {
+        if (!$exception instanceof ValidationException) {
             return parent::buildResponse($exception, $request);
         }
 
         // Use Laravel's default validation error format for compatibility with tests
         return response()->json([
             'success' => false,
-            'code' => Response::HTTP_UNPROCESSABLE_ENTITY,
+            'code'    => Response::HTTP_UNPROCESSABLE_ENTITY,
             'message' => $this->getMessage($exception, $request),
-            'data' => null,
-            'extra' => [],
-            'errors' => $exception->errors(),
+            'data'    => null,
+            'extra'   => [],
+            'errors'  => $exception->errors(),
         ], Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 
     protected function getLogContext(Throwable $exception, Request $request): array
     {
-        if (! $exception instanceof ValidationException) {
+        if (!$exception instanceof ValidationException) {
             return [];
         }
 
@@ -65,7 +65,7 @@ final class ValidationExceptionHandler extends AbstractExceptionHandler
         foreach ($exception->errors() as $field => $messages) {
             foreach ($messages as $message) {
                 $errors[] = [
-                    'field' => $field,
+                    'field'   => $field,
                     'message' => $message,
                 ];
             }

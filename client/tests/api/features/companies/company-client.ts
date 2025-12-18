@@ -1,7 +1,13 @@
 import type { APIResponse } from '@playwright/test'
 
-import type { CreateCompanyRequest, UpdateCompanyRequest, Company, PaginatedCompaniesResponse } from './company-types'
 import type { IResponse } from '../shared/types'
+import type {
+  Company,
+  CreateCompanyRequest,
+  PaginatedCompaniesResponse,
+  UpdateCompanyRequest,
+} from './company-types'
+
 import { BaseClient } from '../shared/core/base-client'
 
 export class CompanyClient extends BaseClient {
@@ -22,7 +28,10 @@ export class CompanyClient extends BaseClient {
    * @param perPage - Number of items per page (default: 15)
    * Returns IResponse<PaginatedCompaniesResponse>
    */
-  async getCompaniesTyped(page: number = 1, perPage: number = 15): Promise<IResponse<PaginatedCompaniesResponse>> {
+  async getCompaniesTyped(
+    page: number = 1,
+    perPage: number = 15,
+  ): Promise<IResponse<PaginatedCompaniesResponse>> {
     const response = await this.getCompanies(page, perPage)
     return response.json() as Promise<IResponse<PaginatedCompaniesResponse>>
   }
@@ -85,7 +94,10 @@ export class CompanyClient extends BaseClient {
    * @param data - Company update data
    * Returns IResponse<Company>
    */
-  async updateCompanyTyped(companyId: number, data: UpdateCompanyRequest): Promise<IResponse<Company>> {
+  async updateCompanyTyped(
+    companyId: number,
+    data: UpdateCompanyRequest,
+  ): Promise<IResponse<Company>> {
     const response = await this.updateCompany(companyId, data)
     return response.json() as Promise<IResponse<Company>>
   }

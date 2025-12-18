@@ -1,6 +1,11 @@
-import type { Company } from '../../features/companies/company-types'
-import type { CreateCompanyRequest, PaginatedCompaniesResponse, UpdateCompanyRequest } from '../../features/companies/company-types'
+import type {
+  Company,
+  CreateCompanyRequest,
+  PaginatedCompaniesResponse,
+  UpdateCompanyRequest,
+} from '../../features/companies/company-types'
 
+import { CompanyClient } from '../../features/companies/company-client'
 import { HttpStatus } from '../../features/shared/enums'
 import {
   expectError,
@@ -9,7 +14,6 @@ import {
   expectUnauthenticated,
   expectValidationErrors,
 } from '../../features/shared/helpers'
-import { CompanyClient } from '../../features/companies/company-client'
 import { expect, test } from '../../fixtures'
 
 /**
@@ -135,7 +139,10 @@ test.describe('Companies API', { tag: ['@api', '@companies'] }, () => {
       await companyClient.deleteCompany(companyId)
     })
 
-    test('should return 404 for non-existent company', async ({ request, authenticatedAuthClient }) => {
+    test('should return 404 for non-existent company', async ({
+      request,
+      authenticatedAuthClient,
+    }) => {
       // Arrange
       const companyClient = new CompanyClient(request)
       companyClient.copyAuthStateFrom(authenticatedAuthClient)
@@ -191,7 +198,10 @@ test.describe('Companies API', { tag: ['@api', '@companies'] }, () => {
       await companyClient.deleteCompany(companyBody.data.id)
     })
 
-    test('should return validation errors for missing name', async ({ request, authenticatedAuthClient }) => {
+    test('should return validation errors for missing name', async ({
+      request,
+      authenticatedAuthClient,
+    }) => {
       // Arrange
       const companyClient = new CompanyClient(request)
       companyClient.copyAuthStateFrom(authenticatedAuthClient)
@@ -210,7 +220,10 @@ test.describe('Companies API', { tag: ['@api', '@companies'] }, () => {
       await expectValidationErrors(response)
     })
 
-    test('should return validation errors for invalid email', async ({ request, authenticatedAuthClient }) => {
+    test('should return validation errors for invalid email', async ({
+      request,
+      authenticatedAuthClient,
+    }) => {
       // Arrange
       const companyClient = new CompanyClient(request)
       companyClient.copyAuthStateFrom(authenticatedAuthClient)
@@ -229,7 +242,10 @@ test.describe('Companies API', { tag: ['@api', '@companies'] }, () => {
       await expectValidationErrors(response)
     })
 
-    test('should return validation errors for invalid industry', async ({ request, authenticatedAuthClient }) => {
+    test('should return validation errors for invalid industry', async ({
+      request,
+      authenticatedAuthClient,
+    }) => {
       // Arrange
       const companyClient = new CompanyClient(request)
       companyClient.copyAuthStateFrom(authenticatedAuthClient)
@@ -248,7 +264,10 @@ test.describe('Companies API', { tag: ['@api', '@companies'] }, () => {
       await expectValidationErrors(response)
     })
 
-    test('should return validation errors for duplicate email', async ({ request, authenticatedAuthClient }) => {
+    test('should return validation errors for duplicate email', async ({
+      request,
+      authenticatedAuthClient,
+    }) => {
       // Arrange
       const companyClient = new CompanyClient(request)
       companyClient.copyAuthStateFrom(authenticatedAuthClient)
@@ -344,7 +363,10 @@ test.describe('Companies API', { tag: ['@api', '@companies'] }, () => {
       await companyClient.deleteCompany(companyId)
     })
 
-    test('should return validation errors for invalid email on update', async ({ request, authenticatedAuthClient }) => {
+    test('should return validation errors for invalid email on update', async ({
+      request,
+      authenticatedAuthClient,
+    }) => {
       // Arrange
       const companyClient = new CompanyClient(request)
       companyClient.copyAuthStateFrom(authenticatedAuthClient)
@@ -367,7 +389,10 @@ test.describe('Companies API', { tag: ['@api', '@companies'] }, () => {
       await companyClient.deleteCompany(companyId)
     })
 
-    test('should return 404 for non-existent company on update', async ({ request, authenticatedAuthClient }) => {
+    test('should return 404 for non-existent company on update', async ({
+      request,
+      authenticatedAuthClient,
+    }) => {
       // Arrange
       const companyClient = new CompanyClient(request)
       companyClient.copyAuthStateFrom(authenticatedAuthClient)
@@ -419,7 +444,10 @@ test.describe('Companies API', { tag: ['@api', '@companies'] }, () => {
       expectError(getResponse, HttpStatus.NOT_FOUND)
     })
 
-    test('should return 404 for non-existent company on delete', async ({ request, authenticatedAuthClient }) => {
+    test('should return 404 for non-existent company on delete', async ({
+      request,
+      authenticatedAuthClient,
+    }) => {
       // Arrange
       const companyClient = new CompanyClient(request)
       companyClient.copyAuthStateFrom(authenticatedAuthClient)

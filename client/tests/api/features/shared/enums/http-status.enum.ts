@@ -36,4 +36,3 @@ export function isSuccessStatus(status: number): boolean {
 export function isErrorStatus(status: number): boolean {
   return status >= 400
 }
-

@@ -79,4 +79,3 @@ const isOpen = ref(false)
     </UiDialogContent>
   </UiDialog>
 </template>
-

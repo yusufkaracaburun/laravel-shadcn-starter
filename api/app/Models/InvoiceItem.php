@@ -7,11 +7,13 @@ namespace App\Models;
 use App\Traits\HasMoneyTrait;
 use App\Observers\InvoiceItemObserver;
 use Cknow\Money\Casts\MoneyDecimalCast;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 
 /**
- * Invoice item model.
+ * InvoiceItem model.
  *
  * Represents a line item on an invoice.
  */
@@ -27,17 +29,7 @@ final class InvoiceItem extends BaseModel
      */
     public function invoice(): BelongsTo
     {
-        return $this->belongsTo(Invoice::class);
-    }
-
-    /**
-     * Get the item this invoice item is based on (if linked to an item).
-     *
-     * @return BelongsTo<Item, covariant $this>
-     */
-    public function item(): BelongsTo
-    {
-        return $this->belongsTo(Item::class);
+        return $this->belongsTo(Invoice::class, 'invoice_id');
     }
 
     /**
@@ -51,6 +43,18 @@ final class InvoiceItem extends BaseModel
     }
 
     /**
+     * Scope a query to order items by sort_order.
+     *
+     * @param  Builder<InvoiceItem>  $query
+     * @return Builder<InvoiceItem>
+     */
+    #[Scope]
+    protected function scopeOrdered(Builder $query): Builder
+    {
+        return $query->orderBy('sort_order')->orderBy('id');
+    }
+
+    /**
      * Get the attributes that should be cast.
      *
      * @return array<string, string>
@@ -58,12 +62,13 @@ final class InvoiceItem extends BaseModel
     protected function casts(): array
     {
         return [
-            'quantity' => 'decimal:5',
-            'unit_price' => MoneyDecimalCast::class,
-            'vat_rate' => 'decimal:0',
+            'quantity'       => 'decimal:5',
+            'unit_price'     => MoneyDecimalCast::class,
+            'vat_rate'       => 'decimal:2',
             'total_excl_vat' => MoneyDecimalCast::class,
-            'total_vat' => MoneyDecimalCast::class,
+            'total_vat'      => MoneyDecimalCast::class,
             'total_incl_vat' => MoneyDecimalCast::class,
+            'sort_order'     => 'integer',
         ];
     }
 }

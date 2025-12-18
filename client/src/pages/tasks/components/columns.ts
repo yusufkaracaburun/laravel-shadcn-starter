@@ -1,11 +1,12 @@
 import type { ColumnDef } from '@tanstack/vue-table'
 
-import { h } from 'vue'
 import dayjs from 'dayjs'
+import { h } from 'vue'
 
 import DataTableColumnHeader from '@/components/data-table/column-header.vue'
 import { SelectColumn } from '@/components/data-table/table-columns'
 import { Badge } from '@/components/ui/badge'
+import { StatusBadge } from '@/components/ui/status-badge'
 
 import type { Task } from '../data/schema'
 
@@ -14,12 +15,9 @@ import DataTableRowActions from './data-table-row-actions.vue'
 
 function getLabelVariant(label: string): 'default' | 'secondary' | 'destructive' | 'outline' {
   const normalizedLabel = label.toLowerCase()
-  if (normalizedLabel === 'bug')
-    return 'destructive'
-  if (normalizedLabel === 'feature')
-    return 'default'
-  if (normalizedLabel === 'documentation')
-    return 'secondary'
+  if (normalizedLabel === 'bug') return 'destructive'
+  if (normalizedLabel === 'feature') return 'default'
+  if (normalizedLabel === 'documentation') return 'secondary'
   return 'outline'
 }
 
@@ -45,9 +43,12 @@ export const columns: ColumnDef<Task>[] = [
     header: ({ column }) => h(DataTableColumnHeader<Task>, { column, title: 'Description' }),
     cell: ({ row }) => {
       const description = row.original.description
-      if (!description)
-        return h('span', { class: 'text-muted-foreground' }, '—')
-      return h('span', { class: 'max-w-[300px] truncate text-sm text-muted-foreground' }, description)
+      if (!description) return h('span', { class: 'text-muted-foreground' }, '—')
+      return h(
+        'span',
+        { class: 'max-w-[300px] truncate text-sm text-muted-foreground' },
+        description,
+      )
     },
     enableSorting: false,
   },
@@ -56,11 +57,18 @@ export const columns: ColumnDef<Task>[] = [
     header: ({ column }) => h(DataTableColumnHeader<Task>, { column, title: 'Labels' }),
     cell: ({ row }) => {
       const taskLabels = row.original.labels || []
-      if (taskLabels.length === 0)
-        return h('span', { class: 'text-muted-foreground' }, '—')
-      return h('div', { class: 'flex flex-wrap gap-1' }, taskLabels.map((label: string) =>
-        h(Badge, { variant: getLabelVariant(label) }, () => label.charAt(0).toUpperCase() + label.slice(1)),
-      ))
+      if (taskLabels.length === 0) return h('span', { class: 'text-muted-foreground' }, '—')
+      return h(
+        'div',
+        { class: 'flex flex-wrap gap-1' },
+        taskLabels.map((label: string) =>
+          h(
+            Badge,
+            { variant: getLabelVariant(label) },
+            () => label.charAt(0).toUpperCase() + label.slice(1),
+          ),
+        ),
+      )
     },
     enableSorting: false,
   },
@@ -73,17 +81,12 @@ export const columns: ColumnDef<Task>[] = [
 
       if (!status) return null
 
-      return h(
-        Badge,
-        {
-          class: `flex w-fit items-center gap-2 ${status.color}`,
-          variant: 'secondary',
-        },
-        () => [
-          status.icon && h(status.icon, { class: 'h-3 w-3' }),
-          h('span', status.label),
-        ],
-      )
+      return h(StatusBadge, {
+        status: status.value,
+        type: 'task',
+        icon: status.icon,
+        label: status.label,
+      })
     },
     filterFn: (row, id, value) => {
       return value.includes(row.getValue(id))
@@ -111,8 +114,7 @@ export const columns: ColumnDef<Task>[] = [
     header: ({ column }) => h(DataTableColumnHeader<Task>, { column, title: 'Due Date' }),
     cell: ({ row }) => {
       const dueDate = row.original.dueDate
-      if (!dueDate)
-        return h('span', { class: 'text-muted-foreground' }, '—')
+      if (!dueDate) return h('span', { class: 'text-muted-foreground' }, '—')
       const date = typeof dueDate === 'string' ? dayjs(dueDate) : dayjs(dueDate)
       return h('span', { class: 'text-sm' }, date.format('MMM D, YYYY'))
     },

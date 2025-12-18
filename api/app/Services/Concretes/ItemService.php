@@ -20,7 +20,7 @@ final class ItemService extends BaseService implements ItemServiceInterface
      * Create a new class instance.
      */
     public function __construct(
-        ItemRepositoryInterface $repo
+        ItemRepositoryInterface $repo,
     ) {
         $this->setRepository($repo);
         $this->itemRepository = $repo;
@@ -76,5 +76,12 @@ final class ItemService extends BaseService implements ItemServiceInterface
         } catch (ModelNotFoundException) {
             throw new ModelNotFoundException('Item not found');
         }
+    }
+
+    public function getAll(): ItemCollection
+    {
+        $items = $this->itemRepository->all();
+
+        return new ItemCollection($items);
     }
 }

@@ -20,12 +20,12 @@ final class RoleResource extends BaseResource
     protected function resolvePayload(Request $request): array
     {
         return [
-            'id' => $this->id,
-            'name' => $this->name,
-            'is_system' => $this->is_system,
-            'users' => UserResource::collection($this->whenLoaded('users')),
-            'permissions' => PermissionResource::collection($this->whenLoaded('permissions')),
-            'users_count' => $this->whenCounted('users'),
+            'id'                => $this->id,
+            'name'              => $this->name,
+            'is_system'         => $this->is_system,
+            'users'             => UserResource::collection($this->whenLoaded('users')),
+            'permissions'       => PermissionResource::collection($this->whenLoaded('permissions')),
+            'users_count'       => $this->whenCounted('users'),
             'permissions_count' => $this->whenCounted('permissions'),
         ];
     }

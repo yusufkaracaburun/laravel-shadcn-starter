@@ -24,15 +24,15 @@ final class IndexCustomerRequest extends BaseIndexFormRequest
         return array_merge(
             parent::messages(),
             [
-                'filter.id.exists' => 'The selected customer does not exist.',
-                'filter.name.string' => 'The name filter must be a valid string.',
-                'filter.email.email' => 'The email filter must be a valid email address.',
-                'filter.phone.string' => 'The phone filter must be a valid string.',
-                'filter.city.string' => 'The city filter must be a valid string.',
-                'filter.country.string' => 'The country filter must be a valid string.',
-                'filter.type.in' => 'The customer type must be either "private" or "business".',
+                'filter.id.exists'       => 'The selected customer does not exist.',
+                'filter.name.string'     => 'The name filter must be a valid string.',
+                'filter.email.email'     => 'The email filter must be a valid email address.',
+                'filter.phone.string'    => 'The phone filter must be a valid string.',
+                'filter.city.string'     => 'The city filter must be a valid string.',
+                'filter.country.string'  => 'The country filter must be a valid string.',
+                'filter.type.in'         => 'The customer type must be either "private" or "business".',
                 'filter.created_at.date' => 'The created_at filter must be a valid date.',
-            ]
+            ],
         );
     }
 
@@ -46,17 +46,17 @@ final class IndexCustomerRequest extends BaseIndexFormRequest
         return array_merge(
             parent::attributes(),
             [
-                'filter.type' => 'customer type',
-                'filter.name' => 'name',
-                'filter.email' => 'email address',
-                'filter.phone' => 'phone number',
-                'filter.city' => 'city',
-                'filter.country' => 'country',
-                'filter.kvk_number' => 'Chamber of Commerce number',
-                'filter.vat_number' => 'VAT number',
+                'filter.type'        => 'customer type',
+                'filter.name'        => 'name',
+                'filter.email'       => 'email address',
+                'filter.phone'       => 'phone number',
+                'filter.city'        => 'city',
+                'filter.country'     => 'country',
+                'filter.kvk_number'  => 'Chamber of Commerce number',
+                'filter.vat_number'  => 'VAT number',
                 'filter.iban_number' => 'IBAN number',
-                'filter.created_at' => 'creation date',
-            ]
+                'filter.created_at'  => 'creation date',
+            ],
         );
     }
 
@@ -70,17 +70,17 @@ final class IndexCustomerRequest extends BaseIndexFormRequest
         return array_merge(
             parent::filterRules(),
             [
-                'filter.type' => 'sometimes|in:private,business',
-                'filter.name' => 'sometimes|string|max:255',
-                'filter.email' => 'sometimes|email|max:255',
-                'filter.phone' => 'sometimes|string|max:255',
-                'filter.city' => 'sometimes|string|max:255',
-                'filter.country' => 'sometimes|string|max:255',
-                'filter.kvk_number' => 'sometimes|string|max:50',
-                'filter.vat_number' => 'sometimes|string|max:50',
+                'filter.type'        => 'sometimes|in:private,business',
+                'filter.name'        => 'sometimes|string|max:255',
+                'filter.email'       => 'sometimes|email|max:255',
+                'filter.phone'       => 'sometimes|string|max:255',
+                'filter.city'        => 'sometimes|string|max:255',
+                'filter.country'     => 'sometimes|string|max:255',
+                'filter.kvk_number'  => 'sometimes|string|max:50',
+                'filter.vat_number'  => 'sometimes|string|max:50',
                 'filter.iban_number' => 'sometimes|string|max:50',
-                'filter.created_at' => 'sometimes|date',
-            ]
+                'filter.created_at'  => 'sometimes|date',
+            ],
         );
     }
 

@@ -12,8 +12,8 @@ use App\Providers\RepositoryServiceProvider;
 return [
     AppServiceProvider::class,
     AuthServiceProvider::class,
-    MacroServiceProvider::class,
     FortifyServiceProvider::class,
+    MacroServiceProvider::class,
     RepositoryServiceProvider::class,
     ServiceServiceProvider::class,
 ];

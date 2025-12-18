@@ -1,7 +1,13 @@
 import type { APIResponse } from '@playwright/test'
 
-import type { CreateItemRequest, UpdateItemRequest, Item, PaginatedItemsResponse } from './item-types'
 import type { IResponse } from '../shared/types'
+import type {
+  CreateItemRequest,
+  Item,
+  PaginatedItemsResponse,
+  UpdateItemRequest,
+} from './item-types'
+
 import { BaseClient } from '../shared/core/base-client'
 
 export class ItemClient extends BaseClient {
@@ -22,7 +28,10 @@ export class ItemClient extends BaseClient {
    * @param perPage - Number of items per page (default: 15)
    * Returns IResponse<PaginatedItemsResponse>
    */
-  async getItemsTyped(page: number = 1, perPage: number = 15): Promise<IResponse<PaginatedItemsResponse>> {
+  async getItemsTyped(
+    page: number = 1,
+    perPage: number = 15,
+  ): Promise<IResponse<PaginatedItemsResponse>> {
     const response = await this.getItems(page, perPage)
     return response.json() as Promise<IResponse<PaginatedItemsResponse>>
   }
@@ -114,4 +123,3 @@ export class ItemClient extends BaseClient {
     thisClient.csrfHandler.setToken(otherClient.csrfHandler.getToken())
   }
 }
-

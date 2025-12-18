@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { useAuth } from '@/composables/use-auth'
+import LoginForm4 from '@/pages/auth/components/LoginForm4.vue'
 import env from '@/utils/env'
 
 import { testusers } from '../../../tests/.data/users.data'
-import LoginForm4 from '@/pages/auth/components/LoginForm4.vue'
 import QuickLoginCard from './components/quick-login-card.vue'
 
 const { login, loading } = useAuth()
@@ -17,8 +17,7 @@ async function quickLogin(userKey: keyof typeof testusers) {
       email: user.email,
       password: user.password,
     })
-  }
-  catch (error) {
+  } catch (error) {
     // Error handling is done in useAuth composable
     console.error('Quick login failed:', error)
   }

@@ -34,7 +34,7 @@ final class UpdateRoleRequest extends BaseFormRequest
                 'max:255',
                 Rule::unique('roles', 'name')->ignore($role),
             ],
-            'permission_ids' => ['nullable', 'array'],
+            'permission_ids'   => ['nullable', 'array'],
             'permission_ids.*' => ['integer', 'exists:permissions,id'],
         ];
     }
@@ -47,8 +47,8 @@ final class UpdateRoleRequest extends BaseFormRequest
     public function messages(): array
     {
         return array_merge(parent::messages(), [
-            'name.required' => 'Role name is required',
-            'name.unique' => 'A role with this name already exists',
+            'name.required'           => 'Role name is required',
+            'name.unique'             => 'A role with this name already exists',
             'permission_ids.*.exists' => 'One or more permission IDs are invalid',
         ]);
     }

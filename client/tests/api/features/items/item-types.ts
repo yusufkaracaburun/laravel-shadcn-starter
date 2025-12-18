@@ -60,4 +60,3 @@ export interface UpdateItemRequest {
   vat_rate?: number
   unit?: string | null
 }
-

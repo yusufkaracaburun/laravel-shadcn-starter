@@ -24,8 +24,8 @@ final class RoleFactory extends Factory
         $name = fake()->unique()->jobTitle();
 
         return [
-            'name' => $name,
-            'slug' => str($name)->slug(),
+            'name'      => $name,
+            'slug'      => str($name)->slug(),
             'is_system' => false,
         ];
     }

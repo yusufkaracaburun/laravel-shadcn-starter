@@ -22,4 +22,3 @@ const isOpen = ref(false)
     </UiDrawerContent>
   </UiDrawer>
 </template>
-

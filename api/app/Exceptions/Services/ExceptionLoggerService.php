@@ -47,17 +47,17 @@ final class ExceptionLoggerService
         Throwable $exception,
         Request $request,
         string $level = LogLevel::WARNING,
-        array $additionalContext = []
+        array $additionalContext = [],
     ): void {
         $context = array_merge([
             'exception' => $exception::class,
-            'message' => $exception->getMessage(),
-            'file' => $exception->getFile(),
-            'line' => $exception->getLine(),
-            'url' => $request->fullUrl(),
-            'method' => $request->method(),
-            'ip' => $request->ip(),
-            'input' => $this->sanitizeInput($request->all()),
+            'message'   => $exception->getMessage(),
+            'file'      => $exception->getFile(),
+            'line'      => $exception->getLine(),
+            'url'       => $request->fullUrl(),
+            'method'    => $request->method(),
+            'ip'        => $request->ip(),
+            'input'     => $this->sanitizeInput($request->all()),
         ], $additionalContext);
 
         Log::log($level, $this->getLogMessage($exception), $context);

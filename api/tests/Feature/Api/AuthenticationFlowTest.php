@@ -24,20 +24,20 @@ beforeEach(function (): void {
 
     foreach ($emails as $email) {
         foreach ($ips as $ip) {
-            $throttleKey = Str::transliterate(Str::lower($email)).'|'.$ip;
-            RateLimiter::clear('login:'.$throttleKey);
+            $throttleKey = Str::transliterate(Str::lower($email)) . '|' . $ip;
+            RateLimiter::clear('login:' . $throttleKey);
         }
     }
 });
 
 test('complete authentication flow works with session-based sanctum', function (): void {
     /** @var TestCase $this */
-    $uniqueEmail = 'flow-test-'.uniqid().'@example.com';
+    $uniqueEmail = 'flow-test-' . uniqid() . '@example.com';
     $password = 'password123';
 
     // Step 1: Create user
     $user = User::factory()->create([
-        'email' => $uniqueEmail,
+        'email'    => $uniqueEmail,
         'password' => Hash::make($password),
     ]);
 
@@ -48,7 +48,7 @@ test('complete authentication flow works with session-based sanctum', function (
 
     // Step 3: Login with credentials
     $loginResponse = $this->postJson('/login', [
-        'email' => $uniqueEmail,
+        'email'    => $uniqueEmail,
         'password' => $password,
     ]);
 
@@ -87,9 +87,9 @@ test('complete authentication flow works with session-based sanctum', function (
                     ->where('name', $user->name)
                     ->whereType('teams', 'array')
                     ->whereType('currentTeam', ['array', 'null'])
-                    ->etc()
+                    ->etc(),
                 )
-                ->has('extra')
+                ->has('extra'),
         );
 
     // Step 5: Logout
@@ -117,17 +117,17 @@ test('csrf cookie is required for session-based authentication', function (): vo
 
 test('authentication flow with user that has teams', function (): void {
     /** @var TestCase $this */
-    $uniqueEmail = 'teams-test-'.uniqid().'@example.com';
+    $uniqueEmail = 'teams-test-' . uniqid() . '@example.com';
     $password = 'password123';
 
     $user = User::factory()->create([
-        'email' => $uniqueEmail,
+        'email'    => $uniqueEmail,
         'password' => Hash::make($password),
     ]);
 
     // Create a team for the user
     $team = $user->ownedTeams()->create([
-        'name' => 'Test Team',
+        'name'          => 'Test Team',
         'personal_team' => false,
     ]);
 
@@ -139,7 +139,7 @@ test('authentication flow with user that has teams', function (): void {
 
     // Login
     $this->postJson('/login', [
-        'email' => $uniqueEmail,
+        'email'    => $uniqueEmail,
         'password' => $password,
     ])->assertStatus(200);
 
@@ -156,10 +156,10 @@ test('authentication flow with user that has teams', function (): void {
                     ->has('teams', 1)
                     ->has('currentTeam', fn (AssertableJson $json): AssertableJson => $json->where('id', $team->id)
                         ->where('name', 'Test Team')
-                        ->etc()
+                        ->etc(),
                     )
-                    ->etc()
+                    ->etc(),
                 )
-                ->has('extra')
+                ->has('extra'),
         );
 });

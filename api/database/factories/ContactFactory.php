@@ -25,13 +25,13 @@ final class ContactFactory extends Factory
     {
         return [
             'first_name' => fake()->firstName(),
-            'last_name' => fake()->lastName(),
-            'email' => fake()->unique()->safeEmail(),
-            'phone' => PhoneNumber::getExampleNumber('NL'),
-            'address' => fake()->streetAddress(),
-            'zipcode' => mb_strtoupper(fake()->postcode()),
-            'city' => fake()->city(),
-            'country' => 'NL',
+            'last_name'  => fake()->lastName(),
+            'email'      => fake()->unique()->safeEmail(),
+            'phone'      => PhoneNumber::getExampleNumber('NL'),
+            'address'    => fake()->streetAddress(),
+            'zipcode'    => mb_strtoupper(fake()->postcode()),
+            'city'       => fake()->city(),
+            'country'    => 'NL',
         ];
     }
 
@@ -43,14 +43,14 @@ final class ContactFactory extends Factory
         $split = explode(' ', $customer->name);
 
         return $this->state(fn (): array => [
-            'email' => $customer->email,
+            'email'      => $customer->email,
             'first_name' => $split[0],
-            'last_name' => isset($split[1]) ? implode(' ', array_slice($split, 1)) : fake()->lastName(),
-            'phone' => $customer->phone,
-            'address' => $customer->address,
-            'zipcode' => $customer->zipcode,
-            'city' => $customer->city,
-            'country' => $customer->country,
+            'last_name'  => isset($split[1]) ? implode(' ', array_slice($split, 1)) : fake()->lastName(),
+            'phone'      => $customer->phone,
+            'address'    => $customer->address,
+            'zipcode'    => $customer->zipcode,
+            'city'       => $customer->city,
+            'country'    => $customer->country,
         ]);
     }
 }

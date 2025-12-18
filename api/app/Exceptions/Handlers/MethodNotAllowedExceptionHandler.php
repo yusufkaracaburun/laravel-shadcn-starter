@@ -31,7 +31,7 @@ final class MethodNotAllowedExceptionHandler extends AbstractExceptionHandler
 
     protected function getExtraData(Throwable $exception, Request $request): array
     {
-        if (! $exception instanceof MethodNotAllowedHttpException) {
+        if (!$exception instanceof MethodNotAllowedHttpException) {
             return [];
         }
 

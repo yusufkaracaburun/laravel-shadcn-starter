@@ -65,6 +65,10 @@ const props = defineProps<
       <DataTableLoading v-if="loading" />
     </div>
 
-    <DataTablePagination v-if="!loading" :table="table" :server-pagination="props.serverPagination" />
+    <DataTablePagination
+      v-if="!loading"
+      :table="table"
+      :server-pagination="props.serverPagination"
+    />
   </div>
 </template>

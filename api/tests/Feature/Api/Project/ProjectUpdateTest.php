@@ -28,8 +28,8 @@ test('authenticated user can update project', function (): void {
     Sanctum::actingAs($user, ['*']);
 
     $updateData = [
-        'name' => 'Updated Project Name',
-        'status' => 'completed',
+        'name'     => 'Updated Project Name',
+        'status'   => 'completed',
         'progress' => 100,
     ];
 
@@ -43,13 +43,13 @@ test('authenticated user can update project', function (): void {
                     ->where('status', $updateData['status'])
                     ->where('progress', $updateData['progress'])
                     ->etc())
-                ->etc()
+                ->etc(),
         );
 
     $this->assertDatabaseHas('projects', [
-        'id' => $project->id,
-        'name' => $updateData['name'],
-        'status' => $updateData['status'],
+        'id'       => $project->id,
+        'name'     => $updateData['name'],
+        'status'   => $updateData['status'],
         'progress' => $updateData['progress'],
     ]);
 });
@@ -62,7 +62,7 @@ test('project update requires valid data', function (): void {
     Sanctum::actingAs($user, ['*']);
 
     $response = $this->putJson("/api/project/{$project->id}", [
-        'status' => 'invalid-status',
+        'status'   => 'invalid-status',
         'category' => 'invalid-category',
         'progress' => 150, // Invalid: exceeds max
     ]);
@@ -88,7 +88,7 @@ test('project update allows partial updates', function (): void {
                 ->where('code', 200)
                 ->has('data', fn (AssertableJson $json): AssertableJson => $json->where('name', 'Updated Name Only')
                     ->etc())
-                ->etc()
+                ->etc(),
         );
 });
 

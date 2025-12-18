@@ -28,10 +28,10 @@ enum UserStatus: string
     {
         return match ($this) {
             self::REGISTERED => 'warning',
-            self::ACTIVE => 'success',
-            self::INACTIVE => 'danger',
-            self::BLOCKED => 'dark',
-            self::SUSPENDED => 'secondary',
+            self::ACTIVE     => 'success',
+            self::INACTIVE   => 'danger',
+            self::BLOCKED    => 'dark',
+            self::SUSPENDED  => 'secondary',
         };
     }
 
@@ -42,10 +42,10 @@ enum UserStatus: string
     {
         return match ($this) {
             self::REGISTERED => 'badge badge-light-warning',
-            self::ACTIVE => 'badge badge-light-success',
-            self::INACTIVE => 'badge badge-light-danger',
-            self::BLOCKED => 'badge badge-dark',
-            self::SUSPENDED => 'badge badge-light-secondary',
+            self::ACTIVE     => 'badge badge-light-success',
+            self::INACTIVE   => 'badge badge-light-danger',
+            self::BLOCKED    => 'badge badge-dark',
+            self::SUSPENDED  => 'badge badge-light-secondary',
         };
     }
 

@@ -1,9 +1,9 @@
 import type { APIResponse } from '@playwright/test'
 
-import { ApiEndpoints } from '../shared/enums'
+import type { IResponse, LoginCredentials, User } from '../shared/types'
+
 import { BaseClient } from '../shared/core/base-client'
-import type { LoginCredentials, User } from '../shared/types'
-import type { IResponse } from '../shared/types'
+import { ApiEndpoints } from '../shared/enums'
 
 /**
  * Client for authentication-related API endpoints
@@ -62,13 +62,12 @@ export class AuthClient extends BaseClient {
   async logout(): Promise<APIResponse> {
     await this.ensureCsrfCookie()
     const response = await this.post(ApiEndpoints.LOGOUT, {})
-    
+
     // Clear cookies after logout to prevent sending invalid session cookies
     if (response.status() >= 200 && response.status() < 300) {
       this.cookieHandler.clear()
     }
-    
+
     return response
   }
 }
-

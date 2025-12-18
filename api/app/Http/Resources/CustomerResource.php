@@ -20,23 +20,23 @@ final class CustomerResource extends BaseResource
     protected function resolvePayload(Request $request): array
     {
         return [
-            'id' => $this->id,
-            'type' => $this->type,
-            'name' => $this->name,
+            'id'     => $this->id,
+            'type'   => $this->type,
+            'name'   => $this->name,
             'number' => mb_str_pad((string) $this->id, 6, '0', STR_PAD_LEFT),
 
             // Address fields
-            'address' => $this->address,
+            'address'           => $this->address,
             'formatted_address' => $this->formatted_address, // accessor
-            'zipcode' => $this->zipcode,
-            'city' => $this->city,
-            'country' => $this->country,
+            'zipcode'           => $this->zipcode,
+            'city'              => $this->city,
+            'country'           => $this->country,
 
             // Contact / business info
-            'email' => $this->email,
-            'phone' => $this->phone,
-            'kvk_number' => $this->kvk_number,
-            'vat_number' => $this->vat_number,
+            'email'       => $this->email,
+            'phone'       => $this->phone,
+            'kvk_number'  => $this->kvk_number,
+            'vat_number'  => $this->vat_number,
             'iban_number' => $this->iban_number,
 
             // Timestamps

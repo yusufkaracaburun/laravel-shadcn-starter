@@ -1,12 +1,13 @@
 import type { APIResponse } from '@playwright/test'
 
+import type { IResponse } from '../shared/types'
 import type {
   CreateCustomerRequest,
-  UpdateCustomerRequest,
   Customer,
   PaginatedCustomersResponse,
+  UpdateCustomerRequest,
 } from './customer-types'
-import type { IResponse } from '../shared/types'
+
 import { BaseClient } from '../shared/core/base-client'
 
 export class CustomerClient extends BaseClient {
@@ -27,7 +28,10 @@ export class CustomerClient extends BaseClient {
    * @param perPage - Number of items per page (default: 15)
    * Returns IResponse<PaginatedCustomersResponse>
    */
-  async getCustomersTyped(page: number = 1, perPage: number = 15): Promise<IResponse<PaginatedCustomersResponse>> {
+  async getCustomersTyped(
+    page: number = 1,
+    perPage: number = 15,
+  ): Promise<IResponse<PaginatedCustomersResponse>> {
     const response = await this.getCustomers(page, perPage)
     return response.json() as Promise<IResponse<PaginatedCustomersResponse>>
   }
@@ -90,7 +94,10 @@ export class CustomerClient extends BaseClient {
    * @param data - Customer update data
    * Returns IResponse<Customer>
    */
-  async updateCustomerTyped(customerId: number, data: UpdateCustomerRequest): Promise<IResponse<Customer>> {
+  async updateCustomerTyped(
+    customerId: number,
+    data: UpdateCustomerRequest,
+  ): Promise<IResponse<Customer>> {
     const response = await this.updateCustomer(customerId, data)
     return response.json() as Promise<IResponse<Customer>>
   }
@@ -119,4 +126,3 @@ export class CustomerClient extends BaseClient {
     thisClient.csrfHandler.setToken(otherClient.csrfHandler.getToken())
   }
 }
-

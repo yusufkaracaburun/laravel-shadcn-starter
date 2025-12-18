@@ -7,34 +7,34 @@ $hasCredentials = static fn (string $clientIdKey, string $clientSecretKey): bool
 return [
     'providers' => [
         [
-            'slug' => 'github',
+            'slug'   => 'github',
             'active' => true,
-            'icon' => 'mdi:github', // Icons from https://iconify.design/
+            'icon'   => 'mdi:github', // Icons from https://iconify.design/
         ],
         [
-            'slug' => 'google',
+            'slug'   => 'google',
             'active' => false,
-            'icon' => 'mdi:google', // Icons from https://iconify.design/
+            'icon'   => 'mdi:google', // Icons from https://iconify.design/
         ],
         [
-            'slug' => 'x',
+            'slug'   => 'x',
             'active' => false,
-            'icon' => 'ri:twitter-x-line', // Icons from https://iconify.design/
+            'icon'   => 'ri:twitter-x-line', // Icons from https://iconify.design/
         ],
         [
-            'slug' => 'gitlab',
+            'slug'   => 'gitlab',
             'active' => true,
-            'icon' => 'mdi:gitlab', // Icons from https://iconify.design/
+            'icon'   => 'mdi:gitlab', // Icons from https://iconify.design/
         ],
         [
-            'slug' => 'bitbucket',
+            'slug'   => 'bitbucket',
             'active' => false,
-            'icon' => 'mdi:bitbucket', // Icons from https://iconify.design/
+            'icon'   => 'mdi:bitbucket', // Icons from https://iconify.design/
         ],
         [
-            'slug' => 'discord',
+            'slug'   => 'discord',
             'active' => false,
-            'icon' => 'mdi:discord', // Icons from https://iconify.design/
+            'icon'   => 'mdi:discord', // Icons from https://iconify.design/
         ],
     ],
 ];

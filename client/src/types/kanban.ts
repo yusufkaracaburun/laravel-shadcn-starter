@@ -14,8 +14,7 @@ export interface Task {
   createdAt: Date | number | string
 }
 
-export interface NewTask extends Omit<Task, 'id' | 'assignee' | 'createdAt'> {
-}
+export interface NewTask extends Omit<Task, 'id' | 'assignee' | 'createdAt'> {}
 
 export interface Column {
   id: string
@@ -26,4 +25,3 @@ export interface Column {
 export interface BoardState {
   columns: Column[]
 }
-

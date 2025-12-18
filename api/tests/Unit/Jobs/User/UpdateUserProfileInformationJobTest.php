@@ -12,9 +12,9 @@ test('update user profile information job creates oauth connection', function ()
     $user = User::factory()->create();
     $socialiteUser = new SocialiteUser();
     $socialiteUser->map([
-        'id' => '12345',
-        'name' => 'Test User',
-        'email' => $user->email,
+        'id'     => '12345',
+        'name'   => 'Test User',
+        'email'  => $user->email,
         'avatar' => 'https://example.com/avatar.jpg',
     ]);
     $socialiteUser->token = 'access-token';
@@ -41,17 +41,17 @@ test('update user profile information job updates existing oauth connection', fu
     // Arrange
     $user = User::factory()->create();
     OauthConnection::query()->create([
-        'user_id' => $user->id,
-        'provider' => 'github',
+        'user_id'     => $user->id,
+        'provider'    => 'github',
         'provider_id' => '12345',
-        'token' => 'old-token',
+        'token'       => 'old-token',
     ]);
 
     $socialiteUser = new SocialiteUser();
     $socialiteUser->map([
-        'id' => '12345',
-        'name' => 'Updated User',
-        'email' => $user->email,
+        'id'     => '12345',
+        'name'   => 'Updated User',
+        'email'  => $user->email,
         'avatar' => null,
     ]);
     $socialiteUser->token = 'new-token';
@@ -76,9 +76,9 @@ test('update user profile information job sets profile photo path when avatar ex
     $user = User::factory()->create();
     $socialiteUser = new SocialiteUser();
     $socialiteUser->map([
-        'id' => '12345',
-        'name' => 'Test User',
-        'email' => $user->email,
+        'id'     => '12345',
+        'name'   => 'Test User',
+        'email'  => $user->email,
         'avatar' => 'https://example.com/avatar.jpg',
     ]);
     $socialiteUser->token = 'token';
@@ -100,9 +100,9 @@ test('update user profile information job verifies email when not verified', fun
     $user = User::factory()->create(['email_verified_at' => null]);
     $socialiteUser = new SocialiteUser();
     $socialiteUser->map([
-        'id' => '12345',
-        'name' => 'Test User',
-        'email' => $user->email,
+        'id'     => '12345',
+        'name'   => 'Test User',
+        'email'  => $user->email,
         'avatar' => null,
     ]);
     $socialiteUser->token = 'token';
@@ -125,9 +125,9 @@ test('update user profile information job does not overwrite existing email veri
     $user = User::factory()->create(['email_verified_at' => $originalVerifiedAt]);
     $socialiteUser = new SocialiteUser();
     $socialiteUser->map([
-        'id' => '12345',
-        'name' => 'Test User',
-        'email' => $user->email,
+        'id'     => '12345',
+        'name'   => 'Test User',
+        'email'  => $user->email,
         'avatar' => null,
     ]);
     $socialiteUser->token = 'token';

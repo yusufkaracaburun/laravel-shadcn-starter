@@ -16,7 +16,7 @@ final class CompanyService extends BaseService implements CompanyServiceInterfac
     private readonly CompanyRepositoryInterface $companyRepository;
 
     public function __construct(
-        CompanyRepositoryInterface $repository
+        CompanyRepositoryInterface $repository,
     ) {
         $this->setRepository($repository);
         $this->companyRepository = $repository;

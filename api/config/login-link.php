@@ -24,7 +24,7 @@ return [
     |
     */
     'rate_limit_attempts' => (int) env('LOGIN_LINK_RATE_LIMIT_ATTEMPTS', 1),
-    'rate_limit_decay' => (int) env('LOGIN_LINK_RATE_LIMIT_DECAY', 60),
+    'rate_limit_decay'    => (int) env('LOGIN_LINK_RATE_LIMIT_DECAY', 60),
 
     /*
     |--------------------------------------------------------------------------

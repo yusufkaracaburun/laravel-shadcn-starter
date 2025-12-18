@@ -21,13 +21,13 @@ final class OauthConnectionFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => User::factory(),
-            'provider' => 'github',
-            'provider_id' => (string) fake()->randomNumber(8),
-            'data' => ['name' => fake()->name()],
-            'token' => fake()->uuid(),
+            'user_id'       => User::factory(),
+            'provider'      => 'github',
+            'provider_id'   => (string) fake()->randomNumber(8),
+            'data'          => ['name' => fake()->name()],
+            'token'         => fake()->uuid(),
             'refresh_token' => fake()->uuid(),
-            'expires_at' => now()->addHour(),
+            'expires_at'    => now()->addHour(),
         ];
     }
 }

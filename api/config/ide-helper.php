@@ -127,7 +127,7 @@ return [
     'include_helpers' => false,
 
     'helper_files' => [
-        base_path().'/vendor/laravel/framework/src/Illuminate/Support/helpers.php',
+        base_path() . '/vendor/laravel/framework/src/Illuminate/Support/helpers.php',
     ],
 
     /*
@@ -186,7 +186,7 @@ return [
 
     'extra' => [
         'Eloquent' => [Builder::class, Illuminate\Database\Query\Builder::class],
-        'Session' => [Store::class],
+        'Session'  => [Store::class],
     ],
 
     'magic' => [],

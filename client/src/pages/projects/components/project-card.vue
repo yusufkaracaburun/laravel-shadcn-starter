@@ -20,6 +20,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Progress } from '@/components/ui/progress'
+import { StatusBadge } from '@/components/ui/status-badge'
 
 import { categories, statuses } from '../data/data'
 import ProjectDelete from './project-delete.vue'
@@ -54,8 +55,7 @@ function handleSelect(command: TCommand) {
 }
 
 function formatDate(dateString: string | null): string {
-  if (!dateString)
-    return '—'
+  if (!dateString) return '—'
   return new Date(dateString).toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'short',
@@ -63,12 +63,15 @@ function formatDate(dateString: string | null): string {
   })
 }
 
-const status = computed(() => statuses.find(s => s.value === props.project.status))
-const category = computed(() => categories.find(c => c.value === props.project.category))
+const status = computed(() => statuses.find((s) => s.value === props.project.status))
+const category = computed(() => categories.find((c) => c.value === props.project.category))
 </script>
 
 <template>
-  <Card class="hover:shadow-md transition-shadow cursor-pointer" @click="router.push({ name: '/projects/[id]', params: { id: project.id.toString() } })">
+  <Card
+    class="hover:shadow-md transition-shadow cursor-pointer"
+    @click="router.push({ name: '/projects/[id]', params: { id: project.id.toString() } })"
+  >
     <CardHeader>
       <div class="flex items-start justify-between">
         <div class="flex-1 min-w-0">
@@ -87,16 +90,12 @@ const category = computed(() => categories.find(c => c.value === props.project.c
             </UiButton>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuItem @click.stop="handleSelect('view')">
-              View
-            </DropdownMenuItem>
+            <DropdownMenuItem @click.stop="handleSelect('view')"> View </DropdownMenuItem>
             <UiDialogTrigger as-child>
-              <DropdownMenuItem @click.stop="handleSelect('edit')">
-                Edit
-              </DropdownMenuItem>
+              <DropdownMenuItem @click.stop="handleSelect('edit')"> Edit </DropdownMenuItem>
             </UiDialogTrigger>
             <UiDialogTrigger as-child>
-              <DropdownMenuItem @click.stop="handleSelect('delete')" class="text-destructive">
+              <DropdownMenuItem class="text-destructive" @click.stop="handleSelect('delete')">
                 Delete
               </DropdownMenuItem>
             </UiDialogTrigger>
@@ -106,15 +105,13 @@ const category = computed(() => categories.find(c => c.value === props.project.c
     </CardHeader>
     <CardContent class="space-y-4">
       <div class="flex items-center gap-2 flex-wrap">
-        <Badge
+        <StatusBadge
           v-if="status"
-          :class="status.color"
-          variant="secondary"
-          class="flex items-center gap-1"
-        >
-          <component :is="status.icon" class="size-3" />
-          {{ status.label }}
-        </Badge>
+          :status="status.value"
+          type="project"
+          :icon="status.icon"
+          :label="status.label"
+        />
         <Badge v-if="category" variant="outline">
           {{ category.label }}
         </Badge>
@@ -168,4 +165,3 @@ const category = computed(() => categories.find(c => c.value === props.project.c
     </UiDialogContent>
   </UiDialog>
 </template>
-

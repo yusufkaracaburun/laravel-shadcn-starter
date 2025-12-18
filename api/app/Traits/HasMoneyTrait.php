@@ -20,7 +20,7 @@ trait HasMoneyTrait
      */
     public function calculateItemTotals(): void
     {
-        if (! $this instanceof InvoiceItem) {
+        if (!$this instanceof InvoiceItem) {
             return;
         }
 
@@ -44,7 +44,7 @@ trait HasMoneyTrait
      */
     public function calculateInvoiceTotals(): void
     {
-        if (! $this instanceof Invoice) {
+        if (!$this instanceof Invoice) {
             return;
         }
 

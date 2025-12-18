@@ -1,4 +1,5 @@
 import type { Task as KanbanTask } from '@/types/kanban'
+
 import type { Task as TableTask } from '../data/schema'
 
 // Map task statuses to kanban column IDs
@@ -64,4 +65,3 @@ export function tableTasksToKanbanTasks(tasks: TableTask[]): KanbanTask[] {
 export function kanbanTasksToTableTasks(tasks: KanbanTask[]): TableTask[] {
   return tasks.map(kanbanTaskToTableTask)
 }
-

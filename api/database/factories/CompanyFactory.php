@@ -31,13 +31,13 @@ final class CompanyFactory extends Factory
         $employeeSizes = ['1-10', '11-50', '51-200', '201-500', '500+'];
 
         return [
-            'name' => fake()->company(),
-            'email' => fake()->unique()->companyEmail(),
-            'phone' => fake()->phoneNumber(),
-            'industry' => fake()->randomElement($industries),
-            'status' => fake()->randomElement($statuses),
+            'name'      => fake()->company(),
+            'email'     => fake()->unique()->companyEmail(),
+            'phone'     => fake()->phoneNumber(),
+            'industry'  => fake()->randomElement($industries),
+            'status'    => fake()->randomElement($statuses),
             'employees' => fake()->randomElement($employeeSizes),
-            'team_id' => null,
+            'team_id'   => null,
         ];
     }
 

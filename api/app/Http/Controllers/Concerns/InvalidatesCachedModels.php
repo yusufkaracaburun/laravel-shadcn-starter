@@ -14,7 +14,7 @@ trait InvalidatesCachedModels
     protected function invalidateAfterCreate(string $modelType, ?int $teamId = null): void
     {
         match ($modelType) {
-            'team' => $teamId && CacheInvalidationService::onTeamUpdated($teamId),
+            'team'  => $teamId && CacheInvalidationService::onTeamUpdated($teamId),
             default => null,
         };
     }
@@ -25,7 +25,7 @@ trait InvalidatesCachedModels
     protected function invalidateAfterUpdate(string $modelType, ?int $teamId = null): void
     {
         match ($modelType) {
-            'team' => $teamId && CacheInvalidationService::onTeamUpdated($teamId),
+            'team'  => $teamId && CacheInvalidationService::onTeamUpdated($teamId),
             default => null,
         };
     }
@@ -36,7 +36,7 @@ trait InvalidatesCachedModels
     protected function invalidateAfterDelete(string $modelType, ?int $teamId = null): void
     {
         match ($modelType) {
-            'team' => $teamId && CacheInvalidationService::onTeamDeleted($teamId),
+            'team'  => $teamId && CacheInvalidationService::onTeamDeleted($teamId),
             default => null,
         };
     }

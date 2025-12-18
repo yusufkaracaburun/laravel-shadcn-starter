@@ -33,14 +33,14 @@ final class ProjectFactory extends Factory
         $endDate = fake()->dateTimeBetween($startDate, '+6 months');
 
         return [
-            'name' => fake()->sentence(3),
+            'name'        => fake()->sentence(3),
             'description' => fake()->paragraph(),
-            'status' => fake()->randomElement($statuses),
-            'category' => fake()->randomElement($categories),
-            'start_date' => $startDate,
-            'end_date' => $endDate,
-            'progress' => fake()->numberBetween(0, 100),
-            'team_id' => null,
+            'status'      => fake()->randomElement($statuses),
+            'category'    => fake()->randomElement($categories),
+            'start_date'  => $startDate,
+            'end_date'    => $endDate,
+            'progress'    => fake()->numberBetween(0, 100),
+            'team_id'     => null,
         ];
     }
 

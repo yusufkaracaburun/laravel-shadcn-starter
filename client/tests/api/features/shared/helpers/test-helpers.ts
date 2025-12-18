@@ -2,9 +2,10 @@ import type { APIResponse } from '@playwright/test'
 
 import { expect } from '@playwright/test'
 
-import { HttpStatus, isSuccessStatus } from '../enums'
 import type { IResponse, User } from '../types'
+
 import { testUser } from '../../../fixtures/data/user'
+import { HttpStatus, isSuccessStatus } from '../enums'
 
 /**
  * Common test helper functions
@@ -114,4 +115,3 @@ export async function expectIResponse<T>(
 
   return iResponse
 }
-

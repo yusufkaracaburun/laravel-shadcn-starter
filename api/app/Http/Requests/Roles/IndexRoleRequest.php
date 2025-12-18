@@ -24,11 +24,11 @@ final class IndexRoleRequest extends BaseIndexFormRequest
         return array_merge(
             parent::messages(),
             [
-                'filter.id.integer' => 'Filter ID must be a number.',
-                'filter.id.exists' => 'The selected role does not exist.',
-                'filter.name.string' => 'Filter name must be a string.',
+                'filter.id.integer'        => 'Filter ID must be a number.',
+                'filter.id.exists'         => 'The selected role does not exist.',
+                'filter.name.string'       => 'Filter name must be a string.',
                 'filter.is_system.boolean' => 'The system filter must be true or false.',
-            ]
+            ],
         );
     }
 
@@ -42,10 +42,10 @@ final class IndexRoleRequest extends BaseIndexFormRequest
         return array_merge(
             parent::attributes(),
             [
-                'filter.id' => 'role ID filter',
-                'filter.name' => 'name filter',
+                'filter.id'        => 'role ID filter',
+                'filter.name'      => 'name filter',
                 'filter.is_system' => 'system role filter',
-            ]
+            ],
         );
     }
 
@@ -59,10 +59,10 @@ final class IndexRoleRequest extends BaseIndexFormRequest
         return array_merge(
             parent::filterRules(),
             [
-                'filter.id' => 'sometimes|integer|exists:roles,id',
-                'filter.name' => 'sometimes|string|max:255',
+                'filter.id'        => 'sometimes|integer|exists:roles,id',
+                'filter.name'      => 'sometimes|string|max:255',
                 'filter.is_system' => 'sometimes|boolean',
-            ]
+            ],
         );
     }
 

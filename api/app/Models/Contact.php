@@ -63,7 +63,7 @@ final class Contact extends BaseModel
             'id', // Foreign key on customers table
             'customer_id', // Foreign key on invoices table
             'id', // Local key on contacts
-            'id' // Local key on customers
+            'id', // Local key on customers
         );
     }
 
@@ -73,7 +73,7 @@ final class Contact extends BaseModel
     protected function fullName(): Attribute
     {
         return Attribute::make(
-            get: fn (): string => mb_trim("{$this->first_name} {$this->last_name}")
+            get: fn (): string => mb_trim("{$this->first_name} {$this->last_name}"),
         );
     }
 

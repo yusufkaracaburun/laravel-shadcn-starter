@@ -41,10 +41,10 @@ use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
-        web: __DIR__.'/../routes/web.php',
-        api: __DIR__.'/../routes/api.php',
-        commands: __DIR__.'/../routes/console.php',
-        channels: __DIR__.'/../routes/channels.php',
+        web: __DIR__ . '/../routes/web.php',
+        api: __DIR__ . '/../routes/api.php',
+        commands: __DIR__ . '/../routes/console.php',
+        channels: __DIR__ . '/../routes/channels.php',
         health: '/up',
         then: function (): void {
             Route::middleware('api')
@@ -69,11 +69,11 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
 
         $middleware->alias([
-            'role' => RoleMiddleware::class,
-            'permission' => PermissionMiddleware::class,
+            'role'               => RoleMiddleware::class,
+            'permission'         => PermissionMiddleware::class,
             'role_or_permission' => RoleOrPermissionMiddleware::class,
-            'team' => EnsureTeamIsSet::class,
-            'cache.response' => CacheApiResponse::class,
+            'team'               => EnsureTeamIsSet::class,
+            'cache.response'     => CacheApiResponse::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
@@ -101,7 +101,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $exceptions->report(function (OAuthAccountLinkingException $e): void {
             // Log with warning level since these are user-facing errors, not system errors
             Log::warning('OAuth account linking failed', [
-                'message' => $e->getMessage(),
+                'message'   => $e->getMessage(),
                 'exception' => $e,
             ]);
         });
@@ -112,7 +112,7 @@ return Application::configure(basePath: dirname(__DIR__))
         // Render API exceptions using the new handler system
         $exceptions->render(function (Throwable $e, $request) use ($factory): ?\Illuminate\Http\JsonResponse {
             // Only handle API requests
-            if (! $request->expectsJson() && ! $request->is('api/*')) {
+            if (!$request->expectsJson() && !$request->is('api/*')) {
                 return null;
             }
 

@@ -50,7 +50,9 @@ export interface PaginatedProjectsResponse {
  * @param sorting - Array of sorting objects from TanStack Table
  * @returns Sort string for Spatie QueryBuilder (e.g., "name" or "-name" or "name,-email")
  */
-function convertSortingToQueryString(sorting: Array<{ id: string, desc: boolean }>): string | undefined {
+function convertSortingToQueryString(
+  sorting: Array<{ id: string; desc: boolean }>,
+): string | undefined {
   if (!sorting || sorting.length === 0) {
     return undefined
   }
@@ -73,7 +75,7 @@ function convertSortingToQueryString(sorting: Array<{ id: string, desc: boolean 
 export function useGetProjectsQuery(
   page: MaybeRef<number> = 1,
   pageSize: MaybeRef<number> = 10,
-  sorting: MaybeRef<Array<{ id: string, desc: boolean }>> = [],
+  sorting: MaybeRef<Array<{ id: string; desc: boolean }>> = [],
 ) {
   const { axiosInstance } = useAxios()
 
@@ -210,7 +212,11 @@ export function useUpdateProjectMutation() {
   const { axiosInstance } = useAxios()
   const queryClient = useQueryClient()
 
-  return useMutation<IResponse<Project>, AxiosError, { projectId: number, data: UpdateProjectRequest }>({
+  return useMutation<
+    IResponse<Project>,
+    AxiosError,
+    { projectId: number; data: UpdateProjectRequest }
+  >({
     mutationFn: async ({ projectId, data }): Promise<IResponse<Project>> => {
       const response = await axiosInstance.put(`/api/project/${projectId}`, data)
       return response.data

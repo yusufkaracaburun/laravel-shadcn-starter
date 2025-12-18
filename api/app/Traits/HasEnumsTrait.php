@@ -44,7 +44,7 @@ trait HasEnumsTrait
     {
         return collect(self::cases())
             ->map(fn (self $case): array => [
-                'id' => $case->value,
+                'id'    => $case->value,
                 'value' => $case->value,
                 'label' => method_exists($case, 'label') ? $case->label() : $case->value,
                 'color' => method_exists($case, 'color') ? $case->color() : null,
@@ -76,7 +76,7 @@ trait HasEnumsTrait
 
         return $case
             ? [
-                'id' => $case->value,
+                'id'    => $case->value,
                 'value' => $case->value,
                 'label' => method_exists($case, 'label') ? $case->label() : $case->value,
                 'color' => method_exists($case, 'color') ? $case->color() : null,

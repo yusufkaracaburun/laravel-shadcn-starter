@@ -17,6 +17,6 @@ final class Role extends SpatieRole
     protected $casts = [
         'updated_at' => 'datetime',
         'created_at' => 'datetime',
-        'is_system' => 'boolean',
+        'is_system'  => 'boolean',
     ];
 }

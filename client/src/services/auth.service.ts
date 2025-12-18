@@ -37,8 +37,8 @@ export function useLoginMutation() {
 
   return useMutation<LoginResponse, AxiosError, LoginRequest>({
     mutationFn: async (credentials: LoginRequest): Promise<LoginResponse> => {
-      await getCsrfCookie();
-      
+      await getCsrfCookie()
+
       const response = await axiosInstance.post('/login', credentials)
       return response.data
     },

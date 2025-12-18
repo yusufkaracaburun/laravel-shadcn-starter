@@ -36,9 +36,9 @@ test('login link store creates magic link for valid email', function (): void {
     // Arrange
     Config::set('login-link.enabled', true);
     Notification::fake();
-    $email = 'test-'.uniqid().'@example.com';
+    $email = 'test-' . uniqid() . '@example.com';
     $user = User::factory()->create(['email' => $email]);
-    RateLimiter::clear('login-link:'.$email);
+    RateLimiter::clear('login-link:' . $email);
 
     // Act
     $response = $this->from('/auth/login')->post('/auth/login-link', [
@@ -107,9 +107,9 @@ test('login link store respects rate limiting', function (): void {
     Config::set('login-link.enabled', true);
     Config::set('login-link.rate_limit_attempts', 1);
     Config::set('login-link.rate_limit_decay', 60);
-    $email = 'ratelimit-'.uniqid().'@example.com';
+    $email = 'ratelimit-' . uniqid() . '@example.com';
     $user = User::factory()->create(['email' => $email]);
-    $key = 'login-link:'.$email;
+    $key = 'login-link:' . $email;
     // Hit the rate limiter to simulate a previous request
     RateLimiter::hit($key, 60);
 
@@ -131,8 +131,8 @@ test('login link login authenticates user with valid token', function (): void {
     RateLimiter::clear('login-link:127.0.0.1');
     $user = User::factory()->create();
     $loginLink = LoginLink::query()->create([
-        'user_id' => $user->id,
-        'token' => 'valid-token-123',
+        'user_id'    => $user->id,
+        'token'      => 'valid-token-123',
         'expires_at' => now()->addMinutes(15),
     ]);
     $signedUrl = URL::signedRoute('login-link.login', ['token' => 'valid-token-123']);
@@ -156,8 +156,8 @@ test('login link login fails with expired token', function (): void {
     RateLimiter::clear('login-link:127.0.0.1');
     $user = User::factory()->create();
     LoginLink::query()->create([
-        'user_id' => $user->id,
-        'token' => 'expired-token',
+        'user_id'    => $user->id,
+        'token'      => 'expired-token',
         'expires_at' => now()->subMinute(),
     ]);
     $signedUrl = URL::signedRoute('login-link.login', ['token' => 'expired-token']);
@@ -179,10 +179,10 @@ test('login link login fails with used token', function (): void {
     RateLimiter::clear('login-link:127.0.0.1');
     $user = User::factory()->create();
     LoginLink::query()->create([
-        'user_id' => $user->id,
-        'token' => 'used-token',
+        'user_id'    => $user->id,
+        'token'      => 'used-token',
         'expires_at' => now()->addMinutes(15),
-        'used_at' => now()->subMinute(),
+        'used_at'    => now()->subMinute(),
     ]);
     $signedUrl = URL::signedRoute('login-link.login', ['token' => 'used-token']);
 

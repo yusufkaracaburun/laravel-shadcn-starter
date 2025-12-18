@@ -132,8 +132,7 @@ const filterRange = computed(() => {
     let daysToSubtract = 90
     if (timeRange.value === '30d') {
       daysToSubtract = 30
-    }
-    else if (timeRange.value === '7d') {
+    } else if (timeRange.value === '7d') {
       daysToSubtract = 7
     }
     const startDate = new Date(referenceDate)
@@ -144,12 +143,13 @@ const filterRange = computed(() => {
 </script>
 
 <template>
-  <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4" data-testid="analytics-content_metrics_grid">
+  <div
+    class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4"
+    data-testid="analytics-content_metrics_grid"
+  >
     <UiCard data-testid="analytics-content_page-views_card">
       <UiCardHeader class="flex flex-row items-center justify-between pb-2 space-y-0">
-        <UiCardTitle class="text-sm font-medium">
-          Page Views
-        </UiCardTitle>
+        <UiCardTitle class="text-sm font-medium"> Page Views </UiCardTitle>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"
@@ -165,19 +165,13 @@ const filterRange = computed(() => {
         </svg>
       </UiCardHeader>
       <UiCardContent>
-        <div class="text-2xl font-bold">
-          124,580
-        </div>
-        <p class="text-xs text-muted-foreground">
-          +15.3% from last month
-        </p>
+        <div class="text-2xl font-bold">124,580</div>
+        <p class="text-xs text-muted-foreground">+15.3% from last month</p>
       </UiCardContent>
     </UiCard>
     <UiCard data-testid="analytics-content_unique-visitors_card">
       <UiCardHeader class="flex flex-row items-center justify-between pb-2 space-y-0">
-        <UiCardTitle class="text-sm font-medium">
-          Unique Visitors
-        </UiCardTitle>
+        <UiCardTitle class="text-sm font-medium"> Unique Visitors </UiCardTitle>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"
@@ -194,19 +188,13 @@ const filterRange = computed(() => {
         </svg>
       </UiCardHeader>
       <UiCardContent>
-        <div class="text-2xl font-bold">
-          78,420
-        </div>
-        <p class="text-xs text-muted-foreground">
-          +12.8% from last month
-        </p>
+        <div class="text-2xl font-bold">78,420</div>
+        <p class="text-xs text-muted-foreground">+12.8% from last month</p>
       </UiCardContent>
     </UiCard>
     <UiCard data-testid="analytics-content_bounce-rate_card">
       <UiCardHeader class="flex flex-row items-center justify-between pb-2 space-y-0">
-        <UiCardTitle class="text-sm font-medium">
-          Bounce Rate
-        </UiCardTitle>
+        <UiCardTitle class="text-sm font-medium"> Bounce Rate </UiCardTitle>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"
@@ -222,19 +210,13 @@ const filterRange = computed(() => {
         </svg>
       </UiCardHeader>
       <UiCardContent>
-        <div class="text-2xl font-bold">
-          42.5%
-        </div>
-        <p class="text-xs text-muted-foreground">
-          -3.2% from last month
-        </p>
+        <div class="text-2xl font-bold">42.5%</div>
+        <p class="text-xs text-muted-foreground">-3.2% from last month</p>
       </UiCardContent>
     </UiCard>
     <UiCard data-testid="analytics-content_avg-session_card">
       <UiCardHeader class="flex flex-row items-center justify-between pb-2 space-y-0">
-        <UiCardTitle class="text-sm font-medium">
-          Avg Session Duration
-        </UiCardTitle>
+        <UiCardTitle class="text-sm font-medium"> Avg Session Duration </UiCardTitle>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"
@@ -250,12 +232,8 @@ const filterRange = computed(() => {
         </svg>
       </UiCardHeader>
       <UiCardContent>
-        <div class="text-2xl font-bold">
-          3m 24s
-        </div>
-        <p class="text-xs text-muted-foreground">
-          +8.5% from last month
-        </p>
+        <div class="text-2xl font-bold">3m 24s</div>
+        <p class="text-xs text-muted-foreground">+8.5% from last month</p>
       </UiCardContent>
     </UiCard>
   </div>
@@ -265,7 +243,9 @@ const filterRange = computed(() => {
       <CardHeader class="flex items-center gap-2 space-y-0 border-b py-5 sm:flex-row">
         <div class="grid flex-1 gap-1">
           <CardTitle>Analytics Overview</CardTitle>
-          <CardDescription> Showing page views and unique visitors for the last 3 months </CardDescription>
+          <CardDescription>
+            Showing page views and unique visitors for the last 3 months
+          </CardDescription>
         </div>
         <Select v-model="timeRange" data-testid="analytics-content_time-range_select">
           <SelectTrigger
@@ -275,20 +255,18 @@ const filterRange = computed(() => {
             <SelectValue placeholder="Last 3 months" />
           </SelectTrigger>
           <SelectContent class="rounded-xl">
-            <SelectItem value="90d" class="rounded-lg">
-              Last 3 months
-            </SelectItem>
-            <SelectItem value="30d" class="rounded-lg">
-              Last 30 days
-            </SelectItem>
-            <SelectItem value="7d" class="rounded-lg">
-              Last 7 days
-            </SelectItem>
+            <SelectItem value="90d" class="rounded-lg"> Last 3 months </SelectItem>
+            <SelectItem value="30d" class="rounded-lg"> Last 30 days </SelectItem>
+            <SelectItem value="7d" class="rounded-lg"> Last 7 days </SelectItem>
           </SelectContent>
         </Select>
       </CardHeader>
       <CardContent class="px-2 pt-4 sm:px-6 sm:pt-6 pb-4">
-        <ChartContainer :config="analyticsChartConfig" class="aspect-auto h-[250px] w-full" :cursor="false">
+        <ChartContainer
+          :config="analyticsChartConfig"
+          class="aspect-auto h-[250px] w-full"
+          :cursor="false"
+        >
           <VisXYContainer
             :data="filterRange"
             :svg-defs="svgDefs"
@@ -298,14 +276,20 @@ const filterRange = computed(() => {
             <VisArea
               :x="(d: AnalyticsData) => d.date"
               :y="[(d: AnalyticsData) => d.uniqueVisitors, (d: AnalyticsData) => d.pageViews]"
-              :color="(_d: AnalyticsData, i: number) => ['url(#fillUniqueVisitors)', 'url(#fillPageViews)'][i]"
+              :color="
+                (_d: AnalyticsData, i: number) =>
+                  ['url(#fillUniqueVisitors)', 'url(#fillPageViews)'][i]
+              "
               :opacity="0.6"
             />
             <VisLine
               :x="(d: AnalyticsData) => d.date"
               :y="[(d: AnalyticsData) => d.uniqueVisitors, (d: AnalyticsData) => d.pageViews]"
               :color="
-                (_d: AnalyticsData, i: number) => [analyticsChartConfig.uniqueVisitors.color, analyticsChartConfig.pageViews.color][i]
+                (_d: AnalyticsData, i: number) =>
+                  [analyticsChartConfig.uniqueVisitors.color, analyticsChartConfig.pageViews.color][
+                    i
+                  ]
               "
               :line-width="1"
             />
@@ -340,7 +324,10 @@ const filterRange = computed(() => {
                 })
               "
               :color="
-                (_d: AnalyticsData, i: number) => [analyticsChartConfig.uniqueVisitors.color, analyticsChartConfig.pageViews.color][i % 2]
+                (_d: AnalyticsData, i: number) =>
+                  [analyticsChartConfig.uniqueVisitors.color, analyticsChartConfig.pageViews.color][
+                    i % 2
+                  ]
               "
             />
           </VisXYContainer>

@@ -7,7 +7,8 @@ export type PriorityValue = 'low' | 'medium' | 'high'
 export type ProjectStatusValue = 'active' | 'completed' | 'on-hold' | 'cancelled'
 export type TaskStatusValue = 'backlog' | 'todo' | 'in progress' | 'done' | 'canceled'
 export type CompanyStatusValue = 'active' | 'inactive' | 'pending'
-
+export type InvoiceStatusValue = 'draft' | 'sent' | 'paid' | 'overdue' | 'cancelled'
+export type PaymentStatusValue = 'pending' | 'paid' | 'failed' | 'refunded' | 'cancelled'
 /**
  * Get priority color class
  * Matches the kanban view color scheme
@@ -91,10 +92,55 @@ export function getCompanyStatusColor(status: CompanyStatusValue | string | unde
 }
 
 /**
+ * Get invoice status color class
+ * Returns badge-style background colors for invoice statuses
+ */
+export function getInvoiceStatusColor(status: InvoiceStatusValue | string | undefined): string {
+  if (!status) return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300'
+
+  switch (status.toLowerCase()) {
+    case 'draft':
+      return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300'
+    case 'sent':
+      return 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300'
+    case 'paid':
+      return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300'
+    case 'overdue':
+      return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300'
+    case 'cancelled':
+      return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300'
+    default:
+      return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300'
+  }
+}
+
+export function getPaymentStatusColor(status: PaymentStatusValue | string | undefined): string {
+  if (!status) return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300'
+
+  switch (status.toLowerCase()) {
+    case 'pending':
+      return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300'
+    case 'paid':
+      return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300'
+    case 'failed':
+      return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300'
+    case 'refunded':
+      return 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300'
+    case 'cancelled':
+      return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300'
+    default:
+      return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300'
+  }
+}
+
+/**
  * Generic status color getter that tries to match project or task status
  * Falls back to a default color if no match is found
  */
-export function getStatusColor(status: string | undefined, type: 'project' | 'task' = 'project'): string {
+export function getStatusColor(
+  status: string | undefined,
+  type: 'project' | 'task' = 'project',
+): string {
   if (!status) return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300'
 
   if (type === 'project') {
@@ -102,4 +148,3 @@ export function getStatusColor(status: string | undefined, type: 'project' | 'ta
   }
   return getTaskStatusColor(status as TaskStatusValue)
 }
-

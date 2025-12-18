@@ -60,7 +60,7 @@ test('projects list supports pagination', function (): void {
                 ->where('data.current_page', 1)
                 ->where('data.per_page', 10)
                 ->where('data.total', 15)
-                ->etc()
+                ->etc(),
         );
 });
 

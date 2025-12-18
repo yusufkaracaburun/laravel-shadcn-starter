@@ -8,7 +8,7 @@ const breadcrumbs = computed(() => {
   const path = route.path
   const segments = path.split('/').filter(Boolean)
 
-  const crumbs: Array<{ label: string, path: string }> = []
+  const crumbs: Array<{ label: string; path: string }> = []
 
   // Always start with Overview (Dashboard) as first breadcrumb
   if (segments.length === 0 || segments[0] === 'dashboard') {
@@ -32,15 +32,15 @@ const breadcrumbs = computed(() => {
 
     // Map common paths to better labels
     const labelMap: Record<string, string> = {
-      'dashboard': 'Overview',
-      'users': 'Customers',
-      'companies': 'Products',
-      'settings': 'Settings',
-      'account': 'Account',
-      'notifications': 'Notifications',
-      'appearance': 'Appearance',
-      'display': 'Display',
-      'billing': 'Billing',
+      dashboard: 'Overview',
+      users: 'Customers',
+      companies: 'Products',
+      settings: 'Settings',
+      account: 'Account',
+      notifications: 'Notifications',
+      appearance: 'Appearance',
+      display: 'Display',
+      billing: 'Billing',
       'sign-in': 'Sign In',
       'sign-up': 'Sign Up',
       'forgot-password': 'Forgot Password',
@@ -76,4 +76,3 @@ const breadcrumbs = computed(() => {
     </UiBreadcrumbList>
   </UiBreadcrumb>
 </template>
-

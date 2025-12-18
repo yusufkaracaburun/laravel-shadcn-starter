@@ -33,8 +33,8 @@ enum InvoiceStatus: string
     {
         return match ($this) {
             self::DRAFT => 'primary',
-            self::SENT => 'info',
-            self::PAID => 'success',
+            self::SENT  => 'info',
+            self::PAID  => 'success',
             self::UNPAID, self::CANCELLED => 'danger',
             self::CREDITED => 'light',
             self::REFUNDED => 'secondary',
@@ -49,8 +49,8 @@ enum InvoiceStatus: string
     {
         return match ($this) {
             self::DRAFT => 'badge badge-light-primary',
-            self::SENT => 'badge badge-light-info',
-            self::PAID => 'badge badge-light-success',
+            self::SENT  => 'badge badge-light-info',
+            self::PAID  => 'badge badge-light-success',
             self::UNPAID, self::CANCELLED => 'badge badge-light-danger',
             self::CREDITED => 'badge badge-light-light',
             self::REFUNDED => 'badge badge-light-secondary',

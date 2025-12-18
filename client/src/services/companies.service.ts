@@ -49,7 +49,9 @@ export interface PaginatedCompaniesResponse {
  * @param sorting - Array of sorting objects from TanStack Table
  * @returns Sort string for Spatie QueryBuilder (e.g., "name" or "-name" or "name,-email")
  */
-function convertSortingToQueryString(sorting: Array<{ id: string, desc: boolean }>): string | undefined {
+function convertSortingToQueryString(
+  sorting: Array<{ id: string; desc: boolean }>,
+): string | undefined {
   if (!sorting || sorting.length === 0) {
     return undefined
   }
@@ -72,7 +74,7 @@ function convertSortingToQueryString(sorting: Array<{ id: string, desc: boolean 
 export function useGetCompaniesQuery(
   page: MaybeRef<number> = 1,
   pageSize: MaybeRef<number> = 10,
-  sorting: MaybeRef<Array<{ id: string, desc: boolean }>> = [],
+  sorting: MaybeRef<Array<{ id: string; desc: boolean }>> = [],
 ) {
   const { axiosInstance } = useAxios()
 
@@ -207,7 +209,11 @@ export function useUpdateCompanyMutation() {
   const { axiosInstance } = useAxios()
   const queryClient = useQueryClient()
 
-  return useMutation<IResponse<Company>, AxiosError, { companyId: number, data: UpdateCompanyRequest }>({
+  return useMutation<
+    IResponse<Company>,
+    AxiosError,
+    { companyId: number; data: UpdateCompanyRequest }
+  >({
     mutationFn: async ({ companyId, data }): Promise<IResponse<Company>> => {
       const response = await axiosInstance.put(`/api/company/${companyId}`, data)
       return response.data

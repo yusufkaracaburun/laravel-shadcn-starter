@@ -25,7 +25,7 @@ final class PaymentController extends Controller
     use UsesQueryBuilder;
 
     public function __construct(
-        private readonly PaymentServiceInterface $paymentService
+        private readonly PaymentServiceInterface $paymentService,
     ) {}
 
     /**

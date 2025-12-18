@@ -1,4 +1,5 @@
 import type { Task as KanbanTask } from '@/types/kanban'
+
 import type { Project } from '../data/schema'
 
 // Map project statuses to kanban column IDs
@@ -41,8 +42,16 @@ export function kanbanTaskToProject(task: KanbanTask, originalProject?: Project)
     description: task.description || null,
     status: columnIdToStatus[task.status || ''] || task.status || 'active',
     category: task.labels?.[0] || originalProject?.category || 'other',
-    end_date: task.dueDate ? (typeof task.dueDate === 'string' ? task.dueDate : new Date(task.dueDate).toISOString().split('T')[0]) : null,
-    endDate: task.dueDate ? (typeof task.dueDate === 'string' ? task.dueDate : new Date(task.dueDate).toISOString().split('T')[0]) : null,
+    end_date: task.dueDate
+      ? typeof task.dueDate === 'string'
+        ? task.dueDate
+        : new Date(task.dueDate).toISOString().split('T')[0]
+      : null,
+    endDate: task.dueDate
+      ? typeof task.dueDate === 'string'
+        ? task.dueDate
+        : new Date(task.dueDate).toISOString().split('T')[0]
+      : null,
   }
 
   // Preserve original project data if provided
@@ -68,7 +77,7 @@ export function projectsToKanbanTasks(projects: Project[]): KanbanTask[] {
  */
 export function kanbanTasksToProjects(tasks: KanbanTask[], originalProjects: Project[]): Project[] {
   return tasks.map((task) => {
-    const originalProject = originalProjects.find(p => p.id.toString() === task.id)
+    const originalProject = originalProjects.find((p) => p.id.toString() === task.id)
     const partialProject = kanbanTaskToProject(task, originalProject)
     return {
       ...originalProject!,

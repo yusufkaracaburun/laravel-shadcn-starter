@@ -17,7 +17,7 @@ final class CustomerService extends BaseService implements CustomerServiceInterf
     private readonly CustomerRepositoryInterface $customerRepository;
 
     public function __construct(
-        CustomerRepositoryInterface $repo
+        CustomerRepositoryInterface $repo,
     ) {
         $this->setRepository($repo);
         $this->customerRepository = $repo;
@@ -73,5 +73,12 @@ final class CustomerService extends BaseService implements CustomerServiceInterf
         } catch (ModelNotFoundException) {
             throw new ModelNotFoundException('Customer not found');
         }
+    }
+
+    public function getAll(): CustomerCollection
+    {
+        $customers = $this->customerRepository->all();
+
+        return new CustomerCollection($customers);
     }
 }

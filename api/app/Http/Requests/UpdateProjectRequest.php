@@ -27,13 +27,13 @@ final class UpdateProjectRequest extends FormRequest
         $this->route('project');
 
         return [
-            'name' => ['sometimes', 'required', 'string', 'max:255'],
+            'name'        => ['sometimes', 'required', 'string', 'max:255'],
             'description' => ['sometimes', 'nullable', 'string'],
-            'status' => ['sometimes', 'required', 'string', 'in:active,on-hold,completed,cancelled'],
-            'category' => ['sometimes', 'required', 'string', 'in:design,development,marketing,support,other'],
-            'start_date' => ['sometimes', 'nullable', 'date'],
-            'end_date' => ['sometimes', 'nullable', 'date', 'after_or_equal:start_date'],
-            'progress' => ['sometimes', 'nullable', 'integer', 'min:0', 'max:100'],
+            'status'      => ['sometimes', 'required', 'string', 'in:active,on-hold,completed,cancelled'],
+            'category'    => ['sometimes', 'required', 'string', 'in:design,development,marketing,support,other'],
+            'start_date'  => ['sometimes', 'nullable', 'date'],
+            'end_date'    => ['sometimes', 'nullable', 'date', 'after_or_equal:start_date'],
+            'progress'    => ['sometimes', 'nullable', 'integer', 'min:0', 'max:100'],
         ];
     }
 }

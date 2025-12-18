@@ -80,8 +80,8 @@ final class Project extends BaseModel
     {
         return [
             'start_date' => 'date',
-            'end_date' => 'date',
-            'progress' => 'integer',
+            'end_date'   => 'date',
+            'progress'   => 'integer',
         ];
     }
 }

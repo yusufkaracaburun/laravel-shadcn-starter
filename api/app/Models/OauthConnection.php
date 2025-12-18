@@ -27,7 +27,7 @@ final class OauthConnection extends BaseModel
     protected function casts(): array
     {
         return [
-            'data' => AsCollection::class,
+            'data'       => AsCollection::class,
             'expires_at' => 'datetime',
         ];
     }

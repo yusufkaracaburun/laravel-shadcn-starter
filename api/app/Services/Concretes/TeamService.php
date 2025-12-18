@@ -16,7 +16,7 @@ final class TeamService extends BaseService implements TeamServiceInterface
     private readonly TeamRepositoryInterface $teamRepository;
 
     public function __construct(
-        TeamRepositoryInterface $repository
+        TeamRepositoryInterface $repository,
     ) {
         $this->setRepository($repository);
         $this->teamRepository = $repository;

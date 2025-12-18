@@ -22,7 +22,7 @@ final class TeamCache
     {
         return self::cache(self::tags($teamId))->get(
             self::key($teamId, $key),
-            $default
+            $default,
         );
     }
 
@@ -36,7 +36,7 @@ final class TeamCache
         return self::cache(self::tags($teamId))->put(
             self::key($teamId, $key),
             $value,
-            $ttl
+            $ttl,
         );
     }
 
@@ -50,7 +50,7 @@ final class TeamCache
         return self::cache(self::tags($teamId))->remember(
             self::key($teamId, $key),
             $ttl,
-            $callback
+            $callback,
         );
     }
 
@@ -60,7 +60,7 @@ final class TeamCache
     public static function forget(int $teamId, string $key): bool
     {
         return self::cache(self::tags($teamId))->forget(
-            self::key($teamId, $key)
+            self::key($teamId, $key),
         );
     }
 

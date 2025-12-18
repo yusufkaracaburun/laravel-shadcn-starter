@@ -58,4 +58,3 @@ export interface UpdateProjectRequest {
   end_date?: string | null
   progress?: number | null
 }
-

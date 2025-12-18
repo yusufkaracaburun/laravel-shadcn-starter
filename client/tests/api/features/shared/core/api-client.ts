@@ -1,10 +1,10 @@
 import type { APIRequestContext } from '@playwright/test'
 
 import { AuthClient } from '../../auth/auth-client'
-import { UserClient } from '../../users/user-client'
-import { ProjectClient } from '../../projects/project-client'
-import { ItemClient } from '../../items/item-client'
 import { CustomerClient } from '../../customers/customer-client'
+import { ItemClient } from '../../items/item-client'
+import { ProjectClient } from '../../projects/project-client'
+import { UserClient } from '../../users/user-client'
 
 /**
  * Facade class providing unified interface to all API clients
@@ -25,4 +25,3 @@ export class ApiClient {
     this.customers = new CustomerClient(request)
   }
 }
-

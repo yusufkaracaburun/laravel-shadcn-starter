@@ -23,20 +23,29 @@ final class StoreInvoiceRequest extends BaseFormRequest
     public function rules(): array
     {
         return [
-            'customer_id' => ['required', 'exists:customers,id'],
-            'invoice_number' => ['nullable', 'string', 'max:50', 'unique:invoices,invoice_number'],
-            'date' => ['required', 'date'],
-            'due_days' => ['nullable', 'integer', 'min:1', 'max:365'],
-            'date_due' => ['nullable', 'date', 'after_or_equal:date'],
-            'status' => 'required|in:'.implode(',', InvoiceStatus::values()),
+            'customer_id'    => ['required', 'exists:customers,id'],
+            'invoice_number' => ['required', 'string', 'max:50', 'unique:invoices,invoice_number'],
+            'date'           => ['required', 'date'],
+            'due_days'       => ['required', 'integer', 'min:1', 'max:365'],
+            'date_due'       => ['nullable', 'date', 'after_or_equal:date'],
+            'status'         => 'required|in:' . implode(',', InvoiceStatus::values()),
 
-            'subtotal' => ['nullable', 'numeric', 'min:0'],
-            'total_vat_0' => ['nullable', 'numeric', 'min:0'],
-            'total_vat_9' => ['nullable', 'numeric', 'min:0'],
-            'total_vat_21' => ['nullable', 'numeric', 'min:0'],
-            'total' => ['nullable', 'numeric', 'min:0'],
+            'subtotal'     => ['required', 'numeric', 'min:0'],
+            'total_vat_0'  => ['required', 'numeric', 'min:0'],
+            'total_vat_9'  => ['required', 'numeric', 'min:0'],
+            'total_vat_21' => ['required', 'numeric', 'min:0'],
+            'total'        => ['required', 'numeric', 'min:0'],
 
             'notes' => ['nullable', 'string', 'max:2000'],
+
+            // Invoice items
+            'items'               => ['required', 'array', 'min:1'],
+            'items.*.name'        => ['required', 'string', 'max:150'],
+            'items.*.description' => ['nullable', 'string', 'max:2000'],
+            'items.*.quantity'    => ['required_with:items', 'numeric', 'min:0.00001'],
+            'items.*.unit_price'  => ['required_with:items', 'numeric', 'min:0'],
+            'items.*.vat_rate'    => ['required_with:items', 'numeric', 'min:0', 'max:100'],
+            'items.*.sort_order'  => ['nullable', 'integer', 'min:0'],
         ];
     }
 
@@ -48,13 +57,13 @@ final class StoreInvoiceRequest extends BaseFormRequest
     public function attributes(): array
     {
         return array_merge(parent::attributes(), [
-            'customer_id' => 'customer',
+            'customer_id'    => 'customer',
             'invoice_number' => 'invoice number',
-            'date' => 'invoice date',
-            'date_due' => 'due date',
-            'due_days' => 'number of due days',
-            'subtotal' => 'subtotal',
-            'total' => 'total amount',
+            'date'           => 'invoice date',
+            'date_due'       => 'due date',
+            'due_days'       => 'number of due days',
+            'subtotal'       => 'subtotal',
+            'total'          => 'total amount',
         ]);
     }
 
@@ -67,7 +76,7 @@ final class StoreInvoiceRequest extends BaseFormRequest
     {
         return array_merge(parent::messages(), [
             'date_due.after_or_equal' => 'The due date must be after or equal to the invoice date.',
-            'status.in' => 'The status must be one of: '.implode(', ', InvoiceStatus::values()),
+            'status.in'               => 'The status must be one of: ' . implode(', ', InvoiceStatus::values()),
         ]);
     }
 }

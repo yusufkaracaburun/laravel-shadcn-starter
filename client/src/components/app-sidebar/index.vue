@@ -19,7 +19,7 @@ const sidebarUser = computed<SidebarUser>(() => {
     return {
       name: authUser.value.name,
       email: authUser.value.email,
-      avatar: authUser.value.profile_photo_url || 'https://i.pravatar.cc/300'
+      avatar: authUser.value.profile_photo_url || 'https://i.pravatar.cc/300',
     }
   }
   return sidebarData.user

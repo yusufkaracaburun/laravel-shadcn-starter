@@ -37,7 +37,7 @@ final class CustomerSeeder extends Seeder
 
                 if ($contact) {
                     $customer->contacts()->attach($contact->id, [
-                        'role' => 'contactpersoon',
+                        'role'       => 'contactpersoon',
                         'is_primary' => true,
                     ]);
                 }
@@ -53,7 +53,7 @@ final class CustomerSeeder extends Seeder
 
                 foreach ($contacts as $index => $contact) {
                     $customer->contacts()->attach($contact->id, [
-                        'role' => $index === 0 ? 'directeur' : 'medewerker',
+                        'role'       => $index === 0 ? 'directeur' : 'medewerker',
                         'is_primary' => $index === 0,
                     ]);
                 }
@@ -74,7 +74,7 @@ final class CustomerSeeder extends Seeder
 
                 if ($contact) {
                     $customer->contacts()->attach($contact->id, [
-                        'role' => 'directeur',
+                        'role'       => 'directeur',
                         'is_primary' => true,
                     ]);
                 }
@@ -85,9 +85,9 @@ final class CustomerSeeder extends Seeder
                     ->create()
                     ->each(
                         fn (Contact $contact) => $customer->contacts()->attach($contact->id, [
-                            'role' => 'medewerker',
+                            'role'       => 'medewerker',
                             'is_primary' => false,
-                        ])
+                        ]),
                     );
             });
     }

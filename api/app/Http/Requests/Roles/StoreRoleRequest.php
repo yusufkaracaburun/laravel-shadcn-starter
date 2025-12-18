@@ -29,8 +29,8 @@ final class StoreRoleRequest extends BaseFormRequest
                 'max:255',
                 Rule::unique('roles', 'name'),
             ],
-            'is_system' => ['boolean'],
-            'permission_ids' => ['nullable', 'array'],
+            'is_system'        => ['boolean'],
+            'permission_ids'   => ['nullable', 'array'],
             'permission_ids.*' => ['integer', 'exists:permissions,id'],
         ];
     }
@@ -43,8 +43,8 @@ final class StoreRoleRequest extends BaseFormRequest
     public function messages(): array
     {
         return array_merge(parent::messages(), [
-            'name.required' => 'Role name is required',
-            'name.unique' => 'A role with this name already exists',
+            'name.required'           => 'Role name is required',
+            'name.unique'             => 'A role with this name already exists',
             'permission_ids.*.exists' => 'One or more permission IDs are invalid',
         ]);
     }

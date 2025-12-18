@@ -6,6 +6,7 @@ import {
   Building2,
   Component,
   CreditCard,
+  FileText,
   FolderKanban,
   LayoutDashboard,
   ListTodo,
@@ -72,14 +73,14 @@ export function useSidebar() {
           icon: ListTodo,
         },
         {
+          title: 'Invoices',
+          url: '/invoices',
+          icon: FileText,
+        },
+        {
           title: 'Apps',
           url: '/apps',
           icon: AppWindow,
-        },
-        {
-          title: 'Marketing',
-          url: '/marketing',
-          icon: Megaphone,
         },
       ],
     },
@@ -90,6 +91,11 @@ export function useSidebar() {
           title: 'Ai Talk Example',
           url: '/ai-talk',
           icon: Podcast,
+        },
+        {
+          title: 'Marketing',
+          url: '/marketing',
+          icon: Megaphone,
         },
         {
           title: 'Auth',

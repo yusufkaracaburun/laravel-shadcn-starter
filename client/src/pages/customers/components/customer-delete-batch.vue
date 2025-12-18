@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import type { Table } from '@tanstack/vue-table'
 
-import type { Customer } from '../data/schema'
-
 import { useCustomers } from '@/composables/use-customers'
+
+import type { Customer } from '../data/schema'
 
 interface Props {
   table: Table<Customer>
@@ -36,16 +36,14 @@ async function handleBatchDelete() {
 
   try {
     isDeleting.value = true
-    const deletePromises = selectedRows.value.map(row => deleteCustomer(row.original.id))
+    const deletePromises = selectedRows.value.map((row) => deleteCustomer(row.original.id))
     await Promise.all(deletePromises)
     props.table.resetRowSelection()
     isOpen.value = false
-  }
-  catch (error) {
+  } catch (error) {
     // Error handling is done in the composable
     console.error('Batch customer deletion error:', error)
-  }
-  finally {
+  } finally {
     isDeleting.value = false
   }
 }
@@ -57,20 +55,15 @@ async function handleBatchDelete() {
       <UiDialogHeader>
         <UiDialogTitle>Delete Customers</UiDialogTitle>
         <UiDialogDescription class="mt-2">
-          Are you sure you want to delete <strong>{{ selectedCount }}</strong> customer(s)? This action cannot be undone.
+          Are you sure you want to delete <strong>{{ selectedCount }}</strong> customer(s)? This
+          action cannot be undone.
         </UiDialogDescription>
       </UiDialogHeader>
       <UiDialogFooter>
         <UiDialogClose as-child>
-          <UiButton variant="outline">
-            Cancel
-          </UiButton>
+          <UiButton variant="outline"> Cancel </UiButton>
         </UiDialogClose>
-        <UiButton
-          variant="destructive"
-          :disabled="isDeleting"
-          @click="handleBatchDelete"
-        >
+        <UiButton variant="destructive" :disabled="isDeleting" @click="handleBatchDelete">
           <UiSpinner v-if="isDeleting" class="mr-2" />
           Delete
         </UiButton>
@@ -78,4 +71,3 @@ async function handleBatchDelete() {
     </UiDialogContent>
   </UiDialog>
 </template>
-

@@ -19,7 +19,7 @@ final class UpdateUserProfileInformationJob implements ShouldQueue
     public function __construct(
         private User $user,
         private readonly SocialiteUser $socialiteUser,
-        private readonly string $provider
+        private readonly string $provider,
     ) {
         //
     }
@@ -34,11 +34,11 @@ final class UpdateUserProfileInformationJob implements ShouldQueue
         $user->oauthConnections()->updateOrCreate([
             'provider' => $this->provider,
         ], [
-            'provider_id' => $socialiteUser->getId(),
-            'data' => $socialiteUser->getRaw(),
-            'token' => $socialiteUser->token,
+            'provider_id'   => $socialiteUser->getId(),
+            'data'          => $socialiteUser->getRaw(),
+            'token'         => $socialiteUser->token,
             'refresh_token' => $socialiteUser->refreshToken,
-            'expires_at' => $socialiteUser->expiresIn ? now()->addSeconds($socialiteUser->expiresIn) : null,
+            'expires_at'    => $socialiteUser->expiresIn ? now()->addSeconds($socialiteUser->expiresIn) : null,
         ]);
 
         if ($socialiteUser->getAvatar()) {

@@ -24,7 +24,7 @@ final class RoleController extends Controller
     use UsesQueryBuilder;
 
     public function __construct(
-        private readonly RoleServiceInterface $roleService
+        private readonly RoleServiceInterface $roleService,
     ) {}
 
     /**
@@ -62,7 +62,7 @@ final class RoleController extends Controller
 
         $role = $this->roleService->createRole($data);
 
-        if (! empty($permissionIds)) {
+        if (!empty($permissionIds)) {
             $role = $this->roleService->assignPermissions($role->resource->id, $permissionIds);
         }
 

@@ -22,10 +22,10 @@ final class LoginLinkFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => User::factory(),
-            'token' => Str::random(64),
+            'user_id'    => User::factory(),
+            'token'      => Str::random(64),
             'expires_at' => now()->addMinutes(15),
-            'used_at' => null,
+            'used_at'    => null,
         ];
     }
 }

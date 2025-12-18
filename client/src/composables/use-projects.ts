@@ -30,11 +30,12 @@ export function useProjects() {
     page.value = 1
   }
 
-  const { data: projectsResponse, isLoading, isFetching, refetch: fetchProjects } = useGetProjectsQuery(
-    page,
-    pageSize,
-    sorting,
-  )
+  const {
+    data: projectsResponse,
+    isLoading,
+    isFetching,
+    refetch: fetchProjects,
+  } = useGetProjectsQuery(page, pageSize, sorting)
 
   // Watch for page and pageSize changes to trigger refetch
   // Vue Query tracks computed refs in queryKey, but explicit watch ensures refetch on changes
@@ -62,14 +63,17 @@ export function useProjects() {
   const loading = computed(() => isLoading.value || isFetching.value)
 
   // Extract pagination metadata from Laravel's pagination structure
-  const pagination = computed(() => projectsResponse.value?.data ?? {
-    current_page: 1,
-    last_page: 1,
-    per_page: 10,
-    total: 0,
-    from: null,
-    to: null,
-  })
+  const pagination = computed(
+    () =>
+      projectsResponse.value?.data ?? {
+        current_page: 1,
+        last_page: 1,
+        per_page: 10,
+        total: 0,
+        from: null,
+        to: null,
+      },
+  )
 
   // Pagination handlers
   function onPageChange(newPage: number) {
@@ -95,8 +99,7 @@ export function useProjects() {
     try {
       const projectsResponse = await fetchProjects()
       return projectsResponse.data
-    }
-    catch (error: any) {
+    } catch (error: any) {
       // Store error with context
       errorStore.setError(error, { context: 'fetchProjects' })
 
@@ -117,8 +120,7 @@ export function useProjects() {
       const response = await createProjectMutation.mutateAsync(data)
       toast.showSuccess('Project created successfully!')
       return response
-    }
-    catch (error: any) {
+    } catch (error: any) {
       // Store error with context
       errorStore.setError(error, { context: 'createProject' })
 
@@ -130,8 +132,7 @@ export function useProjects() {
       if (Object.keys(validationErrors).length > 0) {
         const firstError = Object.values(validationErrors)[0]?.[0]
         toast.showError(firstError || message)
-      }
-      else {
+      } else {
         toast.showError(message)
       }
       throw error
@@ -143,8 +144,7 @@ export function useProjects() {
       const response = await updateProjectMutation.mutateAsync({ projectId, data })
       toast.showSuccess('Project updated successfully!')
       return response
-    }
-    catch (error: any) {
+    } catch (error: any) {
       // Store error with context
       errorStore.setError(error, { context: 'updateProject' })
 
@@ -156,8 +156,7 @@ export function useProjects() {
       if (Object.keys(validationErrors).length > 0) {
         const firstError = Object.values(validationErrors)[0]?.[0]
         toast.showError(firstError || message)
-      }
-      else {
+      } else {
         toast.showError(message)
       }
       throw error
@@ -168,8 +167,7 @@ export function useProjects() {
     try {
       await deleteProjectMutation.mutateAsync(projectId)
       toast.showSuccess('Project deleted successfully!')
-    }
-    catch (error: any) {
+    } catch (error: any) {
       // Store error with context
       errorStore.setError(error, { context: 'deleteProject' })
 

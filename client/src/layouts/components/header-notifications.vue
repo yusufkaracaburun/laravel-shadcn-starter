@@ -123,10 +123,7 @@ function markAllAsRead() {
                 {{ notification.time }}
               </p>
             </div>
-            <div
-              v-if="!notification.read"
-              class="h-2 w-2 rounded-full bg-primary shrink-0 mt-1"
-            />
+            <div v-if="!notification.read" class="h-2 w-2 rounded-full bg-primary shrink-0 mt-1" />
           </div>
         </UiDropdownMenuItem>
         <UiDropdownMenuItem
@@ -146,4 +143,3 @@ function markAllAsRead() {
     </UiDropdownMenuContent>
   </UiDropdownMenu>
 </template>
-

@@ -20,16 +20,16 @@ final class ContactResource extends BaseResource
     protected function resolvePayload(Request $request): array
     {
         return [
-            'id' => $this->id,
-            'name' => $this->full_name,
+            'id'         => $this->id,
+            'name'       => $this->full_name,
             'first_name' => $this->first_name,
-            'last_name' => $this->last_name,
-            'email' => $this->email,
-            'phone' => $this->phone,
-            'address' => $this->address,
-            'zipcode' => $this->zipcode,
-            'city' => $this->city,
-            'country' => $this->country,
+            'last_name'  => $this->last_name,
+            'email'      => $this->email,
+            'phone'      => $this->phone,
+            'address'    => $this->address,
+            'zipcode'    => $this->zipcode,
+            'city'       => $this->city,
+            'country'    => $this->country,
             'created_at' => $this->formatTimestamp($this->created_at),
             'updated_at' => $this->formatTimestamp($this->updated_at),
 

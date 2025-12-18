@@ -20,13 +20,13 @@ final class PermissionResource extends BaseResource
     protected function resolvePayload(Request $request): array
     {
         return [
-            'id' => $this->id,
-            'name' => $this->name,
+            'id'         => $this->id,
+            'name'       => $this->name,
             'guard_name' => $this->guard_name,
             'created_at' => $this->formatTimestamp($this->created_at),
             'updated_at' => $this->formatTimestamp($this->updated_at),
-            'roles' => RoleResource::collection($this->whenLoaded('roles')),
-            'users' => UserResource::collection($this->whenLoaded('users')),
+            'roles'      => RoleResource::collection($this->whenLoaded('roles')),
+            'users'      => UserResource::collection($this->whenLoaded('users')),
         ];
     }
 }

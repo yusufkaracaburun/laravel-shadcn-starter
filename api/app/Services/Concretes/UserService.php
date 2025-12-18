@@ -18,7 +18,7 @@ final class UserService extends BaseService implements UserServiceInterface
     private readonly UserRepositoryInterface $userRepository;
 
     public function __construct(
-        UserRepositoryInterface $repository
+        UserRepositoryInterface $repository,
     ) {
         $this->setRepository($repository);
         $this->userRepository = $repository;

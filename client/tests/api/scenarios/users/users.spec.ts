@@ -1,5 +1,9 @@
 import type { Role, User } from '../../features/shared/types'
-import type { CreateUserRequest, PaginatedUsersResponse, UpdateUserRequest } from '../../features/users/user-client'
+import type {
+  CreateUserRequest,
+  PaginatedUsersResponse,
+  UpdateUserRequest,
+} from '../../features/users/user-client'
 
 import { HttpStatus } from '../../features/shared/enums'
 import {
@@ -218,7 +222,10 @@ test.describe('Users API', { tag: ['@api', '@users'] }, () => {
       expect(userBody.data).toHaveProperty('updated_at')
     })
 
-    test('should return 404 for non-existent user', async ({ request, authenticatedAuthClient }) => {
+    test('should return 404 for non-existent user', async ({
+      request,
+      authenticatedAuthClient,
+    }) => {
       // Arrange
       const userClient = new UserClient(request)
       userClient.copyAuthStateFrom(authenticatedAuthClient)
@@ -301,7 +308,10 @@ test.describe('Users API', { tag: ['@api', '@users'] }, () => {
       await userClient.deleteUser(userBody.data.id)
     })
 
-    test('should return validation errors for missing name', async ({ request, authenticatedAuthClient }) => {
+    test('should return validation errors for missing name', async ({
+      request,
+      authenticatedAuthClient,
+    }) => {
       // Arrange
       const userClient = new UserClient(request)
       userClient.copyAuthStateFrom(authenticatedAuthClient)
@@ -319,7 +329,10 @@ test.describe('Users API', { tag: ['@api', '@users'] }, () => {
       await expectValidationErrors(response)
     })
 
-    test('should return validation errors for invalid email', async ({ request, authenticatedAuthClient }) => {
+    test('should return validation errors for invalid email', async ({
+      request,
+      authenticatedAuthClient,
+    }) => {
       // Arrange
       const userClient = new UserClient(request)
       userClient.copyAuthStateFrom(authenticatedAuthClient)
@@ -337,7 +350,10 @@ test.describe('Users API', { tag: ['@api', '@users'] }, () => {
       await expectValidationErrors(response)
     })
 
-    test('should return validation errors for weak password', async ({ request, authenticatedAuthClient }) => {
+    test('should return validation errors for weak password', async ({
+      request,
+      authenticatedAuthClient,
+    }) => {
       // Arrange
       const userClient = new UserClient(request)
       userClient.copyAuthStateFrom(authenticatedAuthClient)
@@ -355,7 +371,10 @@ test.describe('Users API', { tag: ['@api', '@users'] }, () => {
       await expectValidationErrors(response)
     })
 
-    test('should return validation errors for password mismatch', async ({ request, authenticatedAuthClient }) => {
+    test('should return validation errors for password mismatch', async ({
+      request,
+      authenticatedAuthClient,
+    }) => {
       // Arrange
       const userClient = new UserClient(request)
       userClient.copyAuthStateFrom(authenticatedAuthClient)
@@ -373,7 +392,10 @@ test.describe('Users API', { tag: ['@api', '@users'] }, () => {
       await expectValidationErrors(response)
     })
 
-    test('should return validation errors for duplicate email', async ({ request, authenticatedAuthClient }) => {
+    test('should return validation errors for duplicate email', async ({
+      request,
+      authenticatedAuthClient,
+    }) => {
       // Arrange
       const userClient = new UserClient(request)
       userClient.copyAuthStateFrom(authenticatedAuthClient)
@@ -494,7 +516,10 @@ test.describe('Users API', { tag: ['@api', '@users'] }, () => {
       await userClient.deleteUser(userId)
     })
 
-    test('should return validation errors for invalid email on update', async ({ request, authenticatedAuthClient }) => {
+    test('should return validation errors for invalid email on update', async ({
+      request,
+      authenticatedAuthClient,
+    }) => {
       // Arrange
       const userClient = new UserClient(request)
       userClient.copyAuthStateFrom(authenticatedAuthClient)
@@ -517,7 +542,10 @@ test.describe('Users API', { tag: ['@api', '@users'] }, () => {
       await userClient.deleteUser(userId)
     })
 
-    test('should return validation errors for weak password on update', async ({ request, authenticatedAuthClient }) => {
+    test('should return validation errors for weak password on update', async ({
+      request,
+      authenticatedAuthClient,
+    }) => {
       // Arrange
       const userClient = new UserClient(request)
       userClient.copyAuthStateFrom(authenticatedAuthClient)
@@ -541,7 +569,10 @@ test.describe('Users API', { tag: ['@api', '@users'] }, () => {
       await userClient.deleteUser(userId)
     })
 
-    test('should return 404 for non-existent user on update', async ({ request, authenticatedAuthClient }) => {
+    test('should return 404 for non-existent user on update', async ({
+      request,
+      authenticatedAuthClient,
+    }) => {
       // Arrange
       const userClient = new UserClient(request)
       userClient.copyAuthStateFrom(authenticatedAuthClient)
@@ -593,7 +624,10 @@ test.describe('Users API', { tag: ['@api', '@users'] }, () => {
       expectError(getResponse, HttpStatus.NOT_FOUND)
     })
 
-    test('should return 404 for non-existent user on delete', async ({ request, authenticatedAuthClient }) => {
+    test('should return 404 for non-existent user on delete', async ({
+      request,
+      authenticatedAuthClient,
+    }) => {
       // Arrange
       const userClient = new UserClient(request)
       userClient.copyAuthStateFrom(authenticatedAuthClient)
@@ -618,4 +652,3 @@ test.describe('Users API', { tag: ['@api', '@users'] }, () => {
     })
   })
 })
-

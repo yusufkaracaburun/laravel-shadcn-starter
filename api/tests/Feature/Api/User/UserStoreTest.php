@@ -12,9 +12,9 @@ use Illuminate\Testing\Fluent\AssertableJson;
 test('unauthenticated users cannot create users', function (): void {
     /** @var TestCase $this */
     $response = $this->postJson('/api/user', [
-        'name' => 'Test User',
-        'email' => 'test@example.com',
-        'password' => 'password123',
+        'name'                  => 'Test User',
+        'email'                 => 'test@example.com',
+        'password'              => 'password123',
         'password_confirmation' => 'password123',
     ]);
 
@@ -31,9 +31,9 @@ test('authenticated user can create new user', function (): void {
     Sanctum::actingAs($user, ['*']);
 
     $userData = [
-        'name' => 'Test User',
-        'email' => 'test@example.com',
-        'password' => 'password123',
+        'name'                  => 'Test User',
+        'email'                 => 'test@example.com',
+        'password'              => 'password123',
         'password_confirmation' => 'password123',
     ];
 
@@ -47,12 +47,12 @@ test('authenticated user can create new user', function (): void {
                     ->where('email', $userData['email'])
                     ->etc())
                 ->has('extra')
-                ->etc()
+                ->etc(),
         );
 
     $this->assertDatabaseHas('users', [
         'email' => $userData['email'],
-        'name' => $userData['name'],
+        'name'  => $userData['name'],
     ]);
 });
 
@@ -63,8 +63,8 @@ test('user creation requires valid data', function (): void {
     Sanctum::actingAs($user, ['*']);
 
     $response = $this->postJson('/api/user', [
-        'name' => '',
-        'email' => 'invalid-email',
+        'name'     => '',
+        'email'    => 'invalid-email',
         'password' => 'short',
     ]);
 
@@ -80,9 +80,9 @@ test('user creation requires unique email', function (): void {
     Sanctum::actingAs($user, ['*']);
 
     $response = $this->postJson('/api/user', [
-        'name' => 'Test User',
-        'email' => 'existing@example.com',
-        'password' => 'password123',
+        'name'                  => 'Test User',
+        'email'                 => 'existing@example.com',
+        'password'              => 'password123',
         'password_confirmation' => 'password123',
     ]);
 
@@ -99,11 +99,11 @@ test('user can be created with profile photo', function (): void {
     $file = UploadedFile::fake()->image('avatar.jpg', 100, 100);
 
     $response = $this->post('/api/user', [
-        'name' => 'Test User',
-        'email' => 'test@example.com',
-        'password' => 'password123',
+        'name'                  => 'Test User',
+        'email'                 => 'test@example.com',
+        'password'              => 'password123',
         'password_confirmation' => 'password123',
-        'profile_photo' => $file,
+        'profile_photo'         => $file,
     ]);
 
     $response->assertCreated()
@@ -114,7 +114,7 @@ test('user can be created with profile photo', function (): void {
                     ->where('email', 'test@example.com')
                     ->has('profile_photo_url')
                     ->etc())
-                ->etc()
+                ->etc(),
         );
 
     $createdUser = User::query()->where('email', 'test@example.com')->first();
@@ -130,9 +130,9 @@ test('user can be created without profile photo', function (): void {
     Sanctum::actingAs($user, ['*']);
 
     $response = $this->postJson('/api/user', [
-        'name' => 'Test User',
-        'email' => 'test@example.com',
-        'password' => 'password123',
+        'name'                  => 'Test User',
+        'email'                 => 'test@example.com',
+        'password'              => 'password123',
         'password_confirmation' => 'password123',
     ]);
 
@@ -144,7 +144,7 @@ test('user can be created without profile photo', function (): void {
                     ->where('email', 'test@example.com')
                     ->where('profile_photo_url', null)
                     ->etc())
-                ->etc()
+                ->etc(),
         );
 
     $createdUser = User::query()->where('email', 'test@example.com')->first();
@@ -160,11 +160,11 @@ test('user can be created with role', function (): void {
     Sanctum::actingAs($user, ['*']);
 
     $response = $this->postJson('/api/user', [
-        'name' => 'Test User',
-        'email' => 'test@example.com',
-        'password' => 'password123',
+        'name'                  => 'Test User',
+        'email'                 => 'test@example.com',
+        'password'              => 'password123',
         'password_confirmation' => 'password123',
-        'role' => 'admin',
+        'role'                  => 'admin',
     ]);
 
     $response->assertCreated()
@@ -174,7 +174,7 @@ test('user can be created with role', function (): void {
                 ->has('data', fn (AssertableJson $json): AssertableJson => $json->where('name', 'Test User')
                     ->where('email', 'test@example.com')
                     ->etc())
-                ->etc()
+                ->etc(),
         );
 
     $createdUser = User::query()->where('email', 'test@example.com')->first();

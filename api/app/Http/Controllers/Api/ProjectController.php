@@ -26,7 +26,7 @@ final class ProjectController extends Controller
     use UsesQueryBuilder;
 
     public function __construct(
-        private readonly ProjectServiceInterface $projectService
+        private readonly ProjectServiceInterface $projectService,
     ) {}
 
     /**

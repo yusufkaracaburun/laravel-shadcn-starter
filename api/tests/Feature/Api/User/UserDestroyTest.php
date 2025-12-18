@@ -50,6 +50,6 @@ test('user can view specific user by id', function (): void {
                     ->where('email', $targetUser->email)
                     ->etc())
                 ->has('extra')
-                ->etc()
+                ->etc(),
         );
 });

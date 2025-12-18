@@ -3,11 +3,7 @@ import { LayoutGrid, List } from 'lucide-vue-next'
 
 import Page from '@/components/global-layout/basic-page.vue'
 import { Button } from '@/components/ui/button'
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from '@/components/ui/tooltip'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 
 import { columns } from './components/columns'
 import DataTable from './components/data-table.vue'
@@ -72,7 +68,11 @@ function handleTasksUpdate(updatedTasks: typeof tasksData) {
       <DataTable :data="tasks" :columns="columns" />
     </div>
     <div v-else-if="viewMode === 'kanban'" class="h-full">
-      <TasksKanbanWrapper :key="`kanban-${tasks.length}`" :tasks="tasks" @update:tasks="handleTasksUpdate" />
+      <TasksKanbanWrapper
+        :key="`kanban-${tasks.length}`"
+        :tasks="tasks"
+        @update:tasks="handleTasksUpdate"
+      />
     </div>
   </Page>
 </template>

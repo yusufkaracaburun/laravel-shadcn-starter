@@ -24,13 +24,13 @@ final class IndexUserRequest extends BaseIndexFormRequest
         return array_merge(
             parent::messages(),
             [
-                'filter.id.integer' => 'Filter ID must be a number.',
-                'filter.id.exists' => 'The selected user does not exist.',
-                'filter.name.string' => 'Filter name must be a string.',
-                'filter.email.email' => 'The email filter must be a valid email address.',
+                'filter.id.integer'             => 'Filter ID must be a number.',
+                'filter.id.exists'              => 'The selected user does not exist.',
+                'filter.name.string'            => 'Filter name must be a string.',
+                'filter.email.email'            => 'The email filter must be a valid email address.',
                 'filter.email_verified_at.date' => 'The email verified at filter must be a valid date.',
-                'filter.created_at.date' => 'The created at filter must be a valid date.',
-            ]
+                'filter.created_at.date'        => 'The created at filter must be a valid date.',
+            ],
         );
     }
 
@@ -44,12 +44,12 @@ final class IndexUserRequest extends BaseIndexFormRequest
         return array_merge(
             parent::attributes(),
             [
-                'filter.id' => 'user ID filter',
-                'filter.name' => 'name filter',
-                'filter.email' => 'email filter',
+                'filter.id'                => 'user ID filter',
+                'filter.name'              => 'name filter',
+                'filter.email'             => 'email filter',
                 'filter.email_verified_at' => 'email verified filter',
-                'filter.created_at' => 'created at filter',
-            ]
+                'filter.created_at'        => 'created at filter',
+            ],
         );
     }
 
@@ -63,12 +63,12 @@ final class IndexUserRequest extends BaseIndexFormRequest
         return array_merge(
             parent::filterRules(),
             [
-                'filter.id' => 'sometimes|integer|exists:users,id',
-                'filter.name' => 'sometimes|string|max:255',
-                'filter.email' => 'sometimes|email|max:255',
+                'filter.id'                => 'sometimes|integer|exists:users,id',
+                'filter.name'              => 'sometimes|string|max:255',
+                'filter.email'             => 'sometimes|email|max:255',
                 'filter.email_verified_at' => 'sometimes|date',
-                'filter.created_at' => 'sometimes|date',
-            ]
+                'filter.created_at'        => 'sometimes|date',
+            ],
         );
     }
 

@@ -19,7 +19,7 @@ final class RoleService extends BaseService implements RoleServiceInterface
      * Create a new class instance.
      */
     public function __construct(
-        private readonly RoleRepositoryInterface $repo
+        private readonly RoleRepositoryInterface $repo,
     ) {
         $this->setRepository($repo);
     }

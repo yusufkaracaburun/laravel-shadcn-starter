@@ -25,7 +25,7 @@ final class UpdatePaymentRequest extends BaseFormRequest
     {
         return [
             // Foreign keys
-            'invoice_id' => ['sometimes', 'integer', 'exists:invoices,id'],
+            'invoice_id'  => ['sometimes', 'integer', 'exists:invoices,id'],
             'customer_id' => ['sometimes', 'integer', 'exists:customers,id'],
 
             // Payment details
@@ -38,16 +38,16 @@ final class UpdatePaymentRequest extends BaseFormRequest
             'amount' => ['sometimes', 'numeric', 'min:0'],
 
             // Method & provider
-            'method' => ['sometimes', 'string', 'nullable', 'max:50'],
-            'provider' => ['sometimes', 'string', 'nullable', 'max:50'],
+            'method'             => ['sometimes', 'string', 'nullable', 'max:50'],
+            'provider'           => ['sometimes', 'string', 'nullable', 'max:50'],
             'provider_reference' => ['sometimes', 'string', 'nullable', 'max:100'],
 
             // Enum status
             'status' => ['sometimes', Rule::in(PaymentStatus::values())],
 
             // Date fields
-            'date' => ['sometimes', 'date'],
-            'paid_at' => ['sometimes', 'nullable', 'date'],
+            'date'        => ['sometimes', 'date'],
+            'paid_at'     => ['sometimes', 'nullable', 'date'],
             'refunded_at' => ['sometimes', 'nullable', 'date'],
         ];
     }
@@ -60,17 +60,17 @@ final class UpdatePaymentRequest extends BaseFormRequest
     public function attributes(): array
     {
         return [
-            'invoice_id' => 'invoice',
-            'customer_id' => 'customer',
-            'payment_number' => 'payment number',
-            'amount' => 'amount',
-            'method' => 'payment method',
-            'provider' => 'provider',
+            'invoice_id'         => 'invoice',
+            'customer_id'        => 'customer',
+            'payment_number'     => 'payment number',
+            'amount'             => 'amount',
+            'method'             => 'payment method',
+            'provider'           => 'provider',
             'provider_reference' => 'reference',
-            'status' => 'status',
-            'date' => 'booking date',
-            'paid_at' => 'payment date',
-            'refunded_at' => 'refund date',
+            'status'             => 'status',
+            'date'               => 'booking date',
+            'paid_at'            => 'payment date',
+            'refunded_at'        => 'refund date',
         ];
     }
 
@@ -83,7 +83,7 @@ final class UpdatePaymentRequest extends BaseFormRequest
     {
         return [
             'payment_number.unique' => 'This payment number already exists.',
-            'amount.min' => 'The amount must be greater than 0.',
+            'amount.min'            => 'The amount must be greater than 0.',
         ];
     }
 }

@@ -1,0 +1,24 @@
+h1 {
+    font-size: 22px;
+    font-weight: normal;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+thead th {
+    font-size: 10px;
+    color: #888;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 6px;
+}
+
+tbody td {
+    padding: 8px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.totals {
+    width: 50%;
+    float: right;
+    padding: 10px;
+}

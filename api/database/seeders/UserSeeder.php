@@ -70,7 +70,7 @@ final class UserSeeder extends Seeder
 
         // Test users with team-scoped roles
         $team = Team::query()->first();
-        if (! $team) {
+        if (!$team) {
             return;
         }
 
@@ -82,7 +82,7 @@ final class UserSeeder extends Seeder
         ];
 
         foreach ($testUsers as $userData) {
-            if (! isset($roles[$userData['role']])) {
+            if (!isset($roles[$userData['role']])) {
                 continue;
             }
 
@@ -100,8 +100,8 @@ final class UserSeeder extends Seeder
     private function createRoleBasedUsers(array $roles): void
     {
         $usersByRole = [
-            'admin' => User::factory()->count(2)->create(),
-            'customer' => User::factory()->count(50)->create(),
+            'admin'      => User::factory()->count(2)->create(),
+            'customer'   => User::factory()->count(50)->create(),
             'contractor' => User::factory()->count(25)->create(),
         ];
 
@@ -109,14 +109,14 @@ final class UserSeeder extends Seeder
         $this->assignUsersToTeams($allUsers);
 
         $team = Team::query()->first();
-        if (! $team) {
+        if (!$team) {
             return;
         }
 
         $this->clearCache();
 
         foreach ($usersByRole as $roleName => $users) {
-            if (! isset($roles[$roleName])) {
+            if (!isset($roles[$roleName])) {
                 continue;
             }
 
@@ -136,9 +136,9 @@ final class UserSeeder extends Seeder
     private function createUser(string $email, string $name): User
     {
         return User::query()->firstOrCreate(['email' => $email], [
-            'name' => $name,
-            'password' => Hash::make('password'),
-            'email_verified_at' => now(),
+            'name'               => $name,
+            'password'           => Hash::make('password'),
+            'email_verified_at'  => now(),
             'profile_photo_path' => 'https://i.pravatar.cc/300',
         ]);
     }
@@ -182,7 +182,7 @@ final class UserSeeder extends Seeder
      */
     private function assignUserToTeam(User $user, Team $team, string $teamRole = 'member'): void
     {
-        if (! $user->teams()->where('teams.id', $team->id)->exists()) {
+        if (!$user->teams()->where('teams.id', $team->id)->exists()) {
             $user->teams()->attach($team->id, ['role' => $teamRole]);
         }
 
@@ -197,17 +197,17 @@ final class UserSeeder extends Seeder
     private function assignUsersToTeams(Collection $users): void
     {
         $team = Team::query()->first();
-        if (! $team) {
+        if (!$team) {
             return;
         }
 
         foreach ($users as $user) {
             if (random_int(0, 1) !== 0) {
-                if (! $user->teams()->where('teams.id', $team->id)->exists()) {
+                if (!$user->teams()->where('teams.id', $team->id)->exists()) {
                     $user->teams()->attach($team->id, ['role' => 'member']);
                 }
 
-                if (random_int(0, 1) && ! $user->current_team_id) {
+                if (random_int(0, 1) && !$user->current_team_id) {
                     $user->update(['current_team_id' => $team->id]);
                 }
             }

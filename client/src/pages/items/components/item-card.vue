@@ -70,7 +70,10 @@ function formatPrice(price: number | { formatted: string } | undefined): string 
 </script>
 
 <template>
-  <Card class="hover:shadow-md transition-shadow cursor-pointer" @click="router.push({ name: '/items/[id]', params: { id: item.id.toString() } })">
+  <Card
+    class="hover:shadow-md transition-shadow cursor-pointer"
+    @click="router.push({ name: '/items/[id]', params: { id: item.id.toString() } })"
+  >
     <CardHeader>
       <div class="flex items-start justify-between">
         <div class="flex items-center gap-2">
@@ -87,16 +90,9 @@ function formatPrice(price: number | { formatted: string } | undefined): string 
             </UiButton>
           </UiDropdownMenuTrigger>
           <UiDropdownMenuContent align="end" @click.stop>
-            <UiDropdownMenuItem @click.stop="handleSelect('view')">
-              View
-            </UiDropdownMenuItem>
-            <UiDropdownMenuItem @click.stop="handleSelect('edit')">
-              Edit
-            </UiDropdownMenuItem>
-            <UiDropdownMenuItem
-              class="text-destructive"
-              @click.stop="handleSelect('delete')"
-            >
+            <UiDropdownMenuItem @click.stop="handleSelect('view')"> View </UiDropdownMenuItem>
+            <UiDropdownMenuItem @click.stop="handleSelect('edit')"> Edit </UiDropdownMenuItem>
+            <UiDropdownMenuItem class="text-destructive" @click.stop="handleSelect('delete')">
               Delete
             </UiDropdownMenuItem>
           </UiDropdownMenuContent>
@@ -114,11 +110,13 @@ function formatPrice(price: number | { formatted: string } | undefined): string 
         </div>
         <div class="flex items-center justify-between">
           <span class="text-sm text-muted-foreground">VAT Rate</span>
-          <Badge variant="outline">{{ item.vat_rate }}%</Badge>
+          <Badge variant="outline"> {{ item.vat_rate }}% </Badge>
         </div>
         <div v-if="item.unit" class="flex items-center justify-between">
           <span class="text-sm text-muted-foreground">Unit</span>
-          <Badge variant="secondary">{{ item.unit }}</Badge>
+          <Badge variant="secondary">
+            {{ item.unit }}
+          </Badge>
         </div>
       </div>
     </CardContent>
@@ -128,13 +126,8 @@ function formatPrice(price: number | { formatted: string } | undefined): string 
 
     <UiDialog v-model:open="isDialogOpen">
       <UiDialogContent v-if="showComponent" class="sm:max-w-[425px]">
-        <component
-          :is="showComponent"
-          :item="item"
-          @close="isDialogOpen = false"
-        />
+        <component :is="showComponent" :item="item" @close="isDialogOpen = false" />
       </UiDialogContent>
     </UiDialog>
   </Card>
 </template>
-

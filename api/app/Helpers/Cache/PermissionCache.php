@@ -27,7 +27,7 @@ final class PermissionCache
     {
         return self::cache(self::tags())->get(
             self::key($key),
-            $default
+            $default,
         );
     }
 
@@ -41,7 +41,7 @@ final class PermissionCache
         return self::cache(self::tags())->put(
             self::key($key),
             $value,
-            $ttl
+            $ttl,
         );
     }
 
@@ -55,7 +55,7 @@ final class PermissionCache
         return self::cache(self::tags())->remember(
             self::key($key),
             $ttl,
-            $callback
+            $callback,
         );
     }
 
@@ -65,7 +65,7 @@ final class PermissionCache
     public static function forget(string $key): bool
     {
         return self::cache(self::tags())->forget(
-            self::key($key)
+            self::key($key),
         );
     }
 

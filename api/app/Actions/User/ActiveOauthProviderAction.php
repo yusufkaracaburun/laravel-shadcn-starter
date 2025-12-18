@@ -12,12 +12,12 @@ final class ActiveOauthProviderAction
      * @var array<string, array<int, string>>
      */
     private const array PROVIDER_CREDENTIALS = [
-        'github' => ['GITHUB_CLIENT_ID', 'GITHUB_CLIENT_SECRET'],
-        'google' => ['GOOGLE_CLIENT_ID', 'GOOGLE_CLIENT_SECRET'],
-        'x' => ['X_CLIENT_ID', 'X_CLIENT_SECRET'],
-        'gitlab' => ['GITLAB_CLIENT_ID', 'GITLAB_CLIENT_SECRET'],
+        'github'    => ['GITHUB_CLIENT_ID', 'GITHUB_CLIENT_SECRET'],
+        'google'    => ['GOOGLE_CLIENT_ID', 'GOOGLE_CLIENT_SECRET'],
+        'x'         => ['X_CLIENT_ID', 'X_CLIENT_SECRET'],
+        'gitlab'    => ['GITLAB_CLIENT_ID', 'GITLAB_CLIENT_SECRET'],
         'bitbucket' => ['BITBUCKET_CLIENT_ID', 'BITBUCKET_CLIENT_SECRET'],
-        'discord' => ['DISCORD_CLIENT_ID', 'DISCORD_CLIENT_SECRET'],
+        'discord'   => ['DISCORD_CLIENT_ID', 'DISCORD_CLIENT_SECRET'],
     ];
 
     /**
@@ -31,7 +31,7 @@ final class ActiveOauthProviderAction
         $providers = Config::get('oauth.providers', []);
 
         return array_values(array_filter($providers, function (array $provider): bool {
-            if (! $provider['active']) {
+            if (!$provider['active']) {
                 return false;
             }
 
@@ -45,7 +45,7 @@ final class ActiveOauthProviderAction
 
     private function hasCredentials(string $provider): bool
     {
-        if (! array_key_exists($provider, self::PROVIDER_CREDENTIALS)) {
+        if (!array_key_exists($provider, self::PROVIDER_CREDENTIALS)) {
             return true;
         }
 

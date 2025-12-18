@@ -27,4 +27,3 @@ export const vatRates = [
   { value: '20', label: '20%' },
   { value: '25', label: '25%' },
 ]
-

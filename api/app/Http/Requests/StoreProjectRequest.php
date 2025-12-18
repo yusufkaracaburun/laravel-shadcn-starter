@@ -25,13 +25,13 @@ final class StoreProjectRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:255'],
+            'name'        => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
-            'status' => ['required', 'string', 'in:active,on-hold,completed,cancelled'],
-            'category' => ['required', 'string', 'in:design,development,marketing,support,other'],
-            'start_date' => ['nullable', 'date'],
-            'end_date' => ['nullable', 'date', 'after_or_equal:start_date'],
-            'progress' => ['nullable', 'integer', 'min:0', 'max:100'],
+            'status'      => ['required', 'string', 'in:active,on-hold,completed,cancelled'],
+            'category'    => ['required', 'string', 'in:design,development,marketing,support,other'],
+            'start_date'  => ['nullable', 'date'],
+            'end_date'    => ['nullable', 'date', 'after_or_equal:start_date'],
+            'progress'    => ['nullable', 'integer', 'min:0', 'max:100'],
         ];
     }
 }

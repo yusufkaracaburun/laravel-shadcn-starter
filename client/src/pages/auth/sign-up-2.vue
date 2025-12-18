@@ -9,7 +9,9 @@ import SignUpForm2 from '@/pages/auth/components/SignUpForm2.vue'
     <div class="flex flex-col gap-4 p-6 md:p-10">
       <div class="flex justify-center gap-2 md:justify-start">
         <a href="#" class="flex items-center gap-2 font-medium">
-          <div class="bg-primary text-primary-foreground flex size-6 items-center justify-center rounded-md">
+          <div
+            class="bg-primary text-primary-foreground flex size-6 items-center justify-center rounded-md"
+          >
             <GalleryVerticalEnd class="size-4" />
           </div>
           Acme Inc.
@@ -23,9 +25,10 @@ import SignUpForm2 from '@/pages/auth/components/SignUpForm2.vue'
     </div>
     <div class="bg-muted relative hidden lg:block">
       <img
-        src="/placeholder.png" alt=""
+        src="/placeholder.png"
+        alt=""
         class="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
-      >
+      />
     </div>
   </div>
 </template>

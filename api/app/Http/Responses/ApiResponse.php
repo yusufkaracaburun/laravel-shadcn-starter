@@ -18,14 +18,14 @@ final class ApiResponse
         mixed $data = null,
         string $message = 'Success',
         int $code = Response::HTTP_OK,
-        array $extra = []
+        array $extra = [],
     ): JsonResponse {
         return response()->json([
             'success' => true,
-            'code' => $code,
+            'code'    => $code,
             'message' => $message,
-            'data' => $data,
-            'extra' => $extra,
+            'data'    => $data,
+            'extra'   => $extra,
         ], $code);
     }
 
@@ -38,14 +38,14 @@ final class ApiResponse
         string $message = 'Error',
         int $code = Response::HTTP_BAD_REQUEST,
         mixed $data = null,
-        array $extra = []
+        array $extra = [],
     ): JsonResponse {
         return response()->json([
             'success' => false,
-            'code' => $code,
+            'code'    => $code,
             'message' => $message,
-            'data' => $data,
-            'extra' => $extra,
+            'data'    => $data,
+            'extra'   => $extra,
         ], $code);
     }
 
@@ -57,7 +57,7 @@ final class ApiResponse
     public static function created(
         mixed $data = null,
         array $extra = [],
-        string $message = 'Created successfully'
+        string $message = 'Created successfully',
     ): JsonResponse {
         return self::success($data, $message, Response::HTTP_CREATED, $extra);
     }
@@ -69,7 +69,7 @@ final class ApiResponse
     {
         return response()->json([
             'success' => true,
-            'code' => $code,
+            'code'    => $code,
             'message' => $message,
         ], $code);
     }
@@ -82,7 +82,7 @@ final class ApiResponse
     public static function notFound(
         string $message = 'Resource not found',
         mixed $data = null,
-        array $extra = []
+        array $extra = [],
     ): JsonResponse {
         return self::error($message, Response::HTTP_NOT_FOUND, $data, $extra);
     }
@@ -95,7 +95,7 @@ final class ApiResponse
     public static function forbidden(
         string $message = 'Forbidden',
         mixed $data = null,
-        array $extra = []
+        array $extra = [],
     ): JsonResponse {
         return self::error($message, Response::HTTP_FORBIDDEN, $data, $extra);
     }
@@ -108,7 +108,7 @@ final class ApiResponse
     public static function unauthorized(
         string $message = 'Unauthorized',
         mixed $data = null,
-        array $extra = []
+        array $extra = [],
     ): JsonResponse {
         return self::error($message, Response::HTTP_UNAUTHORIZED, $data, $extra);
     }
@@ -121,7 +121,7 @@ final class ApiResponse
     public static function validationError(
         string $message = 'Validation failed',
         mixed $data = null,
-        array $extra = []
+        array $extra = [],
     ): JsonResponse {
         return self::error($message, Response::HTTP_UNPROCESSABLE_ENTITY, $data, $extra);
     }

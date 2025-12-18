@@ -1,7 +1,9 @@
 <script setup lang="ts">
-import type { User } from '@/services/users.service'
-import { useRouter } from 'vue-router'
 import { BadgeCheck } from 'lucide-vue-next'
+import { useRouter } from 'vue-router'
+
+import type { User } from '@/services/users.service'
+
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 
 interface Props {
@@ -14,8 +16,7 @@ const router = useRouter()
 
 // Get initials from name
 function getInitials(name: string): string {
-  if (!name || name === '—')
-    return '?'
+  if (!name || name === '—') return '?'
   const parts = name.trim().split(/\s+/)
   if (parts.length >= 2) {
     return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase()
@@ -52,4 +53,3 @@ function handleClick() {
     </div>
   </div>
 </template>
-

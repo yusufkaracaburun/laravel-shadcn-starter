@@ -26,7 +26,7 @@ abstract class BaseObserver implements ShouldHandleEventsAfterCommit
             '%s event: %s (id: %s)',
             class_basename($model),
             $event,
-            $model->id ?? 'n/a'
+            $model->id ?? 'n/a',
         ), [
             'attributes' => $model->getAttributes(),
         ]);

@@ -30,11 +30,12 @@ export function useCompanies() {
     page.value = 1
   }
 
-  const { data: companiesResponse, isLoading, isFetching, refetch: fetchCompanies } = useGetCompaniesQuery(
-    page,
-    pageSize,
-    sorting,
-  )
+  const {
+    data: companiesResponse,
+    isLoading,
+    isFetching,
+    refetch: fetchCompanies,
+  } = useGetCompaniesQuery(page, pageSize, sorting)
 
   // Watch for page and pageSize changes to trigger refetch
   // Vue Query tracks computed refs in queryKey, but explicit watch ensures refetch on changes
@@ -54,14 +55,17 @@ export function useCompanies() {
   const loading = computed(() => isLoading.value || isFetching.value)
 
   // Extract pagination metadata from Laravel's pagination structure
-  const pagination = computed(() => companiesResponse.value?.data ?? {
-    current_page: 1,
-    last_page: 1,
-    per_page: 10,
-    total: 0,
-    from: null,
-    to: null,
-  })
+  const pagination = computed(
+    () =>
+      companiesResponse.value?.data ?? {
+        current_page: 1,
+        last_page: 1,
+        per_page: 10,
+        total: 0,
+        from: null,
+        to: null,
+      },
+  )
 
   // Pagination handlers
   function onPageChange(newPage: number) {
@@ -87,8 +91,7 @@ export function useCompanies() {
     try {
       const companiesResponse = await fetchCompanies()
       return companiesResponse.data
-    }
-    catch (error: any) {
+    } catch (error: any) {
       // Store error with context
       errorStore.setError(error, { context: 'fetchCompanies' })
 
@@ -109,8 +112,7 @@ export function useCompanies() {
       const response = await createCompanyMutation.mutateAsync(data)
       toast.showSuccess('Company created successfully!')
       return response
-    }
-    catch (error: any) {
+    } catch (error: any) {
       // Store error with context
       errorStore.setError(error, { context: 'createCompany' })
 
@@ -122,8 +124,7 @@ export function useCompanies() {
       if (Object.keys(validationErrors).length > 0) {
         const firstError = Object.values(validationErrors)[0]?.[0]
         toast.showError(firstError || message)
-      }
-      else {
+      } else {
         toast.showError(message)
       }
       throw error
@@ -135,8 +136,7 @@ export function useCompanies() {
       const response = await updateCompanyMutation.mutateAsync({ companyId, data })
       toast.showSuccess('Company updated successfully!')
       return response
-    }
-    catch (error: any) {
+    } catch (error: any) {
       // Store error with context
       errorStore.setError(error, { context: 'updateCompany' })
 
@@ -148,8 +148,7 @@ export function useCompanies() {
       if (Object.keys(validationErrors).length > 0) {
         const firstError = Object.values(validationErrors)[0]?.[0]
         toast.showError(firstError || message)
-      }
-      else {
+      } else {
         toast.showError(message)
       }
       throw error
@@ -160,8 +159,7 @@ export function useCompanies() {
     try {
       await deleteCompanyMutation.mutateAsync(companyId)
       toast.showSuccess('Company deleted successfully!')
-    }
-    catch (error: any) {
+    } catch (error: any) {
       // Store error with context
       errorStore.setError(error, { context: 'deleteCompany' })
 

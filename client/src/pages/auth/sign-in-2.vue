@@ -2,10 +2,10 @@
 import { GalleryVerticalEnd } from 'lucide-vue-next'
 
 import { useAuth } from '@/composables/use-auth'
+import LoginForm2 from '@/pages/auth/components/LoginForm2.vue'
 import env from '@/utils/env'
 
 import { testusers } from '../../../tests/.data/users.data'
-import LoginForm2 from '@/pages/auth/components/LoginForm2.vue'
 import QuickLoginCard from './components/quick-login-card.vue'
 
 const { login, loading } = useAuth()
@@ -19,8 +19,7 @@ async function quickLogin(userKey: keyof typeof testusers) {
       email: user.email,
       password: user.password,
     })
-  }
-  catch (error) {
+  } catch (error) {
     // Error handling is done in useAuth composable
     console.error('Quick login failed:', error)
   }
@@ -32,7 +31,9 @@ async function quickLogin(userKey: keyof typeof testusers) {
     <div class="flex flex-col gap-4 p-6 md:p-10">
       <div class="flex justify-center gap-2 md:justify-start">
         <a href="#" class="flex items-center gap-2 font-medium">
-          <div class="flex size-6 items-center justify-center rounded-md bg-primary text-primary-foreground">
+          <div
+            class="flex size-6 items-center justify-center rounded-md bg-primary text-primary-foreground"
+          >
             <GalleryVerticalEnd class="size-4" />
           </div>
           Acme Inc.
@@ -52,9 +53,10 @@ async function quickLogin(userKey: keyof typeof testusers) {
     </div>
     <div class="bg-muted relative hidden lg:block">
       <img
-        src="/placeholder.png" alt=""
+        src="/placeholder.png"
+        alt=""
         class="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
-      >
+      />
     </div>
   </div>
 </template>

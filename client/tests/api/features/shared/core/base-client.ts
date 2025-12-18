@@ -42,11 +42,7 @@ export abstract class BaseClient {
     const cookies = this.cookieHandler.getCookies()
     const baseHeaders = this.requestBuilder.getBaseHeaders()
     const headers = options.requireCsrf
-      ? this.requestBuilder.getHeadersWithCsrf(
-          this.csrfHandler.getToken(),
-          false,
-          cookies,
-        )
+      ? this.requestBuilder.getHeadersWithCsrf(this.csrfHandler.getToken(), false, cookies)
       : cookies
         ? { ...baseHeaders, Cookie: cookies }
         : baseHeaders
@@ -156,15 +152,12 @@ export abstract class BaseClient {
   ): Promise<APIResponse> {
     const cookies = this.cookieHandler.getCookies()
     const baseHeaders = this.requestBuilder.getBaseHeaders()
-    const headers = options.requireCsrf !== false
-      ? this.requestBuilder.getHeadersWithCsrf(
-          this.csrfHandler.getToken(),
-          false,
-          cookies,
-        )
-      : cookies
-        ? { ...baseHeaders, Cookie: cookies }
-        : baseHeaders
+    const headers =
+      options.requireCsrf !== false
+        ? this.requestBuilder.getHeadersWithCsrf(this.csrfHandler.getToken(), false, cookies)
+        : cookies
+          ? { ...baseHeaders, Cookie: cookies }
+          : baseHeaders
 
     const response = await this.request.delete(this.buildUrl(endpoint), {
       headers,
@@ -196,4 +189,3 @@ export abstract class BaseClient {
     this.csrfHandler.setToken(other.csrfHandler.getToken())
   }
 }
-

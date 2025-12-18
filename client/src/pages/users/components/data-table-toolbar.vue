@@ -4,6 +4,7 @@ import type { Table } from '@tanstack/vue-table'
 import { X } from 'lucide-vue-next'
 import { computed } from 'vue'
 
+import type { FacetedFilterOption } from '@/components/data-table/types'
 import type { User } from '@/services/users.service'
 
 import DataTableFacetedFilter from '@/components/data-table/faceted-filter.vue'
@@ -11,7 +12,6 @@ import DataTableViewOptions from '@/components/data-table/view-options.vue'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { useGetRolesQuery } from '@/services/users.service'
-import type { FacetedFilterOption } from '@/components/data-table/types'
 
 interface DataTableToolbarProps {
   table: Table<User>

@@ -21,8 +21,8 @@ final class TeamFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => fake()->unique()->company(),
-            'user_id' => User::factory(),
+            'name'          => fake()->unique()->company(),
+            'user_id'       => User::factory(),
             'personal_team' => false,
         ];
     }

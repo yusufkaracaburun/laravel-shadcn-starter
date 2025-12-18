@@ -28,4 +28,3 @@ const description = computed(() =>
     <CompanyForm class="mt-2" :company="company" @close="$emit('close')" />
   </div>
 </template>
-
