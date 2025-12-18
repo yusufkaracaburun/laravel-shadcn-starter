@@ -1,7 +1,7 @@
 import type { AxiosError, AxiosResponse } from 'axios'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query'
-import { computed, isRef, ref, toValue } from 'vue'
+import { computed, ref, toValue } from 'vue'
 
 import type {
   ICreateInvoiceRequest,
@@ -58,91 +58,35 @@ export function useGetInvoicesQuery(
 ) {
   const { axiosInstance } = useAxios()
 
-  // No need to normalize, parameters are already refs
-  const pageRef = page
-  const pageSizeRef = pageSize
-  const sortingRef = sorting
-  const filtersRef = filters
-  const includeRef = include
-
   return useQuery<IResponse<IPaginatedInvoicesResponse>, AxiosError>({
     queryKey: [
       'invoiceList',
-      computed(() => toValue(pageRef)),
-      computed(() => toValue(pageSizeRef)),
-      computed(() => JSON.stringify(toValue(sortingRef))),
-      computed(() => JSON.stringify(toValue(filtersRef))),
-      computed(() => JSON.stringify(toValue(includeRef))),
+      computed(() => toValue(page)),
+      computed(() => toValue(pageSize)),
+      computed(() => JSON.stringify(toValue(sorting))),
+      computed(() => JSON.stringify(toValue(filters))),
+      computed(() => JSON.stringify(toValue(include))),
     ],
     queryFn: async (): Promise<IResponse<IPaginatedInvoicesResponse>> => {
-      // Use toValue() to read current values in queryFn
-      const currentPage = toValue(pageRef)
-      const currentPageSize = toValue(pageSizeRef)
-      const currentSorting = toValue(sortingRef)
-      const currentFilters = toValue(filtersRef)
-      const currentInclude = toValue(includeRef)
-      const sortParam = convertSortingToQueryString(currentSorting)
-
       const params: Record<string, any> = {
-        page: currentPage,
-        per_page: currentPageSize,
-      }
-
-      // Add sort parameter if sorting is provided
-      if (sortParam) {
-        params.sort = sortParam
-      }
-
-      // Add include parameter if relationships are requested
-      if (currentInclude && currentInclude.length > 0) {
-        params.include = currentInclude.join(',')
-      }
-
-      // Add filter parameters if filters are provided
-      if (currentFilters && Object.keys(currentFilters).length > 0) {
-        const filterParams: Record<string, any> = {}
-
-        if (currentFilters.id !== undefined) {
-          filterParams.id = currentFilters.id
-        }
-        if (currentFilters.customer_id !== undefined) {
-          filterParams.customer_id = currentFilters.customer_id
-        }
-        if (currentFilters.status) {
-          filterParams.status = currentFilters.status
-        }
-        if (currentFilters.invoice_number) {
-          filterParams.invoice_number = currentFilters.invoice_number
-        }
-        if (currentFilters.date) {
-          filterParams.date = currentFilters.date
-        }
-        if (currentFilters.date_due) {
-          filterParams.date_due = currentFilters.date_due
-        }
-        if (currentFilters.between) {
-          filterParams.between = currentFilters.between
-        }
-        if (currentFilters.search) {
-          filterParams.search = currentFilters.search
-        }
-
-        if (Object.keys(filterParams).length > 0) {
-          params.filter = filterParams
-        }
+        sort: convertSortingToQueryString(toValue(sorting)),
+        page: toValue(page),
+        per_page: toValue(pageSize),
+        include: toValue(include),
+        filter: toValue(filters),
       }
 
       const response = await axiosInstance.get('/api/invoices', { params })
       return response.data
     },
     retry: (failureCount: number, error: AxiosError) => {
-      // Don't retry on 401 (unauthorized) - user is not authenticated
       if (error.response?.status === 401) {
         return false
       }
-      // Retry up to 2 times for other errors
       return failureCount < 2
     },
+    staleTime: 5 * 60 * 1000,
+    enabled: computed(() => toValue(page) > 0 && toValue(pageSize) > 0),
   })
 }
 
