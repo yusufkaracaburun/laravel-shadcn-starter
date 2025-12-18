@@ -163,12 +163,4 @@ final class AppServiceProvider extends ServiceProvider
         Invoice::observe(InvoiceObserver::class);
         InvoiceItem::observe(InvoiceItemObserver::class);
     }
-
-    private function registerEvents(): void
-    {
-        Event::listen(
-            EmailSent::class,
-            EmailSentListener::class,
-        );
-    }
 }
