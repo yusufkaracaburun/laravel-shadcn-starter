@@ -37,4 +37,3 @@ Route::get('/test/mail', function () {
 
     return 'Mail sent!';
 });
-
