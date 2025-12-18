@@ -63,6 +63,7 @@ final class ExceptionLoggerService
         if ($level === LogLevel::INFO || $level === LogLevel::WARNING) {
             return;
         }
+
         Log::log($level, $this->getLogMessage($exception), $context);
     }
 

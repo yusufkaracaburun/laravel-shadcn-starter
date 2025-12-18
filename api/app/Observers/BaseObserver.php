@@ -22,13 +22,13 @@ abstract class BaseObserver implements ShouldHandleEventsAfterCommit
      */
     protected function log(string $event, $model): void
     {
-//        logger()->info(sprintf(
-//            '%s event: %s (id: %s)',
-//            class_basename($model),
-//            $event,
-//            $model->id ?? 'n/a',
-//        ), [
-//            'attributes' => $model->getAttributes(),
-//        ]);
+        //        logger()->info(sprintf(
+        //            '%s event: %s (id: %s)',
+        //            class_basename($model),
+        //            $event,
+        //            $model->id ?? 'n/a',
+        //        ), [
+        //            'attributes' => $model->getAttributes(),
+        //        ]);
     }
 }

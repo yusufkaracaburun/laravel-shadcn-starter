@@ -48,6 +48,7 @@ Route::get('/test/mail/invoice/{id}', function (int $id) {
         $recipientEmail = config('app.admin_email');
 
         Mail::to($recipientEmail)->send(new InvoiceMail($invoice));
+        //Mail::to($recipientEmail)->queue(new InvoiceMail($invoice)); of InvoiceMail::dispatch($invoice)->to($recipientEmail);
 
         return "Invoice email sent successfully to {$recipientEmail}!";
     } catch (Exception $e) {

@@ -23,7 +23,7 @@ final class InvoiceMail extends BaseMail
      */
     public function attachments(): array
     {
-        $response = $this->invoice->generatePdf()->stream();
+        $response = $this->invoice->generatePdf()->output();
         $name = 'invoice_' . $this->invoice->invoice_number . '.pdf';
 
         return [

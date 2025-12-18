@@ -4,20 +4,15 @@ declare(strict_types=1);
 
 namespace App\Listeners;
 
+use Throwable;
 use App\Events\EmailSent;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Throwable;
 
 final class EmailSentListener implements ShouldQueue
 {
     use InteractsWithQueue;
-
-    /**
-     * Create the event listener.
-     */
-    public function __construct() {}
 
     /**
      * Handle the event.
