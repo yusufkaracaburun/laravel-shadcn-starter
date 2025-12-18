@@ -79,7 +79,9 @@ function handleDelete(index: number) {
           <td class="p-2 text-right">
             {{ formatMoney(item.unit_price) }}
           </td>
-          <td class="p-2 text-right">{{ item.vat_rate }}%</td>
+          <td class="p-2 text-right">
+            {{ item.vat_rate }}%
+          </td>
           <td class="p-2 text-right font-semibold">
             {{ formatMoney(item.total_incl_vat) }}
           </td>

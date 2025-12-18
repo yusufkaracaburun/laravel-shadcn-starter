@@ -8,15 +8,14 @@ import { ArrowLeft, Save, Send } from 'lucide-vue-next'
 import { computed, nextTick, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
-import { useToast } from '@/composables/use-toast'
-
-import Page from '@/components/global-layout/basic-page.vue'
 import Error from '@/components/custom-error.vue'
-
-import type { TInvoiceForm, TInvoiceItem } from '../data/schema'
+import Page from '@/components/global-layout/basic-page.vue'
 import Loading from '@/components/loading.vue'
 import { Button } from '@/components/ui/button'
+import { useToast } from '@/composables/use-toast'
 import { useGetInvoicePrerequisitesQuery, useGetInvoiceQuery } from '@/services/invoices.service'
+
+import type { TInvoiceForm, TInvoiceItem } from '../data/schema'
 
 import InvoiceEditorLayout from '../components/invoice-editor-layout.vue'
 import InvoiceForm from '../components/invoice-form.vue'
@@ -43,14 +42,16 @@ const prerequisites = computed(() => prerequisitesResponse.value?.data ?? null)
 
 // Extract customers from prerequisites
 const customers = computed(() => {
-  if (!prerequisites.value?.customers) return []
+  if (!prerequisites.value?.customers)
+    return []
   const customersData = prerequisites.value.customers
   return Array.isArray(customersData) ? customersData : ((customersData as any).data ?? [])
 })
 
 // Extract items from prerequisites
 const items = computed(() => {
-  if (!prerequisites.value?.items) return []
+  if (!prerequisites.value?.items)
+    return []
   const itemsData = prerequisites.value.items
   return Array.isArray(itemsData) ? itemsData : ((itemsData as any).data ?? [])
 })
@@ -80,39 +81,45 @@ function handleClose() {
 }
 
 async function handleUpdate() {
-  if (!formRef.value) return
+  if (!formRef.value)
+    return
   isSubmitting.value = true
   try {
     await formRef.value.handleSubmit()
     showSuccess('Invoice updated')
-  } catch (validationError) {
+  }
+  catch (validationError) {
     console.error('Validation Error:', validationError)
     toast({
       title: 'Validation Error',
       description: 'Please correct the form errors.',
       variant: 'destructive',
     })
-  } finally {
+  }
+  finally {
     isSubmitting.value = false
   }
 }
 
 async function handleUpdateAndSend() {
-  if (!formRef.value) return
+  if (!formRef.value)
+    return
   isSubmitting.value = true
   try {
     formRef.value.setFieldValue('status', 'sent')
     await nextTick()
     await formRef.value.handleSubmit()
     showSuccess('Invoice updated and sent')
-  } catch (validationError) {
+  }
+  catch (validationError) {
     console.error('Validation Error:', validationError)
     toast({
       title: 'Validation Error',
       description: 'Please correct the form errors.',
       variant: 'destructive',
     })
-  } finally {
+  }
+  finally {
     isSubmitting.value = false
   }
 }
@@ -131,18 +138,32 @@ async function handleUpdateAndSend() {
       <Loading />
     </div>
 
-    <Error v-else-if="isError" :error="error?.message || 'Unknown error'" title="Failed to load invoice"
-      description="We couldn't load the invoice details. Please try again." />
+    <Error
+      v-else-if="isError"
+      :error="error?.message || 'Unknown error'"
+      title="Failed to load invoice"
+      description="We couldn't load the invoice details. Please try again."
+    />
 
     <InvoiceEditorLayout v-else-if="invoice" :is-loading="isSubmitting">
       <template #form>
-        <InvoiceForm ref="formRef" v-model:model-value="currentFormValues" :items="items" :customers="customers"
-          :invoice-id="invoiceId" @update:form-items="(items) => (currentFormItems = items)" />
+        <InvoiceForm
+          ref="formRef"
+          v-model:model-value="currentFormValues"
+          :items="items"
+          :customers="customers"
+          :invoice-id="invoiceId"
+          @update:form-items="(items) => (currentFormItems = items)"
+        />
       </template>
 
       <template #preview>
-        <InvoicePreview :form-values="currentFormValues" :items="currentFormItems" :customers="customers"
-          :is-loading="isSubmitting" />
+        <InvoicePreview
+          :form-values="currentFormValues"
+          :items="currentFormItems"
+          :customers="customers"
+          :is-loading="isSubmitting"
+        />
       </template>
 
       <template #actions>

@@ -23,7 +23,8 @@ export function downloadBlobFromAxiosResponse(
     document.body.appendChild(link)
     link.click()
     document.body.removeChild(link)
-  } finally {
+  }
+  finally {
     URL.revokeObjectURL(url)
   }
 }

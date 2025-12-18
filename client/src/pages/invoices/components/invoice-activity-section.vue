@@ -30,7 +30,9 @@ function hasChanges(activity: IInvoiceActivity): boolean {
     <CardHeader class="pb-4">
       <div class="flex items-center gap-2">
         <History class="size-4 text-muted-foreground" />
-        <CardTitle class="text-base font-semibold"> Activity Log </CardTitle>
+        <CardTitle class="text-base font-semibold">
+          Activity Log
+        </CardTitle>
       </div>
     </CardHeader>
     <CardContent>
@@ -77,8 +79,12 @@ function hasChanges(activity: IInvoiceActivity): boolean {
         <div class="inline-flex items-center justify-center size-10 rounded-full bg-muted mb-3">
           <History class="size-5 text-muted-foreground" />
         </div>
-        <p class="text-sm font-medium text-muted-foreground">No activity recorded</p>
-        <p class="text-xs text-muted-foreground mt-1">Activity history will appear here.</p>
+        <p class="text-sm font-medium text-muted-foreground">
+          No activity recorded
+        </p>
+        <p class="text-xs text-muted-foreground mt-1">
+          Activity history will appear here.
+        </p>
       </div>
     </CardContent>
   </Card>

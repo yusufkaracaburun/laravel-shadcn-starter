@@ -8,17 +8,10 @@ import { Badge } from '@/components/ui/badge'
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
 
 import CustomerDelete from './customer-delete.vue'
 import CustomerResourceDialog from './customer-resource-dialog.vue'
@@ -73,8 +66,12 @@ function handleSelect(command: TCommand) {
             </UiButton>
           </UiDropdownMenuTrigger>
           <UiDropdownMenuContent align="end" @click.stop>
-            <UiDropdownMenuItem @click.stop="handleSelect('view')"> View </UiDropdownMenuItem>
-            <UiDropdownMenuItem @click.stop="handleSelect('edit')"> Edit </UiDropdownMenuItem>
+            <UiDropdownMenuItem @click.stop="handleSelect('view')">
+              View
+            </UiDropdownMenuItem>
+            <UiDropdownMenuItem @click.stop="handleSelect('edit')">
+              Edit
+            </UiDropdownMenuItem>
             <UiDropdownMenuItem class="text-destructive" @click.stop="handleSelect('delete')">
               Delete
             </UiDropdownMenuItem>

@@ -32,7 +32,8 @@ const isInView = ref(false)
 const canvasSize = ref({ width: 0, height: 0 })
 
 const computedColor = computed(() => {
-  if (!context.value) return 'rgba(255, 0, 0,'
+  if (!context.value)
+    return 'rgba(255, 0, 0,'
 
   const hex = color.value.replace(/^#/, '')
   const bigint = Number.parseInt(hex, 16)
@@ -118,7 +119,8 @@ let intersectionObserver: IntersectionObserver | undefined
 let lastTime = 0
 
 function animate(time: number) {
-  if (!isInView.value) return
+  if (!isInView.value)
+    return
 
   const deltaTime = (time - lastTime) / 1000
   lastTime = time
@@ -137,9 +139,11 @@ function animate(time: number) {
 }
 
 onMounted(() => {
-  if (!canvasRef.value || !containerRef.value) return
+  if (!canvasRef.value || !containerRef.value)
+    return
   context.value = canvasRef.value.getContext('2d')!
-  if (!context.value) return
+  if (!context.value)
+    return
 
   updateCanvasSize()
 

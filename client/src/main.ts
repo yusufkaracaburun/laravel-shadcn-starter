@@ -20,14 +20,15 @@ async function bootstrap() {
   app.mount('#app')
 
   await nextTick()
-  //await checkUserAuth()
+  // await checkUserAuth()
 }
 
 async function checkUserAuth() {
   try {
     const { checkAuth } = useAuth()
     await checkAuth()
-  } catch (error) {
+  }
+  catch (error) {
     // Silently fail - user is not authenticated
     console.warn('No authenticated session found', error)
   }

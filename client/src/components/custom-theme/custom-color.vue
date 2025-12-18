@@ -9,14 +9,16 @@ const { setTheme } = themeStore
 const { theme: t } = storeToRefs(themeStore)
 
 watchEffect(() => {
-  document.documentElement.classList.remove(...THEMES.map((theme) => `theme-${theme}`))
+  document.documentElement.classList.remove(...THEMES.map(theme => `theme-${theme}`))
   document.documentElement.classList.add(`theme-${t.value}`)
 })
 </script>
 
 <template>
   <div class="space-y-1.5 pt-6">
-    <UiLabel for="radius" class="text-xs"> Color </UiLabel>
+    <UiLabel for="radius" class="text-xs">
+      Color
+    </UiLabel>
     <div class="grid grid-cols-2 gap-2 py-1.5">
       <UiButton
         v-for="theme in THEME_PRIMARY_COLORS"

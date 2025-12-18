@@ -71,7 +71,11 @@ function handleSelect(command: TCommand) {
 
   <Dialog v-model:open="isDialogOpen" class="print:hidden">
     <DialogContent v-if="showComponent && props.invoice" class="sm:max-w-[425px]">
-      <InvoiceDelete v-if="showComponent === InvoiceDelete" :invoice="props.invoice" @close="handleSelect('close')" />
+      <InvoiceDelete
+        v-if="showComponent === InvoiceDelete"
+        :invoice="props.invoice"
+        @close="handleSelect('close')"
+      />
     </DialogContent>
   </Dialog>
 </template>

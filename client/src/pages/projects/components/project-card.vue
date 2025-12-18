@@ -55,7 +55,8 @@ function handleSelect(command: TCommand) {
 }
 
 function formatDate(dateString: string | null): string {
-  if (!dateString) return '—'
+  if (!dateString)
+    return '—'
   return new Date(dateString).toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'short',
@@ -63,8 +64,8 @@ function formatDate(dateString: string | null): string {
   })
 }
 
-const status = computed(() => statuses.find((s) => s.value === props.project.status))
-const category = computed(() => categories.find((c) => c.value === props.project.category))
+const status = computed(() => statuses.find(s => s.value === props.project.status))
+const category = computed(() => categories.find(c => c.value === props.project.category))
 </script>
 
 <template>
@@ -90,9 +91,13 @@ const category = computed(() => categories.find((c) => c.value === props.project
             </UiButton>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuItem @click.stop="handleSelect('view')"> View </DropdownMenuItem>
+            <DropdownMenuItem @click.stop="handleSelect('view')">
+              View
+            </DropdownMenuItem>
             <UiDialogTrigger as-child>
-              <DropdownMenuItem @click.stop="handleSelect('edit')"> Edit </DropdownMenuItem>
+              <DropdownMenuItem @click.stop="handleSelect('edit')">
+                Edit
+              </DropdownMenuItem>
             </UiDialogTrigger>
             <UiDialogTrigger as-child>
               <DropdownMenuItem class="text-destructive" @click.stop="handleSelect('delete')">

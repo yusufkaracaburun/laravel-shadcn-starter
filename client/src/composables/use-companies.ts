@@ -91,7 +91,8 @@ export function useCompanies() {
     try {
       const companiesResponse = await fetchCompanies()
       return companiesResponse.data
-    } catch (error: any) {
+    }
+    catch (error: any) {
       // Store error with context
       errorStore.setError(error, { context: 'fetchCompanies' })
 
@@ -112,7 +113,8 @@ export function useCompanies() {
       const response = await createCompanyMutation.mutateAsync(data)
       toast.showSuccess('Company created successfully!')
       return response
-    } catch (error: any) {
+    }
+    catch (error: any) {
       // Store error with context
       errorStore.setError(error, { context: 'createCompany' })
 
@@ -124,7 +126,8 @@ export function useCompanies() {
       if (Object.keys(validationErrors).length > 0) {
         const firstError = Object.values(validationErrors)[0]?.[0]
         toast.showError(firstError || message)
-      } else {
+      }
+      else {
         toast.showError(message)
       }
       throw error
@@ -136,7 +139,8 @@ export function useCompanies() {
       const response = await updateCompanyMutation.mutateAsync({ companyId, data })
       toast.showSuccess('Company updated successfully!')
       return response
-    } catch (error: any) {
+    }
+    catch (error: any) {
       // Store error with context
       errorStore.setError(error, { context: 'updateCompany' })
 
@@ -148,7 +152,8 @@ export function useCompanies() {
       if (Object.keys(validationErrors).length > 0) {
         const firstError = Object.values(validationErrors)[0]?.[0]
         toast.showError(firstError || message)
-      } else {
+      }
+      else {
         toast.showError(message)
       }
       throw error
@@ -159,7 +164,8 @@ export function useCompanies() {
     try {
       await deleteCompanyMutation.mutateAsync(companyId)
       toast.showSuccess('Company deleted successfully!')
-    } catch (error: any) {
+    }
+    catch (error: any) {
       // Store error with context
       errorStore.setError(error, { context: 'deleteCompany' })
 

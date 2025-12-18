@@ -99,7 +99,8 @@ export function setupReverbListener(app: App) {
             .error((error: any) => {
               console.error('❌ Private channel error:', error)
             })
-        } else {
+        }
+        else {
           console.warn('⚠️ User not authenticated, skipping private channel subscription')
         }
       },
@@ -113,11 +114,11 @@ export function setupReverbListener(app: App) {
       const { message, type = 'info', title, description, data: eventData } = data
 
       const notificationTitle = title || message || 'Notification'
-      const notificationDescription =
-        description ||
-        (eventData && Object.keys(eventData).length > 0
-          ? JSON.stringify(eventData, null, 2)
-          : undefined)
+      const notificationDescription
+        = description
+          || (eventData && Object.keys(eventData).length > 0
+            ? JSON.stringify(eventData, null, 2)
+            : undefined)
 
       console.warn('🍞 Showing toast:', { notificationTitle, type, notificationDescription })
 
@@ -153,10 +154,12 @@ export function setupReverbListener(app: App) {
 
         if (toastResult) {
           console.warn('✅ Toast called successfully, ID:', toastResult)
-        } else {
+        }
+        else {
           console.error('❌ Toast returned null/undefined - toast may not have rendered')
         }
-      } catch (error) {
+      }
+      catch (error) {
         console.error('❌ Toast error:', error)
       }
     }

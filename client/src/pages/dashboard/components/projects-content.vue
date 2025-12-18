@@ -33,9 +33,11 @@ const filteredProjects = computed(() => {
 
   if (timeRange.value === '90d') {
     daysToSubtract = 90
-  } else if (timeRange.value === '30d') {
+  }
+  else if (timeRange.value === '30d') {
     daysToSubtract = 30
-  } else if (timeRange.value === '7d') {
+  }
+  else if (timeRange.value === '7d') {
     daysToSubtract = 7
   }
 
@@ -50,20 +52,20 @@ const filteredProjects = computed(() => {
 
 const totalProjects = computed(() => filteredProjects.value.length)
 const activeProjects = computed(
-  () => filteredProjects.value.filter((p) => p.status === 'active').length,
+  () => filteredProjects.value.filter(p => p.status === 'active').length,
 )
 const completedProjects = computed(
-  () => filteredProjects.value.filter((p) => p.status === 'completed').length,
+  () => filteredProjects.value.filter(p => p.status === 'completed').length,
 )
 const inProgressProjects = computed(() => {
   return filteredProjects.value.filter(
-    (p) => p.status === 'active' && p.progress > 0 && p.progress < 100,
+    p => p.status === 'active' && p.progress > 0 && p.progress < 100,
   ).length
 })
 
 const recentProjects = computed(() => {
   return filteredProjects.value
-    .filter((p) => p.status === 'active')
+    .filter(p => p.status === 'active')
     .sort((a, b) => new Date(b.startDate).getTime() - new Date(a.startDate).getTime())
     .slice(0, 5)
 })
@@ -75,15 +77,16 @@ interface PieChartData {
 }
 
 function getChartColor(index: number) {
-  if (globalThis.window === undefined) return `var(--chart-${index})`
+  if (globalThis.window === undefined)
+    return `var(--chart-${index})`
   const root = document.documentElement
   const value = getComputedStyle(root).getPropertyValue(`--chart-${index}`).trim()
   return value || `var(--chart-${index})`
 }
 
 const pieChartData = computed<PieChartData[]>(() => {
-  const onHoldCount = filteredProjects.value.filter((p) => p.status === 'on-hold').length
-  const cancelledCount = filteredProjects.value.filter((p) => p.status === 'cancelled').length
+  const onHoldCount = filteredProjects.value.filter(p => p.status === 'on-hold').length
+  const cancelledCount = filteredProjects.value.filter(p => p.status === 'cancelled').length
 
   const data = [
     { status: 'active', value: activeProjects.value, fill: getChartColor(1) },
@@ -92,7 +95,7 @@ const pieChartData = computed<PieChartData[]>(() => {
     { status: 'cancelled', value: cancelledCount, fill: getChartColor(4) },
   ]
 
-  return data.filter((item) => item.value > 0)
+  return data.filter(item => item.value > 0)
 })
 
 const totalProjectsCount = computed(() =>
@@ -134,7 +137,9 @@ function formatDate(dateString: string) {
   <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4" data-testid="projects-content_metrics_grid">
     <UiCard data-testid="projects-content_total-projects_card">
       <UiCardHeader class="flex flex-row items-center justify-between pb-2 space-y-0">
-        <UiCardTitle class="text-sm font-medium"> Total Projects </UiCardTitle>
+        <UiCardTitle class="text-sm font-medium">
+          Total Projects
+        </UiCardTitle>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"
@@ -154,12 +159,16 @@ function formatDate(dateString: string) {
         <div class="text-2xl font-bold">
           {{ totalProjects }}
         </div>
-        <p class="text-xs text-muted-foreground">All projects in system</p>
+        <p class="text-xs text-muted-foreground">
+          All projects in system
+        </p>
       </UiCardContent>
     </UiCard>
     <UiCard data-testid="projects-content_active-projects_card">
       <UiCardHeader class="flex flex-row items-center justify-between pb-2 space-y-0">
-        <UiCardTitle class="text-sm font-medium"> Active Projects </UiCardTitle>
+        <UiCardTitle class="text-sm font-medium">
+          Active Projects
+        </UiCardTitle>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"
@@ -184,7 +193,9 @@ function formatDate(dateString: string) {
     </UiCard>
     <UiCard data-testid="projects-content_completed-projects_card">
       <UiCardHeader class="flex flex-row items-center justify-between pb-2 space-y-0">
-        <UiCardTitle class="text-sm font-medium"> Completed Projects </UiCardTitle>
+        <UiCardTitle class="text-sm font-medium">
+          Completed Projects
+        </UiCardTitle>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"
@@ -209,7 +220,9 @@ function formatDate(dateString: string) {
     </UiCard>
     <UiCard data-testid="projects-content_in-progress_card">
       <UiCardHeader class="flex flex-row items-center justify-between pb-2 space-y-0">
-        <UiCardTitle class="text-sm font-medium"> In Progress </UiCardTitle>
+        <UiCardTitle class="text-sm font-medium">
+          In Progress
+        </UiCardTitle>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"
@@ -228,7 +241,9 @@ function formatDate(dateString: string) {
         <div class="text-2xl font-bold">
           {{ inProgressProjects }}
         </div>
-        <p class="text-xs text-muted-foreground">Currently being worked on</p>
+        <p class="text-xs text-muted-foreground">
+          Currently being worked on
+        </p>
       </UiCardContent>
     </UiCard>
   </div>
@@ -248,10 +263,18 @@ function formatDate(dateString: string) {
             <SelectValue placeholder="All Projects" />
           </SelectTrigger>
           <SelectContent class="rounded-xl">
-            <SelectItem value="all" class="rounded-lg"> All Projects </SelectItem>
-            <SelectItem value="90d" class="rounded-lg"> Last 3 months </SelectItem>
-            <SelectItem value="30d" class="rounded-lg"> Last 30 days </SelectItem>
-            <SelectItem value="7d" class="rounded-lg"> Last 7 days </SelectItem>
+            <SelectItem value="all" class="rounded-lg">
+              All Projects
+            </SelectItem>
+            <SelectItem value="90d" class="rounded-lg">
+              Last 3 months
+            </SelectItem>
+            <SelectItem value="30d" class="rounded-lg">
+              Last 30 days
+            </SelectItem>
+            <SelectItem value="7d" class="rounded-lg">
+              Last 7 days
+            </SelectItem>
           </SelectContent>
         </Select>
       </UiCardHeader>

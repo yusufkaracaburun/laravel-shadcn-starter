@@ -33,18 +33,18 @@ const defaultColumns: Column[] = [
 
 // Initialize board state immediately with tasks data (before useKanban's onMounted loads from localStorage)
 const initialKanbanTasks = tableTasksToKanbanTasks(props.tasks)
-const initialColumns = defaultColumns.map((col) => ({ ...col, tasks: [] as KanbanTask[] }))
+const initialColumns = defaultColumns.map(col => ({ ...col, tasks: [] as KanbanTask[] }))
 
 initialKanbanTasks.forEach((task) => {
   const columnId = task.status || 'todo'
-  const column = initialColumns.find((c) => c.id === columnId)
+  const column = initialColumns.find(c => c.id === columnId)
   if (column) {
     column.tasks.push(task)
   }
 })
 
 const visibleInitialColumns = initialColumns.filter(
-  (col) => col.tasks.length > 0 || ['todo', 'in-progress', 'done'].includes(col.id),
+  col => col.tasks.length > 0 || ['todo', 'in-progress', 'done'].includes(col.id),
 )
 
 // Set board state immediately to override any localStorage data
@@ -55,15 +55,16 @@ const isSyncing = ref(false)
 
 // Organize tasks into columns by status
 function organizeTasksIntoColumns() {
-  if (isSyncing.value) return
+  if (isSyncing.value)
+    return
 
   isSyncing.value = true
-  const columns = defaultColumns.map((col) => ({ ...col, tasks: [] as KanbanTask[] }))
+  const columns = defaultColumns.map(col => ({ ...col, tasks: [] as KanbanTask[] }))
   const kanbanTasks = tableTasksToKanbanTasks(props.tasks)
 
   kanbanTasks.forEach((task) => {
     const columnId = task.status || 'todo'
-    const column = columns.find((c) => c.id === columnId)
+    const column = columns.find(c => c.id === columnId)
     if (column) {
       column.tasks.push(task)
     }
@@ -71,7 +72,7 @@ function organizeTasksIntoColumns() {
 
   // Show default columns (todo, in-progress, done) even if empty, and columns that have tasks
   const visibleColumns = columns.filter(
-    (col) => col.tasks.length > 0 || ['todo', 'in-progress', 'done'].includes(col.id),
+    col => col.tasks.length > 0 || ['todo', 'in-progress', 'done'].includes(col.id),
   )
 
   // Update the kanban board with organized tasks
@@ -99,7 +100,8 @@ watch(
 watch(
   () => board.value.columns,
   () => {
-    if (isSyncing.value) return
+    if (isSyncing.value)
+      return
 
     isSyncing.value = true
 
@@ -126,14 +128,15 @@ function handleTaskUpdated(task: KanbanTask, _columnId: string) {
   const tableTask = kanbanTaskToTableTask(task)
 
   // Check if task already exists
-  const existingIndex = props.tasks.findIndex((t) => t.id === tableTask.id)
+  const existingIndex = props.tasks.findIndex(t => t.id === tableTask.id)
 
   if (existingIndex >= 0) {
     // Update existing task
     const updatedTasks = [...props.tasks]
     updatedTasks[existingIndex] = tableTask
     emit('update:tasks', updatedTasks)
-  } else {
+  }
+  else {
     // Add new task
     const updatedTasks = [...props.tasks, tableTask]
     emit('update:tasks', updatedTasks)
@@ -171,7 +174,7 @@ watch(
     if (!hasForcedInit.value && newColumns.length > 0) {
       const hasOurTasks = props.tasks.some((task) => {
         const kanbanTask = tableTasksToKanbanTasks([task])[0]
-        return newColumns.some((col) => col.tasks.some((t) => t.id === kanbanTask.id))
+        return newColumns.some(col => col.tasks.some(t => t.id === kanbanTask.id))
       })
 
       // If localStorage data doesn't contain our tasks, override it

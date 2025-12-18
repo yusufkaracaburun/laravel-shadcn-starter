@@ -4,7 +4,6 @@ import {
   Bell,
   CreditCard,
   LogOut,
-  Settings,
   Sparkles,
   UserRoundCog,
 } from 'lucide-vue-next'

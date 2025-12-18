@@ -21,7 +21,9 @@ const props = defineProps<IProps>()
     <CardHeader class="pb-4">
       <div class="flex items-center gap-2">
         <CreditCard class="size-4 text-muted-foreground" />
-        <CardTitle class="text-base font-semibold"> Payments </CardTitle>
+        <CardTitle class="text-base font-semibold">
+          Payments
+        </CardTitle>
       </div>
     </CardHeader>
     <CardContent>
@@ -53,8 +55,12 @@ const props = defineProps<IProps>()
         <div class="inline-flex items-center justify-center size-10 rounded-full bg-muted mb-3">
           <CreditCard class="size-5 text-muted-foreground" />
         </div>
-        <p class="text-sm font-medium text-muted-foreground">No payments recorded</p>
-        <p class="text-xs text-muted-foreground mt-1">Payments will appear here when recorded.</p>
+        <p class="text-sm font-medium text-muted-foreground">
+          No payments recorded
+        </p>
+        <p class="text-xs text-muted-foreground mt-1">
+          Payments will appear here when recorded.
+        </p>
       </div>
     </CardContent>
   </Card>

@@ -6,7 +6,6 @@ import {
   expectIResponse,
   expectSuccess,
   expectValidationErrors,
-  expectValidUser,
 } from '../../features/shared/helpers'
 import { expect, invalidUser, test, testUser } from '../../fixtures'
 

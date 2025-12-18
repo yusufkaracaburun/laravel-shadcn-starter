@@ -12,7 +12,7 @@ const links = [
   { path: '/settings/display', label: 'Display', icon: h(PictureInPicture2) },
 ]
 
-const currentLink = computed(() => links.find((link) => link.path === currentPath.value))
+const currentLink = computed(() => links.find(link => link.path === currentPath.value))
 </script>
 
 <template>

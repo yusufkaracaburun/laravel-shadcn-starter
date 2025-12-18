@@ -132,7 +132,8 @@ const filterRange = computed(() => {
     let daysToSubtract = 90
     if (timeRange.value === '30d') {
       daysToSubtract = 30
-    } else if (timeRange.value === '7d') {
+    }
+    else if (timeRange.value === '7d') {
       daysToSubtract = 7
     }
     const startDate = new Date(referenceDate)
@@ -149,7 +150,9 @@ const filterRange = computed(() => {
   >
     <UiCard data-testid="analytics-content_page-views_card">
       <UiCardHeader class="flex flex-row items-center justify-between pb-2 space-y-0">
-        <UiCardTitle class="text-sm font-medium"> Page Views </UiCardTitle>
+        <UiCardTitle class="text-sm font-medium">
+          Page Views
+        </UiCardTitle>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"
@@ -165,13 +168,19 @@ const filterRange = computed(() => {
         </svg>
       </UiCardHeader>
       <UiCardContent>
-        <div class="text-2xl font-bold">124,580</div>
-        <p class="text-xs text-muted-foreground">+15.3% from last month</p>
+        <div class="text-2xl font-bold">
+          124,580
+        </div>
+        <p class="text-xs text-muted-foreground">
+          +15.3% from last month
+        </p>
       </UiCardContent>
     </UiCard>
     <UiCard data-testid="analytics-content_unique-visitors_card">
       <UiCardHeader class="flex flex-row items-center justify-between pb-2 space-y-0">
-        <UiCardTitle class="text-sm font-medium"> Unique Visitors </UiCardTitle>
+        <UiCardTitle class="text-sm font-medium">
+          Unique Visitors
+        </UiCardTitle>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"
@@ -188,13 +197,19 @@ const filterRange = computed(() => {
         </svg>
       </UiCardHeader>
       <UiCardContent>
-        <div class="text-2xl font-bold">78,420</div>
-        <p class="text-xs text-muted-foreground">+12.8% from last month</p>
+        <div class="text-2xl font-bold">
+          78,420
+        </div>
+        <p class="text-xs text-muted-foreground">
+          +12.8% from last month
+        </p>
       </UiCardContent>
     </UiCard>
     <UiCard data-testid="analytics-content_bounce-rate_card">
       <UiCardHeader class="flex flex-row items-center justify-between pb-2 space-y-0">
-        <UiCardTitle class="text-sm font-medium"> Bounce Rate </UiCardTitle>
+        <UiCardTitle class="text-sm font-medium">
+          Bounce Rate
+        </UiCardTitle>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"
@@ -210,13 +225,19 @@ const filterRange = computed(() => {
         </svg>
       </UiCardHeader>
       <UiCardContent>
-        <div class="text-2xl font-bold">42.5%</div>
-        <p class="text-xs text-muted-foreground">-3.2% from last month</p>
+        <div class="text-2xl font-bold">
+          42.5%
+        </div>
+        <p class="text-xs text-muted-foreground">
+          -3.2% from last month
+        </p>
       </UiCardContent>
     </UiCard>
     <UiCard data-testid="analytics-content_avg-session_card">
       <UiCardHeader class="flex flex-row items-center justify-between pb-2 space-y-0">
-        <UiCardTitle class="text-sm font-medium"> Avg Session Duration </UiCardTitle>
+        <UiCardTitle class="text-sm font-medium">
+          Avg Session Duration
+        </UiCardTitle>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"
@@ -232,8 +253,12 @@ const filterRange = computed(() => {
         </svg>
       </UiCardHeader>
       <UiCardContent>
-        <div class="text-2xl font-bold">3m 24s</div>
-        <p class="text-xs text-muted-foreground">+8.5% from last month</p>
+        <div class="text-2xl font-bold">
+          3m 24s
+        </div>
+        <p class="text-xs text-muted-foreground">
+          +8.5% from last month
+        </p>
       </UiCardContent>
     </UiCard>
   </div>
@@ -255,9 +280,15 @@ const filterRange = computed(() => {
             <SelectValue placeholder="Last 3 months" />
           </SelectTrigger>
           <SelectContent class="rounded-xl">
-            <SelectItem value="90d" class="rounded-lg"> Last 3 months </SelectItem>
-            <SelectItem value="30d" class="rounded-lg"> Last 30 days </SelectItem>
-            <SelectItem value="7d" class="rounded-lg"> Last 7 days </SelectItem>
+            <SelectItem value="90d" class="rounded-lg">
+              Last 3 months
+            </SelectItem>
+            <SelectItem value="30d" class="rounded-lg">
+              Last 30 days
+            </SelectItem>
+            <SelectItem value="7d" class="rounded-lg">
+              Last 7 days
+            </SelectItem>
           </SelectContent>
         </Select>
       </CardHeader>

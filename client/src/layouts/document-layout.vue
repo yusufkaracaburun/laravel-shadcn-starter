@@ -4,10 +4,10 @@
 
 <template>
   <div class="min-h-screen">
-    <slot name="navbar"></slot>
+    <slot name="navbar" />
 
     <!-- Main Content Area: Loading, Error, or Document Content -->
-    <slot name="main-content"></slot>
+    <slot name="main-content" />
   </div>
 </template>
 

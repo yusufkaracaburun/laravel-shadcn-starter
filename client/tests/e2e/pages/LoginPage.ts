@@ -57,9 +57,9 @@ export class LoginPage extends BasePage {
       // Match POST requests to the login endpoint on the API server
       // Exclude CSRF cookie requests (GET requests to /sanctum/csrf-cookie)
       return (
-        url.startsWith(apiURL) &&
-        (url.endsWith('/login') || url.endsWith('/login/')) &&
-        method === 'POST'
+        url.startsWith(apiURL)
+        && (url.endsWith('/login') || url.endsWith('/login/'))
+        && method === 'POST'
       )
     })
     await submitButton.click()

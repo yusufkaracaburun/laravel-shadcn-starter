@@ -66,7 +66,9 @@ const onSubmit = handleSubmit((values) => {
 
 <template>
   <div>
-    <h3 class="text-lg font-medium">Display</h3>
+    <h3 class="text-lg font-medium">
+      Display
+    </h3>
     <p class="text-sm text-muted-foreground">
       Turn items on or off to control what's displayed in the app.
     </p>
@@ -76,7 +78,9 @@ const onSubmit = handleSubmit((values) => {
     <FormField name="items">
       <FormItem>
         <div class="mb-4">
-          <FormLabel class="text-base"> Sidebar </FormLabel>
+          <FormLabel class="text-base">
+            Sidebar
+          </FormLabel>
           <FormDescription> Select the items you want to display in the sidebar. </FormDescription>
         </div>
 
@@ -111,7 +115,9 @@ const onSubmit = handleSubmit((values) => {
     </FormField>
 
     <div class="flex justify-start mt-4">
-      <Button type="submit"> Update display </Button>
+      <Button type="submit">
+        Update display
+      </Button>
     </div>
   </form>
 </template>

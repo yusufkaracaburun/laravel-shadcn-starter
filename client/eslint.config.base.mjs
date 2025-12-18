@@ -33,7 +33,7 @@ export default antfu({
   },
   rules: {
     'perfectionist/sort-imports': [
-      'error',
+      'warn',
       {
         tsconfigRootDir: '.',
       },

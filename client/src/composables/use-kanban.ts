@@ -41,7 +41,8 @@ export function useKanban() {
       if (raw) {
         try {
           return JSON.parse(raw) as BoardState
-        } catch {
+        }
+        catch {
           // Invalid JSON, return default
         }
       }
@@ -62,37 +63,42 @@ export function useKanban() {
   }
 
   function removeColumn(id: string) {
-    board.value.columns = board.value.columns.filter((c) => c.id !== id)
+    board.value.columns = board.value.columns.filter(c => c.id !== id)
     persist()
   }
 
   function updateColumn(id: string, title: string) {
-    const col = board.value.columns.find((c) => c.id === id)
-    if (!col) return
+    const col = board.value.columns.find(c => c.id === id)
+    if (!col)
+      return
     col.title = title
     persist()
   }
 
   function addTask(columnId: string, payload: NewTask) {
-    const col = board.value.columns.find((c) => c.id === columnId)
-    if (!col) return
+    const col = board.value.columns.find(c => c.id === columnId)
+    if (!col)
+      return
     col.tasks.unshift({ id: generateTaskId(), createdAt: new Date(), ...payload })
     persist()
   }
 
   function updateTask(columnId: string, taskId: string, patch: Partial<Task>) {
-    const col = board.value.columns.find((c) => c.id === columnId)
-    if (!col) return
-    const t = col.tasks.find((t) => t.id === taskId)
-    if (!t) return
+    const col = board.value.columns.find(c => c.id === columnId)
+    if (!col)
+      return
+    const t = col.tasks.find(t => t.id === taskId)
+    if (!t)
+      return
     Object.assign(t, patch)
     persist()
   }
 
   function removeTask(columnId: string, taskId: string) {
-    const col = board.value.columns.find((c) => c.id === columnId)
-    if (!col) return
-    col.tasks = col.tasks.filter((t) => t.id !== taskId)
+    const col = board.value.columns.find(c => c.id === columnId)
+    if (!col)
+      return
+    col.tasks = col.tasks.filter(t => t.id !== taskId)
     persist()
   }
 

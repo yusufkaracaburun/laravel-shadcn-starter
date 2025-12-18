@@ -12,6 +12,8 @@ import Page from '@/components/global-layout/basic-page.vue'
 import { Button } from '@/components/ui/button'
 import { useGetInvoicePrerequisitesQuery } from '@/services/invoices.service'
 
+import type { TInvoice } from './data/schema'
+
 import InvoiceEditorLayout from './components/invoice-editor-layout.vue'
 import InvoiceForm from './components/invoice-form.vue'
 
@@ -23,7 +25,8 @@ const prerequisites = computed(() => prerequisitesResponse.value?.data ?? null)
 
 // Extract items from prerequisites (ItemCollection serializes to { data: Item[] })
 const items = computed(() => {
-  if (!prerequisites.value?.items) return []
+  if (!prerequisites.value?.items)
+    return []
   // Handle both array format and ResourceCollection format ({ data: [...] })
   const itemsData = prerequisites.value.items
   return Array.isArray(itemsData) ? itemsData : ((itemsData as any).data ?? [])
@@ -31,7 +34,8 @@ const items = computed(() => {
 
 // Extract customers from prerequisites (CustomerCollection serializes to { data: Customer[] })
 const customers = computed(() => {
-  if (!prerequisites.value?.customers) return []
+  if (!prerequisites.value?.customers)
+    return []
   // Handle both array format and ResourceCollection format ({ data: [...] })
   const customersData = prerequisites.value.customers
   return Array.isArray(customersData) ? customersData : ((customersData as any).data ?? [])
@@ -39,8 +43,6 @@ const customers = computed(() => {
 
 const formRef = ref<InstanceType<typeof InvoiceForm> | null>(null)
 const isSubmitting = ref(false)
-
-import type { TInvoice } from './data/schema'
 
 const currentFormValues = ref<TInvoice>({
   id: 0, // Default ID
@@ -80,19 +82,23 @@ function handleClose() {
 }
 
 async function handleSave() {
-  if (!formRef.value) return
+  if (!formRef.value)
+    return
   isSubmitting.value = true
   try {
     await formRef.value.handleSubmit()
-  } catch (error) {
+  }
+  catch (error) {
     console.error('Error saving invoice:', error)
-  } finally {
+  }
+  finally {
     isSubmitting.value = false
   }
 }
 
 async function handleSaveAndSend() {
-  if (!formRef.value) return
+  if (!formRef.value)
+    return
   isSubmitting.value = true
   try {
     // Update status to 'sent' before submitting
@@ -100,9 +106,11 @@ async function handleSaveAndSend() {
     // Wait a tick for the value to update
     await nextTick()
     await formRef.value.handleSubmit()
-  } catch (error) {
+  }
+  catch (error) {
     console.error('Error saving and sending invoice:', error)
-  } finally {
+  }
+  finally {
     isSubmitting.value = false
   }
 }
@@ -126,7 +134,7 @@ async function handleSaveAndSend() {
           :items="items"
           :customers="customers"
           @close="handleClose"
-          @update:formItems="(items) => (currentFormItems = items)"
+          @update:form-items="(items) => (currentFormItems = items)"
         />
       </template>
 

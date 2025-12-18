@@ -18,8 +18,6 @@ import { Input } from '@/components/ui/input'
 import { useAuth } from '@/composables/use-auth'
 import { cn } from '@/lib/utils'
 
-import GitHubButton from './github-button.vue'
-import GoogleButton from './google-button.vue'
 import ToForgotPasswordLink from './to-forgot-password-link.vue'
 
 const props = defineProps<{
@@ -49,7 +47,8 @@ const onSubmit = handleSubmit(async (values) => {
       email: values.email,
       password: values.password,
     })
-  } catch (error: any) {
+  }
+  catch (error: any) {
     // Handle backend validation errors (422)
     if (error.response?.status === 422) {
       const backendErrors = error.response.data.errors || {}
@@ -73,12 +72,18 @@ const onSubmit = handleSubmit(async (values) => {
         <form id="login-form-4" class="p-6 md:p-8" @submit="onSubmit">
           <FieldGroup>
             <div class="flex flex-col items-center gap-2 text-center">
-              <h1 class="text-2xl font-bold">Welcome back</h1>
-              <p class="text-muted-foreground text-balance">Login to your Acme Inc account</p>
+              <h1 class="text-2xl font-bold">
+                Welcome back
+              </h1>
+              <p class="text-muted-foreground text-balance">
+                Login to your Acme Inc account
+              </p>
             </div>
             <Field>
               <VeeField v-slot="{ field, errors }" name="email">
-                <FieldLabel for="login-form-4-email"> Email </FieldLabel>
+                <FieldLabel for="login-form-4-email">
+                  Email
+                </FieldLabel>
                 <Input
                   id="login-form-4-email"
                   v-bind="field"
@@ -93,7 +98,9 @@ const onSubmit = handleSubmit(async (values) => {
             <Field>
               <VeeField v-slot="{ field, errors }" name="password">
                 <div class="flex items-center justify-between">
-                  <FieldLabel for="login-form-4-password"> Password </FieldLabel>
+                  <FieldLabel for="login-form-4-password">
+                    Password
+                  </FieldLabel>
                   <ToForgotPasswordLink />
                 </div>
                 <Input
@@ -162,7 +169,7 @@ const onSubmit = handleSubmit(async (values) => {
             src="/placeholder.png"
             alt=""
             class="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
-          />
+          >
         </div>
       </CardContent>
     </Card>

@@ -17,7 +17,8 @@ async function quickLogin(userKey: keyof typeof testusers) {
       email: user.email,
       password: user.password,
     })
-  } catch (error) {
+  }
+  catch (error) {
     // Error handling is done in useAuth composable
     console.error('Quick login failed:', error)
   }

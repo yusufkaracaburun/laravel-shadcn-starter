@@ -81,12 +81,16 @@ const isOpen = ref(false)
     </UiDropdownMenu>
 
     <UiDialogContent>
-      <component :is="showComponent" :invoice="invoice" @close="
-        () => {
-          isOpen = false
-          showComponent = null
-        }
-      " />
+      <component
+        :is="showComponent"
+        :invoice="invoice"
+        @close="
+          () => {
+            isOpen = false
+            showComponent = null
+          }
+        "
+      />
     </UiDialogContent>
   </UiDialog>
 </template>

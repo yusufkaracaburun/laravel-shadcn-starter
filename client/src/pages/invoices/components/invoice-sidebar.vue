@@ -1,7 +1,9 @@
 <script setup lang="ts">
+import { Clock, CreditCard, Hash, Mail, User } from 'lucide-vue-next'
 import { computed, ref } from 'vue'
 
-import { Clock, CreditCard, Hash, Mail, User } from 'lucide-vue-next'
+import type { TInvoice } from '@/pages/invoices/data/schema'
+import type { IInvoiceActivity, IInvoiceEmail, IInvoicePayment } from '@/services/invoices.service'
 
 import {
   Accordion,
@@ -9,17 +11,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion'
-
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from '@/components/ui/tooltip'
-
-import SentEmailDialog from './sent-email-dialog.vue'
-import type { IInvoiceActivity, IInvoiceEmail, IInvoicePayment } from '@/services/invoices.service'
-import type { TInvoice } from '@/pages/invoices/data/schema'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { statuses } from '@/pages/invoices/data/data'
 import {
   formatDateForPreview,
@@ -27,6 +19,8 @@ import {
   formatMoney,
 } from '@/pages/invoices/utils/formatters'
 import { getPaymentStatusColor } from '@/utils/status-colors'
+
+import SentEmailDialog from './sent-email-dialog.vue'
 
 const props = defineProps<{
   invoice: TInvoice | null
@@ -66,7 +60,8 @@ function formatDate(dateString: string | null): string {
     if (!Number.isNaN(date.getTime())) {
       return formatDateForPreview(dateString)
     }
-  } catch {
+  }
+  catch {
     // Ignore parsing errors
   }
   return dateString
@@ -99,22 +94,29 @@ function closeEmailDialog() {
         </AccordionTrigger>
         <AccordionContent class="pt-2 border-t border-gray-200">
           <div v-if="invoiceActivities.length === 0" class="text-center py-8">
-            <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-gray-200 mb-3">
+            <div
+              class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-gray-200 mb-3"
+            >
               <Clock class="w-6 h-6 text-gray-400" />
             </div>
-            <p class="text-sm text-gray-500">No activity yet</p>
+            <p class="text-sm text-gray-500">
+              No activity yet
+            </p>
           </div>
 
           <div v-else class="px-1">
-            <div v-for="(activity, index) in invoiceActivities" :key="activity.id"
-              class="relative flex gap-3 pb-3 last:pb-0">
+            <div
+              v-for="(activity, index) in invoiceActivities"
+              :key="activity.id"
+              class="relative flex gap-3 pb-3 last:pb-0"
+            >
               <!-- Activity content -->
               <div class="flex-1 min-w-0">
                 <div class="bg-white rounded-lg border border-gray-100 p-3">
                   <div class="flex justify-between items-start mb-1">
                     <span class="text-sm text-gray-900 font-bold mb-1">{{
                       activity.description
-                      }}</span>
+                    }}</span>
                   </div>
 
                   <div class="flex justify-between items-start mb-1 text-xs text-gray-500">
@@ -129,16 +131,25 @@ function closeEmailDialog() {
                   </div>
 
                   <!-- Show properties changes if available -->
-                  <div v-if="
-                    activity.properties &&
-                    Object.keys(activity.properties.attributes || {}).length > 0
-                  " class="mt-2 pt-2 border-t border-gray-100">
+                  <div
+                    v-if="
+                      activity.properties
+                        && Object.keys(activity.properties.attributes || {}).length > 0
+                    "
+                    class="mt-2 pt-2 border-t border-gray-100"
+                  >
                     <details class="text-xs rounded-md border border-gray-200 bg-white p-1 mt-2">
-                      <summary class="cursor-pointer text-gray-700 hover:text-gray-900 font-medium p-1 -m-1">
+                      <summary
+                        class="cursor-pointer text-gray-700 hover:text-gray-900 font-medium p-1 -m-1"
+                      >
                         View changes
                       </summary>
                       <div class="mt-2 space-y-1">
-                        <div v-for="(value, key) in activity.properties.attributes" :key="key" class="text-gray-700">
+                        <div
+                          v-for="(value, key) in activity.properties.attributes"
+                          :key="key"
+                          class="text-gray-700"
+                        >
                           <span class="font-medium">{{ key.replace(/_/g, ' ') }}:</span>
                           <TooltipProvider>
                             <Tooltip>
@@ -172,14 +183,22 @@ function closeEmailDialog() {
         </AccordionTrigger>
         <AccordionContent class="pt-2 border-t border-gray-200">
           <div v-if="invoicePayments.length === 0" class="text-center py-8">
-            <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-gray-200 mb-3">
+            <div
+              class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-gray-200 mb-3"
+            >
               <Clock class="w-6 h-6 text-gray-400" />
             </div>
-            <p class="text-sm text-gray-500">No payments yet</p>
+            <p class="text-sm text-gray-500">
+              No payments yet
+            </p>
           </div>
 
           <div v-else class="px-1">
-            <div v-for="payment in invoicePayments" :key="payment.id" class="relative flex gap-3 pb-3 last:pb-0">
+            <div
+              v-for="payment in invoicePayments"
+              :key="payment.id"
+              class="relative flex gap-3 pb-3 last:pb-0"
+            >
               <!-- Payment content -->
               <div class="flex-1 min-w-0">
                 <div class="bg-white rounded-lg border border-gray-100 p-3">
@@ -188,8 +207,12 @@ function closeEmailDialog() {
                       formatCurrency(payment.amount)
                     }}</span>
                     <div
-                      :class="`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getPaymentStatusColor(payment.status)}`">
-                      <component :is="statuses.find((s) => s.value === payment.status)?.icon" class="w-3 h-3 mr-1" />
+                      :class="`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getPaymentStatusColor(payment.status)}`"
+                    >
+                      <component
+                        :is="statuses.find((s) => s.value === payment.status)?.icon"
+                        class="w-3 h-3 mr-1"
+                      />
                       {{ payment.status_formatted?.label || payment.status }}
                     </div>
                   </div>
@@ -208,7 +231,9 @@ function closeEmailDialog() {
                   <!-- Show properties changes if available -->
                   <div class="mt-2 pt-2 border-t border-gray-100">
                     <details class="text-xs rounded-md border border-gray-200 bg-white p-1 mt-2">
-                      <summary class="cursor-pointer text-gray-700 hover:text-gray-900 font-medium p-1 -m-1">
+                      <summary
+                        class="cursor-pointer text-gray-700 hover:text-gray-900 font-medium p-1 -m-1"
+                      >
                         View details
                       </summary>
                       <div class="mt-2 space-y-1 text-gray-700">
@@ -272,13 +297,21 @@ function closeEmailDialog() {
         </AccordionTrigger>
         <AccordionContent class="pt-2 border-t border-gray-200">
           <div v-if="invoiceEmails.length === 0" class="text-center py-8">
-            <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-gray-200 mb-3">
+            <div
+              class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-gray-200 mb-3"
+            >
               <Mail class="w-6 h-6 text-gray-400" />
             </div>
-            <p class="text-sm text-gray-500">No emails yet</p>
+            <p class="text-sm text-gray-500">
+              No emails yet
+            </p>
           </div>
           <div v-else class="px-1">
-            <div v-for="email in invoiceEmails" :key="email.id" class="relative flex gap-3 pb-3 last:pb-0">
+            <div
+              v-for="email in invoiceEmails"
+              :key="email.id"
+              class="relative flex gap-3 pb-3 last:pb-0"
+            >
               <div class="flex-1 min-w-0">
                 <div class="bg-white rounded-lg border border-gray-100 p-3">
                   <div class="flex justify-between items-start mb-1">
@@ -293,7 +326,9 @@ function closeEmailDialog() {
 
                   <div class="mt-2 pt-2 border-t border-gray-100">
                     <details class="text-xs rounded-md border border-gray-200 bg-white p-1 mt-2">
-                      <summary class="cursor-pointer text-gray-700 hover:text-gray-900 font-medium p-1 -m-1">
+                      <summary
+                        class="cursor-pointer text-gray-700 hover:text-gray-900 font-medium p-1 -m-1"
+                      >
                         View details
                       </summary>
                       <div class="mt-2 space-y-1 text-gray-700">
@@ -329,6 +364,10 @@ function closeEmailDialog() {
       </AccordionItem>
     </Accordion>
 
-    <SentEmailDialog :is-open="isEmailDialogOpened" :email="selectedEmail" @close="closeEmailDialog" />
+    <SentEmailDialog
+      :is-open="isEmailDialogOpened"
+      :email="selectedEmail"
+      @close="closeEmailDialog"
+    />
   </div>
 </template>
