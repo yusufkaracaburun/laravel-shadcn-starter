@@ -39,7 +39,7 @@ export function useGetInvoicePrerequisitesQuery() {
 
 export function useGetInvoicesQuery(
   page: Ref<number> = ref(1),
-  pageSize: Ref<number> = ref(15),
+  pageSize: Ref<number> = ref(10),
   sorting: Ref<Array<ISorting>> = ref([]),
   filters: Ref<IInvoiceFilters> = ref({}),
   include: Ref<string[]> = ref([]),
