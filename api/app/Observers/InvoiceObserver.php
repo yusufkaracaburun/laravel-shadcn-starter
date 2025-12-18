@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Observers;
 
 use App\Models\Invoice;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Observer for Invoice model events.
@@ -55,7 +56,7 @@ final class InvoiceObserver extends BaseObserver
      */
     public function updated(Invoice $invoice): void
     {
-        $this->log('updated', $invoice);
+        $this->log('updating', $invoice);
     }
 
     /**

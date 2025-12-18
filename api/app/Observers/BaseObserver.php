@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Observers;
 
 use Illuminate\Contracts\Events\ShouldHandleEventsAfterCommit;
+use Illuminate\Support\Facades\Log;
 
 /**
  * Base observer class providing common logging functionality.
@@ -30,5 +31,13 @@ abstract class BaseObserver implements ShouldHandleEventsAfterCommit
         //        ), [
         //            'attributes' => $model->getAttributes(),
         //        ]);
+
+//        if ($model->isDirty() && !empty($model->getChanges())) {
+//            activity()
+//                ->performedOn($model)
+//                ->causedBy(auth()->user())
+//                ->withProperties($model->getChanges())
+//                ->log("{class_basename($model)} {$model->id} was {$event}.");
+//        }
     }
 }

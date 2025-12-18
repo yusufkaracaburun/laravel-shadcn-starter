@@ -49,6 +49,9 @@ final class Invoice extends BaseModel
     public function getActivitylogOptions(): LogOptions
     {
         return LogOptions::defaults()
+            ->logAll()
+            ->setDescriptionForEvent(fn (string $eventName) => "Invoice has been {$eventName}")
+            ->dontLogIfAttributesChangedOnly(['created_at', 'updated_at'])
             ->logOnlyDirty()
             ->dontSubmitEmptyLogs();
     }
