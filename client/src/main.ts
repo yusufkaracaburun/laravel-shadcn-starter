@@ -20,7 +20,7 @@ async function bootstrap() {
   app.mount('#app')
 
   await nextTick()
-  await checkUserAuth()
+  //await checkUserAuth()
 }
 
 async function checkUserAuth() {

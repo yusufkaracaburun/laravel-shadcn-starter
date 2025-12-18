@@ -253,6 +253,13 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       | never
     >,
+    '/invoices/edit/[id]': RouteRecordInfo<
+      '/invoices/edit/[id]',
+      '/invoices/edit/:id',
+      { id: ParamValue<true> },
+      { id: ParamValue<false> },
+      | never
+    >,
     '/invoices/edit-[id]': RouteRecordInfo<
       '/invoices/edit-[id]',
       '/invoices/edit-:id',
@@ -576,6 +583,12 @@ declare module 'vue-router/auto-routes' {
     'src/pages/invoices/create.vue': {
       routes:
         | '/invoices/create'
+      views:
+        | never
+    }
+    'src/pages/invoices/edit/[id].vue': {
+      routes:
+        | '/invoices/edit/[id]'
       views:
         | never
     }

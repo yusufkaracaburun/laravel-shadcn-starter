@@ -18,9 +18,9 @@ import Loading from '@/components/loading.vue'
 import { Button } from '@/components/ui/button'
 import { useGetInvoicePrerequisitesQuery, useGetInvoiceQuery } from '@/services/invoices.service'
 
-import InvoiceEditorLayout from './components/invoice-editor-layout.vue'
-import InvoiceForm from './components/invoice-form.vue'
-import InvoicePreview from './components/invoice-preview.vue'
+import InvoiceEditorLayout from '../components/invoice-editor-layout.vue'
+import InvoiceForm from '../components/invoice-form.vue'
+import InvoicePreview from '../components/invoice-preview.vue'
 
 const route = useRoute()
 const router = useRouter()

@@ -31,7 +31,7 @@ type TCommand = 'view' | 'edit' | 'delete'
 function handleSelect(command: TCommand) {
   switch (command) {
     case 'view':
-      router.push({ name: '/invoices/[id]', params: { id: invoice.value.id.toString() } })
+      router.push({ name: '/invoices/[id]/view', params: { id: invoice.value.id.toString() } })
       break
     case 'edit':
       router.push({ name: '/invoices/edit-[id]', params: { id: invoice.value.id.toString() } })
