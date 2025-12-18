@@ -84,22 +84,19 @@ export interface IInvoiceActivity {
  */
 export interface IInvoiceEmail {
   id: number
-  invoice_id: number
-  to: string
+  hash: string
+  headers: string
   subject: string
-  body: string | null
-  status_formatted: {
-    id: string
-    value: string
-    label: string
-    color: string | null
-    style: string | null
-  }
-  status: EmailStatus
-  sent_at: string | null
-  opened_at: string | null
+  content: string | null
+  opens: number
+  clicks: number
+  message_id: string
+  sender_email: string
+  sender_name: string
+  recipient_email: string
+  recipient_name: string
   clicked_at: string | null
-  error_message: string | null
+  opened_at: string | null
   created_at: string
   updated_at: string
 }
