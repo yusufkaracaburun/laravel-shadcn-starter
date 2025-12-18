@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace App\Listeners;
 
 use Throwable;
-use App\Events\EmailSent;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use jdavidbakr\MailTracker\Events\EmailSentEvent;
 
 final class EmailSentListener implements ShouldQueue
 {
@@ -17,9 +17,9 @@ final class EmailSentListener implements ShouldQueue
     /**
      * Handle the event.
      */
-    public function handle(EmailSent $event): void
+    public function handle(EmailSentEvent $event): void
     {
-        $sentEmail = $event->sentEmail;
+        $sentEmail = $event->sent_email;
 
         Log::debug('EmailSentListener triggered', [
             'sent_email_id' => $sentEmail->id ?? 'N/A',
@@ -41,9 +41,9 @@ final class EmailSentListener implements ShouldQueue
     /**
      * Handle a job failure.
      */
-    public function failed(EmailSent $event, Throwable $exception): void
+    public function failed(EmailSentEvent $event, Throwable $exception): void
     {
-        $sentEmail = $event->sentEmail;
+        $sentEmail = $event->sent_email;
 
         Log::error('EmailSentListener failed', [
             'exception_message' => $exception->getMessage(),

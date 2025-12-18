@@ -8,20 +8,20 @@ use Throwable;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use jdavidbakr\MailTracker\Events\ViewEmailEvent;
+use jdavidbakr\MailTracker\Events\EmailDeliveredEvent;
 
-final class EmailViewedListener implements ShouldQueue
+final class EmailDeliveredListener implements ShouldQueue
 {
     use InteractsWithQueue;
 
     /**
      * Handle the event.
      */
-    public function handle(ViewEmailEvent $event): void
+    public function handle(EmailDeliveredEvent $event): void
     {
         $sentEmail = $event->sent_email;
 
-        Log::debug('EmailViewedListener triggered', [
+        Log::debug('EmailDeliveredListener triggered', [
             'sent_email_id' => $sentEmail->id ?? 'N/A',
             'message_id'    => $sentEmail->message_id ?? 'N/A',
             'X-Model-ID'    => $sentEmail->getHeader('X-Model-ID') ?? 'N/A',
@@ -41,11 +41,11 @@ final class EmailViewedListener implements ShouldQueue
     /**
      * Handle a job failure.
      */
-    public function failed(ViewEmailEvent $event, Throwable $exception): void
+    public function failed(EmailDeliveredEvent $event, Throwable $exception): void
     {
         $sentEmail = $event->sent_email;
 
-        Log::error('EmailViewedListener failed', [
+        Log::error('EmailDeliveredListener failed', [
             'exception_message' => $exception->getMessage(),
             'sent_email_id'     => $sentEmail->id ?? 'N/A',
             'message_id'        => $sentEmail->message_id ?? 'N/A',
