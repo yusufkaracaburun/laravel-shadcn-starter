@@ -94,7 +94,7 @@ export function useGetInvoiceQuery(id: Ref<number>, options?: { include?: string
   const { axiosInstance } = useAxios()
 
   return useQuery<IResponse<IInvoice>, AxiosError>({
-    queryKey: ['invoice', computed(() => toValue(id)), computed(() => options?.include?.join(',') || 'customer')],
+    queryKey: ['getInvoice', computed(() => toValue(id)), computed(() => options?.include?.join(',') || 'customer')],
     queryFn: async (): Promise<IResponse<IInvoice>> => {
       const currentId = toValue(id)
       const includes = ['customer', ...(options?.include || [])]
@@ -150,7 +150,7 @@ export function useUpdateInvoiceMutation() {
     },
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['invoiceList'] })
-      queryClient.invalidateQueries({ queryKey: ['invoice', variables.id] })
+      queryClient.invalidateQueries({ queryKey: ['getInvoice', variables.id] })
     },
     onError: (error) => {
       console.error('Update invoice error:', error)
