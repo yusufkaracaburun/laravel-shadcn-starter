@@ -93,7 +93,7 @@ final class Invoice extends BaseModel
      */
     public function emails(): MorphMany
     {
-        return $this->morphMany(SentEmail::class, 'emailable');
+        return $this->morphMany(SentEmail::class, 'emailable')->orderBy('created_at', 'desc');
     }
 
     /**
@@ -103,7 +103,7 @@ final class Invoice extends BaseModel
      */
     public function activities()
     {
-        return $this->morphMany(Activity::class, 'subject');
+        return $this->morphMany(Activity::class, 'subject')->orderBy('created_at', 'desc');
     }
 
     /**
