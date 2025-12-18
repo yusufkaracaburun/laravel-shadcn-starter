@@ -13,9 +13,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('projects', function (Blueprint $table): void {
-            $table->dropIndex(['priority']);
-            $table->dropColumn('priority');
+        Schema::table('sent_emails', function (Blueprint $table): void {
+            $table->nullableMorphs('emailable');
         });
     }
 
@@ -24,9 +23,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('projects', function (Blueprint $table): void {
-            $table->string('priority')->after('status'); // low, medium, high
-            $table->index('priority');
+        Schema::table('sent_emails', function (Blueprint $table): void {
+            $table->dropMorphs('emailable');
         });
     }
 };

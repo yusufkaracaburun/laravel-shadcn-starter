@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use App\Models\Invoice;
+use App\Mail\InvoiceMail;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\User\OauthController;
@@ -31,9 +33,20 @@ Route::get('/invoices/{invoice}/pdf/preview', [InvoiceController::class, 'previe
 
 Route::get('/test/mail', function () {
     Mail::raw('Hello World', function ($message) {
-        $message->to('info@emeq.nl')
+        $recipientEmail = config('app.admin_email');
+
+        $message->to($recipientEmail)
             ->subject('Test Mail');
     });
 
     return 'Mail sent!';
+});
+
+Route::get('/test/mail/invoice/{id}', function (int $id) {
+    $invoice = Invoice::query()->findOrFail($id);
+    $recipientEmail = config('app.admin_email');
+
+    Mail::to($recipientEmail)->send(new InvoiceMail($invoice));
+
+    return 'Invoice email sent successfully!';
 });

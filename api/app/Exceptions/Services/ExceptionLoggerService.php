@@ -60,6 +60,9 @@ final class ExceptionLoggerService
             'input'     => $this->sanitizeInput($request->all()),
         ], $additionalContext);
 
+        if ($level === LogLevel::INFO || $level === LogLevel::WARNING) {
+            return;
+        }
         Log::log($level, $this->getLogMessage($exception), $context);
     }
 

@@ -18,7 +18,6 @@ return new class extends Migration
             $table->string('name');
             $table->text('description')->nullable();
             $table->string('status'); // active, on-hold, completed, cancelled
-            $table->string('priority'); // low, medium, high
             $table->string('category'); // design, development, marketing, support, other
             $table->date('start_date')->nullable();
             $table->date('end_date')->nullable();
@@ -29,7 +28,6 @@ return new class extends Migration
             // Add indexes
             $table->index('team_id');
             $table->index('status');
-            $table->index('priority');
             $table->index('category');
         });
     }

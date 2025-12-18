@@ -7,6 +7,7 @@ namespace App\Models;
 use App\Enums\InvoiceStatus;
 use App\Traits\HasDatesScope;
 use App\Traits\HasMoneyTrait;
+use Barryvdh\DomPDF\Facade\Pdf;
 use App\Observers\InvoiceObserver;
 use Spatie\Activitylog\LogOptions;
 use App\Traits\HasInvoiceNumberTrait;
@@ -85,11 +86,11 @@ final class Invoice extends BaseModel
     /**
      * Get all emails sent for this invoice.
      *
-     * @return HasMany<InvoiceEmail>
+     * @return HasMany<SentEmail>
      */
-    public function emails(): HasMany
+    public function emails(): MorphMany
     {
-        return $this->hasMany(InvoiceEmail::class);
+        return $this->morphMany(SentEmail::class, 'emailable');
     }
 
     /**
@@ -100,6 +101,16 @@ final class Invoice extends BaseModel
     public function activities()
     {
         return $this->morphMany(Activity::class, 'subject');
+    }
+
+    /**
+     * Generate a PDF for this invoice.
+     *
+     * @return \Barryvdh\DomPDF\PDF
+     */
+    public function generatePdf()
+    {
+        return Pdf::loadView('pdf.invoice', ['invoice' => $this]);
     }
 
     /**

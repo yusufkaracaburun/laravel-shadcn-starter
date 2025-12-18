@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Helpers\Cache\CacheInvalidationService;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphMany; // Added for MailTracker
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -94,6 +95,16 @@ final class User extends Authenticatable implements HasMedia
     public function ownedTeams(): HasMany
     {
         return $this->hasMany(Team::class, 'user_id');
+    }
+
+    /**
+     * Get all emails sent by this user.
+     *
+     * @return MorphMany<SentEmail>
+     */
+    public function emails(): MorphMany
+    {
+        return $this->morphMany(SentEmail::class, 'emailable');
     }
 
     /**
