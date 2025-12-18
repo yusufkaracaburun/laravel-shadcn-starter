@@ -49,7 +49,7 @@ Route::get('/test/mail/invoice/{id}', function (int $id) {
 
         Mail::to($recipientEmail)->send(new InvoiceMail($invoice));
 
-        return 'Invoice email sent successfully!';
+        return "Invoice email sent successfully to {$recipientEmail}!";
     } catch (Exception $e) {
         return $e->getMessage();
     }
