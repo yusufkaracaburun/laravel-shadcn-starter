@@ -20,8 +20,10 @@ final class EmailDeliveredListener implements ShouldQueue
     public function handle(EmailDeliveredEvent $event): void
     {
         $sentEmail = $event->sent_email;
+        $email_address = $event->email_address;
 
         Log::debug('EmailDeliveredListener triggered', [
+            'email_address' => $email_address,
             'sent_email_id' => $sentEmail->id ?? 'N/A',
             'message_id'    => $sentEmail->message_id ?? 'N/A',
             'X-Model-ID'    => $sentEmail->getHeader('X-Model-ID') ?? 'N/A',
@@ -44,8 +46,10 @@ final class EmailDeliveredListener implements ShouldQueue
     public function failed(EmailDeliveredEvent $event, Throwable $exception): void
     {
         $sentEmail = $event->sent_email;
+        $email_address = $event->email_address;
 
         Log::error('EmailDeliveredListener failed', [
+            'email_address'     => $email_address,
             'exception_message' => $exception->getMessage(),
             'sent_email_id'     => $sentEmail->id ?? 'N/A',
             'message_id'        => $sentEmail->message_id ?? 'N/A',
