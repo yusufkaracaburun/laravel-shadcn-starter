@@ -43,10 +43,20 @@ Route::get('/test/mail', function () {
 });
 
 Route::get('/test/mail/invoice/{id}', function (int $id) {
-    $invoice = Invoice::query()->findOrFail($id);
-    $recipientEmail = config('app.admin_email');
+    try {
+        $invoice = Invoice::query()->findOrFail($id);
+        $recipientEmail = config('app.admin_email');
 
-    Mail::to($recipientEmail)->send(new InvoiceMail($invoice));
+        Mail::to($recipientEmail)->send(new InvoiceMail($invoice));
 
-    return 'Invoice email sent successfully!';
+        return 'Invoice email sent successfully!';
+    } catch (Exception $e) {
+        return $e->getMessage();
+    }
+});
+
+Route::get('/mailable/{id}', function (int $id) {
+    $invoice = Invoice::find($id);
+
+    return new InvoiceMail($invoice);
 });
