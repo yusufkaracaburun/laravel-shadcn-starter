@@ -143,9 +143,7 @@ function handleClose() {
           class="flex items-center justify-between rounded-lg border bg-muted/50 p-3"
         >
           <div class="text-sm font-medium">
-            {{ selectedCount }} item{{
-              selectedCount === 1 ? '' : 's'
-            }}
+            {{ selectedCount }} item{{ selectedCount === 1 ? '' : 's' }}
             selected
           </div>
           <Button size="sm" variant="ghost" @click="selectedItems.clear()">

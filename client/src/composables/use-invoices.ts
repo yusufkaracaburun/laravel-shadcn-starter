@@ -1,8 +1,6 @@
 import { useRoute } from 'vue-router'
 
-import type {
-  TPageSize,
-} from '@/components/data-table/types'
+import type { TPageSize } from '@/components/data-table/types'
 import type {
   ICreateInvoiceRequest,
   IInvoice,

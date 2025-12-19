@@ -660,9 +660,7 @@ const timeAgoOptions = {
     <DialogContent class="sm:max-w-[520px]">
       <DialogHeader>
         <DialogTitle>
-          {{
-            showModalTask.type === 'create' ? 'New Task' : 'Edit Task'
-          }}
+          {{ showModalTask.type === 'create' ? 'New Task' : 'Edit Task' }}
         </DialogTitle>
         <DialogDescription class="sr-only">
           {{

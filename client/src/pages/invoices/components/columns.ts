@@ -7,59 +7,13 @@ import { useRouter } from 'vue-router'
 import DataTableColumnHeader from '@/components/data-table/column-header.vue'
 import { SelectColumn } from '@/components/data-table/table-columns'
 import { StatusBadge } from '@/components/ui/status-badge'
+import { formatDate } from '@/utils/date'
+import { formatMoney } from '@/utils/money'
 
 import type { TInvoice } from '../data/schema'
 
 import { statuses } from '../data/data'
 import DataTableRowActions from './data-table-row-actions.vue'
-
-/**
- * Format money value (Money object or number)
- */
-function formatMoney(value: any): string {
-  if (typeof value === 'object' && value !== null && 'formatted' in value) {
-    return value.formatted
-  }
-  if (typeof value === 'number') {
-    return new Intl.NumberFormat('nl-NL', {
-      style: 'currency',
-      currency: 'EUR',
-    }).format(value)
-  }
-  return '€ 0,00'
-}
-
-/**
- * Format date from "d-m-Y H:i:s" or "Y-m-d" format
- */
-function formatDate(dateString: string | null | undefined): string {
-  if (!dateString) {
-    return '-'
-  }
-  // Try parsing as "d-m-Y H:i:s" format first
-  if (dateString.includes('-') && dateString.includes(' ')) {
-    const [datePart, timePart] = dateString.split(' ')
-    const [day, month, year] = datePart.split('-')
-    if (day && month && year && year.length === 4) {
-      const date = new Date(`${year}-${month}-${day} ${timePart}`)
-      return date.toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric',
-      })
-    }
-  }
-  // Try parsing as "Y-m-d" format
-  const date = new Date(dateString)
-  if (!Number.isNaN(date.getTime())) {
-    return date.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-    })
-  }
-  return dateString
-}
 
 export const columns: ColumnDef<TInvoice>[] = [
   SelectColumn as ColumnDef<TInvoice>,
@@ -94,7 +48,7 @@ export const columns: ColumnDef<TInvoice>[] = [
   {
     accessorKey: 'customer',
     header: ({ column }) =>
-      h(DataTableColumnHeader<Invoice>, { column, title: 'Customer' }),
+      h(DataTableColumnHeader<TInvoice>, { column, title: 'Customer' }),
     cell: ({ row }) => {
       const invoice = row.original
       const router = useRouter()
@@ -137,7 +91,7 @@ export const columns: ColumnDef<TInvoice>[] = [
   {
     accessorKey: 'date',
     header: ({ column }) =>
-      h(DataTableColumnHeader<Invoice>, { column, title: 'Date' }),
+      h(DataTableColumnHeader<TInvoice>, { column, title: 'Date' }),
     cell: ({ row }) => {
       const dateValue = row.getValue('date') as string | null | undefined
       return h('div', { class: 'w-[100px]' }, formatDate(dateValue))
@@ -147,7 +101,7 @@ export const columns: ColumnDef<TInvoice>[] = [
   {
     accessorKey: 'date_due',
     header: ({ column }) =>
-      h(DataTableColumnHeader<Invoice>, { column, title: 'Due Date' }),
+      h(DataTableColumnHeader<TInvoice>, { column, title: 'Due Date' }),
     cell: ({ row }) => {
       const dateValue = row.getValue('date_due') as string | null | undefined
       return h('div', { class: 'w-[100px]' }, formatDate(dateValue))
@@ -157,7 +111,7 @@ export const columns: ColumnDef<TInvoice>[] = [
   {
     accessorKey: 'status',
     header: ({ column }) =>
-      h(DataTableColumnHeader<Invoice>, { column, title: 'Status' }),
+      h(DataTableColumnHeader<TInvoice>, { column, title: 'Status' }),
     cell: ({ row }) => {
       const statusValue = row.getValue('status') as string
       const status = statuses.find(s => s.value === statusValue)
@@ -175,7 +129,7 @@ export const columns: ColumnDef<TInvoice>[] = [
   {
     accessorKey: 'total',
     header: ({ column }) =>
-      h(DataTableColumnHeader<Invoice>, { column, title: 'Total' }),
+      h(DataTableColumnHeader<TInvoice>, { column, title: 'Total' }),
     cell: ({ row }) => {
       const total = row.getValue('total')
       return h('div', { class: 'w-[100px] font-medium' }, formatMoney(total))
@@ -185,7 +139,7 @@ export const columns: ColumnDef<TInvoice>[] = [
   {
     accessorKey: 'created_at',
     header: ({ column }) =>
-      h(DataTableColumnHeader<Invoice>, { column, title: 'Created At' }),
+      h(DataTableColumnHeader<TInvoice>, { column, title: 'Created At' }),
     cell: ({ row }) => {
       const dateValue = row.getValue('created_at') as string | null | undefined
       return h(
