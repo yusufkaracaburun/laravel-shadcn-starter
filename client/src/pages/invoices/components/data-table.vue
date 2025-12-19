@@ -1,20 +1,25 @@
 <script setup lang="ts">
 import { Trash2Icon } from 'lucide-vue-next'
+import type { ColumnDef, SortingState } from '@tanstack/vue-table'
 
-import type { IDataTableProps } from '@/components/data-table/types'
+import type { IServerPagination, IDataTableProps } from '@/components/data-table/types'
 import type { IInvoiceFilters } from '@/pages/invoices/models/invoice'
 
 import BulkActions from '@/components/data-table/bulk-actions.vue'
 import DataTable from '@/components/data-table/data-table.vue'
 import { generateVueTable } from '@/components/data-table/use-generate-vue-table'
 
-import type { TInvoice } from '../data/schema'
+import type { TInvoice } from '@/pages/invoices/data/schema'
 
-import DataTableToolbar from './data-table-toolbar.vue'
-import InvoiceDeleteBatch from './invoice-delete-batch.vue'
+import DataTableToolbar from '@/pages/invoices/components/data-table-toolbar.vue'
+import InvoiceDeleteBatch from '@/pages/invoices/components/invoice-delete-batch.vue'
 
-interface IExtendedDataTableProps extends IDataTableProps<TInvoice> {
-  filters?: IInvoiceFilters
+interface IExtendedDataTableProps {
+  loading?: boolean
+  columns: ColumnDef<TInvoice, any>[]
+  data: TInvoice[]
+  serverPagination?: IServerPagination
+  filter?: IInvoiceFilters
   onFiltersChange?: (filters: IInvoiceFilters) => void
   onClearFilters?: () => void
 }
@@ -44,14 +49,9 @@ const invoiceDeleteBatchOpen = ref(false)
   </BulkActions>
 
   <DataTable :columns :table :data :loading>
-    <!-- <template #toolbar>
-      <DataTableToolbar
-        :table="table"
-        :filters="filters || {}"
-        :on-filters-change="onFiltersChange || (() => {})"
-        :on-clear-filters="onClearFilters || (() => {})"
-        class="w-full overflow-x-auto"
-      />
-    </template> -->
+    <template #toolbar>
+      <DataTableToolbar :table="table" :filters="filter" :on-filters-change="onFiltersChange || (() => { })"
+        :on-clear-filters="onClearFilters || (() => { })" class="w-full overflow-x-auto" />
+    </template>
   </DataTable>
 </template>

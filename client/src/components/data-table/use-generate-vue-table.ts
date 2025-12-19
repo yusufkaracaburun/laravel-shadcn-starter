@@ -17,17 +17,13 @@ import {
 
 import { valueUpdater } from '@/lib/utils'
 
-import type { DataTableProps } from './types'
+import type { IDataTableProps } from '@/components/data-table/types'
+import type { ISorting } from '@/services/query-utils'
 
-export function generateVueTable<T>(props: DataTableProps<T>) {
+export function generateVueTable<T>(props: IDataTableProps<T>) {
   // Use external sorting state if provided, otherwise create internal one
-  const internalSorting = ref<SortingState>([])
-  const sorting
-    = props.sorting !== undefined
-      ? isRef(props.sorting)
-        ? props.sorting
-        : ref(props.sorting)
-      : internalSorting
+  const internalSorting = ref<ISorting>({ id: 'created_at', desc: true })
+  const sorting = props.sorting ?? internalSorting.value
   const columnFilters = ref<ColumnFiltersState>([])
   const columnVisibility = ref<VisibilityState>({})
   const rowSelection = ref({})
@@ -63,9 +59,6 @@ export function generateVueTable<T>(props: DataTableProps<T>) {
       return props.columns
     },
     state: {
-      get sorting() {
-        return sorting.value
-      },
       get columnFilters() {
         return columnFilters.value
       },
@@ -77,14 +70,6 @@ export function generateVueTable<T>(props: DataTableProps<T>) {
       },
     },
     enableRowSelection: true,
-    onSortingChange: (updaterOrValue) => {
-      valueUpdater(updaterOrValue, sorting)
-      // If external sorting handler is provided, call it
-      if (props.onSortingChange) {
-        props.onSortingChange(sorting.value)
-        console.warn('onSortingChange', sorting.value)
-      }
-    },
     onColumnFiltersChange: updaterOrValue => valueUpdater(updaterOrValue, columnFilters),
     onColumnVisibilityChange: updaterOrValue => valueUpdater(updaterOrValue, columnVisibility),
     onRowSelectionChange: updaterOrValue => valueUpdater(updaterOrValue, rowSelection),
@@ -105,7 +90,6 @@ export function generateVueTable<T>(props: DataTableProps<T>) {
         return pageSize.value
       },
     }
-    // Make pageCount reactive using Object.defineProperty
     Object.defineProperty(tableConfig, 'pageCount', {
       get() {
         return pageCount.value
@@ -121,7 +105,6 @@ export function generateVueTable<T>(props: DataTableProps<T>) {
 
   const table = useVueTable<T>(tableConfig)
 
-  // Return both table and sorting state for server-side operations
   return {
     table,
     sorting,
