@@ -12,7 +12,7 @@ import type { IInvoice } from '@/pages/invoices/models/invoice'
 
 import Page from '@/components/global-layout/basic-page.vue'
 import { useInvoices } from '@/composables/use-invoices'
-import DocumentLayout from '@/layouts/document-layout.vue'
+import InvoiceViewLayout from '@/pages/invoices/view/components/invoice-view-layout.vue'
 import InvoiceNavbar from '@/pages/invoices/view/components/invoice-navbar.vue'
 import InvoiceSidebar from '@/pages/invoices/view/components/invoice-sidebar.vue'
 
@@ -56,21 +56,12 @@ const pdfHeight = computed(() => {
 <template>
   <Page :title="pageTitle" :description="pageDescription">
     <template #actions>
-      <InvoiceNavbar
-        v-if="invoice"
-        :invoice="invoice"
-        :invoice-id="invoiceId ?? 0"
-        @update:title="pageTitle = $event"
-        @update:description="pageDescription = $event"
-      />
+      <InvoiceNavbar v-if="invoice" :invoice="invoice" :invoice-id="invoiceId ?? 0" @update:title="pageTitle = $event"
+        @update:description="pageDescription = $event" />
     </template>
 
-    <DocumentLayout
-      :is-loading="isLoading"
-      :is-error="isError"
-      :error-object="error"
-      :on-retry="fetchInvoiceByIdData"
-    >
+    <InvoiceViewLayout :is-loading="isLoading" :is-error="isError" :error-object="error"
+      :on-retry="fetchInvoiceByIdData">
       <div class="flex flex-1 flex-col items-center justify-center">
         <div class="w-full flex flex-row">
           <div class="flex-1">
@@ -83,6 +74,6 @@ const pdfHeight = computed(() => {
           </div>
         </div>
       </div>
-    </DocumentLayout>
+    </InvoiceViewLayout>
   </Page>
 </template>

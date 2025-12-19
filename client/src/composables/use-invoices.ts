@@ -6,6 +6,7 @@ import type {
   ICreateInvoiceRequest,
   IInvoice,
   IInvoiceFilters,
+  IInvoicePrerequisites,
   IUpdateInvoiceRequest,
 } from '@/pages/invoices/models/invoice'
 import type { ISorting } from '@/services/query-utils'
@@ -83,10 +84,17 @@ export function useInvoices() {
 
   const getInvoicePrerequisitesQuery
     = invoiceService.getInvoicePrerequisitesQuery()
-  async function fetchInvoicePrerequisites() {
+  const {
+    data: invoicePrerequisitesResponse,
+    isLoading: isLoadingInvoicePrerequisites,
+    isError: isErrorInvoicePrerequisites,
+    error: errorInvoicePrerequisites,
+    refetch: refetchInvoicePrerequisites,
+  } = getInvoicePrerequisitesQuery
+  async function fetchInvoicePrerequisitesData(): Promise<IResponse<IInvoicePrerequisites>> {
     try {
-      const response = await getInvoicePrerequisitesQuery.refetch()
-      return response.data
+      const response = await refetchInvoicePrerequisites()
+      return response.data as IResponse<IInvoicePrerequisites>
     }
     catch (error: any) {
       errorStore.setError(error, {
@@ -150,11 +158,11 @@ export function useInvoices() {
     isLoading: isLoadingInvoiceById,
     isError: isErrorInvoiceById,
     error: errorInvoiceById,
-    refetch: fetchInvoiceById,
+    refetch: refetchInvoiceById,
   } = getInvoiceByIdQuery
   async function fetchInvoiceByIdData(): Promise<IResponse<IInvoice>> {
     try {
-      const response = await fetchInvoiceById()
+      const response = await refetchInvoiceById()
       return response.data as IResponse<IInvoice>
     }
     catch (error: any) {
@@ -289,7 +297,11 @@ export function useInvoices() {
     clearFilters,
     onPageChange,
     onPageSizeChange,
-    fetchInvoicePrerequisites,
+    invoicePrerequisitesResponse,
+    isLoadingInvoicePrerequisites,
+    isErrorInvoicePrerequisites,
+    errorInvoicePrerequisites,
+    fetchInvoicePrerequisitesData,
     fetchInvoicesData,
     getInvoice,
     createInvoice,

@@ -20,9 +20,9 @@ import {
 
 import type { TInvoiceForm, TInvoiceItem } from '../data/schema'
 
-import InvoiceEditorLayout from './components/invoice-editor-layout.vue'
+import InvoiceEditorLayout from './edit/components/invoice-editor-layout.vue'
 import InvoiceForm from './components/invoice-form.vue'
-import InvoicePreview from './components/invoice-preview.vue'
+import InvoicePreview from './edit/components/invoice-preview.vue'
 
 const route = useRoute()
 const router = useRouter()
@@ -143,47 +143,26 @@ async function handleUpdateAndSend() {
       </Button>
     </template>
 
-    <div
-      v-if="isLoading"
-      class="flex items-center justify-center min-h-[400px]"
-    >
+    <div v-if="isLoading" class="flex items-center justify-center min-h-[400px]">
       <Loading />
     </div>
 
-    <Error
-      v-else-if="isError"
-      :error="error?.message || 'Unknown error'"
-      title="Failed to load invoice"
-      description="We couldn't load the invoice details. Please try again."
-    />
+    <Error v-else-if="isError" :error="error?.message || 'Unknown error'" title="Failed to load invoice"
+      description="We couldn't load the invoice details. Please try again." />
 
     <InvoiceEditorLayout v-else-if="invoice" :is-loading="isSubmitting">
       <template #form>
-        <InvoiceForm
-          ref="formRef"
-          v-model:model-value="currentFormValues"
-          :items="items"
-          :customers="customers"
-          :invoice-id="invoiceId"
-          @update:form-items="(items) => (currentFormItems = items)"
-        />
+        <InvoiceForm ref="formRef" v-model:model-value="currentFormValues" :items="items" :customers="customers"
+          :invoice-id="invoiceId" @update:form-items="(items) => (currentFormItems = items)" />
       </template>
 
       <template #preview>
-        <InvoicePreview
-          :form-values="currentFormValues"
-          :items="currentFormItems"
-          :customers="customers"
-          :is-loading="isSubmitting"
-        />
+        <InvoicePreview :form-values="currentFormValues" :items="currentFormItems" :customers="customers"
+          :is-loading="isSubmitting" />
       </template>
 
       <template #actions>
-        <Button
-          variant="outline"
-          :disabled="isSubmitting"
-          @click="handleUpdate"
-        >
+        <Button variant="outline" :disabled="isSubmitting" @click="handleUpdate">
           <Save class="mr-2 size-4" />
           Update
         </Button>

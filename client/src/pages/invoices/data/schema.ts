@@ -90,6 +90,7 @@ export const invoiceSchema = z.object({
 })
 
 export const invoiceFormSchema = z.object({
+  id: z.number().optional(),
   customer_id: z.preprocess(
     val =>
       val === undefined || val === null || val === '' ? undefined : Number(val),
@@ -100,8 +101,9 @@ export const invoiceFormSchema = z.object({
   due_days: z.number().min(1, 'Due days must be at least 1'),
   date_due: z.string().min(1, 'Due date is required'),
   status: invoiceStatusSchema,
+  items: z.array(invoiceItemSchema),
   notes: z.string().nullable().optional(),
 })
 
-export type TInvoice = z.infer<typeof invoiceSchema>
 export type TInvoiceForm = z.infer<typeof invoiceFormSchema>
+export type TInvoice = z.infer<typeof invoiceSchema>

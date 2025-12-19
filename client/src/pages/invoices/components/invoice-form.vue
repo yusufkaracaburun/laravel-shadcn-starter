@@ -27,13 +27,16 @@ import InvoiceDatesSection from './invoice-dates-section.vue'
 import InvoiceDetailsSection from './invoice-details-section.vue'
 import InvoiceItemsManagement from './invoice-items-management.vue'
 
+const {
+  prerequisites,
+  fetchInvoicePrerequisitesData,
+} = useInvoices()
+
 const props = defineProps<{
   modelValue: TInvoice | null
-  nextInvoiceNumber?: string | null
-  items?: Item[]
-  customers?: Customer[]
   invoiceId?: number
 }>()
+
 const emits = defineEmits([
   'close',
   'submit',
@@ -41,12 +44,17 @@ const emits = defineEmits([
   'update:formItems',
 ])
 
+const customers = computed(() => {
+  return prerequisites.value?.customers ?? []
+})
+
+const items = computed(() => {
+  return prerequisites.value?.items ?? []
+})
+
 const router = useRouter()
 
 const { createInvoice, updateInvoice } = useInvoices()
-
-// Use customers from props (from prerequisites) or fallback to empty array
-const customers = computed(() => props.customers ?? [])
 
 const formSchema = toTypedSchema(invoiceFormSchema)
 
@@ -512,8 +520,8 @@ const onSubmit = handleSubmit(async (formValues) => {
     backendData.total_excl_vat = rawInvoiceTotals.value.subtotal
     backendData.total_vat
       = rawInvoiceTotals.value.totalVat0
-        + rawInvoiceTotals.value.totalVat9
-        + rawInvoiceTotals.value.totalVat21
+      + rawInvoiceTotals.value.totalVat9
+      + rawInvoiceTotals.value.totalVat21
 
     // Always include items
     backendData.items = itemsData || []
@@ -571,29 +579,16 @@ defineExpose({
 
 <template>
   <form class="space-y-6" @submit.prevent="onSubmit">
-    <InvoiceCustomerSection
-      :customers="customers"
-      :is-field-dirty="isFieldDirty"
-    />
+    <InvoiceCustomerSection :customers="customers" :is-field-dirty="isFieldDirty" />
 
     <InvoiceDetailsSection :is-field-dirty="isFieldDirty" />
 
     <InvoiceDatesSection :is-field-dirty="isFieldDirty" />
 
-    <InvoiceItemsManagement
-      :items="localItems"
-      :editing-item-index="editingItemIndex"
-      :show-add-form="showAddForm"
-      :invoice-totals="invoiceTotals"
-      :invoice-id="props.modelValue?.id"
-      :catalog-items="items"
-      @save="handleItemSave"
-      @cancel="cancelItemEdit"
-      @edit="startEditItem"
-      @delete="handleItemDelete"
-      @items-selected="handleItemsSelected"
-      @add-item="startAddItem"
-    />
+    <!-- <InvoiceItemsManagement :items="localItems" :editing-item-index="editingItemIndex" :show-add-form="showAddForm"
+      :invoice-totals="invoiceTotals" :invoice-id="props.modelValue?.id" :catalog-items="items" @save="handleItemSave"
+      @cancel="cancelItemEdit" @edit="startEditItem" @delete="handleItemDelete" @items-selected="handleItemsSelected"
+      @add-item="startAddItem" /> -->
 
     <InvoiceNotesSection :is-field-dirty="isFieldDirty" />
   </form>

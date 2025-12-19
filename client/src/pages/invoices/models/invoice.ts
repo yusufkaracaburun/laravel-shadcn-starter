@@ -197,6 +197,7 @@ export interface ICreateInvoiceRequest {
  * @see api/app/Http/Requests/Invoices/InvoiceUpdateRequest.php
  */
 export interface IUpdateInvoiceRequest {
+  id: number
   customer_id?: number
   invoice_number?: string | null
   date?: string // Format: \"YYYY-MM-DD\"
