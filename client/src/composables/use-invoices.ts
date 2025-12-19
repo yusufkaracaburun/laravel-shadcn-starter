@@ -89,11 +89,11 @@ export function useInvoices() {
   }
 
   const getInvoicesQuery = invoiceService.getInvoicesQuery(
-    page.value,
-    pageSize.value,
-    sort.value,
-    filter.value,
-    [includes.customer],
+    page,
+    pageSize,
+    sort,
+    filter,
+    ref([includes.customer]),
   )
   const { data: invoicesData, isLoading, isFetching, refetch: fetchInvoices } = getInvoicesQuery
   const invoices = computed(() => invoicesData.value?.data.data ?? [])

@@ -52,28 +52,29 @@ export function useInvoiceService() {
   }
 
   function getInvoicesQuery(
-    page: number,
-    per_page: TPageSize,
-    sort: ISorting,
-    filter: IInvoiceFilters,
-    include: string[],
+    page: Ref<number>,
+    per_page: Ref<TPageSize>,
+    sort: Ref<ISorting>,
+    filter: Ref<IInvoiceFilters>,
+    include: Ref<string[]>,
   ): ReturnType<typeof useQuery<IPaginatedResponse<IInvoice>, AxiosError>> {
     return useQuery({
       queryKey: [QueryKeys.INVOICE_LIST, page, per_page, sort, filter, include],
       queryFn: async (): Promise<IPaginatedResponse<IInvoice>> => {
         const params: Record<string, any> = {
-          page,
-          per_page,
-          sort,
-          filter,
-          include,
+          page: page.value,
+          per_page: per_page.value,
+          sort: sort.value,
+          filter: filter.value,
+          include: include.value,
         }
 
+        console.error('getInvoicesQuery', params)
         const response = await axiosInstance.get(`${API_URL}${buildQueryString(params)}`)
         return response.data
       },
       staleTime: STALE_TIME,
-      enabled: computed(() => page > 0 && per_page > 0),
+      enabled: computed(() => page.value > 0 && per_page.value > 0),
       ...defaultAxiosQueryOptions(),
     })
   }
