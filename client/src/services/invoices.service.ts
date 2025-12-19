@@ -70,12 +70,15 @@ export function useInvoiceService() {
       ],
       queryFn: async (): Promise<IResponse<IPaginatedInvoicesResponse>> => {
         const params: Record<string, any> = {
-          sort: convertSortingToQueryString(sorting),
           page,
           per_page: pageSize,
-          include: includes.join(','),
+          sort: convertSortingToQueryString(sorting),
           filter: JSON.stringify(filters),
+          include: includes.join(','),
         }
+
+        console.warn(page, pageSize, sorting, filters, includes)
+        console.warn(params)
 
         const response = await axiosInstance.get(`${API_URL}`, { params })
         return response.data

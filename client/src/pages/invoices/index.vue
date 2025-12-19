@@ -16,7 +16,7 @@ type TViewMode = 'table' | 'card'
 const viewMode = ref<TViewMode>('table')
 const {
   loading,
-  invoices,
+  data,
   serverPagination,
   sorting,
   onSortingChange,
@@ -27,18 +27,13 @@ const {
 </script>
 
 <template>
-  <Page title="Invoices" description="Manage your invoices" sticky>
+  <Page title="Invoices" description="Manage your invoices" sticky data-testid="invoices_page">
     <template #actions>
       <div class="flex items-center gap-2">
         <Tooltip>
           <TooltipTrigger as-child>
-            <Button
-              :variant="viewMode === 'table' ? 'default' : 'outline'"
-              size="icon"
-              class="size-8"
-              data-testid="invoices_table-view_button"
-              @click="viewMode = 'table'"
-            >
+            <Button :variant="viewMode === 'table' ? 'default' : 'outline'" size="icon" class="size-8"
+              data-testid="invoices_table-view_button" @click="viewMode = 'table'">
               <List class="size-4" />
               <span class="sr-only">Table view</span>
             </Button>
@@ -49,13 +44,8 @@ const {
         </Tooltip>
         <Tooltip>
           <TooltipTrigger as-child>
-            <Button
-              :variant="viewMode === 'card' ? 'default' : 'outline'"
-              size="icon"
-              class="size-8"
-              data-testid="invoices_card-view_button"
-              @click="viewMode = 'card'"
-            >
+            <Button :variant="viewMode === 'card' ? 'default' : 'outline'" size="icon" class="size-8"
+              data-testid="invoices_card-view_button" @click="viewMode = 'card'">
               <Grid3x3 class="size-4" />
               <span class="sr-only">Card view</span>
             </Button>
@@ -68,20 +58,13 @@ const {
       </div>
     </template>
     <div v-if="viewMode === 'table'" class="overflow-x-auto">
-      <DataTable
-        :loading="loading"
-        :data="invoices"
-        :columns="columns"
-        :server-pagination="serverPagination"
-        :sorting="sorting"
-        :on-sorting-change="onSortingChange"
-        :filters="filters"
-        :on-filters-change="onFiltersChange"
-        :on-clear-filters="clearFilters"
-      />
+      <DataTable :data="data" :columns="columns" />
+      <!-- <DataTable :loading="loading" :data="data" :columns="columns" :server-pagination="serverPagination"
+        :sorting="sorting" :on-sorting-change="onSortingChange" :filters="filters" :on-filters-change="onFiltersChange"
+        :on-clear-filters="clearFilters" /> -->
     </div>
     <div v-else-if="viewMode === 'card'">
-      <InvoicesCardGrid :invoices="invoices" :loading="loading" />
+      <!-- <InvoicesCardGrid :invoices="data" :loading="loading" /> -->
     </div>
   </Page>
 </template>

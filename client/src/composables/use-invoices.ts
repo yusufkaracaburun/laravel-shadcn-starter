@@ -95,7 +95,7 @@ export function useInvoices() {
     pageSize.value,
     sorting.value,
     filters.value,
-    [includes.customer, includes.items],
+    [includes.customer],
   )
   const { data, isLoading, isFetching, refetch: fetchInvoices } = getInvoicesQuery
   async function fetchInvoicesData() {
@@ -111,21 +111,26 @@ export function useInvoices() {
     }
   }
 
-  const invoiceId = computed(() => Number((route.params as { id: string }).id as string))
-  const getInvoiceByIdQuery = invoiceService.getInvoiceByIdQuery(invoiceId.value, [includes.customer, includes.items])
-  const { data: invoiceByIdResponse, isLoading: isLoadingInvoiceById, isError: isErrorInvoiceById, error: errorInvoiceById, refetch: refetchInvoiceById } = getInvoiceByIdQuery
-  async function fetchInvoiceById() {
-    try {
-      const response = await refetchInvoiceById()
-      return response.data
-    }
-    catch (error: any) {
-      errorStore.setError(error, { context: InvoiceContext.GET_INVOICE_BY_ID })
-      const message = errorStore.getErrorMessage(error)
-      toast.showError(message)
-      throw error
-    }
-  }
+  // const invoiceId = computed(() => {
+  //   if (!route) {
+  //     return undefined
+  //   }
+  //   return Number((route.params as { id: string }).id as string)
+  // })
+  // const getInvoiceByIdQuery = invoiceService.getInvoiceByIdQuery(invoiceId.value, [includes.customer, includes.items])
+  // const { data: invoiceByIdResponse, isLoading: isLoadingInvoiceById, isError: isErrorInvoiceById, error: errorInvoiceById, refetch: refetchInvoiceById } = getInvoiceByIdQuery
+  // async function fetchInvoiceById() {
+  //   try {
+  //     const response = await refetchInvoiceById()
+  //     return response.data
+  //   }
+  //   catch (error: any) {
+  //     errorStore.setError(error, { context: InvoiceContext.GET_INVOICE_BY_ID })
+  //     const message = errorStore.getErrorMessage(error)
+  //     toast.showError(message)
+  //     throw error
+  //   }
+  // }
 
   const getInvoiceMutation = invoiceService.getInvoiceMutation()
   async function getInvoice(id: number) {
@@ -254,10 +259,5 @@ export function useInvoices() {
     downloadInvoicePdf,
     loading,
     serverPagination,
-    fetchInvoiceById,
-    invoiceByIdResponse,
-    isLoadingInvoiceById,
-    isErrorInvoiceById,
-    errorInvoiceById,
   }
 }
