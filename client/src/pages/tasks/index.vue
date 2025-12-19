@@ -28,8 +28,13 @@ function handleTasksUpdate(updatedTasks: typeof tasksData) {
       <div class="flex items-center gap-2">
         <Tooltip>
           <TooltipTrigger as-child>
-            <Button :variant="viewMode === 'table' ? 'default' : 'outline'" size="icon" class="size-8"
-              data-testid="tasks_table-view_button" @click="viewMode = 'table'">
+            <Button
+              :variant="viewMode === 'table' ? 'default' : 'outline'"
+              size="icon"
+              class="size-8"
+              data-testid="tasks_table-view_button"
+              @click="viewMode = 'table'"
+            >
               <List class="size-4" />
               <span class="sr-only">Table view</span>
             </Button>
@@ -40,8 +45,13 @@ function handleTasksUpdate(updatedTasks: typeof tasksData) {
         </Tooltip>
         <Tooltip>
           <TooltipTrigger as-child>
-            <Button :variant="viewMode === 'kanban' ? 'default' : 'outline'" size="icon" class="size-8"
-              data-testid="tasks_kanban-view_button" @click="viewMode = 'kanban'">
+            <Button
+              :variant="viewMode === 'kanban' ? 'default' : 'outline'"
+              size="icon"
+              class="size-8"
+              data-testid="tasks_kanban-view_button"
+              @click="viewMode = 'kanban'"
+            >
               <LayoutGrid class="size-4" />
               <span class="sr-only">Kanban view</span>
             </Button>
@@ -58,7 +68,11 @@ function handleTasksUpdate(updatedTasks: typeof tasksData) {
       <DataTable :data="tasks" :columns="columns" />
     </div>
     <div v-else-if="viewMode === 'kanban'" class="h-full">
-      <TasksKanbanWrapper :key="`kanban-${tasks.length}`" :tasks="tasks" @update:tasks="handleTasksUpdate" />
+      <TasksKanbanWrapper
+        :key="`kanban-${tasks.length}`"
+        :tasks="tasks"
+        @update:tasks="handleTasksUpdate"
+      />
     </div>
   </Page>
 </template>

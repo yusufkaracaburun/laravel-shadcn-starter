@@ -1,6 +1,5 @@
 import type {
   ColumnFiltersState,
-  SortingState,
   TableOptionsWithReactiveData,
   VisibilityState,
 } from '@tanstack/vue-table'
@@ -15,10 +14,10 @@ import {
   useVueTable,
 } from '@tanstack/vue-table'
 
-import { valueUpdater } from '@/lib/utils'
-
 import type { IDataTableProps } from '@/components/data-table/types'
 import type { ISorting } from '@/services/query-utils'
+
+import { valueUpdater } from '@/lib/utils'
 
 export function generateVueTable<T>(props: IDataTableProps<T>) {
   // Use external sorting state if provided, otherwise create internal one

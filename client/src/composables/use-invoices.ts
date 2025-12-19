@@ -1,5 +1,3 @@
-import type { SortingState } from '@tanstack/vue-table'
-
 import type { IServerPagination, TPageSize } from '@/components/data-table/types'
 import type {
   ICreateInvoiceRequest,

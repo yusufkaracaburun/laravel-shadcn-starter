@@ -59,14 +59,7 @@ export function useInvoiceService() {
     include: string[],
   ): ReturnType<typeof useQuery<IPaginatedResponse<IInvoice>, AxiosError>> {
     return useQuery({
-      queryKey: [
-        QueryKeys.INVOICE_LIST,
-        page,
-        per_page,
-        sort,
-        filter,
-        include,
-      ],
+      queryKey: [QueryKeys.INVOICE_LIST, page, per_page, sort, filter, include],
       queryFn: async (): Promise<IPaginatedResponse<IInvoice>> => {
         const params: Record<string, any> = {
           page,

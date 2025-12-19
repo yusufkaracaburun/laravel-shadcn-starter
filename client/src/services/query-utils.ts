@@ -24,10 +24,7 @@ export function convertSortingToQueryString(sorting: ISorting): string {
   return `${prefix}${sorting.id}`
 }
 
-export function objectToQueryStringDeep(
-  obj: Record<string, any>,
-  prefix = '',
-): string {
+export function objectToQueryStringDeep(obj: Record<string, any>, prefix = ''): string {
   const pairs: string[] = []
 
   for (const [key, value] of Object.entries(obj)) {
@@ -39,17 +36,11 @@ export function objectToQueryStringDeep(
       continue
     }
 
-    if (
-      typeof value === 'object'
-      && !Array.isArray(value)
-      && Object.keys(value).length === 0
-    ) {
+    if (typeof value === 'object' && !Array.isArray(value) && Object.keys(value).length === 0) {
       continue
     }
 
-    const paramKey = prefix
-      ? `${prefix}[${encodeURIComponent(key)}]`
-      : encodeURIComponent(key)
+    const paramKey = prefix ? `${prefix}[${encodeURIComponent(key)}]` : encodeURIComponent(key)
 
     if (key === 'sort') {
       pairs.push(`sort=${convertSortingToQueryString(value)}`)

@@ -5,7 +5,6 @@ import Page from '@/components/global-layout/basic-page.vue'
 import { Button } from '@/components/ui/button'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { useInvoices } from '@/composables/use-invoices'
-
 import { columns } from '@/pages/invoices/components/columns'
 import DataTable from '@/pages/invoices/components/data-table.vue'
 import InvoiceCreate from '@/pages/invoices/components/invoice-create.vue'
@@ -32,8 +31,13 @@ const {
       <div class="flex items-center gap-2">
         <Tooltip>
           <TooltipTrigger as-child>
-            <Button :variant="viewMode === 'table' ? 'default' : 'outline'" size="icon" class="size-8"
-              data-testid="invoices_table-view_button" @click="viewMode = 'table'">
+            <Button
+              :variant="viewMode === 'table' ? 'default' : 'outline'"
+              size="icon"
+              class="size-8"
+              data-testid="invoices_table-view_button"
+              @click="viewMode = 'table'"
+            >
               <List class="size-4" />
               <span class="sr-only">Table view</span>
             </Button>
@@ -44,8 +48,13 @@ const {
         </Tooltip>
         <Tooltip>
           <TooltipTrigger as-child>
-            <Button :variant="viewMode === 'card' ? 'default' : 'outline'" size="icon" class="size-8"
-              data-testid="invoices_card-view_button" @click="viewMode = 'card'">
+            <Button
+              :variant="viewMode === 'card' ? 'default' : 'outline'"
+              size="icon"
+              class="size-8"
+              data-testid="invoices_card-view_button"
+              @click="viewMode = 'card'"
+            >
               <Grid3x3 class="size-4" />
               <span class="sr-only">Card view</span>
             </Button>
@@ -58,9 +67,17 @@ const {
       </div>
     </template>
     <div v-if="viewMode === 'table'" class="overflow-x-auto">
-      <DataTable :loading="loading" :data="invoices" :columns="columns" :server-pagination="serverPagination"
-        :sorting="sort" :on-sorting-change="onSortingChange" :filters="filter" :on-filters-change="onFiltersChange"
-        :on-clear-filters="clearFilters" />
+      <DataTable
+        :loading="loading"
+        :data="invoices"
+        :columns="columns"
+        :server-pagination="serverPagination"
+        :sorting="sort"
+        :on-sorting-change="onSortingChange"
+        :filters="filter"
+        :on-filters-change="onFiltersChange"
+        :on-clear-filters="clearFilters"
+      />
     </div>
     <div v-else-if="viewMode === 'card'">
       <InvoicesCardGrid :invoices="invoices" :loading="loading" />

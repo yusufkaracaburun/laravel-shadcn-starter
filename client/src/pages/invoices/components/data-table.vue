@@ -1,16 +1,15 @@
 <script setup lang="ts">
-import { Trash2Icon } from 'lucide-vue-next'
-import type { ColumnDef, SortingState } from '@tanstack/vue-table'
+import type { ColumnDef } from '@tanstack/vue-table'
 
-import type { IServerPagination, IDataTableProps } from '@/components/data-table/types'
+import { Trash2Icon } from 'lucide-vue-next'
+
+import type { IServerPagination } from '@/components/data-table/types'
+import type { TInvoice } from '@/pages/invoices/data/schema'
 import type { IInvoiceFilters } from '@/pages/invoices/models/invoice'
 
 import BulkActions from '@/components/data-table/bulk-actions.vue'
 import DataTable from '@/components/data-table/data-table.vue'
 import { generateVueTable } from '@/components/data-table/use-generate-vue-table'
-
-import type { TInvoice } from '@/pages/invoices/data/schema'
-
 import DataTableToolbar from '@/pages/invoices/components/data-table-toolbar.vue'
 import InvoiceDeleteBatch from '@/pages/invoices/components/invoice-delete-batch.vue'
 
@@ -31,6 +30,7 @@ const invoiceDeleteBatchOpen = ref(false)
 </script>
 
 <template>
+  P{{ props.serverPagination }}
   <BulkActions entity-name="invoice" :table>
     <UiTooltip>
       <UiTooltipTrigger as-child>
