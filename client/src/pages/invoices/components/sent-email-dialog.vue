@@ -28,7 +28,9 @@ function closeDialog() {
   <Dialog :open="isOpen" @update:open="closeDialog">
     <DialogContent class="max-w-4xl p-0">
       <DialogHeader class="p-6 pb-0">
-        <DialogTitle class="text-2xl font-bold text-gray-900"> Email Details </DialogTitle>
+        <DialogTitle class="text-2xl font-bold text-gray-900">
+          Email Details
+        </DialogTitle>
         <DialogClose variant="ghost" size="icon" class="absolute top-4 right-4">
           <X class="w-4 h-4" />
         </DialogClose>
@@ -58,7 +60,9 @@ function closeDialog() {
         </div>
 
         <div class="border-t pt-4">
-          <h3 class="font-semibold text-lg mb-2">Content:</h3>
+          <h3 class="font-semibold text-lg mb-2">
+            Content:
+          </h3>
           <div class="bg-gray-50 p-4 rounded-md overflow-x-auto">
             <div class="prose max-w-none" v-html="email.content" />
           </div>

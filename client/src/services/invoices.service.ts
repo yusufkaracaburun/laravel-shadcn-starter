@@ -63,7 +63,7 @@ interface IInvoiceService {
     typeof useMutation<IResponse<IInvoice>, AxiosError, ICreateInvoiceRequest>
   >
   updateInvoiceMutation: () => ReturnType<
-    typeof useMutation<IResponse<IInvoice>, AxiosError, { id: number; data: IUpdateInvoiceRequest }>
+    typeof useMutation<IResponse<IInvoice>, AxiosError, { id: number, data: IUpdateInvoiceRequest }>
   >
   deleteInvoiceMutation: () => ReturnType<typeof useMutation<void, AxiosError, number>>
   downloadInvoicePdfMutation: () => ReturnType<
@@ -167,12 +167,12 @@ export function useInvoiceService(): IInvoiceService {
   }
 
   function updateInvoiceMutation(): ReturnType<
-    typeof useMutation<IResponse<IInvoice>, AxiosError, { id: number; data: IUpdateInvoiceRequest }>
+    typeof useMutation<IResponse<IInvoice>, AxiosError, { id: number, data: IUpdateInvoiceRequest }>
   > {
     return useMutation<
       IResponse<IInvoice>,
       AxiosError,
-      { id: number; data: IUpdateInvoiceRequest }
+      { id: number, data: IUpdateInvoiceRequest }
     >({
       mutationKey: [QueryKeys.UPDATE_INVOICE],
       mutationFn: async ({ id, data }): Promise<IResponse<IInvoice>> => {

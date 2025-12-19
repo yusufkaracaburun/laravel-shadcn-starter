@@ -99,7 +99,7 @@ export const test = base.extend<ApiFixtures>({
         retries--
         if (retries > 0) {
           // Wait longer for rate limiting (exponential backoff)
-          await new Promise((resolve) => setTimeout(resolve, delay))
+          await new Promise(resolve => setTimeout(resolve, delay))
           delay *= 2 // Exponential backoff (500ms, 1s, 2s, 4s, 8s)
           continue
         }
@@ -110,7 +110,8 @@ export const test = base.extend<ApiFixtures>({
         let errorText = 'Unable to read error response'
         try {
           errorText = await response.text()
-        } catch {
+        }
+        catch {
           // Ignore text read errors
         }
         throw new Error(

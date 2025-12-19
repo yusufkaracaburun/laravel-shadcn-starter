@@ -15,9 +15,12 @@ import DataTableRowActions from './data-table-row-actions.vue'
 
 function getLabelVariant(label: string): 'default' | 'secondary' | 'destructive' | 'outline' {
   const normalizedLabel = label.toLowerCase()
-  if (normalizedLabel === 'bug') return 'destructive'
-  if (normalizedLabel === 'feature') return 'default'
-  if (normalizedLabel === 'documentation') return 'secondary'
+  if (normalizedLabel === 'bug')
+    return 'destructive'
+  if (normalizedLabel === 'feature')
+    return 'default'
+  if (normalizedLabel === 'documentation')
+    return 'secondary'
   return 'outline'
 }
 
@@ -43,7 +46,8 @@ export const columns: ColumnDef<Task>[] = [
     header: ({ column }) => h(DataTableColumnHeader<Task>, { column, title: 'Description' }),
     cell: ({ row }) => {
       const description = row.original.description
-      if (!description) return h('span', { class: 'text-muted-foreground' }, '—')
+      if (!description)
+        return h('span', { class: 'text-muted-foreground' }, '—')
       return h(
         'span',
         { class: 'max-w-[300px] truncate text-sm text-muted-foreground' },
@@ -57,7 +61,8 @@ export const columns: ColumnDef<Task>[] = [
     header: ({ column }) => h(DataTableColumnHeader<Task>, { column, title: 'Labels' }),
     cell: ({ row }) => {
       const taskLabels = row.original.labels || []
-      if (taskLabels.length === 0) return h('span', { class: 'text-muted-foreground' }, '—')
+      if (taskLabels.length === 0)
+        return h('span', { class: 'text-muted-foreground' }, '—')
       return h(
         'div',
         { class: 'flex flex-wrap gap-1' },
@@ -77,9 +82,10 @@ export const columns: ColumnDef<Task>[] = [
     header: ({ column }) => h(DataTableColumnHeader<Task>, { column, title: 'Status' }),
 
     cell: ({ row }) => {
-      const status = statuses.find((status) => status.value === row.getValue('status'))
+      const status = statuses.find(status => status.value === row.getValue('status'))
 
-      if (!status) return null
+      if (!status)
+        return null
 
       return h(StatusBadge, {
         status: status.value,
@@ -96,9 +102,10 @@ export const columns: ColumnDef<Task>[] = [
     accessorKey: 'priority',
     header: ({ column }) => h(DataTableColumnHeader<Task>, { column, title: 'Priority' }),
     cell: ({ row }) => {
-      const priority = priorities.find((priority) => priority.value === row.getValue('priority'))
+      const priority = priorities.find(priority => priority.value === row.getValue('priority'))
 
-      if (!priority) return null
+      if (!priority)
+        return null
 
       return h('div', { class: 'flex items-center gap-2' }, [
         priority.icon && h(priority.icon, { class: `h-4 w-4 ${priority.color}` }),
@@ -114,7 +121,8 @@ export const columns: ColumnDef<Task>[] = [
     header: ({ column }) => h(DataTableColumnHeader<Task>, { column, title: 'Due Date' }),
     cell: ({ row }) => {
       const dueDate = row.original.dueDate
-      if (!dueDate) return h('span', { class: 'text-muted-foreground' }, '—')
+      if (!dueDate)
+        return h('span', { class: 'text-muted-foreground' }, '—')
       const date = typeof dueDate === 'string' ? dayjs(dueDate) : dayjs(dueDate)
       return h('span', { class: 'text-sm' }, date.format('MMM D, YYYY'))
     },

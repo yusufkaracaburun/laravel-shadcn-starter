@@ -86,8 +86,8 @@ export const columns: ColumnDef<Customer>[] = [
       const emailStr = email || ''
       return h('div', { class: 'flex items-center max-w-[200px]' }, [
         h('span', { class: 'truncate text-muted-foreground' }, emailStr || '-'),
-        emailStr &&
-          h(Copy, { class: 'ml-2 flex-shrink-0', size: 'sm', variant: 'ghost', content: emailStr }),
+        emailStr
+        && h(Copy, { class: 'ml-2 flex-shrink-0', size: 'sm', variant: 'ghost', content: emailStr }),
       ])
     },
     enableSorting: true,

@@ -20,7 +20,8 @@ function formatDate(dateString: string | null): string {
     if (!Number.isNaN(date.getTime())) {
       return formatDateForPreview(dateString)
     }
-  } catch {
+  }
+  catch {
     // Ignore parsing errors
   }
   return dateString
@@ -44,7 +45,9 @@ function formatCurrency(value: any): string {
 
       <!-- Invoice meta -->
       <div class="text-right text-sm">
-        <div class="font-semibold">Factuur</div>
+        <div class="font-semibold">
+          Factuur
+        </div>
         <div>Factuur #{{ props.formValues?.invoice_number ?? '—' }}</div>
         <div>Datum {{ formatDate(props.formValues?.date ?? null) }}</div>
         <div>Vervaldatum {{ formatDate(props.formValues?.date_due ?? null) }}</div>
@@ -53,7 +56,9 @@ function formatCurrency(value: any): string {
 
     <!-- CUSTOMER -->
     <div class="mb-8">
-      <h2 class="text-lg font-semibold mb-2">Klant</h2>
+      <h2 class="text-lg font-semibold mb-2">
+        Klant
+      </h2>
       <div class="text-sm leading-relaxed">
         <div class="font-medium">
           {{ props.formValues?.customer?.name ?? '—' }}
@@ -71,11 +76,21 @@ function formatCurrency(value: any): string {
     <table class="w-full text-sm mb-10 border-collapse">
       <thead>
         <tr class="text-muted border-b">
-          <th class="text-left py-2">Omschrijving</th>
-          <th class="text-center py-2">Aantal</th>
-          <th class="text-center py-2">BTW%</th>
-          <th class="text-right py-2">Prijs (excl.)</th>
-          <th class="text-right py-2">Totaal (excl.)</th>
+          <th class="text-left py-2">
+            Omschrijving
+          </th>
+          <th class="text-center py-2">
+            Aantal
+          </th>
+          <th class="text-center py-2">
+            BTW%
+          </th>
+          <th class="text-right py-2">
+            Prijs (excl.)
+          </th>
+          <th class="text-right py-2">
+            Totaal (excl.)
+          </th>
         </tr>
       </thead>
 
@@ -87,7 +102,9 @@ function formatCurrency(value: any): string {
           <td class="text-center py-2">
             {{ formatNumber(item.quantity, 2) }}
           </td>
-          <td class="text-center py-2">{{ item.vat_rate }}%</td>
+          <td class="text-center py-2">
+            {{ item.vat_rate }}%
+          </td>
           <td class="text-right py-2">
             {{ formatCurrency(item.unit_price) }}
           </td>
@@ -120,7 +137,9 @@ function formatCurrency(value: any): string {
 
     <!-- NOTES -->
     <div v-if="props.formValues?.notes" class="mb-12 text-sm">
-      <h3 class="font-semibold mb-2">Opmerkingen</h3>
+      <h3 class="font-semibold mb-2">
+        Opmerkingen
+      </h3>
       <p class="whitespace-pre-line text-gray-700">
         {{ props.formValues.notes }}
       </p>
@@ -129,8 +148,12 @@ function formatCurrency(value: any): string {
     <!-- FOOTER -->
     <div class="border-t pt-4 text-xs text-gray-500 flex justify-between">
       <div>Bedrijfsnaam · info@bedrijf.nl · BTW nummer</div>
-      <div class="text-center">aaa<br />bbb<br />ccc</div>
-      <div class="text-right">aaa<br />bbb<br />ccc</div>
+      <div class="text-center">
+        aaa<br>bbb<br>ccc
+      </div>
+      <div class="text-right">
+        aaa<br>bbb<br>ccc
+      </div>
     </div>
   </div>
 </template>

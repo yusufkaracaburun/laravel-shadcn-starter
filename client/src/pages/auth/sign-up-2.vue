@@ -28,7 +28,7 @@ import SignUpForm2 from '@/pages/auth/components/SignUpForm2.vue'
         src="/placeholder.png"
         alt=""
         class="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
-      />
+      >
     </div>
   </div>
 </template>

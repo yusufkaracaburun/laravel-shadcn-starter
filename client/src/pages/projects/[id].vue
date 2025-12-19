@@ -34,7 +34,8 @@ const project = computed<Project | null>(() => projectResponse.value?.data ?? nu
 
 // Format date
 function formatDate(dateString: string | null): string {
-  if (!dateString) return '—'
+  if (!dateString)
+    return '—'
   return new Date(dateString).toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'long',
@@ -44,7 +45,8 @@ function formatDate(dateString: string | null): string {
 
 // Format datetime
 function formatDateTime(dateString: string | null): string {
-  if (!dateString) return '—'
+  if (!dateString)
+    return '—'
   return new Date(dateString).toLocaleString('en-US', {
     year: 'numeric',
     month: 'long',
@@ -56,12 +58,12 @@ function formatDateTime(dateString: string | null): string {
 
 // Get status info
 function getStatusInfo(status: string) {
-  return statuses.find((s) => s.value === status) || null
+  return statuses.find(s => s.value === status) || null
 }
 
 // Get category label
 function getCategoryLabel(category: string) {
-  return categories.find((c) => c.value === category)?.label || category
+  return categories.find(c => c.value === category)?.label || category
 }
 
 // Handle edit
@@ -84,7 +86,8 @@ function handleDeleteClose() {
 
 // Check if error is 404
 const isNotFound = computed(() => {
-  if (!isError.value || !error.value) return false
+  if (!isError.value || !error.value)
+    return false
   return (error.value as any)?.response?.status === 404
 })
 </script>
@@ -130,7 +133,9 @@ const isNotFound = computed(() => {
           subtitle="Error Loading Project"
           error="An error occurred while loading the project information. Please try again."
         />
-        <Button class="mt-4" @click="refetch()"> Retry </Button>
+        <Button class="mt-4" @click="refetch()">
+          Retry
+        </Button>
       </div>
     </div>
 
@@ -177,19 +182,25 @@ const isNotFound = computed(() => {
           </CardHeader>
           <CardContent class="space-y-4">
             <div>
-              <div class="text-sm font-medium text-muted-foreground mb-1">Name</div>
+              <div class="text-sm font-medium text-muted-foreground mb-1">
+                Name
+              </div>
               <div class="text-base">
                 {{ project.name }}
               </div>
             </div>
             <div v-if="project.description">
-              <div class="text-sm font-medium text-muted-foreground mb-1">Description</div>
+              <div class="text-sm font-medium text-muted-foreground mb-1">
+                Description
+              </div>
               <div class="text-base">
                 {{ project.description }}
               </div>
             </div>
             <div>
-              <div class="text-sm font-medium text-muted-foreground mb-1">Category</div>
+              <div class="text-sm font-medium text-muted-foreground mb-1">
+                Category
+              </div>
               <div class="text-base">
                 <Badge variant="outline">
                   {{ getCategoryLabel(project.category) }}
@@ -197,7 +208,9 @@ const isNotFound = computed(() => {
               </div>
             </div>
             <div>
-              <div class="text-sm font-medium text-muted-foreground mb-1">Status</div>
+              <div class="text-sm font-medium text-muted-foreground mb-1">
+                Status
+              </div>
               <div class="text-base">
                 <StatusBadge
                   v-if="getStatusInfo(project.status)"
@@ -272,7 +285,9 @@ const isNotFound = computed(() => {
               </div>
             </div>
             <div v-if="project.team_id">
-              <div class="text-sm font-medium text-muted-foreground mb-1">Team ID</div>
+              <div class="text-sm font-medium text-muted-foreground mb-1">
+                Team ID
+              </div>
               <div class="text-base">
                 {{ project.team_id }}
               </div>

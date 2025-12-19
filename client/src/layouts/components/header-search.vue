@@ -29,7 +29,9 @@ const firstKey = computed(() => (navigator?.userAgent.includes('Mac OS') ? '⌘'
     >
       <Search class="size-4" />
       <span class="flex-1 text-xs">Search</span>
-      <UiKbd class="text-xs"> {{ firstKey }} K </UiKbd>
+      <UiKbd class="text-xs">
+        {{ firstKey }} K
+      </UiKbd>
     </div>
 
     <!-- Command Menu Dialog -->

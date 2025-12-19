@@ -19,7 +19,7 @@ type PromiseToastData<T = any> = Omit<ExternalToast, 'description'> & {
  * Default toast configuration
  * These defaults will be used throughout the application
  */
-export const defaultToastOptions: ExternalToast = {
+const defaultToastOptions: ExternalToast = {
   position: 'bottom-right',
   duration: 5000,
   closeButton: true,
@@ -29,7 +29,7 @@ export const defaultToastOptions: ExternalToast = {
 /**
  * Toast configuration for different notification types
  */
-export const toastConfig = {
+const toastConfig = {
   normal: {
     ...defaultToastOptions,
     duration: 5000,
@@ -69,28 +69,17 @@ export const toastConfig = {
 } as const
 
 /**
- * Default Toaster component props
- */
-export const defaultToasterProps = {
-  position: 'bottom-right' as const,
-  theme: 'system' as const,
-  richColors: true,
-  expand: false,
-  closeButton: true,
-}
-
-/**
  * Get default toast options
  * Use this when you want to merge with custom options
  */
-export function getDefaultToastOptions(): ExternalToast {
+function getDefaultToastOptions(): ExternalToast {
   return { ...defaultToastOptions }
 }
 
 /**
  * Get toast config for a specific type
  */
-export function getToastConfig(
+function getToastConfig(
   type: 'normal' | 'action' | 'success' | 'error' | 'warning' | 'info' | 'loading' | 'default',
 ): ExternalToast {
   return { ...toastConfig[type] }
@@ -99,57 +88,68 @@ export function getToastConfig(
 /**
  * Get success toast options
  */
-export function getSuccessToastOptions(): ExternalToast {
+function getSuccessToastOptions(): ExternalToast {
   return { ...toastConfig.success }
 }
 
 /**
  * Get error toast options
  */
-export function getErrorToastOptions(): ExternalToast {
+function getErrorToastOptions(): ExternalToast {
   return { ...toastConfig.error }
 }
 
 /**
  * Get warning toast options
  */
-export function getWarningToastOptions(): ExternalToast {
+function getWarningToastOptions(): ExternalToast {
   return { ...toastConfig.warning }
 }
 
 /**
  * Get info toast options
  */
-export function getInfoToastOptions(): ExternalToast {
+function getInfoToastOptions(): ExternalToast {
   return { ...toastConfig.info }
 }
 
 /**
  * Get normal toast options
  */
-export function getNormalToastOptions(): ExternalToast {
+function getNormalToastOptions(): ExternalToast {
   return { ...toastConfig.normal }
 }
 
 /**
  * Get action toast options
  */
-export function getActionToastOptions(): ExternalToast {
+function getActionToastOptions(): ExternalToast {
   return { ...toastConfig.action }
 }
 
 /**
  * Get loading toast options
  */
-export function getLoadingToastOptions(): ExternalToast {
+function getLoadingToastOptions(): ExternalToast {
   return { ...toastConfig.loading }
 }
 
 /**
  * Get default toast options (alias for normal)
  */
-export function getDefaultTypeToastOptions(): ExternalToast {
+function getDefaultTypeToastOptions(): ExternalToast {
   return { ...toastConfig.default }
+}
+
+/**
+ * Default Toaster component props
+ */
+export const defaultToasterProps = {
+  position: 'bottom-right' as const,
+  theme: 'system' as const,
+  richColors: true,
+  expand: false,
+  closeButton: true,
 }
 
 /**

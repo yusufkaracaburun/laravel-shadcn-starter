@@ -36,10 +36,10 @@ const {
 
 const invoice = computed(() => invoiceResponse.value?.data ?? null) as ComputedRef<
   | (TInvoice & {
-      payments?: IInvoicePayment[]
-      activities?: IInvoiceActivity[]
-      emails?: IInvoiceEmail[]
-    })
+    payments?: IInvoicePayment[]
+    activities?: IInvoiceActivity[]
+    emails?: IInvoiceEmail[]
+  })
   | null
 >
 
@@ -72,11 +72,13 @@ const pdfUrl = computed(
               :code="(error as any)?.response?.status || 500"
               subtitle="Failed to load invoice"
               :error="
-                (error as any)?.message ||
-                'We couldn\'t load the invoice details. Please try again.'
+                (error as any)?.message
+                  || 'We couldn\'t load the invoice details. Please try again.'
               "
             />
-            <Button class="mt-4 print:hidden" @click="refetch"> Try Again </Button>
+            <Button class="mt-4 print:hidden" @click="refetch">
+              Try Again
+            </Button>
           </div>
         </div>
 

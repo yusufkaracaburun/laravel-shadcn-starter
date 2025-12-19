@@ -14,7 +14,8 @@ export type PaymentStatusValue = 'pending' | 'paid' | 'failed' | 'refunded' | 'c
  * Matches the kanban view color scheme
  */
 export function getPriorityColor(priority: PriorityValue | string | undefined): string {
-  if (!priority) return 'text-muted-foreground'
+  if (!priority)
+    return 'text-muted-foreground'
 
   switch (priority.toLowerCase()) {
     case 'low':
@@ -33,7 +34,8 @@ export function getPriorityColor(priority: PriorityValue | string | undefined): 
  * Returns badge-style background colors for project statuses
  */
 export function getProjectStatusColor(status: ProjectStatusValue | string | undefined): string {
-  if (!status) return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300'
+  if (!status)
+    return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300'
 
   switch (status.toLowerCase()) {
     case 'active':
@@ -54,7 +56,8 @@ export function getProjectStatusColor(status: ProjectStatusValue | string | unde
  * Returns badge-style background colors for task statuses
  */
 export function getTaskStatusColor(status: TaskStatusValue | string | undefined): string {
-  if (!status) return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300'
+  if (!status)
+    return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300'
 
   switch (status.toLowerCase()) {
     case 'backlog':
@@ -77,7 +80,8 @@ export function getTaskStatusColor(status: TaskStatusValue | string | undefined)
  * Returns badge-style background colors for company statuses
  */
 export function getCompanyStatusColor(status: CompanyStatusValue | string | undefined): string {
-  if (!status) return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300'
+  if (!status)
+    return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300'
 
   switch (status.toLowerCase()) {
     case 'active':
@@ -96,7 +100,8 @@ export function getCompanyStatusColor(status: CompanyStatusValue | string | unde
  * Returns badge-style background colors for invoice statuses
  */
 export function getInvoiceStatusColor(status: InvoiceStatusValue | string | undefined): string {
-  if (!status) return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300'
+  if (!status)
+    return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300'
 
   switch (status.toLowerCase()) {
     case 'draft':
@@ -117,7 +122,8 @@ export function getInvoiceStatusColor(status: InvoiceStatusValue | string | unde
 }
 
 export function getPaymentStatusColor(status: PaymentStatusValue | string | undefined): string {
-  if (!status) return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300'
+  if (!status)
+    return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300'
 
   switch (status.toLowerCase()) {
     case 'pending':
@@ -143,7 +149,8 @@ export function getStatusColor(
   status: string | undefined,
   type: 'project' | 'task' = 'project',
 ): string {
-  if (!status) return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300'
+  if (!status)
+    return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300'
 
   if (type === 'project') {
     return getProjectStatusColor(status as ProjectStatusValue)

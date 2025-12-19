@@ -28,8 +28,8 @@ export class AuthClient extends BaseClient {
     emailOrCredentials: string | LoginCredentials,
     password?: string,
   ): Promise<APIResponse> {
-    const credentials: LoginCredentials =
-      typeof emailOrCredentials === 'string'
+    const credentials: LoginCredentials
+      = typeof emailOrCredentials === 'string'
         ? { email: emailOrCredentials, password: password! }
         : emailOrCredentials
 

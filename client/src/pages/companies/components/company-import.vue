@@ -53,8 +53,12 @@ function onSubmit() {
         <span v-if="error" class="text-destructive">{{ error }}</span>
       </div>
       <UiDialogFooter>
-        <UiButton variant="secondary" @click="isOpen = false"> Cancel </UiButton>
-        <UiButton @click="onSubmit"> Import </UiButton>
+        <UiButton variant="secondary" @click="isOpen = false">
+          Cancel
+        </UiButton>
+        <UiButton @click="onSubmit">
+          Import
+        </UiButton>
       </UiDialogFooter>
     </UiDialogContent>
   </UiDialog>

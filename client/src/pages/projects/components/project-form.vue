@@ -66,13 +66,15 @@ const onSubmit = handleSubmit(async (values) => {
     if (props.project?.id) {
       // Update existing project
       await updateProject(props.project.id, backendData)
-    } else {
+    }
+    else {
       // Create new project
       await createProject(backendData)
     }
 
     emits('close')
-  } catch (error) {
+  }
+  catch (error) {
     // Error handling is done in the composable
     // Just log for debugging
     console.error('Project form submission error:', error)

@@ -100,7 +100,9 @@ function formatDate(dateString: string) {
               <TableHead>Type</TableHead>
               <TableHead>Date Generated</TableHead>
               <TableHead>Status</TableHead>
-              <TableHead class="text-right"> Actions </TableHead>
+              <TableHead class="text-right">
+                Actions
+              </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>

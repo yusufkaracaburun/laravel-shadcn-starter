@@ -28,11 +28,15 @@ function handleRemove() {
     </UiDialogTitle>
     <UiDialogFooter>
       <UiDialogClose as-child>
-        <UiButton variant="outline"> Cancel </UiButton>
+        <UiButton variant="outline">
+          Cancel
+        </UiButton>
       </UiDialogClose>
 
       <UiDialogClose as-child>
-        <UiButton variant="destructive" @click="handleRemove"> Delete </UiButton>
+        <UiButton variant="destructive" @click="handleRemove">
+          Delete
+        </UiButton>
       </UiDialogClose>
     </UiDialogFooter>
   </div>

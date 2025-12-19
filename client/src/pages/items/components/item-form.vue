@@ -17,7 +17,8 @@ const { createItem, updateItem } = useItems()
 
 // Extract unit_price value - handle both Money object and number
 function getUnitPriceValue(item: Item | null): number {
-  if (!item?.unit_price) return 0
+  if (!item?.unit_price)
+    return 0
   // If it's a Money object, extract the decimal value
   if (typeof item.unit_price === 'object' && 'amount' in item.unit_price) {
     // Money object: amount is in cents, convert to decimal
@@ -105,13 +106,15 @@ const onSubmit = handleSubmit(async (values) => {
     if (props.item?.id) {
       // Update existing item
       await updateItem(props.item.id, backendData)
-    } else {
+    }
+    else {
       // Create new item
       await createItem(backendData)
     }
 
     emits('close')
-  } catch (error) {
+  }
+  catch (error) {
     // Error handling is done in the composable
     // Just log for debugging
     console.error('Item form submission error:', error)

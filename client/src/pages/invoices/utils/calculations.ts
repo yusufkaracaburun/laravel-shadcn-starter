@@ -26,7 +26,7 @@ export function calculateItemTotals(
 /**
  * Extract numeric value from Money object or number
  */
-function extractMoneyValue(value: number | { amount?: string; formatted?: string }): number {
+function extractMoneyValue(value: number | { amount?: string, formatted?: string }): number {
   if (typeof value === 'number') {
     return value
   }
@@ -46,9 +46,9 @@ function extractMoneyValue(value: number | { amount?: string; formatted?: string
  */
 export function calculateInvoiceTotals(
   items: Array<{
-    total_excl_vat: number | { amount?: string; formatted?: string }
-    total_vat: number | { amount?: string; formatted?: string }
-    total_incl_vat: number | { amount?: string; formatted?: string }
+    total_excl_vat: number | { amount?: string, formatted?: string }
+    total_vat: number | { amount?: string, formatted?: string }
+    total_incl_vat: number | { amount?: string, formatted?: string }
     vat_rate: number
   }>,
 ): {
@@ -69,17 +69,19 @@ export function calculateInvoiceTotals(
     const itemTotalVat = extractMoneyValue(item.total_vat)
     const itemTotalInclVat = extractMoneyValue(item.total_incl_vat)
     // Ensure vat_rate is a number for comparison
-    const vatRate =
-      typeof item.vat_rate === 'string' ? Number.parseFloat(item.vat_rate) : Number(item.vat_rate)
+    const vatRate
+      = typeof item.vat_rate === 'string' ? Number.parseFloat(item.vat_rate) : Number(item.vat_rate)
 
     subtotal += itemTotalExclVat
 
     // Group VAT by rate (use Number comparison to handle string/number conversion)
     if (Number(vatRate) === 0) {
       totalVat0 += itemTotalVat
-    } else if (Number(vatRate) === 9) {
+    }
+    else if (Number(vatRate) === 9) {
       totalVat9 += itemTotalVat
-    } else if (Number(vatRate) === 21) {
+    }
+    else if (Number(vatRate) === 21) {
       totalVat21 += itemTotalVat
     }
 

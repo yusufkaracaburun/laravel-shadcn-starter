@@ -7,7 +7,8 @@
  * Check if CookieStore API is available
  */
 export function isCookieStoreAvailable(): boolean {
-  if (typeof window === 'undefined') return false
+  if (typeof window === 'undefined')
+    return false
   return 'cookieStore' in window
 }
 
@@ -23,7 +24,8 @@ export async function getCookie(name: string): Promise<CookieListItem | null> {
   try {
     const cookie = await cookieStore.get(name)
     return cookie || null
-  } catch (error) {
+  }
+  catch (error) {
     console.error(`Error getting cookie "${name}":`, error)
     return null
   }
@@ -41,7 +43,8 @@ export async function getAllCookies(name?: string): Promise<CookieList> {
   try {
     const cookies = await cookieStore.getAll(name)
     return cookies
-  } catch (error) {
+  }
+  catch (error) {
     console.error('Error getting all cookies:', error)
     return []
   }
@@ -65,14 +68,17 @@ export async function setCookie(
     if (typeof nameOrOptions === 'string' && value !== undefined) {
       // Set with name and value
       await cookieStore.set(nameOrOptions, value)
-    } else if (typeof nameOrOptions === 'object') {
+    }
+    else if (typeof nameOrOptions === 'object') {
       // Set with options object
       await cookieStore.set(nameOrOptions)
-    } else {
+    }
+    else {
       throw new TypeError('Invalid arguments for setCookie()')
     }
     return true
-  } catch (error) {
+  }
+  catch (error) {
     console.error('Error setting cookie:', error)
     return false
   }
@@ -94,7 +100,8 @@ export async function removeCookie(
   try {
     await cookieStore.delete(nameOrOptions)
     return true
-  } catch (error) {
+  }
+  catch (error) {
     console.error('Error deleting cookie:', error)
     return false
   }
@@ -127,7 +134,8 @@ export function setupCookie() {
 }
 
 export function getCookieValue(name: string): string | null {
-  const cookie = document.cookie.split('; ').find((row) => row.startsWith(`${name}=`))
-  if (!cookie) return null
+  const cookie = document.cookie.split('; ').find(row => row.startsWith(`${name}=`))
+  if (!cookie)
+    return null
   return decodeURIComponent(cookie.split('=')[1])
 }

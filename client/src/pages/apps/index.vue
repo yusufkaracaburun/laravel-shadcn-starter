@@ -18,7 +18,8 @@ const appTypes: AppType[] = ['all', 'connected', 'notConnected']
 const sort = ref<TSort>('asc')
 
 watch(searchTerm, (newValue) => {
-  if (!newValue) appList.value = apps
+  if (!newValue)
+    appList.value = apps
 
   appList.value = apps.filter((app) => {
     return app.name.toLowerCase().includes(newValue.toLowerCase())
@@ -27,14 +28,16 @@ watch(searchTerm, (newValue) => {
 
 watch(sort, (newValue) => {
   appList.value = apps.sort((a, b) => {
-    if (newValue === 'asc') return a.name.localeCompare(b.name)
+    if (newValue === 'asc')
+      return a.name.localeCompare(b.name)
     return b.name.localeCompare(a.name)
   })
 })
 
 watch(appType, (newValue) => {
   appList.value = apps.filter((app) => {
-    if (newValue === 'all') return true
+    if (newValue === 'all')
+      return true
     return newValue === 'connected' ? app.connected : !app.connected
   })
 })

@@ -53,9 +53,11 @@ export function formatNumber(
   let numValue: number
   if (typeof value === 'string') {
     numValue = Number.parseFloat(value)
-  } else if (value === null || value === undefined) {
+  }
+  else if (value === null || value === undefined) {
     numValue = 0
-  } else {
+  }
+  else {
     numValue = Number(value)
   }
 
@@ -98,7 +100,8 @@ export function parseDutchNumber(value: string): number {
  * Uses vue-i18n to respect current locale setting
  */
 export function formatDate(dateString: string | null | undefined): string {
-  if (!dateString) return '—'
+  if (!dateString)
+    return '—'
   try {
     const date = new Date(dateString)
     if (!isNaN(date.getTime())) {
@@ -113,7 +116,8 @@ export function formatDate(dateString: string | null | undefined): string {
         day: 'numeric',
       })
     }
-  } catch {
+  }
+  catch {
     // Ignore parsing errors
   }
   return dateString
@@ -124,7 +128,8 @@ export function formatDate(dateString: string | null | undefined): string {
  * Uses vue-i18n to respect current locale setting
  */
 export function formatDateForPreview(dateString: string | null | undefined): string {
-  if (!dateString) return '—'
+  if (!dateString)
+    return '—'
   try {
     const date = new Date(dateString)
     if (!isNaN(date.getTime())) {
@@ -139,7 +144,8 @@ export function formatDateForPreview(dateString: string | null | undefined): str
         day: 'numeric',
       })
     }
-  } catch {
+  }
+  catch {
     // Ignore parsing errors
   }
   return dateString
@@ -149,7 +155,8 @@ export function formatDateForPreview(dateString: string | null | undefined): str
  * Format date for input field (YYYY-MM-DD)
  */
 export function formatDateForInput(dateString: string | null | undefined): string {
-  if (!dateString) return ''
+  if (!dateString)
+    return ''
   // Try parsing as "d-m-Y H:i:s" format first
   if (dateString.includes('-') && dateString.includes(' ')) {
     const [datePart] = dateString.split(' ')
@@ -174,7 +181,8 @@ export function formatDateForInput(dateString: string | null | undefined): strin
  * Uses vue-i18n to respect current locale setting
  */
 export function formatDateTime(dateString: string | null | undefined): string {
-  if (!dateString) return '—'
+  if (!dateString)
+    return '—'
   try {
     // Try parsing as "d-m-Y H:i:s" format first
     if (dateString.includes('-') && dateString.includes(' ')) {
@@ -214,7 +222,8 @@ export function formatDateTime(dateString: string | null | undefined): string {
         minute: '2-digit',
       })
     }
-  } catch {
+  }
+  catch {
     // Ignore parsing errors
   }
   return dateString
