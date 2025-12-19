@@ -90,10 +90,13 @@ export function useInvoices() {
     }
   }
 
-  const getInvoicesQuery = invoiceService.getInvoicesQuery(page, pageSize, sorting, filters, [
-    includes.customer,
-    includes.items,
-  ])
+  const getInvoicesQuery = invoiceService.getInvoicesQuery(
+    page.value,
+    pageSize.value,
+    sorting.value,
+    filters.value,
+    [includes.customer, includes.items],
+  )
   const { data, isLoading, isFetching, refetch: fetchInvoices } = getInvoicesQuery
   async function fetchInvoicesData() {
     try {
@@ -109,17 +112,8 @@ export function useInvoices() {
   }
 
   const invoiceId = computed(() => Number((route.params as { id: string }).id as string))
-  const getInvoiceByIdQuery = invoiceService.getInvoiceByIdQuery(invoiceId.value, [
-    includes.customer,
-    includes.items,
-  ])
-  const {
-    data: invoiceByIdResponse,
-    isLoading: isLoadingInvoiceById,
-    isError: isErrorInvoiceById,
-    error: errorInvoiceById,
-    refetch: refetchInvoiceById,
-  } = getInvoiceByIdQuery
+  const getInvoiceByIdQuery = invoiceService.getInvoiceByIdQuery(invoiceId.value, [includes.customer, includes.items])
+  const { data: invoiceByIdResponse, isLoading: isLoadingInvoiceById, isError: isErrorInvoiceById, error: errorInvoiceById, refetch: refetchInvoiceById } = getInvoiceByIdQuery
   async function fetchInvoiceById() {
     try {
       const response = await refetchInvoiceById()
