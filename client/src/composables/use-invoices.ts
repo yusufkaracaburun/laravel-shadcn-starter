@@ -1,5 +1,7 @@
 import type { SortingState } from '@tanstack/vue-table'
 
+import { useRoute } from 'vue-router'
+
 import type { IServerPagination, TPageSize } from '@/components/data-table/types'
 import type {
   ICreateInvoiceRequest,
@@ -13,6 +15,7 @@ import { useInvoiceService } from '@/services/invoices.service'
 import { useErrorStore } from '@/stores/error.store'
 import { downloadBlobFromAxiosResponse } from '@/utils/blob'
 
+const route = useRoute()
 const InvoiceContext = {
   FETCH_INVOICE_PREREQUISITES: 'fetchInvoicePrerequisites',
   FETCH_INVOICES: 'fetchInvoices',
@@ -75,19 +78,6 @@ export function useInvoices() {
   }
 
   const getInvoicePrerequisitesQuery = invoiceService.getInvoicePrerequisitesQuery()
-  const getInvoicesQuery = invoiceService.getInvoicesQuery(
-    page,
-    pageSize,
-    sorting,
-    filters,
-    include,
-  )
-  const getInvoiceMutation = invoiceService.getInvoiceMutation()
-  const createInvoiceMutation = invoiceService.createInvoiceMutation()
-  const downloadInvoicePdfMutation = invoiceService.downloadInvoicePdfMutation()
-  const deleteInvoiceMutation = invoiceService.deleteInvoiceMutation()
-  const updateInvoiceMutation = invoiceService.updateInvoiceMutation()
-
   async function fetchInvoicePrerequisites() {
     try {
       const response = await getInvoicePrerequisitesQuery.refetch()
@@ -101,6 +91,13 @@ export function useInvoices() {
     }
   }
 
+  const getInvoicesQuery = invoiceService.getInvoicesQuery(
+    page,
+    pageSize,
+    sorting,
+    filters,
+    include,
+  )
   const { data, isLoading, isFetching, refetch: fetchInvoices } = getInvoicesQuery
   async function fetchInvoicesData() {
     try {
@@ -115,6 +112,23 @@ export function useInvoices() {
     }
   }
 
+  const invoiceId = computed(() => Number((route.params as { id: string }).id as string))
+  const getInvoiceByIdQuery = invoiceService.getInvoiceByIdQuery(invoiceId.value)
+  const { data: invoiceByIdResponse, isLoading: isLoadingInvoiceById, isError: isErrorInvoiceById, error: errorInvoiceById, refetch: refetchInvoiceById } = getInvoiceByIdQuery
+  async function fetchInvoiceById() {
+    try {
+      const response = await refetchInvoiceById()
+      return response.data
+    }
+    catch (error: any) {
+      errorStore.setError(error, { context: InvoiceContext.GET_INVOICE_BY_ID })
+      const message = errorStore.getErrorMessage(error)
+      toast.showError(message)
+      throw error
+    }
+  }
+
+  const getInvoiceMutation = invoiceService.getInvoiceMutation()
   async function getInvoice(id: number) {
     try {
       const response = await getInvoiceMutation.mutateAsync({
@@ -131,6 +145,7 @@ export function useInvoices() {
     }
   }
 
+  const createInvoiceMutation = invoiceService.createInvoiceMutation()
   async function createInvoice(data: ICreateInvoiceRequest) {
     try {
       const response = await createInvoiceMutation.mutateAsync(data)
@@ -152,6 +167,7 @@ export function useInvoices() {
     }
   }
 
+  const updateInvoiceMutation = invoiceService.updateInvoiceMutation()
   async function updateInvoice(id: number, data: IUpdateInvoiceRequest) {
     try {
       const response = await updateInvoiceMutation.mutateAsync({ id, data })
@@ -173,6 +189,7 @@ export function useInvoices() {
     }
   }
 
+  const deleteInvoiceMutation = invoiceService.deleteInvoiceMutation()
   async function deleteInvoice(id: number) {
     try {
       await deleteInvoiceMutation.mutateAsync(id)
@@ -186,6 +203,7 @@ export function useInvoices() {
     }
   }
 
+  const downloadInvoicePdfMutation = invoiceService.downloadInvoicePdfMutation()
   async function downloadInvoicePdf(id: number) {
     try {
       const response = await downloadInvoicePdfMutation.mutateAsync(id)
@@ -238,5 +256,10 @@ export function useInvoices() {
     downloadInvoicePdf,
     loading,
     serverPagination,
+    fetchInvoiceById,
+    invoiceByIdResponse,
+    isLoadingInvoiceById,
+    isErrorInvoiceById,
+    errorInvoiceById,
   }
 }
