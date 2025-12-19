@@ -17,7 +17,7 @@ import {
 import { formatDateTime } from '@/pages/invoices/utils/formatters'
 
 interface Props {
-  invoiceActivities: IInvoiceActivity[]
+  activities: IInvoiceActivity[]
 }
 
 const props = defineProps<Props>()
@@ -32,7 +32,7 @@ const props = defineProps<Props>()
       </h4>
     </AccordionTrigger>
     <AccordionContent class="pt-2 border-t border-gray-200">
-      <div v-if="props.invoiceActivities.length === 0" class="text-center py-8">
+      <div v-if="props.activities.length === 0" class="text-center py-8">
         <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-gray-200 mb-3">
           <Clock class="w-6 h-6 text-gray-400" />
         </div>
@@ -42,14 +42,14 @@ const props = defineProps<Props>()
       </div>
 
       <div v-else class="px-1">
-        <div v-for="activity in props.invoiceActivities" :key="activity.id" class="relative flex gap-3 pb-3 last:pb-0">
+        <div v-for="activity in props.activities" :key="activity.id" class="relative flex gap-3 pb-3 last:pb-0">
           <!-- Activity content -->
           <div class="flex-1 min-w-0">
             <div class="bg-white rounded-lg border border-gray-100 p-3">
               <div class="flex justify-between items-start mb-1">
                 <span class="text-sm text-gray-900 font-bold mb-1">{{
                   activity.description
-                }}</span>
+                  }}</span>
               </div>
 
               <div class="flex justify-between items-start mb-1 text-xs text-gray-500">

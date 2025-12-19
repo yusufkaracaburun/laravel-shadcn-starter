@@ -10,12 +10,11 @@ import {
 } from '@/components/ui/accordion'
 import { paymentStatuses } from '@/pages/invoices/data/data'
 import { formatDateTime } from '@/pages/invoices/utils/formatters'
-import { formatDate } from '@/utils/date'
 import { formatMoney } from '@/utils/money'
 import { getPaymentStatusColor } from '@/utils/status-colors'
 
 interface Props {
-  invoicePayments: IInvoicePayment[]
+  payments: IInvoicePayment[]
 }
 
 const props = defineProps<Props>()
@@ -30,7 +29,7 @@ const props = defineProps<Props>()
       </h4>
     </AccordionTrigger>
     <AccordionContent class="pt-2 border-t border-gray-200">
-      <div v-if="props.invoicePayments.length === 0" class="text-center py-8">
+      <div v-if="props.payments.length === 0" class="text-center py-8">
         <div class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-gray-200 mb-3">
           <CreditCard class="w-6 h-6 text-gray-400" />
         </div>
@@ -40,14 +39,14 @@ const props = defineProps<Props>()
       </div>
 
       <div v-else class="px-1">
-        <div v-for="payment in props.invoicePayments" :key="payment.id" class="relative flex gap-3 pb-3 last:pb-0">
+        <div v-for="payment in props.payments" :key="payment.id" class="relative flex gap-3 pb-3 last:pb-0">
           <!-- Payment content -->
           <div class="flex-1 min-w-0">
             <div class="bg-white rounded-lg border border-gray-100 p-3">
               <div class="flex justify-between items-start mb-1">
                 <span class="text-sm text-gray-900 font-bold mb-1">{{
                   formatMoney(payment.amount)
-                }}</span>
+                  }}</span>
                 <div
                   :class="`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getPaymentStatusColor(payment.status)}`">
                   <component :is="paymentStatuses.find((s) => s.value === payment.status)?.icon" class="w-3 h-3 mr-1" />
@@ -85,22 +84,22 @@ const props = defineProps<Props>()
                       <span v-if="payment.provider" class="font-medium">Provider:</span>
                       <span v-if="payment.provider">{{
                         payment.provider
-                      }}</span>
+                        }}</span>
 
                       <span v-if="payment.provider_reference" class="font-medium">Provider Reference:</span>
                       <span v-if="payment.provider_reference">{{
                         payment.provider_reference
-                      }}</span>
+                        }}</span>
 
                       <span v-if="payment.paid_at" class="font-medium">Paid At:</span>
                       <span v-if="payment.paid_at">{{
                         formatDateTime(payment.paid_at)
-                      }}</span>
+                        }}</span>
 
                       <span v-if="payment.refunded_at" class="font-medium">Refunded At:</span>
                       <span v-if="payment.refunded_at">{{
                         formatDateTime(payment.refunded_at)
-                      }}</span>
+                        }}</span>
                     </div>
                   </div>
                 </details>
