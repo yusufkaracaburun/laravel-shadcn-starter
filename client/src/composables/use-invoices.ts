@@ -127,7 +127,11 @@ export function useInvoices() {
     if (!route) {
       return undefined
     }
-    return Number((route.params as { id: string }).id as string)
+    const idParam = (route.params as { id: string }).id as string
+    if (!idParam || Number.isNaN(Number(idParam))) {
+      return undefined
+    }
+    return Number(idParam)
   })
   const getInvoiceByIdQuery = invoiceService.getInvoiceByIdQuery(
     invoiceId,
