@@ -82,6 +82,5 @@ export function objectToQueryStringDeep(
 
 export function buildQueryString(params: Record<string, any>): string {
   const qs = objectToQueryStringDeep(params)
-  console.warn(qs)
   return qs ? `?${qs}` : ''
 }

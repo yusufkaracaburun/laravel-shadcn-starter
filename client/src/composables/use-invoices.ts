@@ -3,10 +3,12 @@ import type { SortingState } from '@tanstack/vue-table'
 import type { IServerPagination, TPageSize } from '@/components/data-table/types'
 import type {
   ICreateInvoiceRequest,
+  IInvoice,
   IInvoiceFilters,
   IUpdateInvoiceRequest,
 } from '@/pages/invoices/models/invoice'
 import type { ISorting } from '@/services/query-utils'
+import type { IPaginatedResponse } from '@/services/types/response.type'
 
 import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from '@/components/data-table/types'
 import { useToast } from '@/composables/use-toast'
@@ -95,11 +97,12 @@ export function useInvoices() {
     filter.value,
     [includes.customer],
   )
-  const { data, isLoading, isFetching, refetch: fetchInvoices } = getInvoicesQuery
-  async function fetchInvoicesData() {
+  const { data: invoicesData, isLoading, isFetching, refetch: fetchInvoices } = getInvoicesQuery
+  const invoices = computed(() => invoicesData.value?.data ?? [])
+  async function fetchInvoicesData(): Promise<IPaginatedResponse<IInvoice>> {
     try {
       const response = await fetchInvoices()
-      return response.data
+      return response.data as IPaginatedResponse<IInvoice>
     }
     catch (error: any) {
       errorStore.setError(error, { context: InvoiceContext.FETCH_INVOICES })
@@ -222,9 +225,9 @@ export function useInvoices() {
   const loading = computed(() => isLoading.value || isFetching.value)
 
   const serverPagination = computed<IServerPagination>(() => ({
-    page: data.value?.data?.current_page ?? page.value,
+    page: page.value,
     pageSize: pageSize.value,
-    total: data.value?.data?.total ?? 0,
+    total: invoicesData.value?.data?.total ?? 0,
     onPageChange,
     onPageSizeChange,
   }))
@@ -242,7 +245,7 @@ export function useInvoices() {
     sort,
     filter,
     includes,
-    data,
+    invoices,
     onSortingChange,
     onFiltersChange,
     clearFilters,

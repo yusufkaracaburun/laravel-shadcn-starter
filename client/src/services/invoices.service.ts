@@ -1,7 +1,7 @@
 import type { AxiosError, AxiosResponse } from 'axios'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query'
-import { computed, toValue } from 'vue'
+import { computed } from 'vue'
 
 import type { TPageSize } from '@/components/data-table/types'
 import type {
@@ -9,15 +9,14 @@ import type {
   IInvoice,
   IInvoiceFilters,
   IInvoicePrerequisites,
-  IPaginatedInvoicesResponse,
   IUpdateInvoiceRequest,
 } from '@/pages/invoices/models/invoice'
 import type { ISorting } from '@/services/query-utils'
-import type { IResponse } from '@/services/types/response.type'
+import type { IPaginatedResponse, IResponse } from '@/services/types/response.type'
 
 import { useAxios } from '@/composables/use-axios'
 
-import { buildQueryString, convertSortingToQueryString, defaultAxiosQueryOptions } from './query-utils'
+import { buildQueryString, defaultAxiosQueryOptions } from './query-utils'
 
 enum QueryKeys {
   INVOICE_PREREQUISITES = 'invoicePrerequisites',
@@ -58,7 +57,7 @@ export function useInvoiceService() {
     sort: ISorting,
     filter: IInvoiceFilters,
     include: string[],
-  ): ReturnType<typeof useQuery<IResponse<IPaginatedInvoicesResponse>, AxiosError>> {
+  ): ReturnType<typeof useQuery<IPaginatedResponse<IInvoice>, AxiosError>> {
     return useQuery({
       queryKey: [
         QueryKeys.INVOICE_LIST,
@@ -68,8 +67,8 @@ export function useInvoiceService() {
         filter,
         include,
       ],
-      queryFn: async (): Promise<IResponse<IPaginatedInvoicesResponse>> => {
-        const params = {
+      queryFn: async (): Promise<IPaginatedResponse<IInvoice>> => {
+        const params: Record<string, any> = {
           page,
           per_page,
           sort,
@@ -77,10 +76,8 @@ export function useInvoiceService() {
           include,
         }
 
-        console.warn(page, per_page, sort, filter, include)
-
         const response = await axiosInstance.get(`${API_URL}${buildQueryString(params)}`)
-        return response.data
+        return response.data.data
       },
       staleTime: STALE_TIME,
       enabled: computed(() => page > 0 && per_page > 0),

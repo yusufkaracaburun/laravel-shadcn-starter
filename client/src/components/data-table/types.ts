@@ -23,6 +23,6 @@ export interface IDataTableProps<T> {
   columns: ColumnDef<T, any>[]
   data: T[]
   serverPagination?: IServerPagination
-  sorting?: MaybeRef<SortingState>
+  sorting?: SortingState
   onSortingChange?: (sorting: SortingState) => void
 }

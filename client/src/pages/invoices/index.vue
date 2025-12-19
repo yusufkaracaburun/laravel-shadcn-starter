@@ -6,21 +6,21 @@ import { Button } from '@/components/ui/button'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { useInvoices } from '@/composables/use-invoices'
 
-import { columns } from './components/columns'
-import DataTable from './components/data-table.vue'
-import InvoiceCreate from './components/invoice-create.vue'
-import InvoicesCardGrid from './components/invoices-card-grid.vue'
+import { columns } from '@/pages/invoices/components/columns'
+import DataTable from '@/pages/invoices/components/data-table.vue'
+import InvoiceCreate from '@/pages/invoices/components/invoice-create.vue'
+import InvoicesCardGrid from '@/pages/invoices/components/invoices-card-grid.vue'
 
 type TViewMode = 'table' | 'card'
 
 const viewMode = ref<TViewMode>('table')
 const {
   loading,
-  data,
+  invoices,
   serverPagination,
-  sorting,
+  sort,
   onSortingChange,
-  filters,
+  filter,
   onFiltersChange,
   clearFilters,
 } = useInvoices()
@@ -58,13 +58,12 @@ const {
       </div>
     </template>
     <div v-if="viewMode === 'table'" class="overflow-x-auto">
-      <DataTable :data="data" :columns="columns" />
-      <!-- <DataTable :loading="loading" :data="data" :columns="columns" :server-pagination="serverPagination"
-        :sorting="sorting" :on-sorting-change="onSortingChange" :filters="filters" :on-filters-change="onFiltersChange"
-        :on-clear-filters="clearFilters" /> -->
+      <DataTable :loading="loading" :data="invoices" :columns="columns" :server-pagination="serverPagination"
+        :sorting="sort" :on-sorting-change="onSortingChange" :filters="filter" :on-filters-change="onFiltersChange"
+        :on-clear-filters="clearFilters" />
     </div>
     <div v-else-if="viewMode === 'card'">
-      <!-- <InvoicesCardGrid :invoices="data" :loading="loading" /> -->
+      <InvoicesCardGrid :invoices="invoices" :loading="loading" />
     </div>
   </Page>
 </template>
