@@ -70,7 +70,7 @@ export function useInvoiceService() {
         }
 
         const response = await axiosInstance.get(`${API_URL}${buildQueryString(params)}`)
-        return response.data.data
+        return response.data
       },
       staleTime: STALE_TIME,
       enabled: computed(() => page > 0 && per_page > 0),

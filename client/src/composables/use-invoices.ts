@@ -70,8 +70,8 @@ export function useInvoices() {
   }
 
   function onPageSizeChange(newPageSize: TPageSize): void {
-    pageSize.value = newPageSize
     page.value = DEFAULT_PAGE
+    pageSize.value = newPageSize
   }
 
   const getInvoicePrerequisitesQuery = invoiceService.getInvoicePrerequisitesQuery()
@@ -96,7 +96,7 @@ export function useInvoices() {
     [includes.customer],
   )
   const { data: invoicesData, isLoading, isFetching, refetch: fetchInvoices } = getInvoicesQuery
-  const invoices = computed(() => invoicesData.value?.data ?? [])
+  const invoices = computed(() => invoicesData.value?.data.data ?? [])
   async function fetchInvoicesData(): Promise<IPaginatedResponse<IInvoice>> {
     try {
       const response = await fetchInvoices()
@@ -222,19 +222,23 @@ export function useInvoices() {
 
   const loading = computed(() => isLoading.value || isFetching.value)
 
-  const serverPagination = computed<IServerPagination>(() => ({
-    page: page.value,
-    pageSize: pageSize.value,
-    total: invoicesData.value?.data?.total ?? 0,
-    onPageChange,
-    onPageSizeChange,
-  }))
+  const serverPagination = computed(() => {
+    const response = invoicesData.value?.data
+    return {
+      page: response ? response.current_page : page.value,
+      pageSize: pageSize.value,
+      total: response ? response.total : 0,
+      onPageChange,
+      onPageSizeChange,
+    }
+  })
 
   watch([page, pageSize], ([newPage, newPageSize], [oldPage, oldPageSize]) => {
     if (oldPage === undefined || oldPageSize === undefined) {
       return
     }
     if (oldPage !== newPage || oldPageSize !== newPageSize) {
+      console.error('watch', newPage, newPageSize)
       fetchInvoices()
     }
   })

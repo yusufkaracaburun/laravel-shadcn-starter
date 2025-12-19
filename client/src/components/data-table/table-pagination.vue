@@ -58,10 +58,6 @@ function handlePageSizeChange(value: any) {
   else {
     props.table.setPageSize(newPageSize)
   }
-  console.error('newPageSize', newPageSize)
-  console.error('isServerPagination', isServerPagination.value)
-  console.error('props.serverPagination', props.serverPagination)
-  console.error('currentPageSize', currentPageSize.value)
 }
 
 function goToFirstPage() {

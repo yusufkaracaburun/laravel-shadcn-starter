@@ -30,7 +30,6 @@ const invoiceDeleteBatchOpen = ref(false)
 </script>
 
 <template>
-  P{{ props.serverPagination }}
   <BulkActions entity-name="invoice" :table>
     <UiTooltip>
       <UiTooltipTrigger as-child>
@@ -48,7 +47,7 @@ const invoiceDeleteBatchOpen = ref(false)
     <InvoiceDeleteBatch v-model:open="invoiceDeleteBatchOpen" :table />
   </BulkActions>
 
-  <DataTable :columns :table :data :loading>
+  <DataTable :columns :table :data :loading :server-pagination="props.serverPagination">
     <template #toolbar>
       <DataTableToolbar :table="table" :filters="filter" :on-filters-change="onFiltersChange || (() => { })"
         :on-clear-filters="onClearFilters || (() => { })" class="w-full overflow-x-auto" />
