@@ -72,7 +72,6 @@ export function useInvoiceService() {
           include: include.value,
         }
 
-        console.error('getInvoicesQuery', params)
         const response = await axiosInstance.get(
           `${API_URL}${buildQueryString(params)}`,
         )
