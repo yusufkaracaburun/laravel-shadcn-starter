@@ -26,6 +26,7 @@ enum QueryKeys {
   INVOICE_PREREQUISITES = 'invoicePrerequisites',
   INVOICE_LIST = 'invoiceList',
   GET_INVOICE = 'getInvoice',
+  GET_INVOICE_BY_ID = 'getInvoiceById',
   CREATE_INVOICE = 'createInvoice',
   UPDATE_INVOICE = 'updateInvoice',
   DELETE_INVOICE = 'deleteInvoice',
@@ -84,6 +85,20 @@ export function useInvoiceService() {
       },
       staleTime: STALE_TIME,
       enabled: computed(() => toValue(page) > 0 && toValue(pageSize) > 0),
+      ...defaultAxiosQueryOptions(),
+    })
+  }
+
+  function getInvoiceByIdQuery(id: number): ReturnType<
+    typeof useQuery<IResponse<IInvoice>, AxiosError>
+  > {
+    return useQuery({
+      queryKey: [QueryKeys.GET_INVOICE_BY_ID, id],
+      queryFn: async () => {
+        const response = await axiosInstance.get(`${API_URL}/${id}`)
+        return response.data
+      },
+      staleTime: STALE_TIME,
       ...defaultAxiosQueryOptions(),
     })
   }
@@ -182,8 +197,9 @@ export function useInvoiceService() {
   }
 
   return {
-    getInvoicesQuery,
     getInvoicePrerequisitesQuery,
+    getInvoicesQuery,
+    getInvoiceByIdQuery,
     getInvoiceMutation,
     createInvoiceMutation,
     updateInvoiceMutation,

@@ -7,17 +7,6 @@ export interface ISorting {
 
 export function defaultAxiosQueryOptions() {
   return {
-    retry: (failureCount: number, error: AxiosError) => {
-      if (error.response?.status === 401) {
-        return false
-      }
-      return failureCount < 2
-    },
-  }
-}
-
-export function defaultAxiosQueryOptionsWith404() {
-  return {
     retry: (failureCount: number, number: AxiosError) => {
       if ((number as AxiosError).response?.status === 401) {
         return false

@@ -17,6 +17,7 @@ const InvoiceContext = {
   FETCH_INVOICE_PREREQUISITES: 'fetchInvoicePrerequisites',
   FETCH_INVOICES: 'fetchInvoices',
   GET_INVOICE: 'getInvoice',
+  GET_INVOICE_BY_ID: 'getInvoiceById',
   CREATE_INVOICE: 'createInvoice',
   UPDATE_INVOICE: 'updateInvoice',
   DELETE_INVOICE: 'deleteInvoice',
