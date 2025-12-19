@@ -4,17 +4,24 @@ import { useForm } from 'vee-validate'
 import { computed, nextTick, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 
+import type { TInvoice, TInvoiceItem } from '@/pages/invoices/data/schema'
+
 import { useInvoices } from '@/composables/use-invoices'
 import InvoiceCustomerSection from '@/pages/invoices/components/invoice-customer-section.vue'
 import InvoiceDatesSection from '@/pages/invoices/components/invoice-dates-section.vue'
 import InvoiceDetailsSection from '@/pages/invoices/components/invoice-details-section.vue'
 import InvoiceItemsManagement from '@/pages/invoices/components/invoice-items-management.vue'
 import InvoiceNotesSection from '@/pages/invoices/components/invoice-notes-section.vue'
-import type { TInvoice, TInvoiceItem } from '@/pages/invoices/data/schema'
 import { invoiceFormSchema } from '@/pages/invoices/data/schema'
-import { calculateDueDate, getTodayDate } from '@/pages/invoices/utils/date'
+import {
+  calculateInvoiceTotals,
+  calculateItemTotals,
+  formatCalculatedTotals,
+  toMoneyObject,
+} from '@/pages/invoices/utils/calculations'
+import { formatDateForInput } from '@/pages/invoices/utils/formatters'
+import { calculateDueDate, getTodayDate } from '@/utils/date'
 import { mapObjectDeep } from '@/utils/form'
-import { calculateInvoiceTotals, calculateItemTotals, formatCalculatedTotals, toMoneyObject } from '@/pages/invoices/utils/calculations'
 
 const props = defineProps<{
   modelValue: TInvoice | null
