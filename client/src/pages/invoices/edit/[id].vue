@@ -8,27 +8,16 @@ import { ArrowLeft, Save, Send } from 'lucide-vue-next'
 import { computed, nextTick, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
-import Error from '@/components/custom-error.vue'
-import Page from '@/components/global-layout/basic-page.vue'
-import Loading from '@/components/loading.vue'
-import { Button } from '@/components/ui/button'
-import { useToast } from '@/composables/use-toast'
-import {
-  useGetInvoicePrerequisitesQuery,
-  useGetInvoiceQuery,
-} from '@/services/invoices.service'
-
 import type { TInvoiceForm, TInvoiceItem } from '@/pages/invoices/data/schema'
 
-import InvoiceEditorLayout from '@/pages/invoices/edit/components/invoice-editor-layout.vue'
-import InvoiceForm from '@/pages/invoices/components/invoice-form.vue'
-import InvoicePreview from '@/pages/invoices/edit/components/invoice-preview.vue'
-
+import Page from '@/components/global-layout/basic-page.vue'
+import { Button } from '@/components/ui/button'
 import { useInvoices } from '@/composables/use-invoices'
+import { useToast } from '@/composables/use-toast'
+import InvoiceForm from '@/pages/invoices/components/invoice-form.vue'
+import InvoiceEditorLayout from '@/pages/invoices/edit/components/invoice-editor-layout.vue'
 
 const {
-  invoicePrerequisitesResponse,
-  fetchInvoicePrerequisitesData,
   invoiceId,
   invoiceByIdResponse: invoiceResponse,
   isLoadingInvoiceById: isLoading,
@@ -40,14 +29,6 @@ const {
 const route = useRoute()
 const router = useRouter()
 const { toast, showSuccess } = useToast()
-
-const customers = computed(() => {
-  return invoicePrerequisitesResponse.value?.data?.customers ?? []
-})
-
-const items = computed(() => {
-  return invoicePrerequisitesResponse.value?.data?.items ?? []
-})
 
 const invoice = computed(() => invoiceResponse.value?.data ?? null)
 
@@ -139,11 +120,19 @@ async function handleUpdateAndSend() {
       </Button>
     </template>
 
-    <InvoiceEditorLayout :is-loading="isLoading" :is-error="isError" :error-object="error"
-      :on-retry="fetchInvoiceByIdData">
+    <InvoiceEditorLayout
+      :is-loading="isLoading"
+      :is-error="isError"
+      :error-object="error"
+      :on-retry="fetchInvoiceByIdData"
+    >
       <template #form>
-        <InvoiceForm ref="formRef" v-model:model-value="currentFormValues" :items="items" :customers="customers"
-          :invoice-id="invoiceId" @update:form-items="(items) => (currentFormItems = items)" />
+        <InvoiceForm
+          ref="formRef"
+          v-model:model-value="currentFormValues"
+          :invoice-id="invoiceId"
+          @update:form-items="(items) => (currentFormItems = items)"
+        />
       </template>
 
       <!-- <template #preview>

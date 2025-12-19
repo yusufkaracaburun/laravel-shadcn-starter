@@ -4,33 +4,17 @@ import { useForm } from 'vee-validate'
 import { computed, nextTick, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 
-import type { Customer } from '@/services/customers.service'
-import type { Item } from '@/services/items.service'
-
 import { useInvoices } from '@/composables/use-invoices'
-import { calculateDueDate, getTodayDate } from '@/utils/date'
+import InvoiceCustomerSection from '@/pages/invoices/components/invoice-customer-section.vue'
+import InvoiceDatesSection from '@/pages/invoices/components/invoice-dates-section.vue'
+import InvoiceDetailsSection from '@/pages/invoices/components/invoice-details-section.vue'
+import InvoiceItemsManagement from '@/pages/invoices/components/invoice-items-management.vue'
+import InvoiceNotesSection from '@/pages/invoices/components/invoice-notes-section.vue'
+import type { TInvoice, TInvoiceItem } from '@/pages/invoices/data/schema'
+import { invoiceFormSchema } from '@/pages/invoices/data/schema'
+import { calculateDueDate, getTodayDate } from '@/pages/invoices/utils/date'
 import { mapObjectDeep } from '@/utils/form'
-
-import type { TInvoice, TInvoiceItem } from '../data/schema'
-
-import { invoiceFormSchema } from '../data/schema'
-import {
-  calculateInvoiceTotals,
-  calculateItemTotals,
-  formatCalculatedTotals,
-  toMoneyObject,
-} from '../utils/calculations'
-import { formatDateForInput } from '../utils/formatters'
-import InvoiceNotesSection from '././invoice-notes-section.vue'
-import InvoiceCustomerSection from './invoice-customer-section.vue'
-import InvoiceDatesSection from './invoice-dates-section.vue'
-import InvoiceDetailsSection from './invoice-details-section.vue'
-import InvoiceItemsManagement from './invoice-items-management.vue'
-
-const {
-  prerequisites,
-  fetchInvoicePrerequisitesData,
-} = useInvoices()
+import { calculateInvoiceTotals, calculateItemTotals, formatCalculatedTotals, toMoneyObject } from '@/pages/invoices/utils/calculations'
 
 const props = defineProps<{
   modelValue: TInvoice | null
@@ -44,17 +28,22 @@ const emits = defineEmits([
   'update:formItems',
 ])
 
+const {
+  invoicePrerequisitesResponse,
+  fetchInvoicePrerequisitesData,
+  createInvoice,
+  updateInvoice,
+} = useInvoices()
+
 const customers = computed(() => {
-  return prerequisites.value?.customers ?? []
+  return invoicePrerequisitesResponse.value?.data?.customers ?? []
 })
 
-const items = computed(() => {
-  return prerequisites.value?.items ?? []
+const catalogItems = computed(() => {
+  return invoicePrerequisitesResponse.value?.data?.items ?? []
 })
 
 const router = useRouter()
-
-const { createInvoice, updateInvoice } = useInvoices()
 
 const formSchema = toTypedSchema(invoiceFormSchema)
 
@@ -585,10 +574,10 @@ defineExpose({
 
     <InvoiceDatesSection :is-field-dirty="isFieldDirty" />
 
-    <!-- <InvoiceItemsManagement :items="localItems" :editing-item-index="editingItemIndex" :show-add-form="showAddForm"
-      :invoice-totals="invoiceTotals" :invoice-id="props.modelValue?.id" :catalog-items="items" @save="handleItemSave"
-      @cancel="cancelItemEdit" @edit="startEditItem" @delete="handleItemDelete" @items-selected="handleItemsSelected"
-      @add-item="startAddItem" /> -->
+    <InvoiceItemsManagement :items="localItems" :editing-item-index="editingItemIndex" :show-add-form="showAddForm"
+      :invoice-totals="invoiceTotals" :invoice-id="props.modelValue?.id" :catalog-items="catalogItems"
+      @save="handleItemSave" @cancel="cancelItemEdit" @edit="startEditItem" @delete="handleItemDelete"
+      @items-selected="handleItemsSelected" @add-item="startAddItem" />
 
     <InvoiceNotesSection :is-field-dirty="isFieldDirty" />
   </form>

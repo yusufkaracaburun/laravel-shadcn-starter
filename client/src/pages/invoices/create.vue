@@ -14,8 +14,8 @@ import { useGetInvoicePrerequisitesQuery } from '@/services/invoices.service'
 
 import type { TInvoice } from './data/schema'
 
-import InvoiceEditorLayout from './edit/components/invoice-editor-layout.vue'
 import InvoiceForm from './components/invoice-form.vue'
+import InvoiceEditorLayout from './edit/components/invoice-editor-layout.vue'
 
 const router = useRouter()
 
@@ -131,9 +131,15 @@ async function handleSaveAndSend() {
 
     <InvoiceEditorLayout :is-loading="isSubmitting">
       <template #form>
-        <InvoiceForm ref="formRef" v-model:model-value="currentFormValues"
-          :next-invoice-number="prerequisites?.next_invoice_number ?? null" :items="items" :customers="customers"
-          @close="handleClose" @update:form-items="(items) => (currentFormItems = items)" />
+        <InvoiceForm
+          ref="formRef"
+          v-model:model-value="currentFormValues"
+          :next-invoice-number="prerequisites?.next_invoice_number ?? null"
+          :items="items"
+          :customers="customers"
+          @close="handleClose"
+          @update:form-items="(items) => (currentFormItems = items)"
+        />
       </template>
 
       <template #actions>

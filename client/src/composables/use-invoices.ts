@@ -91,7 +91,9 @@ export function useInvoices() {
     error: errorInvoicePrerequisites,
     refetch: refetchInvoicePrerequisites,
   } = getInvoicePrerequisitesQuery
-  async function fetchInvoicePrerequisitesData(): Promise<IResponse<IInvoicePrerequisites>> {
+  async function fetchInvoicePrerequisitesData(): Promise<
+    IResponse<IInvoicePrerequisites>
+  > {
     try {
       const response = await refetchInvoicePrerequisites()
       return response.data as IResponse<IInvoicePrerequisites>

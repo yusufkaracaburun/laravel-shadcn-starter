@@ -16,7 +16,7 @@ const props = withDefaults(defineProps<Props>(), {
   isLoading: false,
   isError: false,
   errorObject: null,
-  onRetry: () => { },
+  onRetry: () => {},
 })
 
 const errorMessage = computed(() => {
@@ -30,13 +30,23 @@ const errorCode = computed(() => {
 
 <template>
   <div class="min-h-screen">
-    <div v-if="isLoading" class="flex items-center justify-center min-h-[400px]">
+    <div
+      v-if="isLoading"
+      class="flex items-center justify-center min-h-[400px]"
+    >
       <Loading />
     </div>
 
-    <div v-else-if="isError" class="flex items-center justify-center min-h-[400px]">
+    <div
+      v-else-if="isError"
+      class="flex items-center justify-center min-h-[400px]"
+    >
       <div class="text-center">
-        <Error :code="errorCode as number" subtitle="Failed to load document" :error="errorMessage" />
+        <Error
+          :code="errorCode as number"
+          subtitle="Failed to load document"
+          :error="errorMessage"
+        />
         <Button class="mt-4 print:hidden" @click="onRetry">
           Try Again
         </Button>

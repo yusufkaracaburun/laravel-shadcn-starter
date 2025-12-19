@@ -8,8 +8,7 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
-
-import CustomerSwitcher from './customer-switcher.vue'
+import CustomerSwitcher from '@/pages/invoices/components/customer-switcher.vue'
 
 interface IProps {
   customers?: Customer[]
@@ -18,6 +17,7 @@ interface IProps {
 
 withDefaults(defineProps<IProps>(), {
   isFieldDirty: false,
+  customers: () => [],
 })
 </script>
 
@@ -35,7 +35,7 @@ withDefaults(defineProps<IProps>(), {
         <FormLabel>Bill To</FormLabel>
         <FormControl>
           <CustomerSwitcher
-            :customers="customers ?? []"
+            :customers="customers"
             :selected-customer-id="componentField.modelValue"
             @select="componentField['onUpdate:modelValue']"
           />
