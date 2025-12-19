@@ -33,6 +33,11 @@ export default antfu({
   ],
   settings: {
     'import/core-modules': ['vue-router/auto-routes'],
+    'import/resolver': {
+      typescript: {
+        alwaysTryTypes: true,
+      },
+    },
   },
   globals: {
     definePage: 'readonly',

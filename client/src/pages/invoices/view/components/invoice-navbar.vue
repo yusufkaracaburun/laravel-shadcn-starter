@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ArrowLeft, Download, FilePenLine, Trash2 } from 'lucide-vue-next'
-import { ref, shallowRef } from 'vue'
+import { computed, ref, shallowRef, watch } from 'vue'
 import { useRouter } from 'vue-router'
 
 import type { IInvoice } from '@/pages/invoices/models/invoice'
@@ -15,7 +15,42 @@ const props = defineProps<{
   invoiceId: number
 }>()
 
+const emits = defineEmits<{
+  (e: 'update:title', title: string): void
+  (e: 'update:description', description: string): void
+}>()
+
 const router = useRouter()
+
+const title = computed(() => {
+  if (!props.invoice) {
+    return 'Invoice Details'
+  }
+  return props.invoice.invoice_number
+})
+
+const description = computed(() => {
+  if (!props.invoice) {
+    return 'Loading invoice information...'
+  }
+  return `View details for ${props.invoice.invoice_number}`
+})
+
+watch(
+  title,
+  (newTitle) => {
+    emits('update:title', newTitle)
+  },
+  { immediate: true },
+)
+
+watch(
+  description,
+  (newDescription) => {
+    emits('update:description', newDescription)
+  },
+  { immediate: true },
+)
 
 const showComponent = shallowRef<typeof InvoiceDelete | null>(null)
 const isDialogOpen = ref(false)

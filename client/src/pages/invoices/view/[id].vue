@@ -6,7 +6,7 @@ meta:
 <script setup lang="ts">
 import type { ComputedRef } from 'vue'
 
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 
 import type { IInvoice } from '@/pages/invoices/models/invoice'
 
@@ -29,19 +29,8 @@ const invoice = computed(
   () => invoiceResponse.value?.data as IInvoice,
 ) as ComputedRef<IInvoice>
 
-const title = computed(() => {
-  if (!invoice.value) {
-    return 'Invoice Details'
-  }
-  return invoice.value.invoice_number
-})
-
-const description = computed(() => {
-  if (!invoice.value) {
-    return 'Loading invoice information...'
-  }
-  return `View details for ${invoice.value.invoice_number}`
-})
+const pageTitle = ref('Invoice Details')
+const pageDescription = ref('Loading invoice information...')
 
 const pdfUrl = computed(() =>
   invoiceId.value
@@ -65,12 +54,23 @@ const pdfHeight = computed(() => {
 </script>
 
 <template>
-  <Page :title="title" :description="description">
+  <Page :title="pageTitle" :description="pageDescription">
     <template #actions>
-      <InvoiceNavbar v-if="invoice" :invoice="invoice" :invoice-id="invoiceId ?? 0" />
+      <InvoiceNavbar
+        v-if="invoice"
+        :invoice="invoice"
+        :invoice-id="invoiceId ?? 0"
+        @update:title="pageTitle = $event"
+        @update:description="pageDescription = $event"
+      />
     </template>
 
-    <DocumentLayout :is-loading="isLoading" :is-error="isError" :error-object="error" :on-retry="fetchInvoiceByIdData">
+    <DocumentLayout
+      :is-loading="isLoading"
+      :is-error="isError"
+      :error-object="error"
+      :on-retry="fetchInvoiceByIdData"
+    >
       <div class="flex flex-1 flex-col items-center justify-center">
         <div class="w-full flex flex-row">
           <div class="flex-1">
