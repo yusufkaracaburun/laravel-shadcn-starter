@@ -23,10 +23,15 @@ import { formatDateForInput } from '@/pages/invoices/utils/formatters'
 import { calculateDueDate, getTodayDate } from '@/utils/date'
 import { mapObjectDeep } from '@/utils/form'
 
-const props = defineProps<{
+interface IProps {
   modelValue: TInvoice | null
   invoiceId?: number
-}>()
+}
+
+const props = withDefaults(defineProps<IProps>(), {
+  modelValue: null,
+  invoiceId: undefined,
+})
 
 const emits = defineEmits([
   'close',
@@ -48,6 +53,10 @@ const customers = computed(() => {
 
 const catalogItems = computed(() => {
   return invoicePrerequisitesResponse.value?.data?.items ?? []
+})
+
+const nextInvoiceNumber = computed(() => {
+  return invoicePrerequisitesResponse.value?.data?.next_invoice_number ?? null
 })
 
 const router = useRouter()
