@@ -57,44 +57,44 @@ export function useInvoiceService() {
     pageSize: TPageSize,
     sorting: Array<ISorting>,
     filters: IInvoiceFilters,
-    include: string[],
+    includes: string[],
   ): ReturnType<typeof useQuery<IResponse<IPaginatedInvoicesResponse>, AxiosError>> {
     return useQuery({
       queryKey: [
         QueryKeys.INVOICE_LIST,
-        computed(() => toValue(page)),
-        computed(() => toValue(pageSize)),
-        computed(() => JSON.stringify(toValue(sorting))),
-        computed(() => JSON.stringify(toValue(filters))),
-        computed(() => JSON.stringify(toValue(include))),
+        page,
+        pageSize,
+        sorting,
+        filters,
+        includes,
       ],
       queryFn: async (): Promise<IResponse<IPaginatedInvoicesResponse>> => {
         const params: Record<string, any> = {
-          sort: convertSortingToQueryString(toValue(sorting)),
-          page: toValue(page),
-          per_page: toValue(pageSize),
-          include: toValue(include),
-          filter: toValue(filters),
+          sort: convertSortingToQueryString(sorting),
+          page,
+          per_page: pageSize,
+          include: includes.join(','),
+          filter: JSON.stringify(filters),
         }
 
         const response = await axiosInstance.get(`${API_URL}`, { params })
         return response.data
       },
       staleTime: STALE_TIME,
-      enabled: computed(() => toValue(page) > 0 && toValue(pageSize) > 0),
+      enabled: computed(() => page > 0 && pageSize > 0),
       ...defaultAxiosQueryOptions(),
     })
   }
 
   function getInvoiceByIdQuery(
     id: number,
-    include?: string[],
+    includes?: string[],
   ): ReturnType<typeof useQuery<IResponse<IInvoice>, AxiosError>> {
     return useQuery({
-      queryKey: [QueryKeys.GET_INVOICE_BY_ID, id, include],
+      queryKey: [QueryKeys.GET_INVOICE_BY_ID, id, includes],
       queryFn: async () => {
         const response = await axiosInstance.get(`${API_URL}/${id}`, {
-          params: { include: include?.join(',') ?? '' },
+          params: { include: includes?.join(',') ?? '' },
         })
         return response.data
       },
@@ -104,13 +104,13 @@ export function useInvoiceService() {
   }
 
   function getInvoiceMutation(): ReturnType<
-    typeof useMutation<IResponse<IInvoice>, AxiosError, { id: number, include?: string[] }>
+    typeof useMutation<IResponse<IInvoice>, AxiosError, { id: number, includes?: string[] }>
   > {
-    return useMutation<IResponse<IInvoice>, AxiosError, { id: number, include?: string[] }>({
+    return useMutation<IResponse<IInvoice>, AxiosError, { id: number, includes?: string[] }>({
       mutationKey: [QueryKeys.GET_INVOICE],
-      mutationFn: async ({ id, include }): Promise<IResponse<IInvoice>> => {
+      mutationFn: async ({ id, includes }): Promise<IResponse<IInvoice>> => {
         const response = await axiosInstance.get(`${API_URL}/${id}`, {
-          params: { include: include?.join(',') ?? '' },
+          params: { include: includes?.join(',') ?? '' },
         })
         return response.data
       },
