@@ -99,21 +99,30 @@ export interface IInvoiceEmail {
   updated_at: string
 }
 
-/**
- * Invoice interface matching backend InvoiceResource exactly
- * @see api/app/Http/Resources/InvoiceResource.php
- * Note: Customer is loaded when include is used
- * Note: Items are loaded when include=items is used
- * Note: Payments, activities, and emails are loaded when include is used
- */
+export interface IInvoiceItem {
+  id: number
+  invoice_id: number
+  name: string
+  description: string | null
+  quantity: number
+  unit: string | null
+  unit_price: Money | number
+  vat_rate: number
+  total_excl_vat: Money | number
+  total_vat: Money | number
+  total_incl_vat: Money | number
+  sort_order: number
+  created_at: string
+  updated_at: string
+}
 export interface IInvoice {
   id: number
   customer_id: number
-  customer?: Customer // When loaded via include
-  invoice_number: string | null
-  date: string // Date format from backend
+  customer: Customer
+  invoice_number: string
+  date: string
   due_days: number
-  date_due: string // Date format from backend
+  date_due: string
   status: TInvoiceStatus
   subtotal: Money | number
   total_vat_0: Money | number
@@ -121,45 +130,12 @@ export interface IInvoice {
   total_vat_21: Money | number
   total: Money | number
   notes: string | null
-  items?:
-    | Array<{
-      id: number
-      invoice_id: number
-      description: string | null
-      quantity: number
-      unit: string | null
-      unit_price: Money | number
-      vat_rate: number
-      total_excl_vat: Money | number
-      total_vat: Money | number
-      total_incl_vat: Money | number
-      sort_order: number
-      created_at: string
-      updated_at: string
-    }>
-    | {
-      data: Array<{
-        id: number
-        invoice_id: number
-        description: string | null
-        quantity: number
-        unit: string | null
-        unit_price: Money | number
-        vat_rate: number
-        total_excl_vat: Money | number
-        total_vat: Money | number
-        total_incl_vat: Money | number
-        sort_order: number
-        created_at: string
-        updated_at: string
-      }>
-    } // When loaded via include=items - backend returns paginated structure
-  payments?: IInvoicePayment[] // When loaded via include=payments
-  activities?: IInvoiceActivity[] // When loaded via include=activities
-  emails?: IInvoiceEmail[] // When loaded via include=emails
-  created_at: string // Format: \"d-m-Y H:i:s\"
-  updated_at: string // Format: \"d-m-Y H:i:s\"
-  [key: string]: unknown
+  items: IInvoiceItem[]
+  payments?: IInvoicePayment[]
+  activities?: IInvoiceActivity[]
+  emails?: IInvoiceEmail[]
+  created_at: string
+  updated_at: string
 }
 
 /**

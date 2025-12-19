@@ -1,3 +1,4 @@
+import { computed, ref } from 'vue'
 import { useRoute } from 'vue-router'
 
 import type { TPageSize } from '@/components/data-table/types'
@@ -8,7 +9,10 @@ import type {
   IUpdateInvoiceRequest,
 } from '@/pages/invoices/models/invoice'
 import type { ISorting } from '@/services/query-utils'
-import type { IPaginatedResponse } from '@/services/types/response.type'
+import type {
+  IPaginatedResponse,
+  IResponse,
+} from '@/services/types/response.type'
 
 import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from '@/components/data-table/types'
 import { useToast } from '@/composables/use-toast'
@@ -133,19 +137,25 @@ export function useInvoices() {
   })
   const getInvoiceByIdQuery = invoiceService.getInvoiceByIdQuery(
     invoiceId,
-    ref([includes.customer, includes.items]),
+    ref([
+      includes.customer,
+      includes.items,
+      includes.payments,
+      includes.activities,
+      includes.emails,
+    ]),
   )
   const {
     data: invoiceByIdResponse,
     isLoading: isLoadingInvoiceById,
     isError: isErrorInvoiceById,
     error: errorInvoiceById,
-    refetch: refetchInvoiceById,
+    refetch: fetchInvoiceById,
   } = getInvoiceByIdQuery
-  async function fetchInvoiceById() {
+  async function fetchInvoiceByIdData(): Promise<IResponse<IInvoice>> {
     try {
-      const response = await refetchInvoiceById()
-      return response.data
+      const response = await fetchInvoiceById()
+      return response.data as IResponse<IInvoice>
     }
     catch (error: any) {
       errorStore.setError(error, { context: InvoiceContext.GET_INVOICE_BY_ID })
@@ -288,10 +298,11 @@ export function useInvoices() {
     downloadInvoicePdf,
     loading,
     serverPagination,
+    invoiceId,
     invoiceByIdResponse,
     isLoadingInvoiceById,
     isErrorInvoiceById,
     errorInvoiceById,
-    refetchInvoiceById,
+    fetchInvoiceByIdData,
   }
 }

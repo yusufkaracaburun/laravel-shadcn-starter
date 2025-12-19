@@ -19,8 +19,6 @@ const invoice = computed(() => {
   if (result.success) {
     return result.data
   }
-  // If validation fails, return the original data as-is (type assertion)
-  // This handles cases where backend returns slightly different structure
   return props.row.original as TInvoice
 })
 const router = useRouter()
@@ -32,13 +30,13 @@ function handleSelect(command: TCommand) {
   switch (command) {
     case 'view':
       router.push({
-        name: '/invoices/[id]/view',
+        name: '/invoices/view/[id]',
         params: { id: invoice.value.id.toString() },
       })
       break
     case 'edit':
       router.push({
-        name: '/invoices/edit-[id]',
+        name: '/invoices/edit/[id]',
         params: { id: invoice.value.id.toString() },
       })
       break

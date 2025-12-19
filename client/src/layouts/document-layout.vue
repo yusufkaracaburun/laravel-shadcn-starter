@@ -1,16 +1,62 @@
 <script setup lang="ts">
-// Props can be added here if the layout needs configuration
+import { computed } from 'vue'
+
+import Error from '@/components/custom-error.vue'
+import Loading from '@/components/loading.vue'
+import { Button } from '@/components/ui/button'
+
+interface Props {
+  isLoading?: boolean
+  isError?: boolean
+  errorObject?: any
+  onRetry?: () => void
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  isLoading: false,
+  isError: false,
+  errorObject: null,
+  onRetry: () => {},
+})
+
+const errorMessage = computed(() => {
+  return (props.errorObject as any)?.message ?? 'An unexpected error occurred.'
+})
+
+const errorCode = computed(() => {
+  return (props.errorObject as any)?.response?.status || 500
+})
 </script>
 
 <template>
   <div class="min-h-screen">
     <slot name="navbar" />
 
-    <!-- Main Content Area: Loading, Error, or Document Content -->
-    <slot name="main-content" />
+    <div
+      v-if="isLoading"
+      class="flex items-center justify-center min-h-[400px]"
+    >
+      <Loading />
+    </div>
+
+    <div
+      v-else-if="isError"
+      class="flex items-center justify-center min-h-[400px]"
+    >
+      <div class="text-center">
+        <Error
+          :code="errorCode as number"
+          subtitle="Failed to load document"
+          :error="errorMessage"
+        />
+        <Button class="mt-4 print:hidden" @click="onRetry">
+          Try Again
+        </Button>
+      </div>
+    </div>
+
+    <slot v-else />
   </div>
 </template>
 
-<style scoped>
-/* Add any common styles for the document layout here */
-</style>
+<style scoped></style>

@@ -34,7 +34,7 @@ export const columns: ColumnDef<TInvoice>[] = [
             'w-32 font-medium text-left hover:underline cursor-pointer focus:outline-none focus:underline',
           onClick: () => {
             router.push({
-              name: '/invoices/[id]',
+              name: '/invoices/view/[id]',
               params: { id: invoice.id.toString() },
             })
           },

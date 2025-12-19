@@ -3,7 +3,7 @@ import { ArrowLeft, Download, FilePenLine, Trash2 } from 'lucide-vue-next'
 import { ref, shallowRef } from 'vue'
 import { useRouter } from 'vue-router'
 
-import type { TInvoice } from '@/pages/invoices/data/schema'
+import type { IInvoice } from '@/pages/invoices/models/invoice'
 
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent } from '@/components/ui/dialog'
@@ -11,7 +11,7 @@ import { useInvoices } from '@/composables/use-invoices'
 import InvoiceDelete from '@/pages/invoices/components/invoice-delete.vue'
 
 const props = defineProps<{
-  invoice: TInvoice | null
+  invoice: IInvoice
   invoiceId: number
 }>()
 
