@@ -1,8 +1,9 @@
 import type { AxiosError, AxiosResponse } from 'axios'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query'
-import { computed, ref, toValue } from 'vue'
+import { computed, toValue } from 'vue'
 
+import type { TPageSize } from '@/components/data-table/types'
 import type {
   ICreateInvoiceRequest,
   IInvoice,
@@ -11,16 +12,12 @@ import type {
   IPaginatedInvoicesResponse,
   IUpdateInvoiceRequest,
 } from '@/pages/invoices/models/invoice'
+import type { ISorting } from '@/services/query-utils'
 import type { IResponse } from '@/services/types/response.type'
 
 import { useAxios } from '@/composables/use-axios'
 
-import type { ISorting } from './query-utils'
-
-import {
-  convertSortingToQueryString,
-  defaultAxiosQueryOptions,
-} from './query-utils'
+import { convertSortingToQueryString, defaultAxiosQueryOptions } from './query-utils'
 
 enum QueryKeys {
   INVOICE_PREREQUISITES = 'invoicePrerequisites',
@@ -56,11 +53,11 @@ export function useInvoiceService() {
   }
 
   function getInvoicesQuery(
-    page: Ref<number>,
-    pageSize: Ref<number>,
-    sorting: Ref<Array<ISorting>> = ref([]),
-    filters: Ref<IInvoiceFilters> = ref({}),
-    include: Ref<string[]> = ref([]),
+    page: number,
+    pageSize: TPageSize,
+    sorting: Array<ISorting>,
+    filters: IInvoiceFilters,
+    include: string[],
   ): ReturnType<typeof useQuery<IResponse<IPaginatedInvoicesResponse>, AxiosError>> {
     return useQuery({
       queryKey: [
@@ -89,13 +86,16 @@ export function useInvoiceService() {
     })
   }
 
-  function getInvoiceByIdQuery(id: number): ReturnType<
-    typeof useQuery<IResponse<IInvoice>, AxiosError>
-  > {
+  function getInvoiceByIdQuery(
+    id: number,
+    include?: string[],
+  ): ReturnType<typeof useQuery<IResponse<IInvoice>, AxiosError>> {
     return useQuery({
-      queryKey: [QueryKeys.GET_INVOICE_BY_ID, id],
+      queryKey: [QueryKeys.GET_INVOICE_BY_ID, id, include],
       queryFn: async () => {
-        const response = await axiosInstance.get(`${API_URL}/${id}`)
+        const response = await axiosInstance.get(`${API_URL}/${id}`, {
+          params: { include: include?.join(',') ?? '' },
+        })
         return response.data
       },
       staleTime: STALE_TIME,

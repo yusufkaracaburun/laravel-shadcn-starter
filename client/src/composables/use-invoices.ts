@@ -51,7 +51,6 @@ export function useInvoices() {
     activities: 'activities',
     emails: 'emails',
   }
-  const include = ref<string[]>([includes.customer])
 
   function onSortingChange(newSorting: SortingState): void {
     sorting.value = newSorting
@@ -91,13 +90,10 @@ export function useInvoices() {
     }
   }
 
-  const getInvoicesQuery = invoiceService.getInvoicesQuery(
-    page,
-    pageSize,
-    sorting,
-    filters,
-    include,
-  )
+  const getInvoicesQuery = invoiceService.getInvoicesQuery(page, pageSize, sorting, filters, [
+    includes.customer,
+    includes.items,
+  ])
   const { data, isLoading, isFetching, refetch: fetchInvoices } = getInvoicesQuery
   async function fetchInvoicesData() {
     try {
@@ -113,8 +109,17 @@ export function useInvoices() {
   }
 
   const invoiceId = computed(() => Number((route.params as { id: string }).id as string))
-  const getInvoiceByIdQuery = invoiceService.getInvoiceByIdQuery(invoiceId.value)
-  const { data: invoiceByIdResponse, isLoading: isLoadingInvoiceById, isError: isErrorInvoiceById, error: errorInvoiceById, refetch: refetchInvoiceById } = getInvoiceByIdQuery
+  const getInvoiceByIdQuery = invoiceService.getInvoiceByIdQuery(invoiceId.value, [
+    includes.customer,
+    includes.items,
+  ])
+  const {
+    data: invoiceByIdResponse,
+    isLoading: isLoadingInvoiceById,
+    isError: isErrorInvoiceById,
+    error: errorInvoiceById,
+    refetch: refetchInvoiceById,
+  } = getInvoiceByIdQuery
   async function fetchInvoiceById() {
     try {
       const response = await refetchInvoiceById()
@@ -240,7 +245,6 @@ export function useInvoices() {
     sorting,
     filters,
     includes,
-    include,
     data,
     onSortingChange,
     onFiltersChange,
