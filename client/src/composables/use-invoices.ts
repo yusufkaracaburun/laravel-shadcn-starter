@@ -14,7 +14,9 @@ import { useErrorStore } from '@/stores/error.store'
 import { downloadBlobFromAxiosResponse } from '@/utils/blob'
 
 const InvoiceContext = {
+  FETCH_INVOICE_PREREQUISITES: 'fetchInvoicePrerequisites',
   FETCH_INVOICES: 'fetchInvoices',
+  GET_INVOICE: 'getInvoice',
   CREATE_INVOICE: 'createInvoice',
   UPDATE_INVOICE: 'updateInvoice',
   DELETE_INVOICE: 'deleteInvoice',
@@ -32,6 +34,7 @@ const InvoiceMessages = {
 export function useInvoices() {
   const toast = useToast()
   const errorStore = useErrorStore()
+  const invoiceService = useInvoiceService()
 
   const page = ref(DEFAULT_PAGE)
   const pageSize = ref<TPageSize>(DEFAULT_PAGE_SIZE)
@@ -45,19 +48,6 @@ export function useInvoices() {
     emails: 'emails',
   }
   const include = ref<string[]>([includes.customer])
-
-  const invoiceService = useInvoiceService()
-  const {
-    data,
-    isLoading,
-    isFetching,
-    refetch: fetchInvoices,
-  } = invoiceService.getInvoicesQuery(page, pageSize, sorting, filters, include)
-
-  const createInvoiceMutation = invoiceService.createInvoiceMutation()
-  const updateInvoiceMutation = invoiceService.updateInvoiceMutation()
-  const deleteInvoiceMutation = invoiceService.deleteInvoiceMutation()
-  const downloadInvoicePdfMutation = invoiceService.downloadInvoicePdfMutation()
 
   function onSortingChange(newSorting: SortingState): void {
     sorting.value = newSorting
@@ -83,6 +73,131 @@ export function useInvoices() {
     page.value = DEFAULT_PAGE
   }
 
+  const getInvoicePrerequisitesQuery = invoiceService.getInvoicePrerequisitesQuery()
+  const getInvoicesQuery = invoiceService.getInvoicesQuery(
+    page,
+    pageSize,
+    sorting,
+    filters,
+    include,
+  )
+  const getInvoiceMutation = invoiceService.getInvoiceMutation()
+  const createInvoiceMutation = invoiceService.createInvoiceMutation()
+  const downloadInvoicePdfMutation = invoiceService.downloadInvoicePdfMutation()
+  const deleteInvoiceMutation = invoiceService.deleteInvoiceMutation()
+  const updateInvoiceMutation = invoiceService.updateInvoiceMutation()
+
+  async function fetchInvoicePrerequisites() {
+    try {
+      const response = await getInvoicePrerequisitesQuery.refetch()
+      return response.data
+    }
+    catch (error: any) {
+      errorStore.setError(error, { context: InvoiceContext.FETCH_INVOICE_PREREQUISITES })
+      const message = errorStore.getErrorMessage(error)
+      toast.showError(message)
+      throw error
+    }
+  }
+
+  const { data, isLoading, isFetching, refetch: fetchInvoices } = getInvoicesQuery
+  async function fetchInvoicesData() {
+    try {
+      const response = await fetchInvoices()
+      return response.data
+    }
+    catch (error: any) {
+      errorStore.setError(error, { context: InvoiceContext.FETCH_INVOICES })
+      const message = errorStore.getErrorMessage(error)
+      toast.showError(message)
+      throw error
+    }
+  }
+
+  async function getInvoice(id: number) {
+    try {
+      const response = await getInvoiceMutation.mutateAsync({
+        id,
+        include: [includes.customer, includes.items],
+      })
+      return response.data
+    }
+    catch (error: any) {
+      errorStore.setError(error, { context: InvoiceContext.GET_INVOICE })
+      const message = errorStore.getErrorMessage(error)
+      toast.showError(message)
+      throw error
+    }
+  }
+
+  async function createInvoice(data: ICreateInvoiceRequest) {
+    try {
+      const response = await createInvoiceMutation.mutateAsync(data)
+      toast.showSuccess(InvoiceMessages.CREATE_INVOICE_SUCCESS)
+      return response
+    }
+    catch (error: any) {
+      errorStore.setError(error, { context: InvoiceContext.CREATE_INVOICE })
+      const message = errorStore.getErrorMessage(error)
+      const validationErrors = errorStore.getValidationErrors(error)
+      if (Object.keys(validationErrors).length > 0) {
+        const firstError = Object.values(validationErrors)[0]?.[0]
+        toast.showError(firstError || message)
+      }
+      else {
+        toast.showError(message)
+      }
+      throw error
+    }
+  }
+
+  async function updateInvoice(id: number, data: IUpdateInvoiceRequest) {
+    try {
+      const response = await updateInvoiceMutation.mutateAsync({ id, data })
+      toast.showSuccess(InvoiceMessages.UPDATE_INVOICE_SUCCESS)
+      return response
+    }
+    catch (error: any) {
+      errorStore.setError(error, { context: InvoiceContext.UPDATE_INVOICE })
+      const message = errorStore.getErrorMessage(error)
+      const validationErrors = errorStore.getValidationErrors(error)
+      if (Object.keys(validationErrors).length > 0) {
+        const firstError = Object.values(validationErrors)[0]?.[0]
+        toast.showError(firstError || message)
+      }
+      else {
+        toast.showError(message)
+      }
+      throw error
+    }
+  }
+
+  async function deleteInvoice(id: number) {
+    try {
+      await deleteInvoiceMutation.mutateAsync(id)
+      toast.showSuccess(InvoiceMessages.DELETE_INVOICE_SUCCESS)
+    }
+    catch (error: any) {
+      errorStore.setError(error, { context: InvoiceContext.DELETE_INVOICE })
+      const message = errorStore.getErrorMessage(error)
+      toast.showError(message)
+      throw error
+    }
+  }
+
+  async function downloadInvoicePdf(id: number) {
+    try {
+      const response = await downloadInvoicePdfMutation.mutateAsync(id)
+      downloadBlobFromAxiosResponse(response, `factuur_${id}.pdf`)
+      toast.showSuccess(InvoiceMessages.DOWNLOAD_INVOICE_PDF_SUCCESS)
+    }
+    catch (error: any) {
+      errorStore.setError(error, { context: InvoiceContext.DOWNLOAD_INVOICE_PDF })
+      toast.showError(errorStore.getErrorMessage(error))
+      throw error
+    }
+  }
+
   const loading = computed(() => isLoading.value || isFetching.value)
 
   const serverPagination = computed<IServerPagination>(() => ({
@@ -102,121 +217,25 @@ export function useInvoices() {
     }
   })
 
-  async function fetchInvoicesData() {
-    try {
-      const response = await fetchInvoices()
-      return response.data
-    }
-    catch (error: any) {
-      errorStore.setError(error, { context: InvoiceContext.FETCH_INVOICES })
-      const message = errorStore.getErrorMessage(error)
-      toast.showError(message)
-      throw error
-    }
-  }
-
-  async function createInvoice(data: ICreateInvoiceRequest) {
-    try {
-      const response = await createInvoiceMutation.mutateAsync(data)
-      toast.showSuccess(InvoiceMessages.CREATE_INVOICE_SUCCESS)
-      return response
-    }
-    catch (error: any) {
-      // Store error with context
-      errorStore.setError(error, { context: InvoiceContext.CREATE_INVOICE })
-
-      // Use error store utilities for messages
-      const message = errorStore.getErrorMessage(error)
-      const validationErrors = errorStore.getValidationErrors(error)
-
-      // Show toast with appropriate message
-      if (Object.keys(validationErrors).length > 0) {
-        const firstError = Object.values(validationErrors)[0]?.[0]
-        toast.showError(firstError || message)
-      }
-      else {
-        toast.showError(message)
-      }
-      throw error
-    }
-  }
-
-  async function updateInvoice(id: number, data: IUpdateInvoiceRequest) {
-    try {
-      const response = await updateInvoiceMutation.mutateAsync({ id, data })
-      toast.showSuccess(InvoiceMessages.UPDATE_INVOICE_SUCCESS)
-      return response
-    }
-    catch (error: any) {
-      // Store error with context
-      errorStore.setError(error, { context: InvoiceContext.UPDATE_INVOICE })
-
-      // Use error store utilities for messages
-      const message = errorStore.getErrorMessage(error)
-      const validationErrors = errorStore.getValidationErrors(error)
-
-      // Show toast with appropriate message
-      if (Object.keys(validationErrors).length > 0) {
-        const firstError = Object.values(validationErrors)[0]?.[0]
-        toast.showError(firstError || message)
-      }
-      else {
-        toast.showError(message)
-      }
-      throw error
-    }
-  }
-
-  async function deleteInvoice(id: number) {
-    try {
-      await deleteInvoiceMutation.mutateAsync(id)
-      toast.showSuccess(InvoiceMessages.DELETE_INVOICE_SUCCESS)
-    }
-    catch (error: any) {
-      // Store error with context
-      errorStore.setError(error, { context: InvoiceContext.DELETE_INVOICE })
-
-      // Use error store utilities for messages
-      const message = errorStore.getErrorMessage(error)
-      toast.showError(message)
-      throw error
-    }
-  }
-
-  async function downloadInvoicePdf(id: number) {
-    try {
-      const response = await downloadInvoicePdfMutation.mutateAsync(id)
-
-      downloadBlobFromAxiosResponse(response, `factuur_${id}.pdf`)
-
-      toast.showSuccess(InvoiceMessages.DOWNLOAD_INVOICE_PDF_SUCCESS)
-    }
-    catch (error: any) {
-      errorStore.setError(error, { context: InvoiceContext.DOWNLOAD_INVOICE_PDF })
-      toast.showError(errorStore.getErrorMessage(error))
-      throw error
-    }
-  }
-
   return {
-    data,
-    loading,
-    includes,
-    fetchInvoicesData,
-    serverPagination,
     sorting,
-    onSortingChange,
     filters,
+    includes,
+    include,
+    data,
+    onSortingChange,
     onFiltersChange,
     clearFilters,
-    include,
+    onPageChange,
+    onPageSizeChange,
+    fetchInvoicePrerequisites,
+    fetchInvoicesData,
+    getInvoice,
     createInvoice,
-    createInvoiceMutation,
     updateInvoice,
-    updateInvoiceMutation,
     deleteInvoice,
-    deleteInvoiceMutation,
     downloadInvoicePdf,
-    downloadInvoicePdfMutation,
+    loading,
+    serverPagination,
   }
 }

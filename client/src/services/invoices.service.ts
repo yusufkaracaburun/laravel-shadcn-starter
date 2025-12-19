@@ -20,7 +20,6 @@ import type { ISorting } from './query-utils'
 import {
   convertSortingToQueryString,
   defaultAxiosQueryOptions,
-  defaultAxiosQueryOptionsWith404,
 } from './query-utils'
 
 enum QueryKeys {
@@ -33,45 +32,10 @@ enum QueryKeys {
   DOWNLOAD_INVOICE_PDF = 'downloadInvoicePdf',
 }
 
-enum InvoiceInclude {
-  CUSTOMER = 'customer',
-  ITEMS = 'items',
-  PAYMENTS = 'payments',
-  ACTIVITIES = 'activities',
-  EMAILS = 'emails',
-}
-
 const API_URL = '/api/invoices'
 const STALE_TIME = 5 * 60 * 1000
 
-interface IInvoiceService {
-  getInvoicePrerequisitesQuery: () => ReturnType<
-    typeof useQuery<IResponse<IInvoicePrerequisites>, AxiosError>
-  >
-  getInvoicesQuery: (
-    page: Ref<number>,
-    pageSize: Ref<number>,
-    sorting: Ref<Array<ISorting>>,
-    filters: Ref<IInvoiceFilters>,
-    include: Ref<string[]>,
-  ) => ReturnType<typeof useQuery<IResponse<IPaginatedInvoicesResponse>, AxiosError>>
-  getInvoiceQuery: (
-    id: Ref<number>,
-    options?: { include?: InvoiceInclude[] },
-  ) => ReturnType<typeof useQuery<IResponse<IInvoice>, AxiosError>>
-  createInvoiceMutation: () => ReturnType<
-    typeof useMutation<IResponse<IInvoice>, AxiosError, ICreateInvoiceRequest>
-  >
-  updateInvoiceMutation: () => ReturnType<
-    typeof useMutation<IResponse<IInvoice>, AxiosError, { id: number, data: IUpdateInvoiceRequest }>
-  >
-  deleteInvoiceMutation: () => ReturnType<typeof useMutation<void, AxiosError, number>>
-  downloadInvoicePdfMutation: () => ReturnType<
-    typeof useMutation<AxiosResponse<Blob>, AxiosError, number>
-  >
-}
-
-export function useInvoiceService(): IInvoiceService {
+export function useInvoiceService() {
   const queryClient = useQueryClient()
 
   const { axiosInstance } = useAxios()
@@ -124,27 +88,24 @@ export function useInvoiceService(): IInvoiceService {
     })
   }
 
-  function getInvoiceQuery(
-    id: Ref<number>,
-    options?: { include?: InvoiceInclude[] },
-  ): ReturnType<typeof useQuery<IResponse<IInvoice>, AxiosError>> {
-    return useQuery({
-      queryKey: [
-        QueryKeys.GET_INVOICE,
-        computed(() => toValue(id)),
-        computed(() => options?.include?.join(',') || InvoiceInclude.CUSTOMER),
-      ],
-      queryFn: async (): Promise<IResponse<IInvoice>> => {
-        const currentId = toValue(id)
-        const includes = [...(options?.include || []), InvoiceInclude.CUSTOMER]
-        const response = await axiosInstance.get(`${API_URL}/${currentId}`, {
-          params: { include: includes.join(',') },
+  function getInvoiceMutation(): ReturnType<
+    typeof useMutation<IResponse<IInvoice>, AxiosError, { id: number, include?: string[] }>
+  > {
+    return useMutation<IResponse<IInvoice>, AxiosError, { id: number, include?: string[] }>({
+      mutationKey: [QueryKeys.GET_INVOICE],
+      mutationFn: async ({ id, include }): Promise<IResponse<IInvoice>> => {
+        const response = await axiosInstance.get(`${API_URL}/${id}`, {
+          params: { include: include?.join(',') ?? '' },
         })
         return response.data
       },
-      staleTime: STALE_TIME,
-      enabled: computed(() => toValue(id) > 0),
-      ...defaultAxiosQueryOptionsWith404(),
+      onSuccess: (_, variables) => {
+        queryClient.invalidateQueries({ queryKey: [QueryKeys.INVOICE_LIST] })
+        queryClient.invalidateQueries({ queryKey: [QueryKeys.GET_INVOICE, variables.id] })
+      },
+      onError: (error) => {
+        console.error('Get invoice error:', error)
+      },
     })
   }
 
@@ -211,6 +172,9 @@ export function useInvoiceService(): IInvoiceService {
       mutationKey: [QueryKeys.DOWNLOAD_INVOICE_PDF],
       mutationFn: (id: number) =>
         axiosInstance.post(`${API_URL}/${id}/pdf`, {}, { responseType: 'blob' }),
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: [QueryKeys.INVOICE_LIST] })
+      },
       onError: (error) => {
         console.error('Download invoice PDF error:', error)
       },
@@ -218,9 +182,9 @@ export function useInvoiceService(): IInvoiceService {
   }
 
   return {
-    getInvoicePrerequisitesQuery,
     getInvoicesQuery,
-    getInvoiceQuery,
+    getInvoicePrerequisitesQuery,
+    getInvoiceMutation,
     createInvoiceMutation,
     updateInvoiceMutation,
     deleteInvoiceMutation,
