@@ -14,12 +14,12 @@ import {
   TableRow,
 } from '@/components/ui/table'
 
-import type { DataTableProps } from './types'
+import type { IDataTableProps } from './types'
 
 import NoResultFound from '../no-result-found.vue'
 
 const props = defineProps<
-  DataTableProps<T> & {
+  IDataTableProps<T> & {
     table: VueTable<T>
   }
 >()
