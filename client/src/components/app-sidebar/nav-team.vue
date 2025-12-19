@@ -40,7 +40,11 @@ function isActive(menu: NavItem): boolean {
     <UiSidebarMenu>
       <template v-for="menu in group.items" :key="menu.title">
         <UiSidebarMenuItem v-if="!menu.items">
-          <UiSidebarMenuButton as-child :is-active="isActive(menu)" :tooltip="menu.title">
+          <UiSidebarMenuButton
+            as-child
+            :is-active="isActive(menu)"
+            :tooltip="menu.title"
+          >
             <router-link :to="menu.url">
               <component :is="menu.icon" />
               <span>{{ menu.title }}</span>
@@ -69,8 +73,14 @@ function isActive(menu: NavItem): boolean {
             </UiSidebarMenuItem>
             <UiCollapsibleContent>
               <UiSidebarMenuSub>
-                <UiSidebarMenuSubItem v-for="subItem in menu.items" :key="subItem.title">
-                  <UiSidebarMenuSubButton as-child :is-active="isActive(subItem as NavItem)">
+                <UiSidebarMenuSubItem
+                  v-for="subItem in menu.items"
+                  :key="subItem.title"
+                >
+                  <UiSidebarMenuSubButton
+                    as-child
+                    :is-active="isActive(subItem as NavItem)"
+                  >
                     <router-link :to="subItem?.url || '/'">
                       <component :is="subItem.icon" v-if="subItem.icon" />
                       <span>{{ subItem.title }}</span>
@@ -92,7 +102,11 @@ function isActive(menu: NavItem): boolean {
             <UiDropdownMenuContent align="start" side="right">
               <UiDropdownMenuLabel>{{ menu.title }}</UiDropdownMenuLabel>
               <UiDropdownMenuSeparator />
-              <UiDropdownMenuItem v-for="subItem in menu.items" :key="subItem.title" as-child>
+              <UiDropdownMenuItem
+                v-for="subItem in menu.items"
+                :key="subItem.title"
+                as-child
+              >
                 <router-link :to="subItem?.url || '/'">
                   <component :is="subItem.icon" v-if="subItem.icon" />
                   <span>{{ subItem.title }}</span>

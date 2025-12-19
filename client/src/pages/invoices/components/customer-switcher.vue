@@ -33,7 +33,9 @@ function getCustomerIcon(customer: Customer) {
 function handleSelectCommand(command: TComponent) {
   switch (command) {
     case 'customer-add':
-      showComponent.value = defineAsyncComponent(() => import('./customer-add.vue'))
+      showComponent.value = defineAsyncComponent(
+        () => import('./customer-add.vue'),
+      )
       break
   }
 }
@@ -80,7 +82,9 @@ function handleCustomerCreated() {
               {{ selectedCustomer.type }}
             </span>
           </div>
-          <ChevronsUpDown class="ml-auto size-4 text-muted-foreground shrink-0 opacity-50" />
+          <ChevronsUpDown
+            class="ml-auto size-4 text-muted-foreground shrink-0 opacity-50"
+          />
         </UiButton>
       </UiDropdownMenuTrigger>
       <UiDropdownMenuContent
@@ -98,14 +102,22 @@ function handleCustomerCreated() {
             class="gap-2 p-2"
             @click="handleSelect(customer)"
           >
-            <div class="flex items-center justify-center border rounded-sm size-6 shrink-0">
-              <component :is="getCustomerIcon(customer)" class="size-4 shrink-0" />
+            <div
+              class="flex items-center justify-center border rounded-sm size-6 shrink-0"
+            >
+              <component
+                :is="getCustomerIcon(customer)"
+                class="size-4 shrink-0"
+              />
             </div>
             <div class="flex-1 min-w-0">
               <div class="font-medium truncate">
                 {{ customer.name }}
               </div>
-              <div v-if="customer.type" class="text-xs text-muted-foreground capitalize">
+              <div
+                v-if="customer.type"
+                class="text-xs text-muted-foreground capitalize"
+              >
                 {{ customer.type }}
               </div>
               <div
@@ -123,8 +135,13 @@ function handleCustomerCreated() {
         <UiDropdownMenuSeparator />
 
         <UiDialogTrigger as-child>
-          <UiDropdownMenuItem class="gap-2 p-2" @click.stop="handleSelectCommand('customer-add')">
-            <div class="flex items-center justify-center border rounded-md size-6 bg-background">
+          <UiDropdownMenuItem
+            class="gap-2 p-2"
+            @click.stop="handleSelectCommand('customer-add')"
+          >
+            <div
+              class="flex items-center justify-center border rounded-md size-6 bg-background"
+            >
               <Plus class="size-4" />
             </div>
             <div class="font-medium text-muted-foreground">

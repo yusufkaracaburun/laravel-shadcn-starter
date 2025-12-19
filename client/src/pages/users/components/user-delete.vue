@@ -25,7 +25,8 @@ async function handleRemove() {
   <div>
     <UiDialogTitle> Delete this user: {{ user.name }} ? </UiDialogTitle>
     <UiDialogDescription class="mt-2 font-medium">
-      You are about to delete a user with the ID {{ user.id }}. This action cannot be undone.
+      You are about to delete a user with the ID {{ user.id }}. This action
+      cannot be undone.
     </UiDialogDescription>
     <UiDialogFooter>
       <UiDialogClose as-child>

@@ -26,7 +26,10 @@ const links = [
 <template>
   <footer class="min-h-18 flex items-center justify-between">
     <UiAvatar>
-      <UiAvatarImage :src="`${mode === 'dark' ? '/logo.svg' : '/logo-black.svg'}`" alt="Logo" />
+      <UiAvatarImage
+        :src="`${mode === 'dark' ? '/logo.svg' : '/logo-black.svg'}`"
+        alt="Logo"
+      />
     </UiAvatar>
 
     <div>© 2025 Whbbit1999</div>

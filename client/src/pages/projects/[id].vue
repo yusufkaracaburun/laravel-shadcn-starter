@@ -4,7 +4,14 @@ meta:
 </route>
 
 <script setup lang="ts">
-import { ArrowLeft, Calendar, FilePenLine, FolderKanban, Target, Trash2 } from 'lucide-vue-next'
+import {
+  ArrowLeft,
+  Calendar,
+  FilePenLine,
+  FolderKanban,
+  Target,
+  Trash2,
+} from 'lucide-vue-next'
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
@@ -13,7 +20,13 @@ import Page from '@/components/global-layout/basic-page.vue'
 import Loading from '@/components/loading.vue'
 import Badge from '@/components/ui/badge/Badge.vue'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
 import { StatusBadge } from '@/components/ui/status-badge'
 import { useGetProjectQuery } from '@/services/projects.service'
 
@@ -28,9 +41,17 @@ const router = useRouter()
 
 const projectId = computed(() => Number(route.params.id))
 
-const { data: projectResponse, isLoading, isError, error, refetch } = useGetProjectQuery(projectId)
+const {
+  data: projectResponse,
+  isLoading,
+  isError,
+  error,
+  refetch,
+} = useGetProjectQuery(projectId)
 
-const project = computed<Project | null>(() => projectResponse.value?.data ?? null)
+const project = computed<Project | null>(
+  () => projectResponse.value?.data ?? null,
+)
 
 // Format date
 function formatDate(dateString: string | null): string {
@@ -95,7 +116,11 @@ const isNotFound = computed(() => {
 <template>
   <Page
     :title="project ? project.name : 'Project Details'"
-    :description="project ? `View details for ${project.name}` : 'Loading project information...'"
+    :description="
+      project
+        ? `View details for ${project.name}`
+        : 'Loading project information...'
+    "
   >
     <template #actions>
       <div v-if="project" class="flex items-center gap-2">
@@ -114,11 +139,17 @@ const isNotFound = computed(() => {
       </div>
     </template>
 
-    <div v-if="isLoading" class="flex items-center justify-center min-h-[400px]">
+    <div
+      v-if="isLoading"
+      class="flex items-center justify-center min-h-[400px]"
+    >
       <Loading />
     </div>
 
-    <div v-else-if="isError && isNotFound" class="flex items-center justify-center min-h-[400px]">
+    <div
+      v-else-if="isError && isNotFound"
+      class="flex items-center justify-center min-h-[400px]"
+    >
       <Error
         :code="404"
         subtitle="Project Not Found"
@@ -126,7 +157,10 @@ const isNotFound = computed(() => {
       />
     </div>
 
-    <div v-else-if="isError" class="flex items-center justify-center min-h-[400px]">
+    <div
+      v-else-if="isError"
+      class="flex items-center justify-center min-h-[400px]"
+    >
       <div class="text-center">
         <Error
           :code="500"
@@ -144,7 +178,9 @@ const isNotFound = computed(() => {
       <Card>
         <CardHeader>
           <div class="flex items-start gap-6">
-            <div class="flex size-24 items-center justify-center rounded-full bg-primary/10">
+            <div
+              class="flex size-24 items-center justify-center rounded-full bg-primary/10"
+            >
               <FolderKanban class="size-12 text-primary" />
             </div>
             <div class="flex-1">
@@ -160,7 +196,10 @@ const isNotFound = computed(() => {
                   :class="getStatusInfo(project.status)!.color"
                   variant="secondary"
                 >
-                  <component :is="getStatusInfo(project.status)!.icon" class="mr-1 size-3" />
+                  <component
+                    :is="getStatusInfo(project.status)!.icon"
+                    class="mr-1 size-3"
+                  />
                   {{ getStatusInfo(project.status)!.label }}
                 </Badge>
                 <Badge variant="outline">
@@ -222,7 +261,9 @@ const isNotFound = computed(() => {
               </div>
             </div>
             <div>
-              <div class="text-sm font-medium text-muted-foreground mb-1 flex items-center gap-2">
+              <div
+                class="text-sm font-medium text-muted-foreground mb-1 flex items-center gap-2"
+              >
                 <Target class="size-4" />
                 Progress
               </div>
@@ -245,11 +286,15 @@ const isNotFound = computed(() => {
         <Card>
           <CardHeader>
             <CardTitle>Timeline & Dates</CardTitle>
-            <CardDescription>Project schedule and timeline information</CardDescription>
+            <CardDescription>
+              Project schedule and timeline information
+            </CardDescription>
           </CardHeader>
           <CardContent class="space-y-4">
             <div>
-              <div class="text-sm font-medium text-muted-foreground mb-1 flex items-center gap-2">
+              <div
+                class="text-sm font-medium text-muted-foreground mb-1 flex items-center gap-2"
+              >
                 <Calendar class="size-4" />
                 Start Date
               </div>
@@ -258,7 +303,9 @@ const isNotFound = computed(() => {
               </div>
             </div>
             <div>
-              <div class="text-sm font-medium text-muted-foreground mb-1 flex items-center gap-2">
+              <div
+                class="text-sm font-medium text-muted-foreground mb-1 flex items-center gap-2"
+              >
                 <Calendar class="size-4" />
                 End Date
               </div>
@@ -267,7 +314,9 @@ const isNotFound = computed(() => {
               </div>
             </div>
             <div>
-              <div class="text-sm font-medium text-muted-foreground mb-1 flex items-center gap-2">
+              <div
+                class="text-sm font-medium text-muted-foreground mb-1 flex items-center gap-2"
+              >
                 <Calendar class="size-4" />
                 Created At
               </div>
@@ -276,7 +325,9 @@ const isNotFound = computed(() => {
               </div>
             </div>
             <div>
-              <div class="text-sm font-medium text-muted-foreground mb-1 flex items-center gap-2">
+              <div
+                class="text-sm font-medium text-muted-foreground mb-1 flex items-center gap-2"
+              >
                 <Calendar class="size-4" />
                 Updated At
               </div>

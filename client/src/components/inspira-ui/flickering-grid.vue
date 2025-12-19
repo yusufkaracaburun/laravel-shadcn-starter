@@ -22,7 +22,8 @@ const props = withDefaults(defineProps<FlickeringGridProps>(), {
   maxOpacity: 0.3,
 })
 
-const { squareSize, gridGap, flickerChance, color, maxOpacity, width, height } = toRefs(props)
+const { squareSize, gridGap, flickerChance, color, maxOpacity, width, height }
+  = toRefs(props)
 
 const containerRef = templateRef<HTMLDivElement>('containerRef')
 const canvasRef = templateRef<HTMLCanvasElement>('canvasRef')

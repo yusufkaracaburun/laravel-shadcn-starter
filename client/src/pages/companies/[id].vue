@@ -24,7 +24,13 @@ import Page from '@/components/global-layout/basic-page.vue'
 import Loading from '@/components/loading.vue'
 import Badge from '@/components/ui/badge/Badge.vue'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
 import { StatusBadge } from '@/components/ui/status-badge'
 import { useGetCompanyQuery } from '@/services/companies.service'
 
@@ -37,9 +43,17 @@ const router = useRouter()
 
 const companyId = computed(() => Number(route.params.id))
 
-const { data: companyResponse, isLoading, isError, error, refetch } = useGetCompanyQuery(companyId)
+const {
+  data: companyResponse,
+  isLoading,
+  isError,
+  error,
+  refetch,
+} = useGetCompanyQuery(companyId)
 
-const company = computed<Company | null>(() => companyResponse.value?.data ?? null)
+const company = computed<Company | null>(
+  () => companyResponse.value?.data ?? null,
+)
 
 // Format date
 function formatDate(dateString: string | null): string {
@@ -109,7 +123,11 @@ const isNotFound = computed(() => {
 <template>
   <Page
     :title="company ? company.name : 'Company Details'"
-    :description="company ? `View details for ${company.name}` : 'Loading company information...'"
+    :description="
+      company
+        ? `View details for ${company.name}`
+        : 'Loading company information...'
+    "
   >
     <template #actions>
       <div v-if="company" class="flex items-center gap-2">
@@ -128,11 +146,17 @@ const isNotFound = computed(() => {
       </div>
     </template>
 
-    <div v-if="isLoading" class="flex items-center justify-center min-h-[400px]">
+    <div
+      v-if="isLoading"
+      class="flex items-center justify-center min-h-[400px]"
+    >
       <Loading />
     </div>
 
-    <div v-else-if="isError && isNotFound" class="flex items-center justify-center min-h-[400px]">
+    <div
+      v-else-if="isError && isNotFound"
+      class="flex items-center justify-center min-h-[400px]"
+    >
       <Error
         :code="404"
         subtitle="Company Not Found"
@@ -140,7 +164,10 @@ const isNotFound = computed(() => {
       />
     </div>
 
-    <div v-else-if="isError" class="flex items-center justify-center min-h-[400px]">
+    <div
+      v-else-if="isError"
+      class="flex items-center justify-center min-h-[400px]"
+    >
       <div class="text-center">
         <Error
           :code="500"
@@ -158,7 +185,9 @@ const isNotFound = computed(() => {
       <Card>
         <CardHeader>
           <div class="flex items-start gap-6">
-            <div class="flex size-24 items-center justify-center rounded-full bg-primary/10">
+            <div
+              class="flex size-24 items-center justify-center rounded-full bg-primary/10"
+            >
               <Building2 class="size-12 text-primary" />
             </div>
             <div class="flex-1">
@@ -175,7 +204,10 @@ const isNotFound = computed(() => {
                   :class="getStatusInfo(company.status)!.color"
                   variant="secondary"
                 >
-                  <component :is="getStatusInfo(company.status)!.icon" class="mr-1 size-3" />
+                  <component
+                    :is="getStatusInfo(company.status)!.icon"
+                    class="mr-1 size-3"
+                  />
                   {{ getStatusInfo(company.status)!.label }}
                 </Badge>
               </div>
@@ -202,7 +234,9 @@ const isNotFound = computed(() => {
               </div>
             </div>
             <div>
-              <div class="text-sm font-medium text-muted-foreground mb-1 flex items-center gap-2">
+              <div
+                class="text-sm font-medium text-muted-foreground mb-1 flex items-center gap-2"
+              >
                 <Mail class="size-4" />
                 Email
               </div>
@@ -211,7 +245,9 @@ const isNotFound = computed(() => {
               </div>
             </div>
             <div v-if="company.phone">
-              <div class="text-sm font-medium text-muted-foreground mb-1 flex items-center gap-2">
+              <div
+                class="text-sm font-medium text-muted-foreground mb-1 flex items-center gap-2"
+              >
                 <Phone class="size-4" />
                 Phone
               </div>
@@ -244,7 +280,9 @@ const isNotFound = computed(() => {
               </div>
             </div>
             <div>
-              <div class="text-sm font-medium text-muted-foreground mb-1 flex items-center gap-2">
+              <div
+                class="text-sm font-medium text-muted-foreground mb-1 flex items-center gap-2"
+              >
                 <Users class="size-4" />
                 Employees
               </div>
@@ -259,11 +297,15 @@ const isNotFound = computed(() => {
         <Card>
           <CardHeader>
             <CardTitle>Account Status</CardTitle>
-            <CardDescription>Account creation and update information</CardDescription>
+            <CardDescription>
+              Account creation and update information
+            </CardDescription>
           </CardHeader>
           <CardContent class="space-y-4">
             <div>
-              <div class="text-sm font-medium text-muted-foreground mb-1 flex items-center gap-2">
+              <div
+                class="text-sm font-medium text-muted-foreground mb-1 flex items-center gap-2"
+              >
                 <Calendar class="size-4" />
                 Created At
               </div>
@@ -272,7 +314,9 @@ const isNotFound = computed(() => {
               </div>
             </div>
             <div>
-              <div class="text-sm font-medium text-muted-foreground mb-1 flex items-center gap-2">
+              <div
+                class="text-sm font-medium text-muted-foreground mb-1 flex items-center gap-2"
+              >
                 <Calendar class="size-4" />
                 Updated At
               </div>

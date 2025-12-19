@@ -17,7 +17,10 @@ export class CustomerClient extends BaseClient {
    * @param perPage - Number of items per page (default: 15)
    * Returns raw APIResponse
    */
-  async getCustomers(page: number = 1, perPage: number = 15): Promise<APIResponse> {
+  async getCustomers(
+    page: number = 1,
+    perPage: number = 15,
+  ): Promise<APIResponse> {
     const endpoint = `/api/customers?page=${page}&per_page=${perPage}`
     return this.get(endpoint)
   }
@@ -71,7 +74,9 @@ export class CustomerClient extends BaseClient {
    * @param data - Customer creation data
    * Returns IResponse<Customer>
    */
-  async createCustomerTyped(data: CreateCustomerRequest): Promise<IResponse<Customer>> {
+  async createCustomerTyped(
+    data: CreateCustomerRequest,
+  ): Promise<IResponse<Customer>> {
     const response = await this.createCustomer(data)
     return response.json() as Promise<IResponse<Customer>>
   }
@@ -82,7 +87,10 @@ export class CustomerClient extends BaseClient {
    * @param data - Customer update data
    * Returns raw APIResponse
    */
-  async updateCustomer(customerId: number, data: UpdateCustomerRequest): Promise<APIResponse> {
+  async updateCustomer(
+    customerId: number,
+    data: UpdateCustomerRequest,
+  ): Promise<APIResponse> {
     await this.ensureCsrfCookie()
     const endpoint = `/api/customers/${customerId}`
     return this.put(endpoint, data)

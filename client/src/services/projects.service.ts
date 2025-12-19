@@ -136,7 +136,9 @@ export function useGetProjectQuery(projectId: MaybeRef<number>) {
     queryKey: ['project', computed(() => toValue(projectIdRef))],
     queryFn: async (): Promise<IResponse<Project>> => {
       const currentProjectId = toValue(projectIdRef)
-      const response = await axiosInstance.get(`/api/project/${currentProjectId}`)
+      const response = await axiosInstance.get(
+        `/api/project/${currentProjectId}`,
+      )
       return response.data
     },
     retry: (failureCount: number, error: AxiosError) => {
@@ -193,7 +195,9 @@ export function useCreateProjectMutation() {
   const queryClient = useQueryClient()
 
   return useMutation<IResponse<Project>, AxiosError, CreateProjectRequest>({
-    mutationFn: async (data: CreateProjectRequest): Promise<IResponse<Project>> => {
+    mutationFn: async (
+      data: CreateProjectRequest,
+    ): Promise<IResponse<Project>> => {
       const response = await axiosInstance.post('/api/project', data)
       return response.data
     },
@@ -218,14 +222,19 @@ export function useUpdateProjectMutation() {
     { projectId: number, data: UpdateProjectRequest }
   >({
     mutationFn: async ({ projectId, data }): Promise<IResponse<Project>> => {
-      const response = await axiosInstance.put(`/api/project/${projectId}`, data)
+      const response = await axiosInstance.put(
+        `/api/project/${projectId}`,
+        data,
+      )
       return response.data
     },
     onSuccess: (_, variables) => {
       // Invalidate project list query to refresh the projects list
       queryClient.invalidateQueries({ queryKey: ['projectList'] })
       // Invalidate the specific project query to refresh the detail page
-      queryClient.invalidateQueries({ queryKey: ['project', variables.projectId] })
+      queryClient.invalidateQueries({
+        queryKey: ['project', variables.projectId],
+      })
     },
   })
 }

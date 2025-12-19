@@ -13,7 +13,10 @@ const mode = useColorMode()
   <header class="h-14 flex items-center marketing-header sticky top-0 z-99">
     <router-link to="/" class="flex items-center gap-2">
       <UiAvatar>
-        <UiAvatarImage :src="`${mode === 'dark' ? '/logo.svg' : '/logo-black.svg'}`" alt="Logo" />
+        <UiAvatarImage
+          :src="`${mode === 'dark' ? '/logo.svg' : '/logo-black.svg'}`"
+          alt="Logo"
+        />
       </UiAvatar>
       <span class="text-base font-bold">Shadcn Vue Admin</span>
     </router-link>

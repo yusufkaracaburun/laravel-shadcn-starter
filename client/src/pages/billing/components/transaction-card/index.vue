@@ -41,8 +41,16 @@ const currentState = computed(() => {
           {{ orderId }}
         </p>
         <button @click="copy(orderId)">
-          <Icon v-if="!copied" icon="carbon:copy" class="duration-300 hover:scale-105" />
-          <Icon v-else icon="carbon:checkmark" class="text-green-500 duration-300" />
+          <Icon
+            v-if="!copied"
+            icon="carbon:copy"
+            class="duration-300 hover:scale-105"
+          />
+          <Icon
+            v-else
+            icon="carbon:checkmark"
+            class="text-green-500 duration-300"
+          />
         </button>
       </div>
 

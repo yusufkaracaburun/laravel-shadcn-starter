@@ -11,7 +11,9 @@ const content = ref('copy something')
     </h4>
     <blockquote class="my-2 border-l-2 pl-6 italic">
       Source code in
-      <code class="relative rounded bg-muted px-1 py-1 font-mono text-sm font-semibold">
+      <code
+        class="relative rounded bg-muted px-1 py-1 font-mono text-sm font-semibold"
+      >
         src/components/sva-ui/copy
       </code>
     </blockquote>

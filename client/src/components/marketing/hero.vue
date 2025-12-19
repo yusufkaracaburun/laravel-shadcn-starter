@@ -11,7 +11,11 @@ const images = [
 ]
 
 const users: { avatar: string, name: string, id: number }[] = [
-  { avatar: 'https://github.com/benjamincanac.png', name: 'Benjamin Canac', id: 1 },
+  {
+    avatar: 'https://github.com/benjamincanac.png',
+    name: 'Benjamin Canac',
+    id: 1,
+  },
   { avatar: 'https://github.com/romhml.png', name: 'Benjamin Canac', id: 2 },
   { avatar: 'https://github.com/noook.png', name: 'Benjamin Canac', id: 3 },
 ]
@@ -71,7 +75,11 @@ const users: { avatar: string, name: string, id: number }[] = [
         ]"
       >
         <UiCarouselContent>
-          <UiCarouselItem v-for="image in images" :key="image" class="basis-1/3">
+          <UiCarouselItem
+            v-for="image in images"
+            :key="image"
+            class="basis-1/3"
+          >
             <img :src="image" width="320" height="320" class="rounded-lg">
           </UiCarouselItem>
         </UiCarouselContent>

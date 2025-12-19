@@ -22,7 +22,13 @@ import Page from '@/components/global-layout/basic-page.vue'
 import Loading from '@/components/loading.vue'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
 import { useGetCustomerQuery } from '@/services/customers.service'
 
 import type { Customer } from './data/schema'
@@ -43,9 +49,13 @@ const {
   refetch,
 } = useGetCustomerQuery(customerId)
 
-const customer = computed<Customer | null>(() => customerResponse.value?.data ?? null)
+const customer = computed<Customer | null>(
+  () => customerResponse.value?.data ?? null,
+)
 
-const showComponent = shallowRef<typeof CustomerResourceDialog | typeof CustomerDelete | null>(null)
+const showComponent = shallowRef<
+  typeof CustomerResourceDialog | typeof CustomerDelete | null
+>(null)
 const isDialogOpen = ref(false)
 
 type TCommand = 'edit' | 'delete'
@@ -93,25 +103,42 @@ function formatDateTime(dateString: string | null): string {
 </script>
 
 <template>
-  <Page title="Customer Details" description="View and manage customer information" sticky>
+  <Page
+    title="Customer Details"
+    description="View and manage customer information"
+    sticky
+  >
     <template #actions>
       <div class="flex items-center gap-2">
         <Button variant="outline" size="sm" @click="router.back()">
           <ArrowLeft class="mr-2 size-4" />
           Back
         </Button>
-        <Button v-if="customer" variant="outline" size="sm" @click="handleSelect('edit')">
+        <Button
+          v-if="customer"
+          variant="outline"
+          size="sm"
+          @click="handleSelect('edit')"
+        >
           <FilePenLine class="mr-2 size-4" />
           Edit
         </Button>
-        <Button v-if="customer" variant="destructive" size="sm" @click="handleSelect('delete')">
+        <Button
+          v-if="customer"
+          variant="destructive"
+          size="sm"
+          @click="handleSelect('delete')"
+        >
           <Trash2 class="mr-2 size-4" />
           Delete
         </Button>
       </div>
     </template>
 
-    <div v-if="isLoading" class="flex items-center justify-center min-h-[400px]">
+    <div
+      v-if="isLoading"
+      class="flex items-center justify-center min-h-[400px]"
+    >
       <Loading />
     </div>
 
@@ -131,7 +158,9 @@ function formatDateTime(dateString: string | null): string {
               <User class="size-5 text-muted-foreground" />
               <CardTitle>{{ customer.name }}</CardTitle>
             </div>
-            <Badge :variant="customer.type === 'business' ? 'default' : 'secondary'">
+            <Badge
+              :variant="customer.type === 'business' ? 'default' : 'secondary'"
+            >
               {{ customer.type === 'business' ? 'Business' : 'Private' }}
             </Badge>
           </div>
@@ -160,7 +189,10 @@ function formatDateTime(dateString: string | null): string {
                 </p>
               </div>
             </div>
-            <div v-if="customer.city || customer.address" class="flex items-center gap-2">
+            <div
+              v-if="customer.city || customer.address"
+              class="flex items-center gap-2"
+            >
               <MapPin class="size-4 text-muted-foreground" />
               <div>
                 <p class="text-sm font-medium text-muted-foreground">
@@ -170,11 +202,16 @@ function formatDateTime(dateString: string | null): string {
                   <span v-if="customer.address">{{ customer.address }}</span>
                   <span v-if="customer.address && customer.zipcode">, </span>
                   <span v-if="customer.zipcode">{{ customer.zipcode }}</span>
-                  <span v-if="(customer.address || customer.zipcode) && customer.city" />
+                  <span
+                    v-if="
+                      (customer.address || customer.zipcode) && customer.city
+                    "
+                  />
                   <span v-if="customer.city">{{ customer.city }}</span>
                   <span
                     v-if="
-                      customer.country && (customer.city || customer.zipcode || customer.address)
+                      customer.country
+                        && (customer.city || customer.zipcode || customer.address)
                     "
                   >,
                   </span>
@@ -248,7 +285,10 @@ function formatDateTime(dateString: string | null): string {
                 {{ customer.primary_contact.name }}
               </p>
             </div>
-            <div v-if="customer.primary_contact.email" class="grid gap-4 md:grid-cols-2">
+            <div
+              v-if="customer.primary_contact.email"
+              class="grid gap-4 md:grid-cols-2"
+            >
               <div>
                 <p class="text-sm font-medium text-muted-foreground">
                   Email
@@ -299,7 +339,8 @@ function formatDateTime(dateString: string | null): string {
         <CardHeader>
           <CardTitle>All Contacts</CardTitle>
           <CardDescription>
-            {{ customer.contacts.length }} contact(s) associated with this customer
+            {{ customer.contacts.length }} contact(s) associated with this
+            customer
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -318,7 +359,10 @@ function formatDateTime(dateString: string | null): string {
                     {{ contact.email }}
                   </p>
                 </div>
-                <Badge v-if="contact.id === customer.primary_contact?.id" variant="default">
+                <Badge
+                  v-if="contact.id === customer.primary_contact?.id"
+                  variant="default"
+                >
                   Primary
                 </Badge>
               </div>
@@ -370,7 +414,10 @@ function formatDateTime(dateString: string | null): string {
     </div>
 
     <UiDialog v-model:open="isDialogOpen">
-      <UiDialogContent v-if="showComponent && customer" class="sm:max-w-[425px]">
+      <UiDialogContent
+        v-if="showComponent && customer"
+        class="sm:max-w-[425px]"
+      >
         <CustomerResourceDialog
           v-if="showComponent === CustomerResourceDialog"
           :customer="customer"

@@ -19,7 +19,11 @@ export const columns: ColumnDef<Customer>[] = [
     header: ({ column }) =>
       h(DataTableColumnHeader<Customer>, { column, title: 'Customer Number' }),
     cell: ({ row }) => {
-      const number = row.getValue('number') as string | number | null | undefined
+      const number = row.getValue('number') as
+        | string
+        | number
+        | null
+        | undefined
       return h('div', { class: 'w-24' }, number?.toString() || '-')
     },
     enableSorting: false,
@@ -27,7 +31,8 @@ export const columns: ColumnDef<Customer>[] = [
   },
   {
     accessorKey: 'name',
-    header: ({ column }) => h(DataTableColumnHeader<Customer>, { column, title: 'Name' }),
+    header: ({ column }) =>
+      h(DataTableColumnHeader<Customer>, { column, title: 'Name' }),
     cell: ({ row }) => {
       const customer = row.original
       const router = useRouter()
@@ -43,14 +48,18 @@ export const columns: ColumnDef<Customer>[] = [
           class:
             'flex items-center gap-2 max-w-[500px] truncate font-medium text-left hover:underline cursor-pointer focus:outline-none focus:underline',
           onClick: () => {
-            router.push({ name: '/customers/[id]', params: { id: customer.id.toString() } })
+            router.push({
+              name: '/customers/[id]',
+              params: { id: customer.id.toString() },
+            })
           },
         },
         [
           h(
             'div',
             {
-              class: 'flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-muted',
+              class:
+                'flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-muted',
             },
             [h(typeIcon, { class: 'h-4 w-4 text-muted-foreground' })],
           ),
@@ -74,27 +83,38 @@ export const columns: ColumnDef<Customer>[] = [
         return h('div', { class: 'w-[150px] text-muted-foreground' }, '-')
       }
 
-      return h('div', { class: 'w-[150px]' }, primaryContact.name || primaryContact.email || '-')
+      return h(
+        'div',
+        { class: 'w-[150px]' },
+        primaryContact.name || primaryContact.email || '-',
+      )
     },
     enableSorting: false,
   },
   {
     accessorKey: 'email',
-    header: ({ column }) => h(DataTableColumnHeader<Customer>, { column, title: 'Email' }),
+    header: ({ column }) =>
+      h(DataTableColumnHeader<Customer>, { column, title: 'Email' }),
     cell: ({ row }) => {
       const email = row.getValue('email') as string | null
       const emailStr = email || ''
       return h('div', { class: 'flex items-center max-w-[200px]' }, [
         h('span', { class: 'truncate text-muted-foreground' }, emailStr || '-'),
         emailStr
-        && h(Copy, { class: 'ml-2 flex-shrink-0', size: 'sm', variant: 'ghost', content: emailStr }),
+        && h(Copy, {
+          class: 'ml-2 flex-shrink-0',
+          size: 'sm',
+          variant: 'ghost',
+          content: emailStr,
+        }),
       ])
     },
     enableSorting: true,
   },
   {
     accessorKey: 'phone',
-    header: ({ column }) => h(DataTableColumnHeader<Customer>, { column, title: 'Phone' }),
+    header: ({ column }) =>
+      h(DataTableColumnHeader<Customer>, { column, title: 'Phone' }),
     cell: ({ row }) => {
       const phone = row.getValue('phone') as string | null
       return h('div', { class: 'w-[120px]' }, phone || '-')
@@ -103,7 +123,8 @@ export const columns: ColumnDef<Customer>[] = [
   },
   {
     accessorKey: 'created_at',
-    header: ({ column }) => h(DataTableColumnHeader<Customer>, { column, title: 'Created At' }),
+    header: ({ column }) =>
+      h(DataTableColumnHeader<Customer>, { column, title: 'Created At' }),
     cell: ({ row }) => {
       const dateValue = row.getValue('created_at') as string | null | undefined
       if (!dateValue) {
@@ -116,7 +137,11 @@ export const columns: ColumnDef<Customer>[] = [
       return h(
         'div',
         { class: 'w-[100px]' },
-        date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }),
+        date.toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'short',
+          day: 'numeric',
+        }),
       )
     },
     enableSorting: true,

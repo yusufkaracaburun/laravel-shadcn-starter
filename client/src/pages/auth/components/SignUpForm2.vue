@@ -40,7 +40,8 @@ const props = defineProps<{
         </FieldLabel>
         <Input id="email" type="email" placeholder="m@example.com" required />
         <FieldDescription>
-          We'll use this to contact you. We will not share your email with anyone else.
+          We'll use this to contact you. We will not share your email with
+          anyone else.
         </FieldDescription>
       </Field>
       <Field>
@@ -48,7 +49,9 @@ const props = defineProps<{
           Password
         </FieldLabel>
         <Input id="password" type="password" required />
-        <FieldDescription> Must be at least 8 characters long. </FieldDescription>
+        <FieldDescription>
+          Must be at least 8 characters long.
+        </FieldDescription>
       </Field>
       <Field>
         <FieldLabel for="confirm-password">

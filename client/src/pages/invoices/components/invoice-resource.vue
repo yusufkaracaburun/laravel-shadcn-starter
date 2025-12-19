@@ -9,7 +9,9 @@ const props = defineProps<{
 
 defineEmits(['close'])
 
-const title = computed(() => (props.invoice ? 'Edit Invoice' : 'Create New Invoice'))
+const title = computed(() =>
+  props.invoice ? 'Edit Invoice' : 'Create New Invoice',
+)
 const description = computed(() =>
   props.invoice
     ? `Update invoice information${props.invoice.invoice_number ? ` for ${props.invoice.invoice_number}` : ''}.`

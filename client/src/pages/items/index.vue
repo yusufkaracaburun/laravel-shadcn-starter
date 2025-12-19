@@ -3,7 +3,11 @@ import { Grid3x3, List } from 'lucide-vue-next'
 
 import Page from '@/components/global-layout/basic-page.vue'
 import { Button } from '@/components/ui/button'
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
 import { useItems } from '@/composables/use-items'
 
 import { columns } from './components/columns'

@@ -50,8 +50,8 @@ const isOpen = ref(false)
           </div>
         </DialogTitle>
         <DialogDescription>
-          Invite new user to join your team by sending them an email invitation. Assign a role to
-          define their access level.
+          Invite new user to join your team by sending them an email invitation.
+          Assign a role to define their access level.
         </DialogDescription>
       </DialogHeader>
       <GridForm />
@@ -74,8 +74,8 @@ const isOpen = ref(false)
           </div>
         </DrawerTitle>
         <DrawerDescription>
-          Invite new user to join your team by sending them an email invitation. Assign a role to
-          define their access level.
+          Invite new user to join your team by sending them an email invitation.
+          Assign a role to define their access level.
         </DrawerDescription>
       </DrawerHeader>
 

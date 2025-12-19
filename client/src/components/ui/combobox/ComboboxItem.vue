@@ -5,7 +5,9 @@ import { reactiveOmit } from '@vueuse/core'
 import { ComboboxItem, useForwardPropsEmits } from 'reka-ui'
 import { cn } from '@/lib/utils'
 
-const props = defineProps<ComboboxItemProps & { class?: HTMLAttributes['class'] }>()
+const props = defineProps<
+  ComboboxItemProps & { class?: HTMLAttributes['class'] }
+>()
 const emits = defineEmits<ComboboxItemEmits>()
 
 const delegatedProps = reactiveOmit(props, 'class')

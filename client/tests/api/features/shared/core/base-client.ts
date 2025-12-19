@@ -42,7 +42,11 @@ export abstract class BaseClient {
     const cookies = this.cookieHandler.getCookies()
     const baseHeaders = this.requestBuilder.getBaseHeaders()
     const headers = options.requireCsrf
-      ? this.requestBuilder.getHeadersWithCsrf(this.csrfHandler.getToken(), false, cookies)
+      ? this.requestBuilder.getHeadersWithCsrf(
+          this.csrfHandler.getToken(),
+          false,
+          cookies,
+        )
       : cookies
         ? { ...baseHeaders, Cookie: cookies }
         : baseHeaders
@@ -76,7 +80,10 @@ export abstract class BaseClient {
 
     const response = await this.request.post(this.buildUrl(endpoint), {
       data,
-      headers: options.requireCsrf !== false ? headers : this.requestBuilder.getBaseHeaders(),
+      headers:
+        options.requireCsrf !== false
+          ? headers
+          : this.requestBuilder.getBaseHeaders(),
       ignoreHTTPSErrors: true,
     })
 
@@ -104,7 +111,10 @@ export abstract class BaseClient {
 
     const response = await this.request.put(this.buildUrl(endpoint), {
       data,
-      headers: options.requireCsrf !== false ? headers : this.requestBuilder.getBaseHeaders(),
+      headers:
+        options.requireCsrf !== false
+          ? headers
+          : this.requestBuilder.getBaseHeaders(),
       ignoreHTTPSErrors: true,
     })
 
@@ -132,7 +142,10 @@ export abstract class BaseClient {
 
     const response = await this.request.patch(this.buildUrl(endpoint), {
       data,
-      headers: options.requireCsrf !== false ? headers : this.requestBuilder.getBaseHeaders(),
+      headers:
+        options.requireCsrf !== false
+          ? headers
+          : this.requestBuilder.getBaseHeaders(),
       ignoreHTTPSErrors: true,
     })
 
@@ -154,7 +167,11 @@ export abstract class BaseClient {
     const baseHeaders = this.requestBuilder.getBaseHeaders()
     const headers
       = options.requireCsrf !== false
-        ? this.requestBuilder.getHeadersWithCsrf(this.csrfHandler.getToken(), false, cookies)
+        ? this.requestBuilder.getHeadersWithCsrf(
+            this.csrfHandler.getToken(),
+            false,
+            cookies,
+          )
         : cookies
           ? { ...baseHeaders, Cookie: cookies }
           : baseHeaders

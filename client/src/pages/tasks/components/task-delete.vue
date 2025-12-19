@@ -23,7 +23,8 @@ function handleRemove() {
     <UiDialogTitle>
       <UiDialogTitle> Delete this task: {{ task.id }} ? </UiDialogTitle>
       <UiDialogDescription class="mt-2 font-medium">
-        You are about to delete a task with the ID {{ task.id }}.This action cannot be undone.
+        You are about to delete a task with the ID {{ task.id }}.This action
+        cannot be undone.
       </UiDialogDescription>
     </UiDialogTitle>
     <UiDialogFooter>

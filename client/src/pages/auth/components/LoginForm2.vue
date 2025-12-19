@@ -29,7 +29,10 @@ const { login, loading } = useAuth()
 
 const loginSchema = toTypedSchema(
   z.object({
-    email: z.string().email('Please enter a valid email address.').min(1, 'Email is required.'),
+    email: z
+      .string()
+      .email('Please enter a valid email address.')
+      .min(1, 'Email is required.'),
     password: z.string().min(1, 'Password is required.'),
   }),
 )
@@ -67,7 +70,11 @@ const onSubmit = handleSubmit(async (values) => {
 </script>
 
 <template>
-  <form id="login-form-2" :class="cn('flex flex-col gap-6', props.class)" @submit="onSubmit">
+  <form
+    id="login-form-2"
+    :class="cn('flex flex-col gap-6', props.class)"
+    @submit="onSubmit"
+  >
     <FieldGroup>
       <div class="flex flex-col items-center gap-1 text-center">
         <h1 class="text-2xl font-bold">
@@ -113,7 +120,12 @@ const onSubmit = handleSubmit(async (values) => {
         </VeeField>
       </Field>
       <Field>
-        <UiButton type="submit" form="login-form-2" class="w-full" :disabled="loading">
+        <UiButton
+          type="submit"
+          form="login-form-2"
+          class="w-full"
+          :disabled="loading"
+        >
           <UiSpinner v-if="loading" class="mr-2" />
           Login
         </UiButton>

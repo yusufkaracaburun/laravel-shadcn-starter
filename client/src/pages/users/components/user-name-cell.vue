@@ -34,7 +34,11 @@ function handleClick() {
 <template>
   <div class="flex items-center gap-3">
     <Avatar class="size-8">
-      <AvatarImage v-if="user.profile_photo_url" :src="user.profile_photo_url" :alt="name" />
+      <AvatarImage
+        v-if="user.profile_photo_url"
+        :src="user.profile_photo_url"
+        :alt="name"
+      />
       <AvatarFallback>
         {{ getInitials(name) }}
       </AvatarFallback>

@@ -81,7 +81,9 @@ const onSubmit = handleSubmit((values) => {
           <FormLabel class="text-base">
             Sidebar
           </FormLabel>
-          <FormDescription> Select the items you want to display in the sidebar. </FormDescription>
+          <FormDescription>
+            Select the items you want to display in the sidebar.
+          </FormDescription>
         </div>
 
         <FormField
@@ -90,7 +92,10 @@ const onSubmit = handleSubmit((values) => {
           :key="item.id"
           name="items"
         >
-          <FormItem :key="item.id" class="flex flex-row items-start space-x-3 space-y-0">
+          <FormItem
+            :key="item.id"
+            class="flex flex-row items-start space-x-3 space-y-0"
+          >
             <FormControl>
               <Checkbox
                 :model-value="value.includes(item.id)"
@@ -98,7 +103,9 @@ const onSubmit = handleSubmit((values) => {
                   (checked: boolean | 'indeterminate') => {
                     if (Array.isArray(value)) {
                       handleChange(
-                        checked ? [...value, item.id] : value.filter((id) => id !== item.id),
+                        checked
+                          ? [...value, item.id]
+                          : value.filter((id) => id !== item.id),
                       )
                     }
                   }

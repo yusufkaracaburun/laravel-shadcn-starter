@@ -5,7 +5,10 @@ import type { User as FrontendUser } from '@/services/users.service'
  * API Response interface matching backend ApiResponse
  * @see api/app/Http/Responses/ApiResponse.php
  */
-export interface IResponse<T = unknown, E = Record<string, any>> extends FrontendIResponse<T, E> {
+export interface IResponse<
+  T = unknown,
+  E = Record<string, any>,
+> extends FrontendIResponse<T, E> {
   success: boolean
   code: number
   message: string

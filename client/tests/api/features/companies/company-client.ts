@@ -17,7 +17,10 @@ export class CompanyClient extends BaseClient {
    * @param perPage - Number of items per page (default: 15)
    * Returns raw APIResponse
    */
-  async getCompanies(page: number = 1, perPage: number = 15): Promise<APIResponse> {
+  async getCompanies(
+    page: number = 1,
+    perPage: number = 15,
+  ): Promise<APIResponse> {
     const endpoint = `/api/company?page=${page}&per_page=${perPage}`
     return this.get(endpoint)
   }
@@ -71,7 +74,9 @@ export class CompanyClient extends BaseClient {
    * @param data - Company creation data
    * Returns IResponse<Company>
    */
-  async createCompanyTyped(data: CreateCompanyRequest): Promise<IResponse<Company>> {
+  async createCompanyTyped(
+    data: CreateCompanyRequest,
+  ): Promise<IResponse<Company>> {
     const response = await this.createCompany(data)
     return response.json() as Promise<IResponse<Company>>
   }
@@ -82,7 +87,10 @@ export class CompanyClient extends BaseClient {
    * @param data - Company update data
    * Returns raw APIResponse
    */
-  async updateCompany(companyId: number, data: UpdateCompanyRequest): Promise<APIResponse> {
+  async updateCompany(
+    companyId: number,
+    data: UpdateCompanyRequest,
+  ): Promise<APIResponse> {
     await this.ensureCsrfCookie()
     const endpoint = `/api/company/${companyId}`
     return this.put(endpoint, data)

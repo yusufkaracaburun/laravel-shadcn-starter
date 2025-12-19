@@ -27,7 +27,10 @@ type TCommand = 'edit' | 'delete' | 'close' | 'download' | 'back'
 function handleSelect(command: TCommand) {
   switch (command) {
     case 'edit':
-      router.push({ name: '/invoices/edit/[id]', params: { id: props.invoiceId.toString() } })
+      router.push({
+        name: '/invoices/edit/[id]',
+        params: { id: props.invoiceId.toString() },
+      })
       break
     case 'delete':
       showComponent.value = InvoiceDelete
@@ -53,15 +56,27 @@ function handleSelect(command: TCommand) {
       <ArrowLeft class="mr-2 size-4" />
       Back
     </Button>
-    <Button v-if="props.invoiceId" variant="outline" @click="handleSelect('download')">
+    <Button
+      v-if="props.invoiceId"
+      variant="outline"
+      @click="handleSelect('download')"
+    >
       <Download class="mr-2 size-4" />
       Download PDF
     </Button>
-    <Button v-if="props.invoiceId" variant="outline" @click="handleSelect('edit')">
+    <Button
+      v-if="props.invoiceId"
+      variant="outline"
+      @click="handleSelect('edit')"
+    >
       <FilePenLine class="mr-2 size-4" />
       Edit
     </Button>
-    <Button v-if="props.invoiceId" variant="destructive" @click="handleSelect('delete')">
+    <Button
+      v-if="props.invoiceId"
+      variant="destructive"
+      @click="handleSelect('delete')"
+    >
       <Trash2 class="mr-2 size-4" />
       Delete
     </Button>
@@ -70,7 +85,10 @@ function handleSelect(command: TCommand) {
   <div class="border-b border-gray-200" />
 
   <Dialog v-model:open="isDialogOpen" class="print:hidden">
-    <DialogContent v-if="showComponent && props.invoice" class="sm:max-w-[425px]">
+    <DialogContent
+      v-if="showComponent && props.invoice"
+      class="sm:max-w-[425px]"
+    >
       <InvoiceDelete
         v-if="showComponent === InvoiceDelete"
         :invoice="props.invoice"

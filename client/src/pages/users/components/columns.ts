@@ -16,7 +16,8 @@ export const columns: ColumnDef<User>[] = [
   SelectColumn as ColumnDef<User>,
   {
     accessorKey: 'name',
-    header: ({ column }) => h(DataTableColumnHeader<User>, { column, title: 'Name' }),
+    header: ({ column }) =>
+      h(DataTableColumnHeader<User>, { column, title: 'Name' }),
     cell: ({ row }) => {
       const user = row.original
       const nameValue = row.getValue('name')
@@ -31,13 +32,19 @@ export const columns: ColumnDef<User>[] = [
 
   {
     accessorKey: 'email',
-    header: ({ column }) => h(DataTableColumnHeader<User>, { column, title: 'Email' }),
+    header: ({ column }) =>
+      h(DataTableColumnHeader<User>, { column, title: 'Email' }),
     cell: ({ row }) => {
       const email = row.getValue('email')
       const emailStr = email && typeof email === 'string' ? email : ''
       return h('div', {}, [
         h('span', {}, emailStr || '—'),
-        h(Copy, { class: 'ml-2', size: 'sm', variant: 'ghost', content: emailStr }),
+        h(Copy, {
+          class: 'ml-2',
+          size: 'sm',
+          variant: 'ghost',
+          content: emailStr,
+        }),
       ])
     },
     enableSorting: true,
@@ -53,7 +60,8 @@ export const columns: ColumnDef<User>[] = [
       }
       return row.roles.map((role: { name: string }) => role.name)
     },
-    header: ({ column }) => h(DataTableColumnHeader<User>, { column, title: 'Roles' }),
+    header: ({ column }) =>
+      h(DataTableColumnHeader<User>, { column, title: 'Roles' }),
     cell: ({ row }) => {
       const user = row.original
       const roles = user.roles || []
@@ -76,7 +84,9 @@ export const columns: ColumnDef<User>[] = [
         return true
       }
       const userRoles = row.original.roles || []
-      const roleNames = new Set(userRoles.map((role: { name: string }) => role.name))
+      const roleNames = new Set(
+        userRoles.map((role: { name: string }) => role.name),
+      )
       // Check if any of the selected roles match the user's roles
       return value.some((selectedRole: string) => roleNames.has(selectedRole))
     },
@@ -86,7 +96,8 @@ export const columns: ColumnDef<User>[] = [
 
   {
     accessorKey: 'created_at',
-    header: ({ column }) => h(DataTableColumnHeader<User>, { column, title: 'Created At' }),
+    header: ({ column }) =>
+      h(DataTableColumnHeader<User>, { column, title: 'Created At' }),
     cell: ({ row }) => {
       const createdAt = row.getValue('created_at')
       if (!createdAt || typeof createdAt !== 'string') {

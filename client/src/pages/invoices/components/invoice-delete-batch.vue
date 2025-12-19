@@ -26,7 +26,9 @@ const isOpen = computed({
 const { deleteInvoice } = useInvoices()
 const isDeleting = ref(false)
 
-const selectedRows = computed(() => props.table.getFilteredSelectedRowModel().rows)
+const selectedRows = computed(
+  () => props.table.getFilteredSelectedRowModel().rows,
+)
 const selectedCount = computed(() => selectedRows.value.length)
 
 async function handleBatchDelete() {
@@ -36,7 +38,9 @@ async function handleBatchDelete() {
 
   try {
     isDeleting.value = true
-    const deletePromises = selectedRows.value.map(row => deleteInvoice(row.original.id))
+    const deletePromises = selectedRows.value.map(row =>
+      deleteInvoice(row.original.id),
+    )
     await Promise.all(deletePromises)
     props.table.resetRowSelection()
     isOpen.value = false
@@ -57,8 +61,9 @@ async function handleBatchDelete() {
       <UiDialogHeader>
         <UiDialogTitle>Delete Invoices</UiDialogTitle>
         <UiDialogDescription class="mt-2">
-          Are you sure you want to delete <strong>{{ selectedCount }}</strong> invoice(s)? This
-          action cannot be undone.
+          Are you sure you want to delete
+          <strong>{{ selectedCount }}</strong> invoice(s)? This action cannot be
+          undone.
         </UiDialogDescription>
       </UiDialogHeader>
       <UiDialogFooter>
@@ -67,7 +72,11 @@ async function handleBatchDelete() {
             Cancel
           </UiButton>
         </UiDialogClose>
-        <UiButton variant="destructive" :disabled="isDeleting" @click="handleBatchDelete">
+        <UiButton
+          variant="destructive"
+          :disabled="isDeleting"
+          @click="handleBatchDelete"
+        >
           <UiSpinner v-if="isDeleting" class="mr-2" />
           Delete
         </UiButton>

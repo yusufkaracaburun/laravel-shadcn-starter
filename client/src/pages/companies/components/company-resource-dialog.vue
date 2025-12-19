@@ -9,9 +9,13 @@ const props = defineProps<{
 defineEmits(['close'])
 
 const company = computed(() => props.company)
-const title = computed(() => (company.value?.id ? 'Edit Company' : 'New Company'))
+const title = computed(() =>
+  company.value?.id ? 'Edit Company' : 'New Company',
+)
 const description = computed(() =>
-  company.value?.id ? `Edit company ${company.value.name}` : 'Create a new company',
+  company.value?.id
+    ? `Edit company ${company.value.name}`
+    : 'Create a new company',
 )
 </script>
 

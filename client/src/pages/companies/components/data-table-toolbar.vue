@@ -18,7 +18,9 @@ interface DataTableToolbarProps {
 
 const props = defineProps<DataTableToolbarProps>()
 
-const isFiltered = computed(() => props.table.getState().columnFilters.length > 0)
+const isFiltered = computed(
+  () => props.table.getState().columnFilters.length > 0,
+)
 </script>
 
 <template>
@@ -28,7 +30,9 @@ const isFiltered = computed(() => props.table.getState().columnFilters.length > 
     >
       <Input
         placeholder="Filter companies..."
-        :model-value="(table.getColumn('name')?.getFilterValue() as string) ?? ''"
+        :model-value="
+          (table.getColumn('name')?.getFilterValue() as string) ?? ''
+        "
         class="h-8 w-[150px] lg:w-[250px]"
         @input="table.getColumn('name')?.setFilterValue($event.target.value)"
       />

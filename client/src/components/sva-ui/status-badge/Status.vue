@@ -27,6 +27,14 @@ const props = defineProps<Props>()
         )
       "
     />
-    <span :class="cn(statusVariants({ color, rounded }), props.class, 'relative inline-flex')" />
+    <span
+      :class="
+        cn(
+          statusVariants({ color, rounded }),
+          props.class,
+          'relative inline-flex',
+        )
+      "
+    />
   </span>
 </template>

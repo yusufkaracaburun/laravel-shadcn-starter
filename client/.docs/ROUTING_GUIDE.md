@@ -575,7 +575,10 @@ const user = computed(() => authStore.user)
 const team = computed(() => {
   if (!user.value?.teams)
     return null
-  return user.value.teams.find(t => t.id === teamId.value) || user.value.currentTeam
+  return (
+    user.value.teams.find(t => t.id === teamId.value)
+    || user.value.currentTeam
+  )
 })
 </script>
 

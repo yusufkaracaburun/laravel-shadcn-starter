@@ -54,7 +54,9 @@ export async function getAllCookies(name?: string): Promise<CookieList> {
  * Set a cookie
  */
 export async function setCookie(name: string, value: string): Promise<boolean>
-export async function setCookie(options: CookieStoreSetOptions): Promise<boolean>
+export async function setCookie(
+  options: CookieStoreSetOptions,
+): Promise<boolean>
 export async function setCookie(
   nameOrOptions: string | CookieStoreSetOptions,
   value?: string,
@@ -88,7 +90,9 @@ export async function setCookie(
  * Delete a cookie by name or options
  */
 export async function removeCookie(name: string): Promise<boolean>
-export async function removeCookie(options: CookieStoreDeleteOptions): Promise<boolean>
+export async function removeCookie(
+  options: CookieStoreDeleteOptions,
+): Promise<boolean>
 export async function removeCookie(
   nameOrOptions: string | CookieStoreDeleteOptions,
 ): Promise<boolean> {
@@ -110,7 +114,9 @@ export async function removeCookie(
 /**
  * Watch for cookie changes
  */
-export function watchCookieChanges(callback: (event: Event) => void): () => void {
+export function watchCookieChanges(
+  callback: (event: Event) => void,
+): () => void {
   if (!isCookieStoreAvailable()) {
     console.warn('CookieStore API is not available')
     return () => {}
@@ -134,7 +140,9 @@ export function setupCookie() {
 }
 
 export function getCookieValue(name: string): string | null {
-  const cookie = document.cookie.split('; ').find(row => row.startsWith(`${name}=`))
+  const cookie = document.cookie
+    .split('; ')
+    .find(row => row.startsWith(`${name}=`))
   if (!cookie)
     return null
   return decodeURIComponent(cookie.split('=')[1])

@@ -4,7 +4,11 @@ import { Receipt } from 'lucide-vue-next'
 import type { TInvoice } from '@/pages/invoices/data/schema'
 import type { IInvoiceItem } from '@/services/invoices.service'
 
-import { formatDateForPreview, formatMoney, formatNumber } from '@/pages/invoices/utils/formatters'
+import {
+  formatDateForPreview,
+  formatMoney,
+  formatNumber,
+} from '@/pages/invoices/utils/formatters'
 
 const props = defineProps<{
   formValues: TInvoice | null
@@ -42,7 +46,9 @@ function formatCurrency(value: any): string {
         <!-- Company Information -->
         <div class="flex-1">
           <div class="flex items-center gap-3 mb-4">
-            <div class="w-12 h-12 bg-primary rounded-lg flex items-center justify-center">
+            <div
+              class="w-12 h-12 bg-primary rounded-lg flex items-center justify-center"
+            >
               <Receipt class="w-6 h-6 text-white" />
             </div>
             <div>
@@ -50,8 +56,8 @@ function formatCurrency(value: any): string {
                 Your Company Name
               </h1>
               <p class="text-gray-600">
-                123 Business Street<br>City, State 12345<br>Phone: (555) 123-4567<br>Email:
-                info@company.com
+                123 Business Street<br>City, State 12345<br>Phone: (555)
+                123-4567<br>Email: info@company.com
               </p>
             </div>
           </div>
@@ -103,10 +109,15 @@ function formatCurrency(value: any): string {
             <p class="font-semibold text-lg mb-1">
               {{
                 props.formValues?.customer?.name
-                  || (props.formValues?.customer_id ? `Customer #${props.formValues.customer_id}` : '—')
+                  || (props.formValues?.customer_id
+                    ? `Customer #${props.formValues.customer_id}`
+                    : '—')
               }}
             </p>
-            <p v-if="props.formValues?.customer?.type" class="text-sm text-gray-600 mb-2">
+            <p
+              v-if="props.formValues?.customer?.type"
+              class="text-sm text-gray-600 mb-2"
+            >
               {{ props.formValues.customer.type }}
             </p>
 
@@ -114,7 +125,11 @@ function formatCurrency(value: any): string {
               v-if="props.formValues?.customer?.formatted_address?.length"
               class="text-sm space-y-1"
             >
-              <p v-for="(line, index) in props.formValues.customer.formatted_address" :key="index">
+              <p
+                v-for="(line, index) in props.formValues.customer
+                  .formatted_address"
+                :key="index"
+              >
                 {{ line }}
               </p>
             </div>
@@ -128,10 +143,12 @@ function formatCurrency(value: any): string {
                 {{ props.formValues.customer.primary_contact.name }}
               </p>
               <p v-if="props.formValues?.customer?.email">
-                <span class="font-medium">Email:</span> {{ props.formValues.customer.email }}
+                <span class="font-medium">Email:</span>
+                {{ props.formValues.customer.email }}
               </p>
               <p v-if="props.formValues?.customer?.phone">
-                <span class="font-medium">Phone:</span> {{ props.formValues.customer.phone }}
+                <span class="font-medium">Phone:</span>
+                {{ props.formValues.customer.phone }}
               </p>
             </div>
           </div>
@@ -157,22 +174,34 @@ function formatCurrency(value: any): string {
       <table class="w-full border-collapse">
         <thead>
           <tr class="bg-gray-50">
-            <th class="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-900">
+            <th
+              class="border border-gray-300 px-4 py-3 text-left font-semibold text-gray-900"
+            >
               Name
             </th>
-            <th class="border border-gray-300 px-4 py-3 text-right font-semibold text-gray-900">
+            <th
+              class="border border-gray-300 px-4 py-3 text-right font-semibold text-gray-900"
+            >
               Qty
             </th>
-            <th class="border border-gray-300 px-4 py-3 text-right font-semibold text-gray-900">
+            <th
+              class="border border-gray-300 px-4 py-3 text-right font-semibold text-gray-900"
+            >
               Unit Price
             </th>
-            <th class="border border-gray-300 px-4 py-3 text-right font-semibold text-gray-900">
+            <th
+              class="border border-gray-300 px-4 py-3 text-right font-semibold text-gray-900"
+            >
               VAT Rate
             </th>
-            <th class="border border-gray-300 px-4 py-3 text-right font-semibold text-gray-900">
+            <th
+              class="border border-gray-300 px-4 py-3 text-right font-semibold text-gray-900"
+            >
               VAT Amount
             </th>
-            <th class="border border-gray-300 px-4 py-3 text-right font-semibold text-gray-900">
+            <th
+              class="border border-gray-300 px-4 py-3 text-right font-semibold text-gray-900"
+            >
               Total
             </th>
           </tr>
@@ -191,19 +220,29 @@ function formatCurrency(value: any): string {
                 {{ item.unit }}
               </div>
             </td>
-            <td class="border border-gray-300 px-4 py-3 text-right text-gray-900">
+            <td
+              class="border border-gray-300 px-4 py-3 text-right text-gray-900"
+            >
               {{ formatNumber(item.quantity, 2) }}
             </td>
-            <td class="border border-gray-300 px-4 py-3 text-right text-gray-900">
+            <td
+              class="border border-gray-300 px-4 py-3 text-right text-gray-900"
+            >
               {{ formatCurrency(item.unit_price) }}
             </td>
-            <td class="border border-gray-300 px-4 py-3 text-right text-gray-900">
+            <td
+              class="border border-gray-300 px-4 py-3 text-right text-gray-900"
+            >
               {{ item.vat_rate }}%
             </td>
-            <td class="border border-gray-300 px-4 py-3 text-right text-gray-900">
+            <td
+              class="border border-gray-300 px-4 py-3 text-right text-gray-900"
+            >
               {{ formatCurrency(item.total_vat) }}
             </td>
-            <td class="border border-gray-300 px-4 py-3 text-right font-semibold text-gray-900">
+            <td
+              class="border border-gray-300 px-4 py-3 text-right font-semibold text-gray-900"
+            >
               {{ formatCurrency(item.total_incl_vat) }}
             </td>
           </tr>
@@ -278,20 +317,24 @@ function formatCurrency(value: any): string {
       <h3 class="text-lg font-semibold text-gray-900 mb-3">
         Notes:
       </h3>
-      <div class="bg-gray-50 p-4 rounded border text-gray-700 whitespace-pre-wrap">
+      <div
+        class="bg-gray-50 p-4 rounded border text-gray-700 whitespace-pre-wrap"
+      >
         {{ props.formValues.notes }}
       </div>
     </div>
 
     <!-- Footer -->
-    <div class="border-t border-gray-200 pt-6 text-center text-sm text-gray-600">
+    <div
+      class="border-t border-gray-200 pt-6 text-center text-sm text-gray-600"
+    >
       <p>
         Thank you for your business! Payment is due within
         {{ props.formValues?.due_days || '—' }} days.
       </p>
       <p class="mt-2">
-        Please make checks payable to "Your Company Name" and include the invoice number on your
-        payment.
+        Please make checks payable to "Your Company Name" and include the
+        invoice number on your payment.
       </p>
     </div>
   </div>

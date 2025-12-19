@@ -53,23 +53,29 @@ const yearRange = computed(() => {
     createYearRange({
       start:
         props?.minValue ??
-        (toRaw(props.placeholder) ?? props.defaultPlaceholder ?? today(getLocalTimeZone())).cycle(
-          'year',
-          -100,
-        ),
+        (
+          toRaw(props.placeholder) ??
+          props.defaultPlaceholder ??
+          today(getLocalTimeZone())
+        ).cycle('year', -100),
 
       end:
         props?.maxValue ??
-        (toRaw(props.placeholder) ?? props.defaultPlaceholder ?? today(getLocalTimeZone())).cycle(
-          'year',
-          10,
-        ),
+        (
+          toRaw(props.placeholder) ??
+          props.defaultPlaceholder ??
+          today(getLocalTimeZone())
+        ).cycle('year', 10),
     })
   )
 })
 
-const [DefineMonthTemplate, ReuseMonthTemplate] = createReusableTemplate<{ date: DateValue }>()
-const [DefineYearTemplate, ReuseYearTemplate] = createReusableTemplate<{ date: DateValue }>()
+const [DefineMonthTemplate, ReuseMonthTemplate] = createReusableTemplate<{
+  date: DateValue
+}>()
+const [DefineYearTemplate, ReuseYearTemplate] = createReusableTemplate<{
+  date: DateValue
+}>()
 
 const forwarded = useForwardPropsEmits(delegatedProps, emits)
 </script>
@@ -78,7 +84,9 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
   <DefineMonthTemplate v-slot="{ date }">
     <div class="**:data-[slot=native-select-icon]:right-1">
       <div class="relative">
-        <div class="absolute inset-0 flex h-full items-center text-sm pl-2 pointer-events-none">
+        <div
+          class="absolute inset-0 flex h-full items-center text-sm pl-2 pointer-events-none"
+        >
           {{ formatter.custom(toDate(date), { month: 'short' }) }}
         </div>
         <NativeSelect
@@ -107,7 +115,9 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
   <DefineYearTemplate v-slot="{ date }">
     <div class="**:data-[slot=native-select-icon]:right-1">
       <div class="relative">
-        <div class="absolute inset-0 flex h-full items-center text-sm pl-2 pointer-events-none">
+        <div
+          class="absolute inset-0 flex h-full items-center text-sm pl-2 pointer-events-none"
+        >
           {{ formatter.custom(toDate(date), { year: 'numeric' }) }}
         </div>
         <NativeSelect
@@ -141,7 +151,9 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
     :class="cn('p-3', props.class)"
   >
     <CalendarHeader class="pt-0">
-      <nav class="flex items-center gap-1 absolute top-0 inset-x-0 justify-between">
+      <nav
+        class="flex items-center gap-1 absolute top-0 inset-x-0 justify-between"
+      >
         <CalendarPrevButton>
           <slot name="calendar-prev-icon" />
         </CalendarPrevButton>
@@ -195,7 +207,11 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
             :key="`weekDate-${index}`"
             class="mt-2 w-full"
           >
-            <CalendarCell v-for="weekDate in weekDates" :key="weekDate.toString()" :date="weekDate">
+            <CalendarCell
+              v-for="weekDate in weekDates"
+              :key="weekDate.toString()"
+              :date="weekDate"
+            >
               <CalendarCellTrigger :day="weekDate" :month="month.value" />
             </CalendarCell>
           </CalendarGridRow>

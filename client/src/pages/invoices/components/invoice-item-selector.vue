@@ -127,8 +127,14 @@ function handleClose() {
       <div class="space-y-4">
         <!-- Search -->
         <div class="relative">
-          <Search class="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-          <Input v-model="searchQuery" placeholder="Search items..." class="pl-9" />
+          <Search
+            class="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
+          />
+          <Input
+            v-model="searchQuery"
+            placeholder="Search items..."
+            class="pl-9"
+          />
         </div>
 
         <!-- Selected Count -->
@@ -137,7 +143,10 @@ function handleClose() {
           class="flex items-center justify-between rounded-lg border bg-muted/50 p-3"
         >
           <div class="text-sm font-medium">
-            {{ selectedCount }} item{{ selectedCount === 1 ? '' : 's' }} selected
+            {{ selectedCount }} item{{
+              selectedCount === 1 ? '' : 's'
+            }}
+            selected
           </div>
           <Button size="sm" variant="ghost" @click="selectedItems.clear()">
             <X class="size-4" />
@@ -145,7 +154,10 @@ function handleClose() {
         </div>
 
         <!-- Items List -->
-        <div v-if="filteredItems.length === 0" class="flex items-center justify-center py-8">
+        <div
+          v-if="filteredItems.length === 0"
+          class="flex items-center justify-center py-8"
+        >
           <div class="text-sm text-muted-foreground">
             {{ searchQuery ? 'No items found' : 'No items available' }}
           </div>
@@ -156,7 +168,9 @@ function handleClose() {
             v-for="item in filteredItems"
             :key="item.id"
             class="flex items-center gap-3 rounded-lg border p-4 hover:bg-muted/50 cursor-pointer transition-colors"
-            :class="isItemSelected(item.id) ? 'border-primary bg-primary/5' : ''"
+            :class="
+              isItemSelected(item.id) ? 'border-primary bg-primary/5' : ''
+            "
             @click="toggleItemSelection(item.id)"
           >
             <div
@@ -191,7 +205,9 @@ function handleClose() {
           <Plus class="mr-2 size-4" />
           Add
           {{
-            selectedCount > 0 ? `${selectedCount} item${selectedCount === 1 ? '' : 's'}` : 'Items'
+            selectedCount > 0
+              ? `${selectedCount} item${selectedCount === 1 ? '' : 's'}`
+              : 'Items'
           }}
         </Button>
       </DialogFooter>

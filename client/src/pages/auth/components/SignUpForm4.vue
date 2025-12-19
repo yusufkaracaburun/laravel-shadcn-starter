@@ -36,9 +36,15 @@ const props = defineProps<{
               <FieldLabel for="email">
                 Email
               </FieldLabel>
-              <Input id="email" type="email" placeholder="m@example.com" required />
+              <Input
+                id="email"
+                type="email"
+                placeholder="m@example.com"
+                required
+              />
               <FieldDescription>
-                We'll use this to contact you. We will not share your email with anyone else.
+                We'll use this to contact you. We will not share your email with
+                anyone else.
               </FieldDescription>
             </Field>
             <Field>
@@ -56,14 +62,18 @@ const props = defineProps<{
                   <Input id="confirm-password" type="password" required />
                 </Field>
               </Field>
-              <FieldDescription> Must be at least 8 characters long. </FieldDescription>
+              <FieldDescription>
+                Must be at least 8 characters long.
+              </FieldDescription>
             </Field>
             <Field>
               <Button type="submit">
                 Create Account
               </Button>
             </Field>
-            <FieldSeparator class="*:data-[slot=field-separator-content]:bg-card">
+            <FieldSeparator
+              class="*:data-[slot=field-separator-content]:bg-card"
+            >
               Or continue with
             </FieldSeparator>
             <Field class="grid grid-cols-3 gap-4">
@@ -110,8 +120,8 @@ const props = defineProps<{
       </CardContent>
     </Card>
     <FieldDescription class="px-6 text-center">
-      By clicking continue, you agree to our <a href="#">Terms of Service</a> and
-      <a href="#">Privacy Policy</a>.
+      By clicking continue, you agree to our
+      <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.
     </FieldDescription>
   </div>
 </template>

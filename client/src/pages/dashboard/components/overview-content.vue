@@ -6,7 +6,9 @@ import RecentSales from './recent-sales.vue'
 <template>
   <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
     <UiCard>
-      <UiCardHeader class="flex flex-row items-center justify-between pb-2 space-y-0">
+      <UiCardHeader
+        class="flex flex-row items-center justify-between pb-2 space-y-0"
+      >
         <UiCardTitle class="text-sm font-medium">
           Total Revenue
         </UiCardTitle>
@@ -33,7 +35,9 @@ import RecentSales from './recent-sales.vue'
       </UiCardContent>
     </UiCard>
     <UiCard>
-      <UiCardHeader class="flex flex-row items-center justify-between pb-2 space-y-0">
+      <UiCardHeader
+        class="flex flex-row items-center justify-between pb-2 space-y-0"
+      >
         <UiCardTitle class="text-sm font-medium">
           Subscriptions
         </UiCardTitle>
@@ -62,7 +66,9 @@ import RecentSales from './recent-sales.vue'
       </UiCardContent>
     </UiCard>
     <UiCard>
-      <UiCardHeader class="flex flex-row items-center justify-between pb-2 space-y-0">
+      <UiCardHeader
+        class="flex flex-row items-center justify-between pb-2 space-y-0"
+      >
         <UiCardTitle class="text-sm font-medium">
           Sales
         </UiCardTitle>
@@ -90,7 +96,9 @@ import RecentSales from './recent-sales.vue'
       </UiCardContent>
     </UiCard>
     <UiCard>
-      <UiCardHeader class="flex flex-row items-center justify-between pb-2 space-y-0">
+      <UiCardHeader
+        class="flex flex-row items-center justify-between pb-2 space-y-0"
+      >
         <UiCardTitle class="text-sm font-medium">
           Active Now
         </UiCardTitle>

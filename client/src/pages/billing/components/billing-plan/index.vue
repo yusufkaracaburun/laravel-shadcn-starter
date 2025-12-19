@@ -26,7 +26,11 @@ const plans = [
     discount: 499.99,
     billingCycle: 'month',
     description: 'Get the best of everything with our enterprise plan.',
-    features: ['Every small business plan feature', 'Unlimited users', 'Unlimited storage'],
+    features: [
+      'Every small business plan feature',
+      'Unlimited users',
+      'Unlimited storage',
+    ],
     buttonLabel: 'Switch to this plan',
   },
 ]

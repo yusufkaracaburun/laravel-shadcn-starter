@@ -135,7 +135,9 @@ export function useGetCompanyQuery(companyId: MaybeRef<number>) {
     queryKey: ['company', computed(() => toValue(companyIdRef))],
     queryFn: async (): Promise<IResponse<Company>> => {
       const currentCompanyId = toValue(companyIdRef)
-      const response = await axiosInstance.get(`/api/company/${currentCompanyId}`)
+      const response = await axiosInstance.get(
+        `/api/company/${currentCompanyId}`,
+      )
       return response.data
     },
     retry: (failureCount: number, error: AxiosError) => {
@@ -190,7 +192,9 @@ export function useCreateCompanyMutation() {
   const queryClient = useQueryClient()
 
   return useMutation<IResponse<Company>, AxiosError, CreateCompanyRequest>({
-    mutationFn: async (data: CreateCompanyRequest): Promise<IResponse<Company>> => {
+    mutationFn: async (
+      data: CreateCompanyRequest,
+    ): Promise<IResponse<Company>> => {
       const response = await axiosInstance.post('/api/company', data)
       return response.data
     },
@@ -215,14 +219,19 @@ export function useUpdateCompanyMutation() {
     { companyId: number, data: UpdateCompanyRequest }
   >({
     mutationFn: async ({ companyId, data }): Promise<IResponse<Company>> => {
-      const response = await axiosInstance.put(`/api/company/${companyId}`, data)
+      const response = await axiosInstance.put(
+        `/api/company/${companyId}`,
+        data,
+      )
       return response.data
     },
     onSuccess: (_, variables) => {
       // Invalidate company list query to refresh the companies list
       queryClient.invalidateQueries({ queryKey: ['companyList'] })
       // Invalidate the specific company query to refresh the detail page
-      queryClient.invalidateQueries({ queryKey: ['company', variables.companyId] })
+      queryClient.invalidateQueries({
+        queryKey: ['company', variables.companyId],
+      })
     },
   })
 }

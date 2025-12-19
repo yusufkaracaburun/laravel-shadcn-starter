@@ -8,7 +8,9 @@ defineProps<{ app: IApp }>()
   <UiCard class="relative">
     <UiCardHeader>
       <div class="flex items-center justify-between">
-        <div class="flex items-center justify-center p-2 rounded-lg size-10 bg-muted">
+        <div
+          class="flex items-center justify-center p-2 rounded-lg size-10 bg-muted"
+        >
           <component :is="app.logo" />
         </div>
         <UiButton :variant="app.connected ? 'secondary' : 'outline'" size="sm">

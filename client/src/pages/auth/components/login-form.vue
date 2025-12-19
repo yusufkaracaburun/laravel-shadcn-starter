@@ -17,7 +17,10 @@ const { login, loading } = useAuth()
 
 const loginSchema = toTypedSchema(
   z.object({
-    email: z.string().email('Please enter a valid email address.').min(1, 'Email is required.'),
+    email: z
+      .string()
+      .email('Please enter a valid email address.')
+      .min(1, 'Email is required.'),
     password: z.string().min(1, 'Password is required.'),
   }),
 )
@@ -61,7 +64,8 @@ const onSubmit = handleSubmit(async (values) => {
         Login
       </UiCardTitle>
       <UiCardDescription>
-        Enter your email and password below to log into your account. Not have an account?
+        Enter your email and password below to log into your account. Not have
+        an account?
         <UiButton
           variant="link"
           class="px-0 text-muted-foreground"
@@ -115,7 +119,12 @@ const onSubmit = handleSubmit(async (values) => {
             </VeeField>
           </div>
 
-          <UiButton type="submit" form="login-form" class="w-full" :disabled="loading">
+          <UiButton
+            type="submit"
+            form="login-form"
+            class="w-full"
+            :disabled="loading"
+          >
             <UiSpinner v-if="loading" class="mr-2" />
             Login
           </UiButton>

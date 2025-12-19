@@ -13,7 +13,10 @@ import Page from '@/components/global-layout/basic-page.vue'
 import Loading from '@/components/loading.vue'
 import { Button } from '@/components/ui/button'
 import { useToast } from '@/composables/use-toast'
-import { useGetInvoicePrerequisitesQuery, useGetInvoiceQuery } from '@/services/invoices.service'
+import {
+  useGetInvoicePrerequisitesQuery,
+  useGetInvoiceQuery,
+} from '@/services/invoices.service'
 
 import type { TInvoiceForm, TInvoiceItem } from '../data/schema'
 
@@ -45,7 +48,9 @@ const customers = computed(() => {
   if (!prerequisites.value?.customers)
     return []
   const customersData = prerequisites.value.customers
-  return Array.isArray(customersData) ? customersData : ((customersData as any).data ?? [])
+  return Array.isArray(customersData)
+    ? customersData
+    : ((customersData as any).data ?? [])
 })
 
 // Extract items from prerequisites
@@ -70,14 +75,18 @@ watch(
   (newInvoice) => {
     if (newInvoice) {
       currentFormValues.value = { ...newInvoice }
-      currentFormItems.value = (newInvoice.items as any)?.data || newInvoice.items || []
+      currentFormItems.value
+        = (newInvoice.items as any)?.data || newInvoice.items || []
     }
   },
   { immediate: true },
 )
 
 function handleClose() {
-  router.push({ name: '/invoices/[id]', params: { id: invoiceId.value.toString() } })
+  router.push({
+    name: '/invoices/[id]',
+    params: { id: invoiceId.value.toString() },
+  })
 }
 
 async function handleUpdate() {
@@ -134,7 +143,10 @@ async function handleUpdateAndSend() {
       </Button>
     </template>
 
-    <div v-if="isLoading" class="flex items-center justify-center min-h-[400px]">
+    <div
+      v-if="isLoading"
+      class="flex items-center justify-center min-h-[400px]"
+    >
       <Loading />
     </div>
 
@@ -167,7 +179,11 @@ async function handleUpdateAndSend() {
       </template>
 
       <template #actions>
-        <Button variant="outline" :disabled="isSubmitting" @click="handleUpdate">
+        <Button
+          variant="outline"
+          :disabled="isSubmitting"
+          @click="handleUpdate"
+        >
           <Save class="mr-2 size-4" />
           Update
         </Button>

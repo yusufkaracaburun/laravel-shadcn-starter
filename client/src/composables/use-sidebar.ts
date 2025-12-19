@@ -131,8 +131,16 @@ export function useSidebar() {
             { title: 'Profile', url: '/settings/', icon: User },
             { title: 'Account', url: '/settings/account', icon: Wrench },
             { title: 'Appearance', url: '/settings/appearance', icon: Palette },
-            { title: 'Notifications', url: '/settings/notifications', icon: BellDot },
-            { title: 'Display', url: '/settings/display', icon: PictureInPicture2 },
+            {
+              title: 'Notifications',
+              url: '/settings/notifications',
+              icon: BellDot,
+            },
+            {
+              title: 'Display',
+              url: '/settings/display',
+              icon: PictureInPicture2,
+            },
           ],
         },
         {

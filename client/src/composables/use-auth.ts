@@ -4,7 +4,11 @@ import type { LoginRequest, RegisterRequest } from '@/services/auth.service'
 
 import { useToast } from '@/composables/use-toast'
 import { RouterPath } from '@/constants/route-path'
-import { useLoginMutation, useLogoutMutation, useRegisterMutation } from '@/services/auth.service'
+import {
+  useLoginMutation,
+  useLogoutMutation,
+  useRegisterMutation,
+} from '@/services/auth.service'
 import { useGetCurrentUserQuery } from '@/services/users.service'
 import { useAuthStore } from '@/stores/auth.store'
 import { useErrorStore } from '@/stores/error.store'
@@ -19,7 +23,8 @@ export function useAuth() {
   const loginMutation = useLoginMutation()
   const logoutMutation = useLogoutMutation()
   const registerMutation = useRegisterMutation()
-  const { data: currentUser, refetch: fetchCurrentUser } = useGetCurrentUserQuery()
+  const { data: currentUser, refetch: fetchCurrentUser }
+    = useGetCurrentUserQuery()
 
   // Watch for current user changes and update store
   watch(
@@ -132,7 +137,9 @@ export function useAuth() {
 
       // Use error store for message
       const message = errorStore.getErrorMessage(error)
-      toast.showError(message || 'Logout failed, but you have been logged out locally.')
+      toast.showError(
+        message || 'Logout failed, but you have been logged out locally.',
+      )
       router.push({ path: RouterPath.LOGIN as string })
     }
   }

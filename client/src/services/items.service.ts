@@ -263,7 +263,11 @@ export function useUpdateItemMutation() {
   const { axiosInstance } = useAxios()
   const queryClient = useQueryClient()
 
-  return useMutation<IResponse<Item>, AxiosError, { itemId: number, data: UpdateItemRequest }>({
+  return useMutation<
+    IResponse<Item>,
+    AxiosError,
+    { itemId: number, data: UpdateItemRequest }
+  >({
     mutationFn: async ({ itemId, data }): Promise<IResponse<Item>> => {
       const response = await axiosInstance.put(`/api/items/${itemId}`, data)
       return response.data

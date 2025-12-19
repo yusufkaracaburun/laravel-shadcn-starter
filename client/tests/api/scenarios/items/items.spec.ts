@@ -34,13 +34,18 @@ function createUniqueTestItem(baseName = 'Test Item'): CreateItemRequest {
 /**
  * Pure function: Create update data
  */
-function createUpdateData(updates: Partial<UpdateItemRequest>): UpdateItemRequest {
+function createUpdateData(
+  updates: Partial<UpdateItemRequest>,
+): UpdateItemRequest {
   return { ...updates }
 }
 
 test.describe('Items API', { tag: ['@api', '@items'] }, () => {
   test.describe('List Items', () => {
-    test('should get paginated list of items', async ({ request, authenticatedAuthClient }) => {
+    test('should get paginated list of items', async ({
+      request,
+      authenticatedAuthClient,
+    }) => {
       // Arrange
       const itemClient = new ItemClient(request)
       itemClient.copyAuthStateFrom(authenticatedAuthClient)
@@ -80,7 +85,10 @@ test.describe('Items API', { tag: ['@api', '@items'] }, () => {
       }
     })
 
-    test('should handle pagination parameters', async ({ request, authenticatedAuthClient }) => {
+    test('should handle pagination parameters', async ({
+      request,
+      authenticatedAuthClient,
+    }) => {
       // Arrange
       const itemClient = new ItemClient(request)
       itemClient.copyAuthStateFrom(authenticatedAuthClient)
@@ -108,7 +116,10 @@ test.describe('Items API', { tag: ['@api', '@items'] }, () => {
   })
 
   test.describe('Show Item', () => {
-    test('should get item by id', async ({ request, authenticatedAuthClient }) => {
+    test('should get item by id', async ({
+      request,
+      authenticatedAuthClient,
+    }) => {
       // Arrange - Create an item first
       const itemClient = new ItemClient(request)
       itemClient.copyAuthStateFrom(authenticatedAuthClient)
@@ -168,7 +179,10 @@ test.describe('Items API', { tag: ['@api', '@items'] }, () => {
   })
 
   test.describe('Create Item', () => {
-    test('should create item successfully', async ({ request, authenticatedAuthClient }) => {
+    test('should create item successfully', async ({
+      request,
+      authenticatedAuthClient,
+    }) => {
       // Arrange - Create unique test item data
       const itemClient = new ItemClient(request)
       itemClient.copyAuthStateFrom(authenticatedAuthClient)
@@ -313,7 +327,10 @@ test.describe('Items API', { tag: ['@api', '@items'] }, () => {
   })
 
   test.describe('Update Item', () => {
-    test('should update item successfully', async ({ request, authenticatedAuthClient }) => {
+    test('should update item successfully', async ({
+      request,
+      authenticatedAuthClient,
+    }) => {
       // Arrange - Create an item first
       const itemClient = new ItemClient(request)
       itemClient.copyAuthStateFrom(authenticatedAuthClient)
@@ -343,7 +360,10 @@ test.describe('Items API', { tag: ['@api', '@items'] }, () => {
       await itemClient.deleteItem(itemId)
     })
 
-    test('should update item unit_price', async ({ request, authenticatedAuthClient }) => {
+    test('should update item unit_price', async ({
+      request,
+      authenticatedAuthClient,
+    }) => {
       // Arrange
       const itemClient = new ItemClient(request)
       itemClient.copyAuthStateFrom(authenticatedAuthClient)
@@ -418,7 +438,10 @@ test.describe('Items API', { tag: ['@api', '@items'] }, () => {
       })
 
       // Act
-      const response = await itemClient.updateItem(nonExistentItemId, updateData)
+      const response = await itemClient.updateItem(
+        nonExistentItemId,
+        updateData,
+      )
 
       // Assert
       expectError(response, HttpStatus.NOT_FOUND)
@@ -440,7 +463,10 @@ test.describe('Items API', { tag: ['@api', '@items'] }, () => {
   })
 
   test.describe('Delete Item', () => {
-    test('should delete item successfully', async ({ request, authenticatedAuthClient }) => {
+    test('should delete item successfully', async ({
+      request,
+      authenticatedAuthClient,
+    }) => {
       // Arrange - Create an item first
       const itemClient = new ItemClient(request)
       itemClient.copyAuthStateFrom(authenticatedAuthClient)
@@ -453,7 +479,9 @@ test.describe('Items API', { tag: ['@api', '@items'] }, () => {
       const response = await itemClient.deleteItem(itemId)
 
       // Assert - Should return 204 No Content or 200 OK
-      expect([HttpStatus.OK, HttpStatus.NO_CONTENT]).toContain(response.status())
+      expect([HttpStatus.OK, HttpStatus.NO_CONTENT]).toContain(
+        response.status(),
+      )
       expectSuccess(response)
 
       // Verify item is deleted

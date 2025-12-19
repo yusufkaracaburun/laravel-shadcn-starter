@@ -21,7 +21,9 @@ import { expect, test } from '../../fixtures'
  * Uses timestamp to ensure uniqueness
  * Note: Backend doesn't require password for customers; omit to avoid DB errors.
  */
-function createUniqueTestCustomer(baseName = 'Test Customer'): CreateCustomerRequest {
+function createUniqueTestCustomer(
+  baseName = 'Test Customer',
+): CreateCustomerRequest {
   const timestamp = Date.now()
   return {
     type: 'private',
@@ -39,13 +41,18 @@ function createUniqueTestCustomer(baseName = 'Test Customer'): CreateCustomerReq
 /**
  * Pure function: Create update data
  */
-function createUpdateData(updates: Partial<UpdateCustomerRequest>): UpdateCustomerRequest {
+function createUpdateData(
+  updates: Partial<UpdateCustomerRequest>,
+): UpdateCustomerRequest {
   return { ...updates }
 }
 
 test.describe('Customers API', { tag: ['@api', '@customers'] }, () => {
   test.describe('List Customers', () => {
-    test('should get paginated list of customers', async ({ request, authenticatedAuthClient }) => {
+    test('should get paginated list of customers', async ({
+      request,
+      authenticatedAuthClient,
+    }) => {
       // Arrange
       const customerClient = new CustomerClient(request)
       customerClient.copyAuthStateFrom(authenticatedAuthClient)
@@ -58,7 +65,8 @@ test.describe('Customers API', { tag: ['@api', '@customers'] }, () => {
       expect(response.status()).toBe(HttpStatus.OK)
 
       // Assert - Response structure matches IResponse<PaginatedCustomersResponse>
-      const customersBody = await expectIResponse<PaginatedCustomersResponse>(response)
+      const customersBody
+        = await expectIResponse<PaginatedCustomersResponse>(response)
 
       // Assert - Pagination structure
       expect(customersBody.data).toHaveProperty('data')
@@ -84,7 +92,10 @@ test.describe('Customers API', { tag: ['@api', '@customers'] }, () => {
       }
     })
 
-    test('should handle pagination parameters', async ({ request, authenticatedAuthClient }) => {
+    test('should handle pagination parameters', async ({
+      request,
+      authenticatedAuthClient,
+    }) => {
       // Arrange
       const customerClient = new CustomerClient(request)
       customerClient.copyAuthStateFrom(authenticatedAuthClient)
@@ -94,7 +105,8 @@ test.describe('Customers API', { tag: ['@api', '@customers'] }, () => {
 
       // Assert
       expectSuccess(response)
-      const customersBody = await expectIResponse<PaginatedCustomersResponse>(response)
+      const customersBody
+        = await expectIResponse<PaginatedCustomersResponse>(response)
       expect(customersBody.data.per_page).toBe(5)
       expect(customersBody.data.current_page).toBe(1)
     })
@@ -112,12 +124,16 @@ test.describe('Customers API', { tag: ['@api', '@customers'] }, () => {
   })
 
   test.describe('Show Customer', () => {
-    test('should get customer by id', async ({ request, authenticatedAuthClient }) => {
+    test('should get customer by id', async ({
+      request,
+      authenticatedAuthClient,
+    }) => {
       // Arrange - Create a customer first
       const customerClient = new CustomerClient(request)
       customerClient.copyAuthStateFrom(authenticatedAuthClient)
       const testCustomerData = createUniqueTestCustomer()
-      const createResponse = await customerClient.createCustomer(testCustomerData)
+      const createResponse
+        = await customerClient.createCustomer(testCustomerData)
       const createdCustomer = await expectIResponse<Customer>(createResponse)
       const customerId = createdCustomer.data.id
 
@@ -142,7 +158,10 @@ test.describe('Customers API', { tag: ['@api', '@customers'] }, () => {
       // Assert - Relationships are available (contacts may be omitted if empty, but count should exist)
       expect(customerBody.data).toHaveProperty('contacts_count')
       // contacts property is optional - only included when contacts exist or explicitly loaded
-      if (customerBody.data.contacts_count !== undefined && customerBody.data.contacts_count > 0) {
+      if (
+        customerBody.data.contacts_count !== undefined
+        && customerBody.data.contacts_count > 0
+      ) {
         expect(customerBody.data).toHaveProperty('contacts')
       }
       expect(customerBody.data).toHaveProperty('invoices_count')
@@ -180,7 +199,10 @@ test.describe('Customers API', { tag: ['@api', '@customers'] }, () => {
   })
 
   test.describe('Create Customer', () => {
-    test('should create customer successfully', async ({ request, authenticatedAuthClient }) => {
+    test('should create customer successfully', async ({
+      request,
+      authenticatedAuthClient,
+    }) => {
       // Arrange - Create unique test customer data
       const customerClient = new CustomerClient(request)
       customerClient.copyAuthStateFrom(authenticatedAuthClient)
@@ -242,9 +264,15 @@ test.describe('Customers API', { tag: ['@api', '@customers'] }, () => {
       }
       // Business fields may only be set if type is 'business' - check if they were saved
       if (customerBody.data.type === 'business') {
-        expect(customerBody.data.kvk_number).toBe(businessCustomerData.kvk_number)
-        expect(customerBody.data.vat_number).toBe(businessCustomerData.vat_number)
-        expect(customerBody.data.iban_number).toBe(businessCustomerData.iban_number)
+        expect(customerBody.data.kvk_number).toBe(
+          businessCustomerData.kvk_number,
+        )
+        expect(customerBody.data.vat_number).toBe(
+          businessCustomerData.vat_number,
+        )
+        expect(customerBody.data.iban_number).toBe(
+          businessCustomerData.iban_number,
+        )
       }
 
       // Cleanup
@@ -304,12 +332,16 @@ test.describe('Customers API', { tag: ['@api', '@customers'] }, () => {
   })
 
   test.describe('Update Customer', () => {
-    test('should update customer successfully', async ({ request, authenticatedAuthClient }) => {
+    test('should update customer successfully', async ({
+      request,
+      authenticatedAuthClient,
+    }) => {
       // Arrange - Create a customer first
       const customerClient = new CustomerClient(request)
       customerClient.copyAuthStateFrom(authenticatedAuthClient)
       const testCustomerData = createUniqueTestCustomer()
-      const createResponse = await customerClient.createCustomer(testCustomerData)
+      const createResponse
+        = await customerClient.createCustomer(testCustomerData)
       const createdCustomer = await expectIResponse<Customer>(createResponse)
       const customerId = createdCustomer.data.id
 
@@ -319,7 +351,10 @@ test.describe('Customers API', { tag: ['@api', '@customers'] }, () => {
       })
 
       // Act
-      const response = await customerClient.updateCustomer(customerId, updateData)
+      const response = await customerClient.updateCustomer(
+        customerId,
+        updateData,
+      )
 
       // Assert
       expectSuccess(response)
@@ -342,7 +377,8 @@ test.describe('Customers API', { tag: ['@api', '@customers'] }, () => {
       const customerClient = new CustomerClient(request)
       customerClient.copyAuthStateFrom(authenticatedAuthClient)
       const testCustomerData = createUniqueTestCustomer()
-      const createResponse = await customerClient.createCustomer(testCustomerData)
+      const createResponse
+        = await customerClient.createCustomer(testCustomerData)
       const createdCustomer = await expectIResponse<Customer>(createResponse)
       const customerId = createdCustomer.data.id
 
@@ -353,13 +389,19 @@ test.describe('Customers API', { tag: ['@api', '@customers'] }, () => {
       })
 
       // Act
-      const response = await customerClient.updateCustomer(customerId, updateData)
+      const response = await customerClient.updateCustomer(
+        customerId,
+        updateData,
+      )
 
       // Assert
       expectSuccess(response)
       const customerBody = await expectIResponse<Customer>(response)
       // Type update may not be supported or may require additional fields - check if updated
-      if (customerBody.data.type !== null && customerBody.data.type !== testCustomerData.type) {
+      if (
+        customerBody.data.type !== null
+        && customerBody.data.type !== testCustomerData.type
+      ) {
         expect(customerBody.data.type).toBe('business')
       }
       // Business fields should be updated if type is 'business'
@@ -383,7 +425,10 @@ test.describe('Customers API', { tag: ['@api', '@customers'] }, () => {
       const updateData = createUpdateData({ name: 'Updated Name' })
 
       // Act
-      const response = await customerClient.updateCustomer(nonExistentCustomerId, updateData)
+      const response = await customerClient.updateCustomer(
+        nonExistentCustomerId,
+        updateData,
+      )
 
       // Assert
       expectError(response, HttpStatus.NOT_FOUND)
@@ -403,12 +448,16 @@ test.describe('Customers API', { tag: ['@api', '@customers'] }, () => {
   })
 
   test.describe('Delete Customer', () => {
-    test('should delete customer successfully', async ({ request, authenticatedAuthClient }) => {
+    test('should delete customer successfully', async ({
+      request,
+      authenticatedAuthClient,
+    }) => {
       // Arrange - Create a customer first
       const customerClient = new CustomerClient(request)
       customerClient.copyAuthStateFrom(authenticatedAuthClient)
       const testCustomerData = createUniqueTestCustomer()
-      const createResponse = await customerClient.createCustomer(testCustomerData)
+      const createResponse
+        = await customerClient.createCustomer(testCustomerData)
       const createdCustomer = await expectIResponse<Customer>(createResponse)
       const customerId = createdCustomer.data.id
 
@@ -434,7 +483,9 @@ test.describe('Customers API', { tag: ['@api', '@customers'] }, () => {
       const nonExistentCustomerId = 999999
 
       // Act
-      const response = await customerClient.deleteCustomer(nonExistentCustomerId)
+      const response = await customerClient.deleteCustomer(
+        nonExistentCustomerId,
+      )
 
       // Assert
       expectError(response, HttpStatus.NOT_FOUND)
@@ -461,7 +512,8 @@ test.describe('Customers API', { tag: ['@api', '@customers'] }, () => {
       const customerClient = new CustomerClient(request)
       customerClient.copyAuthStateFrom(authenticatedAuthClient)
       const testCustomerData = createUniqueTestCustomer()
-      const createResponse = await customerClient.createCustomer(testCustomerData)
+      const createResponse
+        = await customerClient.createCustomer(testCustomerData)
       const createdCustomer = await expectIResponse<Customer>(createResponse)
       const customerId = createdCustomer.data.id
 
@@ -493,7 +545,8 @@ test.describe('Customers API', { tag: ['@api', '@customers'] }, () => {
       const customerClient = new CustomerClient(request)
       customerClient.copyAuthStateFrom(authenticatedAuthClient)
       const testCustomerData = createUniqueTestCustomer()
-      const createResponse = await customerClient.createCustomer(testCustomerData)
+      const createResponse
+        = await customerClient.createCustomer(testCustomerData)
       const createdCustomer = await expectIResponse<Customer>(createResponse)
       const customerId = createdCustomer.data.id
 
@@ -532,7 +585,8 @@ test.describe('Customers API', { tag: ['@api', '@customers'] }, () => {
       const customerClient = new CustomerClient(request)
       customerClient.copyAuthStateFrom(authenticatedAuthClient)
       const testCustomerData = createUniqueTestCustomer()
-      const createResponse = await customerClient.createCustomer(testCustomerData)
+      const createResponse
+        = await customerClient.createCustomer(testCustomerData)
       const createdCustomer = await expectIResponse<Customer>(createResponse)
       const customerId = createdCustomer.data.id
 

@@ -89,14 +89,19 @@ const { isMobile, open } = useSidebar()
               <BadgeCheck />
               Account
             </UiDropdownMenuItem>
-            <UiDropdownMenuItem @click="$router.push('/settings/notifications')">
+            <UiDropdownMenuItem
+              @click="$router.push('/settings/notifications')"
+            >
               <Bell />
               Notifications
             </UiDropdownMenuItem>
           </UiDropdownMenuGroup>
 
           <UiDropdownMenuSeparator />
-          <UiDropdownMenuItem data-testid="dashboard_logout_button" @click="logout">
+          <UiDropdownMenuItem
+            data-testid="dashboard_logout_button"
+            @click="logout"
+          >
             <LogOut />
             Log out
           </UiDropdownMenuItem>

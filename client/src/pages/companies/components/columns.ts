@@ -17,7 +17,8 @@ export const columns: ColumnDef<Company>[] = [
   SelectColumn as ColumnDef<Company>,
   {
     accessorKey: 'name',
-    header: ({ column }) => h(DataTableColumnHeader<Company>, { column, title: 'Name' }),
+    header: ({ column }) =>
+      h(DataTableColumnHeader<Company>, { column, title: 'Name' }),
     cell: ({ row }) => {
       const company = row.original
       const router = useRouter()
@@ -29,7 +30,10 @@ export const columns: ColumnDef<Company>[] = [
           class:
             'max-w-[500px] truncate font-medium text-left hover:underline cursor-pointer focus:outline-none focus:underline',
           onClick: () => {
-            router.push({ name: '/companies/[id]', params: { id: company.id.toString() } })
+            router.push({
+              name: '/companies/[id]',
+              params: { id: company.id.toString() },
+            })
           },
         },
         String(name || ''),
@@ -41,12 +45,17 @@ export const columns: ColumnDef<Company>[] = [
   },
   {
     accessorKey: 'industry',
-    header: ({ column }) => h(DataTableColumnHeader<Company>, { column, title: 'Industry' }),
+    header: ({ column }) =>
+      h(DataTableColumnHeader<Company>, { column, title: 'Industry' }),
     cell: ({ row }) => {
-      const industry = industries.find(industry => industry.value === row.getValue('industry'))
+      const industry = industries.find(
+        industry => industry.value === row.getValue('industry'),
+      )
 
       return h('div', { class: 'flex items-center' }, [
-        industry ? h(Badge, { variant: 'outline' }, () => industry.label) : null,
+        industry
+          ? h(Badge, { variant: 'outline' }, () => industry.label)
+          : null,
       ])
     },
     filterFn: (row, id, value) => {
@@ -55,13 +64,19 @@ export const columns: ColumnDef<Company>[] = [
   },
   {
     accessorKey: 'email',
-    header: ({ column }) => h(DataTableColumnHeader<Company>, { column, title: 'Email' }),
+    header: ({ column }) =>
+      h(DataTableColumnHeader<Company>, { column, title: 'Email' }),
     cell: ({ row }) => {
       const email = row.getValue('email')
       const emailStr = email && typeof email === 'string' ? email : ''
       return h('div', {}, [
         h('span', {}, emailStr || '—'),
-        h(Copy, { class: 'ml-2', size: 'sm', variant: 'ghost', content: emailStr }),
+        h(Copy, {
+          class: 'ml-2',
+          size: 'sm',
+          variant: 'ghost',
+          content: emailStr,
+        }),
       ])
     },
     enableSorting: true,
@@ -69,14 +84,18 @@ export const columns: ColumnDef<Company>[] = [
   },
   {
     accessorKey: 'phone',
-    header: ({ column }) => h(DataTableColumnHeader<Company>, { column, title: 'Phone' }),
+    header: ({ column }) =>
+      h(DataTableColumnHeader<Company>, { column, title: 'Phone' }),
     cell: ({ row }) => h('div', { class: 'w-[120px]' }, row.getValue('phone')),
   },
   {
     accessorKey: 'status',
-    header: ({ column }) => h(DataTableColumnHeader<Company>, { column, title: 'Status' }),
+    header: ({ column }) =>
+      h(DataTableColumnHeader<Company>, { column, title: 'Status' }),
     cell: ({ row }) => {
-      const status = statuses.find(status => status.value === row.getValue('status'))
+      const status = statuses.find(
+        status => status.value === row.getValue('status'),
+      )
 
       if (!status)
         return null
@@ -94,14 +113,19 @@ export const columns: ColumnDef<Company>[] = [
   },
   {
     accessorKey: 'employees',
-    header: ({ column }) => h(DataTableColumnHeader<Company>, { column, title: 'Employees' }),
+    header: ({ column }) =>
+      h(DataTableColumnHeader<Company>, { column, title: 'Employees' }),
     cell: ({ row }) => {
-      const employeeSize = employeeSizes.find(size => size.value === row.getValue('employees'))
+      const employeeSize = employeeSizes.find(
+        size => size.value === row.getValue('employees'),
+      )
 
       if (!employeeSize)
         return null
 
-      return h('div', { class: 'flex items-center' }, [h('span', {}, employeeSize.label)])
+      return h('div', { class: 'flex items-center' }, [
+        h('span', {}, employeeSize.label),
+      ])
     },
     filterFn: (row, id, value) => {
       return value.includes(row.getValue(id))

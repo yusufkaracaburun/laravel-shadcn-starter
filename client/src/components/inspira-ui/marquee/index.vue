@@ -33,7 +33,9 @@ withDefaults(
       :class="
         cn(
           'flex shrink-0 justify-around gap-(--gap)',
-          vertical ? 'animate-marquee-vertical flex-col' : 'animate-marquee flex-row',
+          vertical
+            ? 'animate-marquee-vertical flex-col'
+            : 'animate-marquee flex-row',
           pauseOnHover ? 'group-hover:paused' : '',
         )
       "

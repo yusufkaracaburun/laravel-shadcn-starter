@@ -1,7 +1,11 @@
 import axios from 'axios'
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
-import { useLoginMutation, useLogoutMutation, useRegisterMutation } from '@/services/auth.service'
+import {
+  useLoginMutation,
+  useLogoutMutation,
+  useRegisterMutation,
+} from '@/services/auth.service'
 
 // Mock axios
 vi.mock('axios')

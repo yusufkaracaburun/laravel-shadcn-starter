@@ -19,7 +19,9 @@ const { createCustomer, updateCustomer } = useCustomers()
 
 const formSchema = toTypedSchema(
   z.object({
-    type: z.enum(['business', 'private']).default(props.customer?.type ?? 'private'),
+    type: z
+      .enum(['business', 'private'])
+      .default(props.customer?.type ?? 'private'),
     name: z
       .string()
       .min(2, 'Name must be at least 2 characters')
@@ -83,10 +85,12 @@ const initialValues = computed(() => ({
   iban_number: props.customer?.iban_number ?? null,
 }))
 
-const { values, isFieldDirty, handleSubmit, isSubmitting, resetForm } = useForm({
-  validationSchema: formSchema,
-  initialValues: initialValues.value,
-})
+const { values, isFieldDirty, handleSubmit, isSubmitting, resetForm } = useForm(
+  {
+    validationSchema: formSchema,
+    initialValues: initialValues.value,
+  },
+)
 
 // Watch customer type to show/hide business fields
 const customerType = computed(() => values.type)
@@ -215,52 +219,92 @@ const onSubmit = handleSubmit(async (formValues) => {
       </UiFormItem>
     </FormField>
 
-    <FormField v-slot="{ componentField }" name="name" :validate-on-blur="!isFieldDirty">
+    <FormField
+      v-slot="{ componentField }"
+      name="name"
+      :validate-on-blur="!isFieldDirty"
+    >
       <UiFormItem>
         <UiFormLabel>Name</UiFormLabel>
         <UiFormControl>
-          <UiInput type="text" placeholder="Customer name" v-bind="componentField" />
+          <UiInput
+            type="text"
+            placeholder="Customer name"
+            v-bind="componentField"
+          />
         </UiFormControl>
         <UiFormMessage />
       </UiFormItem>
     </FormField>
 
-    <FormField v-slot="{ componentField }" name="email" :validate-on-blur="!isFieldDirty">
+    <FormField
+      v-slot="{ componentField }"
+      name="email"
+      :validate-on-blur="!isFieldDirty"
+    >
       <UiFormItem>
         <UiFormLabel>Email</UiFormLabel>
         <UiFormControl>
-          <UiInput type="email" placeholder="customer@example.com" v-bind="componentField" />
+          <UiInput
+            type="email"
+            placeholder="customer@example.com"
+            v-bind="componentField"
+          />
         </UiFormControl>
         <UiFormMessage />
       </UiFormItem>
     </FormField>
 
-    <FormField v-slot="{ componentField }" name="phone" :validate-on-blur="!isFieldDirty">
+    <FormField
+      v-slot="{ componentField }"
+      name="phone"
+      :validate-on-blur="!isFieldDirty"
+    >
       <UiFormItem>
         <UiFormLabel>Phone</UiFormLabel>
         <UiFormControl>
-          <UiInput type="tel" placeholder="+31 6 12345678" v-bind="componentField" />
+          <UiInput
+            type="tel"
+            placeholder="+31 6 12345678"
+            v-bind="componentField"
+          />
         </UiFormControl>
         <UiFormMessage />
       </UiFormItem>
     </FormField>
 
     <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
-      <FormField v-slot="{ componentField }" name="address" :validate-on-blur="!isFieldDirty">
+      <FormField
+        v-slot="{ componentField }"
+        name="address"
+        :validate-on-blur="!isFieldDirty"
+      >
         <UiFormItem>
           <UiFormLabel>Address</UiFormLabel>
           <UiFormControl>
-            <UiInput type="text" placeholder="Street address" v-bind="componentField" />
+            <UiInput
+              type="text"
+              placeholder="Street address"
+              v-bind="componentField"
+            />
           </UiFormControl>
           <UiFormMessage />
         </UiFormItem>
       </FormField>
 
-      <FormField v-slot="{ componentField }" name="zipcode" :validate-on-blur="!isFieldDirty">
+      <FormField
+        v-slot="{ componentField }"
+        name="zipcode"
+        :validate-on-blur="!isFieldDirty"
+      >
         <UiFormItem>
           <UiFormLabel>Zipcode</UiFormLabel>
           <UiFormControl>
-            <UiInput type="text" placeholder="1234 AB" v-bind="componentField" />
+            <UiInput
+              type="text"
+              placeholder="1234 AB"
+              v-bind="componentField"
+            />
           </UiFormControl>
           <UiFormMessage />
         </UiFormItem>
@@ -268,7 +312,11 @@ const onSubmit = handleSubmit(async (formValues) => {
     </div>
 
     <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
-      <FormField v-slot="{ componentField }" name="city" :validate-on-blur="!isFieldDirty">
+      <FormField
+        v-slot="{ componentField }"
+        name="city"
+        :validate-on-blur="!isFieldDirty"
+      >
         <UiFormItem>
           <UiFormLabel>City</UiFormLabel>
           <UiFormControl>
@@ -278,11 +326,20 @@ const onSubmit = handleSubmit(async (formValues) => {
         </UiFormItem>
       </FormField>
 
-      <FormField v-slot="{ componentField }" name="country" :validate-on-blur="!isFieldDirty">
+      <FormField
+        v-slot="{ componentField }"
+        name="country"
+        :validate-on-blur="!isFieldDirty"
+      >
         <UiFormItem>
           <UiFormLabel>Country</UiFormLabel>
           <UiFormControl>
-            <UiInput type="text" placeholder="NL" maxlength="2" v-bind="componentField" />
+            <UiInput
+              type="text"
+              placeholder="NL"
+              maxlength="2"
+              v-bind="componentField"
+            />
           </UiFormControl>
           <UiFormMessage />
         </UiFormItem>
@@ -295,27 +352,47 @@ const onSubmit = handleSubmit(async (formValues) => {
           Business Information
         </h3>
 
-        <FormField v-slot="{ componentField }" name="kvk_number" :validate-on-blur="!isFieldDirty">
+        <FormField
+          v-slot="{ componentField }"
+          name="kvk_number"
+          :validate-on-blur="!isFieldDirty"
+        >
           <UiFormItem>
             <UiFormLabel>KVK Number</UiFormLabel>
             <UiFormControl>
-              <UiInput type="text" placeholder="12345678" v-bind="componentField" />
+              <UiInput
+                type="text"
+                placeholder="12345678"
+                v-bind="componentField"
+              />
             </UiFormControl>
             <UiFormMessage />
           </UiFormItem>
         </FormField>
 
-        <FormField v-slot="{ componentField }" name="vat_number" :validate-on-blur="!isFieldDirty">
+        <FormField
+          v-slot="{ componentField }"
+          name="vat_number"
+          :validate-on-blur="!isFieldDirty"
+        >
           <UiFormItem>
             <UiFormLabel>VAT Number</UiFormLabel>
             <UiFormControl>
-              <UiInput type="text" placeholder="NL123456789B01" v-bind="componentField" />
+              <UiInput
+                type="text"
+                placeholder="NL123456789B01"
+                v-bind="componentField"
+              />
             </UiFormControl>
             <UiFormMessage />
           </UiFormItem>
         </FormField>
 
-        <FormField v-slot="{ componentField }" name="iban_number" :validate-on-blur="!isFieldDirty">
+        <FormField
+          v-slot="{ componentField }"
+          name="iban_number"
+          :validate-on-blur="!isFieldDirty"
+        >
           <UiFormItem>
             <UiFormLabel>IBAN Number</UiFormLabel>
             <UiFormControl>
@@ -333,7 +410,13 @@ const onSubmit = handleSubmit(async (formValues) => {
     </template>
 
     <UiButton type="submit" class="w-full" :disabled="isSubmitting">
-      {{ isSubmitting ? 'Submitting...' : customer ? 'Update Customer' : 'Create Customer' }}
+      {{
+        isSubmitting
+          ? 'Submitting...'
+          : customer
+            ? 'Update Customer'
+            : 'Create Customer'
+      }}
     </UiButton>
   </form>
 </template>

@@ -105,7 +105,10 @@ function handleAddItem() {
     <!-- Items management using local state -->
     <div class="space-y-4">
       <!-- Add/Edit Form -->
-      <div v-if="showAddForm || editingItemIndex !== null" class="rounded-lg border p-4">
+      <div
+        v-if="showAddForm || editingItemIndex !== null"
+        class="rounded-lg border p-4"
+      >
         <InvoiceItemForm
           :item="
             editingItemIndex !== null && editingItemIndex >= 0

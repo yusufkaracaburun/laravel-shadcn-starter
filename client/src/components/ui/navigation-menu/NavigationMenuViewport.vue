@@ -5,7 +5,9 @@ import { reactiveOmit } from '@vueuse/core'
 import { NavigationMenuViewport, useForwardProps } from 'reka-ui'
 import { cn } from '@/lib/utils'
 
-const props = defineProps<NavigationMenuViewportProps & { class?: HTMLAttributes['class'] }>()
+const props = defineProps<
+  NavigationMenuViewportProps & { class?: HTMLAttributes['class'] }
+>()
 
 const delegatedProps = reactiveOmit(props, 'class')
 

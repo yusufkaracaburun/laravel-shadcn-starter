@@ -6,7 +6,11 @@ import type { ItemFilters } from '@/services/items.service'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover'
 import { Separator } from '@/components/ui/separator'
 
 import { units, vatRates } from '../data/data'
@@ -60,7 +64,9 @@ const activeFilterCount = computed(() => {
 
 // Selected unit
 const selectedUnit = computed(() => {
-  return localFilters.value.unit ? units.find(u => u.value === localFilters.value.unit) : null
+  return localFilters.value.unit
+    ? units.find(u => u.value === localFilters.value.unit)
+    : null
 })
 
 // Selected VAT rate
@@ -101,7 +107,10 @@ function handleSearchChange(value: string) {
   applyFilters()
 }
 
-function handleDateFilterChange(type: 'created_at' | 'updated_at', value: string) {
+function handleDateFilterChange(
+  type: 'created_at' | 'updated_at',
+  value: string,
+) {
   if (value) {
     localFilters.value[type] = value
   }
@@ -150,7 +159,9 @@ function handleOpenChange(open: boolean) {
         <div class="space-y-2">
           <Label class="text-sm font-medium">Search filters</Label>
           <div class="relative">
-            <Search class="absolute left-2 top-2.5 size-4 text-muted-foreground" />
+            <Search
+              class="absolute left-2 top-2.5 size-4 text-muted-foreground"
+            />
             <Input
               v-model="searchFilter"
               placeholder="Search filters..."
@@ -174,7 +185,10 @@ function handleOpenChange(open: boolean) {
               @click="handleUnitSelect(unit.value)"
             >
               <span>{{ unit.label }}</span>
-              <Check v-if="selectedUnit?.value === unit.value" class="size-4 text-primary" />
+              <Check
+                v-if="selectedUnit?.value === unit.value"
+                class="size-4 text-primary"
+              />
             </button>
           </div>
         </div>
@@ -193,7 +207,10 @@ function handleOpenChange(open: boolean) {
               @click="handleVatRateSelect(Number(vatRate.value))"
             >
               <span>{{ vatRate.label }}</span>
-              <Check v-if="selectedVatRate?.value === vatRate.value" class="size-4 text-primary" />
+              <Check
+                v-if="selectedVatRate?.value === vatRate.value"
+                class="size-4 text-primary"
+              />
             </button>
           </div>
         </div>
@@ -206,7 +223,12 @@ function handleOpenChange(open: boolean) {
           <Input
             type="date"
             :value="localFilters.created_at || ''"
-            @input="handleDateFilterChange('created_at', ($event.target as HTMLInputElement).value)"
+            @input="
+              handleDateFilterChange(
+                'created_at',
+                ($event.target as HTMLInputElement).value,
+              )
+            "
           />
         </div>
 
@@ -215,7 +237,12 @@ function handleOpenChange(open: boolean) {
           <Input
             type="date"
             :value="localFilters.updated_at || ''"
-            @input="handleDateFilterChange('updated_at', ($event.target as HTMLInputElement).value)"
+            @input="
+              handleDateFilterChange(
+                'updated_at',
+                ($event.target as HTMLInputElement).value,
+              )
+            "
           />
         </div>
 
@@ -223,7 +250,11 @@ function handleOpenChange(open: boolean) {
 
         <!-- Clear Filters -->
         <div v-if="activeFilterCount > 0" class="pt-2">
-          <Button variant="ghost" class="w-full justify-center" @click="handleClear">
+          <Button
+            variant="ghost"
+            class="w-full justify-center"
+            @click="handleClear"
+          >
             <X class="size-4 mr-2" />
             Clear filters
           </Button>

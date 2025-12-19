@@ -10,7 +10,9 @@ export const taskSchema = z.object({
   labels: z.array(z.string()).default([]),
   priority: z.string(),
   dueDate: z.union([z.string(), z.number(), z.date(), z.null()]).optional(),
-  createdAt: z.union([z.string(), z.number(), z.date()]).default(() => new Date().toISOString()),
+  createdAt: z
+    .union([z.string(), z.number(), z.date()])
+    .default(() => new Date().toISOString()),
 })
 
 export type Task = z.infer<typeof taskSchema>

@@ -6,7 +6,13 @@ import { z } from 'zod'
 import type { User } from '@/services/users.service'
 
 import { Button } from '@/components/ui/button'
-import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import {
   Select,
@@ -46,7 +52,10 @@ const isEditMode = computed(() => !!props.user)
 const formSchema = computed(() => {
   const baseSchema = z.object({
     name: z.string().min(1, 'Name is required.'),
-    email: z.string().email('Please enter a valid email address.').min(1, 'Email is required.'),
+    email: z
+      .string()
+      .email('Please enter a valid email address.')
+      .min(1, 'Email is required.'),
     profile_photo: z.instanceof(File).optional().nullable(),
     role: z.string().optional().nullable(),
   })
@@ -55,8 +64,14 @@ const formSchema = computed(() => {
     // In edit mode, password is optional
     return baseSchema
       .extend({
-        password: z.string().min(8, 'Password must be at least 8 characters.').optional(),
-        password_confirmation: z.string().min(1, 'Please confirm your password.').optional(),
+        password: z
+          .string()
+          .min(8, 'Password must be at least 8 characters.')
+          .optional(),
+        password_confirmation: z
+          .string()
+          .min(1, 'Please confirm your password.')
+          .optional(),
       })
       .refine(
         (data) => {
@@ -104,7 +119,9 @@ const form = useForm({
 const { handleSubmit, setFieldError, resetForm } = form
 
 const profilePhotoPreview = ref<string | null>(null)
-const existingProfilePhotoUrl = computed(() => props.user?.profile_photo_url || null)
+const existingProfilePhotoUrl = computed(
+  () => props.user?.profile_photo_url || null,
+)
 
 // Watch for user changes to update form values and preview
 watch(
@@ -275,7 +292,11 @@ const onSubmit = handleSubmit(async (values) => {
       <FormItem>
         <FormLabel>Email address</FormLabel>
         <FormControl>
-          <Input type="email" v-bind="componentField" placeholder="john@example.com" />
+          <Input
+            type="email"
+            v-bind="componentField"
+            placeholder="john@example.com"
+          />
         </FormControl>
         <FormMessage />
       </FormItem>
@@ -288,7 +309,9 @@ const onSubmit = handleSubmit(async (values) => {
           <Input
             type="password"
             v-bind="componentField"
-            :placeholder="isEditMode ? 'Leave blank to keep current password' : '********'"
+            :placeholder="
+              isEditMode ? 'Leave blank to keep current password' : '********'
+            "
           />
         </FormControl>
         <FormMessage />
@@ -305,7 +328,9 @@ const onSubmit = handleSubmit(async (values) => {
           <Input
             type="password"
             v-bind="componentField"
-            :placeholder="isEditMode ? 'Leave blank to keep current password' : '********'"
+            :placeholder="
+              isEditMode ? 'Leave blank to keep current password' : '********'
+            "
           />
         </FormControl>
         <FormMessage />
@@ -321,7 +346,11 @@ const onSubmit = handleSubmit(async (values) => {
               <SelectValue placeholder="Select a role (optional)" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem v-for="role in roles" :key="role.id" :value="role.name">
+              <SelectItem
+                v-for="role in roles"
+                :key="role.id"
+                :value="role.name"
+              >
                 {{ role.name }}
               </SelectItem>
             </SelectContent>
@@ -341,9 +370,13 @@ const onSubmit = handleSubmit(async (values) => {
           <div class="space-y-2">
             <Input type="file" accept="image/*" @change="handlePhotoChange" />
             <p class="text-xs text-muted-foreground">
-              Upload a profile photo (max 2MB). Accepted formats: JPG, PNG, GIF, etc.
+              Upload a profile photo (max 2MB). Accepted formats: JPG, PNG, GIF,
+              etc.
             </p>
-            <div v-if="profilePhotoPreview || existingProfilePhotoUrl" class="mt-2">
+            <div
+              v-if="profilePhotoPreview || existingProfilePhotoUrl"
+              class="mt-2"
+            >
               <img
                 :src="(profilePhotoPreview || existingProfilePhotoUrl) ?? ''"
                 alt="Profile preview"
@@ -360,11 +393,17 @@ const onSubmit = handleSubmit(async (values) => {
       type="submit"
       class="w-full"
       :disabled="
-        isEditMode ? updateUserMutation.isPending.value : createUserMutation.isPending.value
+        isEditMode
+          ? updateUserMutation.isPending.value
+          : createUserMutation.isPending.value
       "
     >
       <UiSpinner
-        v-if="isEditMode ? updateUserMutation.isPending.value : createUserMutation.isPending.value"
+        v-if="
+          isEditMode
+            ? updateUserMutation.isPending.value
+            : createUserMutation.isPending.value
+        "
         class="mr-2"
       />
       {{ isEditMode ? 'Update User' : 'Create User' }}

@@ -3,7 +3,11 @@ import { Clock, CreditCard, Hash, Mail, User } from 'lucide-vue-next'
 import { computed, ref } from 'vue'
 
 import type { TInvoice } from '@/pages/invoices/data/schema'
-import type { IInvoiceActivity, IInvoiceEmail, IInvoicePayment } from '@/services/invoices.service'
+import type {
+  IInvoiceActivity,
+  IInvoiceEmail,
+  IInvoicePayment,
+} from '@/services/invoices.service'
 
 import {
   Accordion,
@@ -11,7 +15,12 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion'
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
 import { statuses } from '@/pages/invoices/data/data'
 import {
   formatDateForPreview,
@@ -84,10 +93,19 @@ function closeEmailDialog() {
 
 <template>
   <div class="print:max-w-none print:mx-0 print:p-0 p-4">
-    <Accordion type="single" collapsible class="w-full" default-value="item-activity">
+    <Accordion
+      type="single"
+      collapsible
+      class="w-full"
+      default-value="item-activity"
+    >
       <AccordionItem value="item-activity">
-        <AccordionTrigger class="flex items-center justify-between cursor-pointer select-none">
-          <h4 class="text-base font-semibold text-gray-900 flex items-center gap-2">
+        <AccordionTrigger
+          class="flex items-center justify-between cursor-pointer select-none"
+        >
+          <h4
+            class="text-base font-semibold text-gray-900 flex items-center gap-2"
+          >
             <Clock class="w-4 h-4 text-gray-600" />
             Activity Timeline
           </h4>
@@ -119,7 +137,9 @@ function closeEmailDialog() {
                     }}</span>
                   </div>
 
-                  <div class="flex justify-between items-start mb-1 text-xs text-gray-500">
+                  <div
+                    class="flex justify-between items-start mb-1 text-xs text-gray-500"
+                  >
                     <div class="flex items-center gap-2">
                       <User class="w-3 h-3" />
                       <span>{{ activity.causer?.name || 'System' }}</span>
@@ -134,11 +154,14 @@ function closeEmailDialog() {
                   <div
                     v-if="
                       activity.properties
-                        && Object.keys(activity.properties.attributes || {}).length > 0
+                        && Object.keys(activity.properties.attributes || {}).length
+                          > 0
                     "
                     class="mt-2 pt-2 border-t border-gray-100"
                   >
-                    <details class="text-xs rounded-md border border-gray-200 bg-white p-1 mt-2">
+                    <details
+                      class="text-xs rounded-md border border-gray-200 bg-white p-1 mt-2"
+                    >
                       <summary
                         class="cursor-pointer text-gray-700 hover:text-gray-900 font-medium p-1 -m-1"
                       >
@@ -155,11 +178,16 @@ function closeEmailDialog() {
                             <Tooltip>
                               <TooltipTrigger as-child>
                                 <span class="ml-1">{{
-                                  typeof value === 'object' ? JSON.stringify(value) : value
+                                  typeof value === 'object'
+                                    ? JSON.stringify(value)
+                                    : value
                                 }}</span>
                               </TooltipTrigger>
                               <TooltipContent>
-                                <p>Old Value: {{ activity.properties.old?.[key] }}</p>
+                                <p>
+                                  Old Value:
+                                  {{ activity.properties.old?.[key] }}
+                                </p>
                               </TooltipContent>
                             </Tooltip>
                           </TooltipProvider>
@@ -175,8 +203,12 @@ function closeEmailDialog() {
       </AccordionItem>
 
       <AccordionItem value="item-payments">
-        <AccordionTrigger class="flex items-center justify-between cursor-pointer select-none">
-          <h4 class="text-base font-semibold text-gray-900 flex items-center gap-2">
+        <AccordionTrigger
+          class="flex items-center justify-between cursor-pointer select-none"
+        >
+          <h4
+            class="text-base font-semibold text-gray-900 flex items-center gap-2"
+          >
             <CreditCard class="w-4 h-4 text-gray-600" />
             Payments
           </h4>
@@ -210,14 +242,18 @@ function closeEmailDialog() {
                       :class="`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${getPaymentStatusColor(payment.status)}`"
                     >
                       <component
-                        :is="statuses.find((s) => s.value === payment.status)?.icon"
+                        :is="
+                          statuses.find((s) => s.value === payment.status)?.icon
+                        "
                         class="w-3 h-3 mr-1"
                       />
                       {{ payment.status_formatted?.label || payment.status }}
                     </div>
                   </div>
 
-                  <div class="flex justify-between items-start mb-1 text-xs text-gray-500">
+                  <div
+                    class="flex justify-between items-start mb-1 text-xs text-gray-500"
+                  >
                     <div class="flex items-center gap-2">
                       <Hash class="w-3 h-3" />
                       <span>{{ payment.payment_number }}</span>
@@ -230,7 +266,9 @@ function closeEmailDialog() {
 
                   <!-- Show properties changes if available -->
                   <div class="mt-2 pt-2 border-t border-gray-100">
-                    <details class="text-xs rounded-md border border-gray-200 bg-white p-1 mt-2">
+                    <details
+                      class="text-xs rounded-md border border-gray-200 bg-white p-1 mt-2"
+                    >
                       <summary
                         class="cursor-pointer text-gray-700 hover:text-gray-900 font-medium p-1 -m-1"
                       >
@@ -241,8 +279,13 @@ function closeEmailDialog() {
                           <span class="font-medium">ID:</span>
                           <span>{{ payment.id }}</span>
 
-                          <span v-if="payment.payment_number" class="font-medium">Payment Number:</span>
-                          <span v-if="payment.payment_number">{{ payment.payment_number }}</span>
+                          <span
+                            v-if="payment.payment_number"
+                            class="font-medium"
+                          >Payment Number:</span>
+                          <span v-if="payment.payment_number">{{
+                            payment.payment_number
+                          }}</span>
 
                           <span class="font-medium">Date:</span>
                           <span>{{ formatDate(payment.date) }}</span>
@@ -251,21 +294,32 @@ function closeEmailDialog() {
                           <span>{{ formatCurrency(payment.amount) }}</span>
 
                           <span v-if="payment.method" class="font-medium">Method:</span>
-                          <span v-if="payment.method">{{ payment.method }}</span>
+                          <span v-if="payment.method">{{
+                            payment.method
+                          }}</span>
 
                           <span v-if="payment.provider" class="font-medium">Provider:</span>
-                          <span v-if="payment.provider">{{ payment.provider }}</span>
+                          <span v-if="payment.provider">{{
+                            payment.provider
+                          }}</span>
 
-                          <span v-if="payment.provider_reference" class="font-medium">Provider Reference:</span>
+                          <span
+                            v-if="payment.provider_reference"
+                            class="font-medium"
+                          >Provider Reference:</span>
                           <span v-if="payment.provider_reference">{{
                             payment.provider_reference
                           }}</span>
 
                           <span class="font-medium">Status:</span>
-                          <span>{{ payment.status_formatted?.label || payment.status }}</span>
+                          <span>{{
+                            payment.status_formatted?.label || payment.status
+                          }}</span>
 
                           <span v-if="payment.paid_at" class="font-medium">Paid At:</span>
-                          <span v-if="payment.paid_at">{{ formatDateTime(payment.paid_at) }}</span>
+                          <span v-if="payment.paid_at">{{
+                            formatDateTime(payment.paid_at)
+                          }}</span>
 
                           <span v-if="payment.refunded_at" class="font-medium">Refunded At:</span>
                           <span v-if="payment.refunded_at">{{
@@ -289,8 +343,12 @@ function closeEmailDialog() {
       </AccordionItem>
 
       <AccordionItem value="item-emails">
-        <AccordionTrigger class="flex items-center justify-between cursor-pointer select-none">
-          <h4 class="text-base font-semibold text-gray-900 flex items-center gap-2">
+        <AccordionTrigger
+          class="flex items-center justify-between cursor-pointer select-none"
+        >
+          <h4
+            class="text-base font-semibold text-gray-900 flex items-center gap-2"
+          >
             <Mail class="w-4 h-4 text-gray-600" />
             Emails
           </h4>
@@ -325,7 +383,9 @@ function closeEmailDialog() {
                   </div>
 
                   <div class="mt-2 pt-2 border-t border-gray-100">
-                    <details class="text-xs rounded-md border border-gray-200 bg-white p-1 mt-2">
+                    <details
+                      class="text-xs rounded-md border border-gray-200 bg-white p-1 mt-2"
+                    >
                       <summary
                         class="cursor-pointer text-gray-700 hover:text-gray-900 font-medium p-1 -m-1"
                       >
@@ -350,7 +410,11 @@ function closeEmailDialog() {
                         </div>
                       </div>
                       <div class="mt-4 pt-4 border-t border-gray-100">
-                        <Button variant="outline" size="sm" @click="openEmailDialog(email)">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          @click="openEmailDialog(email)"
+                        >
                           View Full Email
                         </Button>
                       </div>

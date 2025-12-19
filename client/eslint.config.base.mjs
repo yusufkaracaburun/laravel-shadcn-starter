@@ -24,7 +24,13 @@ export default antfu({
     '**/lib/**',
     '**/components/ui/**',
   ],
-  ignores: ['**/node_modules/**', '**/dist/**', '**/build/**', '**/lib/**', '**/components/ui/**'],
+  ignores: [
+    '**/node_modules/**',
+    '**/dist/**',
+    '**/build/**',
+    '**/lib/**',
+    '**/components/ui/**',
+  ],
   settings: {
     'import/core-modules': ['vue-router/auto-routes'],
   },

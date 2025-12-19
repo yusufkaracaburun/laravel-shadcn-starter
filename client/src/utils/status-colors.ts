@@ -4,16 +4,37 @@
  */
 
 export type PriorityValue = 'low' | 'medium' | 'high'
-export type ProjectStatusValue = 'active' | 'completed' | 'on-hold' | 'cancelled'
-export type TaskStatusValue = 'backlog' | 'todo' | 'in progress' | 'done' | 'canceled'
+export type ProjectStatusValue
+  = | 'active'
+    | 'completed'
+    | 'on-hold'
+    | 'cancelled'
+export type TaskStatusValue
+  = | 'backlog'
+    | 'todo'
+    | 'in progress'
+    | 'done'
+    | 'canceled'
 export type CompanyStatusValue = 'active' | 'inactive' | 'pending'
-export type InvoiceStatusValue = 'draft' | 'sent' | 'paid' | 'overdue' | 'cancelled'
-export type PaymentStatusValue = 'pending' | 'paid' | 'failed' | 'refunded' | 'cancelled'
+export type InvoiceStatusValue
+  = | 'draft'
+    | 'sent'
+    | 'paid'
+    | 'overdue'
+    | 'cancelled'
+export type PaymentStatusValue
+  = | 'pending'
+    | 'paid'
+    | 'failed'
+    | 'refunded'
+    | 'cancelled'
 /**
  * Get priority color class
  * Matches the kanban view color scheme
  */
-export function getPriorityColor(priority: PriorityValue | string | undefined): string {
+export function getPriorityColor(
+  priority: PriorityValue | string | undefined,
+): string {
   if (!priority)
     return 'text-muted-foreground'
 
@@ -33,7 +54,9 @@ export function getPriorityColor(priority: PriorityValue | string | undefined): 
  * Get project status color class
  * Returns badge-style background colors for project statuses
  */
-export function getProjectStatusColor(status: ProjectStatusValue | string | undefined): string {
+export function getProjectStatusColor(
+  status: ProjectStatusValue | string | undefined,
+): string {
   if (!status)
     return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300'
 
@@ -55,7 +78,9 @@ export function getProjectStatusColor(status: ProjectStatusValue | string | unde
  * Get task status color class
  * Returns badge-style background colors for task statuses
  */
-export function getTaskStatusColor(status: TaskStatusValue | string | undefined): string {
+export function getTaskStatusColor(
+  status: TaskStatusValue | string | undefined,
+): string {
   if (!status)
     return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300'
 
@@ -79,7 +104,9 @@ export function getTaskStatusColor(status: TaskStatusValue | string | undefined)
  * Get company status color class
  * Returns badge-style background colors for company statuses
  */
-export function getCompanyStatusColor(status: CompanyStatusValue | string | undefined): string {
+export function getCompanyStatusColor(
+  status: CompanyStatusValue | string | undefined,
+): string {
   if (!status)
     return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300'
 
@@ -99,7 +126,9 @@ export function getCompanyStatusColor(status: CompanyStatusValue | string | unde
  * Get invoice status color class
  * Returns badge-style background colors for invoice statuses
  */
-export function getInvoiceStatusColor(status: InvoiceStatusValue | string | undefined): string {
+export function getInvoiceStatusColor(
+  status: InvoiceStatusValue | string | undefined,
+): string {
   if (!status)
     return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300'
 
@@ -121,7 +150,9 @@ export function getInvoiceStatusColor(status: InvoiceStatusValue | string | unde
   }
 }
 
-export function getPaymentStatusColor(status: PaymentStatusValue | string | undefined): string {
+export function getPaymentStatusColor(
+  status: PaymentStatusValue | string | undefined,
+): string {
   if (!status)
     return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300'
 

@@ -28,7 +28,11 @@ const props = defineProps<IProps>()
     </CardHeader>
     <CardContent>
       <div v-if="props.payments.length > 0" class="space-y-4">
-        <div v-for="payment in props.payments" :key="payment.id" class="space-y-2">
+        <div
+          v-for="payment in props.payments"
+          :key="payment.id"
+          class="space-y-2"
+        >
           <div class="flex items-center justify-between">
             <div class="flex items-center gap-2">
               <span class="text-sm font-medium text-foreground">
@@ -44,15 +48,22 @@ const props = defineProps<IProps>()
               {{ formatDate(payment.date) }}
             </span>
           </div>
-          <div v-if="payment.method" class="flex items-center gap-2 text-xs text-muted-foreground">
+          <div
+            v-if="payment.method"
+            class="flex items-center gap-2 text-xs text-muted-foreground"
+          >
             <span>Method:</span>
             <span class="font-medium">{{ payment.method }}</span>
           </div>
-          <Separator v-if="payment !== props.payments[props.payments.length - 1]" />
+          <Separator
+            v-if="payment !== props.payments[props.payments.length - 1]"
+          />
         </div>
       </div>
       <div v-else class="py-8 text-center">
-        <div class="inline-flex items-center justify-center size-10 rounded-full bg-muted mb-3">
+        <div
+          class="inline-flex items-center justify-center size-10 rounded-full bg-muted mb-3"
+        >
           <CreditCard class="size-5 text-muted-foreground" />
         </div>
         <p class="text-sm font-medium text-muted-foreground">

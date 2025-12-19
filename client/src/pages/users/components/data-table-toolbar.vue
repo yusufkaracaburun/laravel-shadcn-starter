@@ -19,7 +19,9 @@ interface DataTableToolbarProps {
 
 const props = defineProps<DataTableToolbarProps>()
 
-const isFiltered = computed(() => props.table.getState().columnFilters.length > 0)
+const isFiltered = computed(
+  () => props.table.getState().columnFilters.length > 0,
+)
 
 // Fetch roles for the filter
 const { data: rolesResponse } = useGetRolesQuery()
@@ -43,7 +45,9 @@ const roleOptions = computed<FacetedFilterOption[]>(() => {
     >
       <Input
         placeholder="Filter users by name..."
-        :model-value="(table.getColumn('name')?.getFilterValue() as string) ?? ''"
+        :model-value="
+          (table.getColumn('name')?.getFilterValue() as string) ?? ''
+        "
         class="h-8 w-[150px] lg:w-[250px]"
         @input="table.getColumn('name')?.setFilterValue($event.target.value)"
       />

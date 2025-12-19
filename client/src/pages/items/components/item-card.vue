@@ -24,7 +24,9 @@ interface Props {
 const props = defineProps<Props>()
 const router = useRouter()
 
-const showComponent = shallowRef<typeof ItemResourceDialog | typeof ItemDelete | null>(null)
+const showComponent = shallowRef<
+  typeof ItemResourceDialog | typeof ItemDelete | null
+>(null)
 const isDialogOpen = ref(false)
 
 type TCommand = 'view' | 'edit' | 'delete'
@@ -32,7 +34,10 @@ type TCommand = 'view' | 'edit' | 'delete'
 function handleSelect(command: TCommand) {
   switch (command) {
     case 'view':
-      router.push({ name: '/items/[id]', params: { id: props.item.id.toString() } })
+      router.push({
+        name: '/items/[id]',
+        params: { id: props.item.id.toString() },
+      })
       break
     case 'edit':
       showComponent.value = ItemResourceDialog
@@ -46,7 +51,9 @@ function handleSelect(command: TCommand) {
 }
 
 // Format price - handles both Money object and number
-function formatPrice(price: number | { formatted: string } | undefined): string {
+function formatPrice(
+  price: number | { formatted: string } | undefined,
+): string {
   if (!price)
     return '$0.00'
   // Handle Money object from backend
@@ -67,7 +74,9 @@ function formatPrice(price: number | { formatted: string } | undefined): string 
 <template>
   <Card
     class="hover:shadow-md transition-shadow cursor-pointer"
-    @click="router.push({ name: '/items/[id]', params: { id: item.id.toString() } })"
+    @click="
+      router.push({ name: '/items/[id]', params: { id: item.id.toString() } })
+    "
   >
     <CardHeader>
       <div class="flex items-start justify-between">
@@ -91,7 +100,10 @@ function formatPrice(price: number | { formatted: string } | undefined): string 
             <UiDropdownMenuItem @click.stop="handleSelect('edit')">
               Edit
             </UiDropdownMenuItem>
-            <UiDropdownMenuItem class="text-destructive" @click.stop="handleSelect('delete')">
+            <UiDropdownMenuItem
+              class="text-destructive"
+              @click.stop="handleSelect('delete')"
+            >
               Delete
             </UiDropdownMenuItem>
           </UiDropdownMenuContent>
@@ -127,7 +139,11 @@ function formatPrice(price: number | { formatted: string } | undefined): string 
 
     <UiDialog v-model:open="isDialogOpen">
       <UiDialogContent v-if="showComponent" class="sm:max-w-[425px]">
-        <component :is="showComponent" :item="item" @close="isDialogOpen = false" />
+        <component
+          :is="showComponent"
+          :item="item"
+          @close="isDialogOpen = false"
+        />
       </UiDialogContent>
     </UiDialog>
   </Card>

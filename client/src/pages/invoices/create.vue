@@ -38,7 +38,9 @@ const customers = computed(() => {
     return []
   // Handle both array format and ResourceCollection format ({ data: [...] })
   const customersData = prerequisites.value.customers
-  return Array.isArray(customersData) ? customersData : ((customersData as any).data ?? [])
+  return Array.isArray(customersData)
+    ? customersData
+    : ((customersData as any).data ?? [])
 })
 
 const formRef = ref<InstanceType<typeof InvoiceForm> | null>(null)
@@ -51,7 +53,9 @@ const currentFormValues = ref<TInvoice>({
   invoice_number: prerequisites.value?.next_invoice_number ?? null,
   date: new Date().toISOString().split('T')[0], // Current date
   due_days: 30,
-  date_due: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0], // 30 days from now
+  date_due: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
+    .toISOString()
+    .split('T')[0], // 30 days from now
   status: 'draft',
   subtotal: { amount: '0.00', currency: 'EUR', formatted: '€0.00' },
   total_vat_0: { amount: '0.00', currency: 'EUR', formatted: '€0.00' },

@@ -9,7 +9,9 @@ defineOptions({
   inheritAttrs: false,
 })
 
-const props = defineProps<MenubarSubContentProps & { class?: HTMLAttributes['class'] }>()
+const props = defineProps<
+  MenubarSubContentProps & { class?: HTMLAttributes['class'] }
+>()
 const emits = defineEmits<MenubarSubContentEmits>()
 
 const delegatedProps = reactiveOmit(props, 'class')

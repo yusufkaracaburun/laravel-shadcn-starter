@@ -13,7 +13,9 @@ import type { Task } from '../data/schema'
 import { priorities, statuses } from '../data/data'
 import DataTableRowActions from './data-table-row-actions.vue'
 
-function getLabelVariant(label: string): 'default' | 'secondary' | 'destructive' | 'outline' {
+function getLabelVariant(
+  label: string,
+): 'default' | 'secondary' | 'destructive' | 'outline' {
   const normalizedLabel = label.toLowerCase()
   if (normalizedLabel === 'bug')
     return 'destructive'
@@ -28,22 +30,29 @@ export const columns: ColumnDef<Task>[] = [
   SelectColumn as ColumnDef<Task>,
   {
     accessorKey: 'id',
-    header: ({ column }) => h(DataTableColumnHeader<Task>, { column, title: 'Task' }),
+    header: ({ column }) =>
+      h(DataTableColumnHeader<Task>, { column, title: 'Task' }),
     cell: ({ row }) => h('div', { class: 'w-20' }, row.getValue('id')),
     enableSorting: false,
     enableHiding: false,
   },
   {
     accessorKey: 'title',
-    header: ({ column }) => h(DataTableColumnHeader<Task>, { column, title: 'Title' }),
+    header: ({ column }) =>
+      h(DataTableColumnHeader<Task>, { column, title: 'Title' }),
 
     cell: ({ row }) => {
-      return h('span', { class: 'max-w-[500px] truncate font-medium' }, row.getValue('title'))
+      return h(
+        'span',
+        { class: 'max-w-[500px] truncate font-medium' },
+        row.getValue('title'),
+      )
     },
   },
   {
     accessorKey: 'description',
-    header: ({ column }) => h(DataTableColumnHeader<Task>, { column, title: 'Description' }),
+    header: ({ column }) =>
+      h(DataTableColumnHeader<Task>, { column, title: 'Description' }),
     cell: ({ row }) => {
       const description = row.original.description
       if (!description)
@@ -58,7 +67,8 @@ export const columns: ColumnDef<Task>[] = [
   },
   {
     accessorKey: 'labels',
-    header: ({ column }) => h(DataTableColumnHeader<Task>, { column, title: 'Labels' }),
+    header: ({ column }) =>
+      h(DataTableColumnHeader<Task>, { column, title: 'Labels' }),
     cell: ({ row }) => {
       const taskLabels = row.original.labels || []
       if (taskLabels.length === 0)
@@ -79,10 +89,13 @@ export const columns: ColumnDef<Task>[] = [
   },
   {
     accessorKey: 'status',
-    header: ({ column }) => h(DataTableColumnHeader<Task>, { column, title: 'Status' }),
+    header: ({ column }) =>
+      h(DataTableColumnHeader<Task>, { column, title: 'Status' }),
 
     cell: ({ row }) => {
-      const status = statuses.find(status => status.value === row.getValue('status'))
+      const status = statuses.find(
+        status => status.value === row.getValue('status'),
+      )
 
       if (!status)
         return null
@@ -100,15 +113,19 @@ export const columns: ColumnDef<Task>[] = [
   },
   {
     accessorKey: 'priority',
-    header: ({ column }) => h(DataTableColumnHeader<Task>, { column, title: 'Priority' }),
+    header: ({ column }) =>
+      h(DataTableColumnHeader<Task>, { column, title: 'Priority' }),
     cell: ({ row }) => {
-      const priority = priorities.find(priority => priority.value === row.getValue('priority'))
+      const priority = priorities.find(
+        priority => priority.value === row.getValue('priority'),
+      )
 
       if (!priority)
         return null
 
       return h('div', { class: 'flex items-center gap-2' }, [
-        priority.icon && h(priority.icon, { class: `h-4 w-4 ${priority.color}` }),
+        priority.icon
+        && h(priority.icon, { class: `h-4 w-4 ${priority.color}` }),
         h('span', { class: priority.color }, priority.label),
       ])
     },
@@ -118,7 +135,8 @@ export const columns: ColumnDef<Task>[] = [
   },
   {
     accessorKey: 'dueDate',
-    header: ({ column }) => h(DataTableColumnHeader<Task>, { column, title: 'Due Date' }),
+    header: ({ column }) =>
+      h(DataTableColumnHeader<Task>, { column, title: 'Due Date' }),
     cell: ({ row }) => {
       const dueDate = row.original.dueDate
       if (!dueDate)

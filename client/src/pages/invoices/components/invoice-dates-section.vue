@@ -1,5 +1,11 @@
 <script setup lang="ts">
-import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 
 interface IProps {
@@ -18,7 +24,11 @@ withDefaults(defineProps<IProps>(), {
     </h3>
 
     <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
-      <FormField v-slot="{ componentField }" name="date" :validate-on-blur="!isFieldDirty">
+      <FormField
+        v-slot="{ componentField }"
+        name="date"
+        :validate-on-blur="!isFieldDirty"
+      >
         <FormItem>
           <FormLabel>Invoice Date</FormLabel>
           <FormControl>
@@ -28,7 +38,11 @@ withDefaults(defineProps<IProps>(), {
         </FormItem>
       </FormField>
 
-      <FormField v-slot="{ componentField }" name="due_days" :validate-on-blur="!isFieldDirty">
+      <FormField
+        v-slot="{ componentField }"
+        name="due_days"
+        :validate-on-blur="!isFieldDirty"
+      >
         <FormItem>
           <FormLabel>Due Days</FormLabel>
           <FormControl>
@@ -38,7 +52,11 @@ withDefaults(defineProps<IProps>(), {
         </FormItem>
       </FormField>
 
-      <FormField v-slot="{ componentField }" name="date_due" :validate-on-blur="!isFieldDirty">
+      <FormField
+        v-slot="{ componentField }"
+        name="date_due"
+        :validate-on-blur="!isFieldDirty"
+      >
         <FormItem>
           <FormLabel>Due Date</FormLabel>
           <FormControl>

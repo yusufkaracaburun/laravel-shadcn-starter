@@ -12,7 +12,8 @@ import AuthTitle from './components/auth-title.vue'
             Forgot Password
           </UiCardTitle>
           <UiCardDescription>
-            Enter your registered email and we will send you a link to reset your password.
+            Enter your registered email and we will send you a link to reset
+            your password.
           </UiCardDescription>
         </UiCardHeader>
         <UiCardContent>
@@ -21,7 +22,12 @@ import AuthTitle from './components/auth-title.vue'
               <UiLabel for="email">
                 Email
               </UiLabel>
-              <UiInput id="email" type="email" placeholder="m@example.com" required />
+              <UiInput
+                id="email"
+                type="email"
+                placeholder="m@example.com"
+                required
+              />
             </div>
 
             <UiButton class="w-full">

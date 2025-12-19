@@ -1,4 +1,8 @@
-import type { IServerPagination, TPageSize } from '@/components/data-table/types'
+import { useRoute } from 'vue-router'
+
+import type {
+  TPageSize,
+} from '@/components/data-table/types'
 import type {
   ICreateInvoiceRequest,
   IInvoice,
@@ -37,6 +41,7 @@ export function useInvoices() {
   const toast = useToast()
   const errorStore = useErrorStore()
   const invoiceService = useInvoiceService()
+  const route = useRoute()
 
   const page = ref<number>(DEFAULT_PAGE)
   const pageSize = ref<TPageSize>(DEFAULT_PAGE_SIZE)
@@ -74,14 +79,17 @@ export function useInvoices() {
     pageSize.value = newPageSize
   }
 
-  const getInvoicePrerequisitesQuery = invoiceService.getInvoicePrerequisitesQuery()
+  const getInvoicePrerequisitesQuery
+    = invoiceService.getInvoicePrerequisitesQuery()
   async function fetchInvoicePrerequisites() {
     try {
       const response = await getInvoicePrerequisitesQuery.refetch()
       return response.data
     }
     catch (error: any) {
-      errorStore.setError(error, { context: InvoiceContext.FETCH_INVOICE_PREREQUISITES })
+      errorStore.setError(error, {
+        context: InvoiceContext.FETCH_INVOICE_PREREQUISITES,
+      })
       const message = errorStore.getErrorMessage(error)
       toast.showError(message)
       throw error
@@ -95,7 +103,12 @@ export function useInvoices() {
     filter,
     ref([includes.customer]),
   )
-  const { data: invoicesData, isLoading, isFetching, refetch: fetchInvoices } = getInvoicesQuery
+  const {
+    data: invoicesData,
+    isLoading,
+    isFetching,
+    refetch: fetchInvoices,
+  } = getInvoicesQuery
   const invoices = computed(() => invoicesData.value?.data.data ?? [])
   async function fetchInvoicesData(): Promise<IPaginatedResponse<IInvoice>> {
     try {
@@ -110,26 +123,35 @@ export function useInvoices() {
     }
   }
 
-  // const invoiceId = computed(() => {
-  //   if (!route) {
-  //     return undefined
-  //   }
-  //   return Number((route.params as { id: string }).id as string)
-  // })
-  // const getInvoiceByIdQuery = invoiceService.getInvoiceByIdQuery(invoiceId.value, [includes.customer, includes.items])
-  // const { data: invoiceByIdResponse, isLoading: isLoadingInvoiceById, isError: isErrorInvoiceById, error: errorInvoiceById, refetch: refetchInvoiceById } = getInvoiceByIdQuery
-  // async function fetchInvoiceById() {
-  //   try {
-  //     const response = await refetchInvoiceById()
-  //     return response.data
-  //   }
-  //   catch (error: any) {
-  //     errorStore.setError(error, { context: InvoiceContext.GET_INVOICE_BY_ID })
-  //     const message = errorStore.getErrorMessage(error)
-  //     toast.showError(message)
-  //     throw error
-  //   }
-  // }
+  const invoiceId = computed(() => {
+    if (!route) {
+      return undefined
+    }
+    return Number((route.params as { id: string }).id as string)
+  })
+  const getInvoiceByIdQuery = invoiceService.getInvoiceByIdQuery(
+    invoiceId,
+    ref([includes.customer, includes.items]),
+  )
+  const {
+    data: invoiceByIdResponse,
+    isLoading: isLoadingInvoiceById,
+    isError: isErrorInvoiceById,
+    error: errorInvoiceById,
+    refetch: refetchInvoiceById,
+  } = getInvoiceByIdQuery
+  async function fetchInvoiceById() {
+    try {
+      const response = await refetchInvoiceById()
+      return response.data
+    }
+    catch (error: any) {
+      errorStore.setError(error, { context: InvoiceContext.GET_INVOICE_BY_ID })
+      const message = errorStore.getErrorMessage(error)
+      toast.showError(message)
+      throw error
+    }
+  }
 
   const getInvoiceMutation = invoiceService.getInvoiceMutation()
   async function getInvoice(id: number) {
@@ -214,7 +236,9 @@ export function useInvoices() {
       toast.showSuccess(InvoiceMessages.DOWNLOAD_INVOICE_PDF_SUCCESS)
     }
     catch (error: any) {
-      errorStore.setError(error, { context: InvoiceContext.DOWNLOAD_INVOICE_PDF })
+      errorStore.setError(error, {
+        context: InvoiceContext.DOWNLOAD_INVOICE_PDF,
+      })
       toast.showError(errorStore.getErrorMessage(error))
       throw error
     }

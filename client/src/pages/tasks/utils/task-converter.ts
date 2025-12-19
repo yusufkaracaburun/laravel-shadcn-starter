@@ -29,7 +29,8 @@ export function tableTaskToKanbanTask(task: TableTask): KanbanTask {
     title: task.title,
     description: task.description,
     priority: task.priority as 'low' | 'medium' | 'high' | undefined,
-    status: statusToColumnId[task.status.toLowerCase()] || task.status.toLowerCase(),
+    status:
+      statusToColumnId[task.status.toLowerCase()] || task.status.toLowerCase(),
     labels: task.labels || [],
     dueDate: task.dueDate,
     createdAt: task.createdAt || new Date().toISOString(),

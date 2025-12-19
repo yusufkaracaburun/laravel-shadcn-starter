@@ -3,7 +3,13 @@ import { VisArea, VisAxis, VisLine, VisXYContainer } from '@unovis/vue'
 
 import type { ChartConfig } from '@/components/ui/chart'
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
 import {
   ChartContainer,
   ChartCrosshair,
@@ -149,7 +155,9 @@ const filterRange = computed(() => {
     data-testid="analytics-content_metrics_grid"
   >
     <UiCard data-testid="analytics-content_page-views_card">
-      <UiCardHeader class="flex flex-row items-center justify-between pb-2 space-y-0">
+      <UiCardHeader
+        class="flex flex-row items-center justify-between pb-2 space-y-0"
+      >
         <UiCardTitle class="text-sm font-medium">
           Page Views
         </UiCardTitle>
@@ -177,7 +185,9 @@ const filterRange = computed(() => {
       </UiCardContent>
     </UiCard>
     <UiCard data-testid="analytics-content_unique-visitors_card">
-      <UiCardHeader class="flex flex-row items-center justify-between pb-2 space-y-0">
+      <UiCardHeader
+        class="flex flex-row items-center justify-between pb-2 space-y-0"
+      >
         <UiCardTitle class="text-sm font-medium">
           Unique Visitors
         </UiCardTitle>
@@ -206,7 +216,9 @@ const filterRange = computed(() => {
       </UiCardContent>
     </UiCard>
     <UiCard data-testid="analytics-content_bounce-rate_card">
-      <UiCardHeader class="flex flex-row items-center justify-between pb-2 space-y-0">
+      <UiCardHeader
+        class="flex flex-row items-center justify-between pb-2 space-y-0"
+      >
         <UiCardTitle class="text-sm font-medium">
           Bounce Rate
         </UiCardTitle>
@@ -234,7 +246,9 @@ const filterRange = computed(() => {
       </UiCardContent>
     </UiCard>
     <UiCard data-testid="analytics-content_avg-session_card">
-      <UiCardHeader class="flex flex-row items-center justify-between pb-2 space-y-0">
+      <UiCardHeader
+        class="flex flex-row items-center justify-between pb-2 space-y-0"
+      >
         <UiCardTitle class="text-sm font-medium">
           Avg Session Duration
         </UiCardTitle>
@@ -264,15 +278,23 @@ const filterRange = computed(() => {
   </div>
 
   <div class="grid grid-cols-1 gap-4 lg:grid-cols-7">
-    <Card class="col-span-1 lg:col-span-7 pt-0" data-testid="analytics-content_chart_card">
-      <CardHeader class="flex items-center gap-2 space-y-0 border-b py-5 sm:flex-row">
+    <Card
+      class="col-span-1 lg:col-span-7 pt-0"
+      data-testid="analytics-content_chart_card"
+    >
+      <CardHeader
+        class="flex items-center gap-2 space-y-0 border-b py-5 sm:flex-row"
+      >
         <div class="grid flex-1 gap-1">
           <CardTitle>Analytics Overview</CardTitle>
           <CardDescription>
             Showing page views and unique visitors for the last 3 months
           </CardDescription>
         </div>
-        <Select v-model="timeRange" data-testid="analytics-content_time-range_select">
+        <Select
+          v-model="timeRange"
+          data-testid="analytics-content_time-range_select"
+        >
           <SelectTrigger
             class="hidden w-[160px] rounded-lg sm:ml-auto sm:flex"
             aria-label="Select a value"
@@ -306,7 +328,10 @@ const filterRange = computed(() => {
           >
             <VisArea
               :x="(d: AnalyticsData) => d.date"
-              :y="[(d: AnalyticsData) => d.uniqueVisitors, (d: AnalyticsData) => d.pageViews]"
+              :y="[
+                (d: AnalyticsData) => d.uniqueVisitors,
+                (d: AnalyticsData) => d.pageViews,
+              ]"
               :color="
                 (_d: AnalyticsData, i: number) =>
                   ['url(#fillUniqueVisitors)', 'url(#fillPageViews)'][i]
@@ -315,12 +340,16 @@ const filterRange = computed(() => {
             />
             <VisLine
               :x="(d: AnalyticsData) => d.date"
-              :y="[(d: AnalyticsData) => d.uniqueVisitors, (d: AnalyticsData) => d.pageViews]"
+              :y="[
+                (d: AnalyticsData) => d.uniqueVisitors,
+                (d: AnalyticsData) => d.pageViews,
+              ]"
               :color="
                 (_d: AnalyticsData, i: number) =>
-                  [analyticsChartConfig.uniqueVisitors.color, analyticsChartConfig.pageViews.color][
-                    i
-                  ]
+                  [
+                    analyticsChartConfig.uniqueVisitors.color,
+                    analyticsChartConfig.pageViews.color,
+                  ][i]
               "
               :line-width="1"
             />
@@ -341,7 +370,12 @@ const filterRange = computed(() => {
                 }
               "
             />
-            <VisAxis type="y" :num-ticks="3" :tick-line="false" :domain-line="false" />
+            <VisAxis
+              type="y"
+              :num-ticks="3"
+              :tick-line="false"
+              :domain-line="false"
+            />
             <ChartTooltip />
             <ChartCrosshair
               :template="
@@ -356,9 +390,10 @@ const filterRange = computed(() => {
               "
               :color="
                 (_d: AnalyticsData, i: number) =>
-                  [analyticsChartConfig.uniqueVisitors.color, analyticsChartConfig.pageViews.color][
-                    i % 2
-                  ]
+                  [
+                    analyticsChartConfig.uniqueVisitors.color,
+                    analyticsChartConfig.pageViews.color,
+                  ][i % 2]
               "
             />
           </VisXYContainer>

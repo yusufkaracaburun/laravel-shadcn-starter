@@ -45,7 +45,9 @@ export function generateVueTable<T>(props: IDataTableProps<T>) {
 
   const pageCount = computed(() => {
     if (useServerPagination && props.serverPagination) {
-      return Math.ceil(props.serverPagination.total / props.serverPagination.pageSize)
+      return Math.ceil(
+        props.serverPagination.total / props.serverPagination.pageSize,
+      )
     }
     return -1
   })
@@ -69,9 +71,12 @@ export function generateVueTable<T>(props: IDataTableProps<T>) {
       },
     },
     enableRowSelection: true,
-    onColumnFiltersChange: updaterOrValue => valueUpdater(updaterOrValue, columnFilters),
-    onColumnVisibilityChange: updaterOrValue => valueUpdater(updaterOrValue, columnVisibility),
-    onRowSelectionChange: updaterOrValue => valueUpdater(updaterOrValue, rowSelection),
+    onColumnFiltersChange: updaterOrValue =>
+      valueUpdater(updaterOrValue, columnFilters),
+    onColumnVisibilityChange: updaterOrValue =>
+      valueUpdater(updaterOrValue, columnVisibility),
+    onRowSelectionChange: updaterOrValue =>
+      valueUpdater(updaterOrValue, rowSelection),
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),

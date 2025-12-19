@@ -1,5 +1,12 @@
 <script setup lang="ts">
-import { BadgeCheck, Bell, CreditCard, LogOut, Sparkles, UserRoundCog } from 'lucide-vue-next'
+import {
+  BadgeCheck,
+  Bell,
+  CreditCard,
+  LogOut,
+  Sparkles,
+  UserRoundCog,
+} from 'lucide-vue-next'
 import { storeToRefs } from 'pinia'
 import { computed } from 'vue'
 
@@ -114,7 +121,10 @@ const sidebarUser = computed<SidebarUser>(() => {
       </UiDropdownMenuGroup>
 
       <UiDropdownMenuSeparator />
-      <UiDropdownMenuItem data-testid="default-layout_logout_button" @click="logout">
+      <UiDropdownMenuItem
+        data-testid="default-layout_logout_button"
+        @click="logout"
+      >
         <LogOut />
         Log out
       </UiDropdownMenuItem>

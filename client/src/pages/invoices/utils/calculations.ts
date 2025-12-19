@@ -26,7 +26,9 @@ export function calculateItemTotals(
 /**
  * Extract numeric value from Money object or number
  */
-function extractMoneyValue(value: number | { amount?: string, formatted?: string }): number {
+function extractMoneyValue(
+  value: number | { amount?: string, formatted?: string },
+): number {
   if (typeof value === 'number') {
     return value
   }
@@ -70,7 +72,9 @@ export function calculateInvoiceTotals(
     const itemTotalInclVat = extractMoneyValue(item.total_incl_vat)
     // Ensure vat_rate is a number for comparison
     const vatRate
-      = typeof item.vat_rate === 'string' ? Number.parseFloat(item.vat_rate) : Number(item.vat_rate)
+      = typeof item.vat_rate === 'string'
+        ? Number.parseFloat(item.vat_rate)
+        : Number(item.vat_rate)
 
     subtotal += itemTotalExclVat
 

@@ -12,7 +12,10 @@ import type {
   IUpdateInvoiceRequest,
 } from '@/pages/invoices/models/invoice'
 import type { ISorting } from '@/services/query-utils'
-import type { IPaginatedResponse, IResponse } from '@/services/types/response.type'
+import type {
+  IPaginatedResponse,
+  IResponse,
+} from '@/services/types/response.type'
 
 import { useAxios } from '@/composables/use-axios'
 
@@ -70,7 +73,9 @@ export function useInvoiceService() {
         }
 
         console.error('getInvoicesQuery', params)
-        const response = await axiosInstance.get(`${API_URL}${buildQueryString(params)}`)
+        const response = await axiosInstance.get(
+          `${API_URL}${buildQueryString(params)}`,
+        )
         return response.data
       },
       staleTime: STALE_TIME,
@@ -80,26 +85,35 @@ export function useInvoiceService() {
   }
 
   function getInvoiceByIdQuery(
-    id: number,
-    includes?: string[],
+    id: Ref<number | undefined>,
+    includes?: Ref<string[] | undefined>,
   ): ReturnType<typeof useQuery<IResponse<IInvoice>, AxiosError>> {
     return useQuery({
       queryKey: [QueryKeys.GET_INVOICE_BY_ID, id, includes],
       queryFn: async () => {
-        const response = await axiosInstance.get(`${API_URL}/${id}`, {
-          params: { include: includes?.join(',') ?? '' },
+        const response = await axiosInstance.get(`${API_URL}/${id.value}`, {
+          params: { include: includes?.value?.join(',') ?? '' },
         })
         return response.data
       },
       staleTime: STALE_TIME,
+      enabled: computed(() => id.value !== undefined),
       ...defaultAxiosQueryOptions(),
     })
   }
 
   function getInvoiceMutation(): ReturnType<
-    typeof useMutation<IResponse<IInvoice>, AxiosError, { id: number, includes?: string[] }>
+    typeof useMutation<
+      IResponse<IInvoice>,
+      AxiosError,
+      { id: number, includes?: string[] }
+    >
   > {
-    return useMutation<IResponse<IInvoice>, AxiosError, { id: number, includes?: string[] }>({
+    return useMutation<
+      IResponse<IInvoice>,
+      AxiosError,
+      { id: number, includes?: string[] }
+    >({
       mutationKey: [QueryKeys.GET_INVOICE],
       mutationFn: async ({ id, includes }): Promise<IResponse<IInvoice>> => {
         const response = await axiosInstance.get(`${API_URL}/${id}`, {
@@ -109,7 +123,9 @@ export function useInvoiceService() {
       },
       onSuccess: (_, variables) => {
         queryClient.invalidateQueries({ queryKey: [QueryKeys.INVOICE_LIST] })
-        queryClient.invalidateQueries({ queryKey: [QueryKeys.GET_INVOICE, variables.id] })
+        queryClient.invalidateQueries({
+          queryKey: [QueryKeys.GET_INVOICE, variables.id],
+        })
       },
       onError: (error) => {
         console.error('Get invoice error:', error)
@@ -122,7 +138,9 @@ export function useInvoiceService() {
   > {
     return useMutation<IResponse<IInvoice>, AxiosError, ICreateInvoiceRequest>({
       mutationKey: [QueryKeys.CREATE_INVOICE],
-      mutationFn: async (data: ICreateInvoiceRequest): Promise<IResponse<IInvoice>> => {
+      mutationFn: async (
+        data: ICreateInvoiceRequest,
+      ): Promise<IResponse<IInvoice>> => {
         const response = await axiosInstance.post(`${API_URL}`, data)
         return response.data
       },
@@ -136,7 +154,11 @@ export function useInvoiceService() {
   }
 
   function updateInvoiceMutation(): ReturnType<
-    typeof useMutation<IResponse<IInvoice>, AxiosError, { id: number, data: IUpdateInvoiceRequest }>
+    typeof useMutation<
+      IResponse<IInvoice>,
+      AxiosError,
+      { id: number, data: IUpdateInvoiceRequest }
+    >
   > {
     return useMutation<
       IResponse<IInvoice>,
@@ -150,7 +172,9 @@ export function useInvoiceService() {
       },
       onSuccess: (_, variables) => {
         queryClient.invalidateQueries({ queryKey: [QueryKeys.INVOICE_LIST] })
-        queryClient.invalidateQueries({ queryKey: [QueryKeys.GET_INVOICE, variables.id] })
+        queryClient.invalidateQueries({
+          queryKey: [QueryKeys.GET_INVOICE, variables.id],
+        })
       },
       onError: (error) => {
         console.error('Update invoice error:', error)
@@ -158,7 +182,9 @@ export function useInvoiceService() {
     })
   }
 
-  function deleteInvoiceMutation(): ReturnType<typeof useMutation<void, AxiosError, number>> {
+  function deleteInvoiceMutation(): ReturnType<
+    typeof useMutation<void, AxiosError, number>
+  > {
     return useMutation<void, AxiosError, number>({
       mutationKey: [QueryKeys.DELETE_INVOICE],
       mutationFn: async (id: number): Promise<void> => {
@@ -179,7 +205,11 @@ export function useInvoiceService() {
     return useMutation<AxiosResponse<Blob>, AxiosError, number>({
       mutationKey: [QueryKeys.DOWNLOAD_INVOICE_PDF],
       mutationFn: (id: number) =>
-        axiosInstance.post(`${API_URL}/${id}/pdf`, {}, { responseType: 'blob' }),
+        axiosInstance.post(
+          `${API_URL}/${id}/pdf`,
+          {},
+          { responseType: 'blob' },
+        ),
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: [QueryKeys.INVOICE_LIST] })
       },

@@ -18,17 +18,27 @@ function handleComplete(e: string[]) {
             Two-Factor Authentication
           </UiCardTitle>
           <UiCardDescription>
-            Please enter the authentication code.We have sent the authentication code to your email.
+            Please enter the authentication code.We have sent the authentication
+            code to your email.
           </UiCardDescription>
         </UiCardHeader>
         <UiCardContent>
           <div class="grid gap-4">
             <div class="grid items-center justify-center gap-2">
-              <UiPinInput id="pin-input" v-model="value" placeholder="○" @complete="handleComplete">
+              <UiPinInput
+                id="pin-input"
+                v-model="value"
+                placeholder="○"
+                @complete="handleComplete"
+              >
                 <span class="text-xl">SA</span>
                 <span>-</span>
                 <UiPinInputGroup>
-                  <UiPinInputInput v-for="(id, index) in 6" :key="id" :index="index" />
+                  <UiPinInputInput
+                    v-for="(id, index) in 6"
+                    :key="id"
+                    :index="index"
+                  />
                 </UiPinInputGroup>
               </UiPinInput>
             </div>

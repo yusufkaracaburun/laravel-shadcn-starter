@@ -16,7 +16,9 @@ interface DataTableFacetedFilter {
 const props = defineProps<DataTableFacetedFilter>()
 
 const facets = computed(() => props.column?.getFacetedUniqueValues())
-const selectedValues = computed(() => new Set(props.column?.getFilterValue() as string[]))
+const selectedValues = computed(
+  () => new Set(props.column?.getFilterValue() as string[]),
+)
 function filterFunction(list: DataTableFacetedFilter['options'], term: string) {
   return list.filter(i => i.label.toLowerCase()?.includes(term))
 }
@@ -30,7 +32,10 @@ function filterFunction(list: DataTableFacetedFilter['options'], term: string) {
         {{ title }}
         <template v-if="selectedValues.size > 0">
           <UiSeparator orientation="vertical" class="h-4 mx-2" />
-          <UiBadge variant="secondary" class="px-1 font-normal rounded-sm lg:hidden">
+          <UiBadge
+            variant="secondary"
+            class="px-1 font-normal rounded-sm lg:hidden"
+          >
             {{ selectedValues.size }}
           </UiBadge>
           <div class="hidden space-x-1 lg:flex">
@@ -44,7 +49,9 @@ function filterFunction(list: DataTableFacetedFilter['options'], term: string) {
 
             <template v-else>
               <UiBadge
-                v-for="option in options.filter((option) => selectedValues.has(option.value))"
+                v-for="option in options.filter((option) =>
+                  selectedValues.has(option.value),
+                )"
                 :key="option.value"
                 variant="secondary"
                 class="px-1 font-normal rounded-sm"
@@ -77,7 +84,9 @@ function filterFunction(list: DataTableFacetedFilter['options'], term: string) {
                     selectedValues.add(option.value)
                   }
                   const filterValues = Array.from(selectedValues)
-                  column?.setFilterValue(filterValues.length ? filterValues : undefined)
+                  column?.setFilterValue(
+                    filterValues.length ? filterValues : undefined,
+                  )
                 }
               "
             >
@@ -93,7 +102,12 @@ function filterFunction(list: DataTableFacetedFilter['options'], term: string) {
               >
                 <Check
                   :class="
-                    cn('h-4 w-4', selectedValues.has(option.value) ? 'text-primary-foreground' : '')
+                    cn(
+                      'h-4 w-4',
+                      selectedValues.has(option.value)
+                        ? 'text-primary-foreground'
+                        : '',
+                    )
                   "
                 />
               </div>

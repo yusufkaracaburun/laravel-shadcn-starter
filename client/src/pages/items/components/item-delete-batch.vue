@@ -33,7 +33,9 @@ async function handleConfirm() {
   }
 
   const rowsToDelete = selectedRows.value
-  const itemIds = rowsToDelete.map(row => (row.original as Item).id).filter(id => id != null)
+  const itemIds = rowsToDelete
+    .map(row => (row.original as Item).id)
+    .filter(id => id != null)
 
   if (itemIds.length === 0) {
     toast.error('No valid items selected for deletion.')

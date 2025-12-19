@@ -12,7 +12,10 @@ const props = defineProps<DataTableViewOptionsProps>()
 const columns = computed(() =>
   props.table
     .getAllColumns()
-    .filter(column => typeof column.accessorFn !== 'undefined' && column.getCanHide()),
+    .filter(
+      column =>
+        typeof column.accessorFn !== 'undefined' && column.getCanHide(),
+    ),
 )
 
 function resetColumnVisible() {
@@ -37,7 +40,9 @@ function resetColumnVisible() {
         :key="column.id"
         class="capitalize"
         :model-value="column.getIsVisible()"
-        @update:model-value="(value: boolean) => column.toggleVisibility(!!value)"
+        @update:model-value="
+          (value: boolean) => column.toggleVisibility(!!value)
+        "
       >
         {{ column.id }}
       </UiDropdownMenuCheckboxItem>

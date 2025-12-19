@@ -2,7 +2,8 @@ import type { APIRequestContext, APIResponse } from '@playwright/test'
 
 import process from 'node:process'
 
-const apiURL = process.env.PLAYWRIGHT_TEST_API_URL || 'https://api.skeleton:8890'
+const apiURL
+  = process.env.PLAYWRIGHT_TEST_API_URL || 'https://api.skeleton:8890'
 
 export interface LoginCredentials {
   email: string
@@ -28,7 +29,9 @@ export interface CsrfData {
 /**
  * Pure function: Creates headers object without side effects
  */
-export function createHeaders(customHeaders?: Record<string, string>): Record<string, string> {
+export function createHeaders(
+  customHeaders?: Record<string, string>,
+): Record<string, string> {
   return {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
@@ -47,7 +50,9 @@ export function buildUrl(endpoint: string): string {
 /**
  * Pure function: Extracts cookie values from header
  */
-export function extractCookieValue(cookieHeader: string | string[] | undefined): string[] {
+export function extractCookieValue(
+  cookieHeader: string | string[] | undefined,
+): string[] {
   let cookies: string[] = []
   if (Array.isArray(cookieHeader)) {
     cookies = cookieHeader
@@ -104,7 +109,9 @@ export function buildAuthenticatedHeaders(
  * Playwright's APIRequestContext automatically maintains cookies between requests
  * Includes retry logic for rate limiting (429 errors)
  */
-export async function getCsrfCookie(request: APIRequestContext): Promise<APIResponse> {
+export async function getCsrfCookie(
+  request: APIRequestContext,
+): Promise<APIResponse> {
   const headers: Record<string, string> = createHeaders()
 
   // Retry logic for rate limiting
@@ -157,7 +164,9 @@ export async function getCsrfTokenAndCookies(
     headers.Cookie = sessionCookies
   }
 
-  const csrfResponse = await request.get(buildUrl('/sanctum/csrf-cookie'), { headers })
+  const csrfResponse = await request.get(buildUrl('/sanctum/csrf-cookie'), {
+    headers,
+  })
   const csrfCookieHeader = csrfResponse.headers()['set-cookie']
 
   // Extract XSRF token from cookies for the X-XSRF-TOKEN header
@@ -266,7 +275,10 @@ export interface RequestOptions {
  */
 export function apiRequest(request: APIRequestContext) {
   return {
-    get: async (endpoint: string, options?: RequestOptions): Promise<APIResponse> => {
+    get: async (
+      endpoint: string,
+      options?: RequestOptions,
+    ): Promise<APIResponse> => {
       return request.get(buildUrl(endpoint), {
         headers: createHeaders(options?.headers),
       })
@@ -294,7 +306,10 @@ export function apiRequest(request: APIRequestContext) {
       })
     },
 
-    delete: async (endpoint: string, options?: RequestOptions): Promise<APIResponse> => {
+    delete: async (
+      endpoint: string,
+      options?: RequestOptions,
+    ): Promise<APIResponse> => {
       return request.delete(buildUrl(endpoint), {
         headers: createHeaders(options?.headers),
       })
@@ -361,7 +376,9 @@ export function createAuthApi(request: APIRequestContext) {
         })
 
         // Rebuild cookie string, ensuring proper format
-        sessionCookies = Array.from(cookieMap.values()).filter(Boolean).join('; ')
+        sessionCookies = Array.from(cookieMap.values())
+          .filter(Boolean)
+          .join('; ')
       }
     }
   }
@@ -399,7 +416,9 @@ export function createAuthApi(request: APIRequestContext) {
         const baseDelay = 300
         const exponentialDelay = baseDelay * 2 ** (attempt - 1)
         const jitter = Math.random() * 200
-        await new Promise(resolve => setTimeout(resolve, exponentialDelay + jitter))
+        await new Promise(resolve =>
+          setTimeout(resolve, exponentialDelay + jitter),
+        )
       }
 
       const response = await fn()
@@ -499,7 +518,10 @@ export async function registerUser(
     throw new Error('Failed to extract XSRF-TOKEN from CSRF cookie response')
   }
 
-  const headers = buildAuthenticatedHeaders({ token: xsrfToken, cookies: cookieString })
+  const headers = buildAuthenticatedHeaders({
+    token: xsrfToken,
+    cookies: cookieString,
+  })
 
   return request.post(buildUrl('/register'), {
     data,

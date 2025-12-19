@@ -44,7 +44,9 @@ function onSubmit() {
     <UiDialogContent>
       <UiDialogHeader>
         <UiDialogTitle>Import Companies</UiDialogTitle>
-        <UiDialogDescription> Import companies quickly from a CSV file. </UiDialogDescription>
+        <UiDialogDescription>
+          Import companies quickly from a CSV file.
+        </UiDialogDescription>
       </UiDialogHeader>
 
       <div class="grid w-full max-w-sm items-center gap-1.5">

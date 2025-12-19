@@ -24,7 +24,10 @@ type TCommand = 'view' | 'edit' | 'delete'
 function handleSelect(command: TCommand) {
   switch (command) {
     case 'view':
-      router.push({ name: '/items/[id]', params: { id: item.value.id.toString() } })
+      router.push({
+        name: '/items/[id]',
+        params: { id: item.value.id.toString() },
+      })
       break
     case 'edit':
       showComponent.value = ItemResourceDialog
@@ -58,7 +61,10 @@ const isOpen = ref(false)
           <FilePenLine class="mr-2 size-4" />
           Edit
         </UiDropdownMenuItem>
-        <UiDropdownMenuItem class="text-destructive" @click="handleSelect('delete')">
+        <UiDropdownMenuItem
+          class="text-destructive"
+          @click="handleSelect('delete')"
+        >
           <Trash2 class="mr-2 size-4" />
           Delete
         </UiDropdownMenuItem>

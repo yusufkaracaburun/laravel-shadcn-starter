@@ -7,7 +7,8 @@ import CompanyCreate from './components/company-create.vue'
 import CompanyImport from './components/company-import.vue'
 import DataTable from './components/data-table.vue'
 
-const { loading, companies, serverPagination, sorting, onSortingChange } = useCompanies()
+const { loading, companies, serverPagination, sorting, onSortingChange }
+  = useCompanies()
 </script>
 
 <template>

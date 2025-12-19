@@ -7,7 +7,9 @@ import { cn } from '@/lib/utils'
 import { buttonVariants } from '@/components/ui/button'
 
 const props = withDefaults(
-  defineProps<RangeCalendarCellTriggerProps & { class?: HTMLAttributes['class'] }>(),
+  defineProps<
+    RangeCalendarCellTriggerProps & { class?: HTMLAttributes['class'] }
+  >(),
   {
     as: 'button',
   },

@@ -9,7 +9,11 @@ import type { ComputedRef } from 'vue'
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 
-import type { IInvoiceActivity, IInvoiceEmail, IInvoicePayment } from '@/services/invoices.service'
+import type {
+  IInvoiceActivity,
+  IInvoiceEmail,
+  IInvoicePayment,
+} from '@/services/invoices.service'
 
 import Error from '@/components/custom-error.vue'
 import Page from '@/components/global-layout/basic-page.vue'
@@ -34,7 +38,9 @@ const {
   include: ['items', 'payments', 'activities', 'emails'],
 })
 
-const invoice = computed(() => invoiceResponse.value?.data ?? null) as ComputedRef<
+const invoice = computed(
+  () => invoiceResponse.value?.data ?? null,
+) as ComputedRef<
   | (TInvoice & {
     payments?: IInvoicePayment[]
     activities?: IInvoiceActivity[]
@@ -53,7 +59,9 @@ const pdfUrl = computed(
   <Page
     :title="invoice ? invoice.invoice_number : 'Invoice Details'"
     :description="
-      invoice ? `View details for ${invoice.invoice_number}` : 'Loading invoice information...'
+      invoice
+        ? `View details for ${invoice.invoice_number}`
+        : 'Loading invoice information...'
     "
   >
     <template #actions>
@@ -62,11 +70,17 @@ const pdfUrl = computed(
 
     <DocumentLayout>
       <template #main-content>
-        <div v-if="isLoading" class="flex items-center justify-center min-h-[400px]">
+        <div
+          v-if="isLoading"
+          class="flex items-center justify-center min-h-[400px]"
+        >
           <Loading />
         </div>
 
-        <div v-else-if="isError" class="flex items-center justify-center min-h-[400px]">
+        <div
+          v-else-if="isError"
+          class="flex items-center justify-center min-h-[400px]"
+        >
           <div class="text-center">
             <Error
               :code="(error as any)?.response?.status || 500"
@@ -82,11 +96,17 @@ const pdfUrl = computed(
           </div>
         </div>
 
-        <div v-else-if="invoice" class="flex flex-1 flex-col items-center justify-center">
+        <div
+          v-else-if="invoice"
+          class="flex flex-1 flex-col items-center justify-center"
+        >
           <div class="w-full flex flex-row">
             <div class="flex-1">
               <div v-if="pdfUrl" style="height: calc(100vh - 16px)">
-                <iframe :src="pdfUrl" style="width: 100%; height: 100%; border: 0" />
+                <iframe
+                  :src="pdfUrl"
+                  style="width: 100%; height: 100%; border: 0"
+                />
               </div>
             </div>
             <div class="w-1/4 min-h-screen border-l border-gray-200">

@@ -42,13 +42,21 @@ function formatDate(dateString: string | null | undefined): string {
     const [day, month, year] = datePart.split('-')
     if (day && month && year && year.length === 4) {
       const date = new Date(`${year}-${month}-${day} ${timePart}`)
-      return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })
+      return date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+      })
     }
   }
   // Try parsing as "Y-m-d" format
   const date = new Date(dateString)
   if (!Number.isNaN(date.getTime())) {
-    return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+    })
   }
   return dateString
 }
@@ -57,7 +65,8 @@ export const columns: ColumnDef<TInvoice>[] = [
   SelectColumn as ColumnDef<TInvoice>,
   {
     accessorKey: 'invoice_number',
-    header: ({ column }) => h(DataTableColumnHeader<TInvoice>, { column, title: 'Invoice Number' }),
+    header: ({ column }) =>
+      h(DataTableColumnHeader<TInvoice>, { column, title: 'Invoice Number' }),
     cell: ({ row }) => {
       const invoice = row.original
       const router = useRouter()
@@ -70,7 +79,10 @@ export const columns: ColumnDef<TInvoice>[] = [
           class:
             'w-32 font-medium text-left hover:underline cursor-pointer focus:outline-none focus:underline',
           onClick: () => {
-            router.push({ name: '/invoices/[id]', params: { id: invoice.id.toString() } })
+            router.push({
+              name: '/invoices/[id]',
+              params: { id: invoice.id.toString() },
+            })
           },
         },
         displayNumber,
@@ -81,7 +93,8 @@ export const columns: ColumnDef<TInvoice>[] = [
   },
   {
     accessorKey: 'customer',
-    header: ({ column }) => h(DataTableColumnHeader<Invoice>, { column, title: 'Customer' }),
+    header: ({ column }) =>
+      h(DataTableColumnHeader<Invoice>, { column, title: 'Customer' }),
     cell: ({ row }) => {
       const invoice = row.original
       const router = useRouter()
@@ -91,7 +104,8 @@ export const columns: ColumnDef<TInvoice>[] = [
         return h('div', { class: 'w-[150px] text-muted-foreground' }, '-')
       }
 
-      const customerName = (customer as any).name || `Customer #${invoice.customer_id}`
+      const customerName
+        = (customer as any).name || `Customer #${invoice.customer_id}`
 
       return h(
         'button',
@@ -99,14 +113,18 @@ export const columns: ColumnDef<TInvoice>[] = [
           class:
             'flex items-center gap-2 max-w-[200px] truncate font-medium text-left hover:underline cursor-pointer focus:outline-none focus:underline',
           onClick: () => {
-            router.push({ name: '/customers/[id]', params: { id: invoice.customer_id.toString() } })
+            router.push({
+              name: '/customers/[id]',
+              params: { id: invoice.customer_id.toString() },
+            })
           },
         },
         [
           h(
             'div',
             {
-              class: 'flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-muted',
+              class:
+                'flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-muted',
             },
             [h(FileText, { class: 'h-4 w-4 text-muted-foreground' })],
           ),
@@ -118,7 +136,8 @@ export const columns: ColumnDef<TInvoice>[] = [
   },
   {
     accessorKey: 'date',
-    header: ({ column }) => h(DataTableColumnHeader<Invoice>, { column, title: 'Date' }),
+    header: ({ column }) =>
+      h(DataTableColumnHeader<Invoice>, { column, title: 'Date' }),
     cell: ({ row }) => {
       const dateValue = row.getValue('date') as string | null | undefined
       return h('div', { class: 'w-[100px]' }, formatDate(dateValue))
@@ -127,7 +146,8 @@ export const columns: ColumnDef<TInvoice>[] = [
   },
   {
     accessorKey: 'date_due',
-    header: ({ column }) => h(DataTableColumnHeader<Invoice>, { column, title: 'Due Date' }),
+    header: ({ column }) =>
+      h(DataTableColumnHeader<Invoice>, { column, title: 'Due Date' }),
     cell: ({ row }) => {
       const dateValue = row.getValue('date_due') as string | null | undefined
       return h('div', { class: 'w-[100px]' }, formatDate(dateValue))
@@ -136,7 +156,8 @@ export const columns: ColumnDef<TInvoice>[] = [
   },
   {
     accessorKey: 'status',
-    header: ({ column }) => h(DataTableColumnHeader<Invoice>, { column, title: 'Status' }),
+    header: ({ column }) =>
+      h(DataTableColumnHeader<Invoice>, { column, title: 'Status' }),
     cell: ({ row }) => {
       const statusValue = row.getValue('status') as string
       const status = statuses.find(s => s.value === statusValue)
@@ -153,7 +174,8 @@ export const columns: ColumnDef<TInvoice>[] = [
   },
   {
     accessorKey: 'total',
-    header: ({ column }) => h(DataTableColumnHeader<Invoice>, { column, title: 'Total' }),
+    header: ({ column }) =>
+      h(DataTableColumnHeader<Invoice>, { column, title: 'Total' }),
     cell: ({ row }) => {
       const total = row.getValue('total')
       return h('div', { class: 'w-[100px] font-medium' }, formatMoney(total))
@@ -162,10 +184,15 @@ export const columns: ColumnDef<TInvoice>[] = [
   },
   {
     accessorKey: 'created_at',
-    header: ({ column }) => h(DataTableColumnHeader<Invoice>, { column, title: 'Created At' }),
+    header: ({ column }) =>
+      h(DataTableColumnHeader<Invoice>, { column, title: 'Created At' }),
     cell: ({ row }) => {
       const dateValue = row.getValue('created_at') as string | null | undefined
-      return h('div', { class: 'w-[100px] text-muted-foreground' }, formatDate(dateValue))
+      return h(
+        'div',
+        { class: 'w-[100px] text-muted-foreground' },
+        formatDate(dateValue),
+      )
     },
     enableSorting: true,
   },

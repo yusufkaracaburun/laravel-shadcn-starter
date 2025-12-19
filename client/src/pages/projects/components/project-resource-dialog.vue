@@ -9,7 +9,9 @@ const props = defineProps<{
 defineEmits(['close'])
 
 const project = computed(() => props.project)
-const title = computed(() => (project.value?.id ? `Edit Project` : 'New Project'))
+const title = computed(() =>
+  project.value?.id ? `Edit Project` : 'New Project',
+)
 const description = computed(() =>
   project.value?.id ? `Edit project ${project.value.id}` : 'Create new project',
 )

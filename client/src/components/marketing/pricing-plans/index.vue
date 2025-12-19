@@ -90,7 +90,9 @@ const plans = computed<Plan[]>(() => [
     <h4 class="text-center text-xl">
       {{ $t('marketing.pricingPlans.subtitle') }}
     </h4>
-    <div class="flex flex-col lg:flex-row lg:items-start items-center justify-center gap-4 mt-8">
+    <div
+      class="flex flex-col lg:flex-row lg:items-start items-center justify-center gap-4 mt-8"
+    >
       <UiCard
         v-for="plan in plans"
         :key="plan.id"
@@ -111,7 +113,10 @@ const plans = computed<Plan[]>(() => [
             {{ plan.unit }}
             <span class="text-4xl">{{ plan.price }}</span>
           </div>
-          <div v-if="plan.discount" class="text-sm font-bold line-through text-neutral-400">
+          <div
+            v-if="plan.discount"
+            class="text-sm font-bold line-through text-neutral-400"
+          >
             {{ plan.unit }}{{ plan.discount }}
           </div>
         </div>

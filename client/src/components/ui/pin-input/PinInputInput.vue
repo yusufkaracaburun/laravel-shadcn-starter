@@ -5,7 +5,9 @@ import { PinInputInput, useForwardProps } from 'reka-ui'
 import { computed } from 'vue'
 import { cn } from '@/lib/utils'
 
-const props = defineProps<PinInputInputProps & { class?: HTMLAttributes['class'] }>()
+const props = defineProps<
+  PinInputInputProps & { class?: HTMLAttributes['class'] }
+>()
 
 const delegatedProps = computed(() => {
   const { class: _, ...delegated } = props

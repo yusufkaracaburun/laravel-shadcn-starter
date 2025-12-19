@@ -9,9 +9,18 @@ import { toast } from 'vue-sonner'
  */
 type PromiseToastData<T = any> = Omit<ExternalToast, 'description'> & {
   loading?: string | Component
-  success?: string | Component | ((data: T) => string | Component | Promise<string | Component>)
-  error?: string | Component | ((error: any) => string | Component | Promise<string | Component>)
-  description?: string | Component | ((data: T) => string | Component | Promise<string | Component>)
+  success?:
+    | string
+    | Component
+    | ((data: T) => string | Component | Promise<string | Component>)
+  error?:
+    | string
+    | Component
+    | ((error: any) => string | Component | Promise<string | Component>)
+  description?:
+    | string
+    | Component
+    | ((data: T) => string | Component | Promise<string | Component>)
   finally?: () => void | Promise<void>
 }
 
@@ -80,7 +89,15 @@ function getDefaultToastOptions(): ExternalToast {
  * Get toast config for a specific type
  */
 function getToastConfig(
-  type: 'normal' | 'action' | 'success' | 'error' | 'warning' | 'info' | 'loading' | 'default',
+  type:
+    | 'normal'
+    | 'action'
+    | 'success'
+    | 'error'
+    | 'warning'
+    | 'info'
+    | 'loading'
+    | 'default',
 ): ExternalToast {
   return { ...toastConfig[type] }
 }

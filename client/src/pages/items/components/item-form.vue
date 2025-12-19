@@ -124,17 +124,29 @@ const onSubmit = handleSubmit(async (values) => {
 
 <template>
   <form class="space-y-4" @submit="onSubmit">
-    <FormField v-slot="{ componentField }" name="name" :validate-on-blur="!isFieldDirty">
+    <FormField
+      v-slot="{ componentField }"
+      name="name"
+      :validate-on-blur="!isFieldDirty"
+    >
       <UiFormItem>
         <UiFormLabel>Name</UiFormLabel>
         <UiFormControl>
-          <UiInput type="text" placeholder="Item name" v-bind="componentField" />
+          <UiInput
+            type="text"
+            placeholder="Item name"
+            v-bind="componentField"
+          />
         </UiFormControl>
         <UiFormMessage />
       </UiFormItem>
     </FormField>
 
-    <FormField v-slot="{ componentField }" name="description" :validate-on-blur="!isFieldDirty">
+    <FormField
+      v-slot="{ componentField }"
+      name="description"
+      :validate-on-blur="!isFieldDirty"
+    >
       <UiFormItem>
         <UiFormLabel>Description</UiFormLabel>
         <UiFormControl>
@@ -144,17 +156,31 @@ const onSubmit = handleSubmit(async (values) => {
       </UiFormItem>
     </FormField>
 
-    <FormField v-slot="{ componentField }" name="unit_price" :validate-on-blur="!isFieldDirty">
+    <FormField
+      v-slot="{ componentField }"
+      name="unit_price"
+      :validate-on-blur="!isFieldDirty"
+    >
       <UiFormItem>
         <UiFormLabel>Unit Price</UiFormLabel>
         <UiFormControl>
-          <UiInput type="number" step="0.01" min="0" placeholder="0.00" v-bind="componentField" />
+          <UiInput
+            type="number"
+            step="0.01"
+            min="0"
+            placeholder="0.00"
+            v-bind="componentField"
+          />
         </UiFormControl>
         <UiFormMessage />
       </UiFormItem>
     </FormField>
 
-    <FormField v-slot="{ componentField }" name="vat_rate" :validate-on-blur="!isFieldDirty">
+    <FormField
+      v-slot="{ componentField }"
+      name="vat_rate"
+      :validate-on-blur="!isFieldDirty"
+    >
       <UiFormItem>
         <UiFormLabel>VAT Rate (%)</UiFormLabel>
         <UiFormControl>
@@ -171,7 +197,11 @@ const onSubmit = handleSubmit(async (values) => {
       </UiFormItem>
     </FormField>
 
-    <FormField v-slot="{ componentField }" name="unit" :validate-on-blur="!isFieldDirty">
+    <FormField
+      v-slot="{ componentField }"
+      name="unit"
+      :validate-on-blur="!isFieldDirty"
+    >
       <UiFormItem>
         <UiFormLabel>Unit</UiFormLabel>
         <UiFormControl>
@@ -187,7 +217,9 @@ const onSubmit = handleSubmit(async (values) => {
     </FormField>
 
     <UiButton type="submit" class="w-full" :disabled="isSubmitting">
-      {{ isSubmitting ? 'Submitting...' : item ? 'Update Item' : 'Create Item' }}
+      {{
+        isSubmitting ? 'Submitting...' : item ? 'Update Item' : 'Create Item'
+      }}
     </UiButton>
   </form>
 </template>

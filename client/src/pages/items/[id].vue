@@ -12,7 +12,13 @@ import Error from '@/components/custom-error.vue'
 import Page from '@/components/global-layout/basic-page.vue'
 import Loading from '@/components/loading.vue'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
 import { useGetItemQuery } from '@/services/items.service'
 
 import type { Item } from './data/schema'
@@ -25,11 +31,19 @@ const router = useRouter()
 
 const itemId = computed(() => Number(route.params.id))
 
-const { data: itemResponse, isLoading, isError, error, refetch } = useGetItemQuery(itemId)
+const {
+  data: itemResponse,
+  isLoading,
+  isError,
+  error,
+  refetch,
+} = useGetItemQuery(itemId)
 
 const item = computed<Item | null>(() => itemResponse.value?.data ?? null)
 
-const showComponent = shallowRef<typeof ItemResourceDialog | typeof ItemDelete | null>(null)
+const showComponent = shallowRef<
+  typeof ItemResourceDialog | typeof ItemDelete | null
+>(null)
 const isDialogOpen = ref(false)
 
 type TCommand = 'edit' | 'delete'
@@ -84,7 +98,9 @@ function formatDateTime(dateString: string | null): string {
 }
 
 // Format price - handles both Money object and number
-function formatPrice(price: number | { formatted: string } | undefined): string {
+function formatPrice(
+  price: number | { formatted: string } | undefined,
+): string {
   if (!price)
     return '—'
   // Handle Money object from backend
@@ -103,25 +119,42 @@ function formatPrice(price: number | { formatted: string } | undefined): string 
 </script>
 
 <template>
-  <Page title="Item Details" description="View and manage item information" sticky>
+  <Page
+    title="Item Details"
+    description="View and manage item information"
+    sticky
+  >
     <template #actions>
       <div class="flex items-center gap-2">
         <Button variant="outline" size="sm" @click="router.back()">
           <ArrowLeft class="mr-2 size-4" />
           Back
         </Button>
-        <Button v-if="item" variant="outline" size="sm" @click="handleSelect('edit')">
+        <Button
+          v-if="item"
+          variant="outline"
+          size="sm"
+          @click="handleSelect('edit')"
+        >
           <FilePenLine class="mr-2 size-4" />
           Edit
         </Button>
-        <Button v-if="item" variant="destructive" size="sm" @click="handleSelect('delete')">
+        <Button
+          v-if="item"
+          variant="destructive"
+          size="sm"
+          @click="handleSelect('delete')"
+        >
           <Trash2 class="mr-2 size-4" />
           Delete
         </Button>
       </div>
     </template>
 
-    <div v-if="isLoading" class="flex items-center justify-center min-h-[400px]">
+    <div
+      v-if="isLoading"
+      class="flex items-center justify-center min-h-[400px]"
+    >
       <Loading />
     </div>
 

@@ -61,7 +61,10 @@ function getStatusIcon(status: string) {
                 <Badge
                   :class="`text-xs ${email.status_formatted.style || 'bg-gray-100 text-gray-800'}`"
                 >
-                  <component :is="getStatusIcon(email.status)" class="size-3 mr-1" />
+                  <component
+                    :is="getStatusIcon(email.status)"
+                    class="size-3 mr-1"
+                  />
                   {{ email.status_formatted.label }}
                 </Badge>
                 <span class="text-xs text-muted-foreground">
@@ -80,8 +83,12 @@ function getStatusIcon(status: string) {
             v-if="email.opened_at || email.clicked_at"
             class="flex items-center gap-4 text-xs text-muted-foreground"
           >
-            <span v-if="email.opened_at"> Opened: {{ formatDateTime(email.opened_at) }} </span>
-            <span v-if="email.clicked_at"> Clicked: {{ formatDateTime(email.clicked_at) }} </span>
+            <span v-if="email.opened_at">
+              Opened: {{ formatDateTime(email.opened_at) }}
+            </span>
+            <span v-if="email.clicked_at">
+              Clicked: {{ formatDateTime(email.clicked_at) }}
+            </span>
           </div>
           <div
             v-if="email.error_message"
@@ -109,7 +116,9 @@ function getStatusIcon(status: string) {
         </div>
       </div>
       <div v-else class="py-8 text-center">
-        <div class="inline-flex items-center justify-center size-10 rounded-full bg-muted mb-3">
+        <div
+          class="inline-flex items-center justify-center size-10 rounded-full bg-muted mb-3"
+        >
           <Mail class="size-5 text-muted-foreground" />
         </div>
         <p class="text-sm font-medium text-muted-foreground">

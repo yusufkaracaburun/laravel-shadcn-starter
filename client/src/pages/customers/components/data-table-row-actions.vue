@@ -32,7 +32,10 @@ type TCommand = 'view' | 'edit' | 'delete'
 function handleSelect(command: TCommand) {
   switch (command) {
     case 'view':
-      router.push({ name: '/customers/[id]', params: { id: customer.value.id.toString() } })
+      router.push({
+        name: '/customers/[id]',
+        params: { id: customer.value.id.toString() },
+      })
       break
     case 'edit':
       showComponent.value = CustomerResourceDialog
@@ -58,20 +61,26 @@ const isOpen = ref(false)
       <UiDropdownMenuContent align="end" class="w-[160px]">
         <UiDropdownMenuItem @select.stop="handleSelect('view')">
           <span>View</span>
-          <UiDropdownMenuShortcut> <Eye class="size-4" /> </UiDropdownMenuShortcut>
+          <UiDropdownMenuShortcut>
+            <Eye class="size-4" />
+          </UiDropdownMenuShortcut>
         </UiDropdownMenuItem>
 
         <UiDialogTrigger as-child>
           <UiDropdownMenuItem @select.stop="handleSelect('edit')">
             <span>Edit</span>
-            <UiDropdownMenuShortcut> <FilePenLine class="size-4" /> </UiDropdownMenuShortcut>
+            <UiDropdownMenuShortcut>
+              <FilePenLine class="size-4" />
+            </UiDropdownMenuShortcut>
           </UiDropdownMenuItem>
         </UiDialogTrigger>
 
         <UiDialogTrigger as-child>
           <UiDropdownMenuItem @select.stop="handleSelect('delete')">
             <span>Delete</span>
-            <UiDropdownMenuShortcut> <Trash2 class="size-4" /> </UiDropdownMenuShortcut>
+            <UiDropdownMenuShortcut>
+              <Trash2 class="size-4" />
+            </UiDropdownMenuShortcut>
           </UiDropdownMenuItem>
         </UiDialogTrigger>
       </UiDropdownMenuContent>

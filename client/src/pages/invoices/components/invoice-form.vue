@@ -34,7 +34,12 @@ const props = defineProps<{
   customers?: Customer[]
   invoiceId?: number
 }>()
-const emits = defineEmits(['close', 'submit', 'update:modelValue', 'update:formItems'])
+const emits = defineEmits([
+  'close',
+  'submit',
+  'update:modelValue',
+  'update:formItems',
+])
 
 const router = useRouter()
 
@@ -50,7 +55,8 @@ let blockEmits = false
 
 // Compute initial values reactively
 function getInitialValues() {
-  const invoiceDate = formatDateForInput(props.modelValue?.date) || getTodayDate()
+  const invoiceDate
+    = formatDateForInput(props.modelValue?.date) || getTodayDate()
   const dueDays = props.modelValue?.due_days ?? 30
   let calculatedDueDate = ''
   if (props.modelValue?.date_due) {
@@ -62,7 +68,8 @@ function getInitialValues() {
 
   return {
     customer_id: props.modelValue?.customer_id ?? undefined,
-    invoice_number: props.modelValue?.invoice_number ?? props.nextInvoiceNumber ?? null,
+    invoice_number:
+      props.modelValue?.invoice_number ?? props.nextInvoiceNumber ?? null,
     date: invoiceDate,
     due_days: dueDays,
     date_due: calculatedDueDate,
@@ -116,7 +123,10 @@ const localItems = ref<ILocalInvoiceItem[]>(
     let totalVat = 0
     let totalInclVat = 0
 
-    if (typeof item.total_excl_vat === 'object' && 'amount' in item.total_excl_vat) {
+    if (
+      typeof item.total_excl_vat === 'object'
+      && 'amount' in item.total_excl_vat
+    ) {
       totalExclVat = Number.parseFloat(item.total_excl_vat.amount) / 100
     }
     else if (typeof item.total_excl_vat === 'number') {
@@ -130,7 +140,10 @@ const localItems = ref<ILocalInvoiceItem[]>(
       totalVat = item.total_vat
     }
 
-    if (typeof item.total_incl_vat === 'object' && 'amount' in item.total_incl_vat) {
+    if (
+      typeof item.total_incl_vat === 'object'
+      && 'amount' in item.total_incl_vat
+    ) {
       totalInclVat = Number.parseFloat(item.total_incl_vat.amount) / 100
     }
     else if (typeof item.total_incl_vat === 'number') {
@@ -138,7 +151,11 @@ const localItems = ref<ILocalInvoiceItem[]>(
     }
 
     if (totalExclVat === 0 && unitPrice > 0 && item.quantity > 0) {
-      const calculated = calculateItemTotals(item.quantity, unitPrice, item.vat_rate)
+      const calculated = calculateItemTotals(
+        item.quantity,
+        unitPrice,
+        item.vat_rate,
+      )
       totalExclVat = calculated.totalExclVat
       totalVat = calculated.totalVat
       totalInclVat = calculated.totalInclVat
@@ -162,10 +179,14 @@ const editingItemIndex = ref<number | null>(null)
 const showAddForm = ref(false)
 
 // Raw numeric totals from calculations
-const rawInvoiceTotals = computed(() => calculateInvoiceTotals(localItems.value))
+const rawInvoiceTotals = computed(() =>
+  calculateInvoiceTotals(localItems.value),
+)
 
 // Formatted invoice totals (Money objects)
-const invoiceTotals = computed(() => formatCalculatedTotals(rawInvoiceTotals.value))
+const invoiceTotals = computed(() =>
+  formatCalculatedTotals(rawInvoiceTotals.value),
+)
 
 function handleItemsSelected(itemsData: any[]) {
   // Add multiple items to local state
@@ -175,7 +196,11 @@ function handleItemsSelected(itemsData: any[]) {
       = typeof itemData.vat_rate === 'string'
         ? Number.parseInt(itemData.vat_rate)
         : Number(itemData.vat_rate)
-    const totals = calculateItemTotals(itemData.quantity, itemData.unit_price, vatRate)
+    const totals = calculateItemTotals(
+      itemData.quantity,
+      itemData.unit_price,
+      vatRate,
+    )
     localItems.value.push({
       ...itemData,
       name: itemData.name || itemData.description, // Ensure name is always set
@@ -195,7 +220,11 @@ function handleItemSave(itemData: any, itemIdOrIndex?: number) {
     = typeof itemData.vat_rate === 'string'
       ? Number.parseInt(itemData.vat_rate)
       : Number(itemData.vat_rate)
-  const totals = calculateItemTotals(itemData.quantity, itemData.unit_price, vatRate)
+  const totals = calculateItemTotals(
+    itemData.quantity,
+    itemData.unit_price,
+    vatRate,
+  )
   if (typeof itemIdOrIndex === 'number' && itemIdOrIndex >= 0) {
     // Update existing item
     localItems.value[itemIdOrIndex] = {
@@ -268,7 +297,10 @@ watch(
 watch(
   () => [props.modelValue, props.nextInvoiceNumber],
   (values) => {
-    const [newInvoice, nextInvoiceNumber] = values as [TInvoice | null, string | null | undefined]
+    const [newInvoice, nextInvoiceNumber] = values as [
+      TInvoice | null,
+      string | null | undefined,
+    ]
     if (newInvoice) {
       setFieldValue('customer_id', newInvoice.customer_id ?? undefined)
       setFieldValue('invoice_number', newInvoice.invoice_number ?? null)
@@ -284,7 +316,10 @@ watch(
       const defaultDueDays = 30
       const calculatedDueDate = calculateDueDate(todayDate, defaultDueDays)
       setFieldValue('customer_id', undefined)
-      setFieldValue('invoice_number', (nextInvoiceNumber ?? null) as string | null)
+      setFieldValue(
+        'invoice_number',
+        (nextInvoiceNumber ?? null) as string | null,
+      )
       setFieldValue('date', todayDate)
       setFieldValue('due_days', defaultDueDays)
       setFieldValue('date_due', calculatedDueDate)
@@ -364,10 +399,15 @@ watch(
       setFieldValue('status', newInvoice.status ?? 'draft')
       setFieldValue('notes', newInvoice.notes ?? null)
       localItems.value = (
-        Array.isArray(newInvoice.items) ? newInvoice.items : (newInvoice.items as any)?.data || []
+        Array.isArray(newInvoice.items)
+          ? newInvoice.items
+          : (newInvoice.items as any)?.data || []
       ).map((item: any) => {
         let unitPrice = 0
-        if (typeof item.unit_price === 'object' && 'amount' in item.unit_price) {
+        if (
+          typeof item.unit_price === 'object'
+          && 'amount' in item.unit_price
+        ) {
           unitPrice = Number.parseFloat(item.unit_price.amount) / 100
         }
         else if (typeof item.unit_price === 'number') {
@@ -376,7 +416,10 @@ watch(
         let totalExclVat = 0
         let totalVat = 0
         let totalInclVat = 0
-        if (typeof item.total_excl_vat === 'object' && 'amount' in item.total_excl_vat) {
+        if (
+          typeof item.total_excl_vat === 'object'
+          && 'amount' in item.total_excl_vat
+        ) {
           totalExclVat = Number.parseFloat(item.total_excl_vat.amount) / 100
         }
         else if (typeof item.total_excl_vat === 'number') {
@@ -388,14 +431,21 @@ watch(
         else if (typeof item.total_vat === 'number') {
           totalVat = item.total_vat
         }
-        if (typeof item.total_incl_vat === 'object' && 'amount' in item.total_incl_vat) {
+        if (
+          typeof item.total_incl_vat === 'object'
+          && 'amount' in item.total_incl_vat
+        ) {
           totalInclVat = Number.parseFloat(item.total_incl_vat.amount) / 100
         }
         else if (typeof item.total_incl_vat === 'number') {
           totalInclVat = item.total_incl_vat
         }
         if (totalExclVat === 0 && unitPrice > 0 && item.quantity > 0) {
-          const calculated = calculateItemTotals(item.quantity, unitPrice, item.vat_rate)
+          const calculated = calculateItemTotals(
+            item.quantity,
+            unitPrice,
+            item.vat_rate,
+          )
           totalExclVat = calculated.totalExclVat
           totalVat = calculated.totalVat
           totalInclVat = calculated.totalInclVat
@@ -450,7 +500,8 @@ const onSubmit = handleSubmit(async (formValues) => {
     }
 
     // Convert empty strings to null recursively
-    backendData = mapObjectDeep(backendData, value => (value === '' ? null : value))
+    backendData = mapObjectDeep(backendData, value =>
+      value === '' ? null : value)
 
     // Add calculated totals to backendData, ensuring they are numbers or strings as expected by backend
     backendData.subtotal = rawInvoiceTotals.value.subtotal
@@ -470,13 +521,19 @@ const onSubmit = handleSubmit(async (formValues) => {
     if (props.invoiceId) {
       backendData.id = props.invoiceId
       await updateInvoice(props.invoiceId, backendData)
-      router.push({ name: '/invoices/[id]', params: { id: props.invoiceId.toString() } })
+      router.push({
+        name: '/invoices/[id]',
+        params: { id: props.invoiceId.toString() },
+      })
     }
     else {
       const response = await createInvoice(backendData)
       const newInvoice = response?.data
       if (newInvoice?.id) {
-        router.push({ name: '/invoices/[id]', params: { id: newInvoice.id.toString() } })
+        router.push({
+          name: '/invoices/[id]',
+          params: { id: newInvoice.id.toString() },
+        })
       }
       else {
         router.push('/invoices')
@@ -492,7 +549,8 @@ const onSubmit = handleSubmit(async (formValues) => {
       Object.keys(backendErrors).forEach((field) => {
         const fieldErrors = backendErrors[field]
         if (Array.isArray(fieldErrors) && fieldErrors.length > 0) {
-          const formFieldName = field === 'invoice_number' ? 'invoice_number' : field
+          const formFieldName
+            = field === 'invoice_number' ? 'invoice_number' : field
           setFieldError(formFieldName as any, fieldErrors[0])
         }
       })
@@ -513,7 +571,10 @@ defineExpose({
 
 <template>
   <form class="space-y-6" @submit.prevent="onSubmit">
-    <InvoiceCustomerSection :customers="customers" :is-field-dirty="isFieldDirty" />
+    <InvoiceCustomerSection
+      :customers="customers"
+      :is-field-dirty="isFieldDirty"
+    />
 
     <InvoiceDetailsSection :is-field-dirty="isFieldDirty" />
 

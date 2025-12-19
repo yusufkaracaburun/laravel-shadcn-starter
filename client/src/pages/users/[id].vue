@@ -4,7 +4,15 @@ meta:
 </route>
 
 <script setup lang="ts">
-import { ArrowLeft, Calendar, FilePenLine, Mail, Shield, Trash2, Users } from 'lucide-vue-next'
+import {
+  ArrowLeft,
+  Calendar,
+  FilePenLine,
+  Mail,
+  Shield,
+  Trash2,
+  Users,
+} from 'lucide-vue-next'
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
@@ -16,7 +24,13 @@ import Loading from '@/components/loading.vue'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import Badge from '@/components/ui/badge/Badge.vue'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
 import { useGetUserQuery } from '@/services/users.service'
 
 import UserDelete from './components/user-delete.vue'
@@ -27,7 +41,13 @@ const router = useRouter()
 
 const userId = computed(() => Number(route.params.id))
 
-const { data: userResponse, isLoading, isError, error, refetch } = useGetUserQuery(userId)
+const {
+  data: userResponse,
+  isLoading,
+  isError,
+  error,
+  refetch,
+} = useGetUserQuery(userId)
 
 const user = computed<User | null>(() => userResponse.value?.data ?? null)
 
@@ -95,7 +115,9 @@ const isNotFound = computed(() => {
 <template>
   <Page
     :title="user ? user.name : 'User Details'"
-    :description="user ? `View details for ${user.email}` : 'Loading user information...'"
+    :description="
+      user ? `View details for ${user.email}` : 'Loading user information...'
+    "
   >
     <template #actions>
       <div v-if="user" class="flex items-center gap-2">
@@ -114,11 +136,17 @@ const isNotFound = computed(() => {
       </div>
     </template>
 
-    <div v-if="isLoading" class="flex items-center justify-center min-h-[400px]">
+    <div
+      v-if="isLoading"
+      class="flex items-center justify-center min-h-[400px]"
+    >
       <Loading />
     </div>
 
-    <div v-else-if="isError && isNotFound" class="flex items-center justify-center min-h-[400px]">
+    <div
+      v-else-if="isError && isNotFound"
+      class="flex items-center justify-center min-h-[400px]"
+    >
       <Error
         :code="404"
         subtitle="User Not Found"
@@ -126,7 +154,10 @@ const isNotFound = computed(() => {
       />
     </div>
 
-    <div v-else-if="isError" class="flex items-center justify-center min-h-[400px]">
+    <div
+      v-else-if="isError"
+      class="flex items-center justify-center min-h-[400px]"
+    >
       <div class="text-center">
         <Error
           :code="500"
@@ -163,7 +194,9 @@ const isNotFound = computed(() => {
                 {{ user.email }}
               </CardDescription>
               <div class="mt-4 flex items-center gap-2">
-                <Badge :variant="user.email_verified_at ? 'default' : 'secondary'">
+                <Badge
+                  :variant="user.email_verified_at ? 'default' : 'secondary'"
+                >
                   {{ user.email_verified_at ? 'Verified' : 'Unverified' }}
                 </Badge>
               </div>
@@ -202,10 +235,15 @@ const isNotFound = computed(() => {
                 Email Verification
               </div>
               <div class="text-base">
-                <Badge :variant="user.email_verified_at ? 'default' : 'secondary'">
+                <Badge
+                  :variant="user.email_verified_at ? 'default' : 'secondary'"
+                >
                   {{ user.email_verified_at ? 'Verified' : 'Unverified' }}
                 </Badge>
-                <span v-if="user.email_verified_at" class="ml-2 text-sm text-muted-foreground">
+                <span
+                  v-if="user.email_verified_at"
+                  class="ml-2 text-sm text-muted-foreground"
+                >
                   {{ formatDateTime(user.email_verified_at) }}
                 </span>
               </div>
@@ -217,11 +255,15 @@ const isNotFound = computed(() => {
         <Card>
           <CardHeader>
             <CardTitle>Account Status</CardTitle>
-            <CardDescription>Account creation and update information</CardDescription>
+            <CardDescription>
+              Account creation and update information
+            </CardDescription>
           </CardHeader>
           <CardContent class="space-y-4">
             <div>
-              <div class="text-sm font-medium text-muted-foreground mb-1 flex items-center gap-2">
+              <div
+                class="text-sm font-medium text-muted-foreground mb-1 flex items-center gap-2"
+              >
                 <Calendar class="size-4" />
                 Created At
               </div>
@@ -230,7 +272,9 @@ const isNotFound = computed(() => {
               </div>
             </div>
             <div>
-              <div class="text-sm font-medium text-muted-foreground mb-1 flex items-center gap-2">
+              <div
+                class="text-sm font-medium text-muted-foreground mb-1 flex items-center gap-2"
+              >
                 <Calendar class="size-4" />
                 Updated At
               </div>
@@ -260,7 +304,11 @@ const isNotFound = computed(() => {
           </CardHeader>
           <CardContent>
             <div class="flex flex-wrap gap-2">
-              <Badge v-for="role in user.roles" :key="role.id" variant="outline">
+              <Badge
+                v-for="role in user.roles"
+                :key="role.id"
+                variant="outline"
+              >
                 {{ role.name }}
               </Badge>
             </div>
@@ -291,7 +339,10 @@ const isNotFound = computed(() => {
                     {{ team.personal_team ? 'Personal Team' : 'Team' }}
                   </div>
                 </div>
-                <Badge v-if="user.currentTeam && user.currentTeam.id === team.id" variant="default">
+                <Badge
+                  v-if="user.currentTeam && user.currentTeam.id === team.id"
+                  variant="default"
+                >
                   Current
                 </Badge>
               </div>

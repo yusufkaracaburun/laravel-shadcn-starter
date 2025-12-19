@@ -33,8 +33,14 @@ const invoiceDeleteBatchOpen = ref(false)
   <BulkActions entity-name="invoice" :table>
     <UiTooltip>
       <UiTooltipTrigger as-child>
-        <UiButton variant="destructive" size="icon" class="size-8" aria-label="Delete selected invoices"
-          title="Delete selected invoices" @click="invoiceDeleteBatchOpen = true">
+        <UiButton
+          variant="destructive"
+          size="icon"
+          class="size-8"
+          aria-label="Delete selected invoices"
+          title="Delete selected invoices"
+          @click="invoiceDeleteBatchOpen = true"
+        >
           <Trash2Icon />
           <span class="sr-only">Delete selected invoices</span>
         </UiButton>
@@ -47,10 +53,21 @@ const invoiceDeleteBatchOpen = ref(false)
     <InvoiceDeleteBatch v-model:open="invoiceDeleteBatchOpen" :table />
   </BulkActions>
 
-  <DataTable :columns :table :data :loading :server-pagination="props.serverPagination">
+  <DataTable
+    :columns
+    :table
+    :data
+    :loading
+    :server-pagination="props.serverPagination"
+  >
     <template #toolbar>
-      <DataTableToolbar :table="table" :filters="filter" :on-filters-change="onFiltersChange || (() => { })"
-        :on-clear-filters="onClearFilters || (() => { })" class="w-full overflow-x-auto" />
+      <DataTableToolbar
+        :table="table"
+        :filters="filter"
+        :on-filters-change="onFiltersChange || (() => {})"
+        :on-clear-filters="onClearFilters || (() => {})"
+        class="w-full overflow-x-auto"
+      />
     </template>
   </DataTable>
 </template>

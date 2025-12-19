@@ -20,7 +20,11 @@ export function useAxios() {
       }
 
       const csrfToken = getCookieValue('XSRF-TOKEN')
-      console.warn('[axiosInstance.interceptors.request] - CSRF TOKEN', request.method, csrfToken)
+      console.warn(
+        '[axiosInstance.interceptors.request] - CSRF TOKEN',
+        request.method,
+        csrfToken,
+      )
 
       request.headers['X-XSRF-TOKEN'] = csrfToken
 

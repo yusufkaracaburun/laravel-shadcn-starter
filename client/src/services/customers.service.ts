@@ -260,7 +260,9 @@ export function useGetCustomerQuery(customerId: MaybeRef<number>) {
     queryKey: ['customer', computed(() => toValue(customerIdRef))],
     queryFn: async (): Promise<IResponse<Customer>> => {
       const currentCustomerId = toValue(customerIdRef)
-      const response = await axiosInstance.get(`/api/customers/${currentCustomerId}`)
+      const response = await axiosInstance.get(
+        `/api/customers/${currentCustomerId}`,
+      )
       return response.data
     },
     retry: (failureCount: number, error: AxiosError) => {
@@ -327,7 +329,9 @@ export function useCreateCustomerMutation() {
   const queryClient = useQueryClient()
 
   return useMutation<IResponse<Customer>, AxiosError, CreateCustomerRequest>({
-    mutationFn: async (data: CreateCustomerRequest): Promise<IResponse<Customer>> => {
+    mutationFn: async (
+      data: CreateCustomerRequest,
+    ): Promise<IResponse<Customer>> => {
       const response = await axiosInstance.post('/api/customers', data)
       return response.data
     },
@@ -352,14 +356,19 @@ export function useUpdateCustomerMutation() {
     { customerId: number, data: UpdateCustomerRequest }
   >({
     mutationFn: async ({ customerId, data }): Promise<IResponse<Customer>> => {
-      const response = await axiosInstance.put(`/api/customers/${customerId}`, data)
+      const response = await axiosInstance.put(
+        `/api/customers/${customerId}`,
+        data,
+      )
       return response.data
     },
     onSuccess: (_, variables) => {
       // Invalidate customer list query to refresh the customers list
       queryClient.invalidateQueries({ queryKey: ['customerList'] })
       // Invalidate the specific customer query to refresh the detail page
-      queryClient.invalidateQueries({ queryKey: ['customer', variables.customerId] })
+      queryClient.invalidateQueries({
+        queryKey: ['customer', variables.customerId],
+      })
     },
   })
 }

@@ -9,7 +9,10 @@ import { useProjects } from '@/composables/use-projects'
 
 import type { Project } from '../data/schema'
 
-import { kanbanTaskToProject, projectsToKanbanTasks } from '../utils/project-converter'
+import {
+  kanbanTaskToProject,
+  projectsToKanbanTasks,
+} from '../utils/project-converter'
 
 interface Props {
   projects: Project[]
@@ -34,7 +37,10 @@ const defaultColumns: Column[] = [
 
 // Initialize board state immediately with projects data (before useKanban's onMounted loads from localStorage)
 const initialKanbanTasks = projectsToKanbanTasks(props.projects)
-const initialColumns = defaultColumns.map(col => ({ ...col, tasks: [] as KanbanTask[] }))
+const initialColumns = defaultColumns.map(col => ({
+  ...col,
+  tasks: [] as KanbanTask[],
+}))
 
 initialKanbanTasks.forEach((task) => {
   const columnId = task.status || 'in-progress'
@@ -67,7 +73,10 @@ function organizeProjectsIntoColumns() {
     return
 
   isSyncing.value = true
-  const columns = defaultColumns.map(col => ({ ...col, tasks: [] as KanbanTask[] }))
+  const columns = defaultColumns.map(col => ({
+    ...col,
+    tasks: [] as KanbanTask[],
+  }))
   const kanbanTasks = projectsToKanbanTasks(props.projects)
 
   kanbanTasks.forEach((task) => {
@@ -135,7 +144,9 @@ watch(
 
       // Only update if column actually changed
       if (oldColumnId !== newColumnId) {
-        const originalProject = props.projects.find(p => p.id.toString() === projectId)
+        const originalProject = props.projects.find(
+          p => p.id.toString() === projectId,
+        )
         if (originalProject) {
           const updatedProject = kanbanTaskToProject(
             { id: projectId, status: newColumnId } as KanbanTask,
@@ -167,7 +178,9 @@ watch(
 
 function handleProjectUpdated(task: KanbanTask, _columnId: string) {
   // Convert kanban task to project and update via API
-  const originalProject = props.projects.find(p => p.id.toString() === task.id)
+  const originalProject = props.projects.find(
+    p => p.id.toString() === task.id,
+  )
   if (!originalProject) {
     return
   }
@@ -212,7 +225,9 @@ watch(
     if (!hasForcedInit.value && newColumns.length > 0) {
       const hasOurProjects = props.projects.some((project) => {
         const kanbanTask = projectsToKanbanTasks([project])[0]
-        return newColumns.some(col => col.tasks.some(t => t.id === kanbanTask.id))
+        return newColumns.some(col =>
+          col.tasks.some(t => t.id === kanbanTask.id),
+        )
       })
 
       // If localStorage data doesn't contain our projects, override it

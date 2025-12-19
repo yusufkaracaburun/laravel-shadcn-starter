@@ -5,7 +5,13 @@ import { computed, ref } from 'vue'
 
 import CommandChangeTheme from '@/components/command-menu-panel/command-change-theme.vue'
 import CommandToPage from '@/components/command-menu-panel/command-to-page.vue'
-import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty'
+import {
+  Empty,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from '@/components/ui/empty'
 
 const commandMenuOpen = ref(false)
 
@@ -16,7 +22,9 @@ useEventListener('keydown', (event: KeyboardEvent) => {
   }
 })
 
-const firstKey = computed(() => (navigator?.userAgent.includes('Mac OS') ? '⌘' : 'Ctrl'))
+const firstKey = computed(() =>
+  navigator?.userAgent.includes('Mac OS') ? '⌘' : 'Ctrl',
+)
 </script>
 
 <template>

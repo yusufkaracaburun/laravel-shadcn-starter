@@ -28,7 +28,10 @@ const { login, loading } = useAuth()
 
 const loginSchema = toTypedSchema(
   z.object({
-    email: z.string().email('Please enter a valid email address.').min(1, 'Email is required.'),
+    email: z
+      .string()
+      .email('Please enter a valid email address.')
+      .min(1, 'Email is required.'),
     password: z.string().min(1, 'Password is required.'),
   }),
 )
@@ -115,12 +118,19 @@ const onSubmit = handleSubmit(async (values) => {
               </VeeField>
             </Field>
             <Field>
-              <UiButton type="submit" form="login-form-4" class="w-full" :disabled="loading">
+              <UiButton
+                type="submit"
+                form="login-form-4"
+                class="w-full"
+                :disabled="loading"
+              >
                 <UiSpinner v-if="loading" class="mr-2" />
                 Login
               </UiButton>
             </Field>
-            <FieldSeparator class="*:data-[slot=field-separator-content]:bg-card">
+            <FieldSeparator
+              class="*:data-[slot=field-separator-content]:bg-card"
+            >
               Or continue with
             </FieldSeparator>
             <Field class="grid grid-cols-3 gap-4">
@@ -174,8 +184,8 @@ const onSubmit = handleSubmit(async (values) => {
       </CardContent>
     </Card>
     <FieldDescription class="px-6 text-center">
-      By clicking continue, you agree to our <a href="#">Terms of Service</a> and
-      <a href="#">Privacy Policy</a>.
+      By clicking continue, you agree to our
+      <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.
     </FieldDescription>
   </div>
 </template>

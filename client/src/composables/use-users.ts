@@ -1,7 +1,10 @@
 import type { SortingState } from '@tanstack/vue-table'
 
 import type { ServerPagination } from '@/components/data-table/types'
-import type { CreateUserRequest, UpdateUserRequest } from '@/services/users.service'
+import type {
+  CreateUserRequest,
+  UpdateUserRequest,
+} from '@/services/users.service'
 
 import { useToast } from '@/composables/use-toast'
 import {

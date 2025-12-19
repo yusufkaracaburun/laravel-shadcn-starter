@@ -9,7 +9,8 @@ let echoInstance: Echo | null = null
 
 export function setupEcho(app: App) {
   // Only initialize if Reverb is enabled and all required config is present
-  const isEnabled = env.VITE_REVERB_ENABLED === 'true' || env.VITE_REVERB_ENABLED === '1'
+  const isEnabled
+    = env.VITE_REVERB_ENABLED === 'true' || env.VITE_REVERB_ENABLED === '1'
   if (!isEnabled) {
     return
   }

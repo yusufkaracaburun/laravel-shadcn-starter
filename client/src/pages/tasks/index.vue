@@ -3,7 +3,11 @@ import { LayoutGrid, List } from 'lucide-vue-next'
 
 import Page from '@/components/global-layout/basic-page.vue'
 import { Button } from '@/components/ui/button'
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
 
 import { columns } from './components/columns'
 import DataTable from './components/data-table.vue'
@@ -23,7 +27,12 @@ function handleTasksUpdate(updatedTasks: typeof tasksData) {
 </script>
 
 <template>
-  <Page title="Tasks" description="Tasks description" sticky data-testid="tasks_page">
+  <Page
+    title="Tasks"
+    description="Tasks description"
+    sticky
+    data-testid="tasks_page"
+  >
     <template #actions>
       <div class="flex items-center gap-2">
         <Tooltip>

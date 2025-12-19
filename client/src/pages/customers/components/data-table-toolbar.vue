@@ -23,7 +23,10 @@ interface DataTableToolbarProps {
 const props = defineProps<DataTableToolbarProps>()
 
 const isFiltered = computed(() => {
-  return props.table.getState().columnFilters.length > 0 || Object.keys(props.filters).length > 0
+  return (
+    props.table.getState().columnFilters.length > 0
+    || Object.keys(props.filters).length > 0
+  )
 })
 </script>
 
@@ -34,7 +37,9 @@ const isFiltered = computed(() => {
     >
       <Input
         placeholder="Search customers..."
-        :model-value="(table.getColumn('name')?.getFilterValue() as string) ?? ''"
+        :model-value="
+          (table.getColumn('name')?.getFilterValue() as string) ?? ''
+        "
         class="h-8 w-[150px] lg:w-[250px]"
         @input="table.getColumn('name')?.setFilterValue($event.target.value)"
       />

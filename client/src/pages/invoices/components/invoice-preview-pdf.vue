@@ -4,7 +4,11 @@ import { Receipt } from 'lucide-vue-next'
 import type { TInvoice } from '@/pages/invoices/data/schema'
 import type { IInvoiceItem } from '@/services/invoices.service'
 
-import { formatDateForPreview, formatMoney, formatNumber } from '@/pages/invoices/utils/formatters'
+import {
+  formatDateForPreview,
+  formatMoney,
+  formatNumber,
+} from '@/pages/invoices/utils/formatters'
 
 const props = defineProps<{
   formValues: TInvoice | null
@@ -38,7 +42,9 @@ function formatCurrency(value: any): string {
     <div class="flex justify-between items-start mb-10">
       <!-- Logo -->
       <div class="flex items-center gap-3">
-        <div class="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
+        <div
+          class="w-10 h-10 bg-primary rounded-lg flex items-center justify-center"
+        >
           <Receipt class="w-5 h-5 text-white" />
         </div>
       </div>
@@ -50,7 +56,9 @@ function formatCurrency(value: any): string {
         </div>
         <div>Factuur #{{ props.formValues?.invoice_number ?? '—' }}</div>
         <div>Datum {{ formatDate(props.formValues?.date ?? null) }}</div>
-        <div>Vervaldatum {{ formatDate(props.formValues?.date_due ?? null) }}</div>
+        <div>
+          Vervaldatum {{ formatDate(props.formValues?.date_due ?? null) }}
+        </div>
       </div>
     </div>
 
@@ -66,8 +74,14 @@ function formatCurrency(value: any): string {
         <div v-if="props.formValues?.customer?.address">
           {{ props.formValues.customer.address }}
         </div>
-        <div v-if="props.formValues?.customer?.zipcode || props.formValues?.customer?.city">
-          {{ props.formValues?.customer?.zipcode }} {{ props.formValues?.customer?.city }}
+        <div
+          v-if="
+            props.formValues?.customer?.zipcode
+              || props.formValues?.customer?.city
+          "
+        >
+          {{ props.formValues?.customer?.zipcode }}
+          {{ props.formValues?.customer?.city }}
         </div>
       </div>
     </div>
@@ -95,7 +109,11 @@ function formatCurrency(value: any): string {
       </thead>
 
       <tbody>
-        <tr v-for="item in items" :key="item.id" class="border-b last:border-b-0">
+        <tr
+          v-for="item in items"
+          :key="item.id"
+          class="border-b last:border-b-0"
+        >
           <td class="py-2">
             {{ item.description || '—' }}
           </td>
@@ -123,7 +141,10 @@ function formatCurrency(value: any): string {
           <span>{{ formatCurrency(props.formValues?.subtotal) }}</span>
         </div>
 
-        <div v-if="props.formValues?.total_vat_21" class="flex justify-between mb-2">
+        <div
+          v-if="props.formValues?.total_vat_21"
+          class="flex justify-between mb-2"
+        >
           <span>BTW 21%</span>
           <span>{{ formatCurrency(props.formValues.total_vat_21) }}</span>
         </div>

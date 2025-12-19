@@ -9,7 +9,9 @@ const { setTheme } = themeStore
 const { theme: t } = storeToRefs(themeStore)
 
 watchEffect(() => {
-  document.documentElement.classList.remove(...THEMES.map(theme => `theme-${theme}`))
+  document.documentElement.classList.remove(
+    ...THEMES.map(theme => `theme-${theme}`),
+  )
   document.documentElement.classList.add(`theme-${t.value}`)
 })
 </script>

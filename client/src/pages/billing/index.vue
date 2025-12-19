@@ -6,7 +6,10 @@ import BillingPlan from './components/billing-plan/index.vue'
 </script>
 
 <template>
-  <Page title="Plans & Billing" description="Manage your plan and billing history here.">
+  <Page
+    title="Plans & Billing"
+    description="Manage your plan and billing history here."
+  >
     <BillingPlan />
     <BillingHistory class="mt-2" />
   </Page>

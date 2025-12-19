@@ -36,7 +36,10 @@ function closeDialog() {
         </DialogClose>
       </DialogHeader>
 
-      <div v-if="email" class="p-6 space-y-4 text-gray-700 max-h-[80vh] overflow-y-auto">
+      <div
+        v-if="email"
+        class="p-6 space-y-4 text-gray-700 max-h-[80vh] overflow-y-auto"
+      >
         <div
           class="flex flex-col sm:flex-row sm:items-center justify-between text-sm border-b pb-4"
         >

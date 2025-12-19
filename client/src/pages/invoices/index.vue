@@ -3,7 +3,11 @@ import { Grid3x3, List } from 'lucide-vue-next'
 
 import Page from '@/components/global-layout/basic-page.vue'
 import { Button } from '@/components/ui/button'
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
 import { useInvoices } from '@/composables/use-invoices'
 import { columns } from '@/pages/invoices/components/columns'
 import DataTable from '@/pages/invoices/components/data-table.vue'
@@ -26,7 +30,12 @@ const {
 </script>
 
 <template>
-  <Page title="Invoices" description="Manage your invoices" sticky data-testid="invoices_page">
+  <Page
+    title="Invoices"
+    description="Manage your invoices"
+    sticky
+    data-testid="invoices_page"
+  >
     <template #actions>
       <div class="flex items-center gap-2">
         <Tooltip>

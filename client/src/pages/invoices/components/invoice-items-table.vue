@@ -66,7 +66,11 @@ function handleDelete(index: number) {
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(item, index) in items" :key="index" class="border-b hover:bg-muted/50">
+        <tr
+          v-for="(item, index) in items"
+          :key="index"
+          class="border-b hover:bg-muted/50"
+        >
           <td class="p-2 font-medium">
             {{ item.name || '—' }}
           </td>

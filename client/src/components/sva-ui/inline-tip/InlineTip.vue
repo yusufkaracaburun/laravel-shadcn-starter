@@ -27,7 +27,14 @@ const props = withDefaults(defineProps<Props>(), {
       )
     "
   >
-    <div :class="cn('h-full w-1 rounded-full', inlineTipVariants({ variant: props.variant }))" />
+    <div
+      :class="
+        cn(
+          'h-full w-1 rounded-full',
+          inlineTipVariants({ variant: props.variant }),
+        )
+      "
+    />
 
     <div class="text-muted-foreground">
       <strong class="text-sm font-semibold text-foreground mr-2">{{ props.label }}:</strong>

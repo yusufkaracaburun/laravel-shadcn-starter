@@ -5,7 +5,9 @@ import { reactiveOmit } from '@vueuse/core'
 import { NavigationMenuLink, useForwardPropsEmits } from 'reka-ui'
 import { cn } from '@/lib/utils'
 
-const props = defineProps<NavigationMenuLinkProps & { class?: HTMLAttributes['class'] }>()
+const props = defineProps<
+  NavigationMenuLinkProps & { class?: HTMLAttributes['class'] }
+>()
 const emits = defineEmits<NavigationMenuLinkEmits>()
 
 const delegatedProps = reactiveOmit(props, 'class')

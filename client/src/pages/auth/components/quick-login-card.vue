@@ -14,7 +14,9 @@ defineProps<{
       <UiCardTitle class="text-lg">
         Quick Login (Local Only)
       </UiCardTitle>
-      <UiCardDescription> Click a button to quickly login with a test user. </UiCardDescription>
+      <UiCardDescription>
+        Click a button to quickly login with a test user.
+      </UiCardDescription>
     </UiCardHeader>
     <UiCardContent>
       <div class="grid gap-2">
@@ -29,7 +31,9 @@ defineProps<{
         >
           <UiSpinner v-if="loading" class="mr-2" />
           <span class="font-medium">{{ user.name }}</span>
-          <span class="ml-auto text-xs text-muted-foreground">{{ user.email }}</span>
+          <span class="ml-auto text-xs text-muted-foreground">{{
+            user.email
+          }}</span>
         </UiButton>
       </div>
     </UiCardContent>

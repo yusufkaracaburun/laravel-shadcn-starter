@@ -14,14 +14,16 @@ export const columns: ColumnDef<Item>[] = [
   SelectColumn as ColumnDef<Item>,
   {
     accessorKey: 'id',
-    header: ({ column }) => h(DataTableColumnHeader<Item>, { column, title: 'Item ID' }),
+    header: ({ column }) =>
+      h(DataTableColumnHeader<Item>, { column, title: 'Item ID' }),
     cell: ({ row }) => h('div', { class: 'w-24' }, row.getValue('id')),
     enableSorting: false,
     enableHiding: false,
   },
   {
     accessorKey: 'name',
-    header: ({ column }) => h(DataTableColumnHeader<Item>, { column, title: 'Name' }),
+    header: ({ column }) =>
+      h(DataTableColumnHeader<Item>, { column, title: 'Name' }),
     cell: ({ row }) => {
       const item = row.original
       const router = useRouter()
@@ -34,7 +36,10 @@ export const columns: ColumnDef<Item>[] = [
           class:
             'max-w-[500px] truncate font-medium text-left hover:underline cursor-pointer focus:outline-none focus:underline',
           onClick: () => {
-            router.push({ name: '/items/[id]', params: { id: item.id.toString() } })
+            router.push({
+              name: '/items/[id]',
+              params: { id: item.id.toString() },
+            })
           },
         },
         name,
@@ -46,21 +51,31 @@ export const columns: ColumnDef<Item>[] = [
   },
   {
     accessorKey: 'description',
-    header: ({ column }) => h(DataTableColumnHeader<Item>, { column, title: 'Description' }),
+    header: ({ column }) =>
+      h(DataTableColumnHeader<Item>, { column, title: 'Description' }),
     cell: ({ row }) => {
       const description = row.getValue('description') as string | null
-      return h('div', { class: 'max-w-[300px] truncate text-muted-foreground' }, description || '-')
+      return h(
+        'div',
+        { class: 'max-w-[300px] truncate text-muted-foreground' },
+        description || '-',
+      )
     },
     enableSorting: false,
   },
   {
     accessorKey: 'unit_price',
-    header: ({ column }) => h(DataTableColumnHeader<Item>, { column, title: 'Unit Price' }),
+    header: ({ column }) =>
+      h(DataTableColumnHeader<Item>, { column, title: 'Unit Price' }),
     cell: ({ row }) => {
       const item = row.original
       const priceValue = item.unit_price
       // Handle Money object from backend
-      if (priceValue && typeof priceValue === 'object' && 'formatted' in priceValue) {
+      if (
+        priceValue
+        && typeof priceValue === 'object'
+        && 'formatted' in priceValue
+      ) {
         const money = priceValue as { formatted: string }
         return h('div', { class: 'w-[100px]' }, money.formatted)
       }
@@ -81,7 +96,8 @@ export const columns: ColumnDef<Item>[] = [
   },
   {
     accessorKey: 'vat_rate',
-    header: ({ column }) => h(DataTableColumnHeader<Item>, { column, title: 'VAT Rate' }),
+    header: ({ column }) =>
+      h(DataTableColumnHeader<Item>, { column, title: 'VAT Rate' }),
     cell: ({ row }) => {
       const vatRate = row.getValue('vat_rate') as number
       return h('div', { class: 'w-[100px]' }, `${vatRate}%`)
@@ -90,7 +106,8 @@ export const columns: ColumnDef<Item>[] = [
   },
   {
     accessorKey: 'unit',
-    header: ({ column }) => h(DataTableColumnHeader<Item>, { column, title: 'Unit' }),
+    header: ({ column }) =>
+      h(DataTableColumnHeader<Item>, { column, title: 'Unit' }),
     cell: ({ row }) => {
       const unit = row.getValue('unit') as string | null
       return h('div', { class: 'w-[80px]' }, unit || '-')
@@ -99,7 +116,8 @@ export const columns: ColumnDef<Item>[] = [
   },
   {
     accessorKey: 'created_at',
-    header: ({ column }) => h(DataTableColumnHeader<Item>, { column, title: 'Created At' }),
+    header: ({ column }) =>
+      h(DataTableColumnHeader<Item>, { column, title: 'Created At' }),
     cell: ({ row }) => {
       const dateValue = row.getValue('created_at') as string | null | undefined
       if (!dateValue) {
@@ -109,7 +127,11 @@ export const columns: ColumnDef<Item>[] = [
       return h(
         'div',
         { class: 'w-[100px]' },
-        date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }),
+        date.toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'short',
+          day: 'numeric',
+        }),
       )
     },
     enableSorting: true,

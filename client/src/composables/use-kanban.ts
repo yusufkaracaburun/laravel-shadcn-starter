@@ -79,7 +79,11 @@ export function useKanban() {
     const col = board.value.columns.find(c => c.id === columnId)
     if (!col)
       return
-    col.tasks.unshift({ id: generateTaskId(), createdAt: new Date(), ...payload })
+    col.tasks.unshift({
+      id: generateTaskId(),
+      createdAt: new Date(),
+      ...payload,
+    })
     persist()
   }
 

@@ -127,7 +127,9 @@ export function formatDate(dateString: string | null | undefined): string {
  * Format date for preview display (shorter format, e.g., "Mar 10, 2025")
  * Uses vue-i18n to respect current locale setting
  */
-export function formatDateForPreview(dateString: string | null | undefined): string {
+export function formatDateForPreview(
+  dateString: string | null | undefined,
+): string {
   if (!dateString)
     return '—'
   try {
@@ -154,7 +156,9 @@ export function formatDateForPreview(dateString: string | null | undefined): str
 /**
  * Format date for input field (YYYY-MM-DD)
  */
-export function formatDateForInput(dateString: string | null | undefined): string {
+export function formatDateForInput(
+  dateString: string | null | undefined,
+): string {
   if (!dateString)
     return ''
   // Try parsing as "d-m-Y H:i:s" format first

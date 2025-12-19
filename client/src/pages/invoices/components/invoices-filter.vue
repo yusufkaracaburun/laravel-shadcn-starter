@@ -4,7 +4,11 @@ import { Filter } from 'lucide-vue-next'
 import type { IInvoiceFilters } from '@/services/invoices.service'
 
 import { Button } from '@/components/ui/button'
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover'
 import {
   Select,
   SelectContent,
@@ -75,7 +79,8 @@ const hasActiveFilters = computed(() => {
           <Select
             :model-value="localFilters.status"
             @update:model-value="
-              (value) => updateFilter('status', value === 'all' ? undefined : value)
+              (value) =>
+                updateFilter('status', value === 'all' ? undefined : value)
             "
           >
             <SelectTrigger>
@@ -107,9 +112,17 @@ const hasActiveFilters = computed(() => {
         <div class="space-y-2">
           <label class="text-sm font-medium">Customer</label>
           <Select
-            :model-value="localFilters.customer_id ? localFilters.customer_id.toString() : 'all'"
+            :model-value="
+              localFilters.customer_id
+                ? localFilters.customer_id.toString()
+                : 'all'
+            "
             @update:model-value="
-              (value) => updateFilter('customer_id', value === 'all' ? undefined : Number(value))
+              (value) =>
+                updateFilter(
+                  'customer_id',
+                  value === 'all' ? undefined : Number(value),
+                )
             "
           >
             <SelectTrigger>
@@ -137,7 +150,12 @@ const hasActiveFilters = computed(() => {
             type="text"
             placeholder="Filter by invoice number"
             class="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
-            @input="updateFilter('invoice_number', ($event.target as HTMLInputElement).value)"
+            @input="
+              updateFilter(
+                'invoice_number',
+                ($event.target as HTMLInputElement).value,
+              )
+            "
           >
         </div>
 
@@ -147,11 +165,18 @@ const hasActiveFilters = computed(() => {
             v-model="localFilters.date"
             type="date"
             class="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
-            @input="updateFilter('date', ($event.target as HTMLInputElement).value)"
+            @input="
+              updateFilter('date', ($event.target as HTMLInputElement).value)
+            "
           >
         </div>
 
-        <Button v-if="hasActiveFilters" variant="ghost" class="w-full" @click="clearFilters">
+        <Button
+          v-if="hasActiveFilters"
+          variant="ghost"
+          class="w-full"
+          @click="clearFilters"
+        >
           Clear Filters
         </Button>
       </div>

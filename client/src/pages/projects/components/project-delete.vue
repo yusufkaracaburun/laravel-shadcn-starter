@@ -48,7 +48,11 @@ async function handleRemove() {
           Cancel
         </UiButton>
       </UiDialogClose>
-      <UiButton variant="destructive" :disabled="isDeleting" @click="handleRemove">
+      <UiButton
+        variant="destructive"
+        :disabled="isDeleting"
+        @click="handleRemove"
+      >
         <UiSpinner v-if="isDeleting" class="mr-2" />
         Delete
       </UiButton>

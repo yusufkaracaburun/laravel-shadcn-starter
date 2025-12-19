@@ -289,7 +289,11 @@ export function useUpdateUserMutation() {
   const { axiosInstance } = useAxios()
   const queryClient = useQueryClient()
 
-  return useMutation<IResponse<User>, AxiosError, { userId: number, data: UpdateUserRequest }>({
+  return useMutation<
+    IResponse<User>,
+    AxiosError,
+    { userId: number, data: UpdateUserRequest }
+  >({
     mutationFn: async ({ userId, data }): Promise<IResponse<User>> => {
       // If profile photo is present, use FormData for multipart/form-data
       if (data.profile_photo) {
@@ -308,11 +312,15 @@ export function useUpdateUserMutation() {
         // Use POST with _method=PUT for file uploads (Laravel supports this)
         formData.append('_method', 'PUT')
 
-        const response = await axiosInstance.post(`/api/user/${userId}`, formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
+        const response = await axiosInstance.post(
+          `/api/user/${userId}`,
+          formData,
+          {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
           },
-        })
+        )
         return response.data
       }
 

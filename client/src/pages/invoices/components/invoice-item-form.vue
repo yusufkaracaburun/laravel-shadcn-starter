@@ -5,7 +5,13 @@ import { computed, ref, watch } from 'vue'
 import { z } from 'zod'
 
 import { Button } from '@/components/ui/button'
-import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import {
   InputGroup,
@@ -63,11 +69,14 @@ const localUnitPrice = ref('')
 
 function getInitialValues() {
   const vatRate = props.item?.vat_rate ?? 21
-  const vatRateStr: '0' | '9' | '21' = vatRate === 0 ? '0' : vatRate === 9 ? '9' : '21'
+  const vatRateStr: '0' | '9' | '21'
+    = vatRate === 0 ? '0' : vatRate === 9 ? '9' : '21'
 
   // Set local string refs for quantity and unit_price
   localQuantity.value = (props.item?.quantity ?? 1).toString().replace('.', ',')
-  localUnitPrice.value = getUnitPriceValue(props.item).toString().replace('.', ',')
+  localUnitPrice.value = getUnitPriceValue(props.item)
+    .toString()
+    .replace('.', ',')
 
   return {
     description: props.item?.description ?? null,
@@ -96,7 +105,14 @@ watch(localUnitPrice, (newValue) => {
 // Make initial values reactive
 const initialValues = computed(() => getInitialValues())
 
-const { values, isFieldDirty, handleSubmit, isSubmitting, resetForm, setFieldValue } = useForm({
+const {
+  values,
+  isFieldDirty,
+  handleSubmit,
+  isSubmitting,
+  resetForm,
+  setFieldValue,
+} = useForm({
   validationSchema: formSchema,
   initialValues: initialValues.value,
 })
@@ -104,7 +120,11 @@ const { values, isFieldDirty, handleSubmit, isSubmitting, resetForm, setFieldVal
 // Calculate totals in real-time
 const calculatedTotals = computed(() => {
   const vatRate = Number.parseInt(values.vat_rate || '21')
-  return calculateItemTotals(values.quantity || 0, values.unit_price || 0, vatRate)
+  return calculateItemTotals(
+    values.quantity || 0,
+    values.unit_price || 0,
+    vatRate,
+  )
 })
 
 // Reset form when item changes
@@ -115,8 +135,12 @@ watch(
     resetForm({
       values: {
         ...newValues,
-        quantity: Number.parseFloat(newValues.quantity.toString().replace(',', '.')),
-        unit_price: Number.parseFloat(newValues.unit_price.toString().replace(',', '.')),
+        quantity: Number.parseFloat(
+          newValues.quantity.toString().replace(',', '.'),
+        ),
+        unit_price: Number.parseFloat(
+          newValues.unit_price.toString().replace(',', '.'),
+        ),
       },
     })
     // Explicitly set the vat_rate field to ensure ToggleGroup receives the correct value
@@ -143,7 +167,11 @@ function onCancel() {
 <template>
   <form class="space-y-4" @submit.prevent="onSubmit">
     <!-- Name - Full Width -->
-    <FormField v-slot="{ componentField }" name="description" :validate-on-blur="!isFieldDirty">
+    <FormField
+      v-slot="{ componentField }"
+      name="description"
+      :validate-on-blur="!isFieldDirty"
+    >
       <FormItem>
         <FormLabel>Name</FormLabel>
         <FormControl>
@@ -240,7 +268,11 @@ function onCancel() {
                     >
                       <span class="font-semibold text-xs">0%</span>
                     </ToggleGroupItem>
-                    <ToggleGroupItem value="9" class="flex-1 rounded-none" aria-label="VAT 9%">
+                    <ToggleGroupItem
+                      value="9"
+                      class="flex-1 rounded-none"
+                      aria-label="VAT 9%"
+                    >
                       <span class="font-semibold text-xs">9%</span>
                     </ToggleGroupItem>
                     <ToggleGroupItem

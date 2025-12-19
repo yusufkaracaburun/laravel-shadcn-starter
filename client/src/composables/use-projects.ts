@@ -1,7 +1,10 @@
 import type { SortingState } from '@tanstack/vue-table'
 
 import type { ServerPagination } from '@/components/data-table/types'
-import type { CreateProjectRequest, UpdateProjectRequest } from '@/services/projects.service'
+import type {
+  CreateProjectRequest,
+  UpdateProjectRequest,
+} from '@/services/projects.service'
 
 import { useToast } from '@/composables/use-toast'
 import {
@@ -144,7 +147,10 @@ export function useProjects() {
 
   async function updateProject(projectId: number, data: UpdateProjectRequest) {
     try {
-      const response = await updateProjectMutation.mutateAsync({ projectId, data })
+      const response = await updateProjectMutation.mutateAsync({
+        projectId,
+        data,
+      })
       toast.showSuccess('Project updated successfully!')
       return response
     }

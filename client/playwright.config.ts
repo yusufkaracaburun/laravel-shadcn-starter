@@ -50,7 +50,10 @@ export default defineConfig({
     {
       name: 'api',
       testDir: './tests/api',
-      testMatch: [/tests\/api\/.*\.(api|spec)\.spec\.ts$/, /tests\/api\/scenarios\/.*\.spec\.ts$/],
+      testMatch: [
+        /tests\/api\/.*\.(api|spec)\.spec\.ts$/,
+        /tests\/api\/scenarios\/.*\.spec\.ts$/,
+      ],
       use: {
         baseURL: apiURL,
         ...devices['Desktop Chrome'],

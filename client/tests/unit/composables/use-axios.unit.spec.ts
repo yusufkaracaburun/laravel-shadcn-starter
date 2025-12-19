@@ -1,4 +1,9 @@
-import type { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
+import type {
+  AxiosError,
+  AxiosInstance,
+  AxiosRequestConfig,
+  AxiosResponse,
+} from 'axios'
 
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
@@ -96,7 +101,9 @@ describe('useAxios', () => {
       expect(axiosInstance.defaults.timeout).toBe(10000)
       expect(axiosInstance.defaults.withCredentials).toBe(true)
       expect(axiosInstance.defaults.headers.Accept).toBe('application/json')
-      expect(axiosInstance.defaults.headers['X-Requested-With']).toBe('XMLHttpRequest')
+      expect(axiosInstance.defaults.headers['X-Requested-With']).toBe(
+        'XMLHttpRequest',
+      )
     })
   })
 
@@ -291,7 +298,9 @@ describe('useAxios', () => {
 
       // Assert
       expect(mockSetApiError).toHaveBeenCalled()
-      expect(mockShowError).toHaveBeenCalledWith('You are not authorized to access this page')
+      expect(mockShowError).toHaveBeenCalledWith(
+        'You are not authorized to access this page',
+      )
     })
 
     it('should store 422 errors and show toast', async () => {

@@ -51,7 +51,10 @@ export class BasePage {
   /**
    * Wait for URL to match pattern
    */
-  async waitForURL(url: string | RegExp, options?: { timeout?: number }): Promise<void> {
+  async waitForURL(
+    url: string | RegExp,
+    options?: { timeout?: number },
+  ): Promise<void> {
     await this.page.waitForURL(url, options)
   }
 }

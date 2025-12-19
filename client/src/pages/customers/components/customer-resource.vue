@@ -9,7 +9,9 @@ const props = defineProps<{
 
 defineEmits(['close'])
 
-const title = computed(() => (props.customer ? 'Edit Customer' : 'Create New Customer'))
+const title = computed(() =>
+  props.customer ? 'Edit Customer' : 'Create New Customer',
+)
 const description = computed(() =>
   props.customer
     ? `Update customer information for ${props.customer.name}.`

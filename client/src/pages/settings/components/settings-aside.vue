@@ -1,5 +1,12 @@
 <script setup lang="ts">
-import { BellDot, ChevronsUpDown, Palette, PictureInPicture2, User, Wrench } from 'lucide-vue-next'
+import {
+  BellDot,
+  ChevronsUpDown,
+  Palette,
+  PictureInPicture2,
+  User,
+  Wrench,
+} from 'lucide-vue-next'
 
 const route = useRoute()
 const currentPath = computed(() => route.path)
@@ -12,7 +19,9 @@ const links = [
   { path: '/settings/display', label: 'Display', icon: h(PictureInPicture2) },
 ]
 
-const currentLink = computed(() => links.find(link => link.path === currentPath.value))
+const currentLink = computed(() =>
+  links.find(link => link.path === currentPath.value),
+)
 </script>
 
 <template>
@@ -39,7 +48,11 @@ const currentLink = computed(() => links.find(link => link.path === currentPath.
         </div>
       </UiDropdownMenuTrigger>
       <UiDropdownMenuContent class="w-48" align="start">
-        <UiDropdownMenuItem v-for="link in links" :key="link.path" @click="$router.push(link.path)">
+        <UiDropdownMenuItem
+          v-for="link in links"
+          :key="link.path"
+          @click="$router.push(link.path)"
+        >
           <component :is="link.icon" class="size-4 mr-1" />
           {{ link.label }}
         </UiDropdownMenuItem>

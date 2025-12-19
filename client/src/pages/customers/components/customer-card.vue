@@ -5,7 +5,13 @@ import { useRouter } from 'vue-router'
 import type { Customer } from '@/services/customers.service'
 
 import { Badge } from '@/components/ui/badge'
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
 
 import CustomerDelete from './customer-delete.vue'
 import CustomerResourceDialog from './customer-resource-dialog.vue'
@@ -17,7 +23,9 @@ interface Props {
 const props = defineProps<Props>()
 const router = useRouter()
 
-const showComponent = shallowRef<typeof CustomerResourceDialog | typeof CustomerDelete | null>(null)
+const showComponent = shallowRef<
+  typeof CustomerResourceDialog | typeof CustomerDelete | null
+>(null)
 const isDialogOpen = ref(false)
 
 type TCommand = 'view' | 'edit' | 'delete'
@@ -25,7 +33,10 @@ type TCommand = 'view' | 'edit' | 'delete'
 function handleSelect(command: TCommand) {
   switch (command) {
     case 'view':
-      router.push({ name: '/customers/[id]', params: { id: props.customer.id.toString() } })
+      router.push({
+        name: '/customers/[id]',
+        params: { id: props.customer.id.toString() },
+      })
       break
     case 'edit':
       showComponent.value = CustomerResourceDialog
@@ -42,7 +53,12 @@ function handleSelect(command: TCommand) {
 <template>
   <Card
     class="hover:shadow-md transition-shadow cursor-pointer"
-    @click="router.push({ name: '/customers/[id]', params: { id: customer.id.toString() } })"
+    @click="
+      router.push({
+        name: '/customers/[id]',
+        params: { id: customer.id.toString() },
+      })
+    "
   >
     <CardHeader>
       <div class="flex items-start justify-between">
@@ -66,14 +82,19 @@ function handleSelect(command: TCommand) {
             <UiDropdownMenuItem @click.stop="handleSelect('edit')">
               Edit
             </UiDropdownMenuItem>
-            <UiDropdownMenuItem class="text-destructive" @click.stop="handleSelect('delete')">
+            <UiDropdownMenuItem
+              class="text-destructive"
+              @click.stop="handleSelect('delete')"
+            >
               Delete
             </UiDropdownMenuItem>
           </UiDropdownMenuContent>
         </UiDropdownMenu>
       </div>
       <div class="flex items-center gap-2 mt-2">
-        <Badge :variant="customer.type === 'business' ? 'default' : 'secondary'">
+        <Badge
+          :variant="customer.type === 'business' ? 'default' : 'secondary'"
+        >
           {{ customer.type === 'business' ? 'Business' : 'Private' }}
         </Badge>
       </div>
@@ -82,7 +103,9 @@ function handleSelect(command: TCommand) {
       <div class="space-y-2">
         <div v-if="customer.email" class="flex items-center justify-between">
           <span class="text-sm text-muted-foreground">Email</span>
-          <span class="text-sm font-medium truncate max-w-[150px]">{{ customer.email }}</span>
+          <span class="text-sm font-medium truncate max-w-[150px]">{{
+            customer.email
+          }}</span>
         </div>
         <div v-if="customer.phone" class="flex items-center justify-between">
           <span class="text-sm text-muted-foreground">Phone</span>
@@ -92,7 +115,10 @@ function handleSelect(command: TCommand) {
           <span class="text-sm text-muted-foreground">City</span>
           <span class="text-sm font-medium">{{ customer.city }}</span>
         </div>
-        <div v-if="customer.primary_contact" class="flex items-center justify-between">
+        <div
+          v-if="customer.primary_contact"
+          class="flex items-center justify-between"
+        >
           <span class="text-sm text-muted-foreground">Primary Contact</span>
           <span class="text-sm font-medium truncate max-w-[150px]">{{
             customer.primary_contact.name || customer.primary_contact.email
@@ -106,7 +132,11 @@ function handleSelect(command: TCommand) {
 
     <UiDialog v-model:open="isDialogOpen">
       <UiDialogContent v-if="showComponent" class="sm:max-w-[425px]">
-        <component :is="showComponent" :customer="customer" @close="isDialogOpen = false" />
+        <component
+          :is="showComponent"
+          :customer="customer"
+          @close="isDialogOpen = false"
+        />
       </UiDialogContent>
     </UiDialog>
   </Card>

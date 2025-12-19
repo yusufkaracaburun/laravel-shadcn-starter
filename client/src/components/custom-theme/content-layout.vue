@@ -20,7 +20,9 @@ const { contentLayout } = storeToRefs(themeStore)
         :key="layout.label"
         variant="outline"
         class="justify-center h-8 px-3"
-        :class="contentLayout === layout.value ? 'border-foreground border-2' : ''"
+        :class="
+          contentLayout === layout.value ? 'border-foreground border-2' : ''
+        "
         @click="setContentLayout(layout.value)"
       >
         <component :is="layout.icon" />

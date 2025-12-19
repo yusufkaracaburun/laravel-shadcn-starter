@@ -44,13 +44,18 @@ function createTestUserWithRole(role: string): CreateUserRequest {
 /**
  * Pure function: Create update data
  */
-function createUpdateData(updates: Partial<UpdateUserRequest>): UpdateUserRequest {
+function createUpdateData(
+  updates: Partial<UpdateUserRequest>,
+): UpdateUserRequest {
   return { ...updates }
 }
 
 test.describe('Users API', { tag: ['@api', '@users'] }, () => {
   test.describe('Current User', () => {
-    test('should get current authenticated user', async ({ request, authenticatedAuthClient }) => {
+    test('should get current authenticated user', async ({
+      request,
+      authenticatedAuthClient,
+    }) => {
       // Arrange: authenticatedAuthClient fixture provides pre-authenticated client
       // Create UserClient and copy auth state from authenticated client
       const userClient = new UserClient(request)
@@ -90,7 +95,10 @@ test.describe('Users API', { tag: ['@api', '@users'] }, () => {
   })
 
   test.describe('Roles', () => {
-    test('should get available roles', async ({ request, authenticatedAuthClient }) => {
+    test('should get available roles', async ({
+      request,
+      authenticatedAuthClient,
+    }) => {
       // Arrange
       const userClient = new UserClient(request)
       userClient.copyAuthStateFrom(authenticatedAuthClient)
@@ -131,7 +139,10 @@ test.describe('Users API', { tag: ['@api', '@users'] }, () => {
   })
 
   test.describe('List Users', () => {
-    test('should get paginated list of users', async ({ request, authenticatedAuthClient }) => {
+    test('should get paginated list of users', async ({
+      request,
+      authenticatedAuthClient,
+    }) => {
       // Arrange
       const userClient = new UserClient(request)
       userClient.copyAuthStateFrom(authenticatedAuthClient)
@@ -168,7 +179,10 @@ test.describe('Users API', { tag: ['@api', '@users'] }, () => {
       }
     })
 
-    test('should handle pagination parameters', async ({ request, authenticatedAuthClient }) => {
+    test('should handle pagination parameters', async ({
+      request,
+      authenticatedAuthClient,
+    }) => {
       // Arrange
       const userClient = new UserClient(request)
       userClient.copyAuthStateFrom(authenticatedAuthClient)
@@ -196,7 +210,10 @@ test.describe('Users API', { tag: ['@api', '@users'] }, () => {
   })
 
   test.describe('Show User', () => {
-    test('should get user by id', async ({ request, authenticatedAuthClient }) => {
+    test('should get user by id', async ({
+      request,
+      authenticatedAuthClient,
+    }) => {
       // Arrange - Get current user to use their ID
       const userClient = new UserClient(request)
       userClient.copyAuthStateFrom(authenticatedAuthClient)
@@ -251,7 +268,10 @@ test.describe('Users API', { tag: ['@api', '@users'] }, () => {
   })
 
   test.describe('Create User', () => {
-    test('should create user successfully', async ({ request, authenticatedAuthClient }) => {
+    test('should create user successfully', async ({
+      request,
+      authenticatedAuthClient,
+    }) => {
       // Arrange - Create unique test user data
       const userClient = new UserClient(request)
       userClient.copyAuthStateFrom(authenticatedAuthClient)
@@ -278,7 +298,10 @@ test.describe('Users API', { tag: ['@api', '@users'] }, () => {
       await userClient.deleteUser(userBody.data.id)
     })
 
-    test('should create user with optional role', async ({ request, authenticatedAuthClient }) => {
+    test('should create user with optional role', async ({
+      request,
+      authenticatedAuthClient,
+    }) => {
       // Arrange
       const userClient = new UserClient(request)
       userClient.copyAuthStateFrom(authenticatedAuthClient)
@@ -436,7 +459,10 @@ test.describe('Users API', { tag: ['@api', '@users'] }, () => {
   })
 
   test.describe('Update User', () => {
-    test('should update user successfully', async ({ request, authenticatedAuthClient }) => {
+    test('should update user successfully', async ({
+      request,
+      authenticatedAuthClient,
+    }) => {
       // Arrange - Create a user first
       const userClient = new UserClient(request)
       userClient.copyAuthStateFrom(authenticatedAuthClient)
@@ -465,7 +491,10 @@ test.describe('Users API', { tag: ['@api', '@users'] }, () => {
       await userClient.deleteUser(userId)
     })
 
-    test('should update user email', async ({ request, authenticatedAuthClient }) => {
+    test('should update user email', async ({
+      request,
+      authenticatedAuthClient,
+    }) => {
       // Arrange
       const userClient = new UserClient(request)
       userClient.copyAuthStateFrom(authenticatedAuthClient)
@@ -491,7 +520,10 @@ test.describe('Users API', { tag: ['@api', '@users'] }, () => {
       await userClient.deleteUser(userId)
     })
 
-    test('should update user password', async ({ request, authenticatedAuthClient }) => {
+    test('should update user password', async ({
+      request,
+      authenticatedAuthClient,
+    }) => {
       // Arrange
       const userClient = new UserClient(request)
       userClient.copyAuthStateFrom(authenticatedAuthClient)
@@ -582,7 +614,10 @@ test.describe('Users API', { tag: ['@api', '@users'] }, () => {
       })
 
       // Act
-      const response = await userClient.updateUser(nonExistentUserId, updateData)
+      const response = await userClient.updateUser(
+        nonExistentUserId,
+        updateData,
+      )
 
       // Assert
       expectError(response, HttpStatus.NOT_FOUND)
@@ -604,7 +639,10 @@ test.describe('Users API', { tag: ['@api', '@users'] }, () => {
   })
 
   test.describe('Delete User', () => {
-    test('should delete user successfully', async ({ request, authenticatedAuthClient }) => {
+    test('should delete user successfully', async ({
+      request,
+      authenticatedAuthClient,
+    }) => {
       // Arrange - Create a user first
       const userClient = new UserClient(request)
       userClient.copyAuthStateFrom(authenticatedAuthClient)
@@ -617,7 +655,9 @@ test.describe('Users API', { tag: ['@api', '@users'] }, () => {
       const response = await userClient.deleteUser(userId)
 
       // Assert - Should return 204 No Content or 200 OK
-      expect([HttpStatus.OK, HttpStatus.NO_CONTENT]).toContain(response.status())
+      expect([HttpStatus.OK, HttpStatus.NO_CONTENT]).toContain(
+        response.status(),
+      )
 
       // Verify user is deleted
       const getResponse = await userClient.getUser(userId)

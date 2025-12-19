@@ -9,8 +9,10 @@ export const SelectColumn: ColumnDef<any> = {
   header: ({ table }) =>
     h(Checkbox, {
       'modelValue':
-        table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && 'indeterminate'),
-      'onUpdate:modelValue': value => table.toggleAllPageRowsSelected(!!value),
+        table.getIsAllPageRowsSelected()
+        || (table.getIsSomePageRowsSelected() && 'indeterminate'),
+      'onUpdate:modelValue': value =>
+        table.toggleAllPageRowsSelected(!!value),
       'ariaLabel': 'Select all',
     }),
   cell: ({ row }) =>

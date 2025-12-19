@@ -1,7 +1,10 @@
 import type { SortingState } from '@tanstack/vue-table'
 
 import type { ServerPagination } from '@/components/data-table/types'
-import type { CreateCompanyRequest, UpdateCompanyRequest } from '@/services/companies.service'
+import type {
+  CreateCompanyRequest,
+  UpdateCompanyRequest,
+} from '@/services/companies.service'
 
 import { useToast } from '@/composables/use-toast'
 import {
@@ -136,7 +139,10 @@ export function useCompanies() {
 
   async function updateCompany(companyId: number, data: UpdateCompanyRequest) {
     try {
-      const response = await updateCompanyMutation.mutateAsync({ companyId, data })
+      const response = await updateCompanyMutation.mutateAsync({
+        companyId,
+        data,
+      })
       toast.showSuccess('Company updated successfully!')
       return response
     }

@@ -1,5 +1,11 @@
 <script setup lang="ts">
-import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 
 interface IProps {
@@ -16,7 +22,11 @@ withDefaults(defineProps<IProps>(), {
     <h3 class="text-sm font-semibold text-muted-foreground uppercase">
       Invoice Details
     </h3>
-    <FormField v-slot="{ componentField }" name="invoice_number" :validate-on-blur="!isFieldDirty">
+    <FormField
+      v-slot="{ componentField }"
+      name="invoice_number"
+      :validate-on-blur="!isFieldDirty"
+    >
       <FormItem>
         <FormLabel>Invoice Number</FormLabel>
         <FormControl>

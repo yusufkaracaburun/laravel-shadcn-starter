@@ -160,9 +160,15 @@ export function useCustomers() {
     }
   }
 
-  async function updateCustomer(customerId: number, data: UpdateCustomerRequest) {
+  async function updateCustomer(
+    customerId: number,
+    data: UpdateCustomerRequest,
+  ) {
     try {
-      const response = await updateCustomerMutation.mutateAsync({ customerId, data })
+      const response = await updateCustomerMutation.mutateAsync({
+        customerId,
+        data,
+      })
       toast.showSuccess('Customer updated successfully!')
       return response
     }

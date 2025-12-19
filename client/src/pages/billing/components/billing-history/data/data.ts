@@ -1,4 +1,9 @@
-import { CircleDashedIcon, CircleSlash, ClockAlert, HandCoins } from 'lucide-vue-next'
+import {
+  CircleDashedIcon,
+  CircleSlash,
+  ClockAlert,
+  HandCoins,
+} from 'lucide-vue-next'
 import { h } from 'vue'
 
 export const plans = [
@@ -9,9 +14,19 @@ export const plans = [
 
 export const statuses = [
   { value: 'paid', label: 'Paid', icon: h(HandCoins), color: 'green' },
-  { value: 'unpaid', label: 'Unpaid', icon: h(CircleDashedIcon), color: 'orange' },
+  {
+    value: 'unpaid',
+    label: 'Unpaid',
+    icon: h(CircleDashedIcon),
+    color: 'orange',
+  },
   { value: 'overdue', label: 'Overdue', icon: h(ClockAlert), color: 'red' },
-  { value: 'cancelled', label: 'Cancelled', icon: h(CircleSlash), color: 'gray' },
+  {
+    value: 'cancelled',
+    label: 'Cancelled',
+    icon: h(CircleSlash),
+    color: 'gray',
+  },
 ]
 
 export type PayState = 'paid' | 'unpaid' | 'overdue' | 'cancelled'

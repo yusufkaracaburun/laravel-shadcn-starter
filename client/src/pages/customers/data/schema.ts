@@ -44,7 +44,9 @@ export const customerSchema = z.object({
 
   // Address fields
   address: z.string().nullable(),
-  formatted_address: z.union([z.array(z.string()), z.record(z.any())]).optional(), // accessor - can be array or object
+  formatted_address: z
+    .union([z.array(z.string()), z.record(z.any())])
+    .optional(), // accessor - can be array or object
   zipcode: z.string().nullable(),
   city: z.string().nullable(),
   country: z.string().nullable(),

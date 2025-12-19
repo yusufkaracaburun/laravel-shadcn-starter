@@ -3,7 +3,11 @@ import { Icon } from '@iconify/vue'
 </script>
 
 <template>
-  <UiButton variant="outline" class="w-full" data-testid="google-button_login_button">
+  <UiButton
+    variant="outline"
+    class="w-full"
+    data-testid="google-button_login_button"
+  >
     <Icon icon="simple-icons:google" class="size-5 mr-2" />
     Google
   </UiButton>
