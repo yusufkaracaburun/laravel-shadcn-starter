@@ -67,19 +67,10 @@ const pdfHeight = computed(() => {
 <template>
   <Page :title="title" :description="description">
     <template #actions>
-      <InvoiceNavbar
-        v-if="invoice"
-        :invoice="invoice"
-        :invoice-id="invoiceId ?? 0"
-      />
+      <InvoiceNavbar v-if="invoice" :invoice="invoice" :invoice-id="invoiceId ?? 0" />
     </template>
 
-    <DocumentLayout
-      :is-loading="isLoading"
-      :is-error="isError"
-      :error-object="error"
-      :on-retry="fetchInvoiceByIdData"
-    >
+    <DocumentLayout :is-loading="isLoading" :is-error="isError" :error-object="error" :on-retry="fetchInvoiceByIdData">
       <div class="flex flex-1 flex-col items-center justify-center">
         <div class="w-full flex flex-row">
           <div class="flex-1">
