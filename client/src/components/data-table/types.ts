@@ -1,24 +1,25 @@
 import type { ColumnDef, SortingState } from '@tanstack/vue-table'
 
-export interface FacetedFilterOption {
+export type TPageSize = 10 | 20 | 30 | 40 | 50
+export interface IFacetedFilterOption {
   label: string
   value: string
   icon?: Component
 }
 
-export interface ServerPagination {
+export interface IServerPagination {
   page: number
-  pageSize: number
+  pageSize: TPageSize
   total: number
   onPageChange: (page: number) => void
-  onPageSizeChange: (pageSize: number) => void
+  onPageSizeChange: (pageSize: TPageSize) => void
 }
 
-export interface DataTableProps<T> {
+export interface IDataTableProps<T> {
   loading?: boolean
   columns: ColumnDef<T, any>[]
   data: T[]
-  serverPagination?: ServerPagination
+  serverPagination?: IServerPagination
   sorting?: MaybeRef<SortingState>
   onSortingChange?: (sorting: SortingState) => void
 }

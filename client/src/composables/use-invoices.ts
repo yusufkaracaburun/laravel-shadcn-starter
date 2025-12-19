@@ -1,6 +1,6 @@
 import type { SortingState } from '@tanstack/vue-table'
 
-import type { ServerPagination } from '@/components/data-table/types'
+import type { IServerPagination, TPageSize } from '@/components/data-table/types'
 import type {
   ICreateInvoiceRequest,
   IInvoiceFilters,
@@ -19,8 +19,6 @@ enum InvoiceInclude {
   ACTIVITIES = 'activities',
   EMAILS = 'emails',
 }
-
-type TPageSize = 10 | 20 | 30 | 40 | 50
 
 const DEFAULT_PAGE = 1
 const DEFAULT_PAGE_SIZE: TPageSize = 10
@@ -90,7 +88,7 @@ export function useInvoices() {
       },
   )
 
-  const serverPagination = computed<ServerPagination>(() => ({
+  const serverPagination = computed<IServerPagination>(() => ({
     page: pagination.value.current_page,
     pageSize: pageSize.value,
     total: pagination.value.total,
@@ -111,10 +109,10 @@ export function useInvoices() {
   }
 
   // Create invoice mutation
-  const createInvoiceMutation = useCreateInvoiceMutation()
-  const updateInvoiceMutation = useUpdateInvoiceMutation()
-  const deleteInvoiceMutation = useDeleteInvoiceMutation()
-  const downloadInvoicePdfMutation = useDownloadInvoicePdfMutation()
+  const createInvoiceMutation = invoiceService.createInvoiceMutation()
+  const updateInvoiceMutation = invoiceService.updateInvoiceMutation()
+  const deleteInvoiceMutation = invoiceService.deleteInvoiceMutation()
+  const downloadInvoicePdfMutation = invoiceService.downloadInvoicePdfMutation()
 
   async function createInvoice(data: ICreateInvoiceRequest) {
     try {

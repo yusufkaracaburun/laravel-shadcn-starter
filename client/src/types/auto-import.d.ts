@@ -86,6 +86,7 @@ declare global {
   const useCssModule: typeof import('vue').useCssModule
   const useCssVars: typeof import('vue').useCssVars
   const useCustomers: typeof import('../composables/use-customers').useCustomers
+  const useDataTable: typeof import('../composables/use-data-table').useDataTable
   const useEcho: typeof import('../composables/use-echo').useEcho
   const useErrorStore: typeof import('../stores/error.store').useErrorStore
   const useId: typeof import('vue').useId
