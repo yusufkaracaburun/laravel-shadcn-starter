@@ -1,13 +1,12 @@
 import type { SortingState } from '@tanstack/vue-table'
 
-import { useRoute } from 'vue-router'
-
 import type { IServerPagination, TPageSize } from '@/components/data-table/types'
 import type {
   ICreateInvoiceRequest,
   IInvoiceFilters,
   IUpdateInvoiceRequest,
 } from '@/pages/invoices/models/invoice'
+import type { ISorting } from '@/services/query-utils'
 
 import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from '@/components/data-table/types'
 import { useToast } from '@/composables/use-toast'
@@ -15,7 +14,6 @@ import { useInvoiceService } from '@/services/invoices.service'
 import { useErrorStore } from '@/stores/error.store'
 import { downloadBlobFromAxiosResponse } from '@/utils/blob'
 
-const route = useRoute()
 const InvoiceContext = {
   FETCH_INVOICE_PREREQUISITES: 'fetchInvoicePrerequisites',
   FETCH_INVOICES: 'fetchInvoices',
@@ -40,10 +38,10 @@ export function useInvoices() {
   const errorStore = useErrorStore()
   const invoiceService = useInvoiceService()
 
-  const page = ref(DEFAULT_PAGE)
+  const page = ref<number>(DEFAULT_PAGE)
   const pageSize = ref<TPageSize>(DEFAULT_PAGE_SIZE)
-  const sorting = ref<SortingState>([])
-  const filters = ref<IInvoiceFilters>({})
+  const sort = ref<ISorting>({ id: 'created_at', desc: true })
+  const filter = ref<IInvoiceFilters>({})
   const includes = {
     customer: 'customer',
     items: 'items',
@@ -52,18 +50,18 @@ export function useInvoices() {
     emails: 'emails',
   }
 
-  function onSortingChange(newSorting: SortingState): void {
-    sorting.value = newSorting
+  function onSortingChange(newSorting: ISorting): void {
+    sort.value = newSorting
     page.value = DEFAULT_PAGE
   }
 
   function onFiltersChange(newFilters: IInvoiceFilters): void {
-    filters.value = newFilters
+    filter.value = newFilters
     page.value = DEFAULT_PAGE
   }
 
   function clearFilters() {
-    filters.value = {} as IInvoiceFilters
+    filter.value = {} as IInvoiceFilters
     page.value = DEFAULT_PAGE
   }
 
@@ -93,8 +91,8 @@ export function useInvoices() {
   const getInvoicesQuery = invoiceService.getInvoicesQuery(
     page.value,
     pageSize.value,
-    sorting.value,
-    filters.value,
+    sort.value,
+    filter.value,
     [includes.customer],
   )
   const { data, isLoading, isFetching, refetch: fetchInvoices } = getInvoicesQuery
@@ -137,7 +135,7 @@ export function useInvoices() {
     try {
       const response = await getInvoiceMutation.mutateAsync({
         id,
-        include: [includes.customer, includes.items],
+        includes: [includes.customer, includes.items],
       })
       return response.data
     }
@@ -241,8 +239,8 @@ export function useInvoices() {
   })
 
   return {
-    sorting,
-    filters,
+    sort,
+    filter,
     includes,
     data,
     onSortingChange,

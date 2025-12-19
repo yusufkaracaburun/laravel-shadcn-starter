@@ -17,7 +17,7 @@ import type { IResponse } from '@/services/types/response.type'
 
 import { useAxios } from '@/composables/use-axios'
 
-import { convertSortingToQueryString, defaultAxiosQueryOptions } from './query-utils'
+import { buildQueryString, convertSortingToQueryString, defaultAxiosQueryOptions } from './query-utils'
 
 enum QueryKeys {
   INVOICE_PREREQUISITES = 'invoicePrerequisites',
@@ -54,37 +54,36 @@ export function useInvoiceService() {
 
   function getInvoicesQuery(
     page: number,
-    pageSize: TPageSize,
-    sorting: Array<ISorting>,
-    filters: IInvoiceFilters,
-    includes: string[],
+    per_page: TPageSize,
+    sort: ISorting,
+    filter: IInvoiceFilters,
+    include: string[],
   ): ReturnType<typeof useQuery<IResponse<IPaginatedInvoicesResponse>, AxiosError>> {
     return useQuery({
       queryKey: [
         QueryKeys.INVOICE_LIST,
         page,
-        pageSize,
-        sorting,
-        filters,
-        includes,
+        per_page,
+        sort,
+        filter,
+        include,
       ],
       queryFn: async (): Promise<IResponse<IPaginatedInvoicesResponse>> => {
-        const params: Record<string, any> = {
+        const params = {
           page,
-          per_page: pageSize,
-          sort: convertSortingToQueryString(sorting),
-          filter: JSON.stringify(filters),
-          include: includes.join(','),
+          per_page,
+          sort,
+          filter,
+          include,
         }
 
-        console.warn(page, pageSize, sorting, filters, includes)
-        console.warn(params)
+        console.warn(page, per_page, sort, filter, include)
 
-        const response = await axiosInstance.get(`${API_URL}`, { params })
+        const response = await axiosInstance.get(`${API_URL}${buildQueryString(params)}`)
         return response.data
       },
       staleTime: STALE_TIME,
-      enabled: computed(() => page > 0 && pageSize > 0),
+      enabled: computed(() => page > 0 && per_page > 0),
       ...defaultAxiosQueryOptions(),
     })
   }
