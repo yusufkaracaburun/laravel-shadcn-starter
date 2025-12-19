@@ -290,5 +290,10 @@ export function useInvoices() {
     downloadInvoicePdf,
     loading,
     serverPagination,
+    invoiceByIdResponse,
+    isLoadingInvoiceById,
+    isErrorInvoiceById,
+    errorInvoiceById,
+    refetchInvoiceById,
   }
 }
