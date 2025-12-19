@@ -193,7 +193,8 @@ abstract class BaseIndexFormRequest extends BaseFormRequest
                 'sometimes',
                 'string',
                 function ($attribute, $value, $fail) use ($allowedIncludes): void {
-                    $requestedIncludes = array_map(trim(...), explode(',', $value));
+                    $value = is_array($value) ? implode(',', $value) : $value;
+                    $requestedIncludes = array_map(trim(...), explode(',', (string) $value));
 
                     foreach ($requestedIncludes as $include) {
                         if (!in_array($include, $allowedIncludes)) {
