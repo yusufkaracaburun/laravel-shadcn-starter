@@ -1,7 +1,7 @@
-import { CircleDot, FileCheck, FileX, Send, XCircle } from 'lucide-vue-next'
+import { CircleCheck, CircleDot, FileCheck, FileX, Send, XCircle } from 'lucide-vue-next'
 import { h } from 'vue'
 
-import { getInvoiceStatusColor } from '@/utils/status-colors'
+import { getInvoiceStatusColor, getPaymentStatusColor } from '@/utils/status-colors'
 
 export const statuses = [
   {
@@ -50,6 +50,49 @@ export const statuses = [
     icon: h(FileX),
     get color() {
       return getInvoiceStatusColor(this.value)
+    },
+  },
+]
+
+export const paymentStatuses = [
+  {
+    value: 'pending',
+    label: 'Pending',
+    icon: h(CircleDot),
+    get color() {
+      return getPaymentStatusColor(this.value)
+    },
+  },
+  {
+    value: 'paid',
+    label: 'Paid',
+    icon: h(FileCheck),
+    get color() {
+      return getPaymentStatusColor(this.value)
+    },
+  },
+  {
+    value: 'failed',
+    label: 'Failed',
+    icon: h(XCircle),
+    get color() {
+      return getPaymentStatusColor(this.value)
+    },
+  },
+  {
+    value: 'refunded',
+    label: 'Refunded',
+    icon: h(CircleCheck),
+    get color() {
+      return getPaymentStatusColor(this.value)
+    },
+  },
+  {
+    value: 'cancelled',
+    label: 'Cancelled',
+    icon: h(FileX),
+    get color() {
+      return getPaymentStatusColor(this.value)
     },
   },
 ]

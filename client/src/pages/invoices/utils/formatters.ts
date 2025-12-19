@@ -104,7 +104,7 @@ export function formatDate(dateString: string | null | undefined): string {
     return '—'
   try {
     const date = new Date(dateString)
-    if (!isNaN(date.getTime())) {
+    if (!Number.isNaN(date.getTime())) {
       const i18n = getI18n()
       if (i18n) {
         return i18n.d(date, 'long')
@@ -134,7 +134,7 @@ export function formatDateForPreview(
     return '—'
   try {
     const date = new Date(dateString)
-    if (!isNaN(date.getTime())) {
+    if (!Number.isNaN(date.getTime())) {
       const i18n = getI18n()
       if (i18n) {
         return i18n.d(date, 'preview')
@@ -171,7 +171,7 @@ export function formatDateForInput(
   }
   // Try parsing as "Y-m-d" format
   const date = new Date(dateString)
-  if (!isNaN(date.getTime())) {
+  if (!Number.isNaN(date.getTime())) {
     const year = date.getFullYear()
     const month = String(date.getMonth() + 1).padStart(2, '0')
     const day = String(date.getDate()).padStart(2, '0')
@@ -194,7 +194,7 @@ export function formatDateTime(dateString: string | null | undefined): string {
       const [day, month, year] = datePart.split('-')
       if (day && month && year && year.length === 4) {
         const date = new Date(`${year}-${month}-${day} ${timePart}`)
-        if (!isNaN(date.getTime())) {
+        if (!Number.isNaN(date.getTime())) {
           const i18n = getI18n()
           if (i18n) {
             return i18n.d(date, 'long')
@@ -212,7 +212,7 @@ export function formatDateTime(dateString: string | null | undefined): string {
     }
     // Try parsing as ISO format
     const date = new Date(dateString)
-    if (!isNaN(date.getTime())) {
+    if (!Number.isNaN(date.getTime())) {
       const i18n = getI18n()
       if (i18n) {
         return i18n.d(date, 'long')
