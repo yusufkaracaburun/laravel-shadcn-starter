@@ -2,12 +2,12 @@
 import { Clock, CreditCard, Hash, Mail, User } from 'lucide-vue-next'
 import { computed, ref } from 'vue'
 
-import type { TInvoice } from '@/pages/invoices/data/schema'
 import type {
+  IInvoice,
   IInvoiceActivity,
   IInvoiceEmail,
   IInvoicePayment,
-} from '@/services/invoices.service'
+} from '@/pages/invoices/models/invoice'
 
 import {
   Accordion,
@@ -27,12 +27,11 @@ import {
   formatDateTime,
   formatMoney,
 } from '@/pages/invoices/utils/formatters'
+import SentEmailDialog from '@/pages/invoices/view/components/sent-email-dialog.vue'
 import { getPaymentStatusColor } from '@/utils/status-colors'
 
-import SentEmailDialog from './sent-email-dialog.vue'
-
 const props = defineProps<{
-  invoice: TInvoice | null
+  invoice: IInvoice
 }>()
 
 const isEmailDialogOpened = ref(false)

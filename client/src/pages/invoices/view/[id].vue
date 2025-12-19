@@ -13,8 +13,8 @@ import type { IInvoice } from '@/pages/invoices/models/invoice'
 import Page from '@/components/global-layout/basic-page.vue'
 import { useInvoices } from '@/composables/use-invoices'
 import DocumentLayout from '@/layouts/document-layout.vue'
-import InvoiceSidebar from '@/pages/invoices/components/invoice-sidebar.vue'
 import InvoiceNavbar from '@/pages/invoices/view/components/invoice-navbar.vue'
+import InvoiceSidebar from '@/pages/invoices/view/components/invoice-sidebar.vue'
 
 const {
   invoiceId,
@@ -26,8 +26,8 @@ const {
 } = useInvoices()
 
 const invoice = computed(
-  () => invoiceResponse.value?.data ?? null,
-) as ComputedRef<IInvoice | null>
+  () => invoiceResponse.value?.data as IInvoice,
+) as ComputedRef<IInvoice>
 
 const title = computed(() => {
   if (!invoice.value) {

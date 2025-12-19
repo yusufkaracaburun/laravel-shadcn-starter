@@ -30,8 +30,6 @@ const errorCode = computed(() => {
 
 <template>
   <div class="min-h-screen">
-    <slot name="navbar" />
-
     <div
       v-if="isLoading"
       class="flex items-center justify-center min-h-[400px]"
