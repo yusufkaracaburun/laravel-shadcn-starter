@@ -44,12 +44,8 @@ const onSubmit = handleSubmit((values) => {
 
 <template>
   <div>
-    <h3 class="text-lg font-medium">
-      Notifications
-    </h3>
-    <p class="text-sm text-muted-foreground">
-      Configure how you receive notifications.
-    </p>
+    <h3 class="text-lg font-medium">Notifications</h3>
+    <p class="text-sm text-muted-foreground">Configure how you receive notifications.</p>
   </div>
   <Separator class="my-4" />
   <form class="space-y-8" @submit="onSubmit">
@@ -62,25 +58,19 @@ const onSubmit = handleSubmit((values) => {
               <FormControl>
                 <RadioGroupItem value="all" />
               </FormControl>
-              <FormLabel class="font-normal">
-                All new messages
-              </FormLabel>
+              <FormLabel class="font-normal"> All new messages </FormLabel>
             </FormItem>
             <FormItem class="flex items-center space-y-0">
               <FormControl>
                 <RadioGroupItem value="mentions" />
               </FormControl>
-              <FormLabel class="font-normal">
-                Direct messages and mentions
-              </FormLabel>
+              <FormLabel class="font-normal"> Direct messages and mentions </FormLabel>
             </FormItem>
             <FormItem class="flex items-center space-y-0">
               <FormControl>
                 <RadioGroupItem value="none" />
               </FormControl>
-              <FormLabel class="font-normal">
-                Nothing
-              </FormLabel>
+              <FormLabel class="font-normal"> Nothing </FormLabel>
             </FormItem>
           </RadioGroup>
         </FormControl>
@@ -89,16 +79,12 @@ const onSubmit = handleSubmit((values) => {
     </FormField>
 
     <div>
-      <h3 class="mb-4 text-lg font-medium">
-        Email Notifications
-      </h3>
+      <h3 class="mb-4 text-lg font-medium">Email Notifications</h3>
       <div class="space-y-4">
         <FormField v-slot="{ handleChange, value }" type="checkbox" name="communication_emails">
           <FormItem class="flex flex-row items-center justify-between p-4 border rounded-lg">
             <div class="space-y-0.5">
-              <FormLabel class="text-base">
-                Communication emails
-              </FormLabel>
+              <FormLabel class="text-base"> Communication emails </FormLabel>
               <FormDescription> Receive emails about your account activity. </FormDescription>
             </div>
             <FormControl>
@@ -110,9 +96,7 @@ const onSubmit = handleSubmit((values) => {
         <FormField v-slot="{ handleChange, value }" type="checkbox" name="marketing_emails">
           <FormItem class="flex flex-row items-center justify-between p-4 border rounded-lg">
             <div class="space-y-0.5">
-              <FormLabel class="text-base">
-                Marketing emails
-              </FormLabel>
+              <FormLabel class="text-base"> Marketing emails </FormLabel>
               <FormDescription>
                 Receive emails about new products, features, and more.
               </FormDescription>
@@ -126,9 +110,7 @@ const onSubmit = handleSubmit((values) => {
         <FormField v-slot="{ handleChange, value }" type="checkbox" name="social_emails">
           <FormItem class="flex flex-row items-center justify-between p-4 border rounded-lg">
             <div class="space-y-0.5">
-              <FormLabel class="text-base">
-                Social emails
-              </FormLabel>
+              <FormLabel class="text-base"> Social emails </FormLabel>
               <FormDescription>
                 Receive emails for friend requests, follows, and more.
               </FormDescription>
@@ -142,9 +124,7 @@ const onSubmit = handleSubmit((values) => {
         <FormField v-slot="{ handleChange, value }" type="checkbox" name="security_emails">
           <FormItem class="flex flex-row items-center justify-between p-4 border rounded-lg">
             <div class="space-y-0.5">
-              <FormLabel class="text-base">
-                Security emails
-              </FormLabel>
+              <FormLabel class="text-base"> Security emails </FormLabel>
               <FormDescription>
                 Receive emails about your account activity and security.
               </FormDescription>
@@ -173,9 +153,7 @@ const onSubmit = handleSubmit((values) => {
     </FormField>
 
     <div class="flex justify-start">
-      <Button type="submit">
-        Update notifications
-      </Button>
+      <Button type="submit"> Update notifications </Button>
     </div>
   </form>
 </template>

@@ -31,12 +31,12 @@ export const invoiceItemSchema = z.object({
   description: z.string().nullable(),
   quantity: z
     .union([z.number(), z.string()])
-    .transform(val => (typeof val === 'string' ? Number.parseFloat(val) : val)),
+    .transform((val) => (typeof val === 'string' ? Number.parseFloat(val) : val)),
   unit: z.string().nullable().optional(),
   unit_price: moneySchema,
   vat_rate: z
     .union([z.number(), z.string()])
-    .transform(val => (typeof val === 'string' ? Number.parseFloat(val) : val)),
+    .transform((val) => (typeof val === 'string' ? Number.parseFloat(val) : val)),
   total_excl_vat: moneySchema,
   total_vat: moneySchema,
   total_incl_vat: moneySchema,
@@ -81,7 +81,7 @@ export const invoiceSchema = z.object({
 
 export const invoiceFormSchema = z.object({
   customer_id: z.preprocess(
-    val => (val === undefined || val === null || val === '' ? undefined : Number(val)),
+    (val) => (val === undefined || val === null || val === '' ? undefined : Number(val)),
     z.number().min(1, 'Customer is required'),
   ),
   invoice_number: z.string(),

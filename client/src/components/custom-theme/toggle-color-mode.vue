@@ -23,9 +23,7 @@ function setColorMode(colorMode: BasicColorSchema) {
 
 <template>
   <div class="space-y-1.5 pt-6">
-    <UiLabel for="radius" class="text-xs">
-      Color Mode
-    </UiLabel>
+    <UiLabel for="radius" class="text-xs"> Color Mode </UiLabel>
     <div class="grid grid-cols-3 gap-2 py-1.5">
       <UiButton
         v-for="item in colorModes"

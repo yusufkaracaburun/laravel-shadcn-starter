@@ -33,8 +33,7 @@ const user = computed<User | null>(() => userResponse.value?.data ?? null)
 
 // Get initials from name
 function getInitials(name: string): string {
-  if (!name || name === '—')
-    return '?'
+  if (!name || name === '—') return '?'
   const parts = name.trim().split(/\s+/)
   if (parts.length >= 2) {
     return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase()
@@ -44,8 +43,7 @@ function getInitials(name: string): string {
 
 // Format date
 function formatDate(dateString: string | null): string {
-  if (!dateString)
-    return '—'
+  if (!dateString) return '—'
   return new Date(dateString).toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'long',
@@ -55,8 +53,7 @@ function formatDate(dateString: string | null): string {
 
 // Format datetime
 function formatDateTime(dateString: string | null): string {
-  if (!dateString)
-    return '—'
+  if (!dateString) return '—'
   return new Date(dateString).toLocaleString('en-US', {
     year: 'numeric',
     month: 'long',
@@ -86,8 +83,7 @@ function handleDeleteClose() {
 
 // Check if error is 404
 const isNotFound = computed(() => {
-  if (!isError.value || !error.value)
-    return false
+  if (!isError.value || !error.value) return false
   return (error.value as any)?.response?.status === 404
 })
 </script>
@@ -133,9 +129,7 @@ const isNotFound = computed(() => {
           subtitle="Error Loading User"
           error="An error occurred while loading the user information. Please try again."
         />
-        <Button class="mt-4" @click="refetch()">
-          Retry
-        </Button>
+        <Button class="mt-4" @click="refetch()"> Retry </Button>
       </div>
     </div>
 
@@ -182,25 +176,19 @@ const isNotFound = computed(() => {
           </CardHeader>
           <CardContent class="space-y-4">
             <div>
-              <div class="text-sm font-medium text-muted-foreground mb-1">
-                Name
-              </div>
+              <div class="text-sm font-medium text-muted-foreground mb-1">Name</div>
               <div class="text-base">
                 {{ user.name }}
               </div>
             </div>
             <div>
-              <div class="text-sm font-medium text-muted-foreground mb-1">
-                Email
-              </div>
+              <div class="text-sm font-medium text-muted-foreground mb-1">Email</div>
               <div class="text-base">
                 {{ user.email }}
               </div>
             </div>
             <div>
-              <div class="text-sm font-medium text-muted-foreground mb-1">
-                Email Verification
-              </div>
+              <div class="text-sm font-medium text-muted-foreground mb-1">Email Verification</div>
               <div class="text-base">
                 <Badge :variant="user.email_verified_at ? 'default' : 'secondary'">
                   {{ user.email_verified_at ? 'Verified' : 'Unverified' }}
@@ -239,9 +227,7 @@ const isNotFound = computed(() => {
               </div>
             </div>
             <div v-if="user.current_team_id">
-              <div class="text-sm font-medium text-muted-foreground mb-1">
-                Current Team ID
-              </div>
+              <div class="text-sm font-medium text-muted-foreground mb-1">Current Team ID</div>
               <div class="text-base">
                 {{ user.current_team_id }}
               </div>

@@ -22,7 +22,7 @@ function isCollapsed(menu: NavItem): boolean {
       }
     })
   })
-  return !!menu.items?.some(item => item.url === pathname)
+  return !!menu.items?.some((item) => item.url === pathname)
 }
 
 function isActive(menu: NavItem): boolean {
@@ -30,7 +30,7 @@ function isActive(menu: NavItem): boolean {
   if (menu.url) {
     return pathname === menu.url
   }
-  return !!menu.items?.some(item => item.url === pathname)
+  return !!menu.items?.some((item) => item.url === pathname)
 }
 </script>
 

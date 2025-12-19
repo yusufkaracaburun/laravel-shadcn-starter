@@ -48,8 +48,7 @@ const onSubmit = handleSubmit(async (values) => {
       email: values.email,
       password: values.password,
     })
-  }
-  catch (error: any) {
+  } catch (error: any) {
     // Handle backend validation errors (422)
     if (error.response?.status === 422) {
       const backendErrors = error.response.data.errors || {}
@@ -70,18 +69,14 @@ const onSubmit = handleSubmit(async (values) => {
   <form id="login-form-2" :class="cn('flex flex-col gap-6', props.class)" @submit="onSubmit">
     <FieldGroup>
       <div class="flex flex-col items-center gap-1 text-center">
-        <h1 class="text-2xl font-bold">
-          Login to your account
-        </h1>
+        <h1 class="text-2xl font-bold">Login to your account</h1>
         <p class="text-muted-foreground text-sm text-balance">
           Enter your email below to login to your account
         </p>
       </div>
       <Field>
         <VeeField v-slot="{ field, errors }" name="email">
-          <FieldLabel for="login-form-2-email">
-            Email
-          </FieldLabel>
+          <FieldLabel for="login-form-2-email"> Email </FieldLabel>
           <Input
             id="login-form-2-email"
             v-bind="field"
@@ -96,9 +91,7 @@ const onSubmit = handleSubmit(async (values) => {
       <Field>
         <VeeField v-slot="{ field, errors }" name="password">
           <div class="flex items-center justify-between">
-            <FieldLabel for="login-form-2-password">
-              Password
-            </FieldLabel>
+            <FieldLabel for="login-form-2-password"> Password </FieldLabel>
             <ToForgotPasswordLink />
           </div>
           <Input

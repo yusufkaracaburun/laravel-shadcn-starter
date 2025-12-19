@@ -59,8 +59,7 @@ function formatDate(dateString: string | null | undefined): string {
     if (!Number.isNaN(date.getTime())) {
       return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })
     }
-  }
-  catch {
+  } catch {
     // Ignore parsing errors
   }
   return dateString
@@ -88,12 +87,8 @@ function formatDate(dateString: string | null | undefined): string {
             </UiButton>
           </UiDropdownMenuTrigger>
           <UiDropdownMenuContent align="end" @click.stop>
-            <UiDropdownMenuItem @click.stop="handleSelect('view')">
-              View
-            </UiDropdownMenuItem>
-            <UiDropdownMenuItem @click.stop="handleSelect('edit')">
-              Edit
-            </UiDropdownMenuItem>
+            <UiDropdownMenuItem @click.stop="handleSelect('view')"> View </UiDropdownMenuItem>
+            <UiDropdownMenuItem @click.stop="handleSelect('edit')"> Edit </UiDropdownMenuItem>
             <UiDropdownMenuItem class="text-destructive" @click.stop="handleSelect('delete')">
               Delete
             </UiDropdownMenuItem>

@@ -91,8 +91,7 @@ export function useUsers() {
     try {
       const usersResponse = await fetchUsers()
       return usersResponse.data
-    }
-    catch (error: any) {
+    } catch (error: any) {
       // Store error with context
       errorStore.setError(error, { context: 'fetchUsers' })
 
@@ -113,8 +112,7 @@ export function useUsers() {
       const response = await createUserMutation.mutateAsync(data)
       toast.showSuccess('User created successfully!')
       return response
-    }
-    catch (error: any) {
+    } catch (error: any) {
       // Store error with context
       errorStore.setError(error, { context: 'createUser' })
 
@@ -126,8 +124,7 @@ export function useUsers() {
       if (Object.keys(validationErrors).length > 0) {
         const firstError = Object.values(validationErrors)[0]?.[0]
         toast.showError(firstError || message)
-      }
-      else {
+      } else {
         toast.showError(message)
       }
       throw error
@@ -139,8 +136,7 @@ export function useUsers() {
       const response = await updateUserMutation.mutateAsync({ userId, data })
       toast.showSuccess('User updated successfully!')
       return response
-    }
-    catch (error: any) {
+    } catch (error: any) {
       // Store error with context
       errorStore.setError(error, { context: 'updateUser' })
 
@@ -152,8 +148,7 @@ export function useUsers() {
       if (Object.keys(validationErrors).length > 0) {
         const firstError = Object.values(validationErrors)[0]?.[0]
         toast.showError(firstError || message)
-      }
-      else {
+      } else {
         toast.showError(message)
       }
       throw error
@@ -164,8 +159,7 @@ export function useUsers() {
     try {
       await deleteUserMutation.mutateAsync(userId)
       toast.showSuccess('User deleted successfully!')
-    }
-    catch (error: any) {
+    } catch (error: any) {
       // Store error with context
       errorStore.setError(error, { context: 'deleteUser' })
 

@@ -43,7 +43,7 @@ export const columns: ColumnDef<Company>[] = [
     accessorKey: 'industry',
     header: ({ column }) => h(DataTableColumnHeader<Company>, { column, title: 'Industry' }),
     cell: ({ row }) => {
-      const industry = industries.find(industry => industry.value === row.getValue('industry'))
+      const industry = industries.find((industry) => industry.value === row.getValue('industry'))
 
       return h('div', { class: 'flex items-center' }, [
         industry ? h(Badge, { variant: 'outline' }, () => industry.label) : null,
@@ -76,10 +76,9 @@ export const columns: ColumnDef<Company>[] = [
     accessorKey: 'status',
     header: ({ column }) => h(DataTableColumnHeader<Company>, { column, title: 'Status' }),
     cell: ({ row }) => {
-      const status = statuses.find(status => status.value === row.getValue('status'))
+      const status = statuses.find((status) => status.value === row.getValue('status'))
 
-      if (!status)
-        return null
+      if (!status) return null
 
       return h(StatusBadge, {
         status: status.value,
@@ -96,10 +95,9 @@ export const columns: ColumnDef<Company>[] = [
     accessorKey: 'employees',
     header: ({ column }) => h(DataTableColumnHeader<Company>, { column, title: 'Employees' }),
     cell: ({ row }) => {
-      const employeeSize = employeeSizes.find(size => size.value === row.getValue('employees'))
+      const employeeSize = employeeSizes.find((size) => size.value === row.getValue('employees'))
 
-      if (!employeeSize)
-        return null
+      if (!employeeSize) return null
 
       return h('div', { class: 'flex items-center' }, [h('span', {}, employeeSize.label)])
     },

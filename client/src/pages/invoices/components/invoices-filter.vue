@@ -82,24 +82,12 @@ const hasActiveFilters = computed(() => {
               <SelectValue placeholder="All statuses" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">
-                All statuses
-              </SelectItem>
-              <SelectItem value="draft">
-                Draft
-              </SelectItem>
-              <SelectItem value="sent">
-                Sent
-              </SelectItem>
-              <SelectItem value="paid">
-                Paid
-              </SelectItem>
-              <SelectItem value="overdue">
-                Overdue
-              </SelectItem>
-              <SelectItem value="cancelled">
-                Cancelled
-              </SelectItem>
+              <SelectItem value="all"> All statuses </SelectItem>
+              <SelectItem value="draft"> Draft </SelectItem>
+              <SelectItem value="sent"> Sent </SelectItem>
+              <SelectItem value="paid"> Paid </SelectItem>
+              <SelectItem value="overdue"> Overdue </SelectItem>
+              <SelectItem value="cancelled"> Cancelled </SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -116,9 +104,7 @@ const hasActiveFilters = computed(() => {
               <SelectValue placeholder="All customers" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">
-                All customers
-              </SelectItem>
+              <SelectItem value="all"> All customers </SelectItem>
               <SelectItem
                 v-for="customer in customers"
                 :key="customer.id"
@@ -138,7 +124,7 @@ const hasActiveFilters = computed(() => {
             placeholder="Filter by invoice number"
             class="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
             @input="updateFilter('invoice_number', ($event.target as HTMLInputElement).value)"
-          >
+          />
         </div>
 
         <div class="space-y-2">
@@ -148,7 +134,7 @@ const hasActiveFilters = computed(() => {
             type="date"
             class="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
             @input="updateFilter('date', ($event.target as HTMLInputElement).value)"
-          >
+          />
         </div>
 
         <Button v-if="hasActiveFilters" variant="ghost" class="w-full" @click="clearFilters">

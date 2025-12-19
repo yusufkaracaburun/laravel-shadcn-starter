@@ -8,108 +8,91 @@ import type {
 } from '@/pages/invoices/models/invoice'
 
 import { useToast } from '@/composables/use-toast'
-import {
-  useCreateInvoiceMutation,
-  useDeleteInvoiceMutation,
-  useDownloadInvoicePdfMutation,
-  useGetInvoicesQuery,
-  useUpdateInvoiceMutation,
-} from '@/services/invoices.service'
+import { useInvoiceService } from '@/services/invoices.service'
 import { useErrorStore } from '@/stores/error.store'
 import { downloadBlobFromAxiosResponse } from '@/utils/blob'
+
+enum InvoiceInclude {
+  CUSTOMER = 'customer',
+  ITEMS = 'items',
+  PAYMENTS = 'payments',
+  ACTIVITIES = 'activities',
+  EMAILS = 'emails',
+}
+
+type TPageSize = 10 | 20 | 30 | 40 | 50
+
+const DEFAULT_PAGE = 1
+const DEFAULT_PAGE_SIZE: TPageSize = 10
 
 export function useInvoices() {
   const toast = useToast()
   const errorStore = useErrorStore()
 
-  // Pagination state
-  const page = ref(1)
-  const pageSize = ref(10)
-
-  // Sorting state - managed here and passed to table
+  const page = ref(DEFAULT_PAGE)
+  const pageSize = ref<TPageSize>(DEFAULT_PAGE_SIZE)
   const sorting = ref<SortingState>([])
-
-  // Filters state
   const filters = ref<IInvoiceFilters>({})
+  const include = ref<string[]>([InvoiceInclude.CUSTOMER])
 
-  // Include relationships state
-  const include = ref<string[]>(['customer'])
-
-  // Handler for sorting changes from table
-  function onSortingChange(newSorting: SortingState) {
-    sorting.value = newSorting
-    // Reset to first page when sorting changes
-    page.value = 1
-  }
-
-  // Handler for filter changes
-  function onFiltersChange(newFilters: IInvoiceFilters) {
-    filters.value = newFilters
-    // Reset to first page when filters change
-    page.value = 1
-  }
-
-  // Clear all filters
-  function clearFilters() {
-    filters.value = {}
-    page.value = 1
-  }
-
+  const invoiceService = useInvoiceService()
   const {
-    data: invoicesResponse,
+    data,
     isLoading,
     isFetching,
     refetch: fetchInvoices,
-  } = useGetInvoicesQuery(page, pageSize, sorting, filters, include)
+  } = invoiceService.getInvoicesQuery(page, pageSize, sorting, filters, include)
 
-  // Watch for page and pageSize changes to trigger refetch
-  // Vue Query tracks computed refs in queryKey, but explicit watch ensures refetch on changes
+  function onSortingChange(newSorting: SortingState): void {
+    sorting.value = newSorting
+    page.value = DEFAULT_PAGE
+  }
+
+  function onFiltersChange(newFilters: IInvoiceFilters): void {
+    filters.value = newFilters
+    page.value = DEFAULT_PAGE
+  }
+
+  function clearFilters() {
+    filters.value = {} as IInvoiceFilters
+    page.value = DEFAULT_PAGE
+  }
+
+  function onPageChange(newPage: number): void {
+    page.value = newPage
+  }
+
+  function onPageSizeChange(newPageSize: TPageSize): void {
+    pageSize.value = newPageSize
+    page.value = DEFAULT_PAGE
+  }
+
   watch([page, pageSize], ([newPage, newPageSize], [oldPage, oldPageSize]) => {
-    // Skip initial trigger
     if (oldPage === undefined || oldPageSize === undefined) {
       return
     }
-    // Only refetch if values actually changed
     if (oldPage !== newPage || oldPageSize !== newPageSize) {
       fetchInvoices()
     }
   })
 
-  // Invoices data from response
-  const invoices = computed(() => {
-    return invoicesResponse.value?.data?.data ?? []
-  })
-
   const loading = computed(() => isLoading.value || isFetching.value)
 
-  // Extract pagination metadata from Laravel's pagination structure
   const pagination = computed(
     () =>
-      invoicesResponse.value?.data ?? {
+      data.value?.data ?? {
         current_page: 1,
         last_page: 1,
-        per_page: 10,
+        per_page: DEFAULT_PAGE_SIZE,
         total: 0,
         from: null,
         to: null,
       },
   )
 
-  // Pagination handlers
-  function onPageChange(newPage: number) {
-    page.value = newPage
-  }
-
-  function onPageSizeChange(newPageSize: number) {
-    pageSize.value = newPageSize
-    page.value = 1 // Reset to first page when page size changes
-  }
-
-  // Server pagination object for data-table
-  // Uses local pageSize value so dropdown updates immediately when changed
   const serverPagination = computed<ServerPagination>(() => ({
     page: pagination.value.current_page,
-    pageSize: pageSize.value, // Use local state for immediate UI update
+    pageSize: pageSize.value,
     total: pagination.value.total,
     onPageChange,
     onPageSizeChange,
@@ -117,14 +100,10 @@ export function useInvoices() {
 
   async function fetchInvoicesData() {
     try {
-      const invoicesResponse = await fetchInvoices()
-      return invoicesResponse.data
-    }
-    catch (error: any) {
-      // Store error with context
+      const response = await fetchInvoices()
+      return response.data
+    } catch (error: any) {
       errorStore.setError(error, { context: 'fetchInvoices' })
-
-      // Use error store utilities for messages
       const message = errorStore.getErrorMessage(error)
       toast.showError(message)
       throw error
@@ -142,8 +121,7 @@ export function useInvoices() {
       const response = await createInvoiceMutation.mutateAsync(data)
       toast.showSuccess('Invoice created successfully!')
       return response
-    }
-    catch (error: any) {
+    } catch (error: any) {
       // Store error with context
       errorStore.setError(error, { context: 'createInvoice' })
 
@@ -155,8 +133,7 @@ export function useInvoices() {
       if (Object.keys(validationErrors).length > 0) {
         const firstError = Object.values(validationErrors)[0]?.[0]
         toast.showError(firstError || message)
-      }
-      else {
+      } else {
         toast.showError(message)
       }
       throw error
@@ -168,8 +145,7 @@ export function useInvoices() {
       const response = await updateInvoiceMutation.mutateAsync({ invoiceId, data })
       toast.showSuccess('Invoice updated successfully!')
       return response
-    }
-    catch (error: any) {
+    } catch (error: any) {
       // Store error with context
       errorStore.setError(error, { context: 'updateInvoice' })
 
@@ -181,8 +157,7 @@ export function useInvoices() {
       if (Object.keys(validationErrors).length > 0) {
         const firstError = Object.values(validationErrors)[0]?.[0]
         toast.showError(firstError || message)
-      }
-      else {
+      } else {
         toast.showError(message)
       }
       throw error
@@ -193,8 +168,7 @@ export function useInvoices() {
     try {
       await deleteInvoiceMutation.mutateAsync(invoiceId)
       toast.showSuccess('Invoice deleted successfully!')
-    }
-    catch (error: any) {
+    } catch (error: any) {
       // Store error with context
       errorStore.setError(error, { context: 'deleteInvoice' })
 
@@ -212,8 +186,7 @@ export function useInvoices() {
       downloadBlobFromAxiosResponse(response, `factuur_${invoiceId}.pdf`)
 
       toast.showSuccess('Invoice PDF downloaded successfully!')
-    }
-    catch (error: any) {
+    } catch (error: any) {
       errorStore.setError(error, { context: 'downloadInvoicePdf' })
       toast.showError(errorStore.getErrorMessage(error))
       throw error
@@ -221,10 +194,9 @@ export function useInvoices() {
   }
 
   return {
-    invoices,
+    data,
     loading,
     fetchInvoicesData,
-    invoicesResponse,
     serverPagination,
     sorting,
     onSortingChange,

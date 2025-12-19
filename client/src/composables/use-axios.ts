@@ -52,8 +52,7 @@ export function useAxios() {
       // Show toast notifications for specific error types
       if (status === 403) {
         toast.showError('You are not authorized to access this page')
-      }
-      else if (status === 500) {
+      } else if (status === 500) {
         const message = error.response?.data?.message || 'Internal server error'
         toast.showError(message)
       }
@@ -94,7 +93,7 @@ function initializeAxios() {
     timeout: env.VITE_SERVER_API_TIMEOUT,
     withCredentials: true,
     headers: {
-      'Accept': 'application/json',
+      Accept: 'application/json',
       'X-Requested-With': 'XMLHttpRequest',
     },
   })

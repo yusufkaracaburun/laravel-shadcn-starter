@@ -52,7 +52,7 @@ export const columns: ColumnDef<Project>[] = [
     accessorKey: 'category',
     header: ({ column }) => h(DataTableColumnHeader<Project>, { column, title: 'Category' }),
     cell: ({ row }) => {
-      const category = categories.find(category => category.value === row.getValue('category'))
+      const category = categories.find((category) => category.value === row.getValue('category'))
 
       return h('div', { class: 'flex items-center' }, [
         category ? h(Badge, { variant: 'outline' }, () => category.label) : null,
@@ -66,10 +66,9 @@ export const columns: ColumnDef<Project>[] = [
     accessorKey: 'status',
     header: ({ column }) => h(DataTableColumnHeader<Project>, { column, title: 'Status' }),
     cell: ({ row }) => {
-      const status = statuses.find(status => status.value === row.getValue('status'))
+      const status = statuses.find((status) => status.value === row.getValue('status'))
 
-      if (!status)
-        return null
+      if (!status) return null
 
       return h(StatusBadge, {
         status: status.value,

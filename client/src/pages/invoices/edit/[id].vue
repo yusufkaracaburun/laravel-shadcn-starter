@@ -42,16 +42,14 @@ const prerequisites = computed(() => prerequisitesResponse.value?.data ?? null)
 
 // Extract customers from prerequisites
 const customers = computed(() => {
-  if (!prerequisites.value?.customers)
-    return []
+  if (!prerequisites.value?.customers) return []
   const customersData = prerequisites.value.customers
   return Array.isArray(customersData) ? customersData : ((customersData as any).data ?? [])
 })
 
 // Extract items from prerequisites
 const items = computed(() => {
-  if (!prerequisites.value?.items)
-    return []
+  if (!prerequisites.value?.items) return []
   const itemsData = prerequisites.value.items
   return Array.isArray(itemsData) ? itemsData : ((itemsData as any).data ?? [])
 })
@@ -81,45 +79,39 @@ function handleClose() {
 }
 
 async function handleUpdate() {
-  if (!formRef.value)
-    return
+  if (!formRef.value) return
   isSubmitting.value = true
   try {
     await formRef.value.handleSubmit()
     showSuccess('Invoice updated')
-  }
-  catch (validationError) {
+  } catch (validationError) {
     console.error('Validation Error:', validationError)
     toast({
       title: 'Validation Error',
       description: 'Please correct the form errors.',
       variant: 'destructive',
     })
-  }
-  finally {
+  } finally {
     isSubmitting.value = false
   }
 }
 
 async function handleUpdateAndSend() {
-  if (!formRef.value)
-    return
+  if (!formRef.value) return
   isSubmitting.value = true
   try {
     formRef.value.setFieldValue('status', 'sent')
     await nextTick()
     await formRef.value.handleSubmit()
     showSuccess('Invoice updated and sent')
-  }
-  catch (validationError) {
+  } catch (validationError) {
     console.error('Validation Error:', validationError)
     toast({
       title: 'Validation Error',
       description: 'Please correct the form errors.',
       variant: 'destructive',
     })
-  }
-  finally {
+  } finally {
     isSubmitting.value = false
   }
 }

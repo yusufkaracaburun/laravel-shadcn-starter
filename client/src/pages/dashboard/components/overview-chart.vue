@@ -164,8 +164,7 @@ const filterRange = computed(() => {
     let daysToSubtract = 90
     if (timeRange.value === '30d') {
       daysToSubtract = 30
-    }
-    else if (timeRange.value === '7d') {
+    } else if (timeRange.value === '7d') {
       daysToSubtract = 7
     }
     const startDate = new Date(referenceDate)
@@ -190,15 +189,9 @@ const filterRange = computed(() => {
           <SelectValue placeholder="Last 3 months" />
         </SelectTrigger>
         <SelectContent class="rounded-xl">
-          <SelectItem value="90d" class="rounded-lg">
-            Last 3 months
-          </SelectItem>
-          <SelectItem value="30d" class="rounded-lg">
-            Last 30 days
-          </SelectItem>
-          <SelectItem value="7d" class="rounded-lg">
-            Last 7 days
-          </SelectItem>
+          <SelectItem value="90d" class="rounded-lg"> Last 3 months </SelectItem>
+          <SelectItem value="30d" class="rounded-lg"> Last 30 days </SelectItem>
+          <SelectItem value="7d" class="rounded-lg"> Last 7 days </SelectItem>
         </SelectContent>
       </Select>
     </CardHeader>

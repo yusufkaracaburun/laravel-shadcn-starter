@@ -40,9 +40,7 @@ const onSubmit = handleSubmit((values) => {
 
 <template>
   <div>
-    <h3 class="text-lg font-medium">
-      Appearance
-    </h3>
+    <h3 class="text-lg font-medium">Appearance</h3>
     <p class="text-sm text-muted-foreground">
       Customize the appearance of the app. Automatically switch between day and night themes.
     </p>
@@ -60,15 +58,9 @@ const onSubmit = handleSubmit((values) => {
           </UiFormControl>
           <UiSelectContent>
             <UiSelectGroup>
-              <UiSelectItem value="inter">
-                Inter
-              </UiSelectItem>
-              <UiSelectItem value="manrope">
-                Manrope
-              </UiSelectItem>
-              <UiSelectItem value="system">
-                System
-              </UiSelectItem>
+              <UiSelectItem value="inter"> Inter </UiSelectItem>
+              <UiSelectItem value="manrope"> Manrope </UiSelectItem>
+              <UiSelectItem value="system"> System </UiSelectItem>
             </UiSelectGroup>
           </UiSelectContent>
         </UiSelect>
@@ -139,9 +131,7 @@ const onSubmit = handleSubmit((values) => {
     </FormField>
 
     <div class="flex justify-start">
-      <Button type="submit">
-        Update preferences
-      </Button>
+      <Button type="submit"> Update preferences </Button>
     </div>
   </form>
 </template>

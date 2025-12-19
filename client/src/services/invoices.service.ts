@@ -43,8 +43,6 @@ enum InvoiceInclude {
 
 const API_URL = '/api/invoices'
 const STALE_TIME = 5 * 60 * 1000
-const DEFAULT_PAGE = 1
-const DEFAULT_PAGE_SIZE = 10
 
 interface IInvoiceService {
   getInvoicePrerequisitesQuery: () => ReturnType<
@@ -65,7 +63,7 @@ interface IInvoiceService {
     typeof useMutation<IResponse<IInvoice>, AxiosError, ICreateInvoiceRequest>
   >
   updateInvoiceMutation: () => ReturnType<
-    typeof useMutation<IResponse<IInvoice>, AxiosError, { id: number, data: IUpdateInvoiceRequest }>
+    typeof useMutation<IResponse<IInvoice>, AxiosError, { id: number; data: IUpdateInvoiceRequest }>
   >
   deleteInvoiceMutation: () => ReturnType<typeof useMutation<void, AxiosError, number>>
   downloadInvoicePdfMutation: () => ReturnType<
@@ -93,8 +91,8 @@ export function useInvoiceService(): IInvoiceService {
   }
 
   function getInvoicesQuery(
-    page: Ref<number> = ref(DEFAULT_PAGE),
-    pageSize: Ref<number> = ref(DEFAULT_PAGE_SIZE),
+    page: Ref<number>,
+    pageSize: Ref<number>,
     sorting: Ref<Array<ISorting>> = ref([]),
     filters: Ref<IInvoiceFilters> = ref({}),
     include: Ref<string[]> = ref([]),
@@ -169,12 +167,12 @@ export function useInvoiceService(): IInvoiceService {
   }
 
   function updateInvoiceMutation(): ReturnType<
-    typeof useMutation<IResponse<IInvoice>, AxiosError, { id: number, data: IUpdateInvoiceRequest }>
+    typeof useMutation<IResponse<IInvoice>, AxiosError, { id: number; data: IUpdateInvoiceRequest }>
   > {
     return useMutation<
       IResponse<IInvoice>,
       AxiosError,
-      { id: number, data: IUpdateInvoiceRequest }
+      { id: number; data: IUpdateInvoiceRequest }
     >({
       mutationKey: [QueryKeys.UPDATE_INVOICE],
       mutationFn: async ({ id, data }): Promise<IResponse<IInvoice>> => {

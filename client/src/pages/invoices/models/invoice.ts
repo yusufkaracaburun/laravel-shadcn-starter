@@ -118,22 +118,6 @@ export interface IInvoice {
   notes: string | null
   items?:
     | Array<{
-      id: number
-      invoice_id: number
-      description: string | null
-      quantity: number
-      unit: string | null
-      unit_price: Money | number
-      vat_rate: number
-      total_excl_vat: Money | number
-      total_vat: Money | number
-      total_incl_vat: Money | number
-      sort_order: number
-      created_at: string
-      updated_at: string
-    }>
-    | {
-      data: Array<{
         id: number
         invoice_id: number
         description: string | null
@@ -148,7 +132,23 @@ export interface IInvoice {
         created_at: string
         updated_at: string
       }>
-    } // When loaded via include=items - backend returns paginated structure
+    | {
+        data: Array<{
+          id: number
+          invoice_id: number
+          description: string | null
+          quantity: number
+          unit: string | null
+          unit_price: Money | number
+          vat_rate: number
+          total_excl_vat: Money | number
+          total_vat: Money | number
+          total_incl_vat: Money | number
+          sort_order: number
+          created_at: string
+          updated_at: string
+        }>
+      } // When loaded via include=items - backend returns paginated structure
   payments?: IInvoicePayment[] // When loaded via include=payments
   activities?: IInvoiceActivity[] // When loaded via include=activities
   emails?: IInvoiceEmail[] // When loaded via include=emails

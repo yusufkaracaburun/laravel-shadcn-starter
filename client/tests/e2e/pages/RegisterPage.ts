@@ -80,9 +80,9 @@ export class RegisterPage extends BasePage {
       // Match POST requests to the register endpoint on the API server
       // Exclude CSRF cookie requests (GET requests to /sanctum/csrf-cookie)
       return (
-        url.startsWith(apiURL)
-        && (url.endsWith('/register') || url.endsWith('/register/'))
-        && method === 'POST'
+        url.startsWith(apiURL) &&
+        (url.endsWith('/register') || url.endsWith('/register/')) &&
+        method === 'POST'
       )
     })
     await submitButton.click()

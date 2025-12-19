@@ -60,8 +60,7 @@ function formatDate(dateString: string | null): string {
     if (!Number.isNaN(date.getTime())) {
       return formatDateForPreview(dateString)
     }
-  }
-  catch {
+  } catch {
     // Ignore parsing errors
   }
   return dateString
@@ -99,9 +98,7 @@ function closeEmailDialog() {
             >
               <Clock class="w-6 h-6 text-gray-400" />
             </div>
-            <p class="text-sm text-gray-500">
-              No activity yet
-            </p>
+            <p class="text-sm text-gray-500">No activity yet</p>
           </div>
 
           <div v-else class="px-1">
@@ -133,8 +130,8 @@ function closeEmailDialog() {
                   <!-- Show properties changes if available -->
                   <div
                     v-if="
-                      activity.properties
-                        && Object.keys(activity.properties.attributes || {}).length > 0
+                      activity.properties &&
+                      Object.keys(activity.properties.attributes || {}).length > 0
                     "
                     class="mt-2 pt-2 border-t border-gray-100"
                   >
@@ -188,9 +185,7 @@ function closeEmailDialog() {
             >
               <Clock class="w-6 h-6 text-gray-400" />
             </div>
-            <p class="text-sm text-gray-500">
-              No payments yet
-            </p>
+            <p class="text-sm text-gray-500">No payments yet</p>
           </div>
 
           <div v-else class="px-1">
@@ -241,7 +236,9 @@ function closeEmailDialog() {
                           <span class="font-medium">ID:</span>
                           <span>{{ payment.id }}</span>
 
-                          <span v-if="payment.payment_number" class="font-medium">Payment Number:</span>
+                          <span v-if="payment.payment_number" class="font-medium"
+                            >Payment Number:</span
+                          >
                           <span v-if="payment.payment_number">{{ payment.payment_number }}</span>
 
                           <span class="font-medium">Date:</span>
@@ -256,7 +253,9 @@ function closeEmailDialog() {
                           <span v-if="payment.provider" class="font-medium">Provider:</span>
                           <span v-if="payment.provider">{{ payment.provider }}</span>
 
-                          <span v-if="payment.provider_reference" class="font-medium">Provider Reference:</span>
+                          <span v-if="payment.provider_reference" class="font-medium"
+                            >Provider Reference:</span
+                          >
                           <span v-if="payment.provider_reference">{{
                             payment.provider_reference
                           }}</span>
@@ -302,9 +301,7 @@ function closeEmailDialog() {
             >
               <Mail class="w-6 h-6 text-gray-400" />
             </div>
-            <p class="text-sm text-gray-500">
-              No emails yet
-            </p>
+            <p class="text-sm text-gray-500">No emails yet</p>
           </div>
           <div v-else class="px-1">
             <div
