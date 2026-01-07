@@ -1,15 +1,14 @@
 <script setup lang="ts">
 import { Plus } from 'lucide-vue-next'
 
+import type {
+  IInvoiceItem,
+  IInvoiceTotals,
+} from '@/pages/invoices/models/invoice'
 import type { Item } from '@/services/items.service'
 
 import { Button } from '@/components/ui/button'
-
-import type { IInvoiceItem, IInvoiceTotals } from '@/pages/invoices/models/invoice'
-import InvoiceItemForm from '@/pages/invoices/components/invoice-item-form.vue'
 import InvoiceItemSelector from '@/pages/invoices/components/invoice-item-selector.vue'
-import InvoiceItemsTable from '@/pages/invoices/components/invoice-items-table.vue'
-import InvoiceTotalsSummary from '@/pages/invoices/components/invoice-totals-summary.vue'
 
 interface IProps {
   items: IInvoiceItem[]
@@ -73,8 +72,9 @@ function handleAddItem() {
     </div>
 
     <div class="space-y-4">
-      <div v-if="showAddForm || editingItemIndex !== null" class="rounded-lg border p-4">
-        <InvoiceItemForm :item="editingItemIndex !== null && editingItemIndex >= 0
+      {{ showAddForm }}-{{ editingItemIndex }}
+      <!-- <div v-if="showAddForm || editingItemIndex !== null" class="rounded-lg border p-4">
+        <InvoiceItemForm :item="editingItemIndex !== null && editingItemIndex >= 0 && items[editingItemIndex]
           ? (items[editingItemIndex] as IInvoiceItem) || null
           " @save="handleSave" @cancel="handleCancel" />
       </div>
@@ -91,7 +91,7 @@ function handleAddItem() {
 
         <InvoiceTotalsSummary :subtotal="invoiceTotals.subtotal" :total-vat0="invoiceTotals.totalVat0"
           :total-vat9="invoiceTotals.totalVat9" :total-vat21="invoiceTotals.totalVat21" :total="invoiceTotals.total" />
-      </div>
+      </div> -->
     </div>
   </div>
 </template>

@@ -2,7 +2,7 @@
 import { Check, Plus, Search, X } from 'lucide-vue-next'
 import { computed, ref } from 'vue'
 
-import type { Item } from '@/services/items.service'
+import type { IInvoiceItem } from '@/pages/invoices/models/invoice'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -15,34 +15,29 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
+import { formatMoney } from '@/pages/invoices/utils/formatters'
 
-import { formatMoney } from '../utils/formatters'
+interface IProps {
+  items?: IInvoiceItem[]
+}
 
-const props = withDefaults(
-  defineProps<{
-    invoiceId?: number
-    items?: Item[]
-  }>(),
-  {
-    items: () => [],
-  },
-)
+const props = withDefaults(defineProps<IProps>(), {
+  items: () => [],
+})
 
 const emits = defineEmits<{
-  itemsSelected: [items: any[]]
+  itemsSelected: [items: IInvoiceItem[]]
 }>()
 
 const isOpen = ref(false)
 const searchQuery = ref('')
 const selectedItems = ref<Set<number>>(new Set())
 
-// Use items from props (from prerequisites)
 const items = computed(() => props.items)
 
-// Filter items based on search query
 const filteredItems = computed(() => {
   if (!searchQuery.value.trim()) {
-    return items.value.slice(0, 20) // Limit to first 20 items
+    return items.value.slice(0, 20)
   }
 
   const query = searchQuery.value.toLowerCase()
@@ -74,27 +69,20 @@ function handleAddSelected() {
   const selectedItemsData = filteredItems.value
     .filter(item => selectedItems.value.has(item.id))
     .map((item) => {
-      // Extract unit_price value
-      let unitPrice = 0
-      if (typeof item.unit_price === 'object' && 'amount' in item.unit_price) {
-        const amount = Number.parseFloat(item.unit_price.amount)
-        unitPrice = amount / 100
-      }
-      else if (typeof item.unit_price === 'number') {
-        unitPrice = item.unit_price
-      }
+      const unitPrice = Number.parseFloat(item.unit_price.amount) / 100
 
       return {
-        description: item.name || item.description || '',
+        name: item.name,
+        description: item.description || null,
         quantity: 1,
+        unit: item.unit ?? null,
         unit_price: unitPrice,
         vat_rate: item.vat_rate || 21,
-        unit: item.unit ?? null,
       }
     })
 
   if (selectedItemsData.length > 0) {
-    emits('itemsSelected', selectedItemsData)
+    emits('itemsSelected', selectedItemsData as IInvoiceItem[])
     selectedItems.value.clear()
     isOpen.value = false
     searchQuery.value = ''
@@ -125,7 +113,6 @@ function handleClose() {
       </DialogHeader>
 
       <div class="space-y-4">
-        <!-- Search -->
         <div class="relative">
           <Search
             class="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
@@ -137,7 +124,6 @@ function handleClose() {
           />
         </div>
 
-        <!-- Selected Count -->
         <div
           v-if="selectedCount > 0"
           class="flex items-center justify-between rounded-lg border bg-muted/50 p-3"
@@ -151,7 +137,6 @@ function handleClose() {
           </Button>
         </div>
 
-        <!-- Items List -->
         <div
           v-if="filteredItems.length === 0"
           class="flex items-center justify-center py-8"

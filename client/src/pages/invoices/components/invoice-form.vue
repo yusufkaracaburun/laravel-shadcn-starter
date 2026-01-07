@@ -22,6 +22,7 @@ import {
 import { formatDateForInput } from '@/pages/invoices/utils/formatters'
 import { calculateDueDate, getTodayDate } from '@/utils/date'
 import { mapObjectDeep } from '@/utils/form'
+import type { IInvoiceItem } from '@/pages/invoices/models/invoice'
 
 interface IProps {
   modelValue: TInvoice | null
@@ -119,11 +120,11 @@ interface ILocalInvoiceItem {
   sort_order: number
   id?: number
 }
-const localItems = ref<ILocalInvoiceItem[]>(
+const localItems = ref<IInvoiceItem[]>(
   (Array.isArray(props.modelValue?.items)
     ? props.modelValue?.items
     : (props.modelValue?.items as any)?.data || []
-  ).map((item: any) => {
+  ).map((item: IInvoiceItem) => {
     let unitPrice = 0
     if (typeof item.unit_price === 'object' && 'amount' in item.unit_price) {
       unitPrice = Number.parseFloat(item.unit_price.amount) / 100
@@ -277,7 +278,7 @@ function handleItemDelete(itemIdOrIndex: number) {
   }
 }
 
-function startEditItem(_item: TInvoiceItem | any, index: number) {
+function startEditItem(_item: IInvoiceItem, index: number) {
   editingItemIndex.value = index
   showAddForm.value = false
 }
@@ -360,7 +361,7 @@ const itemsForPreview = computed(() => {
     sort_order: item.sort_order,
     created_at: '',
     updated_at: '',
-  })) as TInvoiceItem[]
+  })) as IInvoiceItem[]
 })
 
 // Watch for changes in values and localItems and emit to parent
@@ -415,7 +416,7 @@ watch(
         Array.isArray(newInvoice.items)
           ? newInvoice.items
           : (newInvoice.items as any)?.data || []
-      ).map((item: any) => {
+      ).map((item: IInvoiceItem) => {
         let unitPrice = 0
         if (
           typeof item.unit_price === 'object'
@@ -502,7 +503,7 @@ const onSubmit = handleSubmit(async (formValues) => {
       sort_order: item.sort_order ?? 0,
     }))
 
-    let backendData: any = {
+    let backendData: IUpdateInvoiceRequest | ICreateInvoiceRequest = {
       customer_id: formValues.customer_id,
       invoice_number: formValues.invoice_number || null,
       date: formValues.date,

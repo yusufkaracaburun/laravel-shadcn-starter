@@ -101,7 +101,7 @@ export interface IInvoiceEmail {
 
 export interface IInvoiceItem {
   id: number
-  invoice_id: number
+  invoice_id?: number
   name: string
   description: string | null
   quantity: number
@@ -112,9 +112,18 @@ export interface IInvoiceItem {
   total_vat: Money | number
   total_incl_vat: Money | number
   sort_order: number
-  created_at: string
-  updated_at: string
+  created_at?: string
+  updated_at?: string
 }
+
+export interface IInvoiceTotals {
+  subtotal: number
+  totalVat0: number
+  totalVat9: number
+  totalVat21: number
+  total: number
+}
+
 export interface IInvoice {
   id: number
   customer_id: number
