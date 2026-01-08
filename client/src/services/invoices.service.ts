@@ -103,13 +103,13 @@ export function useInvoiceService() {
     typeof useMutation<
       IResponse<IInvoice>,
       AxiosError,
-      { id: number; includes?: string[] }
+      { id: number, includes?: string[] }
     >
   > {
     return useMutation<
       IResponse<IInvoice>,
       AxiosError,
-      { id: number; includes?: string[] }
+      { id: number, includes?: string[] }
     >({
       mutationKey: [QueryKeys.GET_INVOICE],
       mutationFn: async ({ id, includes }): Promise<IResponse<IInvoice>> => {
@@ -154,13 +154,13 @@ export function useInvoiceService() {
     typeof useMutation<
       IResponse<IInvoice>,
       AxiosError,
-      { id: number; data: IUpdateInvoiceRequest }
+      { id: number, data: IUpdateInvoiceRequest }
     >
   > {
     return useMutation<
       IResponse<IInvoice>,
       AxiosError,
-      { id: number; data: IUpdateInvoiceRequest }
+      { id: number, data: IUpdateInvoiceRequest }
     >({
       mutationKey: [QueryKeys.UPDATE_INVOICE],
       mutationFn: async ({ id, data }): Promise<IResponse<IInvoice>> => {

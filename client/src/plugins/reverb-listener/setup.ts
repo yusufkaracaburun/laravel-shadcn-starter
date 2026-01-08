@@ -128,8 +128,8 @@ export function setupReverbListener(app: App) {
 
       const notificationTitle = title || message || 'Notification'
       const notificationDescription =
-        description ||
-        (eventData && Object.keys(eventData).length > 0
+        description
+        || (eventData && Object.keys(eventData).length > 0
           ? JSON.stringify(eventData, null, 2)
           : undefined)
 

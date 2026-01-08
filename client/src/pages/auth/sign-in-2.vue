@@ -56,7 +56,7 @@ async function quickLogin(userKey: keyof typeof testusers) {
         src="/placeholder.png"
         alt=""
         class="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
-      />
+      >
     </div>
   </div>
 </template>

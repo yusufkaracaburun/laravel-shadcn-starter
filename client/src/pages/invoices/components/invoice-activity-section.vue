@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import type { IInvoiceActivity } from '@/services/invoices.service'
 
-import { HistoryIcon } from '@/composables/use-icons'
-
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
+import { HistoryIcon } from '@/composables/use-icons'
 
 import { formatDateTime } from '../utils/formatters'
 
@@ -30,7 +29,9 @@ function hasChanges(activity: IInvoiceActivity): boolean {
     <CardHeader class="pb-4">
       <div class="flex items-center gap-2">
         <HistoryIcon class="size-4 text-muted-foreground" />
-        <CardTitle class="text-base font-semibold"> Activity Log </CardTitle>
+        <CardTitle class="text-base font-semibold">
+          Activity Log
+        </CardTitle>
       </div>
     </CardHeader>
     <CardContent>
@@ -68,9 +69,7 @@ function hasChanges(activity: IInvoiceActivity): boolean {
                 :key="key"
                 class="flex items-start gap-2"
               >
-                <span class="font-medium text-muted-foreground"
-                  >{{ key }}:</span
-                >
+                <span class="font-medium text-muted-foreground">{{ key }}:</span>
                 <span class="text-foreground">
                   {{
                     activity.properties.old[key] !== undefined

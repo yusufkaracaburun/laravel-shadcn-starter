@@ -32,7 +32,7 @@ const invoiceEmails = computed(() => props.invoice.emails ?? []) as ComputedRef<
 
 const steps = computed(() => {
   const currentStatusIndex = INVOICE_STATUSES.findIndex(
-    (s) => s.value === props.invoice.status,
+    s => s.value === props.invoice.status,
   )
 
   return INVOICE_STATUSES.map((status, index) => ({

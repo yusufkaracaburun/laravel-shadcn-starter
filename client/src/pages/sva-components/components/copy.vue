@@ -6,7 +6,9 @@ const content = ref('copy something')
 
 <template>
   <section>
-    <h4 class="scroll-m-20 text-xl font-semibold tracking-tight mb-2">Copy</h4>
+    <h4 class="scroll-m-20 text-xl font-semibold tracking-tight mb-2">
+      Copy
+    </h4>
     <blockquote class="my-2 border-l-2 pl-6 italic">
       Source code in
       <code
@@ -24,7 +26,9 @@ const content = ref('copy something')
       <Copy :content variant="default" />
     </div>
 
-    <h5 class="scroll-m-20 font-semibold tracking-tight my-1">size = 'sm'</h5>
+    <h5 class="scroll-m-20 font-semibold tracking-tight my-1">
+      size = 'sm'
+    </h5>
     <div class="flex items-center gap-2">
       <UiInput v-model="content" class="w-[200px]" />
       <Copy :content size="sm" />

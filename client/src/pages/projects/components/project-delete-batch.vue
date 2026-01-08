@@ -34,8 +34,8 @@ async function handleConfirm() {
 
   const rowsToDelete = selectedRows.value
   const projectIds = rowsToDelete
-    .map((row) => (row.original as Project).id)
-    .filter((id) => id != null)
+    .map(row => (row.original as Project).id)
+    .filter(id => id != null)
 
   if (projectIds.length === 0) {
     toast.error('No valid projects selected for deletion.')
@@ -46,7 +46,7 @@ async function handleConfirm() {
     isDeleting.value = true
 
     // Delete all selected projects
-    await Promise.all(projectIds.map((id) => deleteProject(id)))
+    await Promise.all(projectIds.map(id => deleteProject(id)))
 
     table.resetRowSelection()
     openModel.value = false
@@ -68,9 +68,11 @@ async function handleConfirm() {
     :disabled="confirmValue.trim() !== CONFIRM_WORD || isDeleting"
     @confirm="handleConfirm"
   >
-    <template #title> Delete {{ selectedCount }} projects? </template>
+    <template #title>
+      Delete {{ selectedCount }} projects?
+    </template>
     <template #description>
-      Are you sure you want to delete the selected projects? <br />
+      Are you sure you want to delete the selected projects? <br>
       This action cannot be undone.
     </template>
 

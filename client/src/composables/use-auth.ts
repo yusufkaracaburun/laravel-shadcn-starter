@@ -39,9 +39,9 @@ export function useAuth() {
 
   const loading = computed(
     () =>
-      loginMutation.isPending.value ||
-      logoutMutation.isPending.value ||
-      registerMutation.isPending.value,
+      loginMutation.isPending.value
+      || logoutMutation.isPending.value
+      || registerMutation.isPending.value,
   )
 
   async function login(credentials: LoginRequest) {

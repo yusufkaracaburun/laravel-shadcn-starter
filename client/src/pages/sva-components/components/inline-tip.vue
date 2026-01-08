@@ -16,7 +16,9 @@ import { InlineTip } from '@/components/sva-ui/inline-tip'
       </code>
     </blockquote>
 
-    <h5 class="scroll-m-20 font-semibold tracking-tight my-1">type = 'info'</h5>
+    <h5 class="scroll-m-20 font-semibold tracking-tight my-1">
+      type = 'info'
+    </h5>
 
     <InlineTip label="Tip" variant="info">
       This is an info inline tip.

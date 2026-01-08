@@ -56,7 +56,9 @@ const onSubmit = handleSubmit((values) => {
 
 <template>
   <div>
-    <h3 class="text-lg font-medium">Profile</h3>
+    <h3 class="text-lg font-medium">
+      Profile
+    </h3>
     <p class="text-sm text-muted-foreground">
       This is how others will see you on the site.
     </p>
@@ -168,7 +170,9 @@ const onSubmit = handleSubmit((values) => {
     </div>
 
     <div class="flex justify-start gap-2">
-      <Button type="submit"> Update profile </Button>
+      <Button type="submit">
+        Update profile
+      </Button>
 
       <Button type="button" variant="outline" @click="resetForm">
         Reset form

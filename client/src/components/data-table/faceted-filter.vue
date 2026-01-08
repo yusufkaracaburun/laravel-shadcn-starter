@@ -20,7 +20,7 @@ const selectedValues = computed(
   () => new Set(props.column?.getFilterValue() as string[]),
 )
 function filterFunction(list: DataTableFacetedFilter['options'], term: string) {
-  return list.filter((i) => i.label.toLowerCase()?.includes(term))
+  return list.filter(i => i.label.toLowerCase()?.includes(term))
 }
 </script>
 
@@ -79,7 +79,8 @@ function filterFunction(list: DataTableFacetedFilter['options'], term: string) {
                   const isSelected = selectedValues.has(option.value)
                   if (isSelected) {
                     selectedValues.delete(option.value)
-                  } else {
+                  }
+                  else {
                     selectedValues.add(option.value)
                   }
                   const filterValues = Array.from(selectedValues)

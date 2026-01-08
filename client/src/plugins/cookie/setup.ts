@@ -7,7 +7,8 @@
  * Check if CookieStore API is available
  */
 export function isCookieStoreAvailable(): boolean {
-  if (typeof window === 'undefined') return false
+  if (typeof window === 'undefined')
+    return false
   return 'cookieStore' in window
 }
 
@@ -135,7 +136,8 @@ export function setupCookie() {
 export function getCookieValue(name: string): string | null {
   const cookie = document.cookie
     .split('; ')
-    .find((row) => row.startsWith(`${name}=`))
-  if (!cookie) return null
+    .find(row => row.startsWith(`${name}=`))
+  if (!cookie)
+    return null
   return decodeURIComponent(cookie.split('=')[1])
 }

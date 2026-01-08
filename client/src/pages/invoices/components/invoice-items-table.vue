@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { Button } from '@/components/ui/button'
-
 import { PencilIcon, Trash2Icon } from '@/composables/use-icons'
 
 import { formatMoney, formatNumber } from '../utils/formatters'
@@ -42,11 +41,15 @@ function handleDelete(index: number) {
     <table class="w-full text-sm">
       <thead>
         <tr class="border-b">
-          <th class="text-left p-2 font-medium text-muted-foreground">Name</th>
+          <th class="text-left p-2 font-medium text-muted-foreground">
+            Name
+          </th>
           <th class="text-right p-2 font-medium text-muted-foreground">
             Quantity
           </th>
-          <th class="text-right p-2 font-medium text-muted-foreground">Unit</th>
+          <th class="text-right p-2 font-medium text-muted-foreground">
+            Unit
+          </th>
           <th class="text-right p-2 font-medium text-muted-foreground">
             Unit Price
           </th>
@@ -79,7 +82,9 @@ function handleDelete(index: number) {
           <td class="p-2 text-right">
             {{ formatMoney(item.unit_price) }}
           </td>
-          <td class="p-2 text-right">{{ item.vat_rate }}%</td>
+          <td class="p-2 text-right">
+            {{ item.vat_rate }}%
+          </td>
           <td class="p-2 text-right font-semibold">
             {{ formatMoney(item.total_incl_vat) }}
           </td>

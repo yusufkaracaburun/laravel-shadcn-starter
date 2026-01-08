@@ -77,7 +77,9 @@ async function onSubmit(values: any) {
 
 <template>
   <div>
-    <h3 class="text-lg font-medium">Account</h3>
+    <h3 class="text-lg font-medium">
+      Account
+    </h3>
     <p class="text-sm text-muted-foreground">
       Update your account settings. Set your preferred language and timezone.
     </p>
@@ -139,7 +141,8 @@ async function onSubmit(values: any) {
                   if (v) {
                     dateValue = v
                     setFieldValue('dob', toDate(v).toISOString())
-                  } else {
+                  }
+                  else {
                     dateValue = undefined
                     setFieldValue('dob', undefined)
                   }
@@ -153,7 +156,7 @@ async function onSubmit(values: any) {
         </FormDescription>
         <FormMessage />
       </FormItem>
-      <input type="hidden" v-bind="field" />
+      <input type="hidden" v-bind="field">
     </FormField>
 
     <FormField v-slot="{ value }" name="language">
@@ -177,7 +180,7 @@ async function onSubmit(values: any) {
                 {{
                   value
                     ? languages.find((language) => language.value === value)
-                        ?.label
+                      ?.label
                     : 'Select language...'
                 }}
 
@@ -228,7 +231,9 @@ async function onSubmit(values: any) {
     </FormField>
 
     <div class="flex justify-start">
-      <Button type="submit"> Update account </Button>
+      <Button type="submit">
+        Update account
+      </Button>
     </div>
   </Form>
 </template>

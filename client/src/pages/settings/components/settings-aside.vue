@@ -20,7 +20,7 @@ const links = [
 ]
 
 const currentLink = computed(() =>
-  links.find((link) => link.path === currentPath.value),
+  links.find(link => link.path === currentPath.value),
 )
 </script>
 

@@ -70,8 +70,12 @@ const isOpen = ref(false)
           </UiDropdownMenuItem>
         </UiDialogTrigger>
 
-        <UiDropdownMenuItem disabled> Make a copy </UiDropdownMenuItem>
-        <UiDropdownMenuItem disabled> Favorite </UiDropdownMenuItem>
+        <UiDropdownMenuItem disabled>
+          Make a copy
+        </UiDropdownMenuItem>
+        <UiDropdownMenuItem disabled>
+          Favorite
+        </UiDropdownMenuItem>
 
         <UiDropdownMenuSeparator />
 

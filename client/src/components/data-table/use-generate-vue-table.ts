@@ -71,11 +71,11 @@ export function generateVueTable<T, F>(props: IDataTableProps<T, F>) {
       },
     },
     enableRowSelection: true,
-    onColumnFiltersChange: (updaterOrValue) =>
+    onColumnFiltersChange: updaterOrValue =>
       valueUpdater(updaterOrValue, columnFilters),
-    onColumnVisibilityChange: (updaterOrValue) =>
+    onColumnVisibilityChange: updaterOrValue =>
       valueUpdater(updaterOrValue, columnVisibility),
-    onRowSelectionChange: (updaterOrValue) =>
+    onRowSelectionChange: updaterOrValue =>
       valueUpdater(updaterOrValue, rowSelection),
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),

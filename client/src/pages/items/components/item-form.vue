@@ -17,7 +17,8 @@ const { createItem, updateItem } = useItems()
 
 // Extract unit_price value - handle both Money object and number
 function getUnitPriceValue(item: Item | null): number {
-  if (!item?.unit_price) return 0
+  if (!item?.unit_price)
+    return 0
   // If it's a Money object, extract the decimal value
   if (typeof item.unit_price === 'object' && 'amount' in item.unit_price) {
     // Money object: amount is in cents, convert to decimal

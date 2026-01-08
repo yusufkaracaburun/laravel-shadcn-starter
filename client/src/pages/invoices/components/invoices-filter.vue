@@ -33,7 +33,7 @@ const customers = computed(() => {
     return []
   }
   if (Array.isArray(response)) {
-    return response.flatMap((r) =>
+    return response.flatMap(r =>
       r && typeof r === 'object' && 'data' in r ? r.data : [],
     )
   }
@@ -88,7 +88,7 @@ const selectedCustomer = computed(() =>
 const activeFilterCount = computed(
   () =>
     Object.keys(localFilters.value).filter(
-      (key) => localFilters.value[key as keyof IInvoiceFilters],
+      key => localFilters.value[key as keyof IInvoiceFilters],
     ).length,
 )
 </script>

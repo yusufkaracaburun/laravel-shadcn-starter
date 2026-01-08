@@ -15,14 +15,14 @@ interface BaseNavItem {
 
 export type NavItem =
   | (BaseNavItem & {
-      items: (BaseNavItem & { url?: string })[]
-      url?: never
-      isActive?: boolean
-    })
+    items: (BaseNavItem & { url?: string })[]
+    url?: never
+    isActive?: boolean
+  })
   | (BaseNavItem & {
-      url: string
-      items?: never
-    })
+    url: string
+    items?: never
+  })
 
 export interface NavGroup {
   title: string

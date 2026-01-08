@@ -31,7 +31,7 @@ const props = defineProps<{
   task: Task | null
 }>()
 const emits = defineEmits<{
-  close: []
+  'close': []
   'task-updated': [task: Task]
   'task-created': [task: Task]
 }>()
@@ -56,7 +56,8 @@ if (props.task?.dueDate) {
 watch(
   () => dueTime.value,
   (newVal) => {
-    if (!newVal) return
+    if (!newVal)
+      return
     if (dueDate.value) {
       const [hours, minutes] = newVal.split(':').map(Number)
       dueDate.value = new CalendarDateTime(
@@ -218,7 +219,8 @@ const onSubmit = handleSubmit((values) => {
                         const current = componentField.modelValue || []
                         if (checked) {
                           componentField.modelValue = [...current, label.value]
-                        } else {
+                        }
+                        else {
                           componentField.modelValue = current.filter(
                             (l: string) => l !== label.value,
                           )
@@ -310,7 +312,9 @@ const onSubmit = handleSubmit((values) => {
         </UiFormItem>
       </FormField>
 
-      <UiButton type="submit"> Submit </UiButton>
+      <UiButton type="submit">
+        Submit
+      </UiButton>
     </form>
   </div>
 </template>

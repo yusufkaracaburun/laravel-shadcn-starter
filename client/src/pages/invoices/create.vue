@@ -7,10 +7,9 @@ meta:
 import { computed, nextTick, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 
-import { ArrowLeftIcon, SaveIcon, SendIcon } from '@/composables/use-icons'
-
 import Page from '@/components/global-layout/basic-page.vue'
 import { Button } from '@/components/ui/button'
+import { ArrowLeftIcon, SaveIcon, SendIcon } from '@/composables/use-icons'
 import { useGetInvoicePrerequisitesQuery } from '@/services/invoices.service'
 
 import type { TInvoiceForm } from './data/schema'
@@ -26,7 +25,8 @@ const prerequisites = computed(() => prerequisitesResponse.value?.data ?? null)
 
 // Extract items from prerequisites (ItemCollection serializes to { data: Item[] })
 const items = computed(() => {
-  if (!prerequisites.value?.items) return []
+  if (!prerequisites.value?.items)
+    return []
   // Handle both array format and ResourceCollection format ({ data: [...] })
   const itemsData = prerequisites.value.items
   return Array.isArray(itemsData) ? itemsData : ((itemsData as any).data ?? [])
@@ -34,7 +34,8 @@ const items = computed(() => {
 
 // Extract customers from prerequisites (CustomerCollection serializes to { data: Customer[] })
 const customers = computed(() => {
-  if (!prerequisites.value?.customers) return []
+  if (!prerequisites.value?.customers)
+    return []
   // Handle both array format and ResourceCollection format ({ data: [...] })
   const customersData = prerequisites.value.customers
   return Array.isArray(customersData)
@@ -74,7 +75,8 @@ function handleClose() {
 }
 
 async function handleSave() {
-  if (!formRef.value) return
+  if (!formRef.value)
+    return
   isSubmitting.value = true
   try {
     await formRef.value.handleSubmit()
@@ -86,7 +88,8 @@ async function handleSave() {
 }
 
 async function handleSaveAndSend() {
-  if (!formRef.value) return
+  if (!formRef.value)
+    return
   isSubmitting.value = true
   try {
     // Update status to 'sent' before submitting

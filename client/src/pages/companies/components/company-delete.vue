@@ -39,13 +39,14 @@ async function handleDelete() {
     <UiDialogHeader>
       <UiDialogTitle>Delete Company</UiDialogTitle>
       <UiDialogDescription class="mt-2">
-        Are you sure you want to delete <strong>{{ company.name }}</strong
-        >? This action cannot be undone.
+        Are you sure you want to delete <strong>{{ company.name }}</strong>? This action cannot be undone.
       </UiDialogDescription>
     </UiDialogHeader>
     <UiDialogFooter>
       <UiDialogClose as-child>
-        <Button variant="outline"> Cancel </Button>
+        <Button variant="outline">
+          Cancel
+        </Button>
       </UiDialogClose>
       <Button
         variant="destructive"

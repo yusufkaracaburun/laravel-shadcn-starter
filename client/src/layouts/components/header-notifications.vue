@@ -53,7 +53,7 @@ const notifications = ref<Notification[]>([
 
 // Notification handlers
 function markAsRead(id: number) {
-  const notification = notifications.value.find((n) => n.id === id)
+  const notification = notifications.value.find(n => n.id === id)
   if (notification && !notification.read) {
     notification.read = true
     unreadCount.value = Math.max(0, unreadCount.value - 1)

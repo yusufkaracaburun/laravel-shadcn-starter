@@ -47,7 +47,9 @@ const errorCode = computed(() => {
           subtitle="Failed to load document"
           :error="errorMessage"
         />
-        <Button class="mt-4 print:hidden" @click="onRetry"> Try Again </Button>
+        <Button class="mt-4 print:hidden" @click="onRetry">
+          Try Again
+        </Button>
       </div>
     </div>
 

@@ -37,9 +37,7 @@ const props = withDefaults(defineProps<Props>(), {
     />
 
     <div class="text-muted-foreground">
-      <strong class="text-sm font-semibold text-foreground mr-2"
-        >{{ props.label }}:</strong
-      >
+      <strong class="text-sm font-semibold text-foreground mr-2">{{ props.label }}:</strong>
       <slot />
     </div>
   </div>

@@ -56,7 +56,8 @@ const canNextPage = computed(() => {
 })
 
 function handlePageSizeChange(value: any) {
-  if (!value) return
+  if (!value)
+    return
   const newPageSize = Number(value)
   if (isServerPagination.value && props.serverPagination?.onPageSizeChange) {
     props.serverPagination.onPageSizeChange(newPageSize as TPageSize)

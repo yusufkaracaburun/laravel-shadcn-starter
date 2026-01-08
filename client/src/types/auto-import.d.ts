@@ -218,13 +218,19 @@ declare global {
   const useDataTable: typeof import('../composables/use-data-table').useDataTable
   const useEcho: typeof import('../composables/use-echo').useEcho
   const useErrorStore: typeof import('../stores/error.store').useErrorStore
+  const useFilters: typeof import('../composables/use-filters').useFilters
   const useId: typeof import('vue').useId
   const useInvoices: typeof import('../composables/use-invoices').useInvoices
   const useItems: typeof import('../composables/use-items').useItems
   const useKanban: typeof import('../composables/use-kanban').useKanban
   const useLink: typeof import('vue-router')['useLink']
   const useModel: typeof import('vue').useModel
+  const usePagination: typeof import('../composables/use-pagination').usePagination
   const useProjects: typeof import('../composables/use-projects').useProjects
+  const useResourceBase: typeof import('../composables/use-resource-base').useResourceBase
+  const useResourceList: typeof import('../composables/use-resource-list').useResourceList
+  const useResourceMutation: typeof import('../composables/use-resource-mutation').useResourceMutation
+  const useResourcePrerequisites: typeof import('../composables/use-resource-prerequisites').useResourcePrerequisites
   const useReverbNotifications: typeof import('../composables/use-reverb-notifications').useReverbNotifications
   const useRoute: typeof import('vue-router').useRoute
   const useRouteHelper: typeof import('../composables/use-route-helper').useRouteHelper
@@ -232,6 +238,7 @@ declare global {
   const useSeoMetaTags: typeof import('../composables/use-seo-meta-tags').useSeoMetaTags
   const useSidebar: typeof import('../composables/use-sidebar').useSidebar
   const useSlots: typeof import('vue').useSlots
+  const useSorting: typeof import('../composables/use-sorting').useSorting
   const useTemplateRef: typeof import('vue').useTemplateRef
   const useThemeConfig: typeof import('../composables/use-theme-config')['useThemeConfig']
   const useThemeStore: typeof import('../stores/theme.store').useThemeStore
@@ -247,6 +254,9 @@ declare global {
   // @ts-ignore
   export type { Component, Slot, Slots, ComponentPublicInstance, ComputedRef, DirectiveBinding, ExtractDefaultPropTypes, ExtractPropTypes, ExtractPublicPropTypes, InjectionKey, PropType, Ref, ShallowRef, MaybeRef, MaybeRefOrGetter, VNode, WritableComputedRef } from 'vue'
   import('vue')
+  // @ts-ignore
+  export type { ResourceService, ResourceConfig } from '../composables/use-resource-base'
+  import('../composables/use-resource-base')
   // @ts-ignore
   export type { Theme, Radius, ContentLayout, Scale } from '../constants/themes'
   import('../constants/themes')

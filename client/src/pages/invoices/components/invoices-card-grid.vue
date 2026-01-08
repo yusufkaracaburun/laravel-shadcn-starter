@@ -24,7 +24,9 @@ withDefaults(defineProps<IProps>(), {
     class="flex items-center justify-center min-h-[400px]"
   >
     <div class="text-center">
-      <p class="text-muted-foreground">No invoices found.</p>
+      <p class="text-muted-foreground">
+        No invoices found.
+      </p>
     </div>
   </div>
   <div

@@ -51,7 +51,8 @@ const formSchema = toTypedSchema(
 
 // Extract unit_price value - handle both Money object and number
 function getUnitPriceValue(item: TInvoiceItem | null): number {
-  if (!item?.unit_price) return 0
+  if (!item?.unit_price)
+    return 0
   if (typeof item.unit_price === 'object' && 'amount' in item.unit_price) {
     const amount = Number.parseFloat(item.unit_price.amount)
     return amount / 100
@@ -302,19 +303,25 @@ function onCancel() {
     <div class="rounded-lg border bg-muted/50 p-4">
       <div class="grid grid-cols-3 gap-4 text-sm">
         <div>
-          <p class="text-muted-foreground">Excl. VAT</p>
+          <p class="text-muted-foreground">
+            Excl. VAT
+          </p>
           <p class="font-semibold">
             {{ formatMoney(calculatedTotals.totalExclVat) }}
           </p>
         </div>
         <div>
-          <p class="text-muted-foreground">VAT</p>
+          <p class="text-muted-foreground">
+            VAT
+          </p>
           <p class="font-semibold">
             {{ formatMoney(calculatedTotals.totalVat) }}
           </p>
         </div>
         <div>
-          <p class="text-muted-foreground">Incl. VAT</p>
+          <p class="text-muted-foreground">
+            Incl. VAT
+          </p>
           <p class="font-semibold">
             {{ formatMoney(calculatedTotals.totalInclVat) }}
           </p>

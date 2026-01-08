@@ -7,12 +7,11 @@ meta:
 import { computed, nextTick, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
-import { ArrowLeftIcon, SaveIcon, SendIcon } from '@/composables/use-icons'
-
 import type { TInvoiceForm, TInvoiceItem } from '@/pages/invoices/data/schema'
 
 import Page from '@/components/global-layout/basic-page.vue'
 import { Button } from '@/components/ui/button'
+import { ArrowLeftIcon, SendIcon } from '@/composables/use-icons'
 import { useInvoices } from '@/composables/use-invoices'
 import { useToast } from '@/composables/use-toast'
 import InvoiceForm from '@/pages/invoices/components/invoice-form.vue'
@@ -60,7 +59,8 @@ function handleClose() {
 }
 
 async function handleUpdate() {
-  if (!formRef.value) return
+  if (!formRef.value)
+    return
   isSubmitting.value = true
   try {
     await formRef.value.handleSubmit()
@@ -78,7 +78,8 @@ async function handleUpdate() {
 }
 
 async function handleUpdateAndSend() {
-  if (!formRef.value) return
+  if (!formRef.value)
+    return
   isSubmitting.value = true
   try {
     formRef.value.setFieldValue('status', 'sent')

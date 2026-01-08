@@ -53,7 +53,8 @@ const user = computed<User | null>(() => userResponse.value?.data ?? null)
 
 // Get initials from name
 function getInitials(name: string): string {
-  if (!name || name === '—') return '?'
+  if (!name || name === '—')
+    return '?'
   const parts = name.trim().split(/\s+/)
   if (parts.length >= 2) {
     return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase()
@@ -63,7 +64,8 @@ function getInitials(name: string): string {
 
 // Format date
 function formatDate(dateString: string | null): string {
-  if (!dateString) return '—'
+  if (!dateString)
+    return '—'
   return new Date(dateString).toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'long',
@@ -73,7 +75,8 @@ function formatDate(dateString: string | null): string {
 
 // Format datetime
 function formatDateTime(dateString: string | null): string {
-  if (!dateString) return '—'
+  if (!dateString)
+    return '—'
   return new Date(dateString).toLocaleString('en-US', {
     year: 'numeric',
     month: 'long',
@@ -103,7 +106,8 @@ function handleDeleteClose() {
 
 // Check if error is 404
 const isNotFound = computed(() => {
-  if (!isError.value || !error.value) return false
+  if (!isError.value || !error.value)
+    return false
   return (error.value as any)?.response?.status === 404
 })
 </script>
@@ -160,7 +164,9 @@ const isNotFound = computed(() => {
           subtitle="Error Loading User"
           error="An error occurred while loading the user information. Please try again."
         />
-        <Button class="mt-4" @click="refetch()"> Retry </Button>
+        <Button class="mt-4" @click="refetch()">
+          Retry
+        </Button>
       </div>
     </div>
 

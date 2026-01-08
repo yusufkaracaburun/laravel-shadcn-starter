@@ -21,7 +21,7 @@ export default defineConfig({
     actionTimeout: 10000,
     navigationTimeout: 10000,
     extraHTTPHeaders: {
-      Accept: 'application/json',
+      'Accept': 'application/json',
       'X-Requested-With': 'XMLHttpRequest',
     },
     ignoreHTTPSErrors: true,
@@ -59,7 +59,7 @@ export default defineConfig({
         ...devices['Desktop Chrome'],
         ignoreHTTPSErrors: true,
         extraHTTPHeaders: {
-          Accept: 'application/json',
+          'Accept': 'application/json',
           'X-Requested-With': 'XMLHttpRequest',
         },
       },

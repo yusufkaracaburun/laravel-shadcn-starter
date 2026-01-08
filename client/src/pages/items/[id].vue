@@ -75,7 +75,8 @@ function handleDeleteClose() {
 
 // Format date
 function formatDate(dateString: string | null): string {
-  if (!dateString) return '—'
+  if (!dateString)
+    return '—'
   return new Date(dateString).toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'long',
@@ -85,7 +86,8 @@ function formatDate(dateString: string | null): string {
 
 // Format datetime
 function formatDateTime(dateString: string | null): string {
-  if (!dateString) return '—'
+  if (!dateString)
+    return '—'
   return new Date(dateString).toLocaleString('en-US', {
     year: 'numeric',
     month: 'long',
@@ -99,7 +101,8 @@ function formatDateTime(dateString: string | null): string {
 function formatPrice(
   price: number | { formatted: string } | undefined,
 ): string {
-  if (!price) return '—'
+  if (!price)
+    return '—'
   // Handle Money object from backend
   if (typeof price === 'object' && 'formatted' in price) {
     return price.formatted
@@ -185,18 +188,28 @@ function formatPrice(
               </p>
             </div>
             <div>
-              <p class="text-sm font-medium text-muted-foreground">VAT Rate</p>
-              <p class="text-lg font-semibold">{{ item.vat_rate }}%</p>
+              <p class="text-sm font-medium text-muted-foreground">
+                VAT Rate
+              </p>
+              <p class="text-lg font-semibold">
+                {{ item.vat_rate }}%
+              </p>
             </div>
             <div v-if="item.unit">
-              <p class="text-sm font-medium text-muted-foreground">Unit</p>
+              <p class="text-sm font-medium text-muted-foreground">
+                Unit
+              </p>
               <p class="text-lg font-semibold">
                 {{ item.unit }}
               </p>
             </div>
             <div>
-              <p class="text-sm font-medium text-muted-foreground">Item ID</p>
-              <p class="text-lg font-semibold">#{{ item.id }}</p>
+              <p class="text-sm font-medium text-muted-foreground">
+                Item ID
+              </p>
+              <p class="text-lg font-semibold">
+                #{{ item.id }}
+              </p>
             </div>
           </div>
         </CardContent>

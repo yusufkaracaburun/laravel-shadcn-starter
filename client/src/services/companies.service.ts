@@ -50,7 +50,7 @@ export interface PaginatedCompaniesResponse {
  * @returns Sort string for Spatie QueryBuilder (e.g., "name" or "-name" or "name,-email")
  */
 function convertSortingToQueryString(
-  sorting: Array<{ id: string; desc: boolean }>,
+  sorting: Array<{ id: string, desc: boolean }>,
 ): string | undefined {
   if (!sorting || sorting.length === 0) {
     return undefined
@@ -74,7 +74,7 @@ function convertSortingToQueryString(
 export function useGetCompaniesQuery(
   page: MaybeRef<number> = 1,
   pageSize: MaybeRef<number> = 10,
-  sorting: MaybeRef<Array<{ id: string; desc: boolean }>> = [],
+  sorting: MaybeRef<Array<{ id: string, desc: boolean }>> = [],
 ) {
   const { axiosInstance } = useAxios()
 
@@ -216,7 +216,7 @@ export function useUpdateCompanyMutation() {
   return useMutation<
     IResponse<Company>,
     AxiosError,
-    { companyId: number; data: UpdateCompanyRequest }
+    { companyId: number, data: UpdateCompanyRequest }
   >({
     mutationFn: async ({ companyId, data }): Promise<IResponse<Company>> => {
       const response = await axiosInstance.put(

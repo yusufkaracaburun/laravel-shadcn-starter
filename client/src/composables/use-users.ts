@@ -1,6 +1,6 @@
-import { computed, ref, watch } from 'vue'
+import { computed, ref } from 'vue'
+import { useRoute } from 'vue-router'
 
-import type { TPageSize } from '@/components/data-table/types'
 import type {
   ICreateUserRequest,
   IUpdateUserRequest,
@@ -8,40 +8,35 @@ import type {
   IUserFilters,
   IUserPrerequisites,
 } from '@/pages/users/models/users'
-import type { ISorting } from '@/services/query-utils'
-import type {
-  IPaginatedResponse,
-  IResponse,
-} from '@/services/types/response.type'
+import type { IResponse } from '@/services/types/response.type'
 
-import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from '@/components/data-table/types'
+import { useResourceBase } from '@/composables/use-resource-base'
 import { useToast } from '@/composables/use-toast'
 import { useUserService } from '@/services/users.service'
 import { useErrorStore } from '@/stores/error.store'
 
 const UserContext = {
-  FETCH_USER_PREREQUISITES: 'fetchUserPrerequisites',
-  FETCH_USERS: 'fetchUsers',
-  CREATE_USER: 'createUser',
-  UPDATE_USER: 'updateUser',
-  DELETE_USER: 'deleteUser',
+  FETCH_PREREQUISITES: 'fetchUserPrerequisites',
+  FETCH_LIST: 'fetchUsers',
+  GET_USER: 'getUser',
+  GET_USER_BY_ID: 'getUserById',
+  CREATE: 'createUser',
+  UPDATE: 'updateUser',
+  DELETE: 'deleteUser',
 }
 
 const UserMessages = {
-  CREATE_USER_SUCCESS: 'User created successfully!',
-  UPDATE_USER_SUCCESS: 'User updated successfully!',
-  DELETE_USER_SUCCESS: 'User deleted successfully!',
+  CREATE_SUCCESS: 'User created successfully!',
+  UPDATE_SUCCESS: 'User updated successfully!',
+  DELETE_SUCCESS: 'User deleted successfully!',
 }
 
 export function useUsers() {
   const toast = useToast()
   const errorStore = useErrorStore()
   const userService = useUserService()
+  const route = useRoute()
 
-  const page = ref<number>(DEFAULT_PAGE)
-  const pageSize = ref<TPageSize>(DEFAULT_PAGE_SIZE)
-  const sort = ref<ISorting>({ id: 'created_at', desc: true })
-  const filter = ref<IUserFilters>({})
   const includes = {
     roles: 'roles',
     companies: 'companies',
@@ -49,175 +44,104 @@ export function useUsers() {
     invoices: 'invoices',
   }
 
-  function onSortingChange(newSorting: ISorting): void {
-    sort.value = newSorting
-    page.value = DEFAULT_PAGE
-  }
+  const base = useResourceBase<
+    IUser,
+    IUserFilters,
+    ICreateUserRequest,
+    IUpdateUserRequest,
+    IUserPrerequisites
+  >({
+    service: {
+      getPrerequisitesQuery: () => userService.getUserPrerequisitesQuery(),
+      getListQuery: (page, per_page, sort, filter, include) =>
+        userService.getUsersQuery(page, per_page, sort, filter, include),
+      createMutation: () => userService.createUserMutation(),
+      updateMutation: () => userService.updateUserMutation(),
+      deleteMutation: () => userService.deleteUserMutation(),
+      getMutation: () => userService.getUserMutation(),
+    },
+    context: UserContext,
+    messages: UserMessages,
+    defaultSort: { id: 'created_at', desc: true },
+    includes,
+    defaultIncludeKey: 'roles',
+    onFetchList: (refetch) => {
+      refetch()
+    },
+  })
 
-  function onFiltersChange(newFilters: IUserFilters): void {
-    filter.value = newFilters
-    page.value = DEFAULT_PAGE
-  }
-
-  function clearFilters() {
-    filter.value = {} as IUserFilters
-    page.value = DEFAULT_PAGE
-  }
-
-  function onPageChange(newPage: number): void {
-    page.value = newPage
-  }
-
-  function onPageSizeChange(newPageSize: TPageSize): void {
-    page.value = DEFAULT_PAGE
-    pageSize.value = newPageSize
-  }
-
-  const getUserPrerequisitesQuery = userService.getUserPrerequisitesQuery()
-  const {
-    data: userPrerequisitesResponse,
-    isLoading: isLoadingUserPrerequisites,
-    isError: isErrorUserPrerequisites,
-    error: errorUserPrerequisites,
-    refetch: refetchUserPrerequisites,
-  } = getUserPrerequisitesQuery
-  async function fetchUserPrerequisitesData(): Promise<
-    IResponse<IUserPrerequisites>
-  > {
-    try {
-      const response = await refetchUserPrerequisites()
-      return response.data as IResponse<IUserPrerequisites>
-    } catch (error: any) {
-      errorStore.setError(error, {
-        context: UserContext.FETCH_USER_PREREQUISITES,
-      })
-      const message = errorStore.getErrorMessage(error)
-      toast.showError(message)
-      throw error
+  const userId = computed(() => {
+    if (!route) {
+      return undefined
     }
-  }
+    const params = route.params as { id?: string | string[] }
+    const idParam = Array.isArray(params.id) ? params.id[0] : params.id
+    if (
+      !idParam ||
+      typeof idParam !== 'string' ||
+      Number.isNaN(Number(idParam))
+    ) {
+      return undefined
+    }
+    return Number(idParam)
+  })
 
-  const getUsersQuery = userService.getUsersQuery(
-    page,
-    pageSize,
-    sort,
-    filter,
-    ref([includes.roles]),
+  const getUserByIdQuery = userService.getUserByIdQuery(
+    userId,
+    ref([
+      includes.roles,
+      includes.companies,
+      includes.permissions,
+      includes.invoices,
+    ]),
   )
   const {
-    data: usersData,
-    isLoading,
-    isFetching,
-    refetch: fetchUsers,
-  } = getUsersQuery
-  const users = computed(() => usersData.value?.data.data ?? [])
-  async function fetchUsersData(): Promise<IPaginatedResponse<IUser>> {
+    data: userByIdResponse,
+    isLoading: isLoadingUserById,
+    isError: isErrorUserById,
+    error: errorUserById,
+    refetch: refetchUserById,
+  } = getUserByIdQuery
+
+  async function fetchUserByIdData(): Promise<IResponse<IUser>> {
     try {
-      const response = await fetchUsers()
-      return response.data as IPaginatedResponse<IUser>
+      const response = await refetchUserById()
+      return response.data as IResponse<IUser>
     } catch (error: any) {
-      errorStore.setError(error, { context: UserContext.FETCH_USERS })
+      errorStore.setError(error, { context: UserContext.GET_USER_BY_ID })
       const message = errorStore.getErrorMessage(error)
       toast.showError(message)
       throw error
     }
   }
-
-  const createUserMutation = userService.createUserMutation()
-  async function createUser(data: ICreateUserRequest) {
-    try {
-      const response = await createUserMutation.mutateAsync(data)
-      toast.showSuccess(UserMessages.CREATE_USER_SUCCESS)
-      return response
-    } catch (error: any) {
-      errorStore.setError(error, { context: UserContext.CREATE_USER })
-      const message = errorStore.getErrorMessage(error)
-      const validationErrors = errorStore.getValidationErrors(error)
-      if (Object.keys(validationErrors).length > 0) {
-        const firstError = Object.values(validationErrors)[0]?.[0]
-        toast.showError(firstError || message)
-      } else {
-        toast.showError(message)
-      }
-      throw error
-    }
-  }
-
-  const updateUserMutation = userService.updateUserMutation()
-  async function updateUser(userId: number, data: IUpdateUserRequest) {
-    try {
-      const response = await updateUserMutation.mutateAsync({
-        id: userId,
-        data,
-      })
-      toast.showSuccess(UserMessages.UPDATE_USER_SUCCESS)
-      return response
-    } catch (error: any) {
-      errorStore.setError(error, { context: UserContext.UPDATE_USER })
-      const message = errorStore.getErrorMessage(error)
-      const validationErrors = errorStore.getValidationErrors(error)
-      if (Object.keys(validationErrors).length > 0) {
-        const firstError = Object.values(validationErrors)[0]?.[0]
-        toast.showError(firstError || message)
-      } else {
-        toast.showError(message)
-      }
-      throw error
-    }
-  }
-
-  const deleteUserMutation = userService.deleteUserMutation()
-  async function deleteUser(userId: number) {
-    try {
-      await deleteUserMutation.mutateAsync(userId)
-      toast.showSuccess(UserMessages.DELETE_USER_SUCCESS)
-    } catch (error: any) {
-      errorStore.setError(error, { context: UserContext.DELETE_USER })
-      const message = errorStore.getErrorMessage(error)
-      toast.showError(message)
-      throw error
-    }
-  }
-
-  const loading = computed(() => isLoading.value || isFetching.value)
-
-  const serverPagination = computed(() => {
-    const response = usersData.value?.data
-    return {
-      page: response ? response.current_page : page.value,
-      pageSize: pageSize.value,
-      total: response ? response.total : 0,
-      onPageChange,
-      onPageSizeChange,
-    }
-  })
-
-  watch([page, pageSize], ([newPage, newPageSize], [oldPage, oldPageSize]) => {
-    if (oldPage !== newPage || oldPageSize !== newPageSize) {
-      fetchUsers()
-    }
-  })
 
   return {
-    sort,
-    filter,
-    includes,
-    users,
-    onSortingChange,
-    onFiltersChange,
-    clearFilters,
-    onPageChange,
-    onPageSizeChange,
-    userPrerequisitesResponse,
-    isLoadingUserPrerequisites,
-    isErrorUserPrerequisites,
-    errorUserPrerequisites,
-    fetchUserPrerequisitesData,
-    fetchUsersData,
-    createUser,
-    updateUser,
-    deleteUser,
-    loading,
-    serverPagination,
+    sort: base.sort,
+    filter: base.filter,
+    includes: base.includes,
+    users: base.items,
+    onSortingChange: base.onSortingChange,
+    onFiltersChange: base.onFiltersChange,
+    clearFilters: base.clearFilters,
+    onPageChange: base.onPageChange,
+    onPageSizeChange: base.onPageSizeChange,
+    userPrerequisitesResponse: base.prerequisitesResponse,
+    isLoadingUserPrerequisites: base.isLoadingPrerequisites,
+    isErrorUserPrerequisites: base.isErrorPrerequisites,
+    errorUserPrerequisites: base.errorPrerequisites,
+    fetchUserPrerequisitesData: base.fetchPrerequisitesData,
+    fetchUsersData: base.fetchListData,
+    getUser: base.get,
+    createUser: base.create,
+    updateUser: base.update,
+    deleteUser: base.deleteItem,
+    loading: base.loading,
+    serverPagination: base.serverPagination,
+    userId,
+    userByIdResponse,
+    isLoadingUserById,
+    isErrorUserById,
+    errorUserById,
+    fetchUserByIdData,
   }
 }

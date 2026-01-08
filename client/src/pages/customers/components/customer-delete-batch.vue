@@ -20,7 +20,7 @@ const emit = defineEmits<{
 
 const isOpen = computed({
   get: () => props.open,
-  set: (value) => emit('update:open', value),
+  set: value => emit('update:open', value),
 })
 
 const { deleteCustomer } = useCustomers()
@@ -38,7 +38,7 @@ async function handleBatchDelete() {
 
   try {
     isDeleting.value = true
-    const deletePromises = selectedRows.value.map((row) =>
+    const deletePromises = selectedRows.value.map(row =>
       deleteCustomer(row.original.id),
     )
     await Promise.all(deletePromises)
@@ -66,7 +66,9 @@ async function handleBatchDelete() {
       </UiDialogHeader>
       <UiDialogFooter>
         <UiDialogClose as-child>
-          <UiButton variant="outline"> Cancel </UiButton>
+          <UiButton variant="outline">
+            Cancel
+          </UiButton>
         </UiDialogClose>
         <UiButton
           variant="destructive"

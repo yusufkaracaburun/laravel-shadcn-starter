@@ -91,7 +91,9 @@ function handleSelect(command: TComponent) {
                 >
                   <Plus class="size-4" />
                 </div>
-                <div class="font-medium text-muted-foreground">Add team</div>
+                <div class="font-medium text-muted-foreground">
+                  Add team
+                </div>
               </UiDropdownMenuItem>
             </UiDialogTrigger>
           </UiDropdownMenuContent>

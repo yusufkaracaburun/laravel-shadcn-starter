@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import type { TInvoice } from '@/pages/invoices/data/schema'
-
-import { ReceiptIcon } from '@/composables/use-icons'
 import type { IInvoiceItem } from '@/services/invoices.service'
 
+import { ReceiptIcon } from '@/composables/use-icons'
 import {
   formatDateForPreview,
   formatMoney,
@@ -55,8 +54,8 @@ function formatCurrency(value: any): string {
                 Your Company Name
               </h1>
               <p class="text-gray-600">
-                123 Business Street<br />City, State 12345<br />Phone: (555)
-                123-4567<br />Email: info@company.com
+                123 Business Street<br>City, State 12345<br>Phone: (555)
+                123-4567<br>Email: info@company.com
               </p>
             </div>
           </div>
@@ -64,13 +63,15 @@ function formatCurrency(value: any): string {
 
         <!-- Invoice Details -->
         <div class="text-right">
-          <h2 class="text-4xl font-bold text-gray-900 mb-2">INVOICE</h2>
+          <h2 class="text-4xl font-bold text-gray-900 mb-2">
+            INVOICE
+          </h2>
           <div class="space-y-2">
             <div>
               <span class="font-semibold text-gray-700">Invoice #:</span>
               <span class="ml-2 text-gray-900">{{
-                props.formValues?.invoice_number ||
-                (props.formValues?.id ? `#${props.formValues.id}` : '—')
+                props.formValues?.invoice_number
+                  || (props.formValues?.id ? `#${props.formValues.id}` : '—')
               }}</span>
             </div>
             <div>
@@ -87,9 +88,7 @@ function formatCurrency(value: any): string {
             </div>
             <div>
               <span class="font-semibold text-gray-700">Terms:</span>
-              <span class="ml-2 text-gray-900"
-                >{{ props.formValues?.due_days || '—' }} days</span
-              >
+              <span class="ml-2 text-gray-900">{{ props.formValues?.due_days || '—' }} days</span>
             </div>
           </div>
         </div>
@@ -101,14 +100,16 @@ function formatCurrency(value: any): string {
       <div class="grid grid-cols-2 gap-8">
         <!-- Bill To -->
         <div>
-          <h3 class="text-lg font-semibold text-gray-900 mb-3">Bill To:</h3>
+          <h3 class="text-lg font-semibold text-gray-900 mb-3">
+            Bill To:
+          </h3>
           <div class="text-gray-700">
             <p class="font-semibold text-lg mb-1">
               {{
-                props.formValues?.customer?.name ||
-                (props.formValues?.customer_id
-                  ? `Customer #${props.formValues.customer_id}`
-                  : '—')
+                props.formValues?.customer?.name
+                  || (props.formValues?.customer_id
+                    ? `Customer #${props.formValues.customer_id}`
+                    : '—')
               }}
             </p>
             <p
@@ -153,9 +154,13 @@ function formatCurrency(value: any): string {
 
         <!-- Ship To (if different) -->
         <div>
-          <h3 class="text-lg font-semibold text-gray-900 mb-3">Ship To:</h3>
+          <h3 class="text-lg font-semibold text-gray-900 mb-3">
+            Ship To:
+          </h3>
           <div class="text-gray-700">
-            <p class="text-sm">Same as billing address</p>
+            <p class="text-sm">
+              Same as billing address
+            </p>
             <!-- You can add shipping address logic here if needed -->
           </div>
         </div>
@@ -254,12 +259,12 @@ function formatCurrency(value: any): string {
 
           <div
             v-if="
-              props.formValues?.total_vat_0 &&
-              (typeof props.formValues.total_vat_0 === 'object'
-                ? Number.parseFloat(props.formValues.total_vat_0.amount) > 0
-                : typeof props.formValues.total_vat_0 === 'number'
-                  ? props.formValues.total_vat_0 > 0
-                  : false)
+              props.formValues?.total_vat_0
+                && (typeof props.formValues.total_vat_0 === 'object'
+                  ? Number.parseFloat(props.formValues.total_vat_0.amount) > 0
+                  : typeof props.formValues.total_vat_0 === 'number'
+                    ? props.formValues.total_vat_0 > 0
+                    : false)
             "
             class="flex justify-between text-gray-700"
           >
@@ -268,12 +273,12 @@ function formatCurrency(value: any): string {
           </div>
           <div
             v-if="
-              props.formValues?.total_vat_9 &&
-              (typeof props.formValues.total_vat_9 === 'object'
-                ? Number.parseFloat(props.formValues.total_vat_9.amount) > 0
-                : typeof props.formValues.total_vat_9 === 'number'
-                  ? props.formValues.total_vat_9 > 0
-                  : false)
+              props.formValues?.total_vat_9
+                && (typeof props.formValues.total_vat_9 === 'object'
+                  ? Number.parseFloat(props.formValues.total_vat_9.amount) > 0
+                  : typeof props.formValues.total_vat_9 === 'number'
+                    ? props.formValues.total_vat_9 > 0
+                    : false)
             "
             class="flex justify-between text-gray-700"
           >
@@ -282,12 +287,12 @@ function formatCurrency(value: any): string {
           </div>
           <div
             v-if="
-              props.formValues?.total_vat_21 &&
-              (typeof props.formValues.total_vat_21 === 'object'
-                ? Number.parseFloat(props.formValues.total_vat_21.amount) > 0
-                : typeof props.formValues.total_vat_21 === 'number'
-                  ? props.formValues.total_vat_21 > 0
-                  : false)
+              props.formValues?.total_vat_21
+                && (typeof props.formValues.total_vat_21 === 'object'
+                  ? Number.parseFloat(props.formValues.total_vat_21.amount) > 0
+                  : typeof props.formValues.total_vat_21 === 'number'
+                    ? props.formValues.total_vat_21 > 0
+                    : false)
             "
             class="flex justify-between text-gray-700"
           >
@@ -307,7 +312,9 @@ function formatCurrency(value: any): string {
 
     <!-- Notes Section -->
     <div v-if="props.formValues?.notes" class="mb-8">
-      <h3 class="text-lg font-semibold text-gray-900 mb-3">Notes:</h3>
+      <h3 class="text-lg font-semibold text-gray-900 mb-3">
+        Notes:
+      </h3>
       <div
         class="bg-gray-50 p-4 rounded border text-gray-700 whitespace-pre-wrap"
       >

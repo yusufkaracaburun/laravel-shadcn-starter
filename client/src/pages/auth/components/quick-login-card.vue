@@ -11,7 +11,9 @@ defineProps<{
 <template>
   <UiCard class="w-full max-w-sm">
     <UiCardHeader>
-      <UiCardTitle class="text-lg"> Quick Login (Local Only) </UiCardTitle>
+      <UiCardTitle class="text-lg">
+        Quick Login (Local Only)
+      </UiCardTitle>
       <UiCardDescription>
         Click a button to quickly login with a test user.
       </UiCardDescription>

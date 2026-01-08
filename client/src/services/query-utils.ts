@@ -40,9 +40,9 @@ export function objectToQueryStringDeep(
     }
 
     if (
-      typeof value === 'object' &&
-      !Array.isArray(value) &&
-      Object.keys(value).length === 0
+      typeof value === 'object'
+      && !Array.isArray(value)
+      && Object.keys(value).length === 0
     ) {
       continue
     }
@@ -58,7 +58,7 @@ export function objectToQueryStringDeep(
 
     if (key === 'include' && Array.isArray(value)) {
       pairs.push(
-        `${paramKey}=${value.map((v) => encodeURIComponent(String(v))).join(',')}`,
+        `${paramKey}=${value.map(v => encodeURIComponent(String(v))).join(',')}`,
       )
       continue
     }

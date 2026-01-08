@@ -39,9 +39,7 @@ const firstKey = computed(() =>
     >
       <div class="flex items-center gap-2">
         <SearchIcon class="size-4" />
-        <span class="text-xs font-semibold text-muted-foreground"
-          >Search Menu</span
-        >
+        <span class="text-xs font-semibold text-muted-foreground">Search Menu</span>
       </div>
       <UiKbd>{{ firstKey }} + k</UiKbd>
     </div>

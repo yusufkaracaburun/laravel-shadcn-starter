@@ -8,7 +8,9 @@ import AuthTitle from './components/auth-title.vue'
       <AuthTitle />
       <UiCard>
         <UiCardHeader>
-          <UiCardTitle class="text-2xl"> Forgot Password </UiCardTitle>
+          <UiCardTitle class="text-2xl">
+            Forgot Password
+          </UiCardTitle>
           <UiCardDescription>
             Enter your registered email and we will send you a link to reset
             your password.
@@ -17,7 +19,9 @@ import AuthTitle from './components/auth-title.vue'
         <UiCardContent>
           <div class="grid gap-4">
             <div class="grid gap-2">
-              <UiLabel for="email"> Email </UiLabel>
+              <UiLabel for="email">
+                Email
+              </UiLabel>
               <UiInput
                 id="email"
                 type="email"
@@ -26,7 +30,9 @@ import AuthTitle from './components/auth-title.vue'
               />
             </div>
 
-            <UiButton class="w-full"> Continue </UiButton>
+            <UiButton class="w-full">
+              Continue
+            </UiButton>
 
             <div>
               Don't have an account?

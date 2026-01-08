@@ -87,7 +87,8 @@ function handleDeleteClose() {
 
 // Format date from "d-m-Y H:i:s" format
 function formatDateTime(dateString: string | null): string {
-  if (!dateString) return '—'
+  if (!dateString)
+    return '—'
   const [datePart, timePart] = dateString.split(' ')
   const [day, month, year] = datePart.split('-')
   const date = new Date(`${year}-${month}-${day} ${timePart}`)
@@ -169,7 +170,9 @@ function formatDateTime(dateString: string | null): string {
             <div v-if="customer.email" class="flex items-center gap-2">
               <Mail class="size-4 text-muted-foreground" />
               <div>
-                <p class="text-sm font-medium text-muted-foreground">Email</p>
+                <p class="text-sm font-medium text-muted-foreground">
+                  Email
+                </p>
                 <p class="text-sm">
                   {{ customer.email }}
                 </p>
@@ -178,7 +181,9 @@ function formatDateTime(dateString: string | null): string {
             <div v-if="customer.phone" class="flex items-center gap-2">
               <Phone class="size-4 text-muted-foreground" />
               <div>
-                <p class="text-sm font-medium text-muted-foreground">Phone</p>
+                <p class="text-sm font-medium text-muted-foreground">
+                  Phone
+                </p>
                 <p class="text-sm">
                   {{ customer.phone }}
                 </p>
@@ -190,7 +195,9 @@ function formatDateTime(dateString: string | null): string {
             >
               <MapPin class="size-4 text-muted-foreground" />
               <div>
-                <p class="text-sm font-medium text-muted-foreground">Address</p>
+                <p class="text-sm font-medium text-muted-foreground">
+                  Address
+                </p>
                 <p class="text-sm">
                   <span v-if="customer.address">{{ customer.address }}</span>
                   <span v-if="customer.address && customer.zipcode">, </span>
@@ -203,10 +210,10 @@ function formatDateTime(dateString: string | null): string {
                   <span v-if="customer.city">{{ customer.city }}</span>
                   <span
                     v-if="
-                      customer.country &&
-                      (customer.city || customer.zipcode || customer.address)
+                      customer.country
+                        && (customer.city || customer.zipcode || customer.address)
                     "
-                    >,
+                  >,
                   </span>
                   <span v-if="customer.country">{{ customer.country }}</span>
                 </p>
@@ -216,7 +223,9 @@ function formatDateTime(dateString: string | null): string {
               <p class="text-sm font-medium text-muted-foreground">
                 Customer ID
               </p>
-              <p class="text-sm font-semibold">#{{ customer.id }}</p>
+              <p class="text-sm font-semibold">
+                #{{ customer.id }}
+              </p>
             </div>
           </div>
         </CardContent>
@@ -269,7 +278,9 @@ function formatDateTime(dateString: string | null): string {
         <CardContent>
           <div class="space-y-4">
             <div>
-              <p class="text-sm font-medium text-muted-foreground">Name</p>
+              <p class="text-sm font-medium text-muted-foreground">
+                Name
+              </p>
               <p class="text-sm font-semibold">
                 {{ customer.primary_contact.name }}
               </p>
@@ -279,13 +290,17 @@ function formatDateTime(dateString: string | null): string {
               class="grid gap-4 md:grid-cols-2"
             >
               <div>
-                <p class="text-sm font-medium text-muted-foreground">Email</p>
+                <p class="text-sm font-medium text-muted-foreground">
+                  Email
+                </p>
                 <p class="text-sm">
                   {{ customer.primary_contact.email }}
                 </p>
               </div>
               <div v-if="customer.primary_contact.phone">
-                <p class="text-sm font-medium text-muted-foreground">Phone</p>
+                <p class="text-sm font-medium text-muted-foreground">
+                  Phone
+                </p>
                 <p class="text-sm">
                   {{ customer.primary_contact.phone }}
                 </p>
@@ -304,7 +319,7 @@ function formatDateTime(dateString: string | null): string {
                     :src="customer.primary_contact.user.profile_photo_url"
                     :alt="customer.primary_contact.user.name"
                     class="w-full h-full object-cover"
-                  />
+                  >
                 </div>
                 <div>
                   <p class="text-sm font-semibold">
@@ -360,7 +375,7 @@ function formatDateTime(dateString: string | null): string {
                     :src="contact.user.profile_photo_url"
                     :alt="contact.user.name"
                     class="w-full h-full object-cover"
-                  />
+                  >
                 </div>
                 <p class="text-xs text-muted-foreground">
                   {{ contact.user.name }}

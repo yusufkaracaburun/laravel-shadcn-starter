@@ -94,7 +94,7 @@ const formSchema = computed(() => {
       password: z.string().min(8, 'Password must be at least 8 characters.'),
       password_confirmation: z.string().min(1, 'Please confirm your password.'),
     })
-    .refine((data) => data.password === data.password_confirmation, {
+    .refine(data => data.password === data.password_confirmation, {
       message: 'Passwords do not match.',
       path: ['password_confirmation'],
     })
@@ -244,12 +244,12 @@ const onSubmit = handleSubmit(async (values) => {
         if (Array.isArray(fieldErrors) && fieldErrors.length > 0) {
           setFieldError(
             field as
-              | 'name'
-              | 'email'
-              | 'password'
-              | 'password_confirmation'
-              | 'profile_photo'
-              | 'role',
+            | 'name'
+            | 'email'
+            | 'password'
+            | 'password_confirmation'
+            | 'profile_photo'
+            | 'role',
             fieldErrors[0],
           )
         }
@@ -376,7 +376,7 @@ const onSubmit = handleSubmit(async (values) => {
                 :src="(profilePhotoPreview || existingProfilePhotoUrl) ?? ''"
                 alt="Profile preview"
                 class="h-24 w-24 rounded-full object-cover border"
-              />
+              >
             </div>
           </div>
         </FormControl>

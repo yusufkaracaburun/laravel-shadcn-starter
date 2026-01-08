@@ -1,19 +1,18 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 
-import {
-  CheckCircle2Icon,
-  ClockIcon,
-  MailIcon,
-  XCircleIcon,
-} from '@/composables/use-icons'
-
 import type { IInvoiceEmail } from '@/services/invoices.service'
 
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
+import {
+  CheckCircle2Icon,
+  ClockIcon,
+  MailIcon,
+  XCircleIcon,
+} from '@/composables/use-icons'
 
 import { formatDateTime } from '../utils/formatters'
 
@@ -52,7 +51,9 @@ function getStatusIcon(status: string) {
     <CardHeader class="pb-4">
       <div class="flex items-center gap-2">
         <MailIcon class="size-4 text-muted-foreground" />
-        <CardTitle class="text-base font-semibold"> Sent Emails </CardTitle>
+        <CardTitle class="text-base font-semibold">
+          Sent Emails
+        </CardTitle>
       </div>
     </CardHeader>
     <CardContent>
@@ -77,7 +78,9 @@ function getStatusIcon(status: string) {
               <p class="text-sm font-medium text-foreground">
                 {{ email.subject }}
               </p>
-              <p class="text-xs text-muted-foreground">To: {{ email.to }}</p>
+              <p class="text-xs text-muted-foreground">
+                To: {{ email.to }}
+              </p>
             </div>
           </div>
           <div
@@ -122,7 +125,9 @@ function getStatusIcon(status: string) {
         >
           <Mail class="size-5 text-muted-foreground" />
         </div>
-        <p class="text-sm font-medium text-muted-foreground">No emails sent</p>
+        <p class="text-sm font-medium text-muted-foreground">
+          No emails sent
+        </p>
         <p class="text-xs text-muted-foreground mt-1">
           Sent emails will appear here.
         </p>

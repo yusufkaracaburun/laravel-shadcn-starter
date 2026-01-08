@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
 
-import { FileTextIcon, MoreVerticalIcon } from '@/composables/use-icons'
-
 import {
   Card,
   CardContent,
@@ -11,6 +9,7 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { StatusBadge } from '@/components/ui/status-badge'
+import { FileTextIcon, MoreVerticalIcon } from '@/composables/use-icons'
 
 import type { IInvoice } from '../models/invoice'
 

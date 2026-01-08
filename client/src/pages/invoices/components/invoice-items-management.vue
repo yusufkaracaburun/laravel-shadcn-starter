@@ -5,9 +5,8 @@ import type {
 } from '@/pages/invoices/models/invoice'
 import type { Item } from '@/services/items.service'
 
-import { PlusIcon } from '@/composables/use-icons'
-
 import { Button } from '@/components/ui/button'
+import { PlusIcon } from '@/composables/use-icons'
 import InvoiceItemSelector from '@/pages/invoices/components/invoice-item-selector.vue'
 
 interface IProps {

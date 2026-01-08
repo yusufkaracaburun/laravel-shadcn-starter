@@ -62,7 +62,7 @@ const formSchema = computed(() => {
       .string()
       .min(1, 'Industry is required.')
       .refine(
-        (val) =>
+        val =>
           [
             'technology',
             'finance',
@@ -77,14 +77,14 @@ const formSchema = computed(() => {
       .string()
       .min(1, 'Status is required.')
       .refine(
-        (val) => ['active', 'inactive', 'pending'].includes(val),
+        val => ['active', 'inactive', 'pending'].includes(val),
         'Please select a valid status.',
       ),
     employees: z
       .string()
       .min(1, 'Employee size is required.')
       .refine(
-        (val) => ['1-10', '11-50', '51-200', '201-500', '500+'].includes(val),
+        val => ['1-10', '11-50', '51-200', '201-500', '500+'].includes(val),
         'Please select a valid employee size.',
       ),
   })
@@ -181,12 +181,12 @@ const onSubmit = handleSubmit(async (values) => {
         if (Array.isArray(fieldErrors) && fieldErrors.length > 0) {
           setFieldError(
             field as
-              | 'name'
-              | 'email'
-              | 'phone'
-              | 'industry'
-              | 'status'
-              | 'employees',
+            | 'name'
+            | 'email'
+            | 'phone'
+            | 'industry'
+            | 'status'
+            | 'employees',
             fieldErrors[0],
           )
         }

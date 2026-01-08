@@ -47,9 +47,10 @@ export const columns: ColumnDef<Billing>[] = [
       h(DataTableColumnHeader<Billing>, { column, title: 'status' }),
     cell: ({ row }) => {
       const status = statuses.find(
-        (status) => status.value === row.getValue('status'),
+        status => status.value === row.getValue('status'),
       )
-      if (!status) return h('div', {}, row.getValue('status'))
+      if (!status)
+        return h('div', {}, row.getValue('status'))
 
       const style = {
         color: status.color,
@@ -63,11 +64,11 @@ export const columns: ColumnDef<Billing>[] = [
           variant: 'secondary',
         },
         () => [
-          status.icon &&
-            h(status.icon, {
-              class: 'mr-2 h-4 w-4 text-muted-foreground',
-              style,
-            }),
+          status.icon
+          && h(status.icon, {
+            class: 'mr-2 h-4 w-4 text-muted-foreground',
+            style,
+          }),
           h('span', status.label),
         ],
       )

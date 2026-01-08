@@ -10,7 +10,7 @@ const { theme: t } = storeToRefs(themeStore)
 
 watchEffect(() => {
   document.documentElement.classList.remove(
-    ...THEMES.map((theme) => `theme-${theme}`),
+    ...THEMES.map(theme => `theme-${theme}`),
   )
   document.documentElement.classList.add(`theme-${t.value}`)
 })
@@ -18,7 +18,9 @@ watchEffect(() => {
 
 <template>
   <div class="space-y-1.5 pt-6">
-    <UiLabel for="radius" class="text-xs"> Color </UiLabel>
+    <UiLabel for="radius" class="text-xs">
+      Color
+    </UiLabel>
     <div class="grid grid-cols-2 gap-2 py-1.5">
       <UiButton
         v-for="theme in THEME_PRIMARY_COLORS"
@@ -34,9 +36,7 @@ watchEffect(() => {
           }"
           class="size-2 rounded-full bg-(--theme-primary)"
         />
-        <span class="text-xs"
-          >{{ theme.theme[0].toUpperCase() }}{{ theme.theme.slice(1) }}</span
-        >
+        <span class="text-xs">{{ theme.theme[0].toUpperCase() }}{{ theme.theme.slice(1) }}</span>
       </UiButton>
     </div>
   </div>

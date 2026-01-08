@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import type { IInvoiceEmail } from '@/services/invoices.service'
 
-import { XIcon } from '@/composables/use-icons'
-
 import {
   Dialog,
   DialogClose,
@@ -10,6 +8,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
+import { XIcon } from '@/composables/use-icons'
 import { formatDateTime } from '@/pages/invoices/utils/formatters'
 
 const props = defineProps<{
@@ -45,9 +44,7 @@ function closeDialog() {
         >
           <div class="flex items-center gap-2">
             <span class="font-semibold">From:</span>
-            <span
-              >{{ email.sender_name }} &lt;{{ email.sender_email }}&gt;</span
-            >
+            <span>{{ email.sender_name }} &lt;{{ email.sender_email }}&gt;</span>
           </div>
           <span class="text-xs text-gray-500">
             {{ formatDateTime(email.created_at) }}
@@ -65,7 +62,9 @@ function closeDialog() {
         </div>
 
         <div class="border-t pt-4">
-          <h3 class="font-semibold text-lg mb-2">Content:</h3>
+          <h3 class="font-semibold text-lg mb-2">
+            Content:
+          </h3>
           <div class="bg-gray-50 p-4 rounded-md overflow-x-auto">
             <div class="prose max-w-none" v-html="email.content" />
           </div>

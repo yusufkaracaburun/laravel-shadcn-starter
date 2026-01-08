@@ -2,17 +2,16 @@
 import { computed, ref, shallowRef, watch } from 'vue'
 import { useRouter } from 'vue-router'
 
+import type { IInvoice } from '@/pages/invoices/models/invoice'
+
+import { Button } from '@/components/ui/button'
+import { Dialog, DialogContent } from '@/components/ui/dialog'
 import {
   ArrowLeftIcon,
   DownloadIcon,
   FilePenLineIcon,
   Trash2Icon,
 } from '@/composables/use-icons'
-
-import type { IInvoice } from '@/pages/invoices/models/invoice'
-
-import { Button } from '@/components/ui/button'
-import { Dialog, DialogContent } from '@/components/ui/dialog'
 import { useInvoices } from '@/composables/use-invoices'
 import InvoiceDelete from '@/pages/invoices/components/invoice-delete.vue'
 

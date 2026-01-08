@@ -1,9 +1,8 @@
 <script lang="ts" setup>
 import { useRouter } from 'vue-router'
 
-import { FilePlusIcon } from '@/composables/use-icons'
-
 import { Button } from '@/components/ui/button'
+import { FilePlusIcon } from '@/composables/use-icons'
 
 const router = useRouter()
 

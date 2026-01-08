@@ -29,7 +29,7 @@ function handleConfirm() {
 
   openModel.value = false
 
-  toast.promise(new Promise((resolve) => setTimeout(resolve, 2000)), {
+  toast.promise(new Promise(resolve => setTimeout(resolve, 2000)), {
     loading: 'Deleting companies...',
     success: () => {
       table.resetRowSelection()
@@ -48,9 +48,11 @@ function handleConfirm() {
     :disabled="confirmValue.trim() !== CONFIRM_WORD"
     @confirm="handleConfirm"
   >
-    <template #title> Delete {{ selectedCount }} companies? </template>
+    <template #title>
+      Delete {{ selectedCount }} companies?
+    </template>
     <template #description>
-      Are you sure you want to delete the selected companies? <br />
+      Are you sure you want to delete the selected companies? <br>
       This action cannot be undone.
     </template>
 

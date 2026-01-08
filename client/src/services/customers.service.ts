@@ -103,7 +103,7 @@ export interface PaginatedCustomersResponse {
  * @returns Sort string for Spatie QueryBuilder (e.g., "name" or "-name" or "name,-email")
  */
 function convertSortingToQueryString(
-  sorting: Array<{ id: string; desc: boolean }>,
+  sorting: Array<{ id: string, desc: boolean }>,
 ): string | undefined {
   if (!sorting || sorting.length === 0) {
     return undefined
@@ -149,7 +149,7 @@ export interface CustomerFilters {
 export function useGetCustomersQuery(
   page: MaybeRef<number> = 1,
   pageSize: MaybeRef<number> = 15,
-  sorting: MaybeRef<Array<{ id: string; desc: boolean }>> = [],
+  sorting: MaybeRef<Array<{ id: string, desc: boolean }>> = [],
   filters: MaybeRef<CustomerFilters> = {},
   include: MaybeRef<string[]> = [],
 ) {
@@ -199,12 +199,18 @@ export function useGetCustomersQuery(
       if (currentFilters && Object.keys(currentFilters).length > 0) {
         const filterParams: Record<string, any> = {}
 
-        if (currentFilters.id !== undefined) filterParams.id = currentFilters.id
-        if (currentFilters.type) filterParams.type = currentFilters.type
-        if (currentFilters.name) filterParams.name = currentFilters.name
-        if (currentFilters.email) filterParams.email = currentFilters.email
-        if (currentFilters.phone) filterParams.phone = currentFilters.phone
-        if (currentFilters.city) filterParams.city = currentFilters.city
+        if (currentFilters.id !== undefined)
+          filterParams.id = currentFilters.id
+        if (currentFilters.type)
+          filterParams.type = currentFilters.type
+        if (currentFilters.name)
+          filterParams.name = currentFilters.name
+        if (currentFilters.email)
+          filterParams.email = currentFilters.email
+        if (currentFilters.phone)
+          filterParams.phone = currentFilters.phone
+        if (currentFilters.city)
+          filterParams.city = currentFilters.city
         if (currentFilters.country)
           filterParams.country = currentFilters.country
         if (currentFilters.kvk_number)
@@ -217,7 +223,8 @@ export function useGetCustomersQuery(
           filterParams.created_at = currentFilters.created_at
         if (currentFilters.between)
           filterParams.between = currentFilters.between
-        if (currentFilters.search) filterParams.search = currentFilters.search
+        if (currentFilters.search)
+          filterParams.search = currentFilters.search
 
         if (Object.keys(filterParams).length > 0) {
           params.filter = filterParams
@@ -346,7 +353,7 @@ export function useUpdateCustomerMutation() {
   return useMutation<
     IResponse<Customer>,
     AxiosError,
-    { customerId: number; data: UpdateCustomerRequest }
+    { customerId: number, data: UpdateCustomerRequest }
   >({
     mutationFn: async ({ customerId, data }): Promise<IResponse<Customer>> => {
       const response = await axiosInstance.put(

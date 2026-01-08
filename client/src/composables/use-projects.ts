@@ -56,7 +56,7 @@ export function useProjects() {
   // Transform backend data to include camelCase aliases for UI compatibility
   const projects = computed(() => {
     const backendProjects = projectsResponse.value?.data?.data ?? []
-    return backendProjects.map((p) => ({
+    return backendProjects.map(p => ({
       ...p,
       startDate: p.start_date,
       endDate: p.end_date,

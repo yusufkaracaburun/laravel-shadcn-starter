@@ -72,9 +72,9 @@ export const columns: ColumnDef<Item>[] = [
       const priceValue = item.unit_price
       // Handle Money object from backend
       if (
-        priceValue &&
-        typeof priceValue === 'object' &&
-        'formatted' in priceValue
+        priceValue
+        && typeof priceValue === 'object'
+        && 'formatted' in priceValue
       ) {
         const money = priceValue as { formatted: string }
         return h('div', { class: 'w-[100px]' }, money.formatted)

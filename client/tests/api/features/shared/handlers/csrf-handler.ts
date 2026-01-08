@@ -23,7 +23,8 @@ export class CsrfHandler {
     let cookieHeadersArray: string[] = []
     if (Array.isArray(setCookieHeader)) {
       cookieHeadersArray = setCookieHeader
-    } else if (typeof setCookieHeader === 'string') {
+    }
+    else if (typeof setCookieHeader === 'string') {
       // Split on newlines to handle multiple cookies in a single string
       cookieHeadersArray = setCookieHeader.split('\n').filter(Boolean)
     }
@@ -37,7 +38,8 @@ export class CsrfHandler {
           // Decode URL-encoding to get the encrypted value for X-XSRF-TOKEN header
           // This is the encrypted session token that Laravel will decrypt
           this.csrfToken = decodeURIComponent(urlEncodedValue)
-        } catch {
+        }
+        catch {
           // If decoding fails, use raw value (shouldn't happen with valid cookies)
           this.csrfToken = urlEncodedValue
         }

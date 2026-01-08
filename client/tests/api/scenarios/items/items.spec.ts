@@ -213,7 +213,8 @@ test.describe('Items API', { tag: ['@api', '@items'] }, () => {
         expect(unitPrice).toHaveProperty('amount')
         expect(unitPrice).toHaveProperty('currency')
         expect(unitPrice).toHaveProperty('formatted')
-      } else {
+      }
+      else {
         // Number - should match input (within rounding tolerance)
         expect(typeof unitPrice).toBe('number')
       }
@@ -388,7 +389,8 @@ test.describe('Items API', { tag: ['@api', '@items'] }, () => {
         // Money object - verify it's updated
         expect(unitPrice).toHaveProperty('amount')
         expect(unitPrice).toHaveProperty('formatted')
-      } else {
+      }
+      else {
         // Number - should be close to updated value
         expect(typeof unitPrice).toBe('number')
       }

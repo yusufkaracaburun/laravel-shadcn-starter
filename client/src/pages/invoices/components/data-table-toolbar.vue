@@ -23,8 +23,8 @@ const searchValue = computed({
 
 const isFiltered = computed(() => {
   return (
-    props.table.getState().columnFilters.length > 0 ||
-    (props.filters && Object.keys(props.filters).length > 0)
+    props.table.getState().columnFilters.length > 0
+    || (props.filters && Object.keys(props.filters).length > 0)
   )
 })
 

@@ -36,21 +36,21 @@ const defaultColumns: Column[] = [
 
 // Initialize board state immediately with tasks data (before useKanban's onMounted loads from localStorage)
 const initialKanbanTasks = tableTasksToKanbanTasks(props.tasks)
-const initialColumns = defaultColumns.map((col) => ({
+const initialColumns = defaultColumns.map(col => ({
   ...col,
   tasks: [] as KanbanTask[],
 }))
 
 initialKanbanTasks.forEach((task) => {
   const columnId = task.status || 'todo'
-  const column = initialColumns.find((c) => c.id === columnId)
+  const column = initialColumns.find(c => c.id === columnId)
   if (column) {
     column.tasks.push(task)
   }
 })
 
 const visibleInitialColumns = initialColumns.filter(
-  (col) =>
+  col =>
     col.tasks.length > 0 || ['todo', 'in-progress', 'done'].includes(col.id),
 )
 
@@ -62,10 +62,11 @@ const isSyncing = ref(false)
 
 // Organize tasks into columns by status
 function organizeTasksIntoColumns() {
-  if (isSyncing.value) return
+  if (isSyncing.value)
+    return
 
   isSyncing.value = true
-  const columns = defaultColumns.map((col) => ({
+  const columns = defaultColumns.map(col => ({
     ...col,
     tasks: [] as KanbanTask[],
   }))
@@ -73,7 +74,7 @@ function organizeTasksIntoColumns() {
 
   kanbanTasks.forEach((task) => {
     const columnId = task.status || 'todo'
-    const column = columns.find((c) => c.id === columnId)
+    const column = columns.find(c => c.id === columnId)
     if (column) {
       column.tasks.push(task)
     }
@@ -81,7 +82,7 @@ function organizeTasksIntoColumns() {
 
   // Show default columns (todo, in-progress, done) even if empty, and columns that have tasks
   const visibleColumns = columns.filter(
-    (col) =>
+    col =>
       col.tasks.length > 0 || ['todo', 'in-progress', 'done'].includes(col.id),
   )
 
@@ -110,7 +111,8 @@ watch(
 watch(
   () => board.value.columns,
   () => {
-    if (isSyncing.value) return
+    if (isSyncing.value)
+      return
 
     isSyncing.value = true
 
@@ -137,7 +139,7 @@ function handleTaskUpdated(task: KanbanTask, _columnId: string) {
   const tableTask = kanbanTaskToTableTask(task)
 
   // Check if task already exists
-  const existingIndex = props.tasks.findIndex((t) => t.id === tableTask.id)
+  const existingIndex = props.tasks.findIndex(t => t.id === tableTask.id)
 
   if (existingIndex >= 0) {
     // Update existing task
@@ -182,8 +184,8 @@ watch(
     if (!hasForcedInit.value && newColumns.length > 0) {
       const hasOurTasks = props.tasks.some((task) => {
         const kanbanTask = tableTasksToKanbanTasks([task])[0]
-        return newColumns.some((col) =>
-          col.tasks.some((t) => t.id === kanbanTask.id),
+        return newColumns.some(col =>
+          col.tasks.some(t => t.id === kanbanTask.id),
         )
       })
 

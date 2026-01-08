@@ -38,13 +38,14 @@ async function handleRemove() {
       <UiDialogTitle>Delete Invoice</UiDialogTitle>
       <UiDialogDescription class="mt-2">
         Are you sure you want to delete invoice
-        <strong>{{ invoice.invoice_number || `#${invoice.id}` }}</strong
-        >? This action cannot be undone.
+        <strong>{{ invoice.invoice_number || `#${invoice.id}` }}</strong>? This action cannot be undone.
       </UiDialogDescription>
     </UiDialogHeader>
     <UiDialogFooter>
       <UiDialogClose as-child>
-        <UiButton variant="outline"> Cancel </UiButton>
+        <UiButton variant="outline">
+          Cancel
+        </UiButton>
       </UiDialogClose>
       <UiButton
         variant="destructive"

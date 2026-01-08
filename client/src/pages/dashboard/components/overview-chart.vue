@@ -202,8 +202,12 @@ const filterRange = computed(() => {
           <SelectItem value="90d" class="rounded-lg">
             Last 3 months
           </SelectItem>
-          <SelectItem value="30d" class="rounded-lg"> Last 30 days </SelectItem>
-          <SelectItem value="7d" class="rounded-lg"> Last 7 days </SelectItem>
+          <SelectItem value="30d" class="rounded-lg">
+            Last 30 days
+          </SelectItem>
+          <SelectItem value="7d" class="rounded-lg">
+            Last 7 days
+          </SelectItem>
         </SelectContent>
       </Select>
     </CardHeader>

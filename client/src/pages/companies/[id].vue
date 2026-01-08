@@ -57,7 +57,8 @@ const company = computed<Company | null>(
 
 // Format date
 function formatDate(dateString: string | null): string {
-  if (!dateString) return '—'
+  if (!dateString)
+    return '—'
   return new Date(dateString).toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'long',
@@ -67,7 +68,8 @@ function formatDate(dateString: string | null): string {
 
 // Format datetime
 function formatDateTime(dateString: string | null): string {
-  if (!dateString) return '—'
+  if (!dateString)
+    return '—'
   return new Date(dateString).toLocaleString('en-US', {
     year: 'numeric',
     month: 'long',
@@ -79,17 +81,17 @@ function formatDateTime(dateString: string | null): string {
 
 // Get status info
 function getStatusInfo(status: string) {
-  return statuses.find((s) => s.value === status) || null
+  return statuses.find(s => s.value === status) || null
 }
 
 // Get industry label
 function getIndustryLabel(industry: string) {
-  return industries.find((i) => i.value === industry)?.label || industry
+  return industries.find(i => i.value === industry)?.label || industry
 }
 
 // Get employee size label
 function getEmployeeSizeLabel(employees: string) {
-  return employeeSizes.find((e) => e.value === employees)?.label || employees
+  return employeeSizes.find(e => e.value === employees)?.label || employees
 }
 
 // Handle edit
@@ -112,7 +114,8 @@ function handleDeleteClose() {
 
 // Check if error is 404
 const isNotFound = computed(() => {
-  if (!isError.value || !error.value) return false
+  if (!isError.value || !error.value)
+    return false
   return (error.value as any)?.response?.status === 404
 })
 </script>
@@ -171,7 +174,9 @@ const isNotFound = computed(() => {
           subtitle="Error Loading Company"
           error="An error occurred while loading the company information. Please try again."
         />
-        <Button class="mt-4" @click="refetch()"> Retry </Button>
+        <Button class="mt-4" @click="refetch()">
+          Retry
+        </Button>
       </div>
     </div>
 

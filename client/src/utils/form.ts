@@ -7,7 +7,7 @@ export function mapObjectDeep<T extends object>(
   }
 
   if (Array.isArray(obj)) {
-    return obj.map((item) => mapObjectDeep(item, mapper)) as T
+    return obj.map(item => mapObjectDeep(item, mapper)) as T
   }
 
   return Object.fromEntries(

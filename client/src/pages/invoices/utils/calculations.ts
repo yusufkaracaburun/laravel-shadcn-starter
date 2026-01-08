@@ -27,7 +27,7 @@ export function calculateItemTotals(
  * Extract numeric value from Money object or number
  */
 function extractMoneyValue(
-  value: number | { amount?: string; formatted?: string },
+  value: number | { amount?: string, formatted?: string },
 ): number {
   if (typeof value === 'number') {
     return value
@@ -48,9 +48,9 @@ function extractMoneyValue(
  */
 export function calculateInvoiceTotals(
   items: Array<{
-    total_excl_vat: number | { amount?: string; formatted?: string }
-    total_vat: number | { amount?: string; formatted?: string }
-    total_incl_vat: number | { amount?: string; formatted?: string }
+    total_excl_vat: number | { amount?: string, formatted?: string }
+    total_vat: number | { amount?: string, formatted?: string }
+    total_incl_vat: number | { amount?: string, formatted?: string }
     vat_rate: number
   }>,
 ): {

@@ -1,14 +1,13 @@
 <script setup lang="ts">
 import type { IInvoiceEmail } from '@/pages/invoices/models/invoice'
 
-import { MailIcon } from '@/composables/use-icons'
-
 import {
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion'
 import { Button } from '@/components/ui/button'
+import { MailIcon } from '@/composables/use-icons'
 import { formatDateTime } from '@/pages/invoices/utils/formatters'
 import SentEmailDialog from '@/pages/invoices/view/components/sent-email-dialog.vue'
 
@@ -49,7 +48,9 @@ function closeEmailDialog() {
         >
           <MailIcon class="w-6 h-6 text-gray-400" />
         </div>
-        <p class="text-sm text-gray-500">No emails yet</p>
+        <p class="text-sm text-gray-500">
+          No emails yet
+        </p>
       </div>
       <div v-else class="px-1">
         <div

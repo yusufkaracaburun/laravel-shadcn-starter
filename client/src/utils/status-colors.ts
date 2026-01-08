@@ -40,7 +40,8 @@ export type PaymentStatusValue =
 export function getPriorityColor(
   priority: PriorityValue | string | undefined,
 ): string {
-  if (!priority) return 'text-muted-foreground'
+  if (!priority)
+    return 'text-muted-foreground'
 
   switch (priority.toLowerCase()) {
     case 'low':

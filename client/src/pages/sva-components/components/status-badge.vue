@@ -33,7 +33,9 @@ import { Status, StatusBadge } from '@/components/sva-ui/status-badge'
         Use StatusBadge
       </h5>
       <div class="flex items-center gap-2 flex-wrap">
-        <StatusBadge variant="outline" rounded="xs"> Green </StatusBadge>
+        <StatusBadge variant="outline" rounded="xs">
+          Green
+        </StatusBadge>
         <StatusBadge variant="outline" rounded="xs" color="red">
           Red
         </StatusBadge>
