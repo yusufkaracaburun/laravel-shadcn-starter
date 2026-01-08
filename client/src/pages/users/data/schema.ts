@@ -11,13 +11,7 @@ export const userStatusSchema = z.enum([
 ])
 export type TUserStatus = z.infer<typeof userStatusSchema>
 
-export const userRoleSchema = z.enum([
-  EUserRole.SUPER_ADMIN,
-  EUserRole.ADMIN,
-  EUserRole.USER,
-  EUserRole.CUSTOMER,
-  EUserRole.CONTRACTOR,
-])
+export const userRoleSchema = z.nativeEnum(EUserRole)
 export type TUserRole = z.infer<typeof userRoleSchema>
 
 export const userSchema = z.object({

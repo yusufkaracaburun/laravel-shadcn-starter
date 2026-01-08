@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { toTypedSchema } from '@vee-validate/zod'
-import { Send } from 'lucide-vue-next'
 import { useForm } from 'vee-validate'
 import { h } from 'vue'
 import { z } from 'zod'
@@ -23,15 +22,25 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
+import { SendIcon } from '@/composables/use-icons'
 import { useToast } from '@/composables/use-toast'
 
+import { userRoleSchema } from '../data/schema'
+import { EUserRole } from '../models/users'
+
 const schema = z.object({
-  email: z.email(),
-  role: z.enum(['superadmin', 'admin', 'cashier', 'manager']),
+  email: z.string().email('Please enter a valid email address.'),
+  role: userRoleSchema,
   description: z.string().optional(),
 })
 
-const roles = ['superadmin', 'admin', 'cashier', 'manager'] as const
+const roles = [
+  EUserRole.SUPER_ADMIN,
+  EUserRole.ADMIN,
+  EUserRole.USER,
+  EUserRole.CUSTOMER,
+  EUserRole.CONTRACTOR,
+] as const
 
 const { toast } = useToast()
 
@@ -102,7 +111,7 @@ const onSubmit = handleSubmit((values) => {
 
     <Button type="submit" class="w-full">
       Invite
-      <Send />
+      <SendIcon />
     </Button>
   </form>
 </template>
