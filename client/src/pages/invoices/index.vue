@@ -8,10 +8,11 @@ import {
 } from '@/components/ui/tooltip'
 import { Grid3x3Icon, ListIcon } from '@/composables/use-icons'
 import { useInvoices } from '@/composables/use-invoices'
-import { columns } from '@/pages/invoices/components/columns'
-import DataTable from '@/pages/invoices/components/data-table.vue'
-import InvoiceCreate from '@/pages/invoices/components/invoice-create.vue'
-import InvoicesCardGrid from '@/pages/invoices/components/invoices-card-grid.vue'
+
+import { columns } from './components/columns'
+import DataTable from './components/data-table.vue'
+import InvoiceCreate from './components/invoice-create.vue'
+import InvoicesCardGrid from './components/invoices-card-grid.vue'
 
 type TViewMode = 'table' | 'card'
 
