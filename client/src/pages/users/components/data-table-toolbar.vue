@@ -39,7 +39,6 @@ const { userPrerequisitesResponse } = useUsers()
 const roleOptions = computed<IFacetedFilterOption[]>(() => {
   return (
     userPrerequisitesResponse.value?.roles.map((role: IRole) => ({
-      id: role.id,
       label: role.name,
       value: role.id.toString(),
     })) ?? []

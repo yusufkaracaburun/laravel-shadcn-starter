@@ -17,21 +17,23 @@ import {
   getPaymentStatusColor,
 } from '@/utils/status-colors'
 
-import type { TInvoiceStatus } from '../models/invoice'
+import type { TInvoiceStatus, TPaymentStatus } from '../models/invoice'
 
-export interface IStatusItem {
+import { EInvoiceStatus, EPaymentStatus } from '../models/invoice'
+
+export interface IStatusItem<T> {
   id: number
-  value: TInvoiceStatus
+  value: T
   label: string
   description: string
   icon: any
   getColor: () => string
 }
 
-export const INVOICE_STATUSES: IStatusItem[] = [
+export const INVOICE_STATUSES: IStatusItem<TInvoiceStatus>[] = [
   {
     id: 1,
-    value: 'draft',
+    value: EInvoiceStatus.DRAFT,
     label: 'Draft',
     description: 'The invoice is a draft',
     icon: h(CircleDotIcon),
@@ -41,7 +43,7 @@ export const INVOICE_STATUSES: IStatusItem[] = [
   },
   {
     id: 2,
-    value: 'sent',
+    value: EInvoiceStatus.SENT,
     label: 'Sent',
     description: 'The invoice has been sent to the customer',
     icon: h(SendIcon),
@@ -51,7 +53,7 @@ export const INVOICE_STATUSES: IStatusItem[] = [
   },
   {
     id: 3,
-    value: 'paid',
+    value: EInvoiceStatus.PAID,
     label: 'Paid',
     description: 'The invoice has been paid',
     icon: h(FileCheckIcon),
@@ -61,7 +63,7 @@ export const INVOICE_STATUSES: IStatusItem[] = [
   },
   {
     id: 4,
-    value: 'unpaid',
+    value: EInvoiceStatus.UNPAID,
     label: 'Unpaid',
     description: 'The invoice has not been paid',
     icon: h(CircleIcon),
@@ -71,7 +73,7 @@ export const INVOICE_STATUSES: IStatusItem[] = [
   },
   {
     id: 5,
-    value: 'partial_paid',
+    value: EInvoiceStatus.PARTIAL_PAID,
     label: 'Partial Paid',
     description: 'The invoice has been partially paid',
     icon: h(CreditCardIcon),
@@ -81,7 +83,7 @@ export const INVOICE_STATUSES: IStatusItem[] = [
   },
   {
     id: 6,
-    value: 'overdue',
+    value: EInvoiceStatus.OVERDUE,
     label: 'Overdue',
     description: 'The invoice is overdue',
     icon: h(XCircleIcon),
@@ -91,7 +93,7 @@ export const INVOICE_STATUSES: IStatusItem[] = [
   },
   {
     id: 7,
-    value: 'reminder',
+    value: EInvoiceStatus.REMINDER,
     label: 'Reminder',
     description: 'A reminder has been sent for this invoice',
     icon: h(ClockIcon),
@@ -101,7 +103,7 @@ export const INVOICE_STATUSES: IStatusItem[] = [
   },
   {
     id: 8,
-    value: 'cancelled',
+    value: EInvoiceStatus.CANCELLED,
     label: 'Cancelled',
     description: 'The invoice has been cancelled',
     icon: h(FileXIcon),
@@ -111,7 +113,7 @@ export const INVOICE_STATUSES: IStatusItem[] = [
   },
   {
     id: 9,
-    value: 'refunded',
+    value: EInvoiceStatus.REFUNDED,
     label: 'Refunded',
     description: 'The invoice has been refunded',
     icon: h(CircleCheckIcon),
@@ -121,7 +123,7 @@ export const INVOICE_STATUSES: IStatusItem[] = [
   },
   {
     id: 10,
-    value: 'credited',
+    value: EInvoiceStatus.CREDITED,
     label: 'Credited',
     description: 'The invoice has been credited',
     icon: h(ReceiptIcon),
@@ -134,7 +136,7 @@ export const INVOICE_STATUSES: IStatusItem[] = [
 export const paymentStatuses = [
   {
     id: 1,
-    value: 'pending',
+    value: EPaymentStatus.PENDING,
     label: 'Pending',
     description: 'The payment is pending',
     icon: h(CircleDotIcon),
@@ -144,7 +146,7 @@ export const paymentStatuses = [
   },
   {
     id: 2,
-    value: 'paid',
+    value: EPaymentStatus.PAID,
     label: 'Paid',
     description: 'The payment has been paid',
     icon: h(FileCheckIcon),
@@ -154,7 +156,7 @@ export const paymentStatuses = [
   },
   {
     id: 3,
-    value: 'failed',
+    value: EPaymentStatus.FAILED,
     label: 'Failed',
     description: 'The payment has failed',
     icon: h(XCircleIcon),
@@ -164,7 +166,7 @@ export const paymentStatuses = [
   },
   {
     id: 4,
-    value: 'refunded',
+    value: EPaymentStatus.REFUNDED,
     label: 'Refunded',
     description: 'The payment has been refunded',
     icon: h(CircleCheckIcon),
@@ -174,7 +176,7 @@ export const paymentStatuses = [
   },
   {
     id: 5,
-    value: 'cancelled',
+    value: EPaymentStatus.CANCELLED,
     label: 'Cancelled',
     description: 'The payment has been cancelled',
     icon: h(FileXIcon),
@@ -182,4 +184,4 @@ export const paymentStatuses = [
       return getPaymentStatusColor(this.value)
     },
   },
-] as IStatusItem[]
+] as IStatusItem<TPaymentStatus>[]

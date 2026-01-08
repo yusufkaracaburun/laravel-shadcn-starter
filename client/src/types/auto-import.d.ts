@@ -16,8 +16,10 @@ declare global {
   const ArrowRightIcon: typeof import('../composables/use-icons').ArrowRightIcon
   const ArrowUp: typeof import('../composables/use-icons').ArrowUp
   const ArrowUpIcon: typeof import('../composables/use-icons').ArrowUpIcon
+  const AwardIcon: typeof import('../composables/use-icons').AwardIcon
   const BadgeCheck: typeof import('../composables/use-icons').BadgeCheck
   const BadgeCheckIcon: typeof import('../composables/use-icons').BadgeCheckIcon
+  const BadgeDollarSignIcon: typeof import('../composables/use-icons').BadgeDollarSignIcon
   const BadgeHelp: typeof import('../composables/use-icons').BadgeHelp
   const BadgeHelpIcon: typeof import('../composables/use-icons').BadgeHelpIcon
   const BellDot: typeof import('../composables/use-icons').BellDot
@@ -75,6 +77,7 @@ declare global {
   const FolderKanbanIcon: typeof import('../composables/use-icons').FolderKanbanIcon
   const Grid3x3: typeof import('../composables/use-icons').Grid3x3
   const Grid3x3Icon: typeof import('../composables/use-icons').Grid3x3Icon
+  const HandshakeIcon: typeof import('../composables/use-icons').HandshakeIcon
   const Hash: typeof import('../composables/use-icons').Hash
   const HashIcon: typeof import('../composables/use-icons').HashIcon
   const HistoryIcon: typeof import('../composables/use-icons').HistoryIcon
@@ -121,6 +124,7 @@ declare global {
   const SendIcon: typeof import('../composables/use-icons').SendIcon
   const Settings: typeof import('../composables/use-icons').Settings
   const SettingsIcon: typeof import('../composables/use-icons').SettingsIcon
+  const ShieldIcon: typeof import('../composables/use-icons').ShieldIcon
   const SquareUserRound: typeof import('../composables/use-icons').SquareUserRound
   const SquareUserRoundIcon: typeof import('../composables/use-icons').SquareUserRoundIcon
   const THEMES: typeof import('../constants/themes').THEMES

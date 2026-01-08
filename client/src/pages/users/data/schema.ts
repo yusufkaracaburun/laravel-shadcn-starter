@@ -1,20 +1,24 @@
 import { z } from 'zod'
 
+import { EUserRole, EUserStatus } from '../models/users'
+
 export const userStatusSchema = z.enum([
-  'active',
-  'inactive',
-  'invited',
-  'suspended',
+  EUserStatus.REGISTERED,
+  EUserStatus.ACTIVE,
+  EUserStatus.INACTIVE,
+  EUserStatus.BLOCKED,
+  EUserStatus.SUSPENDED,
 ])
-export type UserStatus = z.infer<typeof userStatusSchema>
+export type TUserStatus = z.infer<typeof userStatusSchema>
 
 export const userRoleSchema = z.enum([
-  'superadmin',
-  'admin',
-  'cashier',
-  'manager',
+  EUserRole.SUPER_ADMIN,
+  EUserRole.ADMIN,
+  EUserRole.USER,
+  EUserRole.CUSTOMER,
+  EUserRole.CONTRACTOR,
 ])
-export type UserRole = z.infer<typeof userRoleSchema>
+export type TUserRole = z.infer<typeof userRoleSchema>
 
 export const userSchema = z.object({
   id: z.string(),
@@ -28,6 +32,13 @@ export const userSchema = z.object({
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
 })
-export type User = z.infer<typeof userSchema>
+export type TUser = z.infer<typeof userSchema>
 
-export const userListSchema = z.array(userSchema)
+export const userFormSchema = z.object({
+  id: z.number().optional(),
+  name: z.string(),
+  email: z.string(),
+  role: userRoleSchema,
+  status: userStatusSchema,
+})
+export type TUserForm = z.infer<typeof userFormSchema>

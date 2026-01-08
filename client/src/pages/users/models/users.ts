@@ -3,9 +3,9 @@ import type { IStatus } from '@/services/types/response.type'
 export enum EUserRole {
   SUPER_ADMIN = 'super_admin',
   ADMIN = 'admin',
-  MANAGER = 'manager',
   USER = 'user',
   CUSTOMER = 'customer',
+  CONTRACTOR = 'contractor',
 }
 export type TUserRole = (typeof EUserRole)[keyof typeof EUserRole]
 
