@@ -38,3 +38,11 @@ export interface IPaginatedData<T> {
   from: number
   to: number
 }
+
+export interface IStatus {
+  id: string
+  value: string
+  label: string
+  color: string
+  style: string
+}

@@ -1,3 +1,5 @@
+import type { IStatus } from '@/services/types/response.type'
+
 export enum EUserRole {
   SUPER_ADMIN = 'super_admin',
   ADMIN = 'admin',
@@ -29,7 +31,11 @@ export interface IUserFilters {
 
 export interface IRole {
   id: number
+  team_id: number
   name: string
+  guard_name: string
+  created_at: string
+  updated_at: string
 }
 
 export interface IUser {
@@ -59,5 +65,5 @@ export interface IUpdateUserRequest {
 
 export interface IUserPrerequisites {
   roles: IRole[]
-  statuses: object[]
+  statuses: IStatus[]
 }

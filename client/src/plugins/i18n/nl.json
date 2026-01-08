@@ -134,6 +134,7 @@
     "columns": {
       "name": "Naam",
       "email": "E-mail",
+      "roles": "Rollen",
       "verified": "Geverifieerd",
       "unverified": "Niet geverifieerd",
       "createdAt": "Aangemaakt op"

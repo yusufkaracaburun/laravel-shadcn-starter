@@ -23,8 +23,8 @@ const searchValue = computed({
 
 const isFiltered = computed(() => {
   return (
-    props.table.getState().columnFilters.length > 0
-    || (props.filters && Object.keys(props.filters).length > 0)
+    props.table.getState().columnFilters.length > 0 ||
+    (props.filters && Object.keys(props.filters).length > 0)
   )
 })
 
@@ -46,7 +46,7 @@ function handleResetFilters() {
       />
       <Input
         v-model="searchValue"
-        :placeholder="$t('invoices.search')"
+        placeholder="Filter invoices by number..."
         class="h-8 w-[150px] lg:w-[250px] focus-visible:border-input focus-visible:ring-0"
       />
 

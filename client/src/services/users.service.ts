@@ -30,7 +30,7 @@ enum QueryKeys {
   DELETE_USER = 'deleteUser',
 }
 
-const API_URL = '/api/user'
+const API_URL = '/api/users'
 const STALE_TIME = 5 * 60 * 1000
 
 export function useUserService() {
@@ -53,13 +53,13 @@ export function useUserService() {
   }
 
   function getUserPrerequisitesQuery(): ReturnType<
-    typeof useQuery<IResponse<IUserPrerequisites>, AxiosError>
+    typeof useQuery<IUserPrerequisites, AxiosError>
   > {
     return useQuery({
       queryKey: [QueryKeys.USER_PREREQUISITES],
-      queryFn: async (): Promise<IResponse<IUserPrerequisites>> => {
+      queryFn: async (): Promise<IUserPrerequisites> => {
         const response = await axiosInstance.get(`${API_URL}/prerequisites`)
-        return response.data
+        return response.data as IUserPrerequisites
       },
       staleTime: STALE_TIME,
       ...defaultAxiosQueryOptions(),

@@ -20,7 +20,7 @@ export interface ResourceService<
 > {
   getPrerequisitesQuery: () => ReturnType<
     typeof import('@tanstack/vue-query').useQuery<
-      IResponse<TPrerequisites>,
+      TPrerequisites,
       import('axios').AxiosError
     >
   >
@@ -144,10 +144,10 @@ export function useResourceBase<
     refetch: refetchPrerequisites,
   } = getPrerequisitesQuery
 
-  async function fetchPrerequisitesData(): Promise<IResponse<TPrerequisites>> {
+  async function fetchPrerequisitesData(): Promise<TPrerequisites> {
     try {
       const response = await refetchPrerequisites()
-      return response.data as IResponse<TPrerequisites>
+      return response.data as TPrerequisites
     } catch (error: any) {
       errorStore.setError(error, {
         context: config.context.FETCH_PREREQUISITES || 'fetchPrerequisites',

@@ -131,7 +131,7 @@ function createColumns(): ColumnDef<IUser>[] {
       header: ({ column }) =>
         h(DataTableColumnHeader<IUser>, {
           column,
-          title: t('users.columns.roles') || 'Roles',
+          title: t('users.columns.roles'),
         }),
       cell: ({ row }) => {
         const user = row.original as IUserWithRoles
