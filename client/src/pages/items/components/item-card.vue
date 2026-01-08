@@ -54,8 +54,7 @@ function handleSelect(command: TCommand) {
 function formatPrice(
   price: number | { formatted: string } | undefined,
 ): string {
-  if (!price)
-    return '$0.00'
+  if (!price) return '$0.00'
   // Handle Money object from backend
   if (typeof price === 'object' && 'formatted' in price) {
     return price.formatted
@@ -121,9 +120,7 @@ function formatPrice(
         </div>
         <div class="flex items-center justify-between">
           <span class="text-sm text-muted-foreground">VAT Rate</span>
-          <Badge variant="outline">
-            {{ item.vat_rate }}%
-          </Badge>
+          <Badge variant="outline"> {{ item.vat_rate }}% </Badge>
         </div>
         <div v-if="item.unit" class="flex items-center justify-between">
           <span class="text-sm text-muted-foreground">Unit</span>

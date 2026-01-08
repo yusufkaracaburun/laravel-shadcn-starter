@@ -95,8 +95,8 @@ function getStatusMessage(
   if (!status) {
     // Handle network/timeout errors without status
     if (
-      axiosError.code === 'ECONNABORTED'
-      || axiosError.message.includes('timeout')
+      axiosError.code === 'ECONNABORTED' ||
+      axiosError.message.includes('timeout')
     ) {
       return 'Request timeout. Please try again.'
     }
@@ -126,7 +126,7 @@ function getStatusMessage(
  * Check if error is a network error based on message patterns
  */
 function isNetworkError(error: Error): boolean {
-  return NETWORK_ERROR_PATTERNS.some(pattern =>
+  return NETWORK_ERROR_PATTERNS.some((pattern) =>
     error.message.includes(pattern),
   )
 }
@@ -304,8 +304,8 @@ export const useErrorStore = defineStore('error', () => {
 
     // Extract error message
     const extractedMessage = extractApiErrorMessage(responseData, axiosError)
-    const message
-      = responseData?.message || responseData?.error
+    const message =
+      responseData?.message || responseData?.error
         ? extractedMessage
         : getStatusMessage(status, axiosError)
 

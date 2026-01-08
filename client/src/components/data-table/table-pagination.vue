@@ -56,13 +56,11 @@ const canNextPage = computed(() => {
 })
 
 function handlePageSizeChange(value: any) {
-  if (!value)
-    return
+  if (!value) return
   const newPageSize = Number(value)
   if (isServerPagination.value && props.serverPagination?.onPageSizeChange) {
     props.serverPagination.onPageSizeChange(newPageSize as TPageSize)
-  }
-  else {
+  } else {
     props.table.setPageSize(newPageSize)
   }
 }
@@ -70,8 +68,7 @@ function handlePageSizeChange(value: any) {
 function goToFirstPage() {
   if (isServerPagination.value && props.serverPagination?.onPageChange) {
     props.serverPagination.onPageChange(1)
-  }
-  else {
+  } else {
     props.table.setPageIndex(0)
   }
 }
@@ -79,8 +76,7 @@ function goToFirstPage() {
 function goToPreviousPage() {
   if (isServerPagination.value && props.serverPagination?.onPageChange) {
     props.serverPagination.onPageChange(currentPage.value - 1)
-  }
-  else {
+  } else {
     props.table.previousPage()
   }
 }
@@ -88,8 +84,7 @@ function goToPreviousPage() {
 function goToNextPage() {
   if (isServerPagination.value && props.serverPagination?.onPageChange) {
     props.serverPagination.onPageChange(currentPage.value + 1)
-  }
-  else {
+  } else {
     props.table.nextPage()
   }
 }
@@ -97,8 +92,7 @@ function goToNextPage() {
 function goToLastPage() {
   if (isServerPagination.value && props.serverPagination?.onPageChange) {
     props.serverPagination.onPageChange(totalPages.value)
-  }
-  else {
+  } else {
     props.table.setPageIndex(props.table.getPageCount() - 1)
   }
 }

@@ -34,8 +34,8 @@ async function handleConfirm() {
 
   const rowsToDelete = selectedRows.value
   const itemIds = rowsToDelete
-    .map(row => (row.original as Item).id)
-    .filter(id => id != null)
+    .map((row) => (row.original as Item).id)
+    .filter((id) => id != null)
 
   if (itemIds.length === 0) {
     toast.error('No valid items selected for deletion.')
@@ -46,17 +46,15 @@ async function handleConfirm() {
     isDeleting.value = true
 
     // Delete all selected items
-    await Promise.all(itemIds.map(id => deleteItem(id)))
+    await Promise.all(itemIds.map((id) => deleteItem(id)))
 
     table.resetRowSelection()
     openModel.value = false
     confirmValue.value = ''
-  }
-  catch (error) {
+  } catch (error) {
     // Error handling is done in the composable
     console.error('Batch item deletion error:', error)
-  }
-  finally {
+  } finally {
     isDeleting.value = false
   }
 }
@@ -70,11 +68,9 @@ async function handleConfirm() {
     :disabled="confirmValue.trim() !== CONFIRM_WORD || isDeleting"
     @confirm="handleConfirm"
   >
-    <template #title>
-      Delete {{ selectedCount }} items?
-    </template>
+    <template #title> Delete {{ selectedCount }} items? </template>
     <template #description>
-      Are you sure you want to delete the selected items? <br>
+      Are you sure you want to delete the selected items? <br />
       This action cannot be undone.
     </template>
 

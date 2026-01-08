@@ -22,8 +22,7 @@ const expandedEmails = ref<Set<number>>(new Set())
 function toggleEmail(id: number) {
   if (expandedEmails.value.has(id)) {
     expandedEmails.value.delete(id)
-  }
-  else {
+  } else {
     expandedEmails.value.add(id)
   }
 }
@@ -47,9 +46,7 @@ function getStatusIcon(status: string) {
     <CardHeader class="pb-4">
       <div class="flex items-center gap-2">
         <Mail class="size-4 text-muted-foreground" />
-        <CardTitle class="text-base font-semibold">
-          Sent Emails
-        </CardTitle>
+        <CardTitle class="text-base font-semibold"> Sent Emails </CardTitle>
       </div>
     </CardHeader>
     <CardContent>
@@ -74,9 +71,7 @@ function getStatusIcon(status: string) {
               <p class="text-sm font-medium text-foreground">
                 {{ email.subject }}
               </p>
-              <p class="text-xs text-muted-foreground">
-                To: {{ email.to }}
-              </p>
+              <p class="text-xs text-muted-foreground">To: {{ email.to }}</p>
             </div>
           </div>
           <div
@@ -121,9 +116,7 @@ function getStatusIcon(status: string) {
         >
           <Mail class="size-5 text-muted-foreground" />
         </div>
-        <p class="text-sm font-medium text-muted-foreground">
-          No emails sent
-        </p>
+        <p class="text-sm font-medium text-muted-foreground">No emails sent</p>
         <p class="text-xs text-muted-foreground mt-1">
           Sent emails will appear here.
         </p>

@@ -30,9 +30,7 @@ async function handleRemove() {
     </UiDialogDescription>
     <UiDialogFooter>
       <UiDialogClose as-child>
-        <UiButton variant="outline">
-          Cancel
-        </UiButton>
+        <UiButton variant="outline"> Cancel </UiButton>
       </UiDialogClose>
       <UiDialogClose as-child>
         <UiButton variant="destructive" @click="handleRemove">

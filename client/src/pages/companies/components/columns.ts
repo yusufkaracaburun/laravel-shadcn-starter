@@ -49,7 +49,7 @@ export const columns: ColumnDef<Company>[] = [
       h(DataTableColumnHeader<Company>, { column, title: 'Industry' }),
     cell: ({ row }) => {
       const industry = industries.find(
-        industry => industry.value === row.getValue('industry'),
+        (industry) => industry.value === row.getValue('industry'),
       )
 
       return h('div', { class: 'flex items-center' }, [
@@ -94,11 +94,10 @@ export const columns: ColumnDef<Company>[] = [
       h(DataTableColumnHeader<Company>, { column, title: 'Status' }),
     cell: ({ row }) => {
       const status = statuses.find(
-        status => status.value === row.getValue('status'),
+        (status) => status.value === row.getValue('status'),
       )
 
-      if (!status)
-        return null
+      if (!status) return null
 
       return h(StatusBadge, {
         status: status.value,
@@ -117,11 +116,10 @@ export const columns: ColumnDef<Company>[] = [
       h(DataTableColumnHeader<Company>, { column, title: 'Employees' }),
     cell: ({ row }) => {
       const employeeSize = employeeSizes.find(
-        size => size.value === row.getValue('employees'),
+        (size) => size.value === row.getValue('employees'),
       )
 
-      if (!employeeSize)
-        return null
+      if (!employeeSize) return null
 
       return h('div', { class: 'flex items-center' }, [
         h('span', {}, employeeSize.label),

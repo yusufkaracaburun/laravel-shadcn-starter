@@ -58,8 +58,8 @@ export const columns: ColumnDef<TInvoice>[] = [
         return h('div', { class: 'w-[150px] text-muted-foreground' }, '-')
       }
 
-      const customerName
-        = (customer as any).name || `Customer #${invoice.customer_id}`
+      const customerName =
+        (customer as any).name || `Customer #${invoice.customer_id}`
 
       return h(
         'button',
@@ -114,9 +114,8 @@ export const columns: ColumnDef<TInvoice>[] = [
       h(DataTableColumnHeader<TInvoice>, { column, title: 'Status' }),
     cell: ({ row }) => {
       const statusValue = row.getValue('status') as string
-      const status = statuses.find(s => s.value === statusValue)
-      if (!status)
-        return null
+      const status = statuses.find((s) => s.value === statusValue)
+      if (!status) return null
       return h(StatusBadge, {
         status: status.value,
         type: 'invoice',

@@ -114,8 +114,7 @@ export function useItems() {
     try {
       const itemsResponse = await fetchItems()
       return itemsResponse.data
-    }
-    catch (error: any) {
+    } catch (error: any) {
       // Store error with context
       errorStore.setError(error, { context: 'fetchItems' })
 
@@ -136,8 +135,7 @@ export function useItems() {
       const response = await createItemMutation.mutateAsync(data)
       toast.showSuccess('Item created successfully!')
       return response
-    }
-    catch (error: any) {
+    } catch (error: any) {
       // Store error with context
       errorStore.setError(error, { context: 'createItem' })
 
@@ -149,8 +147,7 @@ export function useItems() {
       if (Object.keys(validationErrors).length > 0) {
         const firstError = Object.values(validationErrors)[0]?.[0]
         toast.showError(firstError || message)
-      }
-      else {
+      } else {
         toast.showError(message)
       }
       throw error
@@ -162,8 +159,7 @@ export function useItems() {
       const response = await updateItemMutation.mutateAsync({ itemId, data })
       toast.showSuccess('Item updated successfully!')
       return response
-    }
-    catch (error: any) {
+    } catch (error: any) {
       // Store error with context
       errorStore.setError(error, { context: 'updateItem' })
 
@@ -175,8 +171,7 @@ export function useItems() {
       if (Object.keys(validationErrors).length > 0) {
         const firstError = Object.values(validationErrors)[0]?.[0]
         toast.showError(firstError || message)
-      }
-      else {
+      } else {
         toast.showError(message)
       }
       throw error
@@ -187,8 +182,7 @@ export function useItems() {
     try {
       await deleteItemMutation.mutateAsync(itemId)
       toast.showSuccess('Item deleted successfully!')
-    }
-    catch (error: any) {
+    } catch (error: any) {
       // Store error with context
       errorStore.setError(error, { context: 'deleteItem' })
 

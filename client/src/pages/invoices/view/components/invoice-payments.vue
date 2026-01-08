@@ -37,9 +37,7 @@ const props = defineProps<Props>()
         >
           <CreditCard class="w-6 h-6 text-gray-400" />
         </div>
-        <p class="text-sm text-gray-500">
-          No payments yet
-        </p>
+        <p class="text-sm text-gray-500">No payments yet</p>
       </div>
 
       <div v-else class="px-1">
@@ -99,10 +97,14 @@ const props = defineProps<Props>()
                       <span class="font-medium">Amount:</span>
                       <span>{{ formatMoney(payment.amount) }}</span>
 
-                      <span v-if="payment.method" class="font-medium">Method:</span>
+                      <span v-if="payment.method" class="font-medium"
+                        >Method:</span
+                      >
                       <span v-if="payment.method">{{ payment.method }}</span>
 
-                      <span v-if="payment.provider" class="font-medium">Provider:</span>
+                      <span v-if="payment.provider" class="font-medium"
+                        >Provider:</span
+                      >
                       <span v-if="payment.provider">{{
                         payment.provider
                       }}</span>
@@ -110,17 +112,22 @@ const props = defineProps<Props>()
                       <span
                         v-if="payment.provider_reference"
                         class="font-medium"
-                      >Provider Reference:</span>
+                        >Provider Reference:</span
+                      >
                       <span v-if="payment.provider_reference">{{
                         payment.provider_reference
                       }}</span>
 
-                      <span v-if="payment.paid_at" class="font-medium">Paid At:</span>
+                      <span v-if="payment.paid_at" class="font-medium"
+                        >Paid At:</span
+                      >
                       <span v-if="payment.paid_at">{{
                         formatDateTime(payment.paid_at)
                       }}</span>
 
-                      <span v-if="payment.refunded_at" class="font-medium">Refunded At:</span>
+                      <span v-if="payment.refunded_at" class="font-medium"
+                        >Refunded At:</span
+                      >
                       <span v-if="payment.refunded_at">{{
                         formatDateTime(payment.refunded_at)
                       }}</span>

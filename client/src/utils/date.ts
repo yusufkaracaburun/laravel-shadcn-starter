@@ -20,8 +20,7 @@ export function calculateDueDate(invoiceDate: string, dueDays: number): string {
       const day = String(dueDate.getDate()).padStart(2, '0')
       return `${year}-${month}-${day}`
     }
-  }
-  catch {
+  } catch {
     // Ignore date parsing errors
   }
   return ''

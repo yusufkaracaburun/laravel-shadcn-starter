@@ -60,8 +60,7 @@ function handleSelect(command: TCommand) {
 }
 
 function formatDate(dateString: string | null): string {
-  if (!dateString)
-    return '—'
+  if (!dateString) return '—'
   return new Date(dateString).toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'short',
@@ -70,10 +69,10 @@ function formatDate(dateString: string | null): string {
 }
 
 const status = computed(() =>
-  statuses.find(s => s.value === props.project.status),
+  statuses.find((s) => s.value === props.project.status),
 )
 const category = computed(() =>
-  categories.find(c => c.value === props.project.category),
+  categories.find((c) => c.value === props.project.category),
 )
 </script>
 

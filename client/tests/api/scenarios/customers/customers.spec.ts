@@ -65,8 +65,8 @@ test.describe('Customers API', { tag: ['@api', '@customers'] }, () => {
       expect(response.status()).toBe(HttpStatus.OK)
 
       // Assert - Response structure matches IResponse<PaginatedCustomersResponse>
-      const customersBody
-        = await expectIResponse<PaginatedCustomersResponse>(response)
+      const customersBody =
+        await expectIResponse<PaginatedCustomersResponse>(response)
 
       // Assert - Pagination structure
       expect(customersBody.data).toHaveProperty('data')
@@ -105,8 +105,8 @@ test.describe('Customers API', { tag: ['@api', '@customers'] }, () => {
 
       // Assert
       expectSuccess(response)
-      const customersBody
-        = await expectIResponse<PaginatedCustomersResponse>(response)
+      const customersBody =
+        await expectIResponse<PaginatedCustomersResponse>(response)
       expect(customersBody.data.per_page).toBe(5)
       expect(customersBody.data.current_page).toBe(1)
     })
@@ -132,8 +132,8 @@ test.describe('Customers API', { tag: ['@api', '@customers'] }, () => {
       const customerClient = new CustomerClient(request)
       customerClient.copyAuthStateFrom(authenticatedAuthClient)
       const testCustomerData = createUniqueTestCustomer()
-      const createResponse
-        = await customerClient.createCustomer(testCustomerData)
+      const createResponse =
+        await customerClient.createCustomer(testCustomerData)
       const createdCustomer = await expectIResponse<Customer>(createResponse)
       const customerId = createdCustomer.data.id
 
@@ -159,8 +159,8 @@ test.describe('Customers API', { tag: ['@api', '@customers'] }, () => {
       expect(customerBody.data).toHaveProperty('contacts_count')
       // contacts property is optional - only included when contacts exist or explicitly loaded
       if (
-        customerBody.data.contacts_count !== undefined
-        && customerBody.data.contacts_count > 0
+        customerBody.data.contacts_count !== undefined &&
+        customerBody.data.contacts_count > 0
       ) {
         expect(customerBody.data).toHaveProperty('contacts')
       }
@@ -340,8 +340,8 @@ test.describe('Customers API', { tag: ['@api', '@customers'] }, () => {
       const customerClient = new CustomerClient(request)
       customerClient.copyAuthStateFrom(authenticatedAuthClient)
       const testCustomerData = createUniqueTestCustomer()
-      const createResponse
-        = await customerClient.createCustomer(testCustomerData)
+      const createResponse =
+        await customerClient.createCustomer(testCustomerData)
       const createdCustomer = await expectIResponse<Customer>(createResponse)
       const customerId = createdCustomer.data.id
 
@@ -377,8 +377,8 @@ test.describe('Customers API', { tag: ['@api', '@customers'] }, () => {
       const customerClient = new CustomerClient(request)
       customerClient.copyAuthStateFrom(authenticatedAuthClient)
       const testCustomerData = createUniqueTestCustomer()
-      const createResponse
-        = await customerClient.createCustomer(testCustomerData)
+      const createResponse =
+        await customerClient.createCustomer(testCustomerData)
       const createdCustomer = await expectIResponse<Customer>(createResponse)
       const customerId = createdCustomer.data.id
 
@@ -399,8 +399,8 @@ test.describe('Customers API', { tag: ['@api', '@customers'] }, () => {
       const customerBody = await expectIResponse<Customer>(response)
       // Type update may not be supported or may require additional fields - check if updated
       if (
-        customerBody.data.type !== null
-        && customerBody.data.type !== testCustomerData.type
+        customerBody.data.type !== null &&
+        customerBody.data.type !== testCustomerData.type
       ) {
         expect(customerBody.data.type).toBe('business')
       }
@@ -456,8 +456,8 @@ test.describe('Customers API', { tag: ['@api', '@customers'] }, () => {
       const customerClient = new CustomerClient(request)
       customerClient.copyAuthStateFrom(authenticatedAuthClient)
       const testCustomerData = createUniqueTestCustomer()
-      const createResponse
-        = await customerClient.createCustomer(testCustomerData)
+      const createResponse =
+        await customerClient.createCustomer(testCustomerData)
       const createdCustomer = await expectIResponse<Customer>(createResponse)
       const customerId = createdCustomer.data.id
 
@@ -512,8 +512,8 @@ test.describe('Customers API', { tag: ['@api', '@customers'] }, () => {
       const customerClient = new CustomerClient(request)
       customerClient.copyAuthStateFrom(authenticatedAuthClient)
       const testCustomerData = createUniqueTestCustomer()
-      const createResponse
-        = await customerClient.createCustomer(testCustomerData)
+      const createResponse =
+        await customerClient.createCustomer(testCustomerData)
       const createdCustomer = await expectIResponse<Customer>(createResponse)
       const customerId = createdCustomer.data.id
 
@@ -545,8 +545,8 @@ test.describe('Customers API', { tag: ['@api', '@customers'] }, () => {
       const customerClient = new CustomerClient(request)
       customerClient.copyAuthStateFrom(authenticatedAuthClient)
       const testCustomerData = createUniqueTestCustomer()
-      const createResponse
-        = await customerClient.createCustomer(testCustomerData)
+      const createResponse =
+        await customerClient.createCustomer(testCustomerData)
       const createdCustomer = await expectIResponse<Customer>(createResponse)
       const customerId = createdCustomer.data.id
 
@@ -585,8 +585,8 @@ test.describe('Customers API', { tag: ['@api', '@customers'] }, () => {
       const customerClient = new CustomerClient(request)
       customerClient.copyAuthStateFrom(authenticatedAuthClient)
       const testCustomerData = createUniqueTestCustomer()
-      const createResponse
-        = await customerClient.createCustomer(testCustomerData)
+      const createResponse =
+        await customerClient.createCustomer(testCustomerData)
       const createdCustomer = await expectIResponse<Customer>(createResponse)
       const customerId = createdCustomer.data.id
 

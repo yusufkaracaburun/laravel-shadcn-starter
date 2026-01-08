@@ -36,8 +36,7 @@ export function expectStatus(response: APIResponse, statusCode: number): void {
 export function expectError(response: APIResponse, statusCode?: number): void {
   if (statusCode) {
     expect(response.status()).toBe(statusCode)
-  }
-  else {
+  } else {
     expect(response.status()).toBeGreaterThanOrEqual(400)
   }
 }

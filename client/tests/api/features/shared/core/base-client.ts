@@ -165,8 +165,8 @@ export abstract class BaseClient {
   ): Promise<APIResponse> {
     const cookies = this.cookieHandler.getCookies()
     const baseHeaders = this.requestBuilder.getBaseHeaders()
-    const headers
-      = options.requireCsrf !== false
+    const headers =
+      options.requireCsrf !== false
         ? this.requestBuilder.getHeadersWithCsrf(
             this.csrfHandler.getToken(),
             false,

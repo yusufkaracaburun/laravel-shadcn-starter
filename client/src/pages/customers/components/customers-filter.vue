@@ -79,15 +79,9 @@ const hasActiveFilters = computed(() => {
               <SelectValue placeholder="All types" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">
-                All types
-              </SelectItem>
-              <SelectItem value="business">
-                Business
-              </SelectItem>
-              <SelectItem value="private">
-                Private
-              </SelectItem>
+              <SelectItem value=""> All types </SelectItem>
+              <SelectItem value="business"> Business </SelectItem>
+              <SelectItem value="private"> Private </SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -102,7 +96,7 @@ const hasActiveFilters = computed(() => {
             @input="
               updateFilter('city', ($event.target as HTMLInputElement).value)
             "
-          >
+          />
         </div>
 
         <div class="space-y-2">
@@ -115,7 +109,7 @@ const hasActiveFilters = computed(() => {
             @input="
               updateFilter('country', ($event.target as HTMLInputElement).value)
             "
-          >
+          />
         </div>
 
         <Button

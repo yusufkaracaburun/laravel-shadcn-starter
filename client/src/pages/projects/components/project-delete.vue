@@ -23,12 +23,10 @@ async function handleRemove() {
     isDeleting.value = true
     await deleteProject(props.project.id)
     emits('close')
-  }
-  catch (error) {
+  } catch (error) {
     // Error handling is done in the composable
     console.error('Project deletion error:', error)
-  }
-  finally {
+  } finally {
     isDeleting.value = false
   }
 }
@@ -39,14 +37,13 @@ async function handleRemove() {
     <UiDialogHeader>
       <UiDialogTitle>Delete Project</UiDialogTitle>
       <UiDialogDescription class="mt-2">
-        Are you sure you want to delete <strong>{{ project.name }}</strong>? This action cannot be undone.
+        Are you sure you want to delete <strong>{{ project.name }}</strong
+        >? This action cannot be undone.
       </UiDialogDescription>
     </UiDialogHeader>
     <UiDialogFooter>
       <UiDialogClose as-child>
-        <UiButton variant="outline">
-          Cancel
-        </UiButton>
+        <UiButton variant="outline"> Cancel </UiButton>
       </UiDialogClose>
       <UiButton
         variant="destructive"

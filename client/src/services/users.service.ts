@@ -143,7 +143,7 @@ export function useGetRolesQuery() {
  * @returns Sort string for Spatie QueryBuilder (e.g., "name" or "-name" or "name,-email")
  */
 function convertSortingToQueryString(
-  sorting: Array<{ id: string, desc: boolean }>,
+  sorting: Array<{ id: string; desc: boolean }>,
 ): string | undefined {
   if (!sorting || sorting.length === 0) {
     return undefined
@@ -167,7 +167,7 @@ function convertSortingToQueryString(
 export function useGetUsersQuery(
   page: MaybeRef<number> = 1,
   pageSize: MaybeRef<number> = 10,
-  sorting: MaybeRef<Array<{ id: string, desc: boolean }>> = [],
+  sorting: MaybeRef<Array<{ id: string; desc: boolean }>> = [],
 ) {
   const { axiosInstance } = useAxios()
 
@@ -258,8 +258,7 @@ export function useCreateUserMutation() {
         formData.append('email', data.email)
         formData.append('password', data.password)
         formData.append('password_confirmation', data.password_confirmation)
-        if (data.role)
-          formData.append('role', data.role)
+        if (data.role) formData.append('role', data.role)
         formData.append('profile_photo', data.profile_photo)
 
         const response = await axiosInstance.post('/api/user', formData, {
@@ -292,22 +291,18 @@ export function useUpdateUserMutation() {
   return useMutation<
     IResponse<User>,
     AxiosError,
-    { userId: number, data: UpdateUserRequest }
+    { userId: number; data: UpdateUserRequest }
   >({
     mutationFn: async ({ userId, data }): Promise<IResponse<User>> => {
       // If profile photo is present, use FormData for multipart/form-data
       if (data.profile_photo) {
         const formData = new FormData()
-        if (data.name)
-          formData.append('name', data.name)
-        if (data.email)
-          formData.append('email', data.email)
-        if (data.password)
-          formData.append('password', data.password)
+        if (data.name) formData.append('name', data.name)
+        if (data.email) formData.append('email', data.email)
+        if (data.password) formData.append('password', data.password)
         if (data.password_confirmation)
           formData.append('password_confirmation', data.password_confirmation)
-        if (data.role)
-          formData.append('role', data.role)
+        if (data.role) formData.append('role', data.role)
         formData.append('profile_photo', data.profile_photo)
         // Use POST with _method=PUT for file uploads (Laravel supports this)
         formData.append('_method', 'PUT')

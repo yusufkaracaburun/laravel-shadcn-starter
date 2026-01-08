@@ -24,9 +24,7 @@ defineProps<{
           <UiButton variant="outline" @click="$router.back()">
             Go Back
           </UiButton>
-          <UiButton @click="$router.push('/')">
-            Back to Home
-          </UiButton>
+          <UiButton @click="$router.push('/')"> Back to Home </UiButton>
         </div>
       </slot>
     </footer>

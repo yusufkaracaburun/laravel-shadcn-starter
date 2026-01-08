@@ -39,8 +39,7 @@ const onSubmit = handleSubmit(async (values) => {
       email: values.email,
       password: values.password,
     })
-  }
-  catch (error: any) {
+  } catch (error: any) {
     // Handle backend validation errors (422)
     if (error.response?.status === 422) {
       const backendErrors = error.response.data.errors || {}
@@ -60,9 +59,7 @@ const onSubmit = handleSubmit(async (values) => {
 <template>
   <UiCard class="w-full max-w-sm">
     <UiCardHeader>
-      <UiCardTitle class="text-2xl">
-        Login
-      </UiCardTitle>
+      <UiCardTitle class="text-2xl"> Login </UiCardTitle>
       <UiCardDescription>
         Enter your email and password below to log into your account. Not have
         an account?
@@ -81,9 +78,7 @@ const onSubmit = handleSubmit(async (values) => {
           <div class="grid gap-2">
             <VeeField v-slot="{ field, errors }" name="email">
               <Field :data-invalid="!!errors.length">
-                <FieldLabel for="login-form-email">
-                  Email
-                </FieldLabel>
+                <FieldLabel for="login-form-email"> Email </FieldLabel>
                 <Input
                   id="login-form-email"
                   v-bind="field"
@@ -101,9 +96,7 @@ const onSubmit = handleSubmit(async (values) => {
             <VeeField v-slot="{ field, errors }" name="password">
               <Field :data-invalid="!!errors.length">
                 <div class="flex items-center justify-between">
-                  <FieldLabel for="login-form-password">
-                    Password
-                  </FieldLabel>
+                  <FieldLabel for="login-form-password"> Password </FieldLabel>
                   <ToForgotPasswordLink />
                 </div>
                 <Input

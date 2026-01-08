@@ -4,30 +4,30 @@
  */
 
 export type PriorityValue = 'low' | 'medium' | 'high'
-export type ProjectStatusValue
-  = | 'active'
-    | 'completed'
-    | 'on-hold'
-    | 'cancelled'
-export type TaskStatusValue
-  = | 'backlog'
-    | 'todo'
-    | 'in progress'
-    | 'done'
-    | 'canceled'
+export type ProjectStatusValue =
+  | 'active'
+  | 'completed'
+  | 'on-hold'
+  | 'cancelled'
+export type TaskStatusValue =
+  | 'backlog'
+  | 'todo'
+  | 'in progress'
+  | 'done'
+  | 'canceled'
 export type CompanyStatusValue = 'active' | 'inactive' | 'pending'
-export type InvoiceStatusValue
-  = | 'draft'
-    | 'sent'
-    | 'paid'
-    | 'overdue'
-    | 'cancelled'
-export type PaymentStatusValue
-  = | 'pending'
-    | 'paid'
-    | 'failed'
-    | 'refunded'
-    | 'cancelled'
+export type InvoiceStatusValue =
+  | 'draft'
+  | 'sent'
+  | 'paid'
+  | 'overdue'
+  | 'cancelled'
+export type PaymentStatusValue =
+  | 'pending'
+  | 'paid'
+  | 'failed'
+  | 'refunded'
+  | 'cancelled'
 /**
  * Get priority color class
  * Matches the kanban view color scheme
@@ -35,8 +35,7 @@ export type PaymentStatusValue
 export function getPriorityColor(
   priority: PriorityValue | string | undefined,
 ): string {
-  if (!priority)
-    return 'text-muted-foreground'
+  if (!priority) return 'text-muted-foreground'
 
   switch (priority.toLowerCase()) {
     case 'low':

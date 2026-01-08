@@ -56,7 +56,7 @@ export function useProjects() {
   // Transform backend data to include camelCase aliases for UI compatibility
   const projects = computed(() => {
     const backendProjects = projectsResponse.value?.data?.data ?? []
-    return backendProjects.map(p => ({
+    return backendProjects.map((p) => ({
       ...p,
       startDate: p.start_date,
       endDate: p.end_date,
@@ -102,8 +102,7 @@ export function useProjects() {
     try {
       const projectsResponse = await fetchProjects()
       return projectsResponse.data
-    }
-    catch (error: any) {
+    } catch (error: any) {
       // Store error with context
       errorStore.setError(error, { context: 'fetchProjects' })
 
@@ -124,8 +123,7 @@ export function useProjects() {
       const response = await createProjectMutation.mutateAsync(data)
       toast.showSuccess('Project created successfully!')
       return response
-    }
-    catch (error: any) {
+    } catch (error: any) {
       // Store error with context
       errorStore.setError(error, { context: 'createProject' })
 
@@ -137,8 +135,7 @@ export function useProjects() {
       if (Object.keys(validationErrors).length > 0) {
         const firstError = Object.values(validationErrors)[0]?.[0]
         toast.showError(firstError || message)
-      }
-      else {
+      } else {
         toast.showError(message)
       }
       throw error
@@ -153,8 +150,7 @@ export function useProjects() {
       })
       toast.showSuccess('Project updated successfully!')
       return response
-    }
-    catch (error: any) {
+    } catch (error: any) {
       // Store error with context
       errorStore.setError(error, { context: 'updateProject' })
 
@@ -166,8 +162,7 @@ export function useProjects() {
       if (Object.keys(validationErrors).length > 0) {
         const firstError = Object.values(validationErrors)[0]?.[0]
         toast.showError(firstError || message)
-      }
-      else {
+      } else {
         toast.showError(message)
       }
       throw error
@@ -178,8 +173,7 @@ export function useProjects() {
     try {
       await deleteProjectMutation.mutateAsync(projectId)
       toast.showSuccess('Project deleted successfully!')
-    }
-    catch (error: any) {
+    } catch (error: any) {
       // Store error with context
       errorStore.setError(error, { context: 'deleteProject' })
 

@@ -20,7 +20,7 @@ const emit = defineEmits<{
 
 const isOpen = computed({
   get: () => props.open,
-  set: value => emit('update:open', value),
+  set: (value) => emit('update:open', value),
 })
 
 const { deleteInvoice } = useInvoices()
@@ -38,18 +38,16 @@ async function handleBatchDelete() {
 
   try {
     isDeleting.value = true
-    const deletePromises = selectedRows.value.map(row =>
+    const deletePromises = selectedRows.value.map((row) =>
       deleteInvoice(row.original.id),
     )
     await Promise.all(deletePromises)
     props.table.resetRowSelection()
     isOpen.value = false
-  }
-  catch (error) {
+  } catch (error) {
     // Error handling is done in the composable
     console.error('Batch invoice deletion error:', error)
-  }
-  finally {
+  } finally {
     isDeleting.value = false
   }
 }
@@ -68,9 +66,7 @@ async function handleBatchDelete() {
       </UiDialogHeader>
       <UiDialogFooter>
         <UiDialogClose as-child>
-          <UiButton variant="outline">
-            Cancel
-          </UiButton>
+          <UiButton variant="outline"> Cancel </UiButton>
         </UiDialogClose>
         <UiButton
           variant="destructive"

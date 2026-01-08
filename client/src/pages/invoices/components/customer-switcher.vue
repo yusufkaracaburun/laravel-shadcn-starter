@@ -12,9 +12,8 @@ interface IProps {
 const props = defineProps<IProps>()
 
 const selectedCustomer = computed(() => {
-  if (!props.selectedCustomerId)
-    return null
-  return props.customers.find(c => c.id === props.selectedCustomerId) || null
+  if (!props.selectedCustomerId) return null
+  return props.customers.find((c) => c.id === props.selectedCustomerId) || null
 })
 
 const isOpen = ref(false)
@@ -144,9 +143,7 @@ function handleCustomerCreated() {
             >
               <Plus class="size-4" />
             </div>
-            <div class="font-medium text-muted-foreground">
-              Add customer
-            </div>
+            <div class="font-medium text-muted-foreground">Add customer</div>
           </UiDropdownMenuItem>
         </UiDialogTrigger>
       </UiDropdownMenuContent>

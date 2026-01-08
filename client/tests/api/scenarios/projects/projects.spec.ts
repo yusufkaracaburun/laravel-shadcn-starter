@@ -62,8 +62,8 @@ test.describe('Projects API', { tag: ['@api', '@projects'] }, () => {
       expect(response.status()).toBe(HttpStatus.OK)
 
       // Assert - Response structure matches IResponse<PaginatedProjectsResponse>
-      const projectsBody
-        = await expectIResponse<PaginatedProjectsResponse>(response)
+      const projectsBody =
+        await expectIResponse<PaginatedProjectsResponse>(response)
 
       // Assert - Pagination structure
       expect(projectsBody.data).toHaveProperty('data')
@@ -103,8 +103,8 @@ test.describe('Projects API', { tag: ['@api', '@projects'] }, () => {
 
       // Assert
       expectSuccess(response)
-      const projectsBody
-        = await expectIResponse<PaginatedProjectsResponse>(response)
+      const projectsBody =
+        await expectIResponse<PaginatedProjectsResponse>(response)
       expect(projectsBody.data.per_page).toBe(5)
       expect(projectsBody.data.current_page).toBe(1)
     })

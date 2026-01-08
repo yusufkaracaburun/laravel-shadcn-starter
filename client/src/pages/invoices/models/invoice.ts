@@ -9,12 +9,12 @@ export type TInvoiceStatus = 'draft' | 'sent' | 'paid' | 'overdue' | 'cancelled'
 /**
  * Payment status enum matching backend PaymentStatus
  */
-export type TPaymentStatus
-  = | 'pending'
-    | 'paid'
-    | 'failed'
-    | 'refunded'
-    | 'cancelled'
+export type TPaymentStatus =
+  | 'pending'
+  | 'paid'
+  | 'failed'
+  | 'refunded'
+  | 'cancelled'
 
 /**
  * Email status enum matching backend EmailStatus

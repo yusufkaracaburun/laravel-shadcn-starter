@@ -51,7 +51,7 @@ export interface PaginatedProjectsResponse {
  * @returns Sort string for Spatie QueryBuilder (e.g., "name" or "-name" or "name,-email")
  */
 function convertSortingToQueryString(
-  sorting: Array<{ id: string, desc: boolean }>,
+  sorting: Array<{ id: string; desc: boolean }>,
 ): string | undefined {
   if (!sorting || sorting.length === 0) {
     return undefined
@@ -75,7 +75,7 @@ function convertSortingToQueryString(
 export function useGetProjectsQuery(
   page: MaybeRef<number> = 1,
   pageSize: MaybeRef<number> = 10,
-  sorting: MaybeRef<Array<{ id: string, desc: boolean }>> = [],
+  sorting: MaybeRef<Array<{ id: string; desc: boolean }>> = [],
 ) {
   const { axiosInstance } = useAxios()
 
@@ -219,7 +219,7 @@ export function useUpdateProjectMutation() {
   return useMutation<
     IResponse<Project>,
     AxiosError,
-    { projectId: number, data: UpdateProjectRequest }
+    { projectId: number; data: UpdateProjectRequest }
   >({
     mutationFn: async ({ projectId, data }): Promise<IResponse<Project>> => {
       const response = await axiosInstance.put(

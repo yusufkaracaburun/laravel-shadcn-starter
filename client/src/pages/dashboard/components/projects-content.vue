@@ -33,11 +33,9 @@ const filteredProjects = computed(() => {
 
   if (timeRange.value === '90d') {
     daysToSubtract = 90
-  }
-  else if (timeRange.value === '30d') {
+  } else if (timeRange.value === '30d') {
     daysToSubtract = 30
-  }
-  else if (timeRange.value === '7d') {
+  } else if (timeRange.value === '7d') {
     daysToSubtract = 7
   }
 
@@ -52,20 +50,20 @@ const filteredProjects = computed(() => {
 
 const totalProjects = computed(() => filteredProjects.value.length)
 const activeProjects = computed(
-  () => filteredProjects.value.filter(p => p.status === 'active').length,
+  () => filteredProjects.value.filter((p) => p.status === 'active').length,
 )
 const completedProjects = computed(
-  () => filteredProjects.value.filter(p => p.status === 'completed').length,
+  () => filteredProjects.value.filter((p) => p.status === 'completed').length,
 )
 const inProgressProjects = computed(() => {
   return filteredProjects.value.filter(
-    p => p.status === 'active' && p.progress > 0 && p.progress < 100,
+    (p) => p.status === 'active' && p.progress > 0 && p.progress < 100,
   ).length
 })
 
 const recentProjects = computed(() => {
   return filteredProjects.value
-    .filter(p => p.status === 'active')
+    .filter((p) => p.status === 'active')
     .sort(
       (a, b) =>
         new Date(b.startDate).getTime() - new Date(a.startDate).getTime(),
@@ -80,8 +78,7 @@ interface PieChartData {
 }
 
 function getChartColor(index: number) {
-  if (globalThis.window === undefined)
-    return `var(--chart-${index})`
+  if (globalThis.window === undefined) return `var(--chart-${index})`
   const root = document.documentElement
   const value = getComputedStyle(root)
     .getPropertyValue(`--chart-${index}`)
@@ -91,10 +88,10 @@ function getChartColor(index: number) {
 
 const pieChartData = computed<PieChartData[]>(() => {
   const onHoldCount = filteredProjects.value.filter(
-    p => p.status === 'on-hold',
+    (p) => p.status === 'on-hold',
   ).length
   const cancelledCount = filteredProjects.value.filter(
-    p => p.status === 'cancelled',
+    (p) => p.status === 'cancelled',
   ).length
 
   const data = [
@@ -108,7 +105,7 @@ const pieChartData = computed<PieChartData[]>(() => {
     { status: 'cancelled', value: cancelledCount, fill: getChartColor(4) },
   ]
 
-  return data.filter(item => item.value > 0)
+  return data.filter((item) => item.value > 0)
 })
 
 const totalProjectsCount = computed(() =>
@@ -155,9 +152,7 @@ function formatDate(dateString: string) {
       <UiCardHeader
         class="flex flex-row items-center justify-between pb-2 space-y-0"
       >
-        <UiCardTitle class="text-sm font-medium">
-          Total Projects
-        </UiCardTitle>
+        <UiCardTitle class="text-sm font-medium"> Total Projects </UiCardTitle>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"
@@ -177,18 +172,14 @@ function formatDate(dateString: string) {
         <div class="text-2xl font-bold">
           {{ totalProjects }}
         </div>
-        <p class="text-xs text-muted-foreground">
-          All projects in system
-        </p>
+        <p class="text-xs text-muted-foreground">All projects in system</p>
       </UiCardContent>
     </UiCard>
     <UiCard data-testid="projects-content_active-projects_card">
       <UiCardHeader
         class="flex flex-row items-center justify-between pb-2 space-y-0"
       >
-        <UiCardTitle class="text-sm font-medium">
-          Active Projects
-        </UiCardTitle>
+        <UiCardTitle class="text-sm font-medium"> Active Projects </UiCardTitle>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"
@@ -244,9 +235,7 @@ function formatDate(dateString: string) {
       <UiCardHeader
         class="flex flex-row items-center justify-between pb-2 space-y-0"
       >
-        <UiCardTitle class="text-sm font-medium">
-          In Progress
-        </UiCardTitle>
+        <UiCardTitle class="text-sm font-medium"> In Progress </UiCardTitle>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 24 24"
@@ -265,9 +254,7 @@ function formatDate(dateString: string) {
         <div class="text-2xl font-bold">
           {{ inProgressProjects }}
         </div>
-        <p class="text-xs text-muted-foreground">
-          Currently being worked on
-        </p>
+        <p class="text-xs text-muted-foreground">Currently being worked on</p>
       </UiCardContent>
     </UiCard>
   </div>
@@ -306,9 +293,7 @@ function formatDate(dateString: string) {
             <SelectItem value="30d" class="rounded-lg">
               Last 30 days
             </SelectItem>
-            <SelectItem value="7d" class="rounded-lg">
-              Last 7 days
-            </SelectItem>
+            <SelectItem value="7d" class="rounded-lg"> Last 7 days </SelectItem>
           </SelectContent>
         </Select>
       </UiCardHeader>
@@ -334,8 +319,8 @@ function formatDate(dateString: string) {
               :value="(d: Data) => d.value"
               :color="
                 (d: Data) =>
-                  chartConfig[d.status as keyof typeof chartConfig]?.color
-                  || d.fill
+                  chartConfig[d.status as keyof typeof chartConfig]?.color ||
+                  d.fill
               "
               :arc-width="30"
               :central-label-offset-y="10"
@@ -384,7 +369,9 @@ function formatDate(dateString: string) {
             </div>
             <div class="flex items-center gap-2">
               <Progress :model-value="project.progress" class="h-2 w-20" />
-              <span class="text-xs text-muted-foreground">{{ project.progress }}%</span>
+              <span class="text-xs text-muted-foreground"
+                >{{ project.progress }}%</span
+              >
             </div>
           </div>
         </div>

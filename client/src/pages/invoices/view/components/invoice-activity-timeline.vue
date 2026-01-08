@@ -40,9 +40,7 @@ const props = defineProps<Props>()
         >
           <Clock class="w-6 h-6 text-gray-400" />
         </div>
-        <p class="text-sm text-gray-500">
-          No activity yet
-        </p>
+        <p class="text-sm text-gray-500">No activity yet</p>
       </div>
 
       <div v-else class="px-1">
@@ -91,7 +89,9 @@ const props = defineProps<Props>()
                       :key="key"
                       class="text-gray-700"
                     >
-                      <span class="font-medium">{{ key.replace(/_/g, ' ') }}:</span>
+                      <span class="font-medium"
+                        >{{ key.replace(/_/g, ' ') }}:</span
+                      >
                       <TooltipProvider>
                         <Tooltip>
                           <TooltipTrigger as-child>

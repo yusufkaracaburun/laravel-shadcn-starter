@@ -139,15 +139,13 @@ const onSubmit = handleSubmit(async (formValues) => {
     if (props.customer?.id) {
       // Update existing customer
       await updateCustomer(props.customer.id, backendData)
-    }
-    else {
+    } else {
       // Create new customer
       await createCustomer(backendData)
     }
 
     emits('close')
-  }
-  catch (error) {
+  } catch (error) {
     // Error handling is done in the composable
     // Just log for debugging
     console.error('Customer form submission error:', error)
@@ -180,9 +178,7 @@ const onSubmit = handleSubmit(async (formValues) => {
                 <div class="flex flex-col items-center gap-3">
                   <User class="size-8 text-muted-foreground" />
                   <div class="text-center">
-                    <div class="font-semibold text-foreground">
-                      Private
-                    </div>
+                    <div class="font-semibold text-foreground">Private</div>
                     <div class="text-xs font-normal text-muted-foreground mt-1">
                       Individual customer
                     </div>
@@ -204,9 +200,7 @@ const onSubmit = handleSubmit(async (formValues) => {
                 <div class="flex flex-col items-center gap-3">
                   <Building2 class="size-8 text-muted-foreground" />
                   <div class="text-center">
-                    <div class="font-semibold text-foreground">
-                      Business
-                    </div>
+                    <div class="font-semibold text-foreground">Business</div>
                     <div class="text-xs font-normal text-muted-foreground mt-1">
                       Company or organization
                     </div>
@@ -348,9 +342,7 @@ const onSubmit = handleSubmit(async (formValues) => {
 
     <template v-if="customerType === 'business'">
       <div class="border-t pt-4">
-        <h3 class="mb-4 text-lg font-semibold">
-          Business Information
-        </h3>
+        <h3 class="mb-4 text-lg font-semibold">Business Information</h3>
 
         <FormField
           v-slot="{ componentField }"

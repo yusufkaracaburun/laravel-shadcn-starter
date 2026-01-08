@@ -71,11 +71,11 @@ export function generateVueTable<T>(props: IDataTableProps<T>) {
       },
     },
     enableRowSelection: true,
-    onColumnFiltersChange: updaterOrValue =>
+    onColumnFiltersChange: (updaterOrValue) =>
       valueUpdater(updaterOrValue, columnFilters),
-    onColumnVisibilityChange: updaterOrValue =>
+    onColumnVisibilityChange: (updaterOrValue) =>
       valueUpdater(updaterOrValue, columnVisibility),
-    onRowSelectionChange: updaterOrValue =>
+    onRowSelectionChange: (updaterOrValue) =>
       valueUpdater(updaterOrValue, rowSelection),
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
@@ -102,8 +102,7 @@ export function generateVueTable<T>(props: IDataTableProps<T>) {
       enumerable: true,
     })
     tableConfig.manualPagination = true
-  }
-  else {
+  } else {
     tableConfig.getPaginationRowModel = getPaginationRowModel()
   }
 

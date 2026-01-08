@@ -37,21 +37,21 @@ const defaultColumns: Column[] = [
 
 // Initialize board state immediately with projects data (before useKanban's onMounted loads from localStorage)
 const initialKanbanTasks = projectsToKanbanTasks(props.projects)
-const initialColumns = defaultColumns.map(col => ({
+const initialColumns = defaultColumns.map((col) => ({
   ...col,
   tasks: [] as KanbanTask[],
 }))
 
 initialKanbanTasks.forEach((task) => {
   const columnId = task.status || 'in-progress'
-  const column = initialColumns.find(c => c.id === columnId)
+  const column = initialColumns.find((c) => c.id === columnId)
   if (column) {
     column.tasks.push(task)
   }
 })
 
 const visibleInitialColumns = initialColumns.filter(
-  col => col.tasks.length > 0 || ['in-progress', 'done'].includes(col.id),
+  (col) => col.tasks.length > 0 || ['in-progress', 'done'].includes(col.id),
 )
 
 // Set board state immediately to override any localStorage data
@@ -69,11 +69,10 @@ const isSyncing = ref(false)
 
 // Organize projects into columns by status
 function organizeProjectsIntoColumns() {
-  if (isSyncing.value)
-    return
+  if (isSyncing.value) return
 
   isSyncing.value = true
-  const columns = defaultColumns.map(col => ({
+  const columns = defaultColumns.map((col) => ({
     ...col,
     tasks: [] as KanbanTask[],
   }))
@@ -81,7 +80,7 @@ function organizeProjectsIntoColumns() {
 
   kanbanTasks.forEach((task) => {
     const columnId = task.status || 'in-progress'
-    const column = columns.find(c => c.id === columnId)
+    const column = columns.find((c) => c.id === columnId)
     if (column) {
       column.tasks.push(task)
     }
@@ -89,7 +88,7 @@ function organizeProjectsIntoColumns() {
 
   // Show default columns (in-progress, done) even if empty, and columns that have projects
   const visibleColumns = columns.filter(
-    col => col.tasks.length > 0 || ['in-progress', 'done'].includes(col.id),
+    (col) => col.tasks.length > 0 || ['in-progress', 'done'].includes(col.id),
   )
 
   // Update the kanban board with organized projects
@@ -124,8 +123,7 @@ watch(
 watch(
   () => board.value.columns,
   (newColumns) => {
-    if (isSyncing.value)
-      return
+    if (isSyncing.value) return
 
     isSyncing.value = true
 
@@ -145,7 +143,7 @@ watch(
       // Only update if column actually changed
       if (oldColumnId !== newColumnId) {
         const originalProject = props.projects.find(
-          p => p.id.toString() === projectId,
+          (p) => p.id.toString() === projectId,
         )
         if (originalProject) {
           const updatedProject = kanbanTaskToProject(
@@ -179,7 +177,7 @@ watch(
 function handleProjectUpdated(task: KanbanTask, _columnId: string) {
   // Convert kanban task to project and update via API
   const originalProject = props.projects.find(
-    p => p.id.toString() === task.id,
+    (p) => p.id.toString() === task.id,
   )
   if (!originalProject) {
     return
@@ -225,8 +223,8 @@ watch(
     if (!hasForcedInit.value && newColumns.length > 0) {
       const hasOurProjects = props.projects.some((project) => {
         const kanbanTask = projectsToKanbanTasks([project])[0]
-        return newColumns.some(col =>
-          col.tasks.some(t => t.id === kanbanTask.id),
+        return newColumns.some((col) =>
+          col.tasks.some((t) => t.id === kanbanTask.id),
         )
       })
 

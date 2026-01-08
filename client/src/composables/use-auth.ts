@@ -23,8 +23,8 @@ export function useAuth() {
   const loginMutation = useLoginMutation()
   const logoutMutation = useLogoutMutation()
   const registerMutation = useRegisterMutation()
-  const { data: currentUser, refetch: fetchCurrentUser }
-    = useGetCurrentUserQuery()
+  const { data: currentUser, refetch: fetchCurrentUser } =
+    useGetCurrentUserQuery()
 
   // Watch for current user changes and update store
   watch(
@@ -39,9 +39,9 @@ export function useAuth() {
 
   const loading = computed(
     () =>
-      loginMutation.isPending.value
-      || logoutMutation.isPending.value
-      || registerMutation.isPending.value,
+      loginMutation.isPending.value ||
+      logoutMutation.isPending.value ||
+      registerMutation.isPending.value,
   )
 
   async function login(credentials: LoginRequest) {
@@ -60,13 +60,11 @@ export function useAuth() {
         const redirect = router.currentRoute.value.query.redirect as string
         if (!redirect || redirect.startsWith('//')) {
           router.push({ path: RouterPath.HOME as string })
-        }
-        else {
+        } else {
           router.push(redirect)
         }
       }
-    }
-    catch (error: any) {
+    } catch (error: any) {
       // Store error with context
       errorStore.setError(error, { context: 'login' })
 
@@ -78,8 +76,7 @@ export function useAuth() {
       if (Object.keys(validationErrors).length > 0) {
         const firstError = Object.values(validationErrors)[0]?.[0]
         toast.showError(firstError || message)
-      }
-      else {
+      } else {
         toast.showError(message)
       }
       throw error
@@ -100,8 +97,7 @@ export function useAuth() {
         // Redirect to home after registration
         router.push({ path: RouterPath.HOME as string })
       }
-    }
-    catch (error: any) {
+    } catch (error: any) {
       // Store error with context
       errorStore.setError(error, { context: 'register' })
 
@@ -113,8 +109,7 @@ export function useAuth() {
       if (Object.keys(validationErrors).length > 0) {
         const firstError = Object.values(validationErrors)[0]?.[0]
         toast.showError(firstError || message)
-      }
-      else {
+      } else {
         toast.showError(message)
       }
       throw error
@@ -127,8 +122,7 @@ export function useAuth() {
       authStore.clearUser()
       toast.showSuccess('Logged out successfully!')
       router.push({ path: RouterPath.LOGIN as string })
-    }
-    catch (error: any) {
+    } catch (error: any) {
       // Store error with context
       errorStore.setError(error, { context: 'logout' })
 
@@ -152,8 +146,7 @@ export function useAuth() {
         return true
       }
       return false
-    }
-    catch {
+    } catch {
       authStore.clearUser()
       return false
     }

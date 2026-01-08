@@ -26,16 +26,14 @@ const { copy, copied } = useClipboard({ source: orderId })
 
 const state = computed(() => props.state)
 const currentState = computed(() => {
-  return statuses.find(item => item.value === state.value)
+  return statuses.find((item) => item.value === state.value)
 })
 </script>
 
 <template>
   <div class="w-full font-mono rounded-lg shadow-sm bg-background">
     <header class="relative p-5">
-      <h1 class="text-lg">
-        Billing Card {{ cardNo }}
-      </h1>
+      <h1 class="text-lg">Billing Card {{ cardNo }}</h1>
       <div class="flex items-center gap-2 mt-1">
         <p class="text-stone-600">
           {{ orderId }}
@@ -61,9 +59,7 @@ const currentState = computed(() => {
     </header>
     <div class="p-6 border-t">
       <div class="">
-        <h2 class="mb-2 text-xl font-extralight">
-          Last update
-        </h2>
+        <h2 class="mb-2 text-xl font-extralight">Last update</h2>
         <div class="text-xl">
           {{ updatedAt }}
         </div>
@@ -94,12 +90,8 @@ const currentState = computed(() => {
     </main>
     <div class="p-6 border-t">
       <div class="text-stone-500">
-        <h2 class="mt-6 text-xl font-extralight">
-          Notes
-        </h2>
-        <p class="text-sm">
-          Invoice #{{ invoiceNo }}
-        </p>
+        <h2 class="mt-6 text-xl font-extralight">Notes</h2>
+        <p class="text-sm">Invoice #{{ invoiceNo }}</p>
         <p class="text-sm">
           {{ description }}
         </p>

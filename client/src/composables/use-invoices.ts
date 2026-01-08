@@ -82,8 +82,8 @@ export function useInvoices() {
     pageSize.value = newPageSize
   }
 
-  const getInvoicePrerequisitesQuery
-    = invoiceService.getInvoicePrerequisitesQuery()
+  const getInvoicePrerequisitesQuery =
+    invoiceService.getInvoicePrerequisitesQuery()
   const {
     data: invoicePrerequisitesResponse,
     isLoading: isLoadingInvoicePrerequisites,
@@ -97,8 +97,7 @@ export function useInvoices() {
     try {
       const response = await refetchInvoicePrerequisites()
       return response.data as IResponse<IInvoicePrerequisites>
-    }
-    catch (error: any) {
+    } catch (error: any) {
       errorStore.setError(error, {
         context: InvoiceContext.FETCH_INVOICE_PREREQUISITES,
       })
@@ -126,8 +125,7 @@ export function useInvoices() {
     try {
       const response = await fetchInvoices()
       return response.data as IPaginatedResponse<IInvoice>
-    }
-    catch (error: any) {
+    } catch (error: any) {
       errorStore.setError(error, { context: InvoiceContext.FETCH_INVOICES })
       const message = errorStore.getErrorMessage(error)
       toast.showError(message)
@@ -166,8 +164,7 @@ export function useInvoices() {
     try {
       const response = await refetchInvoiceById()
       return response.data as IResponse<IInvoice>
-    }
-    catch (error: any) {
+    } catch (error: any) {
       errorStore.setError(error, { context: InvoiceContext.GET_INVOICE_BY_ID })
       const message = errorStore.getErrorMessage(error)
       toast.showError(message)
@@ -183,8 +180,7 @@ export function useInvoices() {
         includes: [includes.customer, includes.items],
       })
       return response.data
-    }
-    catch (error: any) {
+    } catch (error: any) {
       errorStore.setError(error, { context: InvoiceContext.GET_INVOICE })
       const message = errorStore.getErrorMessage(error)
       toast.showError(message)
@@ -198,16 +194,14 @@ export function useInvoices() {
       const response = await createInvoiceMutation.mutateAsync(data)
       toast.showSuccess(InvoiceMessages.CREATE_INVOICE_SUCCESS)
       return response
-    }
-    catch (error: any) {
+    } catch (error: any) {
       errorStore.setError(error, { context: InvoiceContext.CREATE_INVOICE })
       const message = errorStore.getErrorMessage(error)
       const validationErrors = errorStore.getValidationErrors(error)
       if (Object.keys(validationErrors).length > 0) {
         const firstError = Object.values(validationErrors)[0]?.[0]
         toast.showError(firstError || message)
-      }
-      else {
+      } else {
         toast.showError(message)
       }
       throw error
@@ -220,16 +214,14 @@ export function useInvoices() {
       const response = await updateInvoiceMutation.mutateAsync({ id, data })
       toast.showSuccess(InvoiceMessages.UPDATE_INVOICE_SUCCESS)
       return response
-    }
-    catch (error: any) {
+    } catch (error: any) {
       errorStore.setError(error, { context: InvoiceContext.UPDATE_INVOICE })
       const message = errorStore.getErrorMessage(error)
       const validationErrors = errorStore.getValidationErrors(error)
       if (Object.keys(validationErrors).length > 0) {
         const firstError = Object.values(validationErrors)[0]?.[0]
         toast.showError(firstError || message)
-      }
-      else {
+      } else {
         toast.showError(message)
       }
       throw error
@@ -241,8 +233,7 @@ export function useInvoices() {
     try {
       await deleteInvoiceMutation.mutateAsync(id)
       toast.showSuccess(InvoiceMessages.DELETE_INVOICE_SUCCESS)
-    }
-    catch (error: any) {
+    } catch (error: any) {
       errorStore.setError(error, { context: InvoiceContext.DELETE_INVOICE })
       const message = errorStore.getErrorMessage(error)
       toast.showError(message)
@@ -256,8 +247,7 @@ export function useInvoices() {
       const response = await downloadInvoicePdfMutation.mutateAsync(id)
       downloadBlobFromAxiosResponse(response, `factuur_${id}.pdf`)
       toast.showSuccess(InvoiceMessages.DOWNLOAD_INVOICE_PDF_SUCCESS)
-    }
-    catch (error: any) {
+    } catch (error: any) {
       errorStore.setError(error, {
         context: InvoiceContext.DOWNLOAD_INVOICE_PDF,
       })

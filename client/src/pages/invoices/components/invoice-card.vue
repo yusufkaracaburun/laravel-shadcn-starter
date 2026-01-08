@@ -75,8 +75,7 @@ function formatDate(dateString: string | null | undefined): string {
         day: 'numeric',
       })
     }
-  }
-  catch {
+  } catch {
     // Ignore parsing errors
   }
   return dateString

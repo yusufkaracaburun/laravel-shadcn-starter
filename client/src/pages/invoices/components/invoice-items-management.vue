@@ -62,9 +62,17 @@ function handleAddItem() {
         Invoice Items
       </h3>
       <div class="flex gap-2">
-        <InvoiceItemSelector :invoice-id="invoiceId || 0" :items="catalogItems ?? []"
-          @items-selected="handleItemsSelected" />
-        <Button v-if="!showAddForm && editingItemIndex === null" size="sm" variant="outline" @click="handleAddItem">
+        <InvoiceItemSelector
+          :invoice-id="invoiceId || 0"
+          :items="catalogItems ?? []"
+          @items-selected="handleItemsSelected"
+        />
+        <Button
+          v-if="!showAddForm && editingItemIndex === null"
+          size="sm"
+          variant="outline"
+          @click="handleAddItem"
+        >
           <Plus class="mr-2 size-4" />
           Add Item
         </Button>

@@ -59,45 +59,39 @@ function handleClose() {
 }
 
 async function handleUpdate() {
-  if (!formRef.value)
-    return
+  if (!formRef.value) return
   isSubmitting.value = true
   try {
     await formRef.value.handleSubmit()
     showSuccess('Invoice updated')
-  }
-  catch (validationError) {
+  } catch (validationError) {
     console.error('Validation Error:', validationError)
     toast({
       title: 'Validation Error',
       description: 'Please correct the form errors.',
       variant: 'destructive',
     })
-  }
-  finally {
+  } finally {
     isSubmitting.value = false
   }
 }
 
 async function handleUpdateAndSend() {
-  if (!formRef.value)
-    return
+  if (!formRef.value) return
   isSubmitting.value = true
   try {
     formRef.value.setFieldValue('status', 'sent')
     await nextTick()
     await formRef.value.handleSubmit()
     showSuccess('Invoice updated and sent')
-  }
-  catch (validationError) {
+  } catch (validationError) {
     console.error('Validation Error:', validationError)
     toast({
       title: 'Validation Error',
       description: 'Please correct the form errors.',
       variant: 'destructive',
     })
-  }
-  finally {
+  } finally {
     isSubmitting.value = false
   }
 }

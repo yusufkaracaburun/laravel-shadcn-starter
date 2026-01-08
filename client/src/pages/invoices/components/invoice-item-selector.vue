@@ -55,8 +55,7 @@ const selectedCount = computed(() => selectedItems.value.size)
 function toggleItemSelection(itemId: number) {
   if (selectedItems.value.has(itemId)) {
     selectedItems.value.delete(itemId)
-  }
-  else {
+  } else {
     selectedItems.value.add(itemId)
   }
 }
@@ -67,7 +66,7 @@ function isItemSelected(itemId: number): boolean {
 
 function handleAddSelected() {
   const selectedItemsData = filteredItems.value
-    .filter(item => selectedItems.value.has(item.id))
+    .filter((item) => selectedItems.value.has(item.id))
     .map((item) => {
       const unitPrice = Number.parseFloat(item.unit_price.amount) / 100
 
@@ -181,9 +180,7 @@ function handleClose() {
       </div>
 
       <DialogFooter>
-        <Button variant="outline" @click="handleClose">
-          Cancel
-        </Button>
+        <Button variant="outline" @click="handleClose"> Cancel </Button>
         <Button :disabled="selectedCount === 0" @click="handleAddSelected">
           <Plus class="mr-2 size-4" />
           Add

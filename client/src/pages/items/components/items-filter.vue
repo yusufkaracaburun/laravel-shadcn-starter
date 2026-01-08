@@ -49,38 +49,32 @@ watchEffect(() => {
 // Count active filters
 const activeFilterCount = computed(() => {
   let count = 0
-  if (localFilters.value.unit)
-    count++
-  if (localFilters.value.vat_rate !== undefined)
-    count++
-  if (localFilters.value.search)
-    count++
-  if (localFilters.value.created_at)
-    count++
-  if (localFilters.value.updated_at)
-    count++
+  if (localFilters.value.unit) count++
+  if (localFilters.value.vat_rate !== undefined) count++
+  if (localFilters.value.search) count++
+  if (localFilters.value.created_at) count++
+  if (localFilters.value.updated_at) count++
   return count
 })
 
 // Selected unit
 const selectedUnit = computed(() => {
   return localFilters.value.unit
-    ? units.find(u => u.value === localFilters.value.unit)
+    ? units.find((u) => u.value === localFilters.value.unit)
     : null
 })
 
 // Selected VAT rate
 const selectedVatRate = computed(() => {
   return localFilters.value.vat_rate !== undefined
-    ? vatRates.find(v => Number(v.value) === localFilters.value.vat_rate)
+    ? vatRates.find((v) => Number(v.value) === localFilters.value.vat_rate)
     : null
 })
 
 function handleUnitSelect(unit: string) {
   if (localFilters.value.unit === unit) {
     delete localFilters.value.unit
-  }
-  else {
+  } else {
     localFilters.value.unit = unit
   }
   applyFilters()
@@ -89,8 +83,7 @@ function handleUnitSelect(unit: string) {
 function handleVatRateSelect(vatRate: number) {
   if (localFilters.value.vat_rate === vatRate) {
     delete localFilters.value.vat_rate
-  }
-  else {
+  } else {
     localFilters.value.vat_rate = vatRate
   }
   applyFilters()
@@ -100,8 +93,7 @@ function handleSearchChange(value: string) {
   searchFilter.value = value
   if (value.trim()) {
     localFilters.value.search = value.trim()
-  }
-  else {
+  } else {
     delete localFilters.value.search
   }
   applyFilters()
@@ -113,8 +105,7 @@ function handleDateFilterChange(
 ) {
   if (value) {
     localFilters.value[type] = value
-  }
-  else {
+  } else {
     delete localFilters.value[type]
   }
   applyFilters()

@@ -94,7 +94,7 @@ const formSchema = computed(() => {
       password: z.string().min(8, 'Password must be at least 8 characters.'),
       password_confirmation: z.string().min(1, 'Please confirm your password.'),
     })
-    .refine(data => data.password === data.password_confirmation, {
+    .refine((data) => data.password === data.password_confirmation, {
       message: 'Passwords do not match.',
       path: ['password_confirmation'],
     })
@@ -142,8 +142,7 @@ watch(
       if (user.profile_photo_url) {
         profilePhotoPreview.value = user.profile_photo_url
       }
-    }
-    else {
+    } else {
       resetForm({
         values: getInitialValues(),
       })
@@ -177,8 +176,7 @@ function handlePhotoChange(event: Event) {
       profilePhotoPreview.value = e.target?.result as string
     }
     reader.readAsDataURL(file)
-  }
-  else {
+  } else {
     form.setFieldValue('profile_photo', null)
     profilePhotoPreview.value = null
   }
@@ -215,8 +213,7 @@ const onSubmit = handleSubmit(async (values) => {
       })
 
       toast.showSuccess('User updated successfully!')
-    }
-    else {
+    } else {
       // Create new user
       await createUserMutation.mutateAsync({
         name: values.name || '',
@@ -233,8 +230,7 @@ const onSubmit = handleSubmit(async (values) => {
     profilePhotoPreview.value = null
     resetForm()
     emits('close')
-  }
-  catch (error: any) {
+  } catch (error: any) {
     // Store error with context
     const context = isEditMode.value ? 'updateUser' : 'createUser'
     errorStore.setError(error, { context })
@@ -248,12 +244,12 @@ const onSubmit = handleSubmit(async (values) => {
         if (Array.isArray(fieldErrors) && fieldErrors.length > 0) {
           setFieldError(
             field as
-            | 'name'
-            | 'email'
-            | 'password'
-            | 'password_confirmation'
-            | 'profile_photo'
-            | 'role',
+              | 'name'
+              | 'email'
+              | 'password'
+              | 'password_confirmation'
+              | 'profile_photo'
+              | 'role',
             fieldErrors[0],
           )
         }
@@ -268,8 +264,7 @@ const onSubmit = handleSubmit(async (values) => {
     if (Object.keys(validationErrors).length > 0) {
       const firstError = Object.values(validationErrors)[0]?.[0]
       toast.showError(firstError || message)
-    }
-    else {
+    } else {
       toast.showError(message)
     }
   }
@@ -381,7 +376,7 @@ const onSubmit = handleSubmit(async (values) => {
                 :src="(profilePhotoPreview || existingProfilePhotoUrl) ?? ''"
                 alt="Profile preview"
                 class="h-24 w-24 rounded-full object-cover border"
-              >
+              />
             </div>
           </div>
         </FormControl>

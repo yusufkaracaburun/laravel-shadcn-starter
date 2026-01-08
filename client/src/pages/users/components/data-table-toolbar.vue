@@ -31,7 +31,7 @@ const roleOptions = computed<FacetedFilterOption[]>(() => {
   if (!rolesResponse.value?.data) {
     return []
   }
-  return rolesResponse.value.data.map(role => ({
+  return rolesResponse.value.data.map((role) => ({
     label: role.name,
     value: role.name,
   }))

@@ -20,8 +20,8 @@ import ProjectsKanbanWrapper from './components/projects-kanban-wrapper.vue'
 type ViewMode = 'table' | 'kanban' | 'card'
 
 const viewMode = ref<ViewMode>('table')
-const { loading, projects, serverPagination, sorting, onSortingChange }
-  = useProjects()
+const { loading, projects, serverPagination, sorting, onSortingChange } =
+  useProjects()
 </script>
 
 <template>
