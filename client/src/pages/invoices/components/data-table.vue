@@ -43,16 +43,16 @@ const invoiceDeleteBatchOpen = ref(false)
 
   <DataTable
     :table="table"
-    :columns="props.columns"
-    :loading="props.loading"
-    :server-pagination="props.serverPagination"
+    :columns="columns"
+    :loading="loading"
+    :server-pagination="serverPagination"
   >
     <template #toolbar>
       <DataTableToolbar
         :table="table"
-        :filters="props.filter"
-        :on-filters-change="props.onFiltersChange"
-        :on-clear-filters="props.onClearFilters"
+        :filters="filter"
+        :on-filters-change="onFiltersChange"
+        :on-clear-filters="onClearFilters"
         class="w-full overflow-x-auto"
       />
     </template>

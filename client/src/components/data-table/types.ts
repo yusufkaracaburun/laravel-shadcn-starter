@@ -1,7 +1,6 @@
 import type { ColumnDef } from '@tanstack/vue-table'
 
 import type { ISorting } from '@/services/query-utils'
-import { IInvoiceFilters } from '@/pages/invoices/models/invoice'
 
 export const DEFAULT_PAGE = 1
 export const DEFAULT_PAGE_SIZE: TPageSize = 10
