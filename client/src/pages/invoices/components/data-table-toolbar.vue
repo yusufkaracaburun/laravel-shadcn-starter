@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import type { IDataTableToolbarProps } from '@/components/data-table/types'
-import type { IInvoice, IInvoiceFilters } from '@/pages/invoices/models/invoice'
 
 import DataTableViewOptions from '@/components/data-table/view-options.vue'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { XIcon } from '@/composables/use-icons'
-import InvoicesFilter from '@/pages/invoices/components/invoices-filter.vue'
+
+import type { IInvoice, IInvoiceFilters } from '../models/invoice'
+
+import InvoicesFilter from './invoices-filter.vue'
 
 const props = defineProps<IDataTableToolbarProps<IInvoice, IInvoiceFilters>>()
 
@@ -40,7 +42,7 @@ function handleResetFilters() {
       <InvoicesFilter
         :filters="filters"
         :on-filters-change="onFiltersChange"
-        :on-clear="onClearFilters"
+        :on-clear-filters="onClearFilters"
       />
       <Input
         v-model="searchValue"

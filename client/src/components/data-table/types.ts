@@ -38,3 +38,9 @@ export interface IDataTableToolbarProps<T, F> {
   onFiltersChange: (filters: F) => void
   onClearFilters: () => void
 }
+
+export interface IDataTableFilterProps<F> {
+  filters: F
+  onFiltersChange: (filters: F) => void
+  onClear: () => void
+}

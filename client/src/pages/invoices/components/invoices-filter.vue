@@ -1,7 +1,5 @@
 <script setup lang="ts">
-import type { IInvoiceFilters } from '@/services/invoices.service'
-
-import { FilterIcon } from '@/composables/use-icons'
+import type { IDataTableFilterProps } from '@/components/data-table/types'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -16,15 +14,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { FilterIcon } from '@/composables/use-icons'
 import { useGetCustomersQuery } from '@/services/customers.service'
 
-interface IInvoicesFilterProps {
-  filters: IInvoiceFilters
-  onFiltersChange: (filters: IInvoiceFilters) => void
-  onClear: () => void
-}
+import type { IInvoiceFilters } from '../models/invoice'
 
-const props = defineProps<IInvoicesFilterProps>()
+const props = defineProps<IDataTableFilterProps<IInvoiceFilters>>()
 
 // Fetch customers for dropdown (with larger page size)
 const { data: customersResponse } = useGetCustomersQuery(1, 100, [], {}, [])
