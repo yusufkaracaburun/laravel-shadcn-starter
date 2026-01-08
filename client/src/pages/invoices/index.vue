@@ -16,8 +16,7 @@ import InvoicesCardGrid from './components/invoices-card-grid.vue'
 
 type TViewMode = 'table' | 'card'
 
-const router = useRouter()
-const columns = getInvoiceColumns(router)
+const columns = getInvoiceColumns()
 
 const viewMode = ref<TViewMode>('table')
 const {
