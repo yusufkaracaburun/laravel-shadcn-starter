@@ -49,6 +49,9 @@ export default antfu({
         tsconfigRootDir: '.',
       },
     ],
+    // Disable operator-linebreak rules - Prettier handles formatting
+    '@stylistic/operator-linebreak': 'off',
+    'vue/operator-linebreak': 'off',
   },
   ...pluginQuery.configs['flat/recommended'],
 })
