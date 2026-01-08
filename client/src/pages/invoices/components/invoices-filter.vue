@@ -19,11 +19,25 @@ import { useGetCustomersQuery } from '@/services/customers.service'
 
 import type { IInvoiceFilters } from '../models/invoice'
 
+import { INVOICE_STATUSES } from '../data/data'
+
 const props = defineProps<IDataTableFilterProps<IInvoiceFilters>>()
 
 // Fetch customers for dropdown (with larger page size)
 const { data: customersResponse } = useGetCustomersQuery(1, 100, [], {}, [])
-const customers = computed(() => customersResponse.value?.data?.data ?? [])
+const customers = computed(() => {
+  const response = customersResponse.value?.data
+  if (!response) return []
+  // Type guard: check if response is array or single object
+  if (Array.isArray(response)) {
+    return response.flatMap(r =>
+      r && typeof r === 'object' && 'data' in r ? r.data : [],
+    )
+  }
+  return response && typeof response === 'object' && 'data' in response
+    ? response.data
+    : []
+})
 
 const localFilters = ref<IInvoiceFilters>({ ...props.filters })
 
@@ -48,6 +62,17 @@ function clearFilters() {
   props.onClearFilters()
 }
 
+function handleStatusChange(value: any) {
+  const statusValue =
+    value === null || value === undefined ? null : String(value)
+  updateFilter(
+    'status',
+    statusValue === 'all' || statusValue === null ? undefined : statusValue,
+  )
+}
+
+const selectedStatus = computed(() => localFilters.value.status || 'all')
+
 const hasActiveFilters = computed(() => {
   return Object.keys(localFilters.value).length > 0
 })
@@ -70,31 +95,38 @@ const hasActiveFilters = computed(() => {
     <PopoverContent class="w-[250px] p-0" align="start">
       <div class="p-4 space-y-4">
         <div class="space-y-2">
-          <label class="text-sm font-medium">Status</label>
+          <label for="status-filter" class="text-sm font-medium">
+            {{ $t('invoices.filters.status') }}
+          </label>
           <Select
-            :model-value="localFilters.status"
-            @update:model-value="
-              (value) =>
-                updateFilter('status', value === 'all' ? undefined : value)
-            "
+            id="status-filter"
+            :model-value="selectedStatus"
+            @update:model-value="handleStatusChange"
           >
             <SelectTrigger>
-              <SelectValue placeholder="All statuses" />
+              <SelectValue :placeholder="$t('invoices.filters.allStatuses')" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all"> All statuses </SelectItem>
-              <SelectItem value="draft"> Draft </SelectItem>
-              <SelectItem value="sent"> Sent </SelectItem>
-              <SelectItem value="paid"> Paid </SelectItem>
-              <SelectItem value="overdue"> Overdue </SelectItem>
-              <SelectItem value="cancelled"> Cancelled </SelectItem>
+              <SelectItem value="all">
+                {{ $t('invoices.filters.allStatuses') }}
+              </SelectItem>
+              <SelectItem
+                v-for="status in INVOICE_STATUSES"
+                :key="status.value"
+                :value="status.value"
+              >
+                {{ status.label }}
+              </SelectItem>
             </SelectContent>
           </Select>
         </div>
 
         <div class="space-y-2">
-          <label class="text-sm font-medium">Customer</label>
+          <label for="customer-filter" class="text-sm font-medium"
+            >Customer</label
+          >
           <Select
+            id="customer-filter"
             :model-value="
               localFilters.customer_id
                 ? localFilters.customer_id.toString()
@@ -125,8 +157,11 @@ const hasActiveFilters = computed(() => {
         </div>
 
         <div class="space-y-2">
-          <label class="text-sm font-medium">Invoice Number</label>
+          <label for="invoice-number-filter" class="text-sm font-medium"
+            >Invoice Number</label
+          >
           <input
+            id="invoice-number-filter"
             v-model="localFilters.invoice_number"
             type="text"
             placeholder="Filter by invoice number"
@@ -141,8 +176,9 @@ const hasActiveFilters = computed(() => {
         </div>
 
         <div class="space-y-2">
-          <label class="text-sm font-medium">Date From</label>
+          <label for="date-filter" class="text-sm font-medium">Date From</label>
           <input
+            id="date-filter"
             v-model="localFilters.date"
             type="date"
             class="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"

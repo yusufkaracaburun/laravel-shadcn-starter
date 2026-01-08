@@ -115,7 +115,11 @@
       "reset": "Resetten"
     },
     "deleteSelectedInvoices": "Facturen verwijderen",
-    "search": "Zoek facturen..."
+    "search": "Zoek facturen...",
+    "filters": {
+      "status": "Status",
+      "allStatuses": "Alle statussen"
+    }
   },
   "users": {
     "title": "Gebruikers",

@@ -115,7 +115,11 @@
       "reset": "Reset"
     },
     "deleteSelectedInvoices": "Delete Selected Invoices",
-    "search": "Search Invoices..."
+    "search": "Search Invoices...",
+    "filters": {
+      "status": "Status",
+      "allStatuses": "All statuses"
+    }
   },
   "users": {
     "title": "Users",
