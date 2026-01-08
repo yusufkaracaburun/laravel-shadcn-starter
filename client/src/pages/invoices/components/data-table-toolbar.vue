@@ -25,6 +25,11 @@ const isFiltered = computed(() => {
     (props.filters && Object.keys(props.filters).length > 0)
   )
 })
+
+function handleResetFilters() {
+  props.table.resetColumnFilters()
+  props.onClearFilters()
+}
 </script>
 
 <template>
@@ -40,22 +45,17 @@ const isFiltered = computed(() => {
       <Input
         v-model="searchValue"
         :placeholder="$t('invoices.search')"
-        class="h-8 w-[150px] lg:w-[250px]"
+        class="h-8 w-[150px] lg:w-[250px] focus-visible:border-input focus-visible:ring-0"
       />
 
       <Button
         v-if="isFiltered"
-        class="h-8 px-2 lg:px-3"
+        variant="ghost"
         size="sm"
-        @click="
-          () => {
-            table.resetColumnFilters()
-            onClearFilters()
-          }
-        "
+        @click="handleResetFilters"
       >
         {{ $t('invoices.actions.reset') }}
-        <XIcon class="size-4" />
+        <XIcon class="ml-2 size-4" />
       </Button>
     </div>
     <DataTableViewOptions :table="table" />
