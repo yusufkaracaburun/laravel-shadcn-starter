@@ -117,8 +117,15 @@
     "deleteSelectedInvoices": "Delete Selected Invoices",
     "search": "Search Invoices...",
     "filters": {
+      "title": "Filters",
       "status": "Status",
-      "allStatuses": "All statuses"
+      "allStatuses": "All statuses",
+      "customer": "Customer",
+      "allCustomers": "All customers",
+      "invoiceNumber": "Invoice Number",
+      "invoiceNumberPlaceholder": "Filter by invoice number",
+      "dateFrom": "Date From",
+      "clearFilters": "Clear Filters"
     }
   },
   "users": {

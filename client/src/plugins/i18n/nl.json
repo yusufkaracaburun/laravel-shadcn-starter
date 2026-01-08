@@ -117,8 +117,15 @@
     "deleteSelectedInvoices": "Facturen verwijderen",
     "search": "Zoek facturen...",
     "filters": {
+      "title": "Filters",
       "status": "Status",
-      "allStatuses": "Alle statussen"
+      "allStatuses": "Alle statussen",
+      "customer": "Klant",
+      "allCustomers": "Alle klanten",
+      "invoiceNumber": "Factuurnummer",
+      "invoiceNumberPlaceholder": "Filter op factuurnummer",
+      "dateFrom": "Datum vanaf",
+      "clearFilters": "Filters wissen"
     }
   },
   "users": {
