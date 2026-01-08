@@ -133,49 +133,98 @@ function handlePhotoChange(event: Event) {
   }
 }
 
+// Helper function to convert role name to enum value
+function convertRoleToEnum(roleName: string | null | undefined): EUserRole {
+  if (!roleName) {
+    return EUserRole.USER
+  }
+  const roleEnum = Object.values(EUserRole).find((r) => r === roleName)
+  return roleEnum || EUserRole.USER
+}
+
+// Helper function to handle validation errors from backend
+function handleValidationErrors(error: any) {
+  if (error.response?.status === 422) {
+    const backendErrors = error.response.data.errors || {}
+    const validFields = [
+      'name',
+      'email',
+      'password',
+      'password_confirmation',
+      'profile_photo',
+      'role',
+    ] as const
+
+    Object.keys(backendErrors).forEach((field) => {
+      const fieldErrors = backendErrors[field]
+      if (
+        Array.isArray(fieldErrors) &&
+        fieldErrors.length > 0 &&
+        validFields.includes(field as (typeof validFields)[number])
+      ) {
+        setFieldError(field as (typeof validFields)[number], fieldErrors[0])
+      }
+    })
+  }
+}
+
+// Helper function to show error toast
+function showErrorToast(error: any) {
+  const message = errorStore.getErrorMessage(error)
+  const validationErrors = errorStore.getValidationErrors(error)
+
+  if (Object.keys(validationErrors).length > 0) {
+    const firstError = Object.values(validationErrors)[0]?.[0]
+    toast.showError(firstError || message)
+  } else {
+    toast.showError(message)
+  }
+}
+
 const onSubmit = handleSubmit(async (values) => {
   try {
     if (isEditMode.value && props.user) {
-      // Update existing user
+      // Update existing user - only include fields that have values
       const updateData: Partial<IUpdateUserRequest> = {
         id: props.user.id,
       }
 
-      if (values.name) {
+      // Only include fields that are provided and different from current values
+      if (values.name && values.name !== props.user.name) {
         updateData.name = values.name
       }
-      if (values.email) {
+      if (values.email && values.email !== props.user.email) {
         updateData.email = values.email
       }
+      // Password fields - only include if provided
       if (values.password) {
         updateData.password = values.password
-      }
-      if (values.password_confirmation) {
         updateData.password_confirmation = values.password_confirmation
       }
+      // Profile photo - include if a new file was selected
       if (values.profile_photo) {
         updateData.profile_photo = values.profile_photo
       }
+      // Role - convert and include if provided and different
       if (values.role) {
-        const roleEnum = Object.values(EUserRole).find((r) => r === values.role)
-        updateData.role = roleEnum
+        const roleEnum = convertRoleToEnum(values.role)
+        const currentRoleName = props.user.roles?.[0]?.name
+        // Only update if the role name has changed
+        if (values.role !== currentRoleName) {
+          updateData.role = roleEnum
+        }
       }
 
       await updateUser(props.user.id, updateData as IUpdateUserRequest)
     } else {
-      let roleValue: EUserRole = EUserRole.USER
-      if (values.role) {
-        const roleEnum = Object.values(EUserRole).find((r) => r === values.role)
-        roleValue = roleEnum
-      }
-
+      // Create new user
       const createData: ICreateUserRequest = {
         name: values.name,
         email: values.email,
         password: values.password!,
         password_confirmation: values.password_confirmation!,
         profile_photo: values.profile_photo || null,
-        role: roleValue,
+        role: convertRoleToEnum(values.role),
         status: EUserStatus.REGISTERED,
       }
 
@@ -186,42 +235,11 @@ const onSubmit = handleSubmit(async (values) => {
     resetForm()
     emits('close')
   } catch (error: any) {
-    // Store error with context
     const context = isEditMode.value ? 'updateUser' : 'createUser'
     errorStore.setError(error, { context })
 
-    // Handle backend validation errors (422)
-    if (error.response?.status === 422) {
-      const backendErrors = error.response.data.errors || {}
-      // Set field errors from backend response
-      Object.keys(backendErrors).forEach((field) => {
-        const fieldErrors = backendErrors[field]
-        if (Array.isArray(fieldErrors) && fieldErrors.length > 0) {
-          setFieldError(
-            field as
-              | 'name'
-              | 'email'
-              | 'password'
-              | 'password_confirmation'
-              | 'profile_photo'
-              | 'role',
-            fieldErrors[0],
-          )
-        }
-      })
-    }
-
-    // Use error store utilities for messages
-    const message = errorStore.getErrorMessage(error)
-    const validationErrors = errorStore.getValidationErrors(error)
-
-    // Show toast with appropriate message
-    if (Object.keys(validationErrors).length > 0) {
-      const firstError = Object.values(validationErrors)[0]?.[0]
-      toast.showError(firstError || message)
-    } else {
-      toast.showError(message)
-    }
+    handleValidationErrors(error)
+    showErrorToast(error)
   }
 })
 </script>
