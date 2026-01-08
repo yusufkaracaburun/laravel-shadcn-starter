@@ -12,6 +12,7 @@ export default {
       'before',
       {
         overrides: {
+          '=': 'after',
           '?': 'before',
           ':': 'before',
           '&&': 'before',
@@ -25,6 +26,7 @@ export default {
       'before',
       {
         overrides: {
+          '=': 'after',
           '?': 'before',
           ':': 'before',
           '&&': 'before',
