@@ -10,6 +10,15 @@ import InvoicesFilter from '@/pages/invoices/components/invoices-filter.vue'
 
 const props = defineProps<IDataTableToolbarProps<IInvoice, IInvoiceFilters>>()
 
+const invoiceNumberColumn = computed(() =>
+  props.table.getColumn('invoice_number'),
+)
+
+const searchValue = computed({
+  get: () => (invoiceNumberColumn.value?.getFilterValue() as string) ?? '',
+  set: (value: string) => invoiceNumberColumn.value?.setFilterValue(value),
+})
+
 const isFiltered = computed(() => {
   return (
     props.table.getState().columnFilters.length > 0 ||
@@ -29,20 +38,15 @@ const isFiltered = computed(() => {
         :on-clear="onClearFilters"
       />
       <Input
+        v-model="searchValue"
         :placeholder="$t('invoices.search')"
-        :model-value="
-          (table.getColumn('invoice_number')?.getFilterValue() as string) ?? ''
-        "
         class="h-8 w-[150px] lg:w-[250px]"
-        @input="
-          table.getColumn('invoice_number')?.setFilterValue($event.target.value)
-        "
       />
 
       <Button
         v-if="isFiltered"
-        variant="ghost"
         class="h-8 px-2 lg:px-3"
+        size="sm"
         @click="
           () => {
             table.resetColumnFilters()
