@@ -2,7 +2,6 @@ import type { ColumnDef } from '@tanstack/vue-table'
 import type { Router } from 'vue-router'
 
 import { h } from 'vue'
-import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 
 import type { Customer } from '@/services/customers.service'
@@ -156,16 +155,17 @@ function createMoneyCell(value: unknown) {
 }
 
 /**
- * Creates invoice table columns with router instance
- * This factory function pattern ensures router is properly injected
- * and avoids calling composables inside render functions
+ * Creates the column definitions array
+ * This is the single source of truth for invoice columns (DRY principle)
  *
- * @param router - Vue Router instance for navigation
+ * @param t - Translation function from i18n
+ * @param getRouter - Function that returns Router instance (allows lazy evaluation)
  * @returns Array of column definitions
  */
-export function createInvoiceColumns(router: Router): ColumnDef<IInvoice>[] {
-  const { t } = useI18n()
-
+function createColumns(
+  t: (key: string) => string,
+  getRouter: () => Router,
+): ColumnDef<IInvoice>[] {
   return [
     SelectColumn as ColumnDef<IInvoice>,
     {
@@ -175,7 +175,7 @@ export function createInvoiceColumns(router: Router): ColumnDef<IInvoice>[] {
           column,
           title: t('invoices.columns.invoiceNumber'),
         }),
-      cell: ({ row }) => createInvoiceNumberCell(row.original, router),
+      cell: ({ row }) => createInvoiceNumberCell(row.original, getRouter()),
       enableSorting: true,
       enableHiding: false,
     },
@@ -186,7 +186,7 @@ export function createInvoiceColumns(router: Router): ColumnDef<IInvoice>[] {
           column,
           title: t('invoices.columns.customer'),
         }),
-      cell: ({ row }) => createCustomerCell(row.original, router),
+      cell: ({ row }) => createCustomerCell(row.original, getRouter()),
       enableSorting: false,
     },
     {
@@ -265,111 +265,16 @@ export function createInvoiceColumns(router: Router): ColumnDef<IInvoice>[] {
   ]
 }
 
-// Default export for backward compatibility
-// Note: useRouter() is called inside render functions which works in Vue 3
-// but is not ideal. For better practice, use createInvoiceColumns(useRouter()) in components
 const t = getT()
 
-export const columns: ColumnDef<IInvoice>[] = [
-  SelectColumn as ColumnDef<IInvoice>,
-  {
-    accessorKey: 'invoice_number',
-    header: ({ column }) =>
-      h(DataTableColumnHeader<IInvoice>, {
-        column,
-        title: t('invoices.columns.invoiceNumber'),
-      }),
-    cell: ({ row }) => {
-      const router = useRouter()
-      return createInvoiceNumberCell(row.original, router)
-    },
-    enableSorting: true,
-    enableHiding: false,
-  },
-  {
-    accessorKey: 'customer',
-    header: ({ column }) =>
-      h(DataTableColumnHeader<IInvoice>, {
-        column,
-        title: t('invoices.columns.customer'),
-      }),
-    cell: ({ row }) => {
-      const router = useRouter()
-      return createCustomerCell(row.original, router)
-    },
-    enableSorting: false,
-  },
-  {
-    accessorKey: 'date',
-    header: ({ column }) =>
-      h(DataTableColumnHeader<IInvoice>, {
-        column,
-        title: t('invoices.columns.date'),
-      }),
-    cell: ({ row }) => {
-      const dateValue = row.getValue('date')
-      return createDateCell(dateValue)
-    },
-    enableSorting: true,
-  },
-  {
-    accessorKey: 'date_due',
-    header: ({ column }) =>
-      h(DataTableColumnHeader<IInvoice>, {
-        column,
-        title: t('invoices.columns.dueDate'),
-      }),
-    cell: ({ row }) => {
-      const dateValue = row.getValue('date_due')
-      return createDateCell(dateValue)
-    },
-    enableSorting: true,
-  },
-  {
-    accessorKey: 'status',
-    header: ({ column }) =>
-      h(DataTableColumnHeader<IInvoice>, {
-        column,
-        title: t('invoices.columns.status'),
-      }),
-    cell: ({ row }) => {
-      const statusValue = row.getValue('status')
-      return createStatusCell(statusValue)
-    },
-    enableSorting: true,
-  },
-  {
-    accessorKey: 'total',
-    header: ({ column }) =>
-      h(DataTableColumnHeader<IInvoice>, {
-        column,
-        title: t('invoices.columns.total'),
-      }),
-    cell: ({ row }) => {
-      const total = row.getValue('total')
-      return createMoneyCell(total)
-    },
-    enableSorting: true,
-  },
-  {
-    accessorKey: 'created_at',
-    header: ({ column }) =>
-      h(DataTableColumnHeader<IInvoice>, {
-        column,
-        title: t('invoices.columns.createdAt'),
-      }),
-    cell: ({ row }) => {
-      const dateValue = row.getValue('created_at')
-      return h(
-        'div',
-        { class: CELL_CLASSES.CREATED_AT_CELL },
-        formatDate(dateValue),
-      )
-    },
-    enableSorting: true,
-  },
-  {
-    id: 'actions',
-    cell: ({ row }) => h(DataTableRowActions, { row }),
-  },
-]
+/**
+ * Factory function to create invoice table columns with router instance
+ * This pattern ensures router is properly injected and avoids calling
+ * composables inside render functions
+ *
+ * @param router - Vue Router instance for navigation
+ * @returns Array of column definitions
+ */
+export function getInvoiceColumns(): ColumnDef<IInvoice>[] {
+  return createColumns(t, () => useRouter())
+}

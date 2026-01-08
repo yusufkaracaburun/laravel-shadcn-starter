@@ -9,7 +9,7 @@ import {
 import { Grid3x3Icon, ListIcon } from '@/composables/use-icons'
 import { useInvoices } from '@/composables/use-invoices'
 
-import { createInvoiceColumns } from './components/columns'
+import { getInvoiceColumns } from './components/columns'
 import DataTable from './components/data-table.vue'
 import InvoiceCreate from './components/invoice-create.vue'
 import InvoicesCardGrid from './components/invoices-card-grid.vue'
@@ -17,7 +17,7 @@ import InvoicesCardGrid from './components/invoices-card-grid.vue'
 type TViewMode = 'table' | 'card'
 
 const router = useRouter()
-const columns = createInvoiceColumns(router)
+const columns = getInvoiceColumns(router)
 
 const viewMode = ref<TViewMode>('table')
 const {
