@@ -16,7 +16,7 @@ import {
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
-import type { User } from '@/services/users.service'
+import type { IUser } from '@/pages/users/models/users'
 
 import Error from '@/components/custom-error.vue'
 import Page from '@/components/global-layout/basic-page.vue'
@@ -31,7 +31,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { useGetUserQuery } from '@/services/users.service'
+import { useUserService } from '@/services/users.service'
 
 import UserDelete from './components/user-delete.vue'
 import UserResourceDialog from './components/user-resource-dialog.vue'
@@ -39,7 +39,14 @@ import UserResourceDialog from './components/user-resource-dialog.vue'
 const route = useRoute()
 const router = useRouter()
 
-const userId = computed(() => Number(route.params.id))
+const userService = useUserService()
+const userId = computed(() => {
+  const idParam = route.params.id
+  if (!idParam || typeof idParam !== 'string' || Number.isNaN(Number(idParam))) {
+    return undefined
+  }
+  return Number(idParam)
+})
 
 const {
   data: userResponse,
@@ -47,9 +54,9 @@ const {
   isError,
   error,
   refetch,
-} = useGetUserQuery(userId)
+} = userService.getUserByIdQuery(userId)
 
-const user = computed<User | null>(() => userResponse.value?.data ?? null)
+const user = computed<IUser | null>(() => userResponse.value?.data ?? null)
 
 // Get initials from name
 function getInitials(name: string): string {

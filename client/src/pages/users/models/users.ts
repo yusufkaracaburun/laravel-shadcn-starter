@@ -27,6 +27,11 @@ export interface IUserFilters {
   between?: string
 }
 
+export interface IRole {
+  id: number
+  name: string
+}
+
 export interface IUser {
   id: number
   name: string
@@ -53,6 +58,6 @@ export interface IUpdateUserRequest {
 }
 
 export interface IUserPrerequisites {
-  roles: object[]
+  roles: IRole[]
   statuses: object[]
 }

@@ -2,12 +2,12 @@
 import { BadgeCheck } from 'lucide-vue-next'
 import { useRouter } from 'vue-router'
 
-import type { User } from '@/services/users.service'
+import type { IUser } from '@/pages/users/models/users'
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 
 interface Props {
-  user: User
+  user: IUser
   name: string
 }
 

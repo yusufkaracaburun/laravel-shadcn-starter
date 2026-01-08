@@ -1,10 +1,10 @@
 <script lang="ts" setup>
-import type { User } from '@/services/users.service'
+import type { IUser } from '@/pages/users/models/users'
 
 import UserForm from './user-form.vue'
 
 const props = defineProps<{
-  user?: User | null
+  user?: IUser | null
 }>()
 
 defineEmits(['close'])

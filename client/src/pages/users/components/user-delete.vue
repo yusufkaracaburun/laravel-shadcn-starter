@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import type { User } from '@/services/users.service'
+import type { IUser } from '@/pages/users/models/users'
 
 import { useUsers } from '@/composables/use-users'
 
 interface UserDeleteProps {
-  user: User
+  user: IUser
 }
 
 const props = defineProps<UserDeleteProps>()

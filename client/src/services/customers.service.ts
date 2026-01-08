@@ -4,8 +4,9 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query'
 
 import { useAxios } from '@/composables/use-axios'
 
+import type { IUser } from '@/pages/users/models/users'
+
 import type { IResponse } from './types/response.type'
-import type { User } from './users.service'
 
 /**
  * Contact interface matching backend ContactResource exactly
@@ -25,7 +26,7 @@ export interface Contact {
   country: string | null
   created_at: string
   updated_at: string
-  user?: User | null // Always loaded on Contact
+  user?: IUser | null // Always loaded on Contact
   [key: string]: unknown
 }
 

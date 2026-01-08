@@ -1,15 +1,14 @@
 <script setup lang="ts">
 import type { IDataTableProps } from '@/components/data-table/types'
-import type { IUserFilters } from '@/pages/users/models/users'
-import type { User } from '@/services/users.service'
+import type { IUser, IUserFilters } from '@/pages/users/models/users'
 
 import DataTable from '@/components/data-table/data-table.vue'
 import { generateVueTable } from '@/components/data-table/use-generate-vue-table'
 
 import DataTableToolbar from './data-table-toolbar.vue'
 
-const props = defineProps<IDataTableProps<User, IUserFilters>>()
-const { table } = generateVueTable<User, IUserFilters>(props)
+const props = defineProps<IDataTableProps<IUser, IUserFilters>>()
+const { table } = generateVueTable<IUser, IUserFilters>(props)
 </script>
 
 <template>

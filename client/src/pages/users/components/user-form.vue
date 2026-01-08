@@ -3,7 +3,7 @@ import { toTypedSchema } from '@vee-validate/zod'
 import { useForm } from 'vee-validate'
 import { z } from 'zod'
 
-import type { User } from '@/services/users.service'
+import type { IUser } from '@/pages/users/models/users'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -22,15 +22,11 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { useToast } from '@/composables/use-toast'
-import {
-  useCreateUserMutation,
-  useGetRolesQuery,
-  useUpdateUserMutation,
-} from '@/services/users.service'
+import { useUserService } from '@/services/users.service'
 import { useErrorStore } from '@/stores/error.store'
 
 const props = defineProps<{
-  user?: User | null
+  user?: IUser | null
 }>()
 
 const emits = defineEmits<{
@@ -39,12 +35,13 @@ const emits = defineEmits<{
 
 const toast = useToast()
 const errorStore = useErrorStore()
-const createUserMutation = useCreateUserMutation()
-const updateUserMutation = useUpdateUserMutation()
+const userService = useUserService()
+const createUserMutation = userService.createUserMutation()
+const updateUserMutation = userService.updateUserMutation()
 
-// Fetch available roles
-const { data: rolesResponse } = useGetRolesQuery()
-const roles = computed(() => rolesResponse.value?.data ?? [])
+// Fetch available roles from prerequisites
+const { data: prerequisitesResponse } = userService.getUserPrerequisitesQuery()
+const roles = computed(() => prerequisitesResponse.value?.data?.roles ?? [])
 
 const isEditMode = computed(() => !!props.user)
 
@@ -208,7 +205,7 @@ const onSubmit = handleSubmit(async (values) => {
       }
 
       await updateUserMutation.mutateAsync({
-        userId: props.user.id,
+        id: props.user.id,
         data: updateData,
       })
 

@@ -2,10 +2,12 @@
 import Page from '@/components/global-layout/basic-page.vue'
 import { useUsers } from '@/composables/use-users'
 
-import { columns } from './components/columns'
+import { getUserColumns } from './components/columns'
 import DataTable from './components/data-table.vue'
 import UserCreate from './components/user-create.vue'
 import UserInvite from './components/user-invite.vue'
+
+const columns = getUserColumns()
 
 const {
   loading,

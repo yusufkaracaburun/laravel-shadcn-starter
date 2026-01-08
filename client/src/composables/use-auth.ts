@@ -9,7 +9,7 @@ import {
   useLogoutMutation,
   useRegisterMutation,
 } from '@/services/auth.service'
-import { useGetCurrentUserQuery } from '@/services/users.service'
+import { useUserService } from '@/services/users.service'
 import { useAuthStore } from '@/stores/auth.store'
 import { useErrorStore } from '@/stores/error.store'
 
@@ -23,8 +23,9 @@ export function useAuth() {
   const loginMutation = useLoginMutation()
   const logoutMutation = useLogoutMutation()
   const registerMutation = useRegisterMutation()
+  const userService = useUserService()
   const { data: currentUser, refetch: fetchCurrentUser } =
-    useGetCurrentUserQuery()
+    userService.getCurrentUserQuery()
 
   // Watch for current user changes and update store
   watch(

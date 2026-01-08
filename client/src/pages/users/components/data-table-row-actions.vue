@@ -5,13 +5,13 @@ import type { Component } from 'vue'
 import { Ellipsis, Eye, FilePenLine, Trash2 } from 'lucide-vue-next'
 import { useRouter } from 'vue-router'
 
-import type { User } from '@/services/users.service'
+import type { IUser } from '@/pages/users/models/users'
 
 import UserDelete from './user-delete.vue'
 import UserResourceDialog from './user-resource-dialog.vue'
 
 interface DataTableRowActionsProps {
-  row: Row<User>
+  row: Row<IUser>
 }
 const props = defineProps<DataTableRowActionsProps>()
 const user = computed(() => props.row.original)

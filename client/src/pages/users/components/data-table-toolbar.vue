@@ -5,16 +5,16 @@ import { X } from 'lucide-vue-next'
 import { computed } from 'vue'
 
 import type { FacetedFilterOption } from '@/components/data-table/types'
-import type { User } from '@/services/users.service'
+import type { IUser } from '@/pages/users/models/users'
 
 import DataTableFacetedFilter from '@/components/data-table/faceted-filter.vue'
 import DataTableViewOptions from '@/components/data-table/view-options.vue'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { useGetRolesQuery } from '@/services/users.service'
+import { useUserService } from '@/services/users.service'
 
 interface DataTableToolbarProps {
-  table: Table<User>
+  table: Table<IUser>
 }
 
 const props = defineProps<DataTableToolbarProps>()
@@ -23,17 +23,16 @@ const isFiltered = computed(
   () => props.table.getState().columnFilters.length > 0,
 )
 
-// Fetch roles for the filter
-const { data: rolesResponse } = useGetRolesQuery()
+// Fetch roles for the filter from prerequisites
+const userService = useUserService()
+const { data: prerequisitesResponse } = userService.getUserPrerequisitesQuery()
 
 // Convert roles to FacetedFilterOption format
 const roleOptions = computed<FacetedFilterOption[]>(() => {
-  if (!rolesResponse.value?.data) {
-    return []
-  }
-  return rolesResponse.value.data.map(role => ({
-    label: role.name,
-    value: role.name,
+  const roles = prerequisitesResponse.value?.data?.roles ?? []
+  return roles.map((role: any) => ({
+    label: role.name || role,
+    value: role.name || role,
   }))
 })
 </script>
