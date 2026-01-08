@@ -7,11 +7,7 @@ meta:
 import { computed, nextTick, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 
-import {
-  ArrowLeftIcon,
-  SaveIcon,
-  SendIcon,
-} from '@/composables/use-icons'
+import { ArrowLeftIcon, SaveIcon, SendIcon } from '@/composables/use-icons'
 
 import Page from '@/components/global-layout/basic-page.vue'
 import { Button } from '@/components/ui/button'

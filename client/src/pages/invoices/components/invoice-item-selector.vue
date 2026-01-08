@@ -1,12 +1,7 @@
 <script lang="ts" setup>
 import { computed, ref } from 'vue'
 
-import {
-  CheckIcon,
-  PlusIcon,
-  SearchIcon,
-  XIcon,
-} from '@/composables/use-icons'
+import { CheckIcon, PlusIcon, SearchIcon, XIcon } from '@/composables/use-icons'
 
 import type { IInvoiceItem } from '@/pages/invoices/models/invoice'
 

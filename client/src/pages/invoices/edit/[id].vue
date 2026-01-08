@@ -7,11 +7,7 @@ meta:
 import { computed, nextTick, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
-import {
-  ArrowLeftIcon,
-  SaveIcon,
-  SendIcon,
-} from '@/composables/use-icons'
+import { ArrowLeftIcon, SaveIcon, SendIcon } from '@/composables/use-icons'
 
 import type { TInvoiceForm, TInvoiceItem } from '@/pages/invoices/data/schema'
 
