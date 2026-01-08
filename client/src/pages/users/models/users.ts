@@ -69,7 +69,7 @@ export interface ICreateUserRequest {
   password: string
   password_confirmation: string
   profile_photo: File | null
-  role: TUserRole
+  role: string
   status: TUserStatus
 }
 
@@ -80,7 +80,7 @@ export interface IUpdateUserRequest {
   password?: string
   password_confirmation?: string
   profile_photo?: File | null
-  role?: TUserRole
+  role: string
   status?: TUserStatus
 }
 

@@ -20,7 +20,6 @@ import {
 } from '@/components/ui/select'
 import { useToast } from '@/composables/use-toast'
 import { useUsers } from '@/composables/use-users'
-import { useErrorStore } from '@/stores/error.store'
 
 import type {
   ICreateUserRequest,
@@ -40,7 +39,6 @@ const emits = defineEmits<{
 }>()
 
 const toast = useToast()
-const errorStore = useErrorStore()
 const {
   userPrerequisitesResponse,
   createUser,
@@ -133,17 +131,10 @@ function handlePhotoChange(event: Event) {
   }
 }
 
-// Helper function to convert role name to enum value
-function convertRoleToEnum(roleName: string | null | undefined): EUserRole {
-  if (!roleName) {
-    return EUserRole.USER
-  }
-  const roleEnum = Object.values(EUserRole).find((r) => r === roleName)
-  return roleEnum || EUserRole.USER
-}
-
-// Helper function to handle validation errors from backend
-function handleValidationErrors(error: any) {
+// Helper function to set form field errors from backend validation
+// The composable already handles error store and toast, but we need to set
+// field-level errors for form validation UI
+function setFormFieldErrors(error: any) {
   if (error.response?.status === 422) {
     const backendErrors = error.response.data.errors || {}
     const validFields = [
@@ -168,63 +159,24 @@ function handleValidationErrors(error: any) {
   }
 }
 
-// Helper function to show error toast
-function showErrorToast(error: any) {
-  const message = errorStore.getErrorMessage(error)
-  const validationErrors = errorStore.getValidationErrors(error)
-
-  if (Object.keys(validationErrors).length > 0) {
-    const firstError = Object.values(validationErrors)[0]?.[0]
-    toast.showError(firstError || message)
-  } else {
-    toast.showError(message)
-  }
-}
-
 const onSubmit = handleSubmit(async (values) => {
   try {
     if (isEditMode.value && props.user) {
-      // Update existing user - only include fields that have values
-      const updateData: Partial<IUpdateUserRequest> = {
+      const updateData: IUpdateUserRequest = {
         id: props.user.id,
+        ...values,
+        role: values.role || props.user.roles?.[0]?.name || '',
       }
 
-      // Only include fields that are provided and different from current values
-      if (values.name && values.name !== props.user.name) {
-        updateData.name = values.name
-      }
-      if (values.email && values.email !== props.user.email) {
-        updateData.email = values.email
-      }
-      // Password fields - only include if provided
-      if (values.password) {
-        updateData.password = values.password
-        updateData.password_confirmation = values.password_confirmation
-      }
-      // Profile photo - include if a new file was selected
-      if (values.profile_photo) {
-        updateData.profile_photo = values.profile_photo
-      }
-      // Role - convert and include if provided and different
-      if (values.role) {
-        const roleEnum = convertRoleToEnum(values.role)
-        const currentRoleName = props.user.roles?.[0]?.name
-        // Only update if the role name has changed
-        if (values.role !== currentRoleName) {
-          updateData.role = roleEnum
-        }
-      }
-
-      await updateUser(props.user.id, updateData as IUpdateUserRequest)
+      await updateUser(props.user.id, updateData)
     } else {
-      // Create new user
       const createData: ICreateUserRequest = {
         name: values.name,
         email: values.email,
         password: values.password!,
         password_confirmation: values.password_confirmation!,
         profile_photo: values.profile_photo || null,
-        role: convertRoleToEnum(values.role),
+        role: values.role || EUserRole.USER,
         status: EUserStatus.REGISTERED,
       }
 
@@ -235,11 +187,7 @@ const onSubmit = handleSubmit(async (values) => {
     resetForm()
     emits('close')
   } catch (error: any) {
-    const context = isEditMode.value ? 'updateUser' : 'createUser'
-    errorStore.setError(error, { context })
-
-    handleValidationErrors(error)
-    showErrorToast(error)
+    setFormFieldErrors(error)
   }
 })
 </script>
