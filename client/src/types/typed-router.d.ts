@@ -239,13 +239,6 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       | never
     >,
-    '/invoices/[id]/edit': RouteRecordInfo<
-      '/invoices/[id]/edit',
-      '/invoices/:id/edit',
-      { id: ParamValue<true> },
-      { id: ParamValue<false> },
-      | never
-    >,
     '/invoices/create': RouteRecordInfo<
       '/invoices/create',
       '/invoices/create',
@@ -256,13 +249,6 @@ declare module 'vue-router/auto-routes' {
     '/invoices/edit/[id]': RouteRecordInfo<
       '/invoices/edit/[id]',
       '/invoices/edit/:id',
-      { id: ParamValue<true> },
-      { id: ParamValue<false> },
-      | never
-    >,
-    '/invoices/edit-[id]': RouteRecordInfo<
-      '/invoices/edit-[id]',
-      '/invoices/edit-:id',
       { id: ParamValue<true> },
       { id: ParamValue<false> },
       | never
@@ -581,12 +567,6 @@ declare module 'vue-router/auto-routes' {
       views:
         | never
     }
-    'src/pages/invoices/[id]/edit.vue': {
-      routes:
-        | '/invoices/[id]/edit'
-      views:
-        | never
-    }
     'src/pages/invoices/create.vue': {
       routes:
         | '/invoices/create'
@@ -596,12 +576,6 @@ declare module 'vue-router/auto-routes' {
     'src/pages/invoices/edit/[id].vue': {
       routes:
         | '/invoices/edit/[id]'
-      views:
-        | never
-    }
-    'src/pages/invoices/edit-[id].vue': {
-      routes:
-        | '/invoices/edit-[id]'
       views:
         | never
     }
