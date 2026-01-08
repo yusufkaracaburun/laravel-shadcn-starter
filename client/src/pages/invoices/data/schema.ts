@@ -2,10 +2,6 @@ import { z } from 'zod'
 
 import { EInvoiceStatus } from '../models/invoice'
 
-/**
- * Money schema for Money objects (or number for compatibility)
- * Matches Money interface from items.service.ts
- */
 export const moneySchema = z.union([
   z.object({
     amount: z.string(),
@@ -15,9 +11,6 @@ export const moneySchema = z.union([
   z.number(),
 ])
 
-/**
- * Invoice status enum matching backend InvoiceStatus
- */
 export const invoiceStatusSchema = z.enum([
   EInvoiceStatus.DRAFT,
   EInvoiceStatus.SENT,
@@ -33,10 +26,6 @@ export const invoiceStatusSchema = z.enum([
 
 export type TInvoiceStatus = z.infer<typeof invoiceStatusSchema>
 
-/**
- * Invoice item schema matching backend InvoiceItemResource
- * @see api/app/Http/Resources/InvoiceItemResource.php
- */
 export const invoiceItemSchema = z.object({
   id: z.number(),
   invoice_id: z.number(),
@@ -64,21 +53,14 @@ export const invoiceItemSchema = z.object({
 
 export type TInvoiceItem = z.infer<typeof invoiceItemSchema>
 
-/**
- * Invoice schema matching backend InvoiceResource
- * @see api/app/Http/Resources/InvoiceResource.php
- * Backend returns snake_case fields
- * Note: Customer is loaded when include is used
- * Note: Items are loaded when include=items is used
- */
 export const invoiceSchema = z.object({
   id: z.number(),
   customer_id: z.number(),
-  customer: z.any().optional(), // Customer type can be imported if needed
+  customer: z.any().optional(),
   invoice_number: z.string().nullable(),
-  date: z.string(), // Date format from backend
+  date: z.string(),
   due_days: z.number(),
-  date_due: z.string(), // Date format from backend
+  date_due: z.string(),
   status: invoiceStatusSchema,
   subtotal: moneySchema,
   total_vat_0: moneySchema,
@@ -87,8 +69,8 @@ export const invoiceSchema = z.object({
   total: moneySchema,
   notes: z.string().nullable(),
   items: z.array(invoiceItemSchema).optional(),
-  created_at: z.string(), // Format: "d-m-Y H:i:s"
-  updated_at: z.string(), // Format: "d-m-Y H:i:s"
+  created_at: z.string(),
+  updated_at: z.string(),
 })
 export type TInvoice = z.infer<typeof invoiceSchema>
 
