@@ -1,0 +1,76 @@
+/**
+ * Centralized icon exports from lucide-vue-next
+ * All icons are exported with the "Icon" suffix for consistency
+ *
+ * Usage:
+ * import { Trash2Icon, XIcon } from '@/composables/use-icons'
+ */
+
+// Action icons
+export { ArrowDown as ArrowDownIcon } from 'lucide-vue-next'
+export { ArrowLeft as ArrowLeftIcon } from 'lucide-vue-next'
+export { ArrowRight as ArrowRightIcon } from 'lucide-vue-next'
+export { ArrowUp as ArrowUpIcon } from 'lucide-vue-next'
+export { BadgeCheck as BadgeCheckIcon } from 'lucide-vue-next'
+export { Building2 as Building2Icon } from 'lucide-vue-next'
+export { Calendar as CalendarIcon } from 'lucide-vue-next'
+export { CalendarDays as CalendarDaysIcon } from 'lucide-vue-next'
+export { Check as CheckIcon } from 'lucide-vue-next'
+export { ChevronsUpDown as ChevronsUpDownIcon } from 'lucide-vue-next'
+export { CirclePlus as CirclePlusIcon } from 'lucide-vue-next'
+export { Clock as ClockIcon } from 'lucide-vue-next'
+export { CreditCard as CreditCardIcon } from 'lucide-vue-next'
+export { Download as DownloadIcon } from 'lucide-vue-next'
+export { Edit as EditIcon } from 'lucide-vue-next'
+export { Ellipsis as EllipsisIcon } from 'lucide-vue-next'
+export { Eye as EyeIcon } from 'lucide-vue-next'
+export { FileDown as FileDownIcon } from 'lucide-vue-next'
+export { FilePenLine as FilePenLineIcon } from 'lucide-vue-next'
+export { FileText as FileTextIcon } from 'lucide-vue-next'
+export { Filter as FilterIcon } from 'lucide-vue-next'
+export { FolderKanban as FolderKanbanIcon } from 'lucide-vue-next'
+export { Grid3x3 as Grid3x3Icon } from 'lucide-vue-next'
+export { Hash as HashIcon } from 'lucide-vue-next'
+export { LayoutGrid as LayoutGridIcon } from 'lucide-vue-next'
+export { List as ListIcon } from 'lucide-vue-next'
+export { ListTodo as ListTodoIcon } from 'lucide-vue-next'
+export { Mail as MailIcon } from 'lucide-vue-next'
+export { MailPlus as MailPlusIcon } from 'lucide-vue-next'
+export { MoreVertical as MoreVerticalIcon } from 'lucide-vue-next'
+export { Package as PackageIcon } from 'lucide-vue-next'
+export { Pencil as PencilIcon } from 'lucide-vue-next'
+export { Plus as PlusIcon } from 'lucide-vue-next'
+export { Receipt as ReceiptIcon } from 'lucide-vue-next'
+export { Save as SaveIcon } from 'lucide-vue-next'
+export { Search as SearchIcon } from 'lucide-vue-next'
+export { Send as SendIcon } from 'lucide-vue-next'
+export { Trash2 as Trash2Icon } from 'lucide-vue-next'
+export { Upload as UploadIcon } from 'lucide-vue-next'
+export { User as UserIcon } from 'lucide-vue-next'
+export { Users as UsersIcon } from 'lucide-vue-next'
+export { X as XIcon } from 'lucide-vue-next'
+
+// Sidebar icons
+export { AppWindow as AppWindowIcon } from 'lucide-vue-next'
+export { BadgeHelp as BadgeHelpIcon } from 'lucide-vue-next'
+export { BellDot as BellDotIcon } from 'lucide-vue-next'
+export { Bug as BugIcon } from 'lucide-vue-next'
+export { Component as ComponentIcon } from 'lucide-vue-next'
+export { LayoutDashboard as LayoutDashboardIcon } from 'lucide-vue-next'
+export { Megaphone as MegaphoneIcon } from 'lucide-vue-next'
+export { Palette as PaletteIcon } from 'lucide-vue-next'
+export { PictureInPicture2 as PictureInPicture2Icon } from 'lucide-vue-next'
+export { Podcast as PodcastIcon } from 'lucide-vue-next'
+export { Settings as SettingsIcon } from 'lucide-vue-next'
+export { SquareUserRound as SquareUserRoundIcon } from 'lucide-vue-next'
+export { UserCircle as UserCircleIcon } from 'lucide-vue-next'
+export { Wrench as WrenchIcon } from 'lucide-vue-next'
+
+// Task status icons
+export { Circle as CircleIcon } from 'lucide-vue-next'
+export { CircleCheck as CircleCheckIcon } from 'lucide-vue-next'
+export { CircleHelp as CircleHelpIcon } from 'lucide-vue-next'
+export { TimerOff as TimerOffIcon } from 'lucide-vue-next'
+
+// Milestone icon (used in command menu)
+export { Milestone as MilestoneIcon } from 'lucide-vue-next'
