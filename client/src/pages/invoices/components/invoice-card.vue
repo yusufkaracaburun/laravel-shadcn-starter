@@ -2,8 +2,6 @@
 import { FileText, MoreVertical } from 'lucide-vue-next'
 import { useRouter } from 'vue-router'
 
-import type { IInvoice } from '@/services/invoices.service'
-
 import {
   Card,
   CardContent,
@@ -13,7 +11,9 @@ import {
 } from '@/components/ui/card'
 import { StatusBadge } from '@/components/ui/status-badge'
 
-import { statuses } from '../data/data'
+import type { IInvoice } from '../models/invoice'
+
+import { INVOICE_STATUSES } from '../data/data'
 import InvoiceDelete from './invoice-delete.vue'
 
 interface IProps {
@@ -32,13 +32,13 @@ function handleSelect(command: TCommand) {
   switch (command) {
     case 'view':
       router.push({
-        name: '/invoices/[id]',
+        name: '/invoices/view/[id]',
         params: { id: props.invoice.id.toString() },
       })
       break
     case 'edit':
       router.push({
-        name: '/invoices/edit-[id]',
+        name: '/invoices/edit/[id]',
         params: { id: props.invoice.id.toString() },
       })
       break
@@ -87,7 +87,7 @@ function formatDate(dateString: string | null | undefined): string {
     class="hover:shadow-md transition-shadow cursor-pointer"
     @click="
       router.push({
-        name: '/invoices/[id]',
+        name: '/invoices/view/[id]',
         params: { id: invoice.id.toString() },
       })
     "
@@ -127,8 +127,10 @@ function formatDate(dateString: string | null | undefined): string {
         <StatusBadge
           :status="invoice.status"
           type="invoice"
-          :icon="statuses.find((s) => s.value === invoice.status)?.icon"
-          :label="statuses.find((s) => s.value === invoice.status)?.label"
+          :icon="INVOICE_STATUSES.find((s) => s.value === invoice.status)?.icon"
+          :label="
+            INVOICE_STATUSES.find((s) => s.value === invoice.status)?.label
+          "
         />
       </div>
     </CardHeader>

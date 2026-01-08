@@ -22,7 +22,7 @@ export interface IStatusItem {
   getColor: () => string
 }
 
-export const statuses = [
+export const INVOICE_STATUSES = [
   {
     id: 1,
     value: 'pending',

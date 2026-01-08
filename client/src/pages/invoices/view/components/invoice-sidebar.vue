@@ -11,7 +11,7 @@ import type {
 } from '@/pages/invoices/models/invoice'
 
 import { Accordion } from '@/components/ui/accordion'
-import { statuses } from '@/pages/invoices/data/data'
+import { INVOICE_STATUSES } from '@/pages/invoices/data/data'
 import InvoiceActivityTimeline from '@/pages/invoices/view/components/invoice-activity-timeline.vue'
 import InvoiceEmails from '@/pages/invoices/view/components/invoice-emails.vue'
 import InvoicePayments from '@/pages/invoices/view/components/invoice-payments.vue'
@@ -31,11 +31,11 @@ const invoiceEmails = computed(() => props.invoice.emails ?? []) as ComputedRef<
 >
 
 const steps = computed(() => {
-  const currentStatusIndex = statuses.findIndex(
+  const currentStatusIndex = INVOICE_STATUSES.findIndex(
     (s) => s.value === props.invoice.status,
   )
 
-  return statuses.map((status, index) => ({
+  return INVOICE_STATUSES.map((status, index) => ({
     step: status.id,
     title: status.label,
     description: status.description,

@@ -12,7 +12,7 @@ import { formatMoney } from '@/utils/money'
 
 import type { IInvoice } from '../models/invoice'
 
-import { statuses } from '../data/data'
+import { INVOICE_STATUSES } from '../data/data'
 import DataTableRowActions from './data-table-row-actions.vue'
 
 export const columns: ColumnDef<IInvoice>[] = [
@@ -114,7 +114,7 @@ export const columns: ColumnDef<IInvoice>[] = [
       h(DataTableColumnHeader<IInvoice>, { column, title: 'Status' }),
     cell: ({ row }) => {
       const statusValue = row.getValue('status') as string
-      const status = statuses.find((s) => s.value === statusValue)
+      const status = INVOICE_STATUSES.find((s) => s.value === statusValue)
       if (!status) return null
       return h(StatusBadge, {
         status: status.value,
