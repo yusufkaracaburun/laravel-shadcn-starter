@@ -3,11 +3,10 @@ import type { Table } from '@tanstack/vue-table'
 
 import type { IInvoice, IInvoiceFilters } from '@/pages/invoices/models/invoice'
 
-import { XIcon } from '@/composables/use-icons'
-
 import DataTableViewOptions from '@/components/data-table/view-options.vue'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { XIcon } from '@/composables/use-icons'
 import InvoicesFilter from '@/pages/invoices/components/invoices-filter.vue'
 
 interface IDataTableToolbarProps {

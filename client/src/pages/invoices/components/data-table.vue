@@ -6,8 +6,9 @@ import BulkActions from '@/components/data-table/bulk-actions.vue'
 import DataTable from '@/components/data-table/data-table.vue'
 import { generateVueTable } from '@/components/data-table/use-generate-vue-table'
 import { Trash2Icon } from '@/composables/use-icons'
-import DataTableToolbar from '@/pages/invoices/components/data-table-toolbar.vue'
-import InvoiceDeleteBatch from '@/pages/invoices/components/invoice-delete-batch.vue'
+
+import DataTableToolbar from './data-table-toolbar.vue'
+import InvoiceDeleteBatch from './invoice-delete-batch.vue'
 
 const props = defineProps<IDataTableProps<IInvoice, IInvoiceFilters>>()
 const { table } = generateVueTable<IInvoice, IInvoiceFilters>(props)
