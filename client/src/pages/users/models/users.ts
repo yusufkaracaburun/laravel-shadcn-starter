@@ -66,6 +66,9 @@ export interface IUser {
 export interface ICreateUserRequest {
   name: string
   email: string
+  password: string
+  password_confirmation: string
+  profile_photo: File | null
   role: TUserRole
   status: TUserStatus
 }
@@ -74,6 +77,9 @@ export interface IUpdateUserRequest {
   id: number
   name?: string
   email?: string
+  password?: string
+  password_confirmation?: string
+  profile_photo?: File | null
   role?: TUserRole
   status?: TUserStatus
 }

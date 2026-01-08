@@ -22,7 +22,11 @@ import { useToast } from '@/composables/use-toast'
 import { useUsers } from '@/composables/use-users'
 import { useErrorStore } from '@/stores/error.store'
 
-import type { IUpdateUserRequest, IUser } from '../models/users'
+import type {
+  ICreateUserRequest,
+  IUpdateUserRequest,
+  IUser,
+} from '../models/users'
 
 import { createUserFormSchema, editUserFormSchema } from '../data/schema'
 import { EUserRole, EUserStatus } from '../models/users'
@@ -76,12 +80,10 @@ const existingProfilePhotoUrl = computed(
   () => props.user?.profile_photo_url || null,
 )
 
-// Watch for user changes to update form values and preview
 watch(
   () => props.user,
   (user) => {
     if (user) {
-      // Use resetForm with values to update all fields at once
       resetForm({
         values: {
           name: user.name || '',
@@ -109,21 +111,17 @@ function handlePhotoChange(event: Event) {
   const target = event.target as HTMLInputElement
   const file = target.files?.[0]
   if (file) {
-    // Validate file type
     if (!file.type.startsWith('image/')) {
       toast.showError('Please select an image file.')
       target.value = ''
       return
     }
-    // Validate file size (2MB max)
     if (file.size > 2 * 1024 * 1024) {
       toast.showError('Image size must be less than 2MB.')
       target.value = ''
       return
     }
-    // Set the file value in the form using setFieldValue
     form.setFieldValue('profile_photo', file)
-    // Create preview
     const reader = new FileReader()
     reader.onload = (e) => {
       profilePhotoPreview.value = e.target?.result as string
@@ -139,39 +137,49 @@ const onSubmit = handleSubmit(async (values) => {
   try {
     if (isEditMode.value && props.user) {
       // Update existing user
-      const updateData: Record<string, any> = {
-        name: values.name || '',
-        email: values.email || '',
+      const updateData: Partial<IUpdateUserRequest> = {
+        id: props.user.id,
       }
 
-      // Only include password if provided
+      if (values.name) {
+        updateData.name = values.name
+      }
+      if (values.email) {
+        updateData.email = values.email
+      }
       if (values.password) {
         updateData.password = values.password
+      }
+      if (values.password_confirmation) {
         updateData.password_confirmation = values.password_confirmation
       }
-
-      // Only include profile_photo if a new file was selected
       if (values.profile_photo) {
         updateData.profile_photo = values.profile_photo
       }
-
-      // Include role if provided (can be empty string to clear role)
-      if (values.role !== null && values.role !== undefined) {
-        updateData.role = values.role || null
+      if (values.role) {
+        const roleEnum = Object.values(EUserRole).find((r) => r === values.role)
+        updateData.role = roleEnum
       }
 
-      await updateUser(props.user.id, updateData as any)
+      await updateUser(props.user.id, updateData as IUpdateUserRequest)
     } else {
-      // Create new user
-      await createUser({
-        name: values.name || '',
-        email: values.email || '',
-        password: values.password || '',
-        password_confirmation: values.password_confirmation || '',
+      let roleValue: EUserRole = EUserRole.USER
+      if (values.role) {
+        const roleEnum = Object.values(EUserRole).find((r) => r === values.role)
+        roleValue = roleEnum
+      }
+
+      const createData: ICreateUserRequest = {
+        name: values.name,
+        email: values.email,
+        password: values.password!,
+        password_confirmation: values.password_confirmation!,
         profile_photo: values.profile_photo || null,
-        role: (values.role as any) || EUserRole.USER,
+        role: roleValue,
         status: EUserStatus.REGISTERED,
-      } as any)
+      }
+
+      await createUser(createData)
     }
 
     profilePhotoPreview.value = null
