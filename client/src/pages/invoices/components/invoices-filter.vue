@@ -55,7 +55,7 @@ watch(
 function updateFilter(key: keyof IInvoiceFilters, value: any) {
   localFilters.value = {
     ...localFilters.value,
-    [key]: value || undefined,
+    [key]: value,
   }
   props.onFiltersChange(localFilters.value)
 }
@@ -66,15 +66,15 @@ function clearFilters() {
 }
 
 function handleStatusChange(value: string) {
-  updateFilter('status', value === 'all' ? undefined : value)
+  updateFilter('status', value === 'all' ? null : value)
 }
 
 function handleCustomerChange(value: string) {
-  updateFilter('customer_id', value === 'all' ? undefined : Number(value))
+  updateFilter('customer_id', value === 'all' ? null : Number(value))
 }
 
 function handleInputChange(key: keyof IInvoiceFilters, value: string) {
-  updateFilter(key, value || undefined)
+  updateFilter(key, value)
 }
 
 const selectedStatus = computed(() => localFilters.value.status || 'all')
