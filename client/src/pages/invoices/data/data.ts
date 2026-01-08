@@ -8,7 +8,6 @@ import {
   SendIcon,
   XCircleIcon,
 } from '@/composables/use-icons'
-
 import {
   getInvoiceStatusColor,
   getPaymentStatusColor,

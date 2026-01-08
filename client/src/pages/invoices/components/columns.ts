@@ -13,6 +13,7 @@ import { FileTextIcon } from '@/composables/use-icons'
 import { formatDate } from '@/utils/date'
 import { formatMoney } from '@/utils/money'
 
+import type { IStatusItem } from '../data/data'
 import type { IInvoice } from '../models/invoice'
 
 import { INVOICE_STATUSES } from '../data/data'
@@ -126,17 +127,22 @@ function createDateCell(dateValue: unknown) {
 /**
  * Helper function to create status cell
  */
-function createStatusCell(statusValue: string) {
-  const status = INVOICE_STATUSES.find((s) => s.value === statusValue)
+function createStatusCell(statusValue: unknown) {
+  const status = INVOICE_STATUSES.find(
+    (s: IStatusItem) => s.value === statusValue,
+  )
   if (!status) {
     return null
   }
 
   return h(StatusBadge, {
+    id: status.id,
     status: status.value,
-    type: 'invoice',
-    icon: status.icon,
     label: status.label,
+    description: status.description,
+    icon: status.icon,
+    type: 'invoice',
+    color: status.getColor(),
   })
 }
 
@@ -188,7 +194,7 @@ export function createInvoiceColumns(router: Router): ColumnDef<IInvoice>[] {
       header: ({ column }) =>
         h(DataTableColumnHeader<IInvoice>, { column, title: 'Due Date' }),
       cell: ({ row }) => {
-        const dateValue = row.getValue('date_due') as string | null | undefined
+        const dateValue = row.getValue('date_due')
         return createDateCell(dateValue)
       },
       enableSorting: true,
@@ -198,7 +204,7 @@ export function createInvoiceColumns(router: Router): ColumnDef<IInvoice>[] {
       header: ({ column }) =>
         h(DataTableColumnHeader<IInvoice>, { column, title: 'Status' }),
       cell: ({ row }) => {
-        const statusValue = row.getValue('status') as string
+        const statusValue = row.getValue('status')
         return createStatusCell(statusValue)
       },
       enableSorting: true,
@@ -218,10 +224,7 @@ export function createInvoiceColumns(router: Router): ColumnDef<IInvoice>[] {
       header: ({ column }) =>
         h(DataTableColumnHeader<IInvoice>, { column, title: 'Created At' }),
       cell: ({ row }) => {
-        const dateValue = row.getValue('created_at') as
-          | string
-          | null
-          | undefined
+        const dateValue = row.getValue('created_at')
         return h(
           'div',
           { class: CELL_CLASSES.CREATED_AT_CELL },
@@ -268,7 +271,7 @@ export const columns: ColumnDef<IInvoice>[] = [
     header: ({ column }) =>
       h(DataTableColumnHeader<IInvoice>, { column, title: 'Date' }),
     cell: ({ row }) => {
-      const dateValue = row.getValue('date') as string | null | undefined
+      const dateValue = row.getValue('date')
       return createDateCell(dateValue)
     },
     enableSorting: true,
@@ -278,7 +281,7 @@ export const columns: ColumnDef<IInvoice>[] = [
     header: ({ column }) =>
       h(DataTableColumnHeader<IInvoice>, { column, title: 'Due Date' }),
     cell: ({ row }) => {
-      const dateValue = row.getValue('date_due') as string | null | undefined
+      const dateValue = row.getValue('date_due')
       return createDateCell(dateValue)
     },
     enableSorting: true,
@@ -288,7 +291,7 @@ export const columns: ColumnDef<IInvoice>[] = [
     header: ({ column }) =>
       h(DataTableColumnHeader<IInvoice>, { column, title: 'Status' }),
     cell: ({ row }) => {
-      const statusValue = row.getValue('status') as string
+      const statusValue = row.getValue('status')
       return createStatusCell(statusValue)
     },
     enableSorting: true,
@@ -308,7 +311,7 @@ export const columns: ColumnDef<IInvoice>[] = [
     header: ({ column }) =>
       h(DataTableColumnHeader<IInvoice>, { column, title: 'Created At' }),
     cell: ({ row }) => {
-      const dateValue = row.getValue('created_at') as string | null | undefined
+      const dateValue = row.getValue('created_at')
       return h(
         'div',
         { class: CELL_CLASSES.CREATED_AT_CELL },
