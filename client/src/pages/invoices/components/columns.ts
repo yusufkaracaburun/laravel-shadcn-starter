@@ -162,10 +162,10 @@ function createMoneyCell(value: unknown) {
  * @param getRouter - Function that returns Router instance (allows lazy evaluation)
  * @returns Array of column definitions
  */
-function createColumns(
-  t: (key: string) => string,
-  getRouter: () => Router,
-): ColumnDef<IInvoice>[] {
+function createColumns(): ColumnDef<IInvoice>[] {
+  const t = getT()
+  const getRouter = () => useRouter()
+
   return [
     SelectColumn as ColumnDef<IInvoice>,
     {
@@ -265,8 +265,6 @@ function createColumns(
   ]
 }
 
-const t = getT()
-
 /**
  * Factory function to create invoice table columns with router instance
  * This pattern ensures router is properly injected and avoids calling
@@ -276,5 +274,5 @@ const t = getT()
  * @returns Array of column definitions
  */
 export function getInvoiceColumns(): ColumnDef<IInvoice>[] {
-  return createColumns(t, () => useRouter())
+  return createColumns()
 }
