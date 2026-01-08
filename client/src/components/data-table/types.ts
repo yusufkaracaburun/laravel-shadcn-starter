@@ -27,7 +27,7 @@ export interface IDataTableProps<T, F> {
   serverPagination: IServerPagination
   sorting: ISorting
   onSortingChange: (sorting: ISorting) => void
-  filter: F
+  filters: F
   onFiltersChange: (filter: F) => void
   onClearFilters: () => void
 }

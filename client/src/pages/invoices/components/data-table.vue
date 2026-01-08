@@ -51,7 +51,7 @@ const invoiceDeleteBatchOpen = ref(false)
     <template #toolbar>
       <DataTableToolbar
         :table="table"
-        :filters="filter"
+        :filters="filters"
         :on-filters-change="onFiltersChange"
         :on-clear-filters="onClearFilters"
         class="w-full overflow-x-auto"
