@@ -3,8 +3,12 @@ import { h } from 'vue'
 import {
   CircleCheckIcon,
   CircleDotIcon,
+  CircleIcon,
+  ClockIcon,
+  CreditCardIcon,
   FileCheckIcon,
   FileXIcon,
+  ReceiptIcon,
   SendIcon,
   XCircleIcon,
 } from '@/composables/use-icons'
@@ -13,28 +17,20 @@ import {
   getPaymentStatusColor,
 } from '@/utils/status-colors'
 
+import type { TInvoiceStatus } from '../models/invoice'
+
 export interface IStatusItem {
   id: number
-  value: string
+  value: TInvoiceStatus
   label: string
   description: string
   icon: any
   getColor: () => string
 }
 
-export const INVOICE_STATUSES = [
+export const INVOICE_STATUSES: IStatusItem[] = [
   {
     id: 1,
-    value: 'pending',
-    label: 'Pending',
-    description: 'The invoice is pending payment',
-    icon: h(CircleDotIcon),
-    getColor() {
-      return getInvoiceStatusColor(this.value)
-    },
-  },
-  {
-    id: 2,
     value: 'draft',
     label: 'Draft',
     description: 'The invoice is a draft',
@@ -44,7 +40,7 @@ export const INVOICE_STATUSES = [
     },
   },
   {
-    id: 3,
+    id: 2,
     value: 'sent',
     label: 'Sent',
     description: 'The invoice has been sent to the customer',
@@ -54,7 +50,37 @@ export const INVOICE_STATUSES = [
     },
   },
   {
+    id: 3,
+    value: 'paid',
+    label: 'Paid',
+    description: 'The invoice has been paid',
+    icon: h(FileCheckIcon),
+    getColor() {
+      return getInvoiceStatusColor(this.value)
+    },
+  },
+  {
     id: 4,
+    value: 'unpaid',
+    label: 'Unpaid',
+    description: 'The invoice has not been paid',
+    icon: h(CircleIcon),
+    getColor() {
+      return getInvoiceStatusColor(this.value)
+    },
+  },
+  {
+    id: 5,
+    value: 'partial_paid',
+    label: 'Partial Paid',
+    description: 'The invoice has been partially paid',
+    icon: h(CreditCardIcon),
+    getColor() {
+      return getInvoiceStatusColor(this.value)
+    },
+  },
+  {
+    id: 6,
     value: 'overdue',
     label: 'Overdue',
     description: 'The invoice is overdue',
@@ -64,7 +90,17 @@ export const INVOICE_STATUSES = [
     },
   },
   {
-    id: 5,
+    id: 7,
+    value: 'reminder',
+    label: 'Reminder',
+    description: 'A reminder has been sent for this invoice',
+    icon: h(ClockIcon),
+    getColor() {
+      return getInvoiceStatusColor(this.value)
+    },
+  },
+  {
+    id: 8,
     value: 'cancelled',
     label: 'Cancelled',
     description: 'The invoice has been cancelled',
@@ -74,16 +110,26 @@ export const INVOICE_STATUSES = [
     },
   },
   {
-    id: 6,
-    value: 'paid',
-    label: 'Paid',
-    description: 'The invoice has been paid',
-    icon: h(FileCheckIcon),
+    id: 9,
+    value: 'refunded',
+    label: 'Refunded',
+    description: 'The invoice has been refunded',
+    icon: h(CircleCheckIcon),
     getColor() {
       return getInvoiceStatusColor(this.value)
     },
   },
-] as IStatusItem[]
+  {
+    id: 10,
+    value: 'credited',
+    label: 'Credited',
+    description: 'The invoice has been credited',
+    icon: h(ReceiptIcon),
+    getColor() {
+      return getInvoiceStatusColor(this.value)
+    },
+  },
+]
 
 export const paymentStatuses = [
   {

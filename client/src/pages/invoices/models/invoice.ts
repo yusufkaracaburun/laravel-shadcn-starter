@@ -4,7 +4,17 @@ import type { Item, Money } from '@/services/items.service'
 /**
  * Invoice status enum matching backend InvoiceStatus
  */
-export type TInvoiceStatus = 'draft' | 'sent' | 'paid' | 'overdue' | 'cancelled'
+export type TInvoiceStatus =
+  | 'draft'
+  | 'sent'
+  | 'paid'
+  | 'unpaid'
+  | 'cancelled'
+  | 'refunded'
+  | 'overdue'
+  | 'reminder'
+  | 'credited'
+  | 'partial_paid'
 
 /**
  * Payment status enum matching backend PaymentStatus

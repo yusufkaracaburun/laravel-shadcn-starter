@@ -29,7 +29,9 @@ const props = defineProps<IDataTableFilterProps<IInvoiceFilters>>()
 const { data: customersResponse } = useGetCustomersQuery(1, 100, [], {}, [])
 const customers = computed(() => {
   const response = customersResponse.value?.data
-  if (!response) return []
+  if (!response) {
+    return []
+  }
   if (Array.isArray(response)) {
     return response.flatMap((r) =>
       r && typeof r === 'object' && 'data' in r ? r.data : [],
@@ -63,24 +65,12 @@ function clearFilters() {
   props.onClearFilters()
 }
 
-function handleStatusChange(value: any) {
-  const statusValue =
-    value === null || value === undefined ? null : String(value)
-  updateFilter(
-    'status',
-    statusValue === 'all' || statusValue === null ? undefined : statusValue,
-  )
+function handleStatusChange(value: string) {
+  updateFilter('status', value === 'all' ? undefined : value)
 }
 
-function handleCustomerChange(value: any) {
-  const customerValue =
-    value === null || value === undefined ? null : String(value)
-  updateFilter(
-    'customer_id',
-    customerValue === 'all' || customerValue === null
-      ? undefined
-      : Number(customerValue),
-  )
+function handleCustomerChange(value: string) {
+  updateFilter('customer_id', value === 'all' ? undefined : Number(value))
 }
 
 function handleInputChange(key: keyof IInvoiceFilters, value: string) {
@@ -127,7 +117,7 @@ const activeFilterCount = computed(
           <Select
             id="status-filter"
             :model-value="selectedStatus"
-            @update:model-value="handleStatusChange"
+            @update:model-value="(value) => handleStatusChange(String(value))"
           >
             <SelectTrigger>
               <SelectValue :placeholder="$t('invoices.filters.allStatuses')" />
@@ -155,7 +145,7 @@ const activeFilterCount = computed(
           <Select
             id="customer-filter"
             :model-value="selectedCustomer"
-            @update:model-value="handleCustomerChange"
+            @update:model-value="(value) => handleCustomerChange(String(value))"
           >
             <SelectTrigger>
               <SelectValue :placeholder="$t('invoices.filters.allCustomers')" />
