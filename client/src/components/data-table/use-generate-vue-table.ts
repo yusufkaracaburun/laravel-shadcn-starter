@@ -19,7 +19,7 @@ import type { ISorting } from '@/services/query-utils'
 
 import { valueUpdater } from '@/lib/utils'
 
-export function generateVueTable<T>(props: IDataTableProps<T>) {
+export function generateVueTable<T, F>(props: IDataTableProps<T, F>) {
   // Use external sorting state if provided, otherwise create internal one
   const internalSorting = ref<ISorting>({ id: 'created_at', desc: true })
   const sorting = props.sorting ?? internalSorting.value

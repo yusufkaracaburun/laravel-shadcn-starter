@@ -1,7 +1,5 @@
 <script setup lang="ts">
-import type { ColumnDef } from '@tanstack/vue-table'
-
-import type { IServerPagination } from '@/components/data-table/types'
+import type { IDataTableProps } from '@/components/data-table/types'
 import type { IInvoice, IInvoiceFilters } from '@/pages/invoices/models/invoice'
 
 import BulkActions from '@/components/data-table/bulk-actions.vue'
@@ -11,18 +9,8 @@ import { Trash2Icon } from '@/composables/use-icons'
 import DataTableToolbar from '@/pages/invoices/components/data-table-toolbar.vue'
 import InvoiceDeleteBatch from '@/pages/invoices/components/invoice-delete-batch.vue'
 
-interface IExtendedDataTableProps {
-  loading?: boolean
-  columns: ColumnDef<IInvoice, any>[]
-  data: IInvoice[]
-  serverPagination?: IServerPagination
-  filter?: IInvoiceFilters
-  onFiltersChange?: (filters: IInvoiceFilters) => void
-  onClearFilters?: () => void
-}
-
-const props = defineProps<IExtendedDataTableProps>()
-const { table } = generateVueTable<IInvoice>(props)
+const props = defineProps<IDataTableProps<IInvoice, IInvoiceFilters>>()
+const { table } = generateVueTable<IInvoice, IInvoiceFilters>(props)
 
 const invoiceDeleteBatchOpen = ref(false)
 </script>

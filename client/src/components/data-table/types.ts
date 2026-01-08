@@ -1,4 +1,7 @@
-import type { ColumnDef, SortingState } from '@tanstack/vue-table'
+import type { ColumnDef } from '@tanstack/vue-table'
+
+import type { ISorting } from '@/services/query-utils'
+import { IInvoiceFilters } from '@/pages/invoices/models/invoice'
 
 export const DEFAULT_PAGE = 1
 export const DEFAULT_PAGE_SIZE: TPageSize = 10
@@ -18,11 +21,14 @@ export interface IServerPagination {
   onPageSizeChange: (pageSize: TPageSize) => void
 }
 
-export interface IDataTableProps<T> {
-  loading?: boolean
-  columns: ColumnDef<T, any>[]
+export interface IDataTableProps<T, F> {
+  loading: boolean
+  columns: ColumnDef<T>[]
   data: T[]
-  serverPagination?: IServerPagination
-  sorting?: SortingState
-  onSortingChange?: (sorting: SortingState) => void
+  serverPagination: IServerPagination
+  sorting: ISorting
+  onSortingChange: (sorting: ISorting) => void
+  filter: F
+  onFiltersChange: (filter: F) => void
+  onClearFilters: () => void
 }
