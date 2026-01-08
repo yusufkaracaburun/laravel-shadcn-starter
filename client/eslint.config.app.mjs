@@ -7,8 +7,33 @@ export default {
   // App-specific file patterns
   files: ['src/**/*.{ts,tsx,vue}', '*.config.{ts,mjs}', 'vite.config.ts'],
   rules: {
-    // Disable operator-linebreak rules - Prettier handles formatting
-    '@stylistic/operator-linebreak': 'off',
-    'vue/operator-linebreak': 'off',
+    '@stylistic/operator-linebreak': [
+      'warn',
+      'before',
+      {
+        overrides: {
+          '=': 'after',
+          '?': 'before',
+          ':': 'before',
+          '&&': 'before',
+          '||': 'before',
+          '??': 'before',
+        },
+      },
+    ],
+    'vue/operator-linebreak': [
+      'warn',
+      'before',
+      {
+        overrides: {
+          '=': 'after',
+          '?': 'before',
+          ':': 'before',
+          '&&': 'before',
+          '||': 'before',
+          '??': 'before',
+        },
+      },
+    ],
   },
 }

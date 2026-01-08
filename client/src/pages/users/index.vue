@@ -7,12 +7,25 @@ import DataTable from './components/data-table.vue'
 import UserCreate from './components/user-create.vue'
 import UserInvite from './components/user-invite.vue'
 
-const { loading, users, serverPagination, sorting, onSortingChange } =
-  useUsers()
+const {
+  loading,
+  users,
+  serverPagination,
+  sorting,
+  onSortingChange,
+  filter,
+  onFiltersChange,
+  clearFilters,
+} = useUsers()
 </script>
 
 <template>
-  <Page title="Users" description="Users description" sticky>
+  <Page
+    title="Users"
+    description="Users description"
+    sticky
+    data-testid="users_page"
+  >
     <template #actions>
       <UserInvite />
       <UserCreate />
