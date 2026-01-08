@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import type { Table } from '@tanstack/vue-table'
-
+import type { IDataTableToolbarProps } from '@/components/data-table/types'
 import type { IInvoice, IInvoiceFilters } from '@/pages/invoices/models/invoice'
 
 import DataTableViewOptions from '@/components/data-table/view-options.vue'
@@ -9,14 +8,7 @@ import { Input } from '@/components/ui/input'
 import { XIcon } from '@/composables/use-icons'
 import InvoicesFilter from '@/pages/invoices/components/invoices-filter.vue'
 
-interface IDataTableToolbarProps {
-  table: Table<IInvoice>
-  filters: IInvoiceFilters
-  onFiltersChange: (filters: IInvoiceFilters) => void
-  onClearFilters: () => void
-}
-
-const props = defineProps<IDataTableToolbarProps>()
+const props = defineProps<IDataTableToolbarProps<IInvoice, IInvoiceFilters>>()
 
 const isFiltered = computed(() => {
   return (
@@ -31,8 +23,13 @@ const isFiltered = computed(() => {
     <div
       class="flex flex-col items-start flex-1 space-y-2 md:items-center md:space-x-2 md:space-y-0 md:flex-row"
     >
+      <InvoicesFilter
+        :filters="filters"
+        :on-filters-change="onFiltersChange"
+        :on-clear="onClearFilters"
+      />
       <Input
-        placeholder="Search invoices..."
+        :placeholder="$t('invoices.search')"
         :model-value="
           (table.getColumn('invoice_number')?.getFilterValue() as string) ?? ''
         "
@@ -40,12 +37,6 @@ const isFiltered = computed(() => {
         @input="
           table.getColumn('invoice_number')?.setFilterValue($event.target.value)
         "
-      />
-
-      <InvoicesFilter
-        :filters="filters"
-        :on-filters-change="onFiltersChange"
-        :on-clear="onClearFilters"
       />
 
       <Button
@@ -59,7 +50,7 @@ const isFiltered = computed(() => {
           }
         "
       >
-        Reset
+        {{ $t('invoices.actions.reset') }}
         <XIcon class="size-4" />
       </Button>
     </div>

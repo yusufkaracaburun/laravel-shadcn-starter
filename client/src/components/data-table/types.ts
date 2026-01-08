@@ -1,4 +1,4 @@
-import type { ColumnDef } from '@tanstack/vue-table'
+import type { ColumnDef, Table } from '@tanstack/vue-table'
 
 import type { ISorting } from '@/services/query-utils'
 
@@ -29,5 +29,12 @@ export interface IDataTableProps<T, F> {
   onSortingChange: (sorting: ISorting) => void
   filter: F
   onFiltersChange: (filter: F) => void
+  onClearFilters: () => void
+}
+
+export interface IDataTableToolbarProps<T, F> {
+  table: Table<T>
+  filters: F
+  onFiltersChange: (filters: F) => void
   onClearFilters: () => void
 }

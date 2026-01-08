@@ -110,7 +110,9 @@
       "status": "Status",
       "total": "Total",
       "createdAt": "Created At"
-    }
+    },
+    "deleteSelectedInvoices": "Delete Selected Invoices",
+    "search": "Search Invoices..."
   },
   "users": {
     "title": "Users",
