@@ -42,5 +42,5 @@ export interface IDataTableToolbarProps<T, F> {
 export interface IDataTableFilterProps<F> {
   filters: F
   onFiltersChange: (filters: F) => void
-  onClear: () => void
+  onClearFilters: () => void
 }

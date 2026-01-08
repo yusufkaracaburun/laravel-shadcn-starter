@@ -45,7 +45,7 @@ function updateFilter(key: keyof IInvoiceFilters, value: any) {
 
 function clearFilters() {
   localFilters.value = {}
-  props.onClear()
+  props.onClearFilters()
 }
 
 const hasActiveFilters = computed(() => {
