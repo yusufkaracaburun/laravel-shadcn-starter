@@ -12,7 +12,7 @@ import Page from '@/components/global-layout/basic-page.vue'
 import { Button } from '@/components/ui/button'
 import { useGetInvoicePrerequisitesQuery } from '@/services/invoices.service'
 
-import type { TInvoice } from './data/schema'
+import type { TInvoiceForm } from './data/schema'
 
 import InvoiceForm from './components/invoice-form.vue'
 import InvoiceEditorLayout from './edit/components/invoice-editor-layout.vue'
@@ -44,28 +44,17 @@ const customers = computed(() => {
 const formRef = ref<InstanceType<typeof InvoiceForm> | null>(null)
 const isSubmitting = ref(false)
 
-const currentFormValues = ref<TInvoice>({
-  id: 0, // Default ID
+const currentFormValues = ref<TInvoiceForm>({
   customer_id: 0, // Default customer_id
-  customer: null,
-  invoice_number: prerequisites.value?.next_invoice_number ?? null,
+  invoice_number: prerequisites.value?.next_invoice_number ?? '',
   date: new Date().toISOString().split('T')[0], // Current date
   due_days: 30,
   date_due: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
     .toISOString()
     .split('T')[0], // 30 days from now
   status: 'draft',
-  subtotal: { amount: '0.00', currency: 'EUR', formatted: '€0.00' },
-  total_vat_0: { amount: '0.00', currency: 'EUR', formatted: '€0.00' },
-  total_vat_9: { amount: '0.00', currency: 'EUR', formatted: '€0.00' },
-  total_vat_21: { amount: '0.00', currency: 'EUR', formatted: '€0.00' },
-  total: { amount: '0.00', currency: 'EUR', formatted: '€0.00' },
-  notes: null,
   items: [],
-  total_excl_vat: { amount: '0.00', currency: 'EUR', formatted: '€0.00' },
-  total_vat: { amount: '0.00', currency: 'EUR', formatted: '€0.00' },
-  created_at: '',
-  updated_at: '',
+  notes: null,
 })
 const currentFormItems = ref([])
 

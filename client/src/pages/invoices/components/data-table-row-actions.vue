@@ -5,22 +5,15 @@ import type { Component } from 'vue'
 import { Ellipsis, Eye, FilePenLine, Trash2 } from 'lucide-vue-next'
 import { useRouter } from 'vue-router'
 
-import type { TInvoice } from '../data/schema'
+import type { IInvoice } from '../models/invoice'
 
-import { invoiceSchema } from '../data/schema'
 import InvoiceDelete from './invoice-delete.vue'
 
 interface IDataTableRowActionsProps {
-  row: Row<TInvoice>
+  row: Row<IInvoice>
 }
 const props = defineProps<IDataTableRowActionsProps>()
-const invoice = computed(() => {
-  const result = invoiceSchema.safeParse(props.row.original)
-  if (result.success) {
-    return result.data
-  }
-  return props.row.original as TInvoice
-})
+const invoice = computed(() => props.row.original as IInvoice)
 const router = useRouter()
 
 const showComponent = shallowRef<Component | null>(null)

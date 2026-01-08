@@ -3,10 +3,10 @@ import type { Table } from '@tanstack/vue-table'
 
 import { useInvoices } from '@/composables/use-invoices'
 
-import type { TInvoice } from '../data/schema'
+import type { IInvoice } from '../models/invoice'
 
 interface IProps {
-  table: Table<TInvoice>
+  table: Table<IInvoice>
   open?: boolean
 }
 

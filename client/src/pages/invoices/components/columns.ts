@@ -10,17 +10,17 @@ import { StatusBadge } from '@/components/ui/status-badge'
 import { formatDate } from '@/utils/date'
 import { formatMoney } from '@/utils/money'
 
-import type { TInvoice } from '../data/schema'
+import type { IInvoice } from '../models/invoice'
 
 import { statuses } from '../data/data'
 import DataTableRowActions from './data-table-row-actions.vue'
 
-export const columns: ColumnDef<TInvoice>[] = [
-  SelectColumn as ColumnDef<TInvoice>,
+export const columns: ColumnDef<IInvoice>[] = [
+  SelectColumn as ColumnDef<IInvoice>,
   {
     accessorKey: 'invoice_number',
     header: ({ column }) =>
-      h(DataTableColumnHeader<TInvoice>, { column, title: 'Invoice Number' }),
+      h(DataTableColumnHeader<IInvoice>, { column, title: 'Invoice Number' }),
     cell: ({ row }) => {
       const invoice = row.original
       const router = useRouter()
@@ -48,7 +48,7 @@ export const columns: ColumnDef<TInvoice>[] = [
   {
     accessorKey: 'customer',
     header: ({ column }) =>
-      h(DataTableColumnHeader<TInvoice>, { column, title: 'Customer' }),
+      h(DataTableColumnHeader<IInvoice>, { column, title: 'Customer' }),
     cell: ({ row }) => {
       const invoice = row.original
       const router = useRouter()
@@ -91,7 +91,7 @@ export const columns: ColumnDef<TInvoice>[] = [
   {
     accessorKey: 'date',
     header: ({ column }) =>
-      h(DataTableColumnHeader<TInvoice>, { column, title: 'Date' }),
+      h(DataTableColumnHeader<IInvoice>, { column, title: 'Date' }),
     cell: ({ row }) => {
       const dateValue = row.getValue('date') as string | null | undefined
       return h('div', { class: 'w-[100px]' }, formatDate(dateValue))
@@ -101,7 +101,7 @@ export const columns: ColumnDef<TInvoice>[] = [
   {
     accessorKey: 'date_due',
     header: ({ column }) =>
-      h(DataTableColumnHeader<TInvoice>, { column, title: 'Due Date' }),
+      h(DataTableColumnHeader<IInvoice>, { column, title: 'Due Date' }),
     cell: ({ row }) => {
       const dateValue = row.getValue('date_due') as string | null | undefined
       return h('div', { class: 'w-[100px]' }, formatDate(dateValue))
@@ -111,7 +111,7 @@ export const columns: ColumnDef<TInvoice>[] = [
   {
     accessorKey: 'status',
     header: ({ column }) =>
-      h(DataTableColumnHeader<TInvoice>, { column, title: 'Status' }),
+      h(DataTableColumnHeader<IInvoice>, { column, title: 'Status' }),
     cell: ({ row }) => {
       const statusValue = row.getValue('status') as string
       const status = statuses.find((s) => s.value === statusValue)
@@ -128,7 +128,7 @@ export const columns: ColumnDef<TInvoice>[] = [
   {
     accessorKey: 'total',
     header: ({ column }) =>
-      h(DataTableColumnHeader<TInvoice>, { column, title: 'Total' }),
+      h(DataTableColumnHeader<IInvoice>, { column, title: 'Total' }),
     cell: ({ row }) => {
       const total = row.getValue('total')
       return h('div', { class: 'w-[100px] font-medium' }, formatMoney(total))
@@ -138,7 +138,7 @@ export const columns: ColumnDef<TInvoice>[] = [
   {
     accessorKey: 'created_at',
     header: ({ column }) =>
-      h(DataTableColumnHeader<TInvoice>, { column, title: 'Created At' }),
+      h(DataTableColumnHeader<IInvoice>, { column, title: 'Created At' }),
     cell: ({ row }) => {
       const dateValue = row.getValue('created_at') as string | null | undefined
       return h(

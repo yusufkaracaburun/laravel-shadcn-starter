@@ -1,10 +1,10 @@
 <script lang="ts" setup>
 import { useInvoices } from '@/composables/use-invoices'
 
-import type { TInvoice } from '../data/schema'
+import type { IInvoice } from '../models/invoice'
 
 const props = defineProps<{
-  invoice: TInvoice
+  invoice: IInvoice
 }>()
 
 const emits = defineEmits<{

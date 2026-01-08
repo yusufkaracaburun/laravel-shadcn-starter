@@ -132,6 +132,13 @@ export interface IInvoice {
   date: string
   due_days: number
   date_due: string
+  status_formatted: {
+    id: string
+    value: string
+    label: string
+    color: string | null
+    style: string | null
+  }
   status: TInvoiceStatus
   subtotal: Money | number
   total_vat_0: Money | number

@@ -3,8 +3,7 @@ import type { Table } from '@tanstack/vue-table'
 
 import { X } from 'lucide-vue-next'
 
-import type { TInvoice } from '@/pages/invoices/data/schema'
-import type { IInvoiceFilters } from '@/pages/invoices/models/invoice'
+import type { IInvoice, IInvoiceFilters } from '@/pages/invoices/models/invoice'
 
 import DataTableViewOptions from '@/components/data-table/view-options.vue'
 import { Button } from '@/components/ui/button'
@@ -12,7 +11,7 @@ import { Input } from '@/components/ui/input'
 import InvoicesFilter from '@/pages/invoices/components/invoices-filter.vue'
 
 interface IDataTableToolbarProps {
-  table: Table<TInvoice>
+  table: Table<IInvoice>
   filters: IInvoiceFilters
   onFiltersChange: (filters: IInvoiceFilters) => void
   onClearFilters: () => void
