@@ -2,6 +2,7 @@ import type { ColumnDef } from '@tanstack/vue-table'
 import type { Router } from 'vue-router'
 
 import { h } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 
 import type { Customer } from '@/services/customers.service'
@@ -10,6 +11,7 @@ import DataTableColumnHeader from '@/components/data-table/column-header.vue'
 import { SelectColumn } from '@/components/data-table/table-columns'
 import { StatusBadge } from '@/components/ui/status-badge'
 import { FileTextIcon } from '@/composables/use-icons'
+import { getI18nInstance } from '@/plugins/i18n/setup'
 import { formatDate } from '@/utils/date'
 import { formatMoney } from '@/utils/money'
 
@@ -162,12 +164,17 @@ function createMoneyCell(value: unknown) {
  * @returns Array of column definitions
  */
 export function createInvoiceColumns(router: Router): ColumnDef<IInvoice>[] {
+  const { t } = useI18n()
+
   return [
     SelectColumn as ColumnDef<IInvoice>,
     {
       accessorKey: 'invoice_number',
       header: ({ column }) =>
-        h(DataTableColumnHeader<IInvoice>, { column, title: 'Invoice Number' }),
+        h(DataTableColumnHeader<IInvoice>, {
+          column,
+          title: t('invoices.columns.invoiceNumber'),
+        }),
       cell: ({ row }) => createInvoiceNumberCell(row.original, router),
       enableSorting: true,
       enableHiding: false,
@@ -175,14 +182,20 @@ export function createInvoiceColumns(router: Router): ColumnDef<IInvoice>[] {
     {
       accessorKey: 'customer',
       header: ({ column }) =>
-        h(DataTableColumnHeader<IInvoice>, { column, title: 'Customer' }),
+        h(DataTableColumnHeader<IInvoice>, {
+          column,
+          title: t('invoices.columns.customer'),
+        }),
       cell: ({ row }) => createCustomerCell(row.original, router),
       enableSorting: false,
     },
     {
       accessorKey: 'date',
       header: ({ column }) =>
-        h(DataTableColumnHeader<IInvoice>, { column, title: 'Date' }),
+        h(DataTableColumnHeader<IInvoice>, {
+          column,
+          title: t('invoices.columns.date'),
+        }),
       cell: ({ row }) => {
         const dateValue = row.getValue('date')
         return createDateCell(dateValue)
@@ -192,7 +205,10 @@ export function createInvoiceColumns(router: Router): ColumnDef<IInvoice>[] {
     {
       accessorKey: 'date_due',
       header: ({ column }) =>
-        h(DataTableColumnHeader<IInvoice>, { column, title: 'Due Date' }),
+        h(DataTableColumnHeader<IInvoice>, {
+          column,
+          title: t('invoices.columns.dueDate'),
+        }),
       cell: ({ row }) => {
         const dateValue = row.getValue('date_due')
         return createDateCell(dateValue)
@@ -202,7 +218,10 @@ export function createInvoiceColumns(router: Router): ColumnDef<IInvoice>[] {
     {
       accessorKey: 'status',
       header: ({ column }) =>
-        h(DataTableColumnHeader<IInvoice>, { column, title: 'Status' }),
+        h(DataTableColumnHeader<IInvoice>, {
+          column,
+          title: t('invoices.columns.status'),
+        }),
       cell: ({ row }) => {
         const statusValue = row.getValue('status')
         return createStatusCell(statusValue)
@@ -212,7 +231,10 @@ export function createInvoiceColumns(router: Router): ColumnDef<IInvoice>[] {
     {
       accessorKey: 'total',
       header: ({ column }) =>
-        h(DataTableColumnHeader<IInvoice>, { column, title: 'Total' }),
+        h(DataTableColumnHeader<IInvoice>, {
+          column,
+          title: t('invoices.columns.total'),
+        }),
       cell: ({ row }) => {
         const total = row.getValue('total')
         return createMoneyCell(total)
@@ -222,7 +244,10 @@ export function createInvoiceColumns(router: Router): ColumnDef<IInvoice>[] {
     {
       accessorKey: 'created_at',
       header: ({ column }) =>
-        h(DataTableColumnHeader<IInvoice>, { column, title: 'Created At' }),
+        h(DataTableColumnHeader<IInvoice>, {
+          column,
+          title: t('invoices.columns.createdAt'),
+        }),
       cell: ({ row }) => {
         const dateValue = row.getValue('created_at')
         return h(
@@ -243,12 +268,18 @@ export function createInvoiceColumns(router: Router): ColumnDef<IInvoice>[] {
 // Default export for backward compatibility
 // Note: useRouter() is called inside render functions which works in Vue 3
 // but is not ideal. For better practice, use createInvoiceColumns(useRouter()) in components
+const i18n = getI18nInstance()
+const t = i18n?.global.t || ((key: string) => key)
+
 export const columns: ColumnDef<IInvoice>[] = [
   SelectColumn as ColumnDef<IInvoice>,
   {
     accessorKey: 'invoice_number',
     header: ({ column }) =>
-      h(DataTableColumnHeader<IInvoice>, { column, title: 'Invoice Number' }),
+      h(DataTableColumnHeader<IInvoice>, {
+        column,
+        title: t('invoices.columns.invoiceNumber'),
+      }),
     cell: ({ row }) => {
       const router = useRouter()
       return createInvoiceNumberCell(row.original, router)
@@ -259,7 +290,10 @@ export const columns: ColumnDef<IInvoice>[] = [
   {
     accessorKey: 'customer',
     header: ({ column }) =>
-      h(DataTableColumnHeader<IInvoice>, { column, title: 'Customer' }),
+      h(DataTableColumnHeader<IInvoice>, {
+        column,
+        title: t('invoices.columns.customer'),
+      }),
     cell: ({ row }) => {
       const router = useRouter()
       return createCustomerCell(row.original, router)
@@ -269,7 +303,10 @@ export const columns: ColumnDef<IInvoice>[] = [
   {
     accessorKey: 'date',
     header: ({ column }) =>
-      h(DataTableColumnHeader<IInvoice>, { column, title: 'Date' }),
+      h(DataTableColumnHeader<IInvoice>, {
+        column,
+        title: t('invoices.columns.date'),
+      }),
     cell: ({ row }) => {
       const dateValue = row.getValue('date')
       return createDateCell(dateValue)
@@ -279,7 +316,10 @@ export const columns: ColumnDef<IInvoice>[] = [
   {
     accessorKey: 'date_due',
     header: ({ column }) =>
-      h(DataTableColumnHeader<IInvoice>, { column, title: 'Due Date' }),
+      h(DataTableColumnHeader<IInvoice>, {
+        column,
+        title: t('invoices.columns.dueDate'),
+      }),
     cell: ({ row }) => {
       const dateValue = row.getValue('date_due')
       return createDateCell(dateValue)
@@ -289,7 +329,10 @@ export const columns: ColumnDef<IInvoice>[] = [
   {
     accessorKey: 'status',
     header: ({ column }) =>
-      h(DataTableColumnHeader<IInvoice>, { column, title: 'Status' }),
+      h(DataTableColumnHeader<IInvoice>, {
+        column,
+        title: t('invoices.columns.status'),
+      }),
     cell: ({ row }) => {
       const statusValue = row.getValue('status')
       return createStatusCell(statusValue)
@@ -299,7 +342,10 @@ export const columns: ColumnDef<IInvoice>[] = [
   {
     accessorKey: 'total',
     header: ({ column }) =>
-      h(DataTableColumnHeader<IInvoice>, { column, title: 'Total' }),
+      h(DataTableColumnHeader<IInvoice>, {
+        column,
+        title: t('invoices.columns.total'),
+      }),
     cell: ({ row }) => {
       const total = row.getValue('total')
       return createMoneyCell(total)
@@ -309,7 +355,10 @@ export const columns: ColumnDef<IInvoice>[] = [
   {
     accessorKey: 'created_at',
     header: ({ column }) =>
-      h(DataTableColumnHeader<IInvoice>, { column, title: 'Created At' }),
+      h(DataTableColumnHeader<IInvoice>, {
+        column,
+        title: t('invoices.columns.createdAt'),
+      }),
     cell: ({ row }) => {
       const dateValue = row.getValue('created_at')
       return h(

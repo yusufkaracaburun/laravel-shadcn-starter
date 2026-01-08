@@ -101,6 +101,17 @@
   "register": "Registreren",
   "language": "Nederlands",
   "changeLanguage": "Taal wijzigen",
+  "invoices": {
+    "columns": {
+      "invoiceNumber": "Factuurnummer",
+      "customer": "Klant",
+      "date": "Datum",
+      "dueDate": "Vervaldatum",
+      "status": "Status",
+      "total": "Totaal",
+      "createdAt": "Aangemaakt op"
+    }
+  },
   "users": {
     "title": "Gebruikers",
     "description": "Gebruikers beschrijving",

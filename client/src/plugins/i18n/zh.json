@@ -97,6 +97,17 @@
       "subtitle": "只需 3 分钟即可开始使用"
     }
   },
+  "invoices": {
+    "columns": {
+      "invoiceNumber": "发票号码",
+      "customer": "客户",
+      "date": "日期",
+      "dueDate": "到期日期",
+      "status": "状态",
+      "total": "总计",
+      "createdAt": "创建时间"
+    }
+  },
   "login": "登录",
   "register": "注册",
   "language": "中文",

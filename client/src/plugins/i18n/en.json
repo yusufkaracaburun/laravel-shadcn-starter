@@ -101,6 +101,17 @@
   "register": "Register",
   "language": "English",
   "changeLanguage": "Change Language",
+  "invoices": {
+    "columns": {
+      "invoiceNumber": "Invoice Number",
+      "customer": "Customer",
+      "date": "Date",
+      "dueDate": "Due Date",
+      "status": "Status",
+      "total": "Total",
+      "createdAt": "Created At"
+    }
+  },
   "users": {
     "title": "Users",
     "description": "Users description",
