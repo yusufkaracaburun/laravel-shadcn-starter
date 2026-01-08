@@ -29,7 +29,7 @@ const {
     data-testid="users_page"
   >
     <template #actions>
-      <UserInvite />
+      <!-- <UserInvite /> -->
       <UserCreate />
     </template>
     <div class="overflow-x-auto">
