@@ -11,7 +11,7 @@ import DataTableColumnHeader from '@/components/data-table/column-header.vue'
 import { SelectColumn } from '@/components/data-table/table-columns'
 import { StatusBadge } from '@/components/ui/status-badge'
 import { FileTextIcon } from '@/composables/use-icons'
-import { getI18nInstance } from '@/plugins/i18n/setup'
+import { getT } from '@/plugins/i18n/setup'
 import { formatDate } from '@/utils/date'
 import { formatMoney } from '@/utils/money'
 
@@ -268,8 +268,7 @@ export function createInvoiceColumns(router: Router): ColumnDef<IInvoice>[] {
 // Default export for backward compatibility
 // Note: useRouter() is called inside render functions which works in Vue 3
 // but is not ideal. For better practice, use createInvoiceColumns(useRouter()) in components
-const i18n = getI18nInstance()
-const t = i18n?.global.t || ((key: string) => key)
+const t = getT()
 
 export const columns: ColumnDef<IInvoice>[] = [
   SelectColumn as ColumnDef<IInvoice>,

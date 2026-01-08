@@ -117,3 +117,18 @@ export function setupI18n(app: App) {
 export function getI18nInstance() {
   return i18nInstance
 }
+
+/**
+ * Get the translation function from the i18n instance
+ * Useful for accessing translations outside of Vue component context
+ * (e.g., in utility functions, column definitions, etc.)
+ *
+ * @returns Translation function that accepts a key and returns the translated string
+ * @example
+ * const t = getT()
+ * const title = t('invoices.columns.invoiceNumber')
+ */
+export function getT() {
+  const i18n = getI18nInstance()
+  return i18n?.global.t || ((key: string) => key)
+}
