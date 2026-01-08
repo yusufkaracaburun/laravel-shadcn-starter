@@ -10,6 +10,7 @@ export const moneySchema = z.union([
   }),
   z.number(),
 ])
+export type TMoney = z.infer<typeof moneySchema>
 
 export const invoiceStatusSchema = z.enum([
   EInvoiceStatus.DRAFT,
@@ -23,7 +24,6 @@ export const invoiceStatusSchema = z.enum([
   EInvoiceStatus.REFUNDED,
   EInvoiceStatus.CREDITED,
 ])
-
 export type TInvoiceStatus = z.infer<typeof invoiceStatusSchema>
 
 export const invoiceItemSchema = z.object({
