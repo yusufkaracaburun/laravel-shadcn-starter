@@ -11,13 +11,11 @@ import type {
   IInvoicePrerequisites,
   IUpdateInvoiceRequest,
 } from '@/pages/invoices/models/invoice'
-import type { ISorting } from '@/services/query-utils'
-import type {
-  IPaginatedResponse,
-  IResponse,
-} from '@/services/types/response.type'
 
 import { useAxios } from '@/composables/use-axios'
+
+import type { ISorting } from './query-utils'
+import type { IPaginatedResponse, IResponse } from './types/response.type'
 
 import { buildQueryString, defaultAxiosQueryOptions } from './query-utils'
 

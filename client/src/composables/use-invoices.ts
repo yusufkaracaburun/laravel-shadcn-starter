@@ -270,11 +270,7 @@ export function useInvoices() {
   })
 
   watch([page, pageSize], ([newPage, newPageSize], [oldPage, oldPageSize]) => {
-    if (oldPage === undefined || oldPageSize === undefined) {
-      return
-    }
     if (oldPage !== newPage || oldPageSize !== newPageSize) {
-      console.error('watch', newPage, newPageSize)
       fetchInvoices()
     }
   })

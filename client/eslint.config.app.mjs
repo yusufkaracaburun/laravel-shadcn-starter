@@ -35,5 +35,6 @@ export default {
         },
       },
     ],
+    '@stylistic/brace-style': 'off',
   },
 }
