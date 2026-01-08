@@ -111,6 +111,9 @@
       "total": "Total",
       "createdAt": "Created At"
     },
+    "actions": {
+      "reset": "Reset"
+    },
     "deleteSelectedInvoices": "Delete Selected Invoices",
     "search": "Search Invoices..."
   },

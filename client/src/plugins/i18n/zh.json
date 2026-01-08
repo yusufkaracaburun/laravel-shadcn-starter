@@ -107,6 +107,9 @@
       "total": "总计",
       "createdAt": "创建时间"
     },
+    "actions": {
+      "reset": "重置"
+    },
     "deleteSelectedInvoices": "删除选中的发票",
     "search": "搜索发票..."
   },

@@ -111,8 +111,11 @@
       "total": "Totaal",
       "createdAt": "Aangemaakt op"
     },
-    "search": "Zoek facturen...",
-    "deleteSelectedInvoices": "Facturen verwijderen"
+    "actions": {
+      "reset": "Resetten"
+    },
+    "deleteSelectedInvoices": "Facturen verwijderen",
+    "search": "Zoek facturen..."
   },
   "users": {
     "title": "Gebruikers",
