@@ -50,8 +50,13 @@ function handleResetFilters() {
         class="h-8 w-[150px] lg:w-[250px] focus-visible:border-input focus-visible:ring-0"
       />
 
-      <Button v-if="isFiltered" variant="ghost" @click="handleResetFilters">
-        {{ $t('invoices.actions.reset') }}
+      <Button
+        v-if="isFiltered"
+        variant="ghost"
+        class="h-8 px-2 lg:px-3"
+        @click="handleResetFilters"
+      >
+        Reset
         <XIcon class="ml-2 size-4" />
       </Button>
     </div>

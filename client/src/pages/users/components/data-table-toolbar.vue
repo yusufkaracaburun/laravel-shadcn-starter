@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { X } from 'lucide-vue-next'
 import { computed } from 'vue'
 
 import type {
@@ -11,6 +10,7 @@ import DataTableFacetedFilter from '@/components/data-table/faceted-filter.vue'
 import DataTableViewOptions from '@/components/data-table/view-options.vue'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { XIcon } from '@/composables/use-icons'
 import { useUsers } from '@/composables/use-users'
 
 import type { IRole, IUser, IUserFilters } from '../models/users'
@@ -29,11 +29,17 @@ const isFiltered = computed(
   () => props.table.getState().columnFilters.length > 0,
 )
 
+function handleResetFilters() {
+  props.table.resetColumnFilters()
+  props.onClearFilters()
+}
+
 const { userPrerequisitesResponse } = useUsers()
 
 const roleOptions = computed<IFacetedFilterOption[]>(() => {
   return (
     userPrerequisitesResponse.value?.roles.map((role: IRole) => ({
+      id: role.id,
       label: role.name,
       value: role.id.toString(),
     })) ?? []
@@ -64,10 +70,10 @@ const roleOptions = computed<IFacetedFilterOption[]>(() => {
         v-if="isFiltered"
         variant="ghost"
         class="h-8 px-2 lg:px-3"
-        @click="table.resetColumnFilters()"
+        @click="handleResetFilters"
       >
         Reset
-        <X class="size-4 ml-2" />
+        <XIcon class="ml-2 size-4" />
       </Button>
     </div>
     <DataTableViewOptions :table="table" />

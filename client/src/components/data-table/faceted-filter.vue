@@ -5,22 +5,25 @@ import { Check, CirclePlus } from 'lucide-vue-next'
 
 import { cn } from '@/lib/utils'
 
-import type { FacetedFilterOption } from './types'
+import type { IFacetedFilterOption } from './types'
 
-interface DataTableFacetedFilter {
+interface IDataTableFacetedFilter {
   column?: Column<T, any>
   title?: string
-  options: FacetedFilterOption[]
+  options: IFacetedFilterOption[]
 }
 
-const props = defineProps<DataTableFacetedFilter>()
+const props = defineProps<IDataTableFacetedFilter>()
 
 const facets = computed(() => props.column?.getFacetedUniqueValues())
 const selectedValues = computed(
   () => new Set(props.column?.getFilterValue() as string[]),
 )
-function filterFunction(list: DataTableFacetedFilter['options'], term: string) {
-  return list.filter(i => i.label.toLowerCase()?.includes(term))
+function filterFunction(
+  list: IDataTableFacetedFilter['options'],
+  term: string,
+) {
+  return list.filter((i) => i.label.toLowerCase()?.includes(term))
 }
 </script>
 
@@ -79,8 +82,7 @@ function filterFunction(list: DataTableFacetedFilter['options'], term: string) {
                   const isSelected = selectedValues.has(option.value)
                   if (isSelected) {
                     selectedValues.delete(option.value)
-                  }
-                  else {
+                  } else {
                     selectedValues.add(option.value)
                   }
                   const filterValues = Array.from(selectedValues)
