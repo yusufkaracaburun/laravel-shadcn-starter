@@ -1,9 +1,6 @@
 <script lang="ts" setup>
 import { toTypedSchema } from '@vee-validate/zod'
 import { useForm } from 'vee-validate'
-import { z } from 'zod'
-
-import type { IUser } from '@/pages/users/models/users'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -22,8 +19,13 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { useToast } from '@/composables/use-toast'
-import { useUserService } from '@/services/users.service'
+import { useUsers } from '@/composables/use-users'
 import { useErrorStore } from '@/stores/error.store'
+
+import type { IUpdateUserRequest, IUser } from '../models/users'
+
+import { createUserFormSchema, editUserFormSchema } from '../data/schema'
+import { EUserRole, EUserStatus } from '../models/users'
 
 const props = defineProps<{
   user?: IUser | null
@@ -35,66 +37,20 @@ const emits = defineEmits<{
 
 const toast = useToast()
 const errorStore = useErrorStore()
-const userService = useUserService()
-const createUserMutation = userService.createUserMutation()
-const updateUserMutation = userService.updateUserMutation()
+const {
+  userPrerequisitesResponse,
+  createUser,
+  updateUser,
+  isCreating,
+  isUpdating,
+} = useUsers()
 
-// Fetch available roles from prerequisites
-const { data: prerequisitesResponse } = userService.getUserPrerequisitesQuery()
-const roles = computed(() => prerequisitesResponse.value?.data?.roles ?? [])
+const roles = computed(() => userPrerequisitesResponse.value?.roles ?? [])
 
 const isEditMode = computed(() => !!props.user)
 
-// Dynamic schema based on edit mode
 const formSchema = computed(() => {
-  const baseSchema = z.object({
-    name: z.string().min(1, 'Name is required.'),
-    email: z
-      .string()
-      .email('Please enter a valid email address.')
-      .min(1, 'Email is required.'),
-    profile_photo: z.instanceof(File).optional().nullable(),
-    role: z.string().optional().nullable(),
-  })
-
-  if (isEditMode.value) {
-    // In edit mode, password is optional
-    return baseSchema
-      .extend({
-        password: z
-          .string()
-          .min(8, 'Password must be at least 8 characters.')
-          .optional(),
-        password_confirmation: z
-          .string()
-          .min(1, 'Please confirm your password.')
-          .optional(),
-      })
-      .refine(
-        (data) => {
-          // Only validate password match if password is provided
-          if (data.password || data.password_confirmation) {
-            return data.password === data.password_confirmation
-          }
-          return true
-        },
-        {
-          message: 'Passwords do not match.',
-          path: ['password_confirmation'],
-        },
-      )
-  }
-
-  // In create mode, password is required
-  return baseSchema
-    .extend({
-      password: z.string().min(8, 'Password must be at least 8 characters.'),
-      password_confirmation: z.string().min(1, 'Please confirm your password.'),
-    })
-    .refine((data) => data.password === data.password_confirmation, {
-      message: 'Passwords do not match.',
-      path: ['password_confirmation'],
-    })
+  return isEditMode.value ? editUserFormSchema : createUserFormSchema
 })
 
 function getInitialValues() {
@@ -204,24 +160,18 @@ const onSubmit = handleSubmit(async (values) => {
         updateData.role = values.role || null
       }
 
-      await updateUserMutation.mutateAsync({
-        id: props.user.id,
-        data: updateData,
-      })
-
-      toast.showSuccess('User updated successfully!')
+      await updateUser(props.user.id, updateData as any)
     } else {
       // Create new user
-      await createUserMutation.mutateAsync({
+      await createUser({
         name: values.name || '',
         email: values.email || '',
         password: values.password || '',
         password_confirmation: values.password_confirmation || '',
         profile_photo: values.profile_photo || null,
-        role: values.role || null,
-      })
-
-      toast.showSuccess('User created successfully!')
+        role: (values.role as any) || EUserRole.USER,
+        status: EUserStatus.REGISTERED,
+      } as any)
     }
 
     profilePhotoPreview.value = null
@@ -384,20 +334,9 @@ const onSubmit = handleSubmit(async (values) => {
     <Button
       type="submit"
       class="w-full"
-      :disabled="
-        isEditMode
-          ? updateUserMutation.isPending.value
-          : createUserMutation.isPending.value
-      "
+      :disabled="isEditMode ? isUpdating : isCreating"
     >
-      <UiSpinner
-        v-if="
-          isEditMode
-            ? updateUserMutation.isPending.value
-            : createUserMutation.isPending.value
-        "
-        class="mr-2"
-      />
+      <UiSpinner v-if="isEditMode ? isUpdating : isCreating" class="mr-2" />
       {{ isEditMode ? 'Update User' : 'Create User' }}
     </Button>
   </form>

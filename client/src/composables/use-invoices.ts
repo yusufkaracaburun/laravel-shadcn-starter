@@ -157,6 +157,7 @@ export function useInvoices() {
     updateInvoice: base.update,
     deleteInvoice: base.deleteItem,
     downloadInvoicePdf,
+    isMutating: base.isMutating,
     loading: base.loading,
     serverPagination: base.serverPagination,
     invoiceId,

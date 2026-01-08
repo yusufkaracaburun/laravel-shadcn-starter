@@ -270,6 +270,12 @@ export function useResourceBase<
 
   const loading = computed(() => isLoading.value || isFetching.value)
 
+  // Mutation loading states
+  const isCreating = computed(() => createMutation.isPending.value)
+  const isUpdating = computed(() => updateMutation.isPending.value)
+  const isDeleting = computed(() => deleteMutation.isPending.value)
+  const isGetting = computed(() => getMutation.isPending.value)
+
   const serverPagination = computed(() => {
     const response = listData.value?.data
     return {
@@ -325,9 +331,9 @@ export function useResourceBase<
     update,
     deleteItem,
     get,
-    createMutation,
-    updateMutation,
-    deleteMutation,
-    getMutation,
+    isCreating,
+    isUpdating,
+    isDeleting,
+    isGetting,
   }
 }
