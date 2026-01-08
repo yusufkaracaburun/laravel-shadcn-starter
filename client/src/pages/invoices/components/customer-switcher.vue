@@ -1,7 +1,12 @@
 <script lang="ts" setup>
-import { Building2, ChevronsUpDown, Plus, User } from 'lucide-vue-next'
-
 import type { Customer } from '@/services/customers.service'
+
+import {
+  Building2Icon,
+  ChevronsUpDownIcon,
+  PlusIcon,
+  UserIcon,
+} from '@/composables/use-icons'
 
 interface IProps {
   customers: Customer[]
@@ -26,7 +31,7 @@ function handleSelect(customer: Customer) {
 }
 
 function getCustomerIcon(customer: Customer) {
-  return customer.type === 'business' ? Building2 : User
+  return customer.type === 'business' ? Building2Icon : UserIcon
 }
 
 function handleSelectCommand(command: TComponent) {
@@ -67,7 +72,7 @@ function handleCustomerCreated() {
             v-else
             class="flex items-center justify-center rounded-lg aspect-square size-8 bg-muted shrink-0 mr-2"
           >
-            <User class="size-4 text-muted-foreground" />
+            <UserIcon class="size-4 text-muted-foreground" />
           </div>
           <div class="grid flex-1 text-sm leading-tight text-left">
             <span v-if="selectedCustomer" class="font-semibold truncate">
@@ -81,7 +86,7 @@ function handleCustomerCreated() {
               {{ selectedCustomer.type }}
             </span>
           </div>
-          <ChevronsUpDown
+          <ChevronsUpDownIcon
             class="ml-auto size-4 text-muted-foreground shrink-0 opacity-50"
           />
         </UiButton>
@@ -141,7 +146,7 @@ function handleCustomerCreated() {
             <div
               class="flex items-center justify-center border rounded-md size-6 bg-background"
             >
-              <Plus class="size-4" />
+              <PlusIcon class="size-4" />
             </div>
             <div class="font-medium text-muted-foreground">Add customer</div>
           </UiDropdownMenuItem>

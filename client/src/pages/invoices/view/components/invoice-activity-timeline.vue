@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { Clock, User } from 'lucide-vue-next'
-
 import type { IInvoiceActivity } from '@/pages/invoices/models/invoice'
+
+import { ClockIcon, UserIcon } from '@/composables/use-icons'
 
 import {
   AccordionContent,
@@ -29,7 +29,7 @@ const props = defineProps<Props>()
       class="flex items-center justify-between cursor-pointer select-none"
     >
       <h4 class="text-base font-semibold text-gray-900 flex items-center gap-2">
-        <Clock class="w-4 h-4 text-gray-600" />
+        <ClockIcon class="w-4 h-4 text-gray-600" />
         Activity Timeline
       </h4>
     </AccordionTrigger>
@@ -62,7 +62,7 @@ const props = defineProps<Props>()
                 class="flex justify-between items-start mb-1 text-xs text-gray-500"
               >
                 <div class="flex items-center gap-2">
-                  <User class="w-3 h-3" />
+                  <UserIcon class="w-3 h-3" />
                   <span>{{ activity.causer?.name || 'System' }}</span>
                 </div>
                 <div class="flex items-center gap-2">

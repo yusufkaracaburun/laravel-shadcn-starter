@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { X } from 'lucide-vue-next'
-
 import type { IInvoiceEmail } from '@/services/invoices.service'
+
+import { XIcon } from '@/composables/use-icons'
 
 import {
   Dialog,
@@ -32,7 +32,7 @@ function closeDialog() {
           Email Details
         </DialogTitle>
         <DialogClose variant="ghost" size="icon" class="absolute top-4 right-4">
-          <X class="w-4 h-4" />
+          <XIcon class="w-4 h-4" />
         </DialogClose>
       </DialogHeader>
 

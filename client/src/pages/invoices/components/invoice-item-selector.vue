@@ -1,6 +1,12 @@
 <script lang="ts" setup>
-import { Check, Plus, Search, X } from 'lucide-vue-next'
 import { computed, ref } from 'vue'
+
+import {
+  CheckIcon,
+  PlusIcon,
+  SearchIcon,
+  XIcon,
+} from '@/composables/use-icons'
 
 import type { IInvoiceItem } from '@/pages/invoices/models/invoice'
 
@@ -99,7 +105,7 @@ function handleClose() {
   <Dialog v-model:open="isOpen">
     <DialogTrigger as-child>
       <Button variant="outline" size="sm">
-        <Plus class="mr-2 size-4" />
+        <PlusIcon class="mr-2 size-4" />
         Add from Catalog
       </Button>
     </DialogTrigger>
@@ -113,7 +119,7 @@ function handleClose() {
 
       <div class="space-y-4">
         <div class="relative">
-          <Search
+          <SearchIcon
             class="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
           />
           <Input
@@ -163,7 +169,7 @@ function handleClose() {
                   : 'border-muted'
               "
             >
-              <Check v-if="isItemSelected(item.id)" class="size-3" />
+              <CheckIcon v-if="isItemSelected(item.id)" class="size-3" />
             </div>
             <div class="flex-1">
               <div class="font-medium">
@@ -182,7 +188,7 @@ function handleClose() {
       <DialogFooter>
         <Button variant="outline" @click="handleClose"> Cancel </Button>
         <Button :disabled="selectedCount === 0" @click="handleAddSelected">
-          <Plus class="mr-2 size-4" />
+          <PlusIcon class="mr-2 size-4" />
           Add
           {{
             selectedCount > 0

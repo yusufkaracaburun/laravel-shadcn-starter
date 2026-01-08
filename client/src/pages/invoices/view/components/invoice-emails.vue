@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { Mail } from 'lucide-vue-next'
-
 import type { IInvoiceEmail } from '@/pages/invoices/models/invoice'
+
+import { MailIcon } from '@/composables/use-icons'
 
 import {
   AccordionContent,
@@ -38,7 +38,7 @@ function closeEmailDialog() {
       class="flex items-center justify-between cursor-pointer select-none"
     >
       <h4 class="text-base font-semibold text-gray-900 flex items-center gap-2">
-        <Mail class="w-4 h-4 text-gray-600" />
+        <MailIcon class="w-4 h-4 text-gray-600" />
         Emails
       </h4>
     </AccordionTrigger>
@@ -47,7 +47,7 @@ function closeEmailDialog() {
         <div
           class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-gray-200 mb-3"
         >
-          <Mail class="w-6 h-6 text-gray-400" />
+          <MailIcon class="w-6 h-6 text-gray-400" />
         </div>
         <p class="text-sm text-gray-500">No emails yet</p>
       </div>

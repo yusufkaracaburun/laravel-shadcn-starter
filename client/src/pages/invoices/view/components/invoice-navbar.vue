@@ -1,7 +1,13 @@
 <script setup lang="ts">
-import { ArrowLeft, Download, FilePenLine, Trash2 } from 'lucide-vue-next'
 import { computed, ref, shallowRef, watch } from 'vue'
 import { useRouter } from 'vue-router'
+
+import {
+  ArrowLeftIcon,
+  DownloadIcon,
+  FilePenLineIcon,
+  Trash2Icon,
+} from '@/composables/use-icons'
 
 import type { IInvoice } from '@/pages/invoices/models/invoice'
 
@@ -88,7 +94,7 @@ function handleSelect(command: TCommand) {
 <template>
   <div class="flex items-center gap-2">
     <Button variant="outline" @click="handleSelect('back')">
-      <ArrowLeft class="mr-2 size-4" />
+      <ArrowLeftIcon class="mr-2 size-4" />
       Back
     </Button>
     <Button
@@ -96,7 +102,7 @@ function handleSelect(command: TCommand) {
       variant="outline"
       @click="handleSelect('download')"
     >
-      <Download class="mr-2 size-4" />
+      <DownloadIcon class="mr-2 size-4" />
       Download PDF
     </Button>
     <Button
@@ -104,7 +110,7 @@ function handleSelect(command: TCommand) {
       variant="outline"
       @click="handleSelect('edit')"
     >
-      <FilePenLine class="mr-2 size-4" />
+      <FilePenLineIcon class="mr-2 size-4" />
       Edit
     </Button>
     <Button
@@ -112,7 +118,7 @@ function handleSelect(command: TCommand) {
       variant="destructive"
       @click="handleSelect('delete')"
     >
-      <Trash2 class="mr-2 size-4" />
+      <Trash2Icon class="mr-2 size-4" />
       Delete
     </Button>
   </div>

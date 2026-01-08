@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { Receipt } from 'lucide-vue-next'
-
 import type { TInvoice } from '@/pages/invoices/data/schema'
+
+import { ReceiptIcon } from '@/composables/use-icons'
 import type { IInvoiceItem } from '@/services/invoices.service'
 
 import {
@@ -48,7 +48,7 @@ function formatCurrency(value: any): string {
             <div
               class="w-12 h-12 bg-primary rounded-lg flex items-center justify-center"
             >
-              <Receipt class="w-6 h-6 text-white" />
+              <ReceiptIcon class="w-6 h-6 text-white" />
             </div>
             <div>
               <h1 class="text-3xl font-bold text-gray-900">

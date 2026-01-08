@@ -32,12 +32,14 @@ declare global {
   const CalendarDaysIcon: typeof import('../composables/use-icons').CalendarDaysIcon
   const CalendarIcon: typeof import('../composables/use-icons').CalendarIcon
   const Check: typeof import('../composables/use-icons').Check
+  const CheckCircle2Icon: typeof import('../composables/use-icons').CheckCircle2Icon
   const CheckIcon: typeof import('../composables/use-icons').CheckIcon
   const ChevronsUpDown: typeof import('../composables/use-icons').ChevronsUpDown
   const ChevronsUpDownIcon: typeof import('../composables/use-icons').ChevronsUpDownIcon
   const Circle: typeof import('../composables/use-icons').Circle
   const CircleCheck: typeof import('../composables/use-icons').CircleCheck
   const CircleCheckIcon: typeof import('../composables/use-icons').CircleCheckIcon
+  const CircleDotIcon: typeof import('../composables/use-icons').CircleDotIcon
   const CircleHelp: typeof import('../composables/use-icons').CircleHelp
   const CircleHelpIcon: typeof import('../composables/use-icons').CircleHelpIcon
   const CircleIcon: typeof import('../composables/use-icons').CircleIcon
@@ -58,12 +60,15 @@ declare global {
   const EllipsisIcon: typeof import('../composables/use-icons').EllipsisIcon
   const Eye: typeof import('../composables/use-icons').Eye
   const EyeIcon: typeof import('../composables/use-icons').EyeIcon
+  const FileCheckIcon: typeof import('../composables/use-icons').FileCheckIcon
   const FileDown: typeof import('../composables/use-icons').FileDown
   const FileDownIcon: typeof import('../composables/use-icons').FileDownIcon
   const FilePenLine: typeof import('../composables/use-icons').FilePenLine
   const FilePenLineIcon: typeof import('../composables/use-icons').FilePenLineIcon
+  const FilePlusIcon: typeof import('../composables/use-icons').FilePlusIcon
   const FileText: typeof import('../composables/use-icons').FileText
   const FileTextIcon: typeof import('../composables/use-icons').FileTextIcon
+  const FileXIcon: typeof import('../composables/use-icons').FileXIcon
   const Filter: typeof import('../composables/use-icons').Filter
   const FilterIcon: typeof import('../composables/use-icons').FilterIcon
   const FolderKanban: typeof import('../composables/use-icons').FolderKanban
@@ -72,6 +77,7 @@ declare global {
   const Grid3x3Icon: typeof import('../composables/use-icons').Grid3x3Icon
   const Hash: typeof import('../composables/use-icons').Hash
   const HashIcon: typeof import('../composables/use-icons').HashIcon
+  const HistoryIcon: typeof import('../composables/use-icons').HistoryIcon
   const LayoutDashboard: typeof import('../composables/use-icons').LayoutDashboard
   const LayoutDashboardIcon: typeof import('../composables/use-icons').LayoutDashboardIcon
   const LayoutGrid: typeof import('../composables/use-icons').LayoutGrid
@@ -135,6 +141,7 @@ declare global {
   const Wrench: typeof import('../composables/use-icons').Wrench
   const WrenchIcon: typeof import('../composables/use-icons').WrenchIcon
   const X: typeof import('../composables/use-icons').X
+  const XCircleIcon: typeof import('../composables/use-icons').XCircleIcon
   const XIcon: typeof import('../composables/use-icons').XIcon
   const computed: typeof import('vue').computed
   const createApp: typeof import('vue').createApp

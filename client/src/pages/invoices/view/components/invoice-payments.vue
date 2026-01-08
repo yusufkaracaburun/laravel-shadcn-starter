@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { CreditCard, Hash } from 'lucide-vue-next'
-
 import type { IInvoicePayment } from '@/pages/invoices/models/invoice'
+
+import { CreditCardIcon, HashIcon } from '@/composables/use-icons'
 
 import {
   AccordionContent,
@@ -26,7 +26,7 @@ const props = defineProps<Props>()
       class="flex items-center justify-between cursor-pointer select-none"
     >
       <h4 class="text-base font-semibold text-gray-900 flex items-center gap-2">
-        <CreditCard class="w-4 h-4 text-gray-600" />
+        <CreditCardIcon class="w-4 h-4 text-gray-600" />
         Payments
       </h4>
     </AccordionTrigger>
@@ -35,7 +35,7 @@ const props = defineProps<Props>()
         <div
           class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-gray-200 mb-3"
         >
-          <CreditCard class="w-6 h-6 text-gray-400" />
+          <CreditCardIcon class="w-6 h-6 text-gray-400" />
         </div>
         <p class="text-sm text-gray-500">No payments yet</p>
       </div>
@@ -71,7 +71,7 @@ const props = defineProps<Props>()
                 class="flex justify-between items-start mb-1 text-xs text-gray-500"
               >
                 <div class="flex items-center gap-2">
-                  <Hash class="w-3 h-3" />
+                  <HashIcon class="w-3 h-3" />
                   <span>{{ payment.payment_number }}</span>
                 </div>
                 <div class="flex items-center gap-2">

@@ -1,6 +1,12 @@
 <script setup lang="ts">
-import { CheckCircle2, Clock, Mail, XCircle } from 'lucide-vue-next'
 import { ref } from 'vue'
+
+import {
+  CheckCircle2Icon,
+  ClockIcon,
+  MailIcon,
+  XCircleIcon,
+} from '@/composables/use-icons'
 
 import type { IInvoiceEmail } from '@/services/invoices.service'
 
@@ -30,13 +36,13 @@ function toggleEmail(id: number) {
 function getStatusIcon(status: string) {
   switch (status) {
     case 'sent':
-      return CheckCircle2
+      return CheckCircle2Icon
     case 'failed':
-      return XCircle
+      return XCircleIcon
     case 'pending':
-      return Clock
+      return ClockIcon
     default:
-      return Mail
+      return MailIcon
   }
 }
 </script>
@@ -45,7 +51,7 @@ function getStatusIcon(status: string) {
   <Card>
     <CardHeader class="pb-4">
       <div class="flex items-center gap-2">
-        <Mail class="size-4 text-muted-foreground" />
+        <MailIcon class="size-4 text-muted-foreground" />
         <CardTitle class="text-base font-semibold"> Sent Emails </CardTitle>
       </div>
     </CardHeader>

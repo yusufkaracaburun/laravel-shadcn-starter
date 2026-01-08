@@ -4,9 +4,14 @@ meta:
 </route>
 
 <script setup lang="ts">
-import { ArrowLeft, Save, Send } from 'lucide-vue-next'
 import { computed, nextTick, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+
+import {
+  ArrowLeftIcon,
+  SaveIcon,
+  SendIcon,
+} from '@/composables/use-icons'
 
 import type { TInvoiceForm, TInvoiceItem } from '@/pages/invoices/data/schema'
 
@@ -101,7 +106,7 @@ async function handleUpdateAndSend() {
   <Page title="Edit Invoice" description="Edit invoice details" sticky>
     <template #actions>
       <Button variant="outline" size="sm" @click="handleClose">
-        <ArrowLeft class="mr-2 size-4" />
+        <ArrowLeftIcon class="mr-2 size-4" />
         Back
       </Button>
       <Button variant="outline" :disabled="isSubmitting" @click="handleUpdate">
@@ -109,7 +114,7 @@ async function handleUpdateAndSend() {
         Update
       </Button>
       <Button :disabled="isSubmitting" @click="handleUpdateAndSend">
-        <Send class="mr-2 size-4" />
+        <SendIcon class="mr-2 size-4" />
         Update & Send
       </Button>
     </template>

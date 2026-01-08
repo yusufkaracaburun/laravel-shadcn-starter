@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { Filter } from 'lucide-vue-next'
-
 import type { IInvoiceFilters } from '@/services/invoices.service'
+
+import { FilterIcon } from '@/composables/use-icons'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -62,7 +62,7 @@ const hasActiveFilters = computed(() => {
   <Popover>
     <PopoverTrigger as-child>
       <Button variant="outline" class="h-8">
-        <Filter class="mr-2 size-4" />
+        <FilterIcon class="mr-2 size-4" />
         Filters
         <span
           v-if="hasActiveFilters"

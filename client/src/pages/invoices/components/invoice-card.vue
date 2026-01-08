@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { FileText, MoreVertical } from 'lucide-vue-next'
 import { useRouter } from 'vue-router'
+
+import { FileTextIcon, MoreVerticalIcon } from '@/composables/use-icons'
 
 import {
   Card,
@@ -95,7 +96,7 @@ function formatDate(dateString: string | null | undefined): string {
     <CardHeader>
       <div class="flex items-start justify-between">
         <div class="flex items-center gap-2">
-          <FileText class="size-5 text-muted-foreground" />
+          <FileTextIcon class="size-5 text-muted-foreground" />
           <CardTitle class="line-clamp-1">
             {{ invoice.invoice_number || `Invoice #${invoice.id}` }}
           </CardTitle>
@@ -103,7 +104,7 @@ function formatDate(dateString: string | null | undefined): string {
         <UiDropdownMenu @click.stop>
           <UiDropdownMenuTrigger as-child @click.stop>
             <UiButton variant="ghost" size="icon" class="size-8" @click.stop>
-              <MoreVertical class="size-4" />
+              <MoreVerticalIcon class="size-4" />
               <span class="sr-only">Open menu</span>
             </UiButton>
           </UiDropdownMenuTrigger>

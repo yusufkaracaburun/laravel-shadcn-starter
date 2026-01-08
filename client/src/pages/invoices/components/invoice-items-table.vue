@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { Pencil, Trash2 } from 'lucide-vue-next'
-
 import { Button } from '@/components/ui/button'
+
+import { PencilIcon, Trash2Icon } from '@/composables/use-icons'
 
 import { formatMoney, formatNumber } from '../utils/formatters'
 
@@ -91,7 +91,7 @@ function handleDelete(index: number) {
                 size="sm"
                 @click="handleEdit(item, index)"
               >
-                <Pencil class="size-4" />
+                <PencilIcon class="size-4" />
               </Button>
               <Button
                 v-if="editingItemIndex !== index"
@@ -99,7 +99,7 @@ function handleDelete(index: number) {
                 size="sm"
                 @click="handleDelete(index)"
               >
-                <Trash2 class="size-4" />
+                <Trash2Icon class="size-4" />
               </Button>
             </div>
           </td>

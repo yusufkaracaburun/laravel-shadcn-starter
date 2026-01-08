@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { CreditCard } from 'lucide-vue-next'
-
 import type { IInvoicePayment } from '@/services/invoices.service'
+
+import { CreditCardIcon } from '@/composables/use-icons'
 
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -20,7 +20,7 @@ const props = defineProps<IProps>()
   <Card>
     <CardHeader class="pb-4">
       <div class="flex items-center gap-2">
-        <CreditCard class="size-4 text-muted-foreground" />
+        <CreditCardIcon class="size-4 text-muted-foreground" />
         <CardTitle class="text-base font-semibold"> Payments </CardTitle>
       </div>
     </CardHeader>

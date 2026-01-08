@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import type { Table } from '@tanstack/vue-table'
 
-import { X } from 'lucide-vue-next'
-
 import type { IInvoice, IInvoiceFilters } from '@/pages/invoices/models/invoice'
+
+import { XIcon } from '@/composables/use-icons'
 
 import DataTableViewOptions from '@/components/data-table/view-options.vue'
 import { Button } from '@/components/ui/button'
@@ -61,7 +61,7 @@ const isFiltered = computed(() => {
         "
       >
         Reset
-        <X class="size-4" />
+        <XIcon class="size-4" />
       </Button>
     </div>
     <DataTableViewOptions :table="table" />

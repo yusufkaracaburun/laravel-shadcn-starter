@@ -1,12 +1,15 @@
 import type { ColumnDef } from '@tanstack/vue-table'
+import type { Router } from 'vue-router'
 
-import { FileText } from 'lucide-vue-next'
 import { h } from 'vue'
 import { useRouter } from 'vue-router'
+
+import type { Customer } from '@/services/customers.service'
 
 import DataTableColumnHeader from '@/components/data-table/column-header.vue'
 import { SelectColumn } from '@/components/data-table/table-columns'
 import { StatusBadge } from '@/components/ui/status-badge'
+import { FileTextIcon } from '@/composables/use-icons'
 import { formatDate } from '@/utils/date'
 import { formatMoney } from '@/utils/money'
 
@@ -15,6 +18,228 @@ import type { IInvoice } from '../models/invoice'
 import { INVOICE_STATUSES } from '../data/data'
 import DataTableRowActions from './data-table-row-actions.vue'
 
+// Route name constants
+const ROUTES = {
+  INVOICE_VIEW: '/invoices/view/[id]',
+  CUSTOMER_VIEW: '/customers/[id]',
+} as const
+
+// CSS class constants
+const CELL_CLASSES = {
+  LINK_BUTTON:
+    'font-medium text-left hover:underline cursor-pointer focus:outline-none focus:underline',
+  INVOICE_NUMBER: 'w-32',
+  CUSTOMER_CONTAINER: 'flex items-center gap-2 max-w-[200px] truncate',
+  CUSTOMER_ICON_WRAPPER:
+    'flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-muted',
+  DATE_CELL: 'w-[100px]',
+  TOTAL_CELL: 'w-[100px] font-medium',
+  CREATED_AT_CELL: 'w-[100px] text-muted-foreground',
+  EMPTY_STATE: 'w-[150px] text-muted-foreground',
+} as const
+
+/**
+ * Helper function to format invoice number display
+ */
+function formatInvoiceNumber(
+  invoiceNumber: string | null,
+  invoiceId: number,
+): string {
+  return invoiceNumber || `Invoice #${invoiceId}`
+}
+
+/**
+ * Helper function to get customer display name
+ */
+function getCustomerDisplayName(
+  customer: Customer | undefined,
+  customerId: number,
+): string {
+  return customer?.name || `Customer #${customerId}`
+}
+
+/**
+ * Helper function to create invoice number cell
+ */
+function createInvoiceNumberCell(invoice: IInvoice, router: Router) {
+  const displayNumber = formatInvoiceNumber(invoice.invoice_number, invoice.id)
+
+  return h(
+    'button',
+    {
+      class: `${CELL_CLASSES.LINK_BUTTON} ${CELL_CLASSES.INVOICE_NUMBER}`,
+      onClick: () => {
+        router.push({
+          name: ROUTES.INVOICE_VIEW,
+          params: { id: invoice.id.toString() },
+        })
+      },
+    },
+    displayNumber,
+  )
+}
+
+/**
+ * Helper function to create customer cell
+ */
+function createCustomerCell(invoice: IInvoice, router: Router) {
+  const customer = invoice.customer
+
+  if (!customer) {
+    return h('div', { class: CELL_CLASSES.EMPTY_STATE }, '-')
+  }
+
+  const customerName = getCustomerDisplayName(customer, invoice.customer_id)
+
+  return h(
+    'button',
+    {
+      class: `${CELL_CLASSES.LINK_BUTTON} ${CELL_CLASSES.CUSTOMER_CONTAINER}`,
+      onClick: () => {
+        router.push({
+          name: ROUTES.CUSTOMER_VIEW,
+          params: { id: invoice.customer_id.toString() },
+        })
+      },
+    },
+    [
+      h('div', { class: CELL_CLASSES.CUSTOMER_ICON_WRAPPER }, [
+        h(FileTextIcon, { class: 'h-4 w-4 text-muted-foreground' }),
+      ]),
+      h('span', { class: 'truncate' }, customerName),
+    ],
+  )
+}
+
+/**
+ * Helper function to create date cell
+ */
+function createDateCell(dateValue: unknown) {
+  const dateValueString = dateValue as string | null | undefined
+  return h(
+    'div',
+    { class: CELL_CLASSES.DATE_CELL },
+    formatDate(dateValueString ?? ''),
+  )
+}
+
+/**
+ * Helper function to create status cell
+ */
+function createStatusCell(statusValue: string) {
+  const status = INVOICE_STATUSES.find((s) => s.value === statusValue)
+  if (!status) {
+    return null
+  }
+
+  return h(StatusBadge, {
+    status: status.value,
+    type: 'invoice',
+    icon: status.icon,
+    label: status.label,
+  })
+}
+
+/**
+ * Helper function to create money cell
+ */
+function createMoneyCell(value: unknown) {
+  return h('div', { class: CELL_CLASSES.TOTAL_CELL }, formatMoney(value))
+}
+
+/**
+ * Creates invoice table columns with router instance
+ * This factory function pattern ensures router is properly injected
+ * and avoids calling composables inside render functions
+ *
+ * @param router - Vue Router instance for navigation
+ * @returns Array of column definitions
+ */
+export function createInvoiceColumns(router: Router): ColumnDef<IInvoice>[] {
+  return [
+    SelectColumn as ColumnDef<IInvoice>,
+    {
+      accessorKey: 'invoice_number',
+      header: ({ column }) =>
+        h(DataTableColumnHeader<IInvoice>, { column, title: 'Invoice Number' }),
+      cell: ({ row }) => createInvoiceNumberCell(row.original, router),
+      enableSorting: true,
+      enableHiding: false,
+    },
+    {
+      accessorKey: 'customer',
+      header: ({ column }) =>
+        h(DataTableColumnHeader<IInvoice>, { column, title: 'Customer' }),
+      cell: ({ row }) => createCustomerCell(row.original, router),
+      enableSorting: false,
+    },
+    {
+      accessorKey: 'date',
+      header: ({ column }) =>
+        h(DataTableColumnHeader<IInvoice>, { column, title: 'Date' }),
+      cell: ({ row }) => {
+        const dateValue = row.getValue('date')
+        return createDateCell(dateValue)
+      },
+      enableSorting: true,
+    },
+    {
+      accessorKey: 'date_due',
+      header: ({ column }) =>
+        h(DataTableColumnHeader<IInvoice>, { column, title: 'Due Date' }),
+      cell: ({ row }) => {
+        const dateValue = row.getValue('date_due') as string | null | undefined
+        return createDateCell(dateValue)
+      },
+      enableSorting: true,
+    },
+    {
+      accessorKey: 'status',
+      header: ({ column }) =>
+        h(DataTableColumnHeader<IInvoice>, { column, title: 'Status' }),
+      cell: ({ row }) => {
+        const statusValue = row.getValue('status') as string
+        return createStatusCell(statusValue)
+      },
+      enableSorting: true,
+    },
+    {
+      accessorKey: 'total',
+      header: ({ column }) =>
+        h(DataTableColumnHeader<IInvoice>, { column, title: 'Total' }),
+      cell: ({ row }) => {
+        const total = row.getValue('total')
+        return createMoneyCell(total)
+      },
+      enableSorting: true,
+    },
+    {
+      accessorKey: 'created_at',
+      header: ({ column }) =>
+        h(DataTableColumnHeader<IInvoice>, { column, title: 'Created At' }),
+      cell: ({ row }) => {
+        const dateValue = row.getValue('created_at') as
+          | string
+          | null
+          | undefined
+        return h(
+          'div',
+          { class: CELL_CLASSES.CREATED_AT_CELL },
+          formatDate(dateValue),
+        )
+      },
+      enableSorting: true,
+    },
+    {
+      id: 'actions',
+      cell: ({ row }) => h(DataTableRowActions, { row }),
+    },
+  ]
+}
+
+// Default export for backward compatibility
+// Note: useRouter() is called inside render functions which works in Vue 3
+// but is not ideal. For better practice, use createInvoiceColumns(useRouter()) in components
 export const columns: ColumnDef<IInvoice>[] = [
   SelectColumn as ColumnDef<IInvoice>,
   {
@@ -22,25 +247,8 @@ export const columns: ColumnDef<IInvoice>[] = [
     header: ({ column }) =>
       h(DataTableColumnHeader<IInvoice>, { column, title: 'Invoice Number' }),
     cell: ({ row }) => {
-      const invoice = row.original
       const router = useRouter()
-      const invoiceNumber = row.getValue('invoice_number') as string | null
-      const displayNumber = invoiceNumber || `Invoice #${invoice.id}`
-
-      return h(
-        'button',
-        {
-          class:
-            'w-32 font-medium text-left hover:underline cursor-pointer focus:outline-none focus:underline',
-          onClick: () => {
-            router.push({
-              name: '/invoices/view/[id]',
-              params: { id: invoice.id.toString() },
-            })
-          },
-        },
-        displayNumber,
-      )
+      return createInvoiceNumberCell(row.original, router)
     },
     enableSorting: true,
     enableHiding: false,
@@ -50,41 +258,8 @@ export const columns: ColumnDef<IInvoice>[] = [
     header: ({ column }) =>
       h(DataTableColumnHeader<IInvoice>, { column, title: 'Customer' }),
     cell: ({ row }) => {
-      const invoice = row.original
       const router = useRouter()
-      const customer = invoice.customer
-
-      if (!customer) {
-        return h('div', { class: 'w-[150px] text-muted-foreground' }, '-')
-      }
-
-      const customerName =
-        (customer as any).name || `Customer #${invoice.customer_id}`
-
-      return h(
-        'button',
-        {
-          class:
-            'flex items-center gap-2 max-w-[200px] truncate font-medium text-left hover:underline cursor-pointer focus:outline-none focus:underline',
-          onClick: () => {
-            router.push({
-              name: '/customers/[id]',
-              params: { id: invoice.customer_id.toString() },
-            })
-          },
-        },
-        [
-          h(
-            'div',
-            {
-              class:
-                'flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-muted',
-            },
-            [h(FileText, { class: 'h-4 w-4 text-muted-foreground' })],
-          ),
-          h('span', { class: 'truncate' }, customerName),
-        ],
-      )
+      return createCustomerCell(row.original, router)
     },
     enableSorting: false,
   },
@@ -94,7 +269,7 @@ export const columns: ColumnDef<IInvoice>[] = [
       h(DataTableColumnHeader<IInvoice>, { column, title: 'Date' }),
     cell: ({ row }) => {
       const dateValue = row.getValue('date') as string | null | undefined
-      return h('div', { class: 'w-[100px]' }, formatDate(dateValue))
+      return createDateCell(dateValue)
     },
     enableSorting: true,
   },
@@ -104,7 +279,7 @@ export const columns: ColumnDef<IInvoice>[] = [
       h(DataTableColumnHeader<IInvoice>, { column, title: 'Due Date' }),
     cell: ({ row }) => {
       const dateValue = row.getValue('date_due') as string | null | undefined
-      return h('div', { class: 'w-[100px]' }, formatDate(dateValue))
+      return createDateCell(dateValue)
     },
     enableSorting: true,
   },
@@ -114,14 +289,7 @@ export const columns: ColumnDef<IInvoice>[] = [
       h(DataTableColumnHeader<IInvoice>, { column, title: 'Status' }),
     cell: ({ row }) => {
       const statusValue = row.getValue('status') as string
-      const status = INVOICE_STATUSES.find((s) => s.value === statusValue)
-      if (!status) return null
-      return h(StatusBadge, {
-        status: status.value,
-        type: 'invoice',
-        icon: status.icon,
-        label: status.label,
-      })
+      return createStatusCell(statusValue)
     },
     enableSorting: true,
   },
@@ -131,7 +299,7 @@ export const columns: ColumnDef<IInvoice>[] = [
       h(DataTableColumnHeader<IInvoice>, { column, title: 'Total' }),
     cell: ({ row }) => {
       const total = row.getValue('total')
-      return h('div', { class: 'w-[100px] font-medium' }, formatMoney(total))
+      return createMoneyCell(total)
     },
     enableSorting: true,
   },
@@ -143,7 +311,7 @@ export const columns: ColumnDef<IInvoice>[] = [
       const dateValue = row.getValue('created_at') as string | null | undefined
       return h(
         'div',
-        { class: 'w-[100px] text-muted-foreground' },
+        { class: CELL_CLASSES.CREATED_AT_CELL },
         formatDate(dateValue),
       )
     },

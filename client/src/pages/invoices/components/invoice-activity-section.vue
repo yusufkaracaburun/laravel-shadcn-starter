@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { History } from 'lucide-vue-next'
-
 import type { IInvoiceActivity } from '@/services/invoices.service'
+
+import { HistoryIcon } from '@/composables/use-icons'
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
@@ -29,7 +29,7 @@ function hasChanges(activity: IInvoiceActivity): boolean {
   <Card>
     <CardHeader class="pb-4">
       <div class="flex items-center gap-2">
-        <History class="size-4 text-muted-foreground" />
+        <HistoryIcon class="size-4 text-muted-foreground" />
         <CardTitle class="text-base font-semibold"> Activity Log </CardTitle>
       </div>
     </CardHeader>

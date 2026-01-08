@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { Plus } from 'lucide-vue-next'
-
 import type {
   IInvoiceItem,
   IInvoiceTotals,
 } from '@/pages/invoices/models/invoice'
 import type { Item } from '@/services/items.service'
+
+import { PlusIcon } from '@/composables/use-icons'
 
 import { Button } from '@/components/ui/button'
 import InvoiceItemSelector from '@/pages/invoices/components/invoice-item-selector.vue'
@@ -73,7 +73,7 @@ function handleAddItem() {
           variant="outline"
           @click="handleAddItem"
         >
-          <Plus class="mr-2 size-4" />
+          <PlusIcon class="mr-2 size-4" />
           Add Item
         </Button>
       </div>

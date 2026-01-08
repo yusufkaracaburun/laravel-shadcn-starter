@@ -2,8 +2,14 @@
 import type { Row } from '@tanstack/vue-table'
 import type { Component } from 'vue'
 
-import { Ellipsis, Eye, FilePenLine, Trash2 } from 'lucide-vue-next'
 import { useRouter } from 'vue-router'
+
+import {
+  EllipsisIcon,
+  EyeIcon,
+  FilePenLineIcon,
+  Trash2Icon,
+} from '@/composables/use-icons'
 
 import type { IInvoice } from '../models/invoice'
 
@@ -48,21 +54,21 @@ const isOpen = ref(false)
       <UiDropdownMenuTrigger as-child>
         <UiButton variant="ghost" class="size-8 p-0">
           <span class="sr-only">Open menu</span>
-          <Ellipsis class="size-4" />
+          <EllipsisIcon class="size-4" />
         </UiButton>
       </UiDropdownMenuTrigger>
       <UiDropdownMenuContent align="end" class="w-[160px]">
         <UiDropdownMenuItem @select.stop="handleSelect('view')">
           <span>View</span>
           <UiDropdownMenuShortcut>
-            <Eye class="size-4" />
+            <EyeIcon class="size-4" />
           </UiDropdownMenuShortcut>
         </UiDropdownMenuItem>
 
         <UiDropdownMenuItem @select.stop="handleSelect('edit')">
           <span>Edit</span>
           <UiDropdownMenuShortcut>
-            <FilePenLine class="size-4" />
+            <FilePenLineIcon class="size-4" />
           </UiDropdownMenuShortcut>
         </UiDropdownMenuItem>
 
@@ -70,7 +76,7 @@ const isOpen = ref(false)
           <UiDropdownMenuItem @select.stop="handleSelect('delete')">
             <span>Delete</span>
             <UiDropdownMenuShortcut>
-              <Trash2 class="size-4" />
+              <Trash2Icon class="size-4" />
             </UiDropdownMenuShortcut>
           </UiDropdownMenuItem>
         </UiDialogTrigger>
