@@ -1,0 +1,58 @@
+export enum EUserRole {
+  SUPER_ADMIN = 'super_admin',
+  ADMIN = 'admin',
+  MANAGER = 'manager',
+  USER = 'user',
+  CUSTOMER = 'customer',
+}
+export type TUserRole = (typeof EUserRole)[keyof typeof EUserRole]
+
+export enum EUserStatus {
+  REGISTERED = 'registered',
+  ACTIVE = 'active',
+  INACTIVE = 'inactive',
+  BLOCKED = 'blocked',
+  SUSPENDED = 'suspended',
+}
+
+export type TUserStatus = (typeof EUserStatus)[keyof typeof EUserStatus]
+
+export interface IUserFilters {
+  name?: string
+  email?: string
+  role?: TUserRole
+  status?: TUserStatus
+  created_at?: string
+  search?: string
+  between?: string
+}
+
+export interface IUser {
+  id: number
+  name: string
+  email: string
+  role: TUserRole
+  status: TUserStatus
+  created_at: string
+  updated_at: string
+}
+
+export interface ICreateUserRequest {
+  name: string
+  email: string
+  role: TUserRole
+  status: TUserStatus
+}
+
+export interface IUpdateUserRequest {
+  id: number
+  name?: string
+  email?: string
+  role?: TUserRole
+  status?: TUserStatus
+}
+
+export interface IUserPrerequisites {
+  roles: object[]
+  statuses: object[]
+}

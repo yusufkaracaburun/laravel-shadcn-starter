@@ -1,40 +1,56 @@
 import type { Customer } from '@/services/customers.service'
 import type { Item, Money } from '@/services/items.service'
 
-/**
- * Invoice status enum matching backend InvoiceStatus
- */
+export enum EInvoiceStatus {
+  DRAFT = 'draft',
+  SENT = 'sent',
+  PAID = 'paid',
+  UNPAID = 'unpaid',
+  CANCELLED = 'cancelled',
+  REFUNDED = 'refunded',
+  OVERDUE = 'overdue',
+  REMINDER = 'reminder',
+  CREDITED = 'credited',
+  PARTIAL_PAID = 'partial_paid',
+}
 export type TInvoiceStatus =
-  | 'draft'
-  | 'sent'
-  | 'paid'
-  | 'unpaid'
-  | 'cancelled'
-  | 'refunded'
-  | 'overdue'
-  | 'reminder'
-  | 'credited'
-  | 'partial_paid'
+  (typeof EInvoiceStatus)[keyof typeof EInvoiceStatus]
 
-/**
- * Payment status enum matching backend PaymentStatus
- */
+export enum EPaymentStatus {
+  PENDING = 'pending',
+  PAID = 'paid',
+  FAILED = 'failed',
+  REFUNDED = 'refunded',
+  CANCELLED = 'cancelled',
+}
 export type TPaymentStatus =
-  | 'pending'
-  | 'paid'
-  | 'failed'
-  | 'refunded'
-  | 'cancelled'
+  (typeof EPaymentStatus)[keyof typeof EPaymentStatus]
 
-/**
- * Email status enum matching backend EmailStatus
- */
-export type TEmailStatus = 'pending' | 'sent' | 'failed'
+export enum EEmailStatus {
+  PENDING = 'pending',
+  SENT = 'sent',
+  FAILED = 'failed',
+}
+export type TEmailStatus = (typeof EEmailStatus)[keyof typeof EEmailStatus]
 
-/**
- * Payment interface matching backend PaymentResource
- * @see api/app/Http/Resources/PaymentResource.php
- */
+export interface IInvoiceFilters {
+  id?: number
+  customer_id?: number
+  status?: TInvoiceStatus
+  invoice_number?: string
+  date?: string
+  date_due?: string
+  between?: string
+  search?: string
+}
+
+interface IStatusFormatted {
+  id: string
+  value: string
+  label: string
+  color: string | null
+  style: string | null
+}
 export interface IInvoicePayment {
   id: number
   payment_number: string | null
@@ -45,13 +61,7 @@ export interface IInvoicePayment {
   method: string | null
   provider: string | null
   provider_reference: string | null
-  status_formatted: {
-    id: string
-    value: string
-    label: string
-    color: string | null
-    style: string | null
-  }
+  status_formatted: IStatusFormatted
   status: TPaymentStatus
   paid_at: string | null
   refunded_at: string | null
@@ -59,10 +69,17 @@ export interface IInvoicePayment {
   updated_at: string
 }
 
-/**
- * Activity interface matching backend ActivityResource
- * @see api/app/Http/Resources/ActivityResource.php
- */
+interface ICauser {
+  id: number
+  name: string
+  email: string | null
+}
+
+interface IProperties {
+  old: Record<string, any>
+  attributes: Record<string, any>
+}
+
 export interface IInvoiceActivity {
   id: number
   log_name: string | null
@@ -71,25 +88,14 @@ export interface IInvoiceActivity {
   subject_type: string
   causer_id: number | null
   causer_type: string | null
-  causer: {
-    id: number
-    name: string
-    email: string | null
-  } | null
-  properties: {
-    old: Record<string, any>
-    attributes: Record<string, any>
-  }
+  causer: ICauser | null
+  properties: IProperties
   event: string | null
   batch_uuid: string | null
   created_at: string
   updated_at: string
 }
 
-/**
- * Email interface matching backend InvoiceEmailResource
- * @see api/app/Http/Resources/InvoiceEmailResource.php
- */
 export interface IInvoiceEmail {
   id: number
   hash: string
@@ -142,13 +148,7 @@ export interface IInvoice {
   date: string
   due_days: number
   date_due: string
-  status_formatted: {
-    id: string
-    value: string
-    label: string
-    color: string | null
-    style: string | null
-  }
+  status_formatted: IStatusFormatted
   status: TInvoiceStatus
   subtotal: Money | number
   total_vat_0: Money | number
@@ -164,51 +164,12 @@ export interface IInvoice {
   updated_at: string
 }
 
-/**
- * Paginated invoices response interface matching Laravel\'s pagination JSON structure
- * @see https://laravel.com/docs/12.x/pagination#converting-results-to-json
- * @see api/app/Http/Controllers/Api/InvoiceController.php::index()\
- */
-export interface IPaginatedInvoicesResponse {
-  data: IInvoice[]
-  current_page: number
-  per_page: number
-  total: number
-  last_page: number
-  first_page_url: string
-  last_page_url: string
-  next_page_url: string | null
-  prev_page_url: string | null
-  path: string
-  from: number | null
-  to: number | null
-}
-
-/**
- * Invoice filters interface matching backend filter structure
- * @see api/app/Http/Controllers/Api/InvoiceController.php::index()
- */
-export interface IInvoiceFilters {
-  id?: number
-  customer_id?: number
-  status?: TInvoiceStatus
-  invoice_number?: string
-  date?: string
-  date_due?: string
-  between?: string // Format: \"YYYY-MM-DD,YYYY-MM-DD\"
-  search?: string
-}
-
-/**
- * Create invoice request interface matching backend validation
- * @see api/app/Http/Requests/Invoices/InvoiceStoreRequest.php
- */
 export interface ICreateInvoiceRequest {
   customer_id: number
   invoice_number?: string | null
-  date: string // Format: \"YYYY-MM-DD\"
+  date: string
   due_days?: number
-  date_due?: string // Format: \"YYYY-MM-DD\"
+  date_due?: string
   status?: TInvoiceStatus
   subtotal?: number
   total_vat_0?: number
@@ -218,17 +179,13 @@ export interface ICreateInvoiceRequest {
   notes?: string | null
 }
 
-/**
- * Update invoice request interface matching backend validation
- * @see api/app/Http/Requests/Invoices/InvoiceUpdateRequest.php
- */
 export interface IUpdateInvoiceRequest {
   id: number
   customer_id?: number
   invoice_number?: string | null
-  date?: string // Format: \"YYYY-MM-DD\"
+  date?: string
   due_days?: number
-  date_due?: string // Format: \"YYYY-MM-DD\"
+  date_due?: string
   status?: TInvoiceStatus
   subtotal?: number
   total_vat_0?: number
@@ -238,12 +195,8 @@ export interface IUpdateInvoiceRequest {
   notes?: string | null
 }
 
-/**
- * Invoice prerequisites interface
- * Note: items and customers are Laravel ResourceCollections which serialize to { data: T[] }
- */
 export interface IInvoicePrerequisites {
-  items: Item[] | { data: Item[] }
-  customers: Customer[] | { data: Customer[] }
+  items: Item[]
+  customers: Customer[]
   next_invoice_number: string
 }

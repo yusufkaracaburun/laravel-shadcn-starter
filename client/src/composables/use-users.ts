@@ -1,11 +1,17 @@
-import type { SortingState } from '@tanstack/vue-table'
+import { computed, ref, watch } from 'vue'
 
-import type { ServerPagination } from '@/components/data-table/types'
+import type { TPageSize } from '@/components/data-table/types'
+import type { IUserFilters } from '@/pages/users/models/users'
+import type { ISorting } from '@/services/query-utils'
+import type { IPaginatedResponse } from '@/services/types/response.type'
 import type {
   CreateUserRequest,
+  PaginatedUsersResponse,
   UpdateUserRequest,
+  User,
 } from '@/services/users.service'
 
+import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from '@/components/data-table/types'
 import { useToast } from '@/composables/use-toast'
 import {
   useCreateUserMutation,
@@ -15,177 +21,180 @@ import {
 } from '@/services/users.service'
 import { useErrorStore } from '@/stores/error.store'
 
+const UserContext = {
+  FETCH_USERS: 'fetchUsers',
+  CREATE_USER: 'createUser',
+  UPDATE_USER: 'updateUser',
+  DELETE_USER: 'deleteUser',
+}
+
+const UserMessages = {
+  CREATE_USER_SUCCESS: 'User created successfully!',
+  UPDATE_USER_SUCCESS: 'User updated successfully!',
+  DELETE_USER_SUCCESS: 'User deleted successfully!',
+}
+
 export function useUsers() {
   const toast = useToast()
   const errorStore = useErrorStore()
 
-  // Pagination state
-  const page = ref(1)
-  const pageSize = ref(10)
-
-  // Sorting state - managed here and passed to table
-  const sorting = ref<SortingState>([])
-
-  // Handler for sorting changes from table
-  function onSortingChange(newSorting: SortingState) {
-    sorting.value = newSorting
-    // Reset to first page when sorting changes
-    page.value = 1
+  const page = ref<number>(DEFAULT_PAGE)
+  const pageSize = ref<TPageSize>(DEFAULT_PAGE_SIZE)
+  const sort = ref<ISorting>({ id: 'created_at', desc: true })
+  const filter = ref<IUserFilters>({})
+  const includes = {
+    roles: 'roles',
   }
 
+  function onSortingChange(newSorting: ISorting): void {
+    sort.value = newSorting
+    page.value = DEFAULT_PAGE
+  }
+
+  function onFiltersChange(newFilters: IUserFilters): void {
+    filter.value = newFilters
+    page.value = DEFAULT_PAGE
+  }
+
+  function clearFilters() {
+    filter.value = {} as IUserFilters
+    page.value = DEFAULT_PAGE
+  }
+
+  function onPageChange(newPage: number): void {
+    page.value = newPage
+  }
+
+  function onPageSizeChange(newPageSize: TPageSize): void {
+    page.value = DEFAULT_PAGE
+    pageSize.value = newPageSize
+  }
+
+  // Convert ISorting to SortingState array format for the query
+  const sorting = computed(() => [sort.value])
+
   const {
-    data: usersResponse,
+    data: usersData,
     isLoading,
     isFetching,
     refetch: fetchUsers,
   } = useGetUsersQuery(page, pageSize, sorting)
 
-  // Watch for page and pageSize changes to trigger refetch
-  // Vue Query tracks computed refs in queryKey, but explicit watch ensures refetch on changes
+  const users = computed(() => {
+    const response = usersData.value?.data as PaginatedUsersResponse | undefined
+    return response?.data ?? []
+  })
+  async function fetchUsersData(): Promise<IPaginatedResponse<User>> {
+    try {
+      const response = await fetchUsers()
+      return response.data as IPaginatedResponse<User>
+    } catch (error: any) {
+      errorStore.setError(error, { context: UserContext.FETCH_USERS })
+      const message = errorStore.getErrorMessage(error)
+      toast.showError(message)
+      throw error
+    }
+  }
+
+  const createUserMutation = useCreateUserMutation()
+  async function createUser(data: CreateUserRequest) {
+    try {
+      const response = await createUserMutation.mutateAsync(data)
+      toast.showSuccess(UserMessages.CREATE_USER_SUCCESS)
+      return response
+    } catch (error: any) {
+      errorStore.setError(error, { context: UserContext.CREATE_USER })
+      const message = errorStore.getErrorMessage(error)
+      const validationErrors = errorStore.getValidationErrors(error)
+      if (Object.keys(validationErrors).length > 0) {
+        const firstError = Object.values(validationErrors)[0]?.[0]
+        toast.showError(firstError || message)
+      } else {
+        toast.showError(message)
+      }
+      throw error
+    }
+  }
+
+  const updateUserMutation = useUpdateUserMutation()
+  async function updateUser(userId: number, data: UpdateUserRequest) {
+    try {
+      const response = await updateUserMutation.mutateAsync({ userId, data })
+      toast.showSuccess(UserMessages.UPDATE_USER_SUCCESS)
+      return response
+    } catch (error: any) {
+      errorStore.setError(error, { context: UserContext.UPDATE_USER })
+      const message = errorStore.getErrorMessage(error)
+      const validationErrors = errorStore.getValidationErrors(error)
+      if (Object.keys(validationErrors).length > 0) {
+        const firstError = Object.values(validationErrors)[0]?.[0]
+        toast.showError(firstError || message)
+      } else {
+        toast.showError(message)
+      }
+      throw error
+    }
+  }
+
+  const deleteUserMutation = useDeleteUserMutation()
+  async function deleteUser(userId: number) {
+    try {
+      await deleteUserMutation.mutateAsync(userId)
+      toast.showSuccess(UserMessages.DELETE_USER_SUCCESS)
+    } catch (error: any) {
+      errorStore.setError(error, { context: UserContext.DELETE_USER })
+      const message = errorStore.getErrorMessage(error)
+      toast.showError(message)
+      throw error
+    }
+  }
+
+  const loading = computed(() => isLoading.value || isFetching.value)
+
+  const serverPagination = computed(() => {
+    const response = usersData.value?.data as PaginatedUsersResponse | undefined
+    if (!response) {
+      return {
+        page: page.value,
+        pageSize: pageSize.value,
+        total: 0,
+        onPageChange,
+        onPageSizeChange,
+      }
+    }
+    return {
+      page: response.current_page,
+      pageSize: pageSize.value,
+      total: response.total,
+      onPageChange,
+      onPageSizeChange,
+    }
+  })
+
   watch([page, pageSize], ([newPage, newPageSize], [oldPage, oldPageSize]) => {
-    // Skip initial trigger
     if (oldPage === undefined || oldPageSize === undefined) {
       return
     }
-    // Only refetch if values actually changed
     if (oldPage !== newPage || oldPageSize !== newPageSize) {
       fetchUsers()
     }
   })
 
-  // Computed refs for easy access
-  const users = computed(() => usersResponse.value?.data?.data ?? [])
-  const loading = computed(() => isLoading.value || isFetching.value)
-
-  // Extract pagination metadata from Laravel's pagination structure
-  const pagination = computed(
-    () =>
-      usersResponse.value?.data ?? {
-        current_page: 1,
-        last_page: 1,
-        per_page: 10,
-        total: 0,
-        from: null,
-        to: null,
-      },
-  )
-
-  // Pagination handlers
-  function onPageChange(newPage: number) {
-    page.value = newPage
-  }
-
-  function onPageSizeChange(newPageSize: number) {
-    pageSize.value = newPageSize
-    page.value = 1 // Reset to first page when page size changes
-  }
-
-  // Server pagination object for data-table
-  // Uses local pageSize value so dropdown updates immediately when changed
-  const serverPagination = computed<ServerPagination>(() => ({
-    page: pagination.value.current_page,
-    pageSize: pageSize.value, // Use local state for immediate UI update
-    total: pagination.value.total,
+  return {
+    sort,
+    filter,
+    includes,
+    users,
+    onSortingChange,
+    onFiltersChange,
+    clearFilters,
     onPageChange,
     onPageSizeChange,
-  }))
-
-  async function fetchUsersData() {
-    try {
-      const usersResponse = await fetchUsers()
-      return usersResponse.data
-    } catch (error: any) {
-      // Store error with context
-      errorStore.setError(error, { context: 'fetchUsers' })
-
-      // Use error store utilities for messages
-      const message = errorStore.getErrorMessage(error)
-      toast.showError(message)
-      throw error
-    }
-  }
-
-  // Create user mutation
-  const createUserMutation = useCreateUserMutation()
-  const updateUserMutation = useUpdateUserMutation()
-  const deleteUserMutation = useDeleteUserMutation()
-
-  async function createUser(data: CreateUserRequest) {
-    try {
-      const response = await createUserMutation.mutateAsync(data)
-      toast.showSuccess('User created successfully!')
-      return response
-    } catch (error: any) {
-      // Store error with context
-      errorStore.setError(error, { context: 'createUser' })
-
-      // Use error store utilities for messages
-      const message = errorStore.getErrorMessage(error)
-      const validationErrors = errorStore.getValidationErrors(error)
-
-      // Show toast with appropriate message
-      if (Object.keys(validationErrors).length > 0) {
-        const firstError = Object.values(validationErrors)[0]?.[0]
-        toast.showError(firstError || message)
-      } else {
-        toast.showError(message)
-      }
-      throw error
-    }
-  }
-
-  async function updateUser(userId: number, data: UpdateUserRequest) {
-    try {
-      const response = await updateUserMutation.mutateAsync({ userId, data })
-      toast.showSuccess('User updated successfully!')
-      return response
-    } catch (error: any) {
-      // Store error with context
-      errorStore.setError(error, { context: 'updateUser' })
-
-      // Use error store utilities for messages
-      const message = errorStore.getErrorMessage(error)
-      const validationErrors = errorStore.getValidationErrors(error)
-
-      // Show toast with appropriate message
-      if (Object.keys(validationErrors).length > 0) {
-        const firstError = Object.values(validationErrors)[0]?.[0]
-        toast.showError(firstError || message)
-      } else {
-        toast.showError(message)
-      }
-      throw error
-    }
-  }
-
-  async function deleteUser(userId: number) {
-    try {
-      await deleteUserMutation.mutateAsync(userId)
-      toast.showSuccess('User deleted successfully!')
-    } catch (error: any) {
-      // Store error with context
-      errorStore.setError(error, { context: 'deleteUser' })
-
-      // Use error store utilities for messages
-      const message = errorStore.getErrorMessage(error)
-      toast.showError(message)
-      throw error
-    }
-  }
-
-  return {
-    users,
-    loading,
     fetchUsersData,
-    usersResponse,
-    serverPagination,
-    sorting,
-    onSortingChange,
     createUser,
-    createUserMutation,
     updateUser,
-    updateUserMutation,
     deleteUser,
-    deleteUserMutation,
+    loading,
+    serverPagination,
   }
 }

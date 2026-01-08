@@ -11,7 +11,7 @@ const {
   loading,
   users,
   serverPagination,
-  sorting,
+  sort,
   onSortingChange,
   filter,
   onFiltersChange,
@@ -36,8 +36,11 @@ const {
         :data="users"
         :columns="columns"
         :server-pagination="serverPagination"
-        :sorting="sorting"
+        :sorting="sort"
         :on-sorting-change="onSortingChange"
+        :filters="filter"
+        :on-filters-change="onFiltersChange"
+        :on-clear-filters="clearFilters"
       />
     </div>
   </Page>
