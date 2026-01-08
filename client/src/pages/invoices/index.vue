@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { Grid3x3, List } from 'lucide-vue-next'
-
 import Page from '@/components/global-layout/basic-page.vue'
 import { Button } from '@/components/ui/button'
 import {
@@ -8,6 +6,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
+import { Grid3x3Icon, ListIcon } from '@/composables/use-icons'
 import { useInvoices } from '@/composables/use-invoices'
 import { columns } from '@/pages/invoices/components/columns'
 import DataTable from '@/pages/invoices/components/data-table.vue'
@@ -47,7 +46,7 @@ const {
               data-testid="invoices_table-view_button"
               @click="viewMode = 'table'"
             >
-              <List class="size-4" />
+              <ListIcon class="size-4" />
               <span class="sr-only">Table view</span>
             </Button>
           </TooltipTrigger>
@@ -64,7 +63,7 @@ const {
               data-testid="invoices_card-view_button"
               @click="viewMode = 'card'"
             >
-              <Grid3x3 class="size-4" />
+              <Grid3x3Icon class="size-4" />
               <span class="sr-only">Card view</span>
             </Button>
           </TooltipTrigger>

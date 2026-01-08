@@ -1,22 +1,20 @@
 <script setup lang="ts">
 import type { ColumnDef } from '@tanstack/vue-table'
 
-import { Trash2Icon } from 'lucide-vue-next'
-
 import type { IServerPagination } from '@/components/data-table/types'
-import type { TInvoice } from '@/pages/invoices/data/schema'
-import type { IInvoiceFilters } from '@/pages/invoices/models/invoice'
+import type { IInvoice, IInvoiceFilters } from '@/pages/invoices/models/invoice'
 
 import BulkActions from '@/components/data-table/bulk-actions.vue'
 import DataTable from '@/components/data-table/data-table.vue'
 import { generateVueTable } from '@/components/data-table/use-generate-vue-table'
+import { Trash2Icon } from '@/composables/use-icons'
 import DataTableToolbar from '@/pages/invoices/components/data-table-toolbar.vue'
 import InvoiceDeleteBatch from '@/pages/invoices/components/invoice-delete-batch.vue'
 
 interface IExtendedDataTableProps {
   loading?: boolean
-  columns: ColumnDef<TInvoice, any>[]
-  data: TInvoice[]
+  columns: ColumnDef<IInvoice, any>[]
+  data: IInvoice[]
   serverPagination?: IServerPagination
   filter?: IInvoiceFilters
   onFiltersChange?: (filters: IInvoiceFilters) => void
@@ -24,7 +22,7 @@ interface IExtendedDataTableProps {
 }
 
 const props = defineProps<IExtendedDataTableProps>()
-const { table } = generateVueTable<TInvoice>(props)
+const { table } = generateVueTable<IInvoice>(props)
 
 const invoiceDeleteBatchOpen = ref(false)
 </script>
