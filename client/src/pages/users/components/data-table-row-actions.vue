@@ -1,19 +1,16 @@
 <script setup lang="ts">
-import type { Row } from '@tanstack/vue-table'
 import type { Component } from 'vue'
 
 import { Ellipsis, Eye, FilePenLine, Trash2 } from 'lucide-vue-next'
 import { useRouter } from 'vue-router'
 
+import type { IDataTableRowActionsProps } from '@/components/data-table/types'
 import type { IUser } from '@/pages/users/models/users'
 
 import UserDelete from './user-delete.vue'
 import UserResourceDialog from './user-resource-dialog.vue'
 
-interface DataTableRowActionsProps {
-  row: Row<IUser>
-}
-const props = defineProps<DataTableRowActionsProps>()
+const props = defineProps<IDataTableRowActionsProps<IUser>>()
 const user = computed(() => props.row.original)
 const router = useRouter()
 
@@ -24,7 +21,7 @@ function handleSelect(command: TCommand) {
   switch (command) {
     case 'view':
       router.push({
-        name: '/users/[id]',
+        name: '/users/view/[id]',
         params: { id: user.value.id.toString() },
       })
       break

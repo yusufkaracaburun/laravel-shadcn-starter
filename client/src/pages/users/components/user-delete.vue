@@ -3,11 +3,11 @@ import type { IUser } from '@/pages/users/models/users'
 
 import { useUsers } from '@/composables/use-users'
 
-interface UserDeleteProps {
+interface IUserDeleteProps {
   user: IUser
 }
 
-const props = defineProps<UserDeleteProps>()
+const props = defineProps<IUserDeleteProps>()
 
 const emits = defineEmits<{
   close: []
@@ -30,9 +30,7 @@ async function handleRemove() {
     </UiDialogDescription>
     <UiDialogFooter>
       <UiDialogClose as-child>
-        <UiButton variant="outline">
-          Cancel
-        </UiButton>
+        <UiButton variant="outline"> Cancel </UiButton>
       </UiDialogClose>
       <UiDialogClose as-child>
         <UiButton variant="destructive" @click="handleRemove">

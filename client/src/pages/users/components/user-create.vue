@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { UserRoundPlus } from 'lucide-vue-next'
+import { UserRoundPlusIcon } from '@/composables/use-icons'
 
 import UserResource from './user-resource.vue'
 
@@ -10,7 +10,7 @@ const isOpen = ref(false)
   <UiDrawer v-model:open="isOpen" direction="right">
     <UiDrawerTrigger as-child>
       <UiButton>
-        <UserRoundPlus />
+        <UserRoundPlusIcon />
         Create User
       </UiButton>
     </UiDrawerTrigger>

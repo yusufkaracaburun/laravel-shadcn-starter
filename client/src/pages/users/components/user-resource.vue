@@ -3,11 +3,14 @@ import type { IUser } from '@/pages/users/models/users'
 
 import UserForm from './user-form.vue'
 
-const props = defineProps<{
+interface IUserResourceProps {
   user?: IUser | null
-}>()
+}
+const props = defineProps<IUserResourceProps>()
 
-defineEmits(['close'])
+const emits = defineEmits<{
+  close: []
+}>()
 
 const title = computed(() => (props.user ? 'Edit User' : 'Create New User'))
 const description = computed(() =>
@@ -27,5 +30,5 @@ const description = computed(() =>
     </UiDrawerDescription>
   </UiDrawerHeader>
 
-  <UserForm :user="user" class="mt-4" @close="$emit('close')" />
+  <UserForm :user="user" class="mt-4" @close="emits('close')" />
 </template>

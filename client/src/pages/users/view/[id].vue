@@ -33,8 +33,8 @@ import {
 } from '@/components/ui/card'
 import { useUserService } from '@/services/users.service'
 
-import UserDelete from './components/user-delete.vue'
-import UserResourceDialog from './components/user-resource-dialog.vue'
+import UserDelete from '../components/user-delete.vue'
+import UserResourceDialog from '../components/user-resource-dialog.vue'
 
 const route = useRoute()
 const router = useRouter()

@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { createReusableTemplate, useMediaQuery } from '@vueuse/core'
-import { MailPlus } from 'lucide-vue-next'
 
 import Button from '@/components/ui/button/Button.vue'
 import {
@@ -21,6 +20,7 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from '@/components/ui/drawer'
+import { MailPlusIcon } from '@/composables/use-icons'
 
 import UserInviteForm from './user-invite-form.vue'
 
@@ -37,7 +37,7 @@ const isOpen = ref(false)
   <Dialog v-if="isDesktop" v-model:open="isOpen">
     <DialogTrigger>
       <Button variant="outline">
-        <MailPlus />
+        <MailPlusIcon />
         Invite User
       </Button>
     </DialogTrigger>
@@ -45,7 +45,7 @@ const isOpen = ref(false)
       <DialogHeader>
         <DialogTitle>
           <div class="flex items-center gap-2">
-            <MailPlus />
+            <MailPlusIcon />
             <span>Invite User</span>
           </div>
         </DialogTitle>
@@ -62,14 +62,14 @@ const isOpen = ref(false)
     <DrawerTrigger as-child>
       <Button variant="outline">
         Invite User
-        <MailPlus />
+        <MailPlusIcon />
       </Button>
     </DrawerTrigger>
     <DrawerContent class="px-4">
       <DrawerHeader class="text-left">
         <DrawerTitle>
           <div class="flex items-center gap-2">
-            <MailPlus />
+            <MailPlusIcon />
             <span>Invite User</span>
           </div>
         </DrawerTitle>
@@ -83,9 +83,7 @@ const isOpen = ref(false)
 
       <DrawerFooter class="pt-2">
         <DrawerClose as-child>
-          <Button variant="outline">
-            Cancel
-          </Button>
+          <Button variant="outline"> Cancel </Button>
         </DrawerClose>
       </DrawerFooter>
     </DrawerContent>

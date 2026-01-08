@@ -140,6 +140,8 @@ declare global {
   const UserCircle: typeof import('../composables/use-icons').UserCircle
   const UserCircleIcon: typeof import('../composables/use-icons').UserCircleIcon
   const UserIcon: typeof import('../composables/use-icons').UserIcon
+  const UserPlusIcon: typeof import('../composables/use-icons').UserPlusIcon
+  const UserRoundPlusIcon: typeof import('../composables/use-icons').UserRoundPlusIcon
   const Users: typeof import('../composables/use-icons').Users
   const UsersIcon: typeof import('../composables/use-icons').UsersIcon
   const Wrench: typeof import('../composables/use-icons').Wrench

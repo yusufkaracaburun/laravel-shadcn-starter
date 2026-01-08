@@ -38,14 +38,29 @@ export interface IRole {
   updated_at: string
 }
 
+export interface ITeam {
+  id: number
+  name: string
+  personal_team: boolean
+  user_id: number
+  created_at: string
+  updated_at: string
+}
+
 export interface IUser {
   id: number
   name: string
   email: string
   role: TUserRole
   status: TUserStatus
+  current_team_id: number | null
+  profile_photo_url: string | null
+  email_verified_at: string | null
   created_at: string
   updated_at: string
+  roles: IRole[]
+  teams: ITeam[]
+  current_team: ITeam | null
 }
 
 export interface ICreateUserRequest {
