@@ -110,7 +110,8 @@
       "status": "Status",
       "total": "Totaal",
       "createdAt": "Aangemaakt op"
-    }
+    },
+    "deleteSelectedInvoices": "Facturen verwijderen"
   },
   "users": {
     "title": "Gebruikers",

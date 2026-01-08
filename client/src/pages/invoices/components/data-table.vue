@@ -23,16 +23,18 @@ const invoiceDeleteBatchOpen = ref(false)
           variant="destructive"
           size="icon"
           class="size-8"
-          aria-label="Delete selected invoices"
-          title="Delete selected invoices"
+          :aria-label="$t('invoices.deleteSelectedInvoices')"
+          :title="$t('invoices.deleteSelectedInvoices')"
           @click="invoiceDeleteBatchOpen = true"
         >
           <Trash2Icon />
-          <span class="sr-only">Delete selected invoices</span>
+          <span class="sr-only">{{
+            $t('invoices.deleteSelectedInvoices')
+          }}</span>
         </UiButton>
       </UiTooltipTrigger>
       <UiTooltipContent>
-        <p>Delete selected invoices</p>
+        <p>{{ $t('invoices.deleteSelectedInvoices') }}</p>
       </UiTooltipContent>
     </UiTooltip>
 
@@ -40,18 +42,23 @@ const invoiceDeleteBatchOpen = ref(false)
   </BulkActions>
 
   <DataTable
-    :columns
-    :table
-    :data
-    :loading
+    :table="table"
+    :columns="props.columns"
+    :data="props.data"
+    :loading="props.loading"
     :server-pagination="props.serverPagination"
+    :sorting="props.sorting"
+    :on-sorting-change="props.onSortingChange"
+    :filters="props.filter"
+    :on-filters-change="props.onFiltersChange"
+    :on-clear-filters="props.onClearFilters"
   >
     <template #toolbar>
       <DataTableToolbar
         :table="table"
-        :filters="filter"
-        :on-filters-change="onFiltersChange || (() => {})"
-        :on-clear-filters="onClearFilters || (() => {})"
+        :filters="props.filter"
+        :on-filters-change="props.onFiltersChange"
+        :on-clear-filters="props.onClearFilters"
         class="w-full overflow-x-auto"
       />
     </template>
