@@ -22,6 +22,7 @@ enum UserRole: string
     case MANAGER = 'manager';
     case USER = 'user';
     case CUSTOMER = 'customer';
+    case CONTRACTOR = 'contractor';
 
     /**
      * Get all permissions for all features.
@@ -45,7 +46,7 @@ enum UserRole: string
         return match ($this) {
             self::SUPER_ADMIN, self::ADMIN => $this->permissions(),
             self::MANAGER => ['view users', 'view companies', 'view invoices', 'update invoices', 'view items'],
-            self::USER, self::CUSTOMER => ['view invoices'],
+            self::USER, self::CUSTOMER, self::CONTRACTOR => ['view invoices'],
         };
     }
 
@@ -59,7 +60,7 @@ enum UserRole: string
             self::ADMIN       => 'warning',
             self::MANAGER     => 'info',
             self::USER        => 'secondary',
-            self::CUSTOMER    => 'primary',
+            self::CUSTOMER, self::CONTRACTOR => 'primary',
         };
     }
 
@@ -73,7 +74,7 @@ enum UserRole: string
             self::ADMIN       => 'badge badge-light-warning',
             self::MANAGER     => 'badge badge-light-info',
             self::USER        => 'badge badge-light-secondary',
-            self::CUSTOMER    => 'badge badge-light-primary',
+            self::CUSTOMER, self::CONTRACTOR => 'primary',
         };
     }
 
@@ -99,6 +100,14 @@ enum UserRole: string
     public function isCustomer(): bool
     {
         return $this === self::CUSTOMER;
+    }
+
+    /**
+     * Check if the role is contractor.
+     */
+    public function isContractor(): bool
+    {
+        return $this === self::CONTRACTOR;
     }
 
     /**

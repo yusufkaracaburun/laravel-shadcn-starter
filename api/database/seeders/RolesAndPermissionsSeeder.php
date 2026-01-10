@@ -37,5 +37,8 @@ final class RolesAndPermissionsSeeder extends Seeder
 
         $customerRole = Role::query()->firstOrCreate(['name' => UserRole::CUSTOMER->value, 'slug' => str(UserRole::CUSTOMER->value)->slug(), 'is_system' => true]);
         $customerRole->syncPermissions(UserRole::CUSTOMER->rolePermissions());
+
+        $contractorRole = Role::query()->firstOrCreate(['name' => UserRole::CONTRACTOR->value, 'slug' => str(UserRole::CONTRACTOR->value)->slug(), 'is_system' => true]);
+        $contractorRole->syncPermissions(UserRole::CONTRACTOR->rolePermissions());
     }
 }

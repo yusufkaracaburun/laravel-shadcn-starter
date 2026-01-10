@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Api;
 
 use App\Models\User;
+use App\Enums\UserStatus;
 use Illuminate\Http\JsonResponse;
 use Spatie\Permission\Models\Role;
 use App\Http\Responses\ApiResponse;
@@ -18,10 +19,12 @@ use App\Helpers\Cache\CacheInvalidationService;
 use App\Services\Contracts\UserServiceInterface;
 use App\Http\Controllers\Concerns\UsesQueryBuilder;
 use App\Http\Controllers\Concerns\UsesCachedResponses;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use App\Http\Controllers\Concerns\InvalidatesCachedModels;
 
 final class UserController extends Controller
 {
+    use AuthorizesRequests;
     use InvalidatesCachedModels;
     use UsesCachedResponses;
     use UsesQueryBuilder;
@@ -152,6 +155,22 @@ final class UserController extends Controller
         }
 
         return ApiResponse::noContent('User deleted successfully');
+    }
+
+    /**
+     * Get prerequisites for creating a new invoice.
+     * Returns all items, all customers, and the next invoice number.
+     *
+     * @authenticated
+     */
+    public function prerequisites(): JsonResponse
+    {
+        $this->authorize('create', User::class);
+
+        $roles = Role::all();
+        $statuses = UserStatus::toArray();
+
+        return ApiResponse::ok(compact('roles', 'statuses'));
     }
 
     /**
