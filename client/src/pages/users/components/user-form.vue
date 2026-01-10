@@ -22,7 +22,7 @@ import { XIcon } from '@/composables/use-icons'
 import { useToast } from '@/composables/use-toast'
 import { useUsers } from '@/composables/use-users'
 import { handleFileUpload } from '@/utils/file'
-import { convertToFormData, setFormFieldErrors } from '@/utils/form'
+import { setFormFieldErrors } from '@/utils/form'
 
 import type {
   ICreateUserRequest,
@@ -115,29 +115,24 @@ const validFields = [
 function prepareRequestData(
   values: any,
   isEdit: boolean,
-): IUpdateUserRequest | ICreateUserRequest | FormData {
-  const data: IUpdateUserRequest | ICreateUserRequest =
-    isEdit && props.user
-      ? {
-          id: props.user.id,
-          ...values,
-          role: values.role || props.user.roles?.[0]?.name || '',
-        }
-      : {
-          name: values.name,
-          email: values.email,
-          password: values.password!,
-          password_confirmation: values.password_confirmation!,
-          profile_photo: values.profile_photo || null,
-          role: values.role || EUserRole.USER,
-          status: EUserStatus.REGISTERED,
-        }
+): IUpdateUserRequest | ICreateUserRequest {
+  if (isEdit && props.user) {
+    return {
+      id: props.user.id,
+      ...values,
+      role: values.role || props.user.roles?.[0]?.name || '',
+    }
+  }
 
-  // Convert to FormData if file is present
-  // For create mode, exclude id; for update mode, id is already in data
-  return convertToFormData(data, {
-    excludeId: !isEdit,
-  })
+  return {
+    name: values.name,
+    email: values.email,
+    password: values.password!,
+    password_confirmation: values.password_confirmation!,
+    profile_photo: values.profile_photo || null,
+    role: values.role || EUserRole.USER,
+    status: EUserStatus.REGISTERED,
+  }
 }
 
 const onSubmit = handleSubmit(async (values) => {

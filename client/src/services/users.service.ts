@@ -13,6 +13,7 @@ import type {
 } from '@/pages/users/models/users'
 
 import { useAxios } from '@/composables/use-axios'
+import { convertToFormData } from '@/utils/form'
 
 import type { ISorting } from './query-utils'
 import type { IPaginatedResponse, IResponse } from './types/response.type'
@@ -145,22 +146,20 @@ export function useUserService() {
   }
 
   function createUserMutation(): ReturnType<
-    typeof useMutation<
-      IResponse<IUser>,
-      AxiosError,
-      ICreateUserRequest | FormData
-    >
+    typeof useMutation<IResponse<IUser>, AxiosError, ICreateUserRequest>
   > {
-    return useMutation<
-      IResponse<IUser>,
-      AxiosError,
-      ICreateUserRequest | FormData
-    >({
+    return useMutation<IResponse<IUser>, AxiosError, ICreateUserRequest>({
       mutationKey: [QueryKeys.CREATE_USER],
       mutationFn: async (
-        data: ICreateUserRequest | FormData,
+        data: ICreateUserRequest,
       ): Promise<IResponse<IUser>> => {
-        const response = await axiosInstance.post(`${API_URL}`, data)
+        // Convert to FormData if file is present
+        const requestData =
+          data.profile_photo instanceof File
+            ? convertToFormData(data, { excludeId: true })
+            : data
+
+        const response = await axiosInstance.post(`${API_URL}`, requestData)
         return response.data
       },
       onSuccess: () => {
@@ -176,20 +175,29 @@ export function useUserService() {
     typeof useMutation<
       IResponse<IUser>,
       AxiosError,
-      { id: number; data: IUpdateUserRequest | FormData }
+      { id: number; data: IUpdateUserRequest }
     >
   > {
     return useMutation<
       IResponse<IUser>,
       AxiosError,
-      { id: number; data: IUpdateUserRequest | FormData }
+      { id: number; data: IUpdateUserRequest }
     >({
       mutationKey: [QueryKeys.UPDATE_USER],
       mutationFn: async ({ id, data }): Promise<IResponse<IUser>> => {
-        // Use POST with _method=PUT for FormData (Laravel convention for file uploads)
-        if (data instanceof FormData) {
-          data.append('_method', 'PUT')
-          const response = await axiosInstance.post(`${API_URL}/${id}`, data)
+        // Convert to FormData if file is present
+        const requestData =
+          data.profile_photo instanceof File
+            ? convertToFormData(data, { excludeId: false })
+            : data
+
+        // Use POST with _method=PUT for FormData (Laravel convention)
+        if (requestData instanceof FormData) {
+          requestData.append('_method', 'PUT')
+          const response = await axiosInstance.post(
+            `${API_URL}/${id}`,
+            requestData,
+          )
           return response.data
         }
 
