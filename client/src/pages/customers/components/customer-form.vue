@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-import { computed, watch } from 'vue'
 import { toTypedSchema } from '@vee-validate/zod'
 import { Building2, User } from 'lucide-vue-next'
 import { useForm } from 'vee-validate'
+import { computed, watch } from 'vue'
 
 import { FormField } from '@/components/ui/form'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
@@ -10,6 +10,7 @@ import { useCustomers } from '@/composables/use-customers.composable'
 import { setFormFieldErrors } from '@/utils/form'
 
 import type { ICustomer } from '../models/customers'
+
 import {
   createCustomerFormSchema,
   editCustomerFormSchema,
@@ -114,46 +115,36 @@ const onSubmit = handleSubmit(async (formValues) => {
         <UiFormLabel>Customer Type</UiFormLabel>
         <UiFormMessage />
         <RadioGroup class="grid grid-cols-2 gap-4 pt-2" v-bind="componentField">
-          <UiFormItem class="h-full">
+          <UiFormItem class="h-full w-full">
             <UiFormLabel
-              class="[&:has([data-state=checked])>div]:border-primary flex flex-col cursor-pointer h-full"
+              class="[&:has([data-state=checked])>div]:border-primary flex flex-col cursor-pointer h-full w-full"
             >
               <UiFormControl>
                 <RadioGroupItem value="private" class="sr-only" />
               </UiFormControl>
               <div
-                class="p-4 border-2 rounded-md border-muted hover:border-accent transition-colors h-full flex items-center justify-center"
+                class="p-2 border-2 rounded-md border-muted hover:border-accent transition-colors h-full w-full flex items-center justify-center"
               >
-                <div class="flex flex-col items-center gap-3">
-                  <User class="size-8 text-muted-foreground" />
-                  <div class="text-center">
-                    <div class="font-semibold text-foreground">Private</div>
-                    <div class="text-xs font-normal text-muted-foreground mt-1">
-                      Individual customer
-                    </div>
-                  </div>
+                <div class="flex flex-col items-center gap-2">
+                  <User class="size-4 text-muted-foreground" />
+                  <div class="font-semibold text-foreground">Private</div>
                 </div>
               </div>
             </UiFormLabel>
           </UiFormItem>
-          <UiFormItem class="h-full">
+          <UiFormItem class="h-full w-full">
             <UiFormLabel
-              class="[&:has([data-state=checked])>div]:border-primary flex flex-col cursor-pointer h-full"
+              class="[&:has([data-state=checked])>div]:border-primary flex flex-col cursor-pointer h-full w-full"
             >
               <UiFormControl>
                 <RadioGroupItem value="business" class="sr-only" />
               </UiFormControl>
               <div
-                class="p-4 border-2 rounded-md border-muted hover:border-accent transition-colors h-full flex items-center justify-center"
+                class="p-2 border-2 rounded-md border-muted hover:border-accent transition-colors h-full w-full flex items-center justify-center"
               >
-                <div class="flex flex-col items-center gap-3">
-                  <Building2 class="size-8 text-muted-foreground" />
-                  <div class="text-center">
-                    <div class="font-semibold text-foreground">Business</div>
-                    <div class="text-xs font-normal text-muted-foreground mt-1">
-                      Company or organization
-                    </div>
-                  </div>
+                <div class="flex flex-col items-center gap-2">
+                  <Building2 class="size-4 text-muted-foreground" />
+                  <div class="font-semibold text-foreground">Business</div>
                 </div>
               </div>
             </UiFormLabel>
