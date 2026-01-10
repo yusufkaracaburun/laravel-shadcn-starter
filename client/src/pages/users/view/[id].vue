@@ -10,6 +10,12 @@ import type { IUser } from '@/pages/users/models/users'
 
 import Page from '@/components/global-layout/basic-page.vue'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import {
+  LayoutGridIcon,
+  ShieldIcon,
+  UserCircleIcon,
+  UsersIcon,
+} from '@/composables/use-icons.composable'
 import { useUsers } from '@/composables/use-users.composable'
 
 import UserAccountStatusCard from './components/user-account-status-card.vue'
@@ -156,10 +162,22 @@ function handleDeleteClosed() {
 
           <Tabs v-model="activeTab" class="w-full">
             <TabsList>
-              <TabsTrigger value="overview"> Overview </TabsTrigger>
-              <TabsTrigger value="account"> Account </TabsTrigger>
-              <TabsTrigger value="roles"> Roles & Permissions </TabsTrigger>
-              <TabsTrigger value="teams"> Teams </TabsTrigger>
+              <TabsTrigger value="overview" class="gap-2">
+                <LayoutGridIcon class="size-4" />
+                Overview
+              </TabsTrigger>
+              <TabsTrigger value="account" class="gap-2">
+                <UserCircleIcon class="size-4" />
+                Account
+              </TabsTrigger>
+              <TabsTrigger value="roles" class="gap-2">
+                <ShieldIcon class="size-4" />
+                Roles & Permissions
+              </TabsTrigger>
+              <TabsTrigger value="teams" class="gap-2">
+                <UsersIcon class="size-4" />
+                Teams
+              </TabsTrigger>
             </TabsList>
 
             <TabsContent value="overview" class="mt-6">
