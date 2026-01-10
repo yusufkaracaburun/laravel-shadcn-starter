@@ -10,6 +10,7 @@ import {
 } from 'lucide-vue-next'
 
 import { useSidebar } from '@/components/ui/sidebar'
+import { SettingsIcon } from '@/composables/use-icons.composable'
 import { useAuth } from '@/pages/auth/composables/use-auth.composable'
 
 import type { User } from './types'
@@ -32,9 +33,7 @@ const { isMobile, open } = useSidebar()
           >
             <UiAvatar class="size-8 rounded-lg">
               <UiAvatarImage :src="user.avatar" :alt="user.name" />
-              <UiAvatarFallback class="rounded-lg">
-                CN
-              </UiAvatarFallback>
+              <UiAvatarFallback class="rounded-lg"> CN </UiAvatarFallback>
             </UiAvatar>
             <div class="grid flex-1 text-sm leading-tight text-left">
               <span class="font-semibold truncate">{{ user.name }}</span>
@@ -53,9 +52,7 @@ const { isMobile, open } = useSidebar()
             <div class="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
               <UiAvatar class="size-8 rounded-lg">
                 <UiAvatarImage :src="user.avatar" :alt="user.name" />
-                <UiAvatarFallback class="rounded-lg">
-                  CN
-                </UiAvatarFallback>
+                <UiAvatarFallback class="rounded-lg"> CN </UiAvatarFallback>
               </UiAvatar>
               <div class="grid flex-1 text-sm leading-tight text-left">
                 <span class="font-semibold truncate">{{ user.name }}</span>
@@ -72,7 +69,6 @@ const { isMobile, open } = useSidebar()
             </UiDropdownMenuItem>
           </UiDropdownMenuGroup>
 
-          <UiDropdownMenuSeparator />
           <UiDropdownMenuGroup>
             <UiDropdownMenuItem @click="$router.push('/billing?type=billing')">
               <CreditCard />
@@ -95,6 +91,13 @@ const { isMobile, open } = useSidebar()
             >
               <Bell />
               Notifications
+            </UiDropdownMenuItem>
+          </UiDropdownMenuGroup>
+
+          <UiDropdownMenuGroup>
+            <UiDropdownMenuItem @click="$router.push('/settings/display')">
+              <SettingsIcon />
+              Settings
             </UiDropdownMenuItem>
           </UiDropdownMenuGroup>
 
