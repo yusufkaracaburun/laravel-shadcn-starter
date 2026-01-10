@@ -1,96 +1,51 @@
 <script lang="ts" setup>
+import { computed, watch } from 'vue'
 import { toTypedSchema } from '@vee-validate/zod'
 import { Building2, User } from 'lucide-vue-next'
 import { useForm } from 'vee-validate'
-import { z } from 'zod'
 
 import { FormField } from '@/components/ui/form'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { useCustomers } from '@/composables/use-customers.composable'
+import { setFormFieldErrors } from '@/utils/form'
 
 import type { ICustomer } from '../models/customers'
+import {
+  createCustomerFormSchema,
+  editCustomerFormSchema,
+} from '../data/schema'
 
 const props = defineProps<{
-  customer: ICustomer | null
+  customer?: ICustomer | null
 }>()
-const emits = defineEmits(['close'])
 
-const { createCustomer, updateCustomer } = useCustomers()
+const emits = defineEmits<{
+  close: []
+}>()
 
-const formSchema = toTypedSchema(
-  z.object({
-    type: z
-      .enum(['business', 'private'])
-      .default(props.customer?.type ?? 'private'),
-    name: z
-      .string()
-      .min(2, 'Name must be at least 2 characters')
-      .max(255, 'Name must not exceed 255 characters')
-      .default(props.customer?.name ?? ''),
-    email: z
-      .string()
-      .email('Invalid email address')
-      .max(255, 'Email must not exceed 255 characters')
-      .nullable()
-      .default(props.customer?.email ?? null),
-    phone: z
-      .string()
-      .nullable()
-      .default(props.customer?.phone ?? null),
-    address: z
-      .string()
-      .nullable()
-      .default(props.customer?.address ?? null),
-    zipcode: z
-      .string()
-      .nullable()
-      .default(props.customer?.zipcode ?? null),
-    city: z
-      .string()
-      .nullable()
-      .default(props.customer?.city ?? null),
-    country: z
-      .string()
-      .max(2, 'Country code must be 2 characters')
-      .nullable()
-      .default(props.customer?.country ?? null),
-    kvk_number: z
-      .string()
-      .nullable()
-      .default(props.customer?.kvk_number ?? null),
-    vat_number: z
-      .string()
-      .nullable()
-      .default(props.customer?.vat_number ?? null),
-    iban_number: z
-      .string()
-      .max(34, 'IBAN must not exceed 34 characters')
-      .nullable()
-      .default(props.customer?.iban_number ?? null),
-  }),
+const {
+  createCustomer,
+  updateCustomer,
+  isCreating,
+  isUpdating,
+  getCustomerFormInitialValues,
+} = useCustomers()
+
+const isEditMode = computed(() => !!props.customer)
+const formSchema = computed(() =>
+  isEditMode.value ? editCustomerFormSchema : createCustomerFormSchema,
 )
 
-// Compute initial values reactively
-const initialValues = computed(() => ({
-  type: props.customer?.type ?? 'private',
-  name: props.customer?.name ?? '',
-  email: props.customer?.email ?? null,
-  phone: props.customer?.phone ?? null,
-  address: props.customer?.address ?? null,
-  zipcode: props.customer?.zipcode ?? null,
-  city: props.customer?.city ?? null,
-  country: props.customer?.country ?? null,
-  kvk_number: props.customer?.kvk_number ?? null,
-  vat_number: props.customer?.vat_number ?? null,
-  iban_number: props.customer?.iban_number ?? null,
-}))
-
-const { values, isFieldDirty, handleSubmit, isSubmitting, resetForm } = useForm(
-  {
-    validationSchema: formSchema,
-    initialValues: initialValues.value,
-  },
+const initialValues = computed(() =>
+  getCustomerFormInitialValues(props.customer),
 )
+
+const form = useForm({
+  validationSchema: computed(() => toTypedSchema(formSchema.value)),
+  initialValues: initialValues.value,
+})
+
+const { values, handleSubmit, setFieldError, resetForm } = form
 
 // Watch customer type to show/hide business fields
 const customerType = computed(() => values.type)
@@ -98,69 +53,63 @@ const customerType = computed(() => values.type)
 // Reset form when customer changes
 watch(
   () => props.customer,
-  (newCustomer) => {
-    if (newCustomer) {
-      resetForm({
-        values: {
-          type: newCustomer.type ?? 'private',
-          name: newCustomer.name ?? '',
-          email: newCustomer.email ?? null,
-          phone: newCustomer.phone ?? null,
-          address: newCustomer.address ?? null,
-          zipcode: newCustomer.zipcode ?? null,
-          city: newCustomer.city ?? null,
-          country: newCustomer.country ?? null,
-          kvk_number: newCustomer.kvk_number ?? null,
-          vat_number: newCustomer.vat_number ?? null,
-          iban_number: newCustomer.iban_number ?? null,
-        },
-      })
-    }
+  () => {
+    resetForm({ values: initialValues.value })
   },
-  { deep: true },
+  { immediate: true },
 )
+
+const validFields = [
+  'type',
+  'name',
+  'email',
+  'phone',
+  'address',
+  'zipcode',
+  'city',
+  'country',
+  'kvk_number',
+  'vat_number',
+  'iban_number',
+] as const
+
+function prepareRequestData(values: any): any {
+  return {
+    type: values.type,
+    name: values.name,
+    email: values.email || null,
+    phone: values.phone || null,
+    address: values.address || null,
+    zipcode: values.zipcode || null,
+    city: values.city || null,
+    country: values.country || null,
+    kvk_number: values.kvk_number || null,
+    vat_number: values.vat_number || null,
+    iban_number: values.iban_number || null,
+  }
+}
 
 const onSubmit = handleSubmit(async (formValues) => {
   try {
-    const backendData = {
-      type: formValues.type,
-      name: formValues.name,
-      email: formValues.email || null,
-      phone: formValues.phone || null,
-      address: formValues.address || null,
-      zipcode: formValues.zipcode || null,
-      city: formValues.city || null,
-      country: formValues.country || null,
-      kvk_number: formValues.kvk_number || null,
-      vat_number: formValues.vat_number || null,
-      iban_number: formValues.iban_number || null,
-    }
+    const requestData = prepareRequestData(formValues)
 
-    if (props.customer?.id) {
-      // Update existing customer
-      await updateCustomer(props.customer.id, backendData)
+    if (isEditMode.value && props.customer) {
+      await updateCustomer(props.customer.id, requestData)
     } else {
-      // Create new customer
-      await createCustomer(backendData)
+      await createCustomer(requestData)
     }
 
+    resetForm()
     emits('close')
-  } catch (error) {
-    // Error handling is done in the composable
-    // Just log for debugging
-    console.error('Customer form submission error:', error)
+  } catch (error: any) {
+    setFormFieldErrors(error, setFieldError, validFields)
   }
 })
 </script>
 
 <template>
   <form class="space-y-4" @submit="onSubmit">
-    <FormField
-      v-slot="{ componentField }"
-      type="radio"
-      name="type"
-      :validate-on-blur="!isFieldDirty"
-    >
+    <FormField v-slot="{ componentField }" name="type">
       <UiFormItem class="space-y-1">
         <UiFormLabel>Customer Type</UiFormLabel>
         <UiFormMessage />
@@ -178,9 +127,7 @@ const onSubmit = handleSubmit(async (formValues) => {
                 <div class="flex flex-col items-center gap-3">
                   <User class="size-8 text-muted-foreground" />
                   <div class="text-center">
-                    <div class="font-semibold text-foreground">
-                      Private
-                    </div>
+                    <div class="font-semibold text-foreground">Private</div>
                     <div class="text-xs font-normal text-muted-foreground mt-1">
                       Individual customer
                     </div>
@@ -202,9 +149,7 @@ const onSubmit = handleSubmit(async (formValues) => {
                 <div class="flex flex-col items-center gap-3">
                   <Building2 class="size-8 text-muted-foreground" />
                   <div class="text-center">
-                    <div class="font-semibold text-foreground">
-                      Business
-                    </div>
+                    <div class="font-semibold text-foreground">Business</div>
                     <div class="text-xs font-normal text-muted-foreground mt-1">
                       Company or organization
                     </div>
@@ -217,11 +162,7 @@ const onSubmit = handleSubmit(async (formValues) => {
       </UiFormItem>
     </FormField>
 
-    <FormField
-      v-slot="{ componentField }"
-      name="name"
-      :validate-on-blur="!isFieldDirty"
-    >
+    <FormField v-slot="{ componentField }" name="name">
       <UiFormItem>
         <UiFormLabel>Name</UiFormLabel>
         <UiFormControl>
@@ -235,11 +176,7 @@ const onSubmit = handleSubmit(async (formValues) => {
       </UiFormItem>
     </FormField>
 
-    <FormField
-      v-slot="{ componentField }"
-      name="email"
-      :validate-on-blur="!isFieldDirty"
-    >
+    <FormField v-slot="{ componentField }" name="email">
       <UiFormItem>
         <UiFormLabel>Email</UiFormLabel>
         <UiFormControl>
@@ -253,11 +190,7 @@ const onSubmit = handleSubmit(async (formValues) => {
       </UiFormItem>
     </FormField>
 
-    <FormField
-      v-slot="{ componentField }"
-      name="phone"
-      :validate-on-blur="!isFieldDirty"
-    >
+    <FormField v-slot="{ componentField }" name="phone">
       <UiFormItem>
         <UiFormLabel>Phone</UiFormLabel>
         <UiFormControl>
@@ -272,11 +205,7 @@ const onSubmit = handleSubmit(async (formValues) => {
     </FormField>
 
     <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
-      <FormField
-        v-slot="{ componentField }"
-        name="address"
-        :validate-on-blur="!isFieldDirty"
-      >
+      <FormField v-slot="{ componentField }" name="address">
         <UiFormItem>
           <UiFormLabel>Address</UiFormLabel>
           <UiFormControl>
@@ -290,11 +219,7 @@ const onSubmit = handleSubmit(async (formValues) => {
         </UiFormItem>
       </FormField>
 
-      <FormField
-        v-slot="{ componentField }"
-        name="zipcode"
-        :validate-on-blur="!isFieldDirty"
-      >
+      <FormField v-slot="{ componentField }" name="zipcode">
         <UiFormItem>
           <UiFormLabel>Zipcode</UiFormLabel>
           <UiFormControl>
@@ -310,11 +235,7 @@ const onSubmit = handleSubmit(async (formValues) => {
     </div>
 
     <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
-      <FormField
-        v-slot="{ componentField }"
-        name="city"
-        :validate-on-blur="!isFieldDirty"
-      >
+      <FormField v-slot="{ componentField }" name="city">
         <UiFormItem>
           <UiFormLabel>City</UiFormLabel>
           <UiFormControl>
@@ -324,11 +245,7 @@ const onSubmit = handleSubmit(async (formValues) => {
         </UiFormItem>
       </FormField>
 
-      <FormField
-        v-slot="{ componentField }"
-        name="country"
-        :validate-on-blur="!isFieldDirty"
-      >
+      <FormField v-slot="{ componentField }" name="country">
         <UiFormItem>
           <UiFormLabel>Country</UiFormLabel>
           <UiFormControl>
@@ -346,15 +263,9 @@ const onSubmit = handleSubmit(async (formValues) => {
 
     <template v-if="customerType === 'business'">
       <div class="border-t pt-4">
-        <h3 class="mb-4 text-lg font-semibold">
-          Business Information
-        </h3>
+        <h3 class="mb-4 text-lg font-semibold">Business Information</h3>
 
-        <FormField
-          v-slot="{ componentField }"
-          name="kvk_number"
-          :validate-on-blur="!isFieldDirty"
-        >
+        <FormField v-slot="{ componentField }" name="kvk_number">
           <UiFormItem>
             <UiFormLabel>KVK Number</UiFormLabel>
             <UiFormControl>
@@ -368,11 +279,7 @@ const onSubmit = handleSubmit(async (formValues) => {
           </UiFormItem>
         </FormField>
 
-        <FormField
-          v-slot="{ componentField }"
-          name="vat_number"
-          :validate-on-blur="!isFieldDirty"
-        >
+        <FormField v-slot="{ componentField }" name="vat_number">
           <UiFormItem>
             <UiFormLabel>VAT Number</UiFormLabel>
             <UiFormControl>
@@ -386,11 +293,7 @@ const onSubmit = handleSubmit(async (formValues) => {
           </UiFormItem>
         </FormField>
 
-        <FormField
-          v-slot="{ componentField }"
-          name="iban_number"
-          :validate-on-blur="!isFieldDirty"
-        >
+        <FormField v-slot="{ componentField }" name="iban_number">
           <UiFormItem>
             <UiFormLabel>IBAN Number</UiFormLabel>
             <UiFormControl>
@@ -407,14 +310,12 @@ const onSubmit = handleSubmit(async (formValues) => {
       </div>
     </template>
 
-    <UiButton type="submit" class="w-full" :disabled="isSubmitting">
-      {{
-        isSubmitting
-          ? 'Submitting...'
-          : customer
-            ? 'Update Customer'
-            : 'Create Customer'
-      }}
+    <UiButton
+      type="submit"
+      class="w-full"
+      :disabled="isEditMode ? isUpdating : isCreating"
+    >
+      {{ isEditMode ? 'Update Customer' : 'Create Customer' }}
     </UiButton>
   </form>
 </template>

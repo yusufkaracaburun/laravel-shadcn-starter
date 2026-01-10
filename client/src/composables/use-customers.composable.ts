@@ -1,4 +1,4 @@
-import { computed } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import type { SortingState } from '@tanstack/vue-table'
 
@@ -12,6 +12,7 @@ import type {
   ICustomer,
   ICustomerFilters,
 } from '@/pages/customers/models/customers'
+import { ECustomerType } from '@/pages/customers/models/customers'
 
 import { useToast } from '@/composables/use-toast.composable'
 import {
@@ -57,7 +58,7 @@ export function useCustomers() {
   }
 
   // Handler for filter changes
-  function onFiltersChange(newFilters: CustomerFilters) {
+  function onFiltersChange(newFilters: ICustomerFilters) {
     filters.value = newFilters
     // Reset to first page when filters change
     page.value = 1
@@ -246,7 +247,7 @@ export function useCustomers() {
   async function fetchCustomerByIdData(): Promise<IResponse<ICustomer>> {
     try {
       const response = await refetchCustomerById()
-      return response.data as IResponse<Customer>
+      return response.data as IResponse<ICustomer>
     } catch (error: any) {
       errorStore.setError(error, { context: CustomerContext.GET_CUSTOMER_BY_ID })
       const message = errorStore.getErrorMessage(error)
@@ -254,6 +255,37 @@ export function useCustomers() {
       throw error
     }
   }
+
+  /**
+   * Get initial form values for customer form
+   * @param customer - Optional customer object for edit mode
+   * @returns Initial values object for vee-validate form
+   */
+  function getCustomerFormInitialValues(customer?: ICustomer | null) {
+    // Convert type string to ECustomerType enum
+    const type =
+      customer?.type &&
+      Object.values(ECustomerType).includes(customer.type as ECustomerType)
+        ? (customer.type as ECustomerType)
+        : ECustomerType.PRIVATE
+
+    return {
+      type,
+      name: customer?.name || '',
+      email: customer?.email || null,
+      phone: customer?.phone || null,
+      address: customer?.address || null,
+      zipcode: customer?.zipcode || null,
+      city: customer?.city || null,
+      country: customer?.country || null,
+      kvk_number: customer?.kvk_number || null,
+      vat_number: customer?.vat_number || null,
+      iban_number: customer?.iban_number || null,
+    }
+  }
+
+  const isCreating = computed(() => createCustomerMutation.isPending.value)
+  const isUpdating = computed(() => updateCustomerMutation.isPending.value)
 
   return {
     customers,
@@ -279,5 +311,8 @@ export function useCustomers() {
     isErrorCustomerById,
     errorCustomerById,
     fetchCustomerByIdData,
+    getCustomerFormInitialValues,
+    isCreating,
+    isUpdating,
   }
 }

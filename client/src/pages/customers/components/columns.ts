@@ -15,21 +15,6 @@ import DataTableRowActions from './data-table-row-actions.vue'
 export const columns: ColumnDef<ICustomer>[] = [
   SelectColumn as ColumnDef<ICustomer>,
   {
-    accessorKey: 'number',
-    header: ({ column }) =>
-      h(DataTableColumnHeader<ICustomer>, { column, title: 'Customer Number' }),
-    cell: ({ row }) => {
-      const number = row.getValue('number') as
-        | string
-        | number
-        | null
-        | undefined
-      return h('div', { class: 'w-24' }, number?.toString() || '-')
-    },
-    enableSorting: false,
-    enableHiding: false,
-  },
-  {
     accessorKey: 'name',
     header: ({ column }) =>
       h(DataTableColumnHeader<ICustomer>, { column, title: 'Name' }),
@@ -49,7 +34,7 @@ export const columns: ColumnDef<ICustomer>[] = [
             'flex items-center gap-2 max-w-[500px] truncate font-medium text-left hover:underline cursor-pointer focus:outline-none focus:underline',
           onClick: () => {
             router.push({
-              name: '/customers/[id]',
+              name: '/customers/view/[id]',
               params: { id: customer.id.toString() },
             })
           },

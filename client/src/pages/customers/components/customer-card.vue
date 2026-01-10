@@ -34,7 +34,7 @@ function handleSelect(command: TCommand) {
   switch (command) {
     case 'view':
       router.push({
-        name: '/customers/[id]',
+        name: '/customers/view/[id]',
         params: { id: props.customer.id.toString() },
       })
       break
@@ -55,7 +55,7 @@ function handleSelect(command: TCommand) {
     class="hover:shadow-md transition-shadow cursor-pointer"
     @click="
       router.push({
-        name: '/customers/[id]',
+        name: '/customers/view/[id]',
         params: { id: customer.id.toString() },
       })
     "

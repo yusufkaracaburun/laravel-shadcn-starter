@@ -78,3 +78,53 @@ export const customerSchema = z.object({
 })
 
 export type Customer = z.infer<typeof customerSchema>
+
+/**
+ * Base schema for customer form (shared between create and edit modes)
+ * @see api/app/Http/Requests/StoreCustomerRequest.php
+ * @see api/app/Http/Requests/UpdateCustomerRequest.php
+ */
+const baseCustomerFormSchema = z.object({
+  type: customerTypeSchema.default('private'),
+  name: z
+    .string()
+    .min(2, 'Name must be at least 2 characters')
+    .max(255, 'Name must not exceed 255 characters'),
+  email: z
+    .string()
+    .email('Invalid email address')
+    .max(255, 'Email must not exceed 255 characters')
+    .nullable()
+    .optional(),
+  phone: z.string().nullable().optional(),
+  address: z.string().nullable().optional(),
+  zipcode: z.string().nullable().optional(),
+  city: z.string().nullable().optional(),
+  country: z
+    .string()
+    .max(2, 'Country code must be 2 characters')
+    .nullable()
+    .optional(),
+  kvk_number: z.string().nullable().optional(),
+  vat_number: z.string().nullable().optional(),
+  iban_number: z
+    .string()
+    .max(34, 'IBAN must not exceed 34 characters')
+    .nullable()
+    .optional(),
+})
+
+/**
+ * Schema for creating a new customer
+ * @see api/app/Http/Requests/StoreCustomerRequest.php
+ */
+export const createCustomerFormSchema = baseCustomerFormSchema
+
+/**
+ * Schema for editing an existing customer
+ * @see api/app/Http/Requests/UpdateCustomerRequest.php
+ */
+export const editCustomerFormSchema = baseCustomerFormSchema
+
+export type TCreateCustomerForm = z.infer<typeof createCustomerFormSchema>
+export type TEditCustomerForm = z.infer<typeof editCustomerFormSchema>

@@ -33,7 +33,7 @@ function handleSelect(command: TCommand) {
   switch (command) {
     case 'view':
       router.push({
-        name: '/customers/[id]',
+        name: '/customers/view/[id]',
         params: { id: customer.value.id.toString() },
       })
       break
