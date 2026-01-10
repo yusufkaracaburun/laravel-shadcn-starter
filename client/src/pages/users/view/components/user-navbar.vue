@@ -25,7 +25,9 @@ const emits = defineEmits<{
 
 const router = useRouter()
 
-const showComponent = shallowRef<typeof UserDelete | typeof UserResourceDialog | null>(null)
+const showComponent = shallowRef<
+  typeof UserDelete | typeof UserResourceDialog | null
+>(null)
 const isDialogOpen = ref(false)
 
 type TCommand = 'edit' | 'delete' | 'close' | 'back'
@@ -78,10 +80,7 @@ function handleDeleteClose() {
   </div>
 
   <Dialog v-model:open="isDialogOpen" class="print:hidden">
-    <DialogContent
-      v-if="showComponent && props.user"
-      class="sm:max-w-[425px]"
-    >
+    <DialogContent v-if="showComponent && props.user" class="sm:max-w-[425px]">
       <UserResourceDialog
         v-if="showComponent === UserResourceDialog"
         :user="props.user"

@@ -164,19 +164,19 @@ function handleDeleteClosed() {
             <TabsList>
               <TabsTrigger value="overview" class="gap-2">
                 <LayoutGridIcon class="size-4" />
-                Overview
+                <span v-if="activeTab === 'overview'">Overview</span>
               </TabsTrigger>
               <TabsTrigger value="account" class="gap-2">
                 <UserCircleIcon class="size-4" />
-                Account
+                <span v-if="activeTab === 'account'">Account</span>
               </TabsTrigger>
               <TabsTrigger value="roles" class="gap-2">
                 <ShieldIcon class="size-4" />
-                Roles & Permissions
+                <span v-if="activeTab === 'roles'">Roles & Permissions</span>
               </TabsTrigger>
               <TabsTrigger value="teams" class="gap-2">
                 <UsersIcon class="size-4" />
-                Teams
+                <span v-if="activeTab === 'teams'">Teams</span>
               </TabsTrigger>
             </TabsList>
 

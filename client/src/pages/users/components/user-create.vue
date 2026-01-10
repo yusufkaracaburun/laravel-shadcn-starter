@@ -1,24 +1,25 @@
 <script lang="ts" setup>
+import { Button } from '@/components/ui/button'
+import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog'
 import { UserRoundPlusIcon } from '@/composables/use-icons.composable'
 
-import UserResource from './user-resource.vue'
+import UserResourceDialog from './user-resource-dialog.vue'
 
 const isOpen = ref(false)
 </script>
 
 <template>
-  <UiDrawer v-model:open="isOpen" direction="right">
-    <UiDrawerTrigger as-child>
-      <UiButton>
+  <Dialog v-model:open="isOpen">
+    <DialogTrigger as-child>
+      <Button>
         <UserRoundPlusIcon />
         Create User
-      </UiButton>
-    </UiDrawerTrigger>
-
-    <UiDrawerContent class="px-4 pb-4">
-      <div class="overflow-y-auto max-h-[calc(100vh-4rem)]">
-        <UserResource @close="isOpen = false" />
-      </div>
-    </UiDrawerContent>
-  </UiDrawer>
+      </Button>
+    </DialogTrigger>
+    <DialogContent
+      class="top-4 right-4 bottom-4 left-auto translate-x-0 translate-y-0 sm:max-w-[425px]"
+    >
+      <UserResourceDialog :user="null" @close="isOpen = false" />
+    </DialogContent>
+  </Dialog>
 </template>

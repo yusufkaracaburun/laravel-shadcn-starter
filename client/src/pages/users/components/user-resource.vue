@@ -1,6 +1,11 @@
 <script lang="ts" setup>
 import type { IUser } from '@/pages/users/models/users'
 
+import {
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+} from '@/components/ui/sheet'
 import UserForm from './user-form.vue'
 
 interface IUserResourceProps {
@@ -21,14 +26,14 @@ const description = computed(() =>
 </script>
 
 <template>
-  <UiDrawerHeader>
-    <UiDrawerTitle>
+  <SheetHeader>
+    <SheetTitle>
       {{ title }}
-    </UiDrawerTitle>
-    <UiDrawerDescription>
+    </SheetTitle>
+    <SheetDescription>
       {{ description }}
-    </UiDrawerDescription>
-  </UiDrawerHeader>
+    </SheetDescription>
+  </SheetHeader>
 
   <UserForm :user="user" class="mt-4" @close="emits('close')" />
 </template>
