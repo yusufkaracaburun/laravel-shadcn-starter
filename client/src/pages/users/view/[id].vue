@@ -11,6 +11,7 @@ import type { IUser } from '@/pages/users/models/users'
 import Page from '@/components/global-layout/basic-page.vue'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import {
+  FileTextIcon,
   LayoutGridIcon,
   ShieldIcon,
   UserCircleIcon,
@@ -20,6 +21,7 @@ import { useUsers } from '@/composables/use-users.composable'
 
 import UserAccountStatusCard from './components/user-account-status-card.vue'
 import UserHeader from './components/user-header.vue'
+import UserInvoicesCard from './components/user-invoices-card.vue'
 import UserNavbar from './components/user-navbar.vue'
 import UserProfileCard from './components/user-profile-card.vue'
 import UserRolesCard from './components/user-roles-card.vue'
@@ -201,6 +203,13 @@ function handleDeleteClosed() {
                   <UsersIcon class="size-4" />
                   <span>Teams</span>
                 </TabsTrigger>
+                <TabsTrigger
+                  value="invoices"
+                  class="gap-2 rounded-md px-4 py-2.5 data-[state=active]:bg-background data-[state=active]:shadow-sm"
+                >
+                  <FileTextIcon class="size-4" />
+                  <span>Invoices</span>
+                </TabsTrigger>
               </TabsList>
 
               <TabsContent value="overview" class="mt-8">
@@ -238,6 +247,12 @@ function handleDeleteClosed() {
               <TabsContent value="teams" class="mt-8">
                 <div class="max-w-2xl">
                   <UserTeamsCard :user="user" />
+                </div>
+              </TabsContent>
+
+              <TabsContent value="invoices" class="mt-8">
+                <div class="max-w-2xl">
+                  <UserInvoicesCard :user="user" />
                 </div>
               </TabsContent>
             </Tabs>
