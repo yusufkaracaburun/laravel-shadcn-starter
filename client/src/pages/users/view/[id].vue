@@ -153,65 +153,95 @@ function handleDeleteClosed() {
       :on-retry="fetchUserByIdData"
     >
       <template v-if="user">
-        <div class="space-y-6">
-          <UserHeader
-            :user="user"
-            :initials="userInitials"
-            :is-email-verified="isEmailVerified"
-          />
-
-          <Tabs v-model="activeTab" class="w-full">
-            <TabsList>
-              <TabsTrigger value="overview" class="gap-2">
-                <LayoutGridIcon class="size-4" />
-                <span v-if="activeTab === 'overview'">Overview</span>
-              </TabsTrigger>
-              <TabsTrigger value="account" class="gap-2">
-                <UserCircleIcon class="size-4" />
-                <span v-if="activeTab === 'account'">Account</span>
-              </TabsTrigger>
-              <TabsTrigger value="roles" class="gap-2">
-                <ShieldIcon class="size-4" />
-                <span v-if="activeTab === 'roles'">Roles & Permissions</span>
-              </TabsTrigger>
-              <TabsTrigger value="teams" class="gap-2">
-                <UsersIcon class="size-4" />
-                <span v-if="activeTab === 'teams'">Teams</span>
-              </TabsTrigger>
-            </TabsList>
-
-            <TabsContent value="overview" class="mt-6">
-              <div class="grid gap-6 md:grid-cols-2">
-                <UserProfileCard
-                  :user="user"
-                  :is-email-verified="isEmailVerified"
-                  :email-verified-at="formattedEmailVerifiedAt"
-                />
-
-                <UserAccountStatusCard
-                  :user="user"
-                  :created-at="formattedCreatedAt"
-                  :updated-at="formattedUpdatedAt"
-                />
-              </div>
-            </TabsContent>
-
-            <TabsContent value="account" class="mt-6">
-              <UserAccountStatusCard
+        <div class="space-y-8">
+          <!-- Enhanced Header Section -->
+          <div
+            class="relative overflow-hidden rounded-xl border bg-gradient-to-br from-background to-muted/20 p-8 shadow-sm"
+          >
+            <div class="relative z-10">
+              <UserHeader
                 :user="user"
-                :created-at="formattedCreatedAt"
-                :updated-at="formattedUpdatedAt"
+                :initials="userInitials"
+                :is-email-verified="isEmailVerified"
               />
-            </TabsContent>
+            </div>
+          </div>
 
-            <TabsContent value="roles" class="mt-6">
-              <UserRolesCard :user="user" />
-            </TabsContent>
+          <!-- Modern Tabs Section -->
+          <div class="space-y-6">
+            <Tabs v-model="activeTab" class="w-full">
+              <TabsList
+                class="h-auto w-full justify-start gap-1 bg-muted/50 p-1"
+              >
+                <TabsTrigger
+                  value="overview"
+                  class="gap-2 rounded-md px-4 py-2.5 data-[state=active]:bg-background data-[state=active]:shadow-sm"
+                >
+                  <LayoutGridIcon class="size-4" />
+                  <span>Overview</span>
+                </TabsTrigger>
+                <TabsTrigger
+                  value="account"
+                  class="gap-2 rounded-md px-4 py-2.5 data-[state=active]:bg-background data-[state=active]:shadow-sm"
+                >
+                  <UserCircleIcon class="size-4" />
+                  <span>Account</span>
+                </TabsTrigger>
+                <TabsTrigger
+                  value="roles"
+                  class="gap-2 rounded-md px-4 py-2.5 data-[state=active]:bg-background data-[state=active]:shadow-sm"
+                >
+                  <ShieldIcon class="size-4" />
+                  <span>Roles & Permissions</span>
+                </TabsTrigger>
+                <TabsTrigger
+                  value="teams"
+                  class="gap-2 rounded-md px-4 py-2.5 data-[state=active]:bg-background data-[state=active]:shadow-sm"
+                >
+                  <UsersIcon class="size-4" />
+                  <span>Teams</span>
+                </TabsTrigger>
+              </TabsList>
 
-            <TabsContent value="teams" class="mt-6">
-              <UserTeamsCard :user="user" />
-            </TabsContent>
-          </Tabs>
+              <TabsContent value="overview" class="mt-8">
+                <div class="grid gap-6 lg:grid-cols-2">
+                  <UserProfileCard
+                    :user="user"
+                    :is-email-verified="isEmailVerified"
+                    :email-verified-at="formattedEmailVerifiedAt"
+                  />
+
+                  <UserAccountStatusCard
+                    :user="user"
+                    :created-at="formattedCreatedAt"
+                    :updated-at="formattedUpdatedAt"
+                  />
+                </div>
+              </TabsContent>
+
+              <TabsContent value="account" class="mt-8">
+                <div class="max-w-2xl">
+                  <UserAccountStatusCard
+                    :user="user"
+                    :created-at="formattedCreatedAt"
+                    :updated-at="formattedUpdatedAt"
+                  />
+                </div>
+              </TabsContent>
+
+              <TabsContent value="roles" class="mt-8">
+                <div class="max-w-2xl">
+                  <UserRolesCard :user="user" />
+                </div>
+              </TabsContent>
+
+              <TabsContent value="teams" class="mt-8">
+                <div class="max-w-2xl">
+                  <UserTeamsCard :user="user" />
+                </div>
+              </TabsContent>
+            </Tabs>
+          </div>
         </div>
       </template>
     </UserViewLayout>
