@@ -10,6 +10,7 @@ import {
 } from 'lucide-vue-next'
 
 import { useSidebar } from '@/components/ui/sidebar'
+import { useAuth } from '@/pages/auth/composables/use-auth.composable'
 
 import type { User } from './types'
 
