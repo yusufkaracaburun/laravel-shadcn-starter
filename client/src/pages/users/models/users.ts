@@ -3,6 +3,7 @@ import type { IStatus } from '@/services/types/response.type'
 export enum EUserRole {
   SUPER_ADMIN = 'super-admin',
   ADMIN = 'admin',
+  MANAGER = 'manager',
   USER = 'user',
   CUSTOMER = 'customer',
   CONTRACTOR = 'contractor',
