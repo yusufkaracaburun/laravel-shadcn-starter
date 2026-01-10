@@ -36,7 +36,8 @@ final class CustomerUpdateRequest extends BaseFormRequest
                 'max:255',
                 Rule::unique('customers')->ignore($customer),
             ],
-            'phone' => ['nullable', new ValidPhoneNumber()],
+            'phone'  => ['nullable', new ValidPhoneNumber()],
+            'status' => ['sometimes', 'nullable', 'string', 'in:active,inactive,pending'],
         ];
     }
 }

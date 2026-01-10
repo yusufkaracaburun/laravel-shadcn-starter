@@ -31,7 +31,6 @@ final class ApiResponse
 
     /**
      * Create a OK API response.
-     *
      */
     public static function ok(
         mixed $data = null,

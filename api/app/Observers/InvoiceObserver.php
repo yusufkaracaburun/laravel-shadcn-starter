@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Observers;
 
 use App\Models\Invoice;
-use Illuminate\Support\Facades\Log;
 
 /**
  * Observer for Invoice model events.

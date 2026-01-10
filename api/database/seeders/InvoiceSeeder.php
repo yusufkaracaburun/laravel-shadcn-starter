@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Database\Seeders;
 
-use App\Enums\InvoiceStatus;
 use App\Models\Invoice;
 use App\Models\Customer;
 use Illuminate\Database\Seeder;
