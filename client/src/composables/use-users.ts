@@ -12,6 +12,7 @@ import type { IResponse } from '@/services/types/response.type'
 
 import { useResourceBase } from '@/composables/use-resource-base'
 import { useToast } from '@/composables/use-toast'
+import { EUserRole } from '@/pages/users/models/users'
 import { useUserService } from '@/services/users.service'
 import { useErrorStore } from '@/stores/error.store'
 
@@ -121,13 +122,20 @@ export function useUsers() {
    * @returns Initial values object for vee-validate form
    */
   function getUserFormInitialValues(user?: IUser | null) {
+    // Convert role name string to EUserRole enum value, default to USER if not found
+    const roleName = user?.roles?.[0]?.name
+    const role =
+      roleName && Object.values(EUserRole).includes(roleName as EUserRole)
+        ? (roleName as EUserRole)
+        : EUserRole.USER
+
     return {
       name: user?.name || '',
       email: user?.email || '',
       password: '',
       password_confirmation: '',
       profile_photo: null,
-      role: user?.roles?.[0]?.name || null,
+      role,
     }
   }
 
