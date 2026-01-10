@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import type { Item } from '../data/schema'
+import type { IItem } from '../models/items'
 
 interface Props {
-  items: Item[]
+  items: IItem[]
 }
 
 const props = defineProps<Props>()

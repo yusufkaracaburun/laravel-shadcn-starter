@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import type { Item } from '@/services/items.service'
+import type { IItem } from '@/pages/items/models/items'
 
 import Loading from '@/components/loading.vue'
 
 import ItemCard from './item-card.vue'
 
 interface Props {
-  items: Item[]
+  items: IItem[]
   loading?: boolean
 }
 

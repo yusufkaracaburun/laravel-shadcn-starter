@@ -1,17 +1,23 @@
 <script lang="ts" setup>
-import type { Item } from '../data/schema'
+import type { IItem } from '@/pages/items/models/items'
 
 import ItemForm from './item-form.vue'
 
-const props = defineProps<{
-  item: Item | null
-}>()
-defineEmits(['close'])
+interface IItemResourceDialogProps {
+  item: IItem | null
+}
 
-const item = computed(() => props.item)
-const title = computed(() => (item.value?.id ? 'Edit Item' : 'New Item'))
+const props = defineProps<IItemResourceDialogProps>()
+
+const emits = defineEmits<{
+  close: []
+}>()
+
+const title = computed(() => (props.item ? 'Edit Item' : 'New Item'))
 const description = computed(() =>
-  item.value?.id ? `Edit item ${item.value.id}` : 'Create new item',
+  props.item
+    ? `Update item information for ${props.item.name}.`
+    : 'Add a new item to the system. Fill in the required information below.',
 )
 </script>
 
@@ -25,6 +31,6 @@ const description = computed(() =>
         {{ description }}
       </UiDialogDescription>
     </UiDialogHeader>
-    <ItemForm class="mt-2" :item="item" @close="$emit('close')" />
+    <ItemForm :item="item" class="mt-2" @close="emits('close')" />
   </div>
 </template>

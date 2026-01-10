@@ -154,6 +154,28 @@
       "filterByEmail": "Filter users by email..."
     }
   },
+  "items": {
+    "title": "Items",
+    "description": "Items description",
+    "columns": {
+      "id": "Item ID",
+      "name": "Name",
+      "description": "Description",
+      "unitPrice": "Unit Price",
+      "vatRate": "VAT Rate",
+      "unit": "Unit",
+      "createdAt": "Created At"
+    },
+    "actions": {
+      "create": "Create Item",
+      "reset": "Reset",
+      "cancel": "Cancel"
+    },
+    "filters": {
+      "filterByName": "Filter items by name...",
+      "filterByDescription": "Filter items by description..."
+    }
+  },
   "sidebar": {
     "sections": {
       "general": "General",

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Check, CirclePlus, Search, X } from 'lucide-vue-next'
 
-import type { ItemFilters } from '@/services/items.service'
+import type { IItemFilters } from '@/pages/items/models/items'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -16,8 +16,8 @@ import { Separator } from '@/components/ui/separator'
 import { units, vatRates } from '../data/data'
 
 interface Props {
-  filters: ItemFilters
-  onFiltersChange: (filters: ItemFilters) => void
+  filters: IItemFilters
+  onFiltersChange: (filters: IItemFilters) => void
   onClear: () => void
 }
 
@@ -27,7 +27,7 @@ const isOpen = ref(false)
 const searchFilter = ref('')
 
 // Local state for filters
-const localFilters = ref<ItemFilters>({ ...props.filters })
+const localFilters = ref<IItemFilters>({ ...props.filters })
 
 // Watch for external filter changes
 watch(

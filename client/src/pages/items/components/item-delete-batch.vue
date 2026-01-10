@@ -1,4 +1,4 @@
-<script lang="ts" setup generic="T = Item">
+<script lang="ts" setup generic="T = IItem">
 import type { Table as VueTable } from '@tanstack/vue-table'
 
 import { toast } from 'vue-sonner'
@@ -6,7 +6,7 @@ import { toast } from 'vue-sonner'
 import ConfirmDialog from '@/components/confirm-dialog.vue'
 import { useItems } from '@/composables/use-items.composable'
 
-import type { Item } from '../data/schema'
+import type { IItem } from '../models/items'
 
 const { table } = defineProps<{
   table: VueTable<T>
@@ -34,7 +34,7 @@ async function handleConfirm() {
 
   const rowsToDelete = selectedRows.value
   const itemIds = rowsToDelete
-    .map(row => (row.original as Item).id)
+    .map(row => (row.original as IItem).id)
     .filter(id => id != null)
 
   if (itemIds.length === 0) {

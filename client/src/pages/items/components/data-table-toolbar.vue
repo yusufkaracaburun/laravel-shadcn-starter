@@ -3,20 +3,18 @@ import type { Table } from '@tanstack/vue-table'
 
 import { X } from 'lucide-vue-next'
 
-import type { ItemFilters } from '@/services/items.service'
+import type { IItem, IItemFilters } from '@/pages/items/models/items'
 
 import DataTableViewOptions from '@/components/data-table/view-options.vue'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 
-import type { Item } from '../data/schema'
-
 import ItemsFilter from './items-filter.vue'
 
 interface DataTableToolbarProps {
-  table: Table<Item>
-  filters: ItemFilters
-  onFiltersChange: (filters: ItemFilters) => void
+  table: Table<IItem>
+  filters: IItemFilters
+  onFiltersChange: (filters: IItemFilters) => void
   onClearFilters: () => void
 }
 

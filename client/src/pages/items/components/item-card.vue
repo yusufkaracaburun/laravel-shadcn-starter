@@ -2,7 +2,7 @@
 import { MoreVertical, Package } from 'lucide-vue-next'
 import { useRouter } from 'vue-router'
 
-import type { Item } from '@/services/items.service'
+import type { IItem } from '@/pages/items/models/items'
 
 import { Badge } from '@/components/ui/badge'
 import {
@@ -18,7 +18,7 @@ import ItemDelete from './item-delete.vue'
 import ItemResourceDialog from './item-resource-dialog.vue'
 
 interface Props {
-  item: Item
+  item: IItem
 }
 
 const props = defineProps<Props>()
@@ -35,7 +35,7 @@ function handleSelect(command: TCommand) {
   switch (command) {
     case 'view':
       router.push({
-        name: '/items/[id]',
+        name: '/items/view/[id]',
         params: { id: props.item.id.toString() },
       })
       break
@@ -75,7 +75,7 @@ function formatPrice(
   <Card
     class="hover:shadow-md transition-shadow cursor-pointer"
     @click="
-      router.push({ name: '/items/[id]', params: { id: item.id.toString() } })
+      router.push({ name: '/items/view/[id]', params: { id: item.id.toString() } })
     "
   >
     <CardHeader>

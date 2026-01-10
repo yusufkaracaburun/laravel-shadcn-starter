@@ -1,188 +1,158 @@
 <script lang="ts" setup>
 import { toTypedSchema } from '@vee-validate/zod'
 import { useForm } from 'vee-validate'
-import { z } from 'zod'
 
-import { FormField } from '@/components/ui/form'
+import { Button } from '@/components/ui/button'
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
 import { useItems } from '@/composables/use-items.composable'
+import { setFormFieldErrors } from '@/utils/form'
 
-import type { Item } from '../data/schema'
+import type {
+  ICreateItemRequest,
+  IItem,
+  IUpdateItemRequest,
+} from '../models/items'
+
+import { createItemFormSchema, editItemFormSchema } from '../data/schema'
 
 const props = defineProps<{
-  item: Item | null
+  item?: IItem | null
 }>()
-const emits = defineEmits(['close'])
 
-const { createItem, updateItem } = useItems()
+const emits = defineEmits<{
+  close: []
+}>()
 
-// Extract unit_price value - handle both Money object and number
-function getUnitPriceValue(item: Item | null): number {
-  if (!item?.unit_price)
-    return 0
-  // If it's a Money object, extract the decimal value
-  if (typeof item.unit_price === 'object' && 'amount' in item.unit_price) {
-    // Money object: amount is in cents, convert to decimal
-    const amount = Number.parseFloat(item.unit_price.amount)
-    return amount / 100
-  }
-  // If it's already a number, use it directly
-  if (typeof item.unit_price === 'number') {
-    return item.unit_price
-  }
-  return 0
-}
+const {
+  createItem,
+  updateItem,
+  isCreating,
+  isUpdating,
+  getItemFormInitialValues,
+} = useItems()
 
-const formSchema = toTypedSchema(
-  z.object({
-    name: z
-      .string()
-      .min(2, 'Name must be at least 2 characters')
-      .max(255, 'Name must not exceed 255 characters')
-      .default(props.item?.name ?? ''),
-    description: z
-      .string()
-      .nullable()
-      .default(props.item?.description ?? null),
-    unit_price: z
-      .number()
-      .min(0, 'Unit price must be zero or greater')
-      .default(getUnitPriceValue(props.item)),
-    vat_rate: z
-      .number()
-      .min(0, 'VAT rate must be zero or greater')
-      .max(100, 'VAT rate may not be greater than 100%')
-      .default(props.item?.vat_rate ?? 0),
-    unit: z
-      .string()
-      .max(50, 'Unit must not exceed 50 characters')
-      .nullable()
-      .default(props.item?.unit ?? null),
-  }),
+const isEditMode = computed(() => !!props.item)
+const formSchema = computed(() =>
+  isEditMode.value ? editItemFormSchema : createItemFormSchema,
 )
 
-// Compute initial values reactively
-const initialValues = computed(() => ({
-  name: props.item?.name ?? '',
-  description: props.item?.description ?? null,
-  unit_price: getUnitPriceValue(props.item),
-  vat_rate: props.item?.vat_rate ?? 0,
-  unit: props.item?.unit ?? null,
-}))
+const initialValues = computed(() => getItemFormInitialValues(props.item))
 
-const { isFieldDirty, handleSubmit, isSubmitting, resetForm } = useForm({
-  validationSchema: formSchema,
+const form = useForm({
+  validationSchema: computed(() => toTypedSchema(formSchema.value)),
   initialValues: initialValues.value,
 })
 
-// Reset form when item changes
+const { handleSubmit, setFieldError, resetForm, values } = form
+
 watch(
   () => props.item,
-  (newItem) => {
-    if (newItem) {
-      resetForm({
-        values: {
-          name: newItem.name ?? '',
-          description: newItem.description ?? null,
-          unit_price: getUnitPriceValue(newItem),
-          vat_rate: newItem.vat_rate ?? 0,
-          unit: newItem.unit ?? null,
-        },
-      })
-    }
+  (item) => {
+    resetForm({ values: initialValues.value })
   },
-  { deep: true },
+  { immediate: true },
 )
+
+const validFields = [
+  'name',
+  'description',
+  'unit_price',
+  'vat_rate',
+  'unit',
+] as const
+
+function prepareRequestData(
+  values: any,
+  isEdit: boolean,
+): IUpdateItemRequest | ICreateItemRequest {
+  if (isEdit && props.item) {
+    return {
+      ...values,
+    }
+  }
+
+  return {
+    name: values.name,
+    description: values.description || null,
+    unit_price: values.unit_price,
+    vat_rate: values.vat_rate,
+    unit: values.unit || null,
+  }
+}
 
 const onSubmit = handleSubmit(async (values) => {
   try {
-    const backendData = {
-      name: values.name,
-      description: values.description || null,
-      unit_price: values.unit_price,
-      vat_rate: values.vat_rate,
-      unit: values.unit || null,
-    }
+    const requestData = prepareRequestData(values, isEditMode.value)
 
-    if (props.item?.id) {
-      // Update existing item
-      await updateItem(props.item.id, backendData)
+    if (isEditMode.value && props.item) {
+      await updateItem(props.item.id, requestData as IUpdateItemRequest)
     } else {
-      // Create new item
-      await createItem(backendData)
+      await createItem(requestData as ICreateItemRequest)
     }
 
+    resetForm()
     emits('close')
-  } catch (error) {
-    // Error handling is done in the composable
-    // Just log for debugging
-    console.error('Item form submission error:', error)
+  } catch (error: any) {
+    setFormFieldErrors(error, setFieldError, validFields)
   }
 })
 </script>
 
 <template>
   <form class="space-y-4" @submit="onSubmit">
-    <FormField
-      v-slot="{ componentField }"
-      name="name"
-      :validate-on-blur="!isFieldDirty"
-    >
-      <UiFormItem>
-        <UiFormLabel>Name</UiFormLabel>
-        <UiFormControl>
-          <UiInput
-            type="text"
-            placeholder="Item name"
+    <FormField v-slot="{ componentField }" name="name">
+      <FormItem>
+        <FormLabel>Name</FormLabel>
+        <FormControl>
+          <Input type="text" v-bind="componentField" placeholder="Item name" />
+        </FormControl>
+        <FormMessage />
+      </FormItem>
+    </FormField>
+
+    <FormField v-slot="{ componentField }" name="description">
+      <FormItem>
+        <FormLabel>Description</FormLabel>
+        <FormControl>
+          <Textarea
             v-bind="componentField"
+            placeholder="Item description"
+            :rows="3"
           />
-        </UiFormControl>
-        <UiFormMessage />
-      </UiFormItem>
+        </FormControl>
+        <FormMessage />
+      </FormItem>
     </FormField>
 
-    <FormField
-      v-slot="{ componentField }"
-      name="description"
-      :validate-on-blur="!isFieldDirty"
-    >
-      <UiFormItem>
-        <UiFormLabel>Description</UiFormLabel>
-        <UiFormControl>
-          <UiTextarea placeholder="Item description" v-bind="componentField" />
-        </UiFormControl>
-        <UiFormMessage />
-      </UiFormItem>
-    </FormField>
-
-    <FormField
-      v-slot="{ componentField }"
-      name="unit_price"
-      :validate-on-blur="!isFieldDirty"
-    >
-      <UiFormItem>
-        <UiFormLabel>Unit Price</UiFormLabel>
-        <UiFormControl>
-          <UiInput
+    <FormField v-slot="{ componentField }" name="unit_price">
+      <FormItem>
+        <FormLabel>Unit Price</FormLabel>
+        <FormControl>
+          <Input
             type="number"
             step="0.01"
             min="0"
             placeholder="0.00"
             v-bind="componentField"
           />
-        </UiFormControl>
-        <UiFormMessage />
-      </UiFormItem>
+        </FormControl>
+        <FormMessage />
+      </FormItem>
     </FormField>
 
-    <FormField
-      v-slot="{ componentField }"
-      name="vat_rate"
-      :validate-on-blur="!isFieldDirty"
-    >
-      <UiFormItem>
-        <UiFormLabel>VAT Rate (%)</UiFormLabel>
-        <UiFormControl>
-          <UiInput
+    <FormField v-slot="{ componentField }" name="vat_rate">
+      <FormItem>
+        <FormLabel>VAT Rate (%)</FormLabel>
+        <FormControl>
+          <Input
             type="number"
             step="0.01"
             min="0"
@@ -190,34 +160,33 @@ const onSubmit = handleSubmit(async (values) => {
             placeholder="0.00"
             v-bind="componentField"
           />
-        </UiFormControl>
-        <UiFormMessage />
-      </UiFormItem>
+        </FormControl>
+        <FormMessage />
+      </FormItem>
     </FormField>
 
-    <FormField
-      v-slot="{ componentField }"
-      name="unit"
-      :validate-on-blur="!isFieldDirty"
-    >
-      <UiFormItem>
-        <UiFormLabel>Unit</UiFormLabel>
-        <UiFormControl>
-          <UiInput
+    <FormField v-slot="{ componentField }" name="unit">
+      <FormItem>
+        <FormLabel>Unit</FormLabel>
+        <FormControl>
+          <Input
             type="text"
             placeholder="e.g., pcs, kg, m"
             maxlength="50"
             v-bind="componentField"
           />
-        </UiFormControl>
-        <UiFormMessage />
-      </UiFormItem>
+        </FormControl>
+        <FormMessage />
+      </FormItem>
     </FormField>
 
-    <UiButton type="submit" class="w-full" :disabled="isSubmitting">
-      {{
-        isSubmitting ? 'Submitting...' : item ? 'Update Item' : 'Create Item'
-      }}
-    </UiButton>
+    <Button
+      type="submit"
+      class="w-full"
+      :disabled="isEditMode ? isUpdating : isCreating"
+    >
+      <UiSpinner v-if="isEditMode ? isUpdating : isCreating" class="mr-2" />
+      {{ isEditMode ? 'Update Item' : 'Create Item' }}
+    </Button>
   </form>
 </template>

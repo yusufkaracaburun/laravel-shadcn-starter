@@ -1,10 +1,10 @@
 <script lang="ts" setup>
-import type { Item } from '../data/schema'
+import type { IItem } from '../models/items'
 
 import ItemForm from './item-form.vue'
 
 const props = defineProps<{
-  item?: Item | null
+  item?: IItem | null
 }>()
 
 defineEmits(['close'])

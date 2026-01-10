@@ -1,59 +1,42 @@
-<script lang="ts" setup>
+<script setup lang="ts">
+import type { IItem } from '@/pages/items/models/items'
+
 import { useItems } from '@/composables/use-items.composable'
 
-import type { Item } from '../data/schema'
+interface IItemDeleteProps {
+  item: IItem
+}
 
-const props = defineProps<{
-  item: Item
-}>()
+const props = defineProps<IItemDeleteProps>()
 
 const emits = defineEmits<{
   close: []
 }>()
 
 const { deleteItem } = useItems()
-const isDeleting = ref(false)
 
 async function handleRemove() {
-  if (!props.item?.id) {
-    return
-  }
-
-  try {
-    isDeleting.value = true
-    await deleteItem(props.item.id)
-    emits('close')
-  } catch (error) {
-    // Error handling is done in the composable
-    console.error('Item deletion error:', error)
-  } finally {
-    isDeleting.value = false
-  }
+  await deleteItem(props.item.id)
+  emits('close')
 }
 </script>
 
 <template>
   <div>
-    <UiDialogHeader>
-      <UiDialogTitle>Delete Item</UiDialogTitle>
-      <UiDialogDescription class="mt-2">
-        Are you sure you want to delete <strong>{{ item.name }}</strong>? This action cannot be undone.
-      </UiDialogDescription>
-    </UiDialogHeader>
+    <UiDialogTitle> Delete this item: {{ item.name }} ? </UiDialogTitle>
+    <UiDialogDescription class="mt-2 font-medium">
+      You are about to delete an item with the ID {{ item.id }}. This action
+      cannot be undone.
+    </UiDialogDescription>
     <UiDialogFooter>
       <UiDialogClose as-child>
-        <UiButton variant="outline">
-          Cancel
+        <UiButton variant="outline"> Cancel </UiButton>
+      </UiDialogClose>
+      <UiDialogClose as-child>
+        <UiButton variant="destructive" @click="handleRemove">
+          Delete
         </UiButton>
       </UiDialogClose>
-      <UiButton
-        variant="destructive"
-        :disabled="isDeleting"
-        @click="handleRemove"
-      >
-        <UiSpinner v-if="isDeleting" class="mr-2" />
-        Delete
-      </UiButton>
     </UiDialogFooter>
   </div>
 </template>
