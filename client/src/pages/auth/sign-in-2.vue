@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { GalleryVerticalEnd } from 'lucide-vue-next'
 
-import { useAuth } from '@/composables/use-auth.composable'
+import { useAuth } from '@/pages/auth/composables/use-auth.composable'
 import LoginForm2 from '@/pages/auth/components/LoginForm2.vue'
 import env from '@/utils/env'
 

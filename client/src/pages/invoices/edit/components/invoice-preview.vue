@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { TInvoice } from '@/pages/invoices/data/schema'
-import type { IInvoiceItem } from '@/services/invoices.service'
+import type { IInvoiceItem } from '@/pages/invoices/services/invoices.service'
 
 import { ReceiptIcon } from '@/composables/use-icons.composable'
 import {

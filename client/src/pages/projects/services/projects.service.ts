@@ -4,20 +4,22 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query'
 
 import { useAxios } from '@/composables/use-axios.composable'
 
-import type { IResponse } from './types/response.type'
+import type { IResponse } from '@/services/types/response.type'
 
 /**
- * Company interface matching backend CompanyResource exactly
- * @see api/app/Http/Resources/CompanyResource.php
+ * Project interface matching backend ProjectResource exactly
+ * @see api/app/Http/Resources/ProjectResource.php
+ * @deprecated Use IProject from @/pages/projects/models/projects instead (if available)
  */
-export interface Company {
+export interface Project {
   id: number
   name: string
-  email: string
-  phone: string | null
-  industry: string
+  description: string | null
   status: string
-  employees: string
+  category: string
+  start_date: string | null
+  end_date: string | null
+  progress: number
   team_id: number | null
   created_at: string
   updated_at: string
@@ -25,12 +27,12 @@ export interface Company {
 }
 
 /**
- * Paginated companies response interface matching Laravel's pagination JSON structure
+ * Paginated projects response interface matching Laravel's pagination JSON structure
  * @see https://laravel.com/docs/12.x/pagination#converting-results-to-json
- * @see api/app/Http/Controllers/Api/CompanyController.php::index()
+ * @see api/app/Http/Controllers/Api/ProjectController.php::index()
  */
-export interface PaginatedCompaniesResponse {
-  data: Company[]
+export interface PaginatedProjectsResponse {
+  data: Project[]
   current_page: number
   per_page: number
   total: number
@@ -65,13 +67,13 @@ function convertSortingToQueryString(
 }
 
 /**
- * List all companies with pagination and sorting
- * @see api/app/Http/Controllers/Api/CompanyController.php::index()
+ * List all projects with pagination and sorting
+ * @see api/app/Http/Controllers/Api/ProjectController.php::index()
  * @param page - Page number (default: 1) - can be a ref or number
  * @param pageSize - Number of items per page (default: 15) - can be a ref or number
  * @param sorting - Sorting state from TanStack Table (default: []) - can be a ref or array
  */
-export function useGetCompaniesQuery(
+export function useGetProjectsQuery(
   page: MaybeRef<number> = 1,
   pageSize: MaybeRef<number> = 10,
   sorting: MaybeRef<Array<{ id: string, desc: boolean }>> = [],
@@ -83,14 +85,14 @@ export function useGetCompaniesQuery(
   const pageSizeRef = isRef(pageSize) ? pageSize : ref(pageSize)
   const sortingRef = isRef(sorting) ? sorting : ref(sorting)
 
-  return useQuery<IResponse<PaginatedCompaniesResponse>, AxiosError>({
+  return useQuery<IResponse<PaginatedProjectsResponse>, AxiosError>({
     queryKey: [
-      'companyList',
+      'projectList',
       computed(() => toValue(pageRef)),
       computed(() => toValue(pageSizeRef)),
       computed(() => JSON.stringify(toValue(sortingRef))),
     ],
-    queryFn: async (): Promise<IResponse<PaginatedCompaniesResponse>> => {
+    queryFn: async (): Promise<IResponse<PaginatedProjectsResponse>> => {
       // Use toValue() to read current values in queryFn
       const currentPage = toValue(pageRef)
       const currentPageSize = toValue(pageSizeRef)
@@ -107,7 +109,7 @@ export function useGetCompaniesQuery(
         params.sort = sortParam
       }
 
-      const response = await axiosInstance.get('/api/company', { params })
+      const response = await axiosInstance.get('/api/project', { params })
       return response.data
     },
     retry: (failureCount: number, error: AxiosError) => {
@@ -122,21 +124,21 @@ export function useGetCompaniesQuery(
 }
 
 /**
- * Get a specific company by ID
- * @see api/app/Http/Controllers/Api/CompanyController.php::show()
+ * Get a specific project by ID
+ * @see api/app/Http/Controllers/Api/ProjectController.php::show()
  */
-export function useGetCompanyQuery(companyId: MaybeRef<number>) {
+export function useGetProjectQuery(projectId: MaybeRef<number>) {
   const { axiosInstance } = useAxios()
 
   // Normalize MaybeRef parameter to ref for proper reactivity
-  const companyIdRef = isRef(companyId) ? companyId : ref(companyId)
+  const projectIdRef = isRef(projectId) ? projectId : ref(projectId)
 
-  return useQuery<IResponse<Company>, AxiosError>({
-    queryKey: ['company', computed(() => toValue(companyIdRef))],
-    queryFn: async (): Promise<IResponse<Company>> => {
-      const currentCompanyId = toValue(companyIdRef)
+  return useQuery<IResponse<Project>, AxiosError>({
+    queryKey: ['project', computed(() => toValue(projectIdRef))],
+    queryFn: async (): Promise<IResponse<Project>> => {
+      const currentProjectId = toValue(projectIdRef)
       const response = await axiosInstance.get(
-        `/api/company/${currentCompanyId}`,
+        `/api/project/${currentProjectId}`,
       )
       return response.data
     },
@@ -145,7 +147,7 @@ export function useGetCompanyQuery(companyId: MaybeRef<number>) {
       if (error.response?.status === 401) {
         return false
       }
-      // Don't retry on 404 (not found) - company doesn't exist
+      // Don't retry on 404 (not found) - project doesn't exist
       if (error.response?.status === 404) {
         return false
       }
@@ -153,104 +155,106 @@ export function useGetCompanyQuery(companyId: MaybeRef<number>) {
       return failureCount < 2
     },
     staleTime: 5 * 60 * 1000, // Consider data fresh for 5 minutes
-    enabled: computed(() => toValue(companyIdRef) > 0), // Only fetch if companyId is valid
+    enabled: computed(() => toValue(projectIdRef) > 0), // Only fetch if projectId is valid
   })
 }
 
 /**
- * Create company request interface matching backend validation
- * @see api/app/Http/Controllers/Api/CompanyController.php::store()
+ * Create project request interface matching backend validation
+ * @see api/app/Http/Controllers/Api/ProjectController.php::store()
  */
-export interface CreateCompanyRequest {
+export interface CreateProjectRequest {
   name: string
-  email: string
-  phone?: string | null
-  industry: string
+  description?: string | null
   status: string
-  employees: string
+  category: string
+  start_date?: string | null
+  end_date?: string | null
+  progress?: number
 }
 
 /**
- * Update company request interface matching backend validation
- * @see api/app/Http/Controllers/Api/CompanyController.php::update()
+ * Update project request interface matching backend validation
+ * @see api/app/Http/Controllers/Api/ProjectController.php::update()
  */
-export interface UpdateCompanyRequest {
+export interface UpdateProjectRequest {
   name?: string
-  email?: string
-  phone?: string | null
-  industry?: string
+  description?: string | null
   status?: string
-  employees?: string
+  category?: string
+  start_date?: string | null
+  end_date?: string | null
+  progress?: number
 }
 
 /**
- * Create a new company
- * @see api/app/Http/Controllers/Api/CompanyController.php::store()
+ * Create a new project
+ * @see api/app/Http/Controllers/Api/ProjectController.php::store()
  */
-export function useCreateCompanyMutation() {
+export function useCreateProjectMutation() {
   const { axiosInstance } = useAxios()
   const queryClient = useQueryClient()
 
-  return useMutation<IResponse<Company>, AxiosError, CreateCompanyRequest>({
+  return useMutation<IResponse<Project>, AxiosError, CreateProjectRequest>({
     mutationFn: async (
-      data: CreateCompanyRequest,
-    ): Promise<IResponse<Company>> => {
-      const response = await axiosInstance.post('/api/company', data)
+      data: CreateProjectRequest,
+    ): Promise<IResponse<Project>> => {
+      const response = await axiosInstance.post('/api/project', data)
       return response.data
     },
     onSuccess: () => {
-      // Invalidate company list query to refresh the companies list
-      queryClient.invalidateQueries({ queryKey: ['companyList'] })
+      // Invalidate project list query to refresh the projects list
+      queryClient.invalidateQueries({ queryKey: ['projectList'] })
     },
   })
 }
 
 /**
- * Update an existing company
- * @see api/app/Http/Controllers/Api/CompanyController.php::update()
+ * Update an existing project
+ * @see api/app/Http/Controllers/Api/ProjectController.php::update()
  */
-export function useUpdateCompanyMutation() {
+export function useUpdateProjectMutation() {
   const { axiosInstance } = useAxios()
   const queryClient = useQueryClient()
 
   return useMutation<
-    IResponse<Company>,
+    IResponse<Project>,
     AxiosError,
-    { companyId: number, data: UpdateCompanyRequest }
+    { projectId: number, data: UpdateProjectRequest }
   >({
-    mutationFn: async ({ companyId, data }): Promise<IResponse<Company>> => {
+    mutationFn: async ({ projectId, data }): Promise<IResponse<Project>> => {
       const response = await axiosInstance.put(
-        `/api/company/${companyId}`,
+        `/api/project/${projectId}`,
         data,
       )
       return response.data
     },
     onSuccess: (_, variables) => {
-      // Invalidate company list query to refresh the companies list
-      queryClient.invalidateQueries({ queryKey: ['companyList'] })
-      // Invalidate the specific company query to refresh the detail page
+      // Invalidate project list query to refresh the projects list
+      queryClient.invalidateQueries({ queryKey: ['projectList'] })
+      // Invalidate the specific project query to refresh the detail page
       queryClient.invalidateQueries({
-        queryKey: ['company', variables.companyId],
+        queryKey: ['project', variables.projectId],
       })
     },
   })
 }
 
 /**
- * Delete a company
- * @see api/app/Http/Controllers/Api/CompanyController.php::destroy()
+ * Delete a project
+ * @see api/app/Http/Controllers/Api/ProjectController.php::destroy()
  */
-export function useDeleteCompanyMutation() {
+export function useDeleteProjectMutation() {
   const { axiosInstance } = useAxios()
   const queryClient = useQueryClient()
 
   return useMutation<void, AxiosError, number>({
-    mutationFn: async (companyId: number): Promise<void> => {
-      await axiosInstance.delete(`/api/company/${companyId}`)
+    mutationFn: async (projectId: number): Promise<void> => {
+      await axiosInstance.delete(`/api/project/${projectId}`)
     },
     onSuccess: () => {
-      // Invalidate company list query to refresh the companies list
-      queryClient.invalidateQueries({ queryKey: ['companyList'] })
+      // Invalidate project list query to refresh the projects list
+      queryClient.invalidateQueries({ queryKey: ['projectList'] })
     },
   })
 }

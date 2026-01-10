@@ -7,7 +7,7 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip'
 import { Grid3x3Icon, ListIcon } from '@/composables/use-icons.composable'
-import { useInvoices } from '@/composables/use-invoices.composable'
+import { useInvoices } from '@/pages/invoices/composables/use-invoices.composable'
 
 import { getInvoiceColumns } from './components/columns'
 import DataTable from './components/data-table.vue'

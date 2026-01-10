@@ -10,7 +10,7 @@ import { useRouter } from 'vue-router'
 import Page from '@/components/global-layout/basic-page.vue'
 import { Button } from '@/components/ui/button'
 import { ArrowLeftIcon, SaveIcon, SendIcon } from '@/composables/use-icons.composable'
-import { useGetInvoicePrerequisitesQuery } from '@/services/invoices.service'
+import { useGetInvoicePrerequisitesQuery } from '@/pages/invoices/services/invoices.service'
 
 import type { TInvoiceForm } from './data/schema'
 

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { IInvoicePayment } from '@/services/invoices.service'
+import type { IInvoicePayment } from '@/pages/invoices/services/invoices.service'
 
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'

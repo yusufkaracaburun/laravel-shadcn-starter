@@ -4,7 +4,12 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query'
 
 import { useAxios } from '@/composables/use-axios.composable'
 
-import type { IResponse } from './types/response.type'
+import type { IResponse } from '@/services/types/response.type'
+import type {
+  ICustomer,
+  ICustomerFilters,
+  TCustomerType,
+} from '@/pages/customers/models/customers'
 
 // Re-export types from models for convenience
 export type {

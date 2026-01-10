@@ -2,7 +2,7 @@
 import { Calendar, FolderKanban, MoreVertical } from 'lucide-vue-next'
 import { useRouter } from 'vue-router'
 
-import type { Project } from '@/services/projects.service'
+import type { Project } from '@/pages/projects/services/projects.service'
 
 import { Badge } from '@/components/ui/badge'
 import {

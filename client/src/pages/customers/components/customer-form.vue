@@ -6,7 +6,7 @@ import { computed, watch } from 'vue'
 import { Button } from '@/components/ui/button'
 import { ButtonGroup } from '@/components/ui/button-group'
 import { FormField } from '@/components/ui/form'
-import { useCustomers } from '@/composables/use-customers.composable'
+import { useCustomers } from '@/pages/customers/composables/use-customers.composable'
 import { Building2Icon, UserIcon } from '@/composables/use-icons.composable'
 import { setFormFieldErrors } from '@/utils/form'
 

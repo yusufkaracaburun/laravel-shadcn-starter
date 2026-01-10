@@ -12,7 +12,7 @@ import {
   FilePenLineIcon,
   Trash2Icon,
 } from '@/composables/use-icons.composable'
-import { useInvoices } from '@/composables/use-invoices.composable'
+import { useInvoices } from '@/pages/invoices/composables/use-invoices.composable'
 import InvoiceDelete from '@/pages/invoices/components/invoice-delete.vue'
 
 const props = defineProps<{

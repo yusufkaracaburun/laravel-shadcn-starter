@@ -2,7 +2,7 @@
 import type { ICompany } from '@/pages/companies/models/companies'
 
 import { Button } from '@/components/ui/button'
-import { useCompanies } from '@/composables/use-companies.composable'
+import { useCompanies } from '@/pages/companies/composables/use-companies.composable'
 import { useToast } from '@/composables/use-toast.composable'
 
 const props = defineProps<{

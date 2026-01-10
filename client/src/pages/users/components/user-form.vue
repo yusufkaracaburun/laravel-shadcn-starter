@@ -20,7 +20,7 @@ import {
 } from '@/components/ui/select'
 import { XIcon } from '@/composables/use-icons.composable'
 import { useToast } from '@/composables/use-toast.composable'
-import { useUsers } from '@/composables/use-users.composable'
+import { useUsers } from '@/pages/users/composables/use-users.composable'
 import { handleFileUpload } from '@/utils/file'
 import { setFormFieldErrors } from '@/utils/form'
 

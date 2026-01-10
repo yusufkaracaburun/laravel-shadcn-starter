@@ -25,7 +25,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { useCompanies } from '@/composables/use-companies.composable'
+import { useCompanies } from '@/pages/companies/composables/use-companies.composable'
 import { setFormFieldErrors } from '@/utils/form'
 
 import { employeeSizes, industries, statuses } from '../data/data'

@@ -179,7 +179,7 @@ declare global {
   const isReadonly: typeof import('vue').isReadonly
   const isRef: typeof import('vue').isRef
   const isShallow: typeof import('vue').isShallow
-  const logout: typeof import('../composables/use-auth.composable')['logout']
+  const logout: typeof import('../pages/auth/composables/use-auth.composable')['logout']
   const markRaw: typeof import('vue').markRaw
   const nextTick: typeof import('vue').nextTick
   const onActivated: typeof import('vue').onActivated
@@ -215,25 +215,25 @@ declare global {
   const triggerRef: typeof import('vue').triggerRef
   const unref: typeof import('vue').unref
   const useAttrs: typeof import('vue').useAttrs
-  const useAuth: typeof import('../composables/use-auth.composable').useAuth
+  const useAuth: typeof import('../pages/auth/composables/use-auth.composable').useAuth
   const useAuthStore: typeof import('../stores/auth.store').useAuthStore
   const useAxios: typeof import('../composables/use-axios.composable').useAxios
-  const useCompanies: typeof import('../composables/use-companies.composable').useCompanies
+  const useCompanies: typeof import('../pages/companies/composables/use-companies.composable').useCompanies
   const useCssModule: typeof import('vue').useCssModule
   const useCssVars: typeof import('vue').useCssVars
-  const useCustomers: typeof import('../composables/use-customers.composable').useCustomers
+  const useCustomers: typeof import('../pages/customers/composables/use-customers.composable').useCustomers
   const useDataTable: typeof import('../composables/use-data-table.composable').useDataTable
   const useEcho: typeof import('../composables/use-echo.composable').useEcho
   const useErrorStore: typeof import('../stores/error.store').useErrorStore
   const useFilters: typeof import('../composables/use-filters.composable').useFilters
   const useId: typeof import('vue').useId
-  const useInvoices: typeof import('../composables/use-invoices.composable').useInvoices
+  const useInvoices: typeof import('../pages/invoices/composables/use-invoices.composable').useInvoices
   const useItems: typeof import('../pages/items/composables/use-items.composable').useItems
   const useKanban: typeof import('../composables/use-kanban.composable').useKanban
   const useLink: typeof import('vue-router')['useLink']
   const useModel: typeof import('vue').useModel
   const usePagination: typeof import('../composables/use-pagination.composable').usePagination
-  const useProjects: typeof import('../composables/use-projects.composable').useProjects
+  const useProjects: typeof import('../pages/projects/composables/use-projects.composable').useProjects
   const useResourceBase: typeof import('../composables/use-resource-base.composable').useResourceBase
   const useResourceList: typeof import('../composables/use-resource-list.composable').useResourceList
   const useResourceMutation: typeof import('../composables/use-resource-mutation.composable').useResourceMutation
@@ -250,7 +250,7 @@ declare global {
   const useThemeConfig: typeof import('../composables/use-theme-config.composable')['useThemeConfig']
   const useThemeStore: typeof import('../stores/theme.store').useThemeStore
   const useToast: typeof import('../composables/use-toast.composable').useToast
-  const useUsers: typeof import('../composables/use-users.composable').useUsers
+  const useUsers: typeof import('../pages/users/composables/use-users.composable').useUsers
   const watch: typeof import('vue').watch
   const watchEffect: typeof import('vue').watchEffect
   const watchPostEffect: typeof import('vue').watchPostEffect

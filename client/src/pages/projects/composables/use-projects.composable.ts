@@ -4,7 +4,7 @@ import type { ServerPagination } from '@/components/data-table/types'
 import type {
   CreateProjectRequest,
   UpdateProjectRequest,
-} from '@/services/projects.service'
+} from '@/pages/projects/services/projects.service'
 
 import { useToast } from '@/composables/use-toast.composable'
 import {
@@ -12,7 +12,7 @@ import {
   useDeleteProjectMutation,
   useGetProjectsQuery,
   useUpdateProjectMutation,
-} from '@/services/projects.service'
+} from '@/pages/projects/services/projects.service'
 import { useErrorStore } from '@/stores/error.store'
 
 export function useProjects() {

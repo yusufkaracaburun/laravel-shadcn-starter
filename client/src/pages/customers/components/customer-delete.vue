@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { useCustomers } from '@/composables/use-customers.composable'
+import { useCustomers } from '@/pages/customers/composables/use-customers.composable'
 
 import type { ICustomer } from '../models/customers'
 

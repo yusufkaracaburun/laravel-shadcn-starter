@@ -17,7 +17,7 @@ import {
   UserCircleIcon,
   UsersIcon,
 } from '@/composables/use-icons.composable'
-import { useUsers } from '@/composables/use-users.composable'
+import { useUsers } from '@/pages/users/composables/use-users.composable'
 
 import UserAccountStatusCard from './components/user-account-status-card.vue'
 import UserHeader from './components/user-header.vue'

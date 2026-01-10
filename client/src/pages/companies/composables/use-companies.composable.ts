@@ -4,51 +4,52 @@ import type { SortingState } from '@tanstack/vue-table'
 
 import type { ServerPagination } from '@/components/data-table/types'
 import type {
-  CreateCustomerRequest,
-  UpdateCustomerRequest,
-} from '@/services/customers.service'
+  CreateCompanyRequest,
+  UpdateCompanyRequest,
+} from '@/pages/companies/services/companies.service'
 import type { IResponse } from '@/services/types/response.type'
 import type {
-  ICustomer,
-  ICustomerFilters,
-} from '@/pages/customers/models/customers'
-import { ECustomerType } from '@/pages/customers/models/customers'
+  ICompany,
+  ICompanyFilters,
+} from '@/pages/companies/models/companies'
+import {
+  ECompanyStatus,
+  ECompanyIndustry,
+  ECompanyEmployeeSize,
+} from '@/pages/companies/models/companies'
 
 import { useToast } from '@/composables/use-toast.composable'
 import {
-  useCreateCustomerMutation,
-  useDeleteCustomerMutation,
-  useGetCustomersQuery,
-  useGetCustomerQuery,
-  useUpdateCustomerMutation,
-} from '@/services/customers.service'
+  useCreateCompanyMutation,
+  useDeleteCompanyMutation,
+  useGetCompaniesQuery,
+  useGetCompanyQuery,
+  useUpdateCompanyMutation,
+} from '@/pages/companies/services/companies.service'
 import { useErrorStore } from '@/stores/error.store'
 
-const CustomerContext = {
-  FETCH_LIST: 'fetchCustomers',
-  GET_CUSTOMER_BY_ID: 'getCustomerById',
-  CREATE: 'createCustomer',
-  UPDATE: 'updateCustomer',
-  DELETE: 'deleteCustomer',
+const CompanyContext = {
+  FETCH_LIST: 'fetchCompanies',
+  GET_COMPANY_BY_ID: 'getCompanyById',
+  CREATE: 'createCompany',
+  UPDATE: 'updateCompany',
+  DELETE: 'deleteCompany',
 }
 
-export function useCustomers() {
+export function useCompanies() {
   const toast = useToast()
   const errorStore = useErrorStore()
   const route = useRoute()
 
   // Pagination state
   const page = ref(1)
-  const pageSize = ref(15)
+  const pageSize = ref(10)
 
   // Sorting state - managed here and passed to table
   const sorting = ref<SortingState>([])
 
   // Filters state
-  const filters = ref<ICustomerFilters>({})
-
-  // Include relationships state
-  const include = ref<string[]>([])
+  const filters = ref<ICompanyFilters>({})
 
   // Handler for sorting changes from table
   function onSortingChange(newSorting: SortingState) {
@@ -58,7 +59,7 @@ export function useCustomers() {
   }
 
   // Handler for filter changes
-  function onFiltersChange(newFilters: ICustomerFilters) {
+  function onFiltersChange(newFilters: ICompanyFilters) {
     filters.value = newFilters
     // Reset to first page when filters change
     page.value = 1
@@ -71,11 +72,11 @@ export function useCustomers() {
   }
 
   const {
-    data: customersResponse,
+    data: companiesResponse,
     isLoading,
     isFetching,
-    refetch: fetchCustomers,
-  } = useGetCustomersQuery(page, pageSize, sorting, filters, include)
+    refetch: fetchCompanies,
+  } = useGetCompaniesQuery(page, pageSize, sorting)
 
   // Watch for page and pageSize changes to trigger refetch
   // Vue Query tracks computed refs in queryKey, but explicit watch ensures refetch on changes
@@ -86,24 +87,21 @@ export function useCustomers() {
     }
     // Only refetch if values actually changed
     if (oldPage !== newPage || oldPageSize !== newPageSize) {
-      fetchCustomers()
+      fetchCompanies()
     }
   })
 
-  // Customers data from response
-  const customers = computed(() => {
-    return customersResponse.value?.data?.data ?? []
-  })
-
+  // Computed refs for easy access
+  const companies = computed(() => companiesResponse.value?.data?.data ?? [])
   const loading = computed(() => isLoading.value || isFetching.value)
 
   // Extract pagination metadata from Laravel's pagination structure
   const pagination = computed(
     () =>
-      customersResponse.value?.data ?? {
+      companiesResponse.value?.data ?? {
         current_page: 1,
         last_page: 1,
-        per_page: 15,
+        per_page: 10,
         total: 0,
         from: null,
         to: null,
@@ -130,13 +128,13 @@ export function useCustomers() {
     onPageSizeChange,
   }))
 
-  async function fetchCustomersData() {
+  async function fetchCompaniesData() {
     try {
-      const customersResponse = await fetchCustomers()
-      return customersResponse.data
+      const companiesResponse = await fetchCompanies()
+      return companiesResponse.data
     } catch (error: any) {
       // Store error with context
-      errorStore.setError(error, { context: CustomerContext.FETCH_LIST })
+      errorStore.setError(error, { context: CompanyContext.FETCH_LIST })
 
       // Use error store utilities for messages
       const message = errorStore.getErrorMessage(error)
@@ -145,19 +143,19 @@ export function useCustomers() {
     }
   }
 
-  // Create customer mutation
-  const createCustomerMutation = useCreateCustomerMutation()
-  const updateCustomerMutation = useUpdateCustomerMutation()
-  const deleteCustomerMutation = useDeleteCustomerMutation()
+  // Create company mutation
+  const createCompanyMutation = useCreateCompanyMutation()
+  const updateCompanyMutation = useUpdateCompanyMutation()
+  const deleteCompanyMutation = useDeleteCompanyMutation()
 
-  async function createCustomer(data: CreateCustomerRequest) {
+  async function createCompany(data: CreateCompanyRequest) {
     try {
-      const response = await createCustomerMutation.mutateAsync(data)
-      toast.showSuccess('Customer created successfully!')
+      const response = await createCompanyMutation.mutateAsync(data)
+      toast.showSuccess('Company created successfully!')
       return response
     } catch (error: any) {
       // Store error with context
-      errorStore.setError(error, { context: CustomerContext.CREATE })
+      errorStore.setError(error, { context: CompanyContext.CREATE })
 
       // Use error store utilities for messages
       const message = errorStore.getErrorMessage(error)
@@ -174,20 +172,17 @@ export function useCustomers() {
     }
   }
 
-  async function updateCustomer(
-    customerId: number,
-    data: UpdateCustomerRequest,
-  ) {
+  async function updateCompany(companyId: number, data: UpdateCompanyRequest) {
     try {
-      const response = await updateCustomerMutation.mutateAsync({
-        customerId,
+      const response = await updateCompanyMutation.mutateAsync({
+        companyId,
         data,
       })
-      toast.showSuccess('Customer updated successfully!')
+      toast.showSuccess('Company updated successfully!')
       return response
     } catch (error: any) {
       // Store error with context
-      errorStore.setError(error, { context: CustomerContext.UPDATE })
+      errorStore.setError(error, { context: CompanyContext.UPDATE })
 
       // Use error store utilities for messages
       const message = errorStore.getErrorMessage(error)
@@ -204,13 +199,13 @@ export function useCustomers() {
     }
   }
 
-  async function deleteCustomer(customerId: number) {
+  async function deleteCompany(companyId: number) {
     try {
-      await deleteCustomerMutation.mutateAsync(customerId)
-      toast.showSuccess('Customer deleted successfully!')
+      await deleteCompanyMutation.mutateAsync(companyId)
+      toast.showSuccess('Company deleted successfully!')
     } catch (error: any) {
       // Store error with context
-      errorStore.setError(error, { context: CustomerContext.DELETE })
+      errorStore.setError(error, { context: CompanyContext.DELETE })
 
       // Use error store utilities for messages
       const message = errorStore.getErrorMessage(error)
@@ -219,17 +214,17 @@ export function useCustomers() {
     }
   }
 
-  // Single customer query
-  const customerId = computed(() => {
+  // Single company query
+  const companyId = computed(() => {
     if (!route) {
       return undefined
     }
     const params = route.params as { id?: string | string[] }
     const idParam = Array.isArray(params.id) ? params.id[0] : params.id
     if (
-      !idParam ||
-      typeof idParam !== 'string' ||
-      Number.isNaN(Number(idParam))
+      !idParam
+      || typeof idParam !== 'string'
+      || Number.isNaN(Number(idParam))
     ) {
       return undefined
     }
@@ -237,19 +232,19 @@ export function useCustomers() {
   })
 
   const {
-    data: customerByIdResponse,
-    isLoading: isLoadingCustomerById,
-    isError: isErrorCustomerById,
-    error: errorCustomerById,
-    refetch: refetchCustomerById,
-  } = useGetCustomerQuery(customerId)
+    data: companyByIdResponse,
+    isLoading: isLoadingCompanyById,
+    isError: isErrorCompanyById,
+    error: errorCompanyById,
+    refetch: refetchCompanyById,
+  } = useGetCompanyQuery(companyId)
 
-  async function fetchCustomerByIdData(): Promise<IResponse<ICustomer>> {
+  async function fetchCompanyByIdData(): Promise<IResponse<ICompany>> {
     try {
-      const response = await refetchCustomerById()
-      return response.data as IResponse<ICustomer>
+      const response = await refetchCompanyById()
+      return response.data as IResponse<ICompany>
     } catch (error: any) {
-      errorStore.setError(error, { context: CustomerContext.GET_CUSTOMER_BY_ID })
+      errorStore.setError(error, { context: CompanyContext.GET_COMPANY_BY_ID })
       const message = errorStore.getErrorMessage(error)
       toast.showError(message)
       throw error
@@ -257,62 +252,72 @@ export function useCustomers() {
   }
 
   /**
-   * Get initial form values for customer form
-   * @param customer - Optional customer object for edit mode
+   * Get initial form values for company form
+   * @param company - Optional company object for edit mode
    * @returns Initial values object for vee-validate form
    */
-  function getCustomerFormInitialValues(customer?: ICustomer | null) {
-    // Convert type string to ECustomerType enum
-    const type =
-      customer?.type &&
-      Object.values(ECustomerType).includes(customer.type as ECustomerType)
-        ? (customer.type as ECustomerType)
-        : ECustomerType.PRIVATE
+  function getCompanyFormInitialValues(company?: ICompany | null) {
+    // Convert status string to ECompanyStatus enum
+    const status =
+      company?.status &&
+      Object.values(ECompanyStatus).includes(company.status as ECompanyStatus)
+        ? (company.status as ECompanyStatus)
+        : ECompanyStatus.PENDING
+
+    // Convert industry string to ECompanyIndustry enum
+    const industry =
+      company?.industry &&
+      Object.values(ECompanyIndustry).includes(
+        company.industry as ECompanyIndustry,
+      )
+        ? (company.industry as ECompanyIndustry)
+        : ECompanyIndustry.TECHNOLOGY
+
+    // Convert employees string to ECompanyEmployeeSize enum
+    const employees =
+      company?.employees &&
+      Object.values(ECompanyEmployeeSize).includes(
+        company.employees as ECompanyEmployeeSize,
+      )
+        ? (company.employees as ECompanyEmployeeSize)
+        : ECompanyEmployeeSize.ONE_TO_TEN
 
     return {
-      type,
-      name: customer?.name || '',
-      email: customer?.email || null,
-      phone: customer?.phone || null,
-      address: customer?.address || null,
-      zipcode: customer?.zipcode || null,
-      city: customer?.city || null,
-      country: customer?.country || null,
-      kvk_number: customer?.kvk_number || null,
-      vat_number: customer?.vat_number || null,
-      iban_number: customer?.iban_number || null,
+      name: company?.name || '',
+      email: company?.email || '',
+      phone: company?.phone || null,
+      industry,
+      status,
+      employees,
     }
   }
 
-  const isCreating = computed(() => createCustomerMutation.isPending.value)
-  const isUpdating = computed(() => updateCustomerMutation.isPending.value)
-
   return {
-    customers,
+    companies,
     loading,
-    fetchCustomersData,
-    customersResponse,
+    fetchCompaniesData,
+    companiesResponse,
     serverPagination,
     sorting,
     onSortingChange,
-    filters,
+    filter: filters,
     onFiltersChange,
     clearFilters,
-    include,
-    createCustomer,
-    createCustomerMutation,
-    updateCustomer,
-    updateCustomerMutation,
-    deleteCustomer,
-    deleteCustomerMutation,
-    customerId,
-    customerByIdResponse,
-    isLoadingCustomerById,
-    isErrorCustomerById,
-    errorCustomerById,
-    fetchCustomerByIdData,
-    getCustomerFormInitialValues,
-    isCreating,
-    isUpdating,
+    createCompany,
+    createCompanyMutation,
+    updateCompany,
+    updateCompanyMutation,
+    deleteCompany,
+    deleteCompanyMutation,
+    isCreating: computed(() => createCompanyMutation.isPending.value),
+    isUpdating: computed(() => updateCompanyMutation.isPending.value),
+    isDeleting: computed(() => deleteCompanyMutation.isPending.value),
+    companyId,
+    companyByIdResponse,
+    isLoadingCompanyById,
+    isErrorCompanyById,
+    errorCompanyById,
+    fetchCompanyByIdData,
+    getCompanyFormInitialValues,
   }
 }

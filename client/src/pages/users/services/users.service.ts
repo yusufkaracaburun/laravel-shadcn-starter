@@ -15,10 +15,10 @@ import type {
 import { useAxios } from '@/composables/use-axios.composable'
 import { convertToFormData } from '@/utils/form'
 
-import type { ISorting } from './query-utils'
-import type { IPaginatedResponse, IResponse } from './types/response.type'
+import type { ISorting } from '@/services/query-utils'
+import type { IPaginatedResponse, IResponse } from '@/services/types/response.type'
 
-import { buildQueryString, defaultAxiosQueryOptions } from './query-utils'
+import { buildQueryString, defaultAxiosQueryOptions } from '@/services/query-utils'
 
 enum QueryKeys {
   USER_PREREQUISITES = 'userPrerequisites',

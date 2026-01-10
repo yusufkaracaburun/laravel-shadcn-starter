@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 
-import type { IInvoiceEmail } from '@/services/invoices.service'
+import type { IInvoiceEmail } from '@/pages/invoices/services/invoices.service'
 
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'

@@ -12,7 +12,7 @@ import {
 } from '@/components/ui/card'
 import Loading from '@/components/loading.vue'
 import { FileTextIcon } from '@/composables/use-icons.composable'
-import { useInvoices } from '@/composables/use-invoices.composable'
+import { useInvoices } from '@/pages/invoices/composables/use-invoices.composable'
 
 interface Props {
   company: ICompany

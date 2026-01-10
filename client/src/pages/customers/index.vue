@@ -8,7 +8,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
-import { useCustomers } from '@/composables/use-customers.composable'
+import { useCustomers } from '@/pages/customers/composables/use-customers.composable'
 
 import { columns } from './components/columns'
 import CustomerCreate from './components/customer-create.vue'

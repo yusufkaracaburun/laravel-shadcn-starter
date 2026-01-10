@@ -13,7 +13,7 @@ import type { IResponse } from '@/services/types/response.type'
 import { useResourceBase } from '@/composables/use-resource-base.composable'
 import { useToast } from '@/composables/use-toast.composable'
 import { EUserRole, EUserStatus } from '@/pages/users/models/users'
-import { useUserService } from '@/services/users.service'
+import { useUserService } from '@/pages/users/services/users.service'
 import { useErrorStore } from '@/stores/error.store'
 
 const UserContext = {
@@ -78,9 +78,9 @@ export function useUsers() {
     const params = route.params as { id?: string | string[] }
     const idParam = Array.isArray(params.id) ? params.id[0] : params.id
     if (
-      !idParam ||
-      typeof idParam !== 'string' ||
-      Number.isNaN(Number(idParam))
+      !idParam
+      || typeof idParam !== 'string'
+      || Number.isNaN(Number(idParam))
     ) {
       return undefined
     }

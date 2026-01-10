@@ -15,7 +15,7 @@ import {
   LayoutGridIcon,
   UsersIcon,
 } from '@/composables/use-icons.composable'
-import { useCustomers } from '@/composables/use-customers.composable'
+import { useCustomers } from '@/pages/customers/composables/use-customers.composable'
 
 import CustomerAccountStatusCard from './components/customer-account-status-card.vue'
 import CustomerContactsCard from './components/customer-contacts-card.vue'

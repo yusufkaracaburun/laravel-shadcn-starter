@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { IInvoiceEmail } from '@/services/invoices.service'
+import type { IInvoiceEmail } from '@/pages/invoices/services/invoices.service'
 
 import {
   Dialog,

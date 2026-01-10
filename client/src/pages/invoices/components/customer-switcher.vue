@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import type { Customer } from '@/services/customers.service'
+import type { Customer } from '@/pages/customers/services/customers.service'
 
 import {
   Building2Icon,

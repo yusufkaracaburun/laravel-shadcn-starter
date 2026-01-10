@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Customer } from '@/services/customers.service'
+import type { Customer } from '@/pages/customers/services/customers.service'
 
 import {
   FormControl,

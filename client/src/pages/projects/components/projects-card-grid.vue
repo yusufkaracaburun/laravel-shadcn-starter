@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Project } from '@/services/projects.service'
+import type { Project } from '@/pages/projects/services/projects.service'
 
 import Loading from '@/components/loading.vue'
 

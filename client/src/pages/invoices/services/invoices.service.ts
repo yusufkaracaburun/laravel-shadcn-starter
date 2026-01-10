@@ -14,10 +14,19 @@ import type {
 
 import { useAxios } from '@/composables/use-axios.composable'
 
-import type { ISorting } from './query-utils'
-import type { IPaginatedResponse, IResponse } from './types/response.type'
+import type { ISorting } from '@/services/query-utils'
+import type { IPaginatedResponse, IResponse } from '@/services/types/response.type'
 
-import { buildQueryString, defaultAxiosQueryOptions } from './query-utils'
+import { buildQueryString, defaultAxiosQueryOptions } from '@/services/query-utils'
+
+// Re-export types from models for convenience
+export type {
+  IInvoice,
+  IInvoiceItem,
+  IInvoicePayment,
+  IInvoiceEmail,
+  IInvoiceActivity,
+} from '@/pages/invoices/models/invoice'
 
 enum QueryKeys {
   INVOICE_PREREQUISITES = 'invoicePrerequisites',
@@ -226,4 +235,10 @@ export function useInvoiceService() {
     deleteInvoiceMutation,
     downloadInvoicePdfMutation,
   }
+}
+
+// Export function for backward compatibility
+export function useGetInvoicePrerequisitesQuery() {
+  const service = useInvoiceService()
+  return service.getInvoicePrerequisitesQuery()
 }

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { IInvoiceActivity } from '@/services/invoices.service'
+import type { IInvoiceActivity } from '@/pages/invoices/services/invoices.service'
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'

@@ -11,7 +11,7 @@ import DataTableViewOptions from '@/components/data-table/view-options.vue'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { XIcon } from '@/composables/use-icons.composable'
-import { useUsers } from '@/composables/use-users.composable'
+import { useUsers } from '@/pages/users/composables/use-users.composable'
 
 import type { IRole, IUser, IUserFilters } from '../models/users'
 

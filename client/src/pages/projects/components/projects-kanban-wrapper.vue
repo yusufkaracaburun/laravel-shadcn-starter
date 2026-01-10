@@ -5,7 +5,7 @@ import type { Column, Task as KanbanTask } from '@/types/kanban'
 
 import KanbanBoard from '@/components/kanban/kanban-board.vue'
 import { useKanban } from '@/composables/use-kanban.composable'
-import { useProjects } from '@/composables/use-projects.composable'
+import { useProjects } from '@/pages/projects/composables/use-projects.composable'
 
 import type { Project } from '../data/schema'
 

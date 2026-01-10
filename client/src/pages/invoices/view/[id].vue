@@ -10,7 +10,7 @@ import InvoiceSidebar from '.components/invoice-sidebar.vue'
 import { computed, ref } from 'vue'
 
 import Page from '@/components/global-layout/basic-page.vue'
-import { useInvoices } from '@/composables/use-invoices.composable'
+import { useInvoices } from '@/pages/invoices/composables/use-invoices.composable'
 
 import type { IInvoice } from '../models/invoice'
 

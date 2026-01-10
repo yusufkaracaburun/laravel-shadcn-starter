@@ -28,7 +28,7 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { StatusBadge } from '@/components/ui/status-badge'
-import { useGetProjectQuery } from '@/services/projects.service'
+import { useGetProjectQuery } from '@/pages/projects/services/projects.service'
 
 import type { Project } from './data/schema'
 

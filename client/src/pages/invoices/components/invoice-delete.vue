@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { useInvoices } from '@/composables/use-invoices.composable'
+import { useInvoices } from '@/pages/invoices/composables/use-invoices.composable'
 
 import type { IInvoice } from '../models/invoice'
 

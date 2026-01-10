@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { IInvoice } from '@/services/invoices.service'
+import type { IInvoice } from '@/pages/invoices/services/invoices.service'
 
 import Loading from '@/components/loading.vue'
 

@@ -10,7 +10,7 @@ import type { ICompany } from '@/pages/companies/models/companies'
 
 import Page from '@/components/global-layout/basic-page.vue'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { useCompanies } from '@/composables/use-companies.composable'
+import { useCompanies } from '@/pages/companies/composables/use-companies.composable'
 import {
   FileTextIcon,
   LayoutGridIcon,

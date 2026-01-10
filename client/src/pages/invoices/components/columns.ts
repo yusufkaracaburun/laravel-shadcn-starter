@@ -4,7 +4,7 @@ import type { Router } from 'vue-router'
 import { h } from 'vue'
 import { useRouter } from 'vue-router'
 
-import type { Customer } from '@/services/customers.service'
+import type { Customer } from '@/pages/customers/services/customers.service'
 
 import DataTableColumnHeader from '@/components/data-table/column-header.vue'
 import { SelectColumn } from '@/components/data-table/table-columns'

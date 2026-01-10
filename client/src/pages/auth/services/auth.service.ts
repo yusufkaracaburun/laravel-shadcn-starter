@@ -4,7 +4,7 @@ import { useMutation, useQueryClient } from '@tanstack/vue-query'
 
 import { useAxios } from '@/composables/use-axios.composable'
 
-import type { IResponse } from './types/response.type'
+import type { IResponse } from '@/services/types/response.type'
 
 export interface LoginRequest {
   email: string
