@@ -34,7 +34,6 @@ const breadcrumbs = computed(() => {
     const labelMap: Record<string, string> = {
       'dashboard': 'Overview',
       'users': 'Customers',
-      'companies': 'Products',
       'settings': 'Settings',
       'account': 'Account',
       'notifications': 'Notifications',

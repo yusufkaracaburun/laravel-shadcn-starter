@@ -3,7 +3,6 @@ import {
   BadgeHelp,
   BellDot,
   Bug,
-  Building2,
   Component,
   CreditCard,
   FileText,
@@ -46,11 +45,6 @@ export function useSidebar() {
           title: 'Users',
           url: '/users',
           icon: Users,
-        },
-        {
-          title: 'Companies',
-          url: '/companies',
-          icon: Building2,
         },
         {
           title: 'Customers',

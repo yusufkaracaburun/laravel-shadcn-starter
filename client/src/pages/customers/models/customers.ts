@@ -7,6 +7,14 @@
 
 import type { IUser } from '@/pages/users/models/users'
 
+export enum ECustomerStatus {
+  REGISTERED = 'registered',
+  ACTIVE = 'active',
+  INACTIVE = 'inactive',
+}
+export type TCustomerStatus =
+  (typeof ECustomerStatus)[keyof typeof ECustomerStatus]
+
 export enum ECustomerType {
   BUSINESS = 'business',
   PRIVATE = 'private',
@@ -47,6 +55,7 @@ export interface IContact {
 export interface ICustomer {
   id: number
   type: TCustomerType
+  status: TCustomerStatus
   name: string
   number: string // Generated from id, padded to 6 digits (e.g., "000001")
 
@@ -82,6 +91,7 @@ export interface ICustomer {
 
 export interface ICreateCustomerRequest {
   type: TCustomerType
+  status: TCustomerStatus
   name: string
   email?: string | null
   phone?: string | null
@@ -111,6 +121,7 @@ export interface IUpdateCustomerRequest {
 export interface ICustomerFilters {
   id?: number
   type?: TCustomerType
+  status?: TCustomerStatus
   name?: string
   email?: string
   phone?: string

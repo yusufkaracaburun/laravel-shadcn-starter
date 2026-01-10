@@ -145,22 +145,22 @@ declare global {
   const triggerRef: typeof import('vue').triggerRef
   const unref: typeof import('vue').unref
   const useAttrs: typeof import('vue').useAttrs
-  const useAuth: typeof import('./src/composables/use-auth.composable').useAuth
+  const useAuth: typeof import('./src/composables/use-auth').useAuth
   const useAuthStore: typeof import('./src/stores/auth.store').useAuthStore
   const useAxios: typeof import('./src/composables/use-axios.composable').useAxios
-  const useCompanies: typeof import('./src/composables/use-companies.composable').useCompanies
+  const useCompanies: typeof import('./src/composables/use-companies').useCompanies
   const useCssModule: typeof import('vue').useCssModule
   const useCssVars: typeof import('vue').useCssVars
-  const useCustomers: typeof import('./src/composables/use-customers.composable').useCustomers
+  const useCustomers: typeof import('./src/composables/use-customers').useCustomers
   const useEcho: typeof import('./src/composables/use-echo.composable').useEcho
   const useErrorStore: typeof import('./src/stores/error.store').useErrorStore
   const useId: typeof import('vue').useId
-  const useInvoices: typeof import('./src/composables/use-invoices.composable').useInvoices
-  const useItems: typeof import('./src/composables/use-items.composable').useItems
+  const useInvoices: typeof import('./src/composables/use-invoices').useInvoices
+  const useItems: typeof import('./src/composables/use-items').useItems
   const useKanban: typeof import('./src/composables/use-kanban.composable').useKanban
   const useLink: typeof import('vue-router').useLink
   const useModel: typeof import('vue').useModel
-  const useProjects: typeof import('./src/composables/use-projects.composable').useProjects
+  const useProjects: typeof import('./src/composables/use-projects').useProjects
   const useResourceBase: typeof import('./src/composables/use-resource-base.composable').useResourceBase
   const useReverbNotifications: typeof import('./src/composables/use-reverb-notifications.composable').useReverbNotifications
   const useRoute: typeof import('vue-router').useRoute
@@ -172,7 +172,7 @@ declare global {
   const useTemplateRef: typeof import('vue').useTemplateRef
   const useThemeStore: typeof import('./src/stores/theme.store').useThemeStore
   const useToast: typeof import('./src/composables/use-toast.composable').useToast
-  const useUsers: typeof import('./src/composables/use-users.composable').useUsers
+  const useUsers: typeof import('./src/composables/use-users').useUsers
   const watch: typeof import('vue').watch
   const watchEffect: typeof import('vue').watchEffect
   const watchPostEffect: typeof import('vue').watchPostEffect
