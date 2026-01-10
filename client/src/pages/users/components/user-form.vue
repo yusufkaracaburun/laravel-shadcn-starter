@@ -48,27 +48,23 @@ const {
 } = useUsers()
 
 const roles = computed(() => userPrerequisitesResponse.value?.roles ?? [])
-
 const isEditMode = computed(() => !!props.user)
+const formSchema = computed(() =>
+  isEditMode.value ? editUserFormSchema : createUserFormSchema,
+)
 
-const formSchema = computed(() => {
-  return isEditMode.value ? editUserFormSchema : createUserFormSchema
-})
-
-function getInitialValues() {
-  return {
-    name: props.user?.name || '',
-    email: props.user?.email || '',
-    password: '',
-    password_confirmation: '',
-    profile_photo: null,
-    role: props.user?.roles?.[0]?.name || null,
-  }
-}
+const initialValues = computed(() => ({
+  name: props.user?.name || '',
+  email: props.user?.email || '',
+  password: '',
+  password_confirmation: '',
+  profile_photo: null,
+  role: props.user?.roles?.[0]?.name || null,
+}))
 
 const form = useForm({
   validationSchema: computed(() => toTypedSchema(formSchema.value)),
-  initialValues: getInitialValues(),
+  initialValues: initialValues.value,
 })
 
 const { handleSubmit, setFieldError, resetForm } = form
@@ -81,26 +77,8 @@ const existingProfilePhotoUrl = computed(
 watch(
   () => props.user,
   (user) => {
-    if (user) {
-      resetForm({
-        values: {
-          name: user.name || '',
-          email: user.email || '',
-          password: '',
-          password_confirmation: '',
-          profile_photo: null,
-          role: user.roles?.[0]?.name || null,
-        },
-      })
-      if (user.profile_photo_url) {
-        profilePhotoPreview.value = user.profile_photo_url
-      }
-    } else {
-      resetForm({
-        values: getInitialValues(),
-      })
-      profilePhotoPreview.value = null
-    }
+    resetForm({ values: initialValues.value })
+    profilePhotoPreview.value = user?.profile_photo_url || null
   },
   { immediate: true },
 )
@@ -108,106 +86,97 @@ watch(
 function handlePhotoChange(event: Event) {
   const target = event.target as HTMLInputElement
   const file = target.files?.[0]
-  if (file) {
-    if (!file.type.startsWith('image/')) {
-      toast.showError('Please select an image file.')
-      target.value = ''
-      return
-    }
-    if (file.size > 2 * 1024 * 1024) {
-      toast.showError('Image size must be less than 2MB.')
-      target.value = ''
-      return
-    }
-    form.setFieldValue('profile_photo', file)
-    const reader = new FileReader()
-    reader.onload = (e) => {
-      profilePhotoPreview.value = e.target?.result as string
-    }
-    reader.readAsDataURL(file)
-  } else {
+
+  if (!file) {
     form.setFieldValue('profile_photo', null)
     profilePhotoPreview.value = null
+    return
   }
+
+  if (!file.type.startsWith('image/')) {
+    toast.showError('Please select an image file.')
+    target.value = ''
+    return
+  }
+
+  if (file.size > 2 * 1024 * 1024) {
+    toast.showError('Image size must be less than 2MB.')
+    target.value = ''
+    return
+  }
+
+  form.setFieldValue('profile_photo', file)
+  const reader = new FileReader()
+  reader.onload = (e) => {
+    profilePhotoPreview.value = e.target?.result as string
+  }
+  reader.readAsDataURL(file)
 }
 
-// Helper function to set form field errors from backend validation
-// The composable already handles error store and toast, but we need to set
-// field-level errors for form validation UI
 function setFormFieldErrors(error: any) {
-  if (error.response?.status === 422) {
-    const backendErrors = error.response.data.errors || {}
-    const validFields = [
-      'name',
-      'email',
-      'password',
-      'password_confirmation',
-      'profile_photo',
-      'role',
-    ] as const
-
-    Object.keys(backendErrors).forEach((field) => {
-      const fieldErrors = backendErrors[field]
-      if (
-        Array.isArray(fieldErrors) &&
-        fieldErrors.length > 0 &&
-        validFields.includes(field as (typeof validFields)[number])
-      ) {
-        setFieldError(field as (typeof validFields)[number], fieldErrors[0])
-      }
-    })
+  if (error.response?.status !== 422) {
+    return
   }
+
+  const backendErrors = error.response.data.errors || {}
+  const validFields = [
+    'name',
+    'email',
+    'password',
+    'password_confirmation',
+    'profile_photo',
+    'role',
+  ] as const
+
+  Object.entries(backendErrors).forEach(([field, fieldErrors]) => {
+    if (
+      Array.isArray(fieldErrors) &&
+      fieldErrors.length > 0 &&
+      validFields.includes(field as (typeof validFields)[number])
+    ) {
+      setFieldError(field as (typeof validFields)[number], fieldErrors[0])
+    }
+  })
 }
 
-// Helper function to prepare request data and convert to FormData if file is present
 function prepareRequestData(
   values: any,
   isEdit: boolean,
 ): IUpdateUserRequest | ICreateUserRequest | FormData {
-  let data: IUpdateUserRequest | ICreateUserRequest
+  const data: IUpdateUserRequest | ICreateUserRequest =
+    isEdit && props.user
+      ? {
+          id: props.user.id,
+          ...values,
+          role: values.role || props.user.roles?.[0]?.name || '',
+        }
+      : {
+          name: values.name,
+          email: values.email,
+          password: values.password!,
+          password_confirmation: values.password_confirmation!,
+          profile_photo: values.profile_photo || null,
+          role: values.role || EUserRole.USER,
+          status: EUserStatus.REGISTERED,
+        }
 
-  if (isEdit && props.user) {
-    data = {
-      id: props.user.id,
-      ...values,
-      role: values.role || props.user.roles?.[0]?.name || '',
+  // Convert to FormData if file is present
+  if (data.profile_photo instanceof File) {
+    const formData = new FormData()
+    Object.entries(data).forEach(([key, value]) => {
+      if (value instanceof File) {
+        formData.append(key, value)
+      } else if (value !== null && value !== undefined && key !== 'id') {
+        formData.append(key, String(value))
+      }
+    })
+    if (isEdit && 'id' in data) {
+      formData.append('id', String(data.id))
     }
-  } else {
-    data = {
-      name: values.name,
-      email: values.email,
-      password: values.password!,
-      password_confirmation: values.password_confirmation!,
-      profile_photo: values.profile_photo || null,
-      role: values.role || EUserRole.USER,
-      status: EUserStatus.REGISTERED,
-    }
+    return formData
   }
 
-  // Check if there's a file to upload (profile_photo is set in handlePhotoChange)
-  const hasFile = data.profile_photo instanceof File
-
-  if (!hasFile) {
-    return data
-  }
-
-  // Convert to FormData for file uploads
-  const formData = new FormData()
-  Object.keys(data).forEach((key) => {
-    const value = data[key as keyof typeof data]
-    if (value instanceof File) {
-      formData.append(key, value)
-    } else if (value !== null && value !== undefined && key !== 'id') {
-      formData.append(key, String(value))
-    }
-  })
-
-  // Add id separately for update requests
-  if (isEdit && 'id' in data) {
-    formData.append('id', String(data.id))
-  }
-
-  return formData
+  return data
 }
 
 const onSubmit = handleSubmit(async (values) => {
