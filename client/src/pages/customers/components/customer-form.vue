@@ -1,12 +1,12 @@
 <script lang="ts" setup>
 import { toTypedSchema } from '@vee-validate/zod'
-import { Building2Icon, UserIcon } from '@/composables/use-icons.composable'
 import { useForm } from 'vee-validate'
 import { computed, watch } from 'vue'
 
 import { FormField } from '@/components/ui/form'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { useCustomers } from '@/composables/use-customers.composable'
+import { Building2Icon, UserIcon } from '@/composables/use-icons.composable'
 import { setFormFieldErrors } from '@/utils/form'
 
 import type { ICustomer } from '../models/customers'
@@ -125,7 +125,7 @@ const onSubmit = handleSubmit(async (formValues) => {
               <div
                 class="p-2 border-2 rounded-md border-muted hover:border-accent transition-colors h-full w-full flex items-center justify-center"
               >
-                <div class="flex flex-col items-center gap-2">
+                <div class="flex items-center gap-2">
                   <UserIcon class="size-4 text-muted-foreground" />
                   <div class="font-semibold text-foreground">Private</div>
                 </div>
@@ -142,7 +142,7 @@ const onSubmit = handleSubmit(async (formValues) => {
               <div
                 class="p-2 border-2 rounded-md border-muted hover:border-accent transition-colors h-full w-full flex items-center justify-center"
               >
-                <div class="flex flex-col items-center gap-2">
+                <div class="flex items-center gap-2">
                   <Building2Icon class="size-4 text-muted-foreground" />
                   <div class="font-semibold text-foreground">Business</div>
                 </div>

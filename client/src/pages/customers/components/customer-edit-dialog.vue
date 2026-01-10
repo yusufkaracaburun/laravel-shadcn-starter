@@ -26,7 +26,7 @@ function handleClose() {
 <template>
   <Dialog :open="props.open" @update:open="emits('update:open', $event)">
     <DialogContent
-      class="top-10 right-10 bottom-10 left-auto translate-x-0 translate-y-0 sm:max-w-[425px]"
+      class="top-5 right-5 bottom-5 left-auto translate-x-0 translate-y-0 sm:max-w-[425px]"
     >
       <CustomerResourceDialog :customer="props.customer" @close="handleClose" />
     </DialogContent>

@@ -17,7 +17,7 @@ const isOpen = ref(false)
       </Button>
     </DialogTrigger>
     <DialogContent
-      class="top-10 right-10 bottom-10 left-auto translate-x-0 translate-y-0 sm:max-w-[425px]"
+      class="top-5 right-5 bottom-5 left-auto translate-x-0 translate-y-0 sm:max-w-[425px]"
     >
       <UserResourceDialog :user="null" @close="isOpen = false" />
     </DialogContent>

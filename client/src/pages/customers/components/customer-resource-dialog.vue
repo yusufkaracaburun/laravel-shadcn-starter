@@ -3,19 +3,23 @@ import type { ICustomer } from '../models/customers'
 
 import CustomerForm from './customer-form.vue'
 
-const props = defineProps<{
+interface ICustomerResourceDialogProps {
   customer: ICustomer | null
-}>()
-defineEmits(['close'])
+}
 
-const customer = computed(() => props.customer)
+const props = defineProps<ICustomerResourceDialogProps>()
+
+const emits = defineEmits<{
+  close: []
+}>()
+
 const title = computed(() =>
-  customer.value?.id ? 'Edit Customer' : 'New Customer',
+  props.customer ? 'Edit Customer' : 'New Customer',
 )
 const description = computed(() =>
-  customer.value?.id
-    ? `Edit customer ${customer.value.id}`
-    : 'Create new customer',
+  props.customer
+    ? `Update customer information for ${props.customer.name}.`
+    : 'Add a new customer to the system. Fill in the required information below.',
 )
 </script>
 
@@ -29,6 +33,10 @@ const description = computed(() =>
         {{ description }}
       </UiDialogDescription>
     </UiDialogHeader>
-    <CustomerForm class="mt-2" :customer="customer" @close="$emit('close')" />
+    <CustomerForm
+      :customer="props.customer"
+      class="mt-2"
+      @close="emits('close')"
+    />
   </div>
 </template>

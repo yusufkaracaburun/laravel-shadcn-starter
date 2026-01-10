@@ -3,19 +3,21 @@ import type { ICompany } from '@/pages/companies/models/companies'
 
 import CompanyForm from './company-form.vue'
 
-const props = defineProps<{
+interface ICompanyResourceDialogProps {
   company: ICompany | null
-}>()
-defineEmits(['close'])
+}
 
-const company = computed(() => props.company)
-const title = computed(() =>
-  company.value?.id ? 'Edit Company' : 'New Company',
-)
+const props = defineProps<ICompanyResourceDialogProps>()
+
+const emits = defineEmits<{
+  close: []
+}>()
+
+const title = computed(() => (props.company ? 'Edit Company' : 'New Company'))
 const description = computed(() =>
-  company.value?.id
-    ? `Edit company ${company.value.name}`
-    : 'Create a new company',
+  props.company
+    ? `Update company information for ${props.company.name}.`
+    : 'Add a new company to the system. Fill in the required information below.',
 )
 </script>
 
@@ -29,6 +31,10 @@ const description = computed(() =>
         {{ description }}
       </UiDialogDescription>
     </UiDialogHeader>
-    <CompanyForm class="mt-2" :company="company" @close="$emit('close')" />
+    <CompanyForm
+      :company="props.company"
+      class="mt-2"
+      @close="emits('close')"
+    />
   </div>
 </template>
