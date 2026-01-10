@@ -12,6 +12,7 @@ import { computed } from 'vue'
 
 import type { User as SidebarUser } from '@/components/app-sidebar/types'
 
+import { SettingsIcon } from '@/composables/use-icons.composable'
 import { useAuth } from '@/pages/auth/composables/use-auth.composable'
 import { useAuthStore } from '@/stores/auth.store'
 
@@ -96,7 +97,6 @@ const sidebarUser = computed<SidebarUser>(() => {
         </UiDropdownMenuItem>
       </UiDropdownMenuGroup>
 
-      <UiDropdownMenuSeparator />
       <UiDropdownMenuGroup>
         <UiDropdownMenuItem @click="$router.push('/billing?type=billing')">
           <CreditCard />
@@ -120,6 +120,12 @@ const sidebarUser = computed<SidebarUser>(() => {
         </UiDropdownMenuItem>
       </UiDropdownMenuGroup>
 
+      <UiDropdownMenuGroup>
+        <UiDropdownMenuItem @click="$router.push('/settings/display')">
+          <SettingsIcon />
+          Settings
+        </UiDropdownMenuItem>
+      </UiDropdownMenuGroup>
       <UiDropdownMenuSeparator />
       <UiDropdownMenuItem
         data-testid="default-layout_logout_button"

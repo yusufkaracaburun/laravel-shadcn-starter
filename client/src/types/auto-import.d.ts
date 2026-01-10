@@ -22,6 +22,7 @@ declare global {
   const BadgeDollarSignIcon: typeof import('../composables/use-icons.composable').BadgeDollarSignIcon
   const BadgeHelp: typeof import('../composables/use-icons.composable').BadgeHelp
   const BadgeHelpIcon: typeof import('../composables/use-icons.composable').BadgeHelpIcon
+  const BanknoteIcon: typeof import('../composables/use-icons.composable').BanknoteIcon
   const BellDot: typeof import('../composables/use-icons.composable').BellDot
   const BellDotIcon: typeof import('../composables/use-icons.composable').BellDotIcon
   const Bug: typeof import('../composables/use-icons.composable').Bug
@@ -53,6 +54,7 @@ declare global {
   const ComponentIcon: typeof import('../composables/use-icons.composable').ComponentIcon
   const CreditCard: typeof import('../composables/use-icons.composable').CreditCard
   const CreditCardIcon: typeof import('../composables/use-icons.composable').CreditCardIcon
+  const DollarSignIcon: typeof import('../composables/use-icons.composable').DollarSignIcon
   const Download: typeof import('../composables/use-icons.composable').Download
   const DownloadIcon: typeof import('../composables/use-icons.composable').DownloadIcon
   const Edit: typeof import('../composables/use-icons.composable').Edit
@@ -87,6 +89,7 @@ declare global {
   const LayoutGridIcon: typeof import('../composables/use-icons.composable').LayoutGridIcon
   const List: typeof import('../composables/use-icons.composable').List
   const ListIcon: typeof import('../composables/use-icons.composable').ListIcon
+  const ListOrderedIcon: typeof import('../composables/use-icons.composable').ListOrderedIcon
   const ListTodo: typeof import('../composables/use-icons.composable').ListTodo
   const ListTodoIcon: typeof import('../composables/use-icons.composable').ListTodoIcon
   const Mail: typeof import('../composables/use-icons.composable').Mail
@@ -126,6 +129,7 @@ declare global {
   const Settings: typeof import('../composables/use-icons.composable').Settings
   const SettingsIcon: typeof import('../composables/use-icons.composable').SettingsIcon
   const ShieldIcon: typeof import('../composables/use-icons.composable').ShieldIcon
+  const ShoppingCartIcon: typeof import('../composables/use-icons.composable').ShoppingCartIcon
   const SquareUserRound: typeof import('../composables/use-icons.composable').SquareUserRound
   const SquareUserRoundIcon: typeof import('../composables/use-icons.composable').SquareUserRoundIcon
   const THEMES: typeof import('../constants/themes').THEMES

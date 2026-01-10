@@ -1,30 +1,34 @@
-import {
-  AppWindow,
-  BadgeHelp,
-  BellDot,
-  Bug,
-  Building2,
-  Component,
-  CreditCard,
-  FileText,
-  FolderKanban,
-  LayoutDashboard,
-  ListOrdered,
-  ListTodo,
-  Megaphone,
-  Package,
-  Palette,
-  PictureInPicture2,
-  Podcast,
-  Settings,
-  SquareUserRound,
-  User,
-  UserCircle,
-  Users,
-  Wrench,
-} from 'lucide-vue-next'
-
 import type { NavGroup } from '@/components/app-sidebar/types'
+
+import {
+  AppWindowIcon,
+  BadgeHelpIcon,
+  BanknoteIcon,
+  BellDotIcon,
+  BugIcon,
+  Building2Icon,
+  ComponentIcon,
+  CreditCardIcon,
+  DollarSignIcon,
+  FileTextIcon,
+  FolderKanbanIcon,
+  LayoutDashboardIcon,
+  ListOrderedIcon,
+  ListTodoIcon,
+  MegaphoneIcon,
+  PackageIcon,
+  PaletteIcon,
+  PictureInPicture2Icon,
+  PodcastIcon,
+  ReceiptIcon,
+  SettingsIcon,
+  ShoppingCartIcon,
+  SquareUserRoundIcon,
+  UserCircleIcon,
+  UserIcon,
+  UsersIcon,
+  WrenchIcon,
+} from '@/composables/use-icons.composable'
 
 export function useSidebar() {
   const navData = ref<NavGroup[]>()
@@ -36,7 +40,7 @@ export function useSidebar() {
         {
           title: 'Dashboard',
           url: '/dashboard',
-          icon: LayoutDashboard,
+          icon: LayoutDashboardIcon,
         },
       ],
     },
@@ -46,22 +50,22 @@ export function useSidebar() {
         {
           title: 'Users',
           url: '/users',
-          icon: Users,
+          icon: UsersIcon,
         },
         {
           title: 'Customers',
           url: '/customers',
-          icon: UserCircle,
+          icon: UserCircleIcon,
         },
         {
           title: 'Suppliers',
           url: '/customers',
-          icon: Building2,
+          icon: Building2Icon,
         },
         {
           title: 'Items',
           url: '/items',
-          icon: Package,
+          icon: PackageIcon,
         },
       ],
     },
@@ -71,12 +75,37 @@ export function useSidebar() {
         {
           title: 'Projects',
           url: '/projects',
-          icon: FolderKanban,
+          icon: FolderKanbanIcon,
         },
         {
           title: 'Tasks',
           url: '/tasks',
-          icon: ListTodo,
+          icon: ListTodoIcon,
+        },
+      ],
+    },
+    {
+      title: 'Finance',
+      items: [
+        {
+          title: 'Production list',
+          url: '/invoices',
+          icon: ListOrderedIcon,
+        },
+        {
+          title: 'Invoices',
+          url: '/invoices',
+          icon: FileTextIcon,
+        },
+        {
+          title: 'Purchase order',
+          url: '/invoices',
+          icon: ShoppingCartIcon,
+        },
+        {
+          title: 'Self billing',
+          url: '/invoices',
+          icon: ReceiptIcon,
         },
       ],
     },
@@ -84,14 +113,19 @@ export function useSidebar() {
       title: 'Accounting',
       items: [
         {
-          title: 'Production order',
+          title: 'Transactions',
           url: '/invoices',
-          icon: ListOrdered,
+          icon: CreditCardIcon,
         },
         {
-          title: 'Invoices',
+          title: 'Balance',
           url: '/invoices',
-          icon: FileText,
+          icon: DollarSignIcon,
+        },
+        {
+          title: 'Bank accounts',
+          url: '/invoices',
+          icon: BanknoteIcon,
         },
       ],
     },
@@ -100,77 +134,81 @@ export function useSidebar() {
       items: [
         {
           title: 'Settings',
-          icon: Settings,
+          icon: SettingsIcon,
           items: [
-            { title: 'Profile', url: '/settings/', icon: User },
-            { title: 'Account', url: '/settings/account', icon: Wrench },
-            { title: 'Appearance', url: '/settings/appearance', icon: Palette },
+            { title: 'Profile', url: '/settings/', icon: UserIcon },
+            { title: 'Account', url: '/settings/account', icon: WrenchIcon },
+            {
+              title: 'Appearance',
+              url: '/settings/appearance',
+              icon: PaletteIcon,
+            },
             {
               title: 'Notifications',
               url: '/settings/notifications',
-              icon: BellDot,
+              icon: BellDotIcon,
             },
             {
               title: 'Display',
               url: '/settings/display',
-              icon: PictureInPicture2,
+              icon: PictureInPicture2Icon,
             },
             {
               title: 'Apps',
               url: '/apps',
-              icon: AppWindow,
+              icon: AppWindowIcon,
             },
           ],
         },
         {
           title: 'Help Center',
           url: '/help-center',
-          icon: BadgeHelp,
+          icon: BadgeHelpIcon,
         },
       ],
     },
-    {
-      title: 'Example',
-      items: [
-        {
-          title: 'Auth',
-          icon: SquareUserRound,
-          items: [
-            { title: 'Sign In', url: '/auth/sign-in' },
-            { title: 'Sign In(2 Col)', url: '/auth/sign-in-2' },
-            { title: 'Sign Up', url: '/auth/sign-up' },
-            { title: 'Forgot Password', url: '/auth/forgot-password' },
-            { title: 'OTP', url: '/auth/otp' },
-          ],
-        },
-        {
-          title: 'Errors',
-          icon: Bug,
-          items: [
-            { title: '401 | Unauthorized', url: '/errors/401' },
-            { title: '403 | Forbidden', url: '/errors/403' },
-            { title: '404 | Not Found', url: '/errors/404' },
-            { title: '500 | Internal Server Error', url: '/errors/500' },
-            { title: '503 | Maintenance Error', url: '/errors/503' },
-          ],
-        },
-        {
-          title: 'Ai Talk Example',
-          url: '/ai-talk',
-          icon: Podcast,
-        },
-        {
-          title: 'Marketing',
-          url: '/marketing',
-          icon: Megaphone,
-        },
-        {
-          title: 'SVA Components',
-          url: '/sva-components',
-          icon: Component,
-        },
-      ],
-    },
+    // {
+    //   title: 'Example',
+    //   items: [
+    //     {
+    //       title: 'Auth',
+    //       icon: SquareUserRoundIcon,
+    //       items: [
+    //         { title: 'Sign In', url: '/auth/sign-in' },
+    //         { title: 'Sign In(2 Col)', url: '/auth/sign-in-2' },
+    //         { title: 'Sign Up', url: '/auth/sign-up' },
+    //         { title: 'Forgot Password', url: '/auth/forgot-password' },
+    //         { title: 'OTP', url: '/auth/otp' },
+    //       ],
+    //     },
+    //     {
+    //       title: 'Errors',
+    //       icon: BugIcon,
+    //       items: [
+    //         { title: '401 | Unauthorized', url: '/errors/401' },
+    //         { title: '403 | Forbidden', url: '/errors/403' },
+    //         { title: '404 | Not Found', url: '/errors/404' },
+    //         { title: '500 | Internal Server Error', url: '/errors/500' },
+    //         { title: '503 | Maintenance Error', url: '/errors/503' },
+    //       ],
+    //     },
+    //     {
+    //       title: 'Ai Talk Example',
+    //       url: '/ai-talk',
+    //       icon: PodcastIcon,
+    //     },
+    //     {
+    //       title: 'Marketing',
+    //       url: '/marketing',
+    //       icon: MegaphoneIcon,
+    //     },
+    //     {
+    //       title: 'SVA Components',
+    //       url: '/sva-components',
+    //       icon: ComponentIcon,
+    //     },
+    //   ],
+    // },
   ]
 
   const otherPages = ref<NavGroup[]>([
@@ -179,7 +217,7 @@ export function useSidebar() {
       items: [
         {
           title: 'Plans & Pricing',
-          icon: CreditCard,
+          icon: CreditCardIcon,
           url: '/billing',
         },
       ],
