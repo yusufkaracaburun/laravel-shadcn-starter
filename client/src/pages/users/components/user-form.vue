@@ -287,5 +287,4 @@ const onSubmit = handleSubmit(async (values) => {
       {{ isEditMode ? 'Update User' : 'Create User' }}
     </Button>
   </form>
-  <pre>{{ values }}</pre>
 </template>

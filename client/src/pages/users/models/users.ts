@@ -1,7 +1,7 @@
 import type { IStatus } from '@/services/types/response.type'
 
 export enum EUserRole {
-  SUPER_ADMIN = 'super_admin',
+  SUPER_ADMIN = 'super-admin',
   ADMIN = 'admin',
   USER = 'user',
   CUSTOMER = 'customer',
