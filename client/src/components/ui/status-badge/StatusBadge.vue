@@ -5,12 +5,13 @@ import type { HTMLAttributes } from 'vue'
 import { Badge } from '@/components/ui/badge'
 import {
   getCompanyStatusColor,
+  getCustomerStatusColor,
   getInvoiceStatusColor,
   getProjectStatusColor,
   getTaskStatusColor,
 } from '@/utils/status-colors'
 
-export type StatusType = 'project' | 'task' | 'invoice' | 'company'
+export type StatusType = 'project' | 'task' | 'invoice' | 'company' | 'customer'
 
 interface Props {
   status: string
@@ -36,6 +37,8 @@ function getStatusColor(status: string, type: StatusType): string {
       return getInvoiceStatusColor(status)
     case 'company':
       return getCompanyStatusColor(status)
+    case 'customer':
+      return getCustomerStatusColor(status)
     default:
       return getProjectStatusColor(status)
   }

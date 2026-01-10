@@ -4,7 +4,7 @@ import { nextTick, watch } from 'vue'
 import type { Column, Task as KanbanTask } from '@/types/kanban'
 
 import KanbanBoard from '@/components/kanban/kanban-board.vue'
-import { useKanban } from '@/composables/use-kanban.composable'
+import { useKanban } from '@/pages/tasks/composables/use-kanban.composable'
 import { useProjects } from '@/pages/projects/composables/use-projects.composable'
 
 import type { Project } from '../data/schema'

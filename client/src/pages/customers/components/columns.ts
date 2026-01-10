@@ -7,9 +7,11 @@ import { useRouter } from 'vue-router'
 import DataTableColumnHeader from '@/components/data-table/column-header.vue'
 import { SelectColumn } from '@/components/data-table/table-columns'
 import { Copy } from '@/components/sva-ui/copy'
+import { StatusBadge } from '@/components/ui/status-badge'
 
 import type { ICustomer } from '../models/customers'
 
+import { statuses } from '../data/data'
 import DataTableRowActions from './data-table-row-actions.vue'
 
 export const columns: ColumnDef<ICustomer>[] = [
@@ -107,27 +109,26 @@ export const columns: ColumnDef<ICustomer>[] = [
     enableSorting: true,
   },
   {
-    accessorKey: 'created_at',
+    accessorKey: 'status',
     header: ({ column }) =>
-      h(DataTableColumnHeader<ICustomer>, { column, title: 'Created At' }),
+      h(DataTableColumnHeader<ICustomer>, { column, title: 'Status' }),
     cell: ({ row }) => {
-      const dateValue = row.getValue('created_at') as string | null | undefined
-      if (!dateValue) {
-        return h('div', { class: 'w-[100px] text-muted-foreground' }, '-')
-      }
-      // Parse date from "d-m-Y H:i:s" format
-      const [datePart, timePart] = dateValue.split(' ')
-      const [day, month, year] = datePart.split('-')
-      const date = new Date(`${year}-${month}-${day} ${timePart}`)
-      return h(
-        'div',
-        { class: 'w-[100px]' },
-        date.toLocaleDateString('en-US', {
-          year: 'numeric',
-          month: 'short',
-          day: 'numeric',
-        }),
+      const status = statuses.find(
+        status => status.value === row.getValue('status'),
       )
+
+      if (!status)
+        return null
+
+      return h(StatusBadge, {
+        status: status.value,
+        type: 'customer',
+        icon: status.icon,
+        label: status.label,
+      })
+    },
+    filterFn: (row, id, value) => {
+      return value.includes(row.getValue(id))
     },
     enableSorting: true,
   },
