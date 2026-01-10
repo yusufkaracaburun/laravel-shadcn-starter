@@ -1,26 +1,38 @@
 <script setup lang="ts">
-import type { Table } from '@tanstack/vue-table'
+import { computed } from 'vue'
 
-import { X } from 'lucide-vue-next'
+import type { IDataTableToolbarProps } from '@/components/data-table/types'
 
 import DataTableFacetedFilter from '@/components/data-table/faceted-filter.vue'
 import DataTableViewOptions from '@/components/data-table/view-options.vue'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { XIcon } from '@/composables/use-icons.composable'
 
-import type { Company } from '../data/schema'
+import type { ICompany, ICompanyFilters } from '../models/companies'
 
 import { employeeSizes, industries, statuses } from '../data/data'
 
-interface DataTableToolbarProps {
-  table: Table<Company>
-}
+const props = defineProps<IDataTableToolbarProps<ICompany, ICompanyFilters>>()
 
-const props = defineProps<DataTableToolbarProps>()
+const nameColumn = computed(() => props.table.getColumn('name'))
+const statusColumn = computed(() => props.table.getColumn('status'))
+const employeesColumn = computed(() => props.table.getColumn('employees'))
+const industryColumn = computed(() => props.table.getColumn('industry'))
+
+const searchValue = computed({
+  get: () => (nameColumn.value?.getFilterValue() as string) ?? '',
+  set: (value: string) => nameColumn.value?.setFilterValue(value),
+})
 
 const isFiltered = computed(
   () => props.table.getState().columnFilters.length > 0,
 )
+
+function handleResetFilters() {
+  props.table.resetColumnFilters()
+  props.onClearFilters()
+}
 </script>
 
 <template>
@@ -29,30 +41,27 @@ const isFiltered = computed(
       class="flex flex-col items-start flex-1 space-y-2 md:items-center md:space-x-2 md:space-y-0 md:flex-row"
     >
       <Input
-        placeholder="Filter companies..."
-        :model-value="
-          (table.getColumn('name')?.getFilterValue() as string) ?? ''
-        "
-        class="h-8 w-[150px] lg:w-[250px]"
-        @input="table.getColumn('name')?.setFilterValue($event.target.value)"
+        v-model="searchValue"
+        placeholder="Filter companies by name..."
+        class="h-8 w-[150px] lg:w-[250px] focus-visible:border-input focus-visible:ring-0"
       />
 
       <div class="space-x-2">
         <DataTableFacetedFilter
-          v-if="table.getColumn('status')"
-          :column="table.getColumn('status')"
+          v-if="statusColumn"
+          :column="statusColumn"
           title="Status"
           :options="statuses"
         />
         <DataTableFacetedFilter
-          v-if="table.getColumn('employees')"
-          :column="table.getColumn('employees')"
+          v-if="employeesColumn"
+          :column="employeesColumn"
           title="Employees"
           :options="employeeSizes"
         />
         <DataTableFacetedFilter
-          v-if="table.getColumn('industry')"
-          :column="table.getColumn('industry')"
+          v-if="industryColumn"
+          :column="industryColumn"
           title="Industry"
           :options="industries"
         />
@@ -62,10 +71,10 @@ const isFiltered = computed(
         v-if="isFiltered"
         variant="ghost"
         class="h-8 px-2 lg:px-3"
-        @click="table.resetColumnFilters()"
+        @click="handleResetFilters"
       >
         Reset
-        <X class="size-4" />
+        <XIcon class="ml-2 size-4" />
       </Button>
     </div>
     <DataTableViewOptions :table="table" />

@@ -143,9 +143,9 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       | never
     >,
-    '/companies/[id]': RouteRecordInfo<
-      '/companies/[id]',
-      '/companies/:id',
+    '/companies/view/[id]': RouteRecordInfo<
+      '/companies/view/[id]',
+      '/companies/view/:id',
       { id: ParamValue<true> },
       { id: ParamValue<false> },
       | never
@@ -483,9 +483,9 @@ declare module 'vue-router/auto-routes' {
       views:
         | never
     }
-    'src/pages/companies/[id].vue': {
+    'src/pages/companies/view/[id].vue': {
       routes:
-        | '/companies/[id]'
+        | '/companies/view/[id]'
       views:
         | never
     }

@@ -1,9 +1,12 @@
 <script lang="ts" setup>
 import { toTypedSchema } from '@vee-validate/zod'
 import { useForm } from 'vee-validate'
-import { z } from 'zod'
 
-import type { Company } from '@/services/companies.service'
+import type {
+  ICompany,
+  ICreateCompanyRequest,
+  IUpdateCompanyRequest,
+} from '@/pages/companies/models/companies'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -22,188 +25,101 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { useToast } from '@/composables/use-toast.composable'
-import {
-  useCreateCompanyMutation,
-  useUpdateCompanyMutation,
-} from '@/services/companies.service'
-import { useErrorStore } from '@/stores/error.store'
+import { useCompanies } from '@/composables/use-companies.composable'
+import { setFormFieldErrors } from '@/utils/form'
 
 import { employeeSizes, industries, statuses } from '../data/data'
+import { createCompanyFormSchema, editCompanyFormSchema } from '../data/schema'
 
 const props = defineProps<{
-  company?: Company | null
+  company?: ICompany | null
 }>()
 
 const emits = defineEmits<{
   close: []
 }>()
 
-const toast = useToast()
-const errorStore = useErrorStore()
-const createCompanyMutation = useCreateCompanyMutation()
-const updateCompanyMutation = useUpdateCompanyMutation()
+const {
+  createCompany,
+  updateCompany,
+  isCreating,
+  isUpdating,
+  getCompanyFormInitialValues,
+} = useCompanies()
 
 const isEditMode = computed(() => !!props.company)
+const formSchema = computed(() =>
+  isEditMode.value ? editCompanyFormSchema : createCompanyFormSchema,
+)
 
-// Dynamic schema based on edit mode
-const formSchema = computed(() => {
-  return z.object({
-    name: z
-      .string()
-      .min(1, 'Name is required.')
-      .max(255, 'Name must not exceed 255 characters.'),
-    email: z
-      .string()
-      .email('Please enter a valid email address.')
-      .min(1, 'Email is required.'),
-    phone: z.string().optional().nullable(),
-    industry: z
-      .string()
-      .min(1, 'Industry is required.')
-      .refine(
-        val =>
-          [
-            'technology',
-            'finance',
-            'healthcare',
-            'retail',
-            'manufacturing',
-            'education',
-          ].includes(val),
-        'Please select a valid industry.',
-      ),
-    status: z
-      .string()
-      .min(1, 'Status is required.')
-      .refine(
-        val => ['active', 'inactive', 'pending'].includes(val),
-        'Please select a valid status.',
-      ),
-    employees: z
-      .string()
-      .min(1, 'Employee size is required.')
-      .refine(
-        val => ['1-10', '11-50', '51-200', '201-500', '500+'].includes(val),
-        'Please select a valid employee size.',
-      ),
-  })
-})
-
-function getInitialValues() {
-  return {
-    name: props.company?.name || '',
-    email: props.company?.email || '',
-    phone: props.company?.phone || null,
-    industry: props.company?.industry || '',
-    status: props.company?.status || '',
-    employees: props.company?.employees || '',
-  }
-}
+const initialValues = computed(() => getCompanyFormInitialValues(props.company))
 
 const form = useForm({
   validationSchema: computed(() => toTypedSchema(formSchema.value)),
-  initialValues: getInitialValues(),
+  initialValues: initialValues.value,
 })
 
 const { handleSubmit, setFieldError, resetForm } = form
 
-// Watch for company changes to update form values
 watch(
   () => props.company,
-  (company) => {
-    if (company) {
-      resetForm({
-        values: {
-          name: company.name || '',
-          email: company.email || '',
-          phone: company.phone || null,
-          industry: company.industry || '',
-          status: company.status || '',
-          employees: company.employees || '',
-        },
-      })
-    } else {
-      resetForm({
-        values: getInitialValues(),
-      })
-    }
+  () => {
+    resetForm({ values: initialValues.value })
   },
   { immediate: true },
 )
 
+const validFields = [
+  'name',
+  'email',
+  'phone',
+  'industry',
+  'status',
+  'employees',
+] as const
+
+function prepareRequestData(
+  values: any,
+  isEdit: boolean,
+): IUpdateCompanyRequest | ICreateCompanyRequest {
+  if (isEdit && props.company) {
+    return {
+      name: values.name,
+      email: values.email,
+      phone: values.phone || null,
+      industry: values.industry,
+      status: values.status,
+      employees: values.employees,
+    }
+  }
+
+  return {
+    name: values.name,
+    email: values.email,
+    phone: values.phone || null,
+    industry: values.industry,
+    status: values.status,
+    employees: values.employees,
+  }
+}
+
 const onSubmit = handleSubmit(async (values) => {
   try {
+    const requestData = prepareRequestData(values, isEditMode.value)
+
     if (isEditMode.value && props.company) {
-      // Update existing company
-      const updateData: Record<string, any> = {
-        name: values.name || '',
-        email: values.email || '',
-        phone: values.phone || null,
-        industry: values.industry || '',
-        status: values.status || '',
-        employees: values.employees || '',
-      }
-
-      await updateCompanyMutation.mutateAsync({
-        companyId: props.company.id,
-        data: updateData,
-      })
-
-      toast.showSuccess('Company updated successfully!')
+      await updateCompany(
+        props.company.id,
+        requestData as IUpdateCompanyRequest,
+      )
     } else {
-      // Create new company
-      await createCompanyMutation.mutateAsync({
-        name: values.name || '',
-        email: values.email || '',
-        phone: values.phone || null,
-        industry: values.industry || '',
-        status: values.status || '',
-        employees: values.employees || '',
-      })
-
-      toast.showSuccess('Company created successfully!')
+      await createCompany(requestData as ICreateCompanyRequest)
     }
 
     resetForm()
     emits('close')
   } catch (error: any) {
-    // Store error with context
-    const context = isEditMode.value ? 'updateCompany' : 'createCompany'
-    errorStore.setError(error, { context })
-
-    // Handle backend validation errors (422)
-    if (error.response?.status === 422) {
-      const backendErrors = error.response.data.errors || {}
-      // Set field errors from backend response
-      Object.keys(backendErrors).forEach((field) => {
-        const fieldErrors = backendErrors[field]
-        if (Array.isArray(fieldErrors) && fieldErrors.length > 0) {
-          setFieldError(
-            field as
-            | 'name'
-            | 'email'
-            | 'phone'
-            | 'industry'
-            | 'status'
-            | 'employees',
-            fieldErrors[0],
-          )
-        }
-      })
-    }
-
-    // Use error store utilities for messages
-    const message = errorStore.getErrorMessage(error)
-    const validationErrors = errorStore.getValidationErrors(error)
-
-    // Show toast with appropriate message
-    if (Object.keys(validationErrors).length > 0) {
-      const firstError = Object.values(validationErrors)[0]?.[0]
-      toast.showError(firstError || message)
-    } else {
-      toast.showError(message)
-    }
+    setFormFieldErrors(error, setFieldError, validFields)
   }
 })
 </script>
@@ -327,20 +243,9 @@ const onSubmit = handleSubmit(async (values) => {
     <Button
       type="submit"
       class="w-full"
-      :disabled="
-        isEditMode
-          ? updateCompanyMutation.isPending.value
-          : createCompanyMutation.isPending.value
-      "
+      :disabled="isEditMode ? isUpdating : isCreating"
     >
-      <UiSpinner
-        v-if="
-          isEditMode
-            ? updateCompanyMutation.isPending.value
-            : createCompanyMutation.isPending.value
-        "
-        class="mr-2"
-      />
+      <UiSpinner v-if="isEditMode ? isUpdating : isCreating" class="mr-2" />
       {{ isEditMode ? 'Update Company' : 'Create Company' }}
     </Button>
   </form>

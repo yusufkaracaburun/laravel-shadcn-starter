@@ -105,6 +105,7 @@ declare global {
   const PaletteIcon: typeof import('../composables/use-icons.composable').PaletteIcon
   const Pencil: typeof import('../composables/use-icons.composable').Pencil
   const PencilIcon: typeof import('../composables/use-icons.composable').PencilIcon
+  const PhoneIcon: typeof import('../composables/use-icons.composable').PhoneIcon
   const PictureInPicture2: typeof import('../composables/use-icons.composable').PictureInPicture2
   const PictureInPicture2Icon: typeof import('../composables/use-icons.composable').PictureInPicture2Icon
   const Plus: typeof import('../composables/use-icons.composable').Plus

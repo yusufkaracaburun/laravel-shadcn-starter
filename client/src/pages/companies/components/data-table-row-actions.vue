@@ -5,13 +5,13 @@ import type { Component } from 'vue'
 import { Ellipsis, Eye, FilePenLine, Trash2 } from 'lucide-vue-next'
 import { useRouter } from 'vue-router'
 
-import type { Company } from '@/services/companies.service'
+import type { ICompany } from '@/pages/companies/models/companies'
 
 import CompanyDelete from './company-delete.vue'
 import CompanyResourceDialog from './company-resource-dialog.vue'
 
 interface DataTableRowActionsProps {
-  row: Row<Company>
+  row: Row<ICompany>
 }
 const props = defineProps<DataTableRowActionsProps>()
 const company = computed(() => props.row.original)
@@ -24,7 +24,7 @@ function handleSelect(command: TCommand) {
   switch (command) {
     case 'view':
       router.push({
-        name: '/companies/[id]',
+        name: '/companies/view/[id]',
         params: { id: company.value.id.toString() },
       })
       break

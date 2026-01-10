@@ -1,10 +1,10 @@
 <script lang="ts" setup>
-import type { Company } from '@/services/companies.service'
+import type { ICompany } from '@/pages/companies/models/companies'
 
 import CompanyForm from './company-form.vue'
 
 const props = defineProps<{
-  company: Company | null
+  company: ICompany | null
 }>()
 defineEmits(['close'])
 

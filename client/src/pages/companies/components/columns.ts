@@ -3,22 +3,23 @@ import type { ColumnDef } from '@tanstack/vue-table'
 import { h } from 'vue'
 import { useRouter } from 'vue-router'
 
-import type { Company } from '@/services/companies.service'
+import type { ICompany } from '@/pages/companies/models/companies'
 
 import DataTableColumnHeader from '@/components/data-table/column-header.vue'
 import { SelectColumn } from '@/components/data-table/table-columns'
 import { Copy } from '@/components/sva-ui/copy'
+import Badge from '@/components/ui/badge/Badge.vue'
 import { StatusBadge } from '@/components/ui/status-badge'
 
 import { employeeSizes, industries, statuses } from '../data/data'
 import DataTableRowActions from './data-table-row-actions.vue'
 
-export const columns: ColumnDef<Company>[] = [
-  SelectColumn as ColumnDef<Company>,
+export const columns: ColumnDef<ICompany>[] = [
+  SelectColumn as ColumnDef<ICompany>,
   {
     accessorKey: 'name',
     header: ({ column }) =>
-      h(DataTableColumnHeader<Company>, { column, title: 'Name' }),
+      h(DataTableColumnHeader<ICompany>, { column, title: 'Name' }),
     cell: ({ row }) => {
       const company = row.original
       const router = useRouter()
@@ -31,7 +32,7 @@ export const columns: ColumnDef<Company>[] = [
             'max-w-[500px] truncate font-medium text-left hover:underline cursor-pointer focus:outline-none focus:underline',
           onClick: () => {
             router.push({
-              name: '/companies/[id]',
+              name: '/companies/view/[id]',
               params: { id: company.id.toString() },
             })
           },
@@ -46,7 +47,7 @@ export const columns: ColumnDef<Company>[] = [
   {
     accessorKey: 'industry',
     header: ({ column }) =>
-      h(DataTableColumnHeader<Company>, { column, title: 'Industry' }),
+      h(DataTableColumnHeader<ICompany>, { column, title: 'Industry' }),
     cell: ({ row }) => {
       const industry = industries.find(
         industry => industry.value === row.getValue('industry'),
@@ -65,7 +66,7 @@ export const columns: ColumnDef<Company>[] = [
   {
     accessorKey: 'email',
     header: ({ column }) =>
-      h(DataTableColumnHeader<Company>, { column, title: 'Email' }),
+      h(DataTableColumnHeader<ICompany>, { column, title: 'Email' }),
     cell: ({ row }) => {
       const email = row.getValue('email')
       const emailStr = email && typeof email === 'string' ? email : ''
@@ -85,13 +86,13 @@ export const columns: ColumnDef<Company>[] = [
   {
     accessorKey: 'phone',
     header: ({ column }) =>
-      h(DataTableColumnHeader<Company>, { column, title: 'Phone' }),
+      h(DataTableColumnHeader<ICompany>, { column, title: 'Phone' }),
     cell: ({ row }) => h('div', { class: 'w-[120px]' }, row.getValue('phone')),
   },
   {
     accessorKey: 'status',
     header: ({ column }) =>
-      h(DataTableColumnHeader<Company>, { column, title: 'Status' }),
+      h(DataTableColumnHeader<ICompany>, { column, title: 'Status' }),
     cell: ({ row }) => {
       const status = statuses.find(
         status => status.value === row.getValue('status'),
@@ -114,7 +115,7 @@ export const columns: ColumnDef<Company>[] = [
   {
     accessorKey: 'employees',
     header: ({ column }) =>
-      h(DataTableColumnHeader<Company>, { column, title: 'Employees' }),
+      h(DataTableColumnHeader<ICompany>, { column, title: 'Employees' }),
     cell: ({ row }) => {
       const employeeSize = employeeSizes.find(
         size => size.value === row.getValue('employees'),

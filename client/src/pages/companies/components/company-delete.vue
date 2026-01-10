@@ -1,13 +1,12 @@
 <script lang="ts" setup>
-import type { Company } from '@/services/companies.service'
+import type { ICompany } from '@/pages/companies/models/companies'
 
 import { Button } from '@/components/ui/button'
+import { useCompanies } from '@/composables/use-companies.composable'
 import { useToast } from '@/composables/use-toast.composable'
-import { useDeleteCompanyMutation } from '@/services/companies.service'
-import { useErrorStore } from '@/stores/error.store'
 
 const props = defineProps<{
-  company: Company
+  company: ICompany
 }>()
 
 const emits = defineEmits<{
@@ -15,21 +14,14 @@ const emits = defineEmits<{
 }>()
 
 const toast = useToast()
-const errorStore = useErrorStore()
-const deleteCompanyMutation = useDeleteCompanyMutation()
+const { deleteCompany, isDeleting } = useCompanies()
 
 async function handleDelete() {
   try {
-    await deleteCompanyMutation.mutateAsync(props.company.id)
-    toast.showSuccess('Company deleted successfully!')
+    await deleteCompany(props.company.id)
     emits('close')
   } catch (error: any) {
-    // Store error with context
-    errorStore.setError(error, { context: 'deleteCompany' })
-
-    // Use error store utilities for messages
-    const message = errorStore.getErrorMessage(error)
-    toast.showError(message)
+    // Error handling is done in composable
   }
 }
 </script>
@@ -50,10 +42,10 @@ async function handleDelete() {
       </UiDialogClose>
       <Button
         variant="destructive"
-        :disabled="deleteCompanyMutation.isPending.value"
+        :disabled="isDeleting"
         @click="handleDelete"
       >
-        <UiSpinner v-if="deleteCompanyMutation.isPending.value" class="mr-2" />
+        <UiSpinner v-if="isDeleting" class="mr-2" />
         Delete
       </Button>
     </UiDialogFooter>
