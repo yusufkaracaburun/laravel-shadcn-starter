@@ -6,7 +6,81 @@
 // biome-ignore lint: disable
 export {}
 declare global {
+  const AppWindowIcon: typeof import('./src/composables/use-icons').AppWindowIcon
+  const ArrowDownIcon: typeof import('./src/composables/use-icons').ArrowDownIcon
+  const ArrowLeftIcon: typeof import('./src/composables/use-icons').ArrowLeftIcon
+  const ArrowRightIcon: typeof import('./src/composables/use-icons').ArrowRightIcon
+  const ArrowUpIcon: typeof import('./src/composables/use-icons').ArrowUpIcon
+  const AwardIcon: typeof import('./src/composables/use-icons').AwardIcon
+  const BadgeCheckIcon: typeof import('./src/composables/use-icons').BadgeCheckIcon
+  const BadgeDollarSignIcon: typeof import('./src/composables/use-icons').BadgeDollarSignIcon
+  const BadgeHelpIcon: typeof import('./src/composables/use-icons').BadgeHelpIcon
+  const BellDotIcon: typeof import('./src/composables/use-icons').BellDotIcon
+  const BugIcon: typeof import('./src/composables/use-icons').BugIcon
+  const Building2Icon: typeof import('./src/composables/use-icons').Building2Icon
+  const CalendarDaysIcon: typeof import('./src/composables/use-icons').CalendarDaysIcon
+  const CalendarIcon: typeof import('./src/composables/use-icons').CalendarIcon
+  const CheckCircle2Icon: typeof import('./src/composables/use-icons').CheckCircle2Icon
+  const CheckIcon: typeof import('./src/composables/use-icons').CheckIcon
+  const ChevronsUpDownIcon: typeof import('./src/composables/use-icons').ChevronsUpDownIcon
+  const CircleCheckIcon: typeof import('./src/composables/use-icons').CircleCheckIcon
+  const CircleDotIcon: typeof import('./src/composables/use-icons').CircleDotIcon
+  const CircleHelpIcon: typeof import('./src/composables/use-icons').CircleHelpIcon
+  const CircleIcon: typeof import('./src/composables/use-icons').CircleIcon
+  const CirclePlusIcon: typeof import('./src/composables/use-icons').CirclePlusIcon
+  const ClockIcon: typeof import('./src/composables/use-icons').ClockIcon
+  const ComponentIcon: typeof import('./src/composables/use-icons').ComponentIcon
+  const CreditCardIcon: typeof import('./src/composables/use-icons').CreditCardIcon
+  const DownloadIcon: typeof import('./src/composables/use-icons').DownloadIcon
+  const EditIcon: typeof import('./src/composables/use-icons').EditIcon
   const EffectScope: typeof import('vue').EffectScope
+  const EllipsisIcon: typeof import('./src/composables/use-icons').EllipsisIcon
+  const EyeIcon: typeof import('./src/composables/use-icons').EyeIcon
+  const FileCheckIcon: typeof import('./src/composables/use-icons').FileCheckIcon
+  const FileDownIcon: typeof import('./src/composables/use-icons').FileDownIcon
+  const FilePenLineIcon: typeof import('./src/composables/use-icons').FilePenLineIcon
+  const FilePlusIcon: typeof import('./src/composables/use-icons').FilePlusIcon
+  const FileTextIcon: typeof import('./src/composables/use-icons').FileTextIcon
+  const FileXIcon: typeof import('./src/composables/use-icons').FileXIcon
+  const FilterIcon: typeof import('./src/composables/use-icons').FilterIcon
+  const FolderKanbanIcon: typeof import('./src/composables/use-icons').FolderKanbanIcon
+  const Grid3x3Icon: typeof import('./src/composables/use-icons').Grid3x3Icon
+  const HandshakeIcon: typeof import('./src/composables/use-icons').HandshakeIcon
+  const HashIcon: typeof import('./src/composables/use-icons').HashIcon
+  const HistoryIcon: typeof import('./src/composables/use-icons').HistoryIcon
+  const LayoutDashboardIcon: typeof import('./src/composables/use-icons').LayoutDashboardIcon
+  const LayoutGridIcon: typeof import('./src/composables/use-icons').LayoutGridIcon
+  const ListIcon: typeof import('./src/composables/use-icons').ListIcon
+  const ListTodoIcon: typeof import('./src/composables/use-icons').ListTodoIcon
+  const MailIcon: typeof import('./src/composables/use-icons').MailIcon
+  const MailPlusIcon: typeof import('./src/composables/use-icons').MailPlusIcon
+  const MegaphoneIcon: typeof import('./src/composables/use-icons').MegaphoneIcon
+  const MilestoneIcon: typeof import('./src/composables/use-icons').MilestoneIcon
+  const MoreVerticalIcon: typeof import('./src/composables/use-icons').MoreVerticalIcon
+  const PackageIcon: typeof import('./src/composables/use-icons').PackageIcon
+  const PaletteIcon: typeof import('./src/composables/use-icons').PaletteIcon
+  const PencilIcon: typeof import('./src/composables/use-icons').PencilIcon
+  const PictureInPicture2Icon: typeof import('./src/composables/use-icons').PictureInPicture2Icon
+  const PlusIcon: typeof import('./src/composables/use-icons').PlusIcon
+  const PodcastIcon: typeof import('./src/composables/use-icons').PodcastIcon
+  const ReceiptIcon: typeof import('./src/composables/use-icons').ReceiptIcon
+  const SaveIcon: typeof import('./src/composables/use-icons').SaveIcon
+  const SearchIcon: typeof import('./src/composables/use-icons').SearchIcon
+  const SendIcon: typeof import('./src/composables/use-icons').SendIcon
+  const SettingsIcon: typeof import('./src/composables/use-icons').SettingsIcon
+  const ShieldIcon: typeof import('./src/composables/use-icons').ShieldIcon
+  const SquareUserRoundIcon: typeof import('./src/composables/use-icons').SquareUserRoundIcon
+  const TimerOffIcon: typeof import('./src/composables/use-icons').TimerOffIcon
+  const Trash2Icon: typeof import('./src/composables/use-icons').Trash2Icon
+  const UploadIcon: typeof import('./src/composables/use-icons').UploadIcon
+  const UserCircleIcon: typeof import('./src/composables/use-icons').UserCircleIcon
+  const UserIcon: typeof import('./src/composables/use-icons').UserIcon
+  const UserPlusIcon: typeof import('./src/composables/use-icons').UserPlusIcon
+  const UserRoundPlusIcon: typeof import('./src/composables/use-icons').UserRoundPlusIcon
+  const UsersIcon: typeof import('./src/composables/use-icons').UsersIcon
+  const WrenchIcon: typeof import('./src/composables/use-icons').WrenchIcon
+  const XCircleIcon: typeof import('./src/composables/use-icons').XCircleIcon
+  const XIcon: typeof import('./src/composables/use-icons').XIcon
   const computed: typeof import('vue').computed
   const createApp: typeof import('vue').createApp
   const customRef: typeof import('vue').customRef
@@ -86,6 +160,7 @@ declare global {
   const useLink: typeof import('vue-router').useLink
   const useModel: typeof import('vue').useModel
   const useProjects: typeof import('./src/composables/use-projects').useProjects
+  const useResourceBase: typeof import('./src/composables/use-resource-base').useResourceBase
   const useReverbNotifications: typeof import('./src/composables/use-reverb-notifications').useReverbNotifications
   const useRoute: typeof import('vue-router').useRoute
   const useRouteHelper: typeof import('./src/composables/use-route-helper').useRouteHelper
@@ -107,6 +182,9 @@ declare global {
   // @ts-ignore
   export type { Component, Slot, Slots, ComponentPublicInstance, ComputedRef, DirectiveBinding, ExtractDefaultPropTypes, ExtractPropTypes, ExtractPublicPropTypes, InjectionKey, PropType, Ref, ShallowRef, MaybeRef, MaybeRefOrGetter, VNode, WritableComputedRef } from 'vue'
   import('vue')
+  // @ts-ignore
+  export type { ResourceService, ResourceConfig } from './src/composables/use-resource-base'
+  import('./src/composables/use-resource-base')
   // @ts-ignore
   export type { ErrorType, ErrorState, SetErrorOptions } from './src/stores/error.store'
   import('./src/stores/error.store')

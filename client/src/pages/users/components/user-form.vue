@@ -159,28 +159,65 @@ function setFormFieldErrors(error: any) {
   }
 }
 
+// Helper function to prepare request data and convert to FormData if file is present
+function prepareRequestData(
+  values: any,
+  isEdit: boolean,
+): IUpdateUserRequest | ICreateUserRequest | FormData {
+  let data: IUpdateUserRequest | ICreateUserRequest
+
+  if (isEdit && props.user) {
+    data = {
+      id: props.user.id,
+      ...values,
+      role: values.role || props.user.roles?.[0]?.name || '',
+    }
+  } else {
+    data = {
+      name: values.name,
+      email: values.email,
+      password: values.password!,
+      password_confirmation: values.password_confirmation!,
+      profile_photo: values.profile_photo || null,
+      role: values.role || EUserRole.USER,
+      status: EUserStatus.REGISTERED,
+    }
+  }
+
+  // Check if there's a file to upload
+  const hasFile = Object.values(data).some((value) => value instanceof File)
+
+  if (!hasFile) {
+    return data
+  }
+
+  // Convert to FormData for file uploads
+  const formData = new FormData()
+  Object.keys(data).forEach((key) => {
+    const value = data[key as keyof typeof data]
+    if (value instanceof File) {
+      formData.append(key, value)
+    } else if (value !== null && value !== undefined && key !== 'id') {
+      formData.append(key, String(value))
+    }
+  })
+
+  // Add id separately for update requests
+  if (isEdit && 'id' in data) {
+    formData.append('id', String(data.id))
+  }
+
+  return formData
+}
+
 const onSubmit = handleSubmit(async (values) => {
   try {
+    const requestData = prepareRequestData(values, isEditMode.value)
+
     if (isEditMode.value && props.user) {
-      const updateData: IUpdateUserRequest = {
-        id: props.user.id,
-        ...values,
-        role: values.role || props.user.roles?.[0]?.name || '',
-      }
-
-      await updateUser(props.user.id, updateData)
+      await updateUser(props.user.id, requestData as IUpdateUserRequest)
     } else {
-      const createData: ICreateUserRequest = {
-        name: values.name,
-        email: values.email,
-        password: values.password!,
-        password_confirmation: values.password_confirmation!,
-        profile_photo: values.profile_photo || null,
-        role: values.role || EUserRole.USER,
-        status: EUserStatus.REGISTERED,
-      }
-
-      await createUser(createData)
+      await createUser(requestData as ICreateUserRequest)
     }
 
     profilePhotoPreview.value = null

@@ -145,12 +145,20 @@ export function useUserService() {
   }
 
   function createUserMutation(): ReturnType<
-    typeof useMutation<IResponse<IUser>, AxiosError, ICreateUserRequest>
+    typeof useMutation<
+      IResponse<IUser>,
+      AxiosError,
+      ICreateUserRequest | FormData
+    >
   > {
-    return useMutation<IResponse<IUser>, AxiosError, ICreateUserRequest>({
+    return useMutation<
+      IResponse<IUser>,
+      AxiosError,
+      ICreateUserRequest | FormData
+    >({
       mutationKey: [QueryKeys.CREATE_USER],
       mutationFn: async (
-        data: ICreateUserRequest,
+        data: ICreateUserRequest | FormData,
       ): Promise<IResponse<IUser>> => {
         const response = await axiosInstance.post(`${API_URL}`, data)
         return response.data
@@ -168,16 +176,24 @@ export function useUserService() {
     typeof useMutation<
       IResponse<IUser>,
       AxiosError,
-      { id: number; data: IUpdateUserRequest }
+      { id: number; data: IUpdateUserRequest | FormData }
     >
   > {
     return useMutation<
       IResponse<IUser>,
       AxiosError,
-      { id: number; data: IUpdateUserRequest }
+      { id: number; data: IUpdateUserRequest | FormData }
     >({
       mutationKey: [QueryKeys.UPDATE_USER],
       mutationFn: async ({ id, data }): Promise<IResponse<IUser>> => {
+        // Use POST with _method=PUT for FormData (Laravel convention for file uploads)
+        if (data instanceof FormData) {
+          data.append('_method', 'PUT')
+          const response = await axiosInstance.post(`${API_URL}/${id}`, data)
+          return response.data
+        }
+
+        // Use regular PUT for JSON data
         const response = await axiosInstance.put(`${API_URL}/${id}`, data)
         return response.data
       },
