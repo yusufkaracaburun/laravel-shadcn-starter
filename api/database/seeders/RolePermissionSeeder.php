@@ -26,12 +26,9 @@ final class RolePermissionSeeder extends Seeder
             collect($permission)->each(fn ($permission) => Permission::query()->firstOrCreate(['name' => $permission]));
         }
 
-        $this->createRoles(UserRole::SUPER_ADMIN);
-        $this->createRoles(UserRole::ADMIN);
-        $this->createRoles(UserRole::USER);
-        $this->createRoles(UserRole::CUSTOMER);
-        $this->createRoles(UserRole::CONTRACTOR);
-
+        foreach (UserRole::cases() as $userRole) {
+            $this->createRoles($userRole);
+        }
         app()[PermissionRegistrar::class]->forgetCachedPermissions();
 
         $admin = $this->createAdminUser(UserRole::values());
