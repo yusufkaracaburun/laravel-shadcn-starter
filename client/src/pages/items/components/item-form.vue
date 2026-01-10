@@ -12,7 +12,7 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
-import { useItems } from '@/composables/use-items.composable'
+import { useItems } from '@/pages/items/composables/use-items.composable'
 import { setFormFieldErrors } from '@/utils/form'
 
 import type {

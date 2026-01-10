@@ -14,7 +14,7 @@ import {
   LayoutGridIcon,
   PackageIcon,
 } from '@/composables/use-icons.composable'
-import { useItems } from '@/composables/use-items.composable'
+import { useItems } from '@/pages/items/composables/use-items.composable'
 
 import ItemDetailsCard from './components/item-details-card.vue'
 import ItemHeader from './components/item-header.vue'

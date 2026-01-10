@@ -1,5 +1,5 @@
 import type { Customer } from '@/services/customers.service'
-import type { Item, Money } from '@/services/items.service'
+import type { Item, Money } from '@/pages/items/services/items.service'
 
 export enum EInvoiceStatus {
   DRAFT = 'draft',

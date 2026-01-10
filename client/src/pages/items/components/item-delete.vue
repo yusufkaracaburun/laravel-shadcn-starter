@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { IItem } from '@/pages/items/models/items'
 
-import { useItems } from '@/composables/use-items.composable'
+import { useItems } from '@/pages/items/composables/use-items.composable'
 
 interface IItemDeleteProps {
   item: IItem

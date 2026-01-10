@@ -13,7 +13,7 @@ import type { IResponse } from '@/services/types/response.type'
 
 import { useResourceBase } from '@/composables/use-resource-base.composable'
 import { useToast } from '@/composables/use-toast.composable'
-import { useItemService } from '@/services/items.service'
+import { useItemService } from '@/pages/items/services/items.service'
 import { defaultAxiosQueryOptions } from '@/services/query-utils'
 import { useErrorStore } from '@/stores/error.store'
 
@@ -88,9 +88,9 @@ export function useItems() {
     const params = route.params as { id?: string | string[] }
     const idParam = Array.isArray(params.id) ? params.id[0] : params.id
     if (
-      !idParam ||
-      typeof idParam !== 'string' ||
-      Number.isNaN(Number(idParam))
+      !idParam
+      || typeof idParam !== 'string'
+      || Number.isNaN(Number(idParam))
     ) {
       return undefined
     }
@@ -126,7 +126,9 @@ export function useItems() {
   function getItemFormInitialValues(item?: IItem | null) {
     // Extract unit_price value - handle both Money object and number
     function getUnitPriceValue(item: IItem | null | undefined): number {
-      if (!item?.unit_price) return 0
+      if (!item?.unit_price) {
+        return 0
+      }
       // If it's a Money object, extract the decimal value
       if (typeof item.unit_price === 'object' && 'amount' in item.unit_price) {
         // Money object: amount is in cents, convert to decimal

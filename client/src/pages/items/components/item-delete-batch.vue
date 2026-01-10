@@ -4,7 +4,7 @@ import type { Table as VueTable } from '@tanstack/vue-table'
 import { toast } from 'vue-sonner'
 
 import ConfirmDialog from '@/components/confirm-dialog.vue'
-import { useItems } from '@/composables/use-items.composable'
+import { useItems } from '@/pages/items/composables/use-items.composable'
 
 import type { IItem } from '../models/items'
 

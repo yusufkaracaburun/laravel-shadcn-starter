@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import Page from '@/components/global-layout/basic-page.vue'
-import { useItems } from '@/composables/use-items.composable'
+import { useItems } from '@/pages/items/composables/use-items.composable'
 
 import { getItemColumns } from './components/columns'
 import DataTable from './components/data-table.vue'

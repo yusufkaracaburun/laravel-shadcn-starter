@@ -228,7 +228,7 @@ declare global {
   const useFilters: typeof import('../composables/use-filters.composable').useFilters
   const useId: typeof import('vue').useId
   const useInvoices: typeof import('../composables/use-invoices.composable').useInvoices
-  const useItems: typeof import('../composables/use-items.composable').useItems
+  const useItems: typeof import('../pages/items/composables/use-items.composable').useItems
   const useKanban: typeof import('../composables/use-kanban.composable').useKanban
   const useLink: typeof import('vue-router')['useLink']
   const useModel: typeof import('vue').useModel

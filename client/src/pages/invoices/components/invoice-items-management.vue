@@ -3,7 +3,7 @@ import type {
   IInvoiceItem,
   IInvoiceTotals,
 } from '@/pages/invoices/models/invoice'
-import type { Item } from '@/services/items.service'
+import type { Item } from '@/pages/items/services/items.service'
 
 import { Button } from '@/components/ui/button'
 import { PlusIcon } from '@/composables/use-icons.composable'

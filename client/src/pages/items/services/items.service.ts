@@ -13,10 +13,10 @@ import type {
 
 import { useAxios } from '@/composables/use-axios.composable'
 
-import type { ISorting } from './query-utils'
-import type { IPaginatedResponse, IResponse } from './types/response.type'
+import type { ISorting } from '@/services/query-utils'
+import type { IPaginatedResponse, IResponse } from '@/services/types/response.type'
 
-import { buildQueryString, defaultAxiosQueryOptions } from './query-utils'
+import { buildQueryString, defaultAxiosQueryOptions } from '@/services/query-utils'
 
 enum QueryKeys {
   ITEM_LIST = 'itemList',
@@ -187,3 +187,6 @@ export function useItemService() {
     deleteItemMutation,
   }
 }
+
+// Export types for backward compatibility with invoice models
+export type { IItem as Item, IMoney as Money } from '../models/items'
