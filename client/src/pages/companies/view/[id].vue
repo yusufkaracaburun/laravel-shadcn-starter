@@ -12,12 +12,16 @@ import Page from '@/components/global-layout/basic-page.vue'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useCompanies } from '@/composables/use-companies.composable'
 import {
+  FileTextIcon,
   LayoutGridIcon,
   UserCircleIcon,
+  UsersIcon,
 } from '@/composables/use-icons.composable'
 
 import CompanyAccountStatusCard from './components/company-account-status-card.vue'
+import CompanyEmployeesCard from './components/company-employees-card.vue'
 import CompanyHeader from './components/company-header.vue'
+import CompanyInvoicesCard from './components/company-invoices-card.vue'
 import CompanyNavbar from './components/company-navbar.vue'
 import CompanyProfileCard from './components/company-profile-card.vue'
 import CompanyViewLayout from './components/company-view-layout.vue'
@@ -158,6 +162,20 @@ function handleDeleteClosed() {
                   <UserCircleIcon class="size-4" />
                   <span>Account</span>
                 </TabsTrigger>
+                <TabsTrigger
+                  value="employees"
+                  class="gap-2 rounded-md px-4 py-2.5 data-[state=active]:bg-background data-[state=active]:shadow-sm"
+                >
+                  <UsersIcon class="size-4" />
+                  <span>Employees</span>
+                </TabsTrigger>
+                <TabsTrigger
+                  value="invoices"
+                  class="gap-2 rounded-md px-4 py-2.5 data-[state=active]:bg-background data-[state=active]:shadow-sm"
+                >
+                  <FileTextIcon class="size-4" />
+                  <span>Invoices</span>
+                </TabsTrigger>
               </TabsList>
 
               <TabsContent value="overview" class="mt-8">
@@ -179,6 +197,18 @@ function handleDeleteClosed() {
                     :created-at="formattedCreatedAt"
                     :updated-at="formattedUpdatedAt"
                   />
+                </div>
+              </TabsContent>
+
+              <TabsContent value="employees" class="mt-8">
+                <div class="max-w-2xl">
+                  <CompanyEmployeesCard :company="company" />
+                </div>
+              </TabsContent>
+
+              <TabsContent value="invoices" class="mt-8">
+                <div class="max-w-2xl">
+                  <CompanyInvoicesCard :company="company" />
                 </div>
               </TabsContent>
             </Tabs>
