@@ -63,7 +63,7 @@ const form = useForm({
   initialValues: initialValues.value,
 })
 
-const { handleSubmit, setFieldError, resetForm } = form
+const { handleSubmit, setFieldError, resetForm, values } = form
 
 const profilePhotoPreview = ref<string | null>(null)
 const existingProfilePhotoUrl = computed(
@@ -220,7 +220,7 @@ const onSubmit = handleSubmit(async (values) => {
         <FormControl>
           <Select v-bind="componentField">
             <SelectTrigger>
-              <SelectValue placeholder="Select a role (optional)" />
+              <SelectValue placeholder="Select a role" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem
@@ -234,9 +234,6 @@ const onSubmit = handleSubmit(async (values) => {
           </Select>
         </FormControl>
         <FormMessage />
-        <p class="text-xs text-muted-foreground mt-1">
-          Optional: Assign a role to this user
-        </p>
       </FormItem>
     </FormField>
 
@@ -290,4 +287,5 @@ const onSubmit = handleSubmit(async (values) => {
       {{ isEditMode ? 'Update User' : 'Create User' }}
     </Button>
   </form>
+  <pre>{{ values }}</pre>
 </template>
