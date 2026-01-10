@@ -4,11 +4,12 @@ meta:
 </route>
 
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 
 import type { IUser } from '@/pages/users/models/users'
 
 import Page from '@/components/global-layout/basic-page.vue'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useUsers } from '@/composables/use-users.composable'
 
 import UserAccountStatusCard from './components/user-account-status-card.vue'
@@ -115,6 +116,9 @@ const formattedEmailVerifiedAt = computed(() => {
   })
 })
 
+// Tab state
+const activeTab = ref('overview')
+
 // Event handlers
 function handleEditClosed() {
   fetchUserByIdData()
@@ -150,23 +154,46 @@ function handleDeleteClosed() {
             :is-email-verified="isEmailVerified"
           />
 
-          <div class="grid gap-6 md:grid-cols-2">
-            <UserProfileCard
-              :user="user"
-              :is-email-verified="isEmailVerified"
-              :email-verified-at="formattedEmailVerifiedAt"
-            />
+          <Tabs v-model="activeTab" class="w-full">
+            <TabsList>
+              <TabsTrigger value="overview"> Overview </TabsTrigger>
+              <TabsTrigger value="account"> Account </TabsTrigger>
+              <TabsTrigger value="roles"> Roles & Permissions </TabsTrigger>
+              <TabsTrigger value="teams"> Teams </TabsTrigger>
+            </TabsList>
 
-            <UserAccountStatusCard
-              :user="user"
-              :created-at="formattedCreatedAt"
-              :updated-at="formattedUpdatedAt"
-            />
+            <TabsContent value="overview" class="mt-6">
+              <div class="grid gap-6 md:grid-cols-2">
+                <UserProfileCard
+                  :user="user"
+                  :is-email-verified="isEmailVerified"
+                  :email-verified-at="formattedEmailVerifiedAt"
+                />
 
-            <UserRolesCard :user="user" />
+                <UserAccountStatusCard
+                  :user="user"
+                  :created-at="formattedCreatedAt"
+                  :updated-at="formattedUpdatedAt"
+                />
+              </div>
+            </TabsContent>
 
-            <UserTeamsCard :user="user" />
-          </div>
+            <TabsContent value="account" class="mt-6">
+              <UserAccountStatusCard
+                :user="user"
+                :created-at="formattedCreatedAt"
+                :updated-at="formattedUpdatedAt"
+              />
+            </TabsContent>
+
+            <TabsContent value="roles" class="mt-6">
+              <UserRolesCard :user="user" />
+            </TabsContent>
+
+            <TabsContent value="teams" class="mt-6">
+              <UserTeamsCard :user="user" />
+            </TabsContent>
+          </Tabs>
         </div>
       </template>
     </UserViewLayout>
