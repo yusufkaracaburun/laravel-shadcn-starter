@@ -3,11 +3,13 @@ import {
   BadgeHelp,
   BellDot,
   Bug,
+  Building2,
   Component,
   CreditCard,
   FileText,
   FolderKanban,
   LayoutDashboard,
+  ListOrdered,
   ListTodo,
   Megaphone,
   Package,
@@ -39,7 +41,7 @@ export function useSidebar() {
       ],
     },
     {
-      title: 'User management',
+      title: 'System management',
       items: [
         {
           title: 'Users',
@@ -50,6 +52,16 @@ export function useSidebar() {
           title: 'Customers',
           url: '/customers',
           icon: UserCircle,
+        },
+        {
+          title: 'Suppliers',
+          url: '/customers',
+          icon: Building2,
+        },
+        {
+          title: 'Items',
+          url: '/items',
+          icon: Package,
         },
       ],
     },
@@ -72,9 +84,9 @@ export function useSidebar() {
       title: 'Accounting',
       items: [
         {
-          title: 'Items',
-          url: '/items',
-          icon: Package,
+          title: 'Production order',
+          url: '/invoices',
+          icon: ListOrdered,
         },
         {
           title: 'Invoices',
@@ -84,7 +96,7 @@ export function useSidebar() {
       ],
     },
     {
-      title: 'System',
+      title: 'Configuration',
       items: [
         {
           title: 'Settings',
