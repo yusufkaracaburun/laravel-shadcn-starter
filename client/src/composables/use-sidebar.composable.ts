@@ -39,7 +39,7 @@ export function useSidebar() {
       ],
     },
     {
-      title: 'Pages',
+      title: 'User management',
       items: [
         {
           title: 'Users',
@@ -51,46 +51,75 @@ export function useSidebar() {
           url: '/customers',
           icon: UserCircle,
         },
+      ],
+    },
+    {
+      title: 'Project management',
+      items: [
         {
           title: 'Projects',
           url: '/projects',
           icon: FolderKanban,
         },
         {
-          title: 'Items',
-          url: '/items',
-          icon: Package,
-        },
-        {
           title: 'Tasks',
           url: '/tasks',
           icon: ListTodo,
+        },
+      ],
+    },
+    {
+      title: 'Accounting',
+      items: [
+        {
+          title: 'Items',
+          url: '/items',
+          icon: Package,
         },
         {
           title: 'Invoices',
           url: '/invoices',
           icon: FileText,
         },
+      ],
+    },
+    {
+      title: 'System',
+      items: [
         {
-          title: 'Apps',
-          url: '/apps',
-          icon: AppWindow,
+          title: 'Settings',
+          icon: Settings,
+          items: [
+            { title: 'Profile', url: '/settings/', icon: User },
+            { title: 'Account', url: '/settings/account', icon: Wrench },
+            { title: 'Appearance', url: '/settings/appearance', icon: Palette },
+            {
+              title: 'Notifications',
+              url: '/settings/notifications',
+              icon: BellDot,
+            },
+            {
+              title: 'Display',
+              url: '/settings/display',
+              icon: PictureInPicture2,
+            },
+            {
+              title: 'Apps',
+              url: '/apps',
+              icon: AppWindow,
+            },
+          ],
+        },
+        {
+          title: 'Help Center',
+          url: '/help-center',
+          icon: BadgeHelp,
         },
       ],
     },
     {
       title: 'Example',
       items: [
-        {
-          title: 'Ai Talk Example',
-          url: '/ai-talk',
-          icon: Podcast,
-        },
-        {
-          title: 'Marketing',
-          url: '/marketing',
-          icon: Megaphone,
-        },
         {
           title: 'Auth',
           icon: SquareUserRound,
@@ -113,39 +142,20 @@ export function useSidebar() {
             { title: '503 | Maintenance Error', url: '/errors/503' },
           ],
         },
-      ],
-    },
-    {
-      title: 'Other',
-      items: [
         {
-          title: 'Settings',
-          icon: Settings,
-          items: [
-            { title: 'Profile', url: '/settings/', icon: User },
-            { title: 'Account', url: '/settings/account', icon: Wrench },
-            { title: 'Appearance', url: '/settings/appearance', icon: Palette },
-            {
-              title: 'Notifications',
-              url: '/settings/notifications',
-              icon: BellDot,
-            },
-            {
-              title: 'Display',
-              url: '/settings/display',
-              icon: PictureInPicture2,
-            },
-          ],
+          title: 'Ai Talk Example',
+          url: '/ai-talk',
+          icon: Podcast,
+        },
+        {
+          title: 'Marketing',
+          url: '/marketing',
+          icon: Megaphone,
         },
         {
           title: 'SVA Components',
           url: '/sva-components',
           icon: Component,
-        },
-        {
-          title: 'Help Center',
-          url: '/help-center',
-          icon: BadgeHelp,
         },
       ],
     },
