@@ -8,13 +8,14 @@ import type { IDataTableRowActionsProps } from '@/components/data-table/types'
 import type { IUser } from '@/pages/users/models/users'
 
 import UserDelete from './user-delete.vue'
-import UserResourceDialog from './user-resource-dialog.vue'
+import UserEditDialog from './user-edit-dialog.vue'
 
 const props = defineProps<IDataTableRowActionsProps<IUser>>()
 const user = computed(() => props.row.original)
 const router = useRouter()
 
 const showComponent = shallowRef<Component | null>(null)
+const isEditDialogOpen = ref(false)
 
 type TCommand = 'view' | 'edit' | 'delete'
 function handleSelect(command: TCommand) {
@@ -26,7 +27,7 @@ function handleSelect(command: TCommand) {
       })
       break
     case 'edit':
-      showComponent.value = UserResourceDialog
+      isEditDialogOpen.value = true
       break
     case 'delete':
       showComponent.value = UserDelete
@@ -57,14 +58,12 @@ const isOpen = ref(false)
           </UiDropdownMenuShortcut>
         </UiDropdownMenuItem>
 
-        <UiDialogTrigger as-child>
-          <UiDropdownMenuItem @select.stop="handleSelect('edit')">
-            <span>Edit</span>
-            <UiDropdownMenuShortcut>
-              <FilePenLine class="size-4" />
-            </UiDropdownMenuShortcut>
-          </UiDropdownMenuItem>
-        </UiDialogTrigger>
+        <UiDropdownMenuItem @select.stop="handleSelect('edit')">
+          <span>Edit</span>
+          <UiDropdownMenuShortcut>
+            <FilePenLine class="size-4" />
+          </UiDropdownMenuShortcut>
+        </UiDropdownMenuItem>
 
         <UiDialogTrigger as-child>
           <UiDropdownMenuItem @select.stop="handleSelect('delete')">
@@ -77,8 +76,15 @@ const isOpen = ref(false)
       </UiDropdownMenuContent>
     </UiDropdownMenu>
 
-    <UiDialogContent>
+    <UiDialogContent class="sm:max-w-[425px]">
       <component :is="showComponent" :user="user" @close="isOpen = false" />
     </UiDialogContent>
   </UiDialog>
+
+  <UserEditDialog
+    :user="user"
+    :open="isEditDialogOpen"
+    @update:open="isEditDialogOpen = $event"
+    @close="isEditDialogOpen = false"
+  />
 </template>

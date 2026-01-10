@@ -4,7 +4,7 @@ import { useUsers } from '@/composables/use-users.composable'
 
 import { getUserColumns } from './components/columns'
 import DataTable from './components/data-table.vue'
-import UserCreate from './components/user-create.vue'
+import UserCreate from './components/user-create-dialog.vue'
 import UserInvite from './components/user-invite.vue'
 
 const columns = getUserColumns()

@@ -12,7 +12,7 @@ import {
   Trash2Icon,
 } from '@/composables/use-icons.composable'
 import UserDelete from '@/pages/users/components/user-delete.vue'
-import UserResourceDialog from '@/pages/users/components/user-resource-dialog.vue'
+import UserEditDialog from '@/pages/users/components/user-edit-dialog.vue'
 
 const props = defineProps<{
   user: IUser
@@ -25,18 +25,16 @@ const emits = defineEmits<{
 
 const router = useRouter()
 
-const showComponent = shallowRef<
-  typeof UserDelete | typeof UserResourceDialog | null
->(null)
+const showComponent = shallowRef<typeof UserDelete | null>(null)
 const isDialogOpen = ref(false)
+const isEditDialogOpen = ref(false)
 
 type TCommand = 'edit' | 'delete' | 'close' | 'back'
 
 function handleSelect(command: TCommand) {
   switch (command) {
     case 'edit':
-      showComponent.value = UserResourceDialog
-      isDialogOpen.value = true
+      isEditDialogOpen.value = true
       break
     case 'delete':
       showComponent.value = UserDelete
@@ -53,7 +51,7 @@ function handleSelect(command: TCommand) {
 }
 
 function handleEditClose() {
-  handleSelect('close')
+  isEditDialogOpen.value = false
   emits('edit-closed')
 }
 
@@ -79,15 +77,18 @@ function handleDeleteClose() {
     </Button>
   </div>
 
+  <UserEditDialog
+    v-if="props.user"
+    :user="props.user"
+    :open="isEditDialogOpen"
+    @update:open="isEditDialogOpen = $event"
+    @close="handleEditClose"
+  />
+
   <Dialog v-model:open="isDialogOpen" class="print:hidden">
     <DialogContent v-if="showComponent && props.user" class="sm:max-w-[425px]">
-      <UserResourceDialog
-        v-if="showComponent === UserResourceDialog"
-        :user="props.user"
-        @close="handleEditClose"
-      />
       <UserDelete
-        v-else-if="showComponent === UserDelete"
+        v-if="showComponent === UserDelete"
         :user="props.user"
         @close="handleDeleteClose"
       />
