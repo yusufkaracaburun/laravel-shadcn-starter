@@ -12,7 +12,7 @@ import type { IResponse } from '@/services/types/response.type'
 
 import { useResourceBase } from '@/composables/use-resource-base.composable'
 import { useToast } from '@/composables/use-toast.composable'
-import { EUserRole } from '@/pages/users/models/users'
+import { EUserRole, EUserStatus } from '@/pages/users/models/users'
 import { useUserService } from '@/services/users.service'
 import { useErrorStore } from '@/stores/error.store'
 
@@ -136,6 +136,7 @@ export function useUsers() {
       password_confirmation: '',
       profile_photo: null,
       role,
+      status: user?.status || EUserStatus.REGISTERED,
     }
   }
 

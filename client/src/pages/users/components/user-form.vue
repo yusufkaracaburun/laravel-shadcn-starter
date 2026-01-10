@@ -31,7 +31,6 @@ import type {
 } from '../models/users'
 
 import { createUserFormSchema, editUserFormSchema } from '../data/schema'
-import { EUserRole, EUserStatus } from '../models/users'
 
 const props = defineProps<{
   user?: IUser | null
@@ -120,7 +119,7 @@ function prepareRequestData(
     return {
       id: props.user.id,
       ...values,
-      role: values.role || props.user.roles?.[0]?.name || '',
+      role: values.role,
     }
   }
 
@@ -130,8 +129,8 @@ function prepareRequestData(
     password: values.password!,
     password_confirmation: values.password_confirmation!,
     profile_photo: values.profile_photo || null,
-    role: values.role || EUserRole.USER,
-    status: EUserStatus.REGISTERED,
+    role: values.role,
+    status: values.status,
   }
 }
 
