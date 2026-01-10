@@ -20,6 +20,8 @@ import {
 } from '@/components/ui/select'
 import { useToast } from '@/composables/use-toast'
 import { useUsers } from '@/composables/use-users'
+import { handleFileUpload } from '@/utils/file'
+import { convertToFormData, setFormFieldErrors } from '@/utils/form'
 
 import type {
   ICreateUserRequest,
@@ -45,6 +47,7 @@ const {
   updateUser,
   isCreating,
   isUpdating,
+  getUserFormInitialValues,
 } = useUsers()
 
 const roles = computed(() => userPrerequisitesResponse.value?.roles ?? [])
@@ -53,14 +56,7 @@ const formSchema = computed(() =>
   isEditMode.value ? editUserFormSchema : createUserFormSchema,
 )
 
-const initialValues = computed(() => ({
-  name: props.user?.name || '',
-  email: props.user?.email || '',
-  password: '',
-  password_confirmation: '',
-  profile_photo: null,
-  role: props.user?.roles?.[0]?.name || null,
-}))
+const initialValues = computed(() => getUserFormInitialValues(props.user))
 
 const form = useForm({
   validationSchema: computed(() => toTypedSchema(formSchema.value)),
@@ -84,60 +80,27 @@ watch(
 )
 
 function handlePhotoChange(event: Event) {
-  const target = event.target as HTMLInputElement
-  const file = target.files?.[0]
-
-  if (!file) {
-    form.setFieldValue('profile_photo', null)
-    profilePhotoPreview.value = null
-    return
-  }
-
-  if (!file.type.startsWith('image/')) {
-    toast.showError('Please select an image file.')
-    target.value = ''
-    return
-  }
-
-  if (file.size > 2 * 1024 * 1024) {
-    toast.showError('Image size must be less than 2MB.')
-    target.value = ''
-    return
-  }
-
-  form.setFieldValue('profile_photo', file)
-  const reader = new FileReader()
-  reader.onload = (e) => {
-    profilePhotoPreview.value = e.target?.result as string
-  }
-  reader.readAsDataURL(file)
-}
-
-function setFormFieldErrors(error: any) {
-  if (error.response?.status !== 422) {
-    return
-  }
-
-  const backendErrors = error.response.data.errors || {}
-  const validFields = [
-    'name',
-    'email',
-    'password',
-    'password_confirmation',
-    'profile_photo',
-    'role',
-  ] as const
-
-  Object.entries(backendErrors).forEach(([field, fieldErrors]) => {
-    if (
-      Array.isArray(fieldErrors) &&
-      fieldErrors.length > 0 &&
-      validFields.includes(field as (typeof validFields)[number])
-    ) {
-      setFieldError(field as (typeof validFields)[number], fieldErrors[0])
-    }
+  handleFileUpload(event, {
+    fieldName: 'profile_photo',
+    setFieldValue: form.setFieldValue,
+    onPreview: (preview: string | null) => {
+      profilePhotoPreview.value = preview
+    },
+    allowedTypes: ['image/*'],
+    onError: (message: string) => {
+      toast.showError(message)
+    },
   })
 }
+
+const validFields = [
+  'name',
+  'email',
+  'password',
+  'password_confirmation',
+  'profile_photo',
+  'role',
+] as const
 
 function prepareRequestData(
   values: any,
@@ -161,22 +124,10 @@ function prepareRequestData(
         }
 
   // Convert to FormData if file is present
-  if (data.profile_photo instanceof File) {
-    const formData = new FormData()
-    Object.entries(data).forEach(([key, value]) => {
-      if (value instanceof File) {
-        formData.append(key, value)
-      } else if (value !== null && value !== undefined && key !== 'id') {
-        formData.append(key, String(value))
-      }
-    })
-    if (isEdit && 'id' in data) {
-      formData.append('id', String(data.id))
-    }
-    return formData
-  }
-
-  return data
+  // For create mode, exclude id; for update mode, id is already in data
+  return convertToFormData(data, {
+    excludeId: !isEdit,
+  })
 }
 
 const onSubmit = handleSubmit(async (values) => {
@@ -193,7 +144,7 @@ const onSubmit = handleSubmit(async (values) => {
     resetForm()
     emits('close')
   } catch (error: any) {
-    setFormFieldErrors(error)
+    setFormFieldErrors(error, setFieldError, validFields)
   }
 })
 </script>

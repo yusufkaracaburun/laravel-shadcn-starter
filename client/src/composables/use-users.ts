@@ -115,6 +115,22 @@ export function useUsers() {
     }
   }
 
+  /**
+   * Get initial form values for user form
+   * @param user - Optional user object for edit mode
+   * @returns Initial values object for vee-validate form
+   */
+  function getUserFormInitialValues(user?: IUser | null) {
+    return {
+      name: user?.name || '',
+      email: user?.email || '',
+      password: '',
+      password_confirmation: '',
+      profile_photo: null,
+      role: user?.roles?.[0]?.name || null,
+    }
+  }
+
   return {
     sort: base.sort,
     filter: base.filter,
@@ -146,5 +162,6 @@ export function useUsers() {
     isErrorUserById,
     errorUserById,
     fetchUserByIdData,
+    getUserFormInitialValues,
   }
 }
