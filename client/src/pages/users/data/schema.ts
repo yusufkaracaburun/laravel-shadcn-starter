@@ -47,7 +47,7 @@ const baseUserFormSchema = z.object({
     .email('Please enter a valid email address.')
     .min(1, 'Email is required.'),
   profile_photo: z.instanceof(File).optional().nullable(),
-  role: z.string().optional().nullable(),
+  role: userRoleSchema,
 })
 
 /**
