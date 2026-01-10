@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { Download } from 'lucide-vue-next'
+import { DownloadIcon } from '@/composables/use-icons.composable'
 import { toast } from 'vue-sonner'
 
 const isOpen = ref(false)
@@ -37,7 +37,7 @@ function onSubmit() {
     <UiDialogTrigger as-child>
       <UiButton variant="outline">
         Import
-        <Download />
+        <DownloadIcon />
       </UiButton>
     </UiDialogTrigger>
 

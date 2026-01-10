@@ -1,4 +1,8 @@
-import { CheckCircle2, Clock, XCircle } from 'lucide-vue-next'
+import {
+  CheckCircle2Icon,
+  ClockIcon,
+  XCircleIcon,
+} from '@/composables/use-icons.composable'
 import { h } from 'vue'
 
 import { getCompanyStatusColor } from '@/utils/status-colors'
@@ -34,7 +38,7 @@ export const statuses = [
   {
     value: 'active',
     label: 'Active',
-    icon: h(CheckCircle2),
+    icon: h(CheckCircle2Icon),
     get color() {
       return getCompanyStatusColor(this.value)
     },
@@ -42,7 +46,7 @@ export const statuses = [
   {
     value: 'inactive',
     label: 'Inactive',
-    icon: h(XCircle),
+    icon: h(XCircleIcon),
     get color() {
       return getCompanyStatusColor(this.value)
     },
@@ -50,7 +54,7 @@ export const statuses = [
   {
     value: 'pending',
     label: 'Pending',
-    icon: h(Clock),
+    icon: h(ClockIcon),
     get color() {
       return getCompanyStatusColor(this.value)
     },

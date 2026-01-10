@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { UserPlus } from 'lucide-vue-next'
+import { UserPlusIcon } from '@/composables/use-icons.composable'
 
 import CustomerResource from './customer-resource.vue'
 
@@ -10,7 +10,7 @@ const isOpen = ref(false)
   <UiDrawer v-model:open="isOpen" direction="right">
     <UiDrawerTrigger as-child>
       <UiButton>
-        <UserPlus />
+        <UserPlusIcon />
         Create Customer
       </UiButton>
     </UiDrawerTrigger>

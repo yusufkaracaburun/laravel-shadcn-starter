@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { Building2 } from 'lucide-vue-next'
+import { Building2Icon } from '@/composables/use-icons.composable'
 
 import CompanyResource from './company-resource.vue'
 
@@ -10,7 +10,7 @@ const isOpen = ref(false)
   <UiDrawer v-model:open="isOpen" direction="right">
     <UiDrawerTrigger as-child>
       <UiButton>
-        <Building2 />
+        <Building2Icon />
         Create Company
       </UiButton>
     </UiDrawerTrigger>

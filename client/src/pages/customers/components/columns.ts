@@ -1,6 +1,6 @@
 import type { ColumnDef } from '@tanstack/vue-table'
 
-import { Building2, User } from 'lucide-vue-next'
+import { Building2Icon, UserIcon } from '@/composables/use-icons.composable'
 import { h } from 'vue'
 import { useRouter } from 'vue-router'
 
@@ -25,7 +25,7 @@ export const columns: ColumnDef<ICustomer>[] = [
       const name = (typeof nameValue === 'string' ? nameValue : '') || ''
       const type = customer.type as string
       const isBusiness = type === 'business'
-      const typeIcon = isBusiness ? Building2 : User
+      const typeIcon = isBusiness ? Building2Icon : UserIcon
 
       return h(
         'button',

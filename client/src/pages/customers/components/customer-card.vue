@@ -1,5 +1,8 @@
 <script setup lang="ts">
-import { MoreVertical, User } from 'lucide-vue-next'
+import {
+  MoreVerticalIcon,
+  UserIcon,
+} from '@/composables/use-icons.composable'
 import { useRouter } from 'vue-router'
 
 import type { ICustomer } from '@/pages/customers/models/customers'
@@ -63,7 +66,7 @@ function handleSelect(command: TCommand) {
     <CardHeader>
       <div class="flex items-start justify-between">
         <div class="flex items-center gap-2">
-          <User class="size-5 text-muted-foreground" />
+          <UserIcon class="size-5 text-muted-foreground" />
           <CardTitle class="line-clamp-1">
             {{ customer.name }}
           </CardTitle>
@@ -71,7 +74,7 @@ function handleSelect(command: TCommand) {
         <UiDropdownMenu @click.stop>
           <UiDropdownMenuTrigger as-child @click.stop>
             <UiButton variant="ghost" size="icon" class="size-8" @click.stop>
-              <MoreVertical class="size-4" />
+              <MoreVerticalIcon class="size-4" />
               <span class="sr-only">Open menu</span>
             </UiButton>
           </UiDropdownMenuTrigger>

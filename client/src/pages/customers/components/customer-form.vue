@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { toTypedSchema } from '@vee-validate/zod'
-import { Building2, User } from 'lucide-vue-next'
+import { Building2Icon, UserIcon } from '@/composables/use-icons.composable'
 import { useForm } from 'vee-validate'
 import { computed, watch } from 'vue'
 
@@ -126,7 +126,7 @@ const onSubmit = handleSubmit(async (formValues) => {
                 class="p-2 border-2 rounded-md border-muted hover:border-accent transition-colors h-full w-full flex items-center justify-center"
               >
                 <div class="flex flex-col items-center gap-2">
-                  <User class="size-4 text-muted-foreground" />
+                  <UserIcon class="size-4 text-muted-foreground" />
                   <div class="font-semibold text-foreground">Private</div>
                 </div>
               </div>
@@ -143,7 +143,7 @@ const onSubmit = handleSubmit(async (formValues) => {
                 class="p-2 border-2 rounded-md border-muted hover:border-accent transition-colors h-full w-full flex items-center justify-center"
               >
                 <div class="flex flex-col items-center gap-2">
-                  <Building2 class="size-4 text-muted-foreground" />
+                  <Building2Icon class="size-4 text-muted-foreground" />
                   <div class="font-semibold text-foreground">Business</div>
                 </div>
               </div>

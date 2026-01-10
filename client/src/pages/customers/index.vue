@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Grid3x3, List } from 'lucide-vue-next'
+import { Grid3x3Icon, ListIcon } from '@/composables/use-icons.composable'
 
 import Page from '@/components/global-layout/basic-page.vue'
 import { Button } from '@/components/ui/button'
@@ -43,7 +43,7 @@ const {
               data-testid="customers_table-view_button"
               @click="viewMode = 'table'"
             >
-              <List class="size-4" />
+              <ListIcon class="size-4" />
               <span class="sr-only">Table view</span>
             </Button>
           </TooltipTrigger>
@@ -60,7 +60,7 @@ const {
               data-testid="customers_card-view_button"
               @click="viewMode = 'card'"
             >
-              <Grid3x3 class="size-4" />
+              <Grid3x3Icon class="size-4" />
               <span class="sr-only">Card view</span>
             </Button>
           </TooltipTrigger>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Trash2Icon } from 'lucide-vue-next'
+import { Trash2Icon } from '@/composables/use-icons.composable'
 
 import type { IDataTableProps } from '@/components/data-table/types'
 import type {
