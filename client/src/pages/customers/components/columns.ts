@@ -8,16 +8,16 @@ import DataTableColumnHeader from '@/components/data-table/column-header.vue'
 import { SelectColumn } from '@/components/data-table/table-columns'
 import { Copy } from '@/components/sva-ui/copy'
 
-import type { Customer } from '../data/schema'
+import type { ICustomer } from '../models/customers'
 
 import DataTableRowActions from './data-table-row-actions.vue'
 
-export const columns: ColumnDef<Customer>[] = [
-  SelectColumn as ColumnDef<Customer>,
+export const columns: ColumnDef<ICustomer>[] = [
+  SelectColumn as ColumnDef<ICustomer>,
   {
     accessorKey: 'number',
     header: ({ column }) =>
-      h(DataTableColumnHeader<Customer>, { column, title: 'Customer Number' }),
+      h(DataTableColumnHeader<ICustomer>, { column, title: 'Customer Number' }),
     cell: ({ row }) => {
       const number = row.getValue('number') as
         | string
@@ -32,7 +32,7 @@ export const columns: ColumnDef<Customer>[] = [
   {
     accessorKey: 'name',
     header: ({ column }) =>
-      h(DataTableColumnHeader<Customer>, { column, title: 'Name' }),
+      h(DataTableColumnHeader<ICustomer>, { column, title: 'Name' }),
     cell: ({ row }) => {
       const customer = row.original
       const router = useRouter()
@@ -74,7 +74,7 @@ export const columns: ColumnDef<Customer>[] = [
   {
     accessorKey: 'primary_contact',
     header: ({ column }) =>
-      h(DataTableColumnHeader<Customer>, { column, title: 'Primary Contact' }),
+      h(DataTableColumnHeader<ICustomer>, { column, title: 'Primary Contact' }),
     cell: ({ row }) => {
       const customer = row.original
       const primaryContact = customer.primary_contact
@@ -94,7 +94,7 @@ export const columns: ColumnDef<Customer>[] = [
   {
     accessorKey: 'email',
     header: ({ column }) =>
-      h(DataTableColumnHeader<Customer>, { column, title: 'Email' }),
+      h(DataTableColumnHeader<ICustomer>, { column, title: 'Email' }),
     cell: ({ row }) => {
       const email = row.getValue('email') as string | null
       const emailStr = email || ''
@@ -114,7 +114,7 @@ export const columns: ColumnDef<Customer>[] = [
   {
     accessorKey: 'phone',
     header: ({ column }) =>
-      h(DataTableColumnHeader<Customer>, { column, title: 'Phone' }),
+      h(DataTableColumnHeader<ICustomer>, { column, title: 'Phone' }),
     cell: ({ row }) => {
       const phone = row.getValue('phone') as string | null
       return h('div', { class: 'w-[120px]' }, phone || '-')
@@ -124,7 +124,7 @@ export const columns: ColumnDef<Customer>[] = [
   {
     accessorKey: 'created_at',
     header: ({ column }) =>
-      h(DataTableColumnHeader<Customer>, { column, title: 'Created At' }),
+      h(DataTableColumnHeader<ICustomer>, { column, title: 'Created At' }),
     cell: ({ row }) => {
       const dateValue = row.getValue('created_at') as string | null | undefined
       if (!dateValue) {

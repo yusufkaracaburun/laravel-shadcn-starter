@@ -2,7 +2,7 @@
 import { MoreVertical, User } from 'lucide-vue-next'
 import { useRouter } from 'vue-router'
 
-import type { Customer } from '@/services/customers.service'
+import type { ICustomer } from '@/pages/customers/models/customers'
 
 import { Badge } from '@/components/ui/badge'
 import {
@@ -17,7 +17,7 @@ import CustomerDelete from './customer-delete.vue'
 import CustomerResourceDialog from './customer-resource-dialog.vue'
 
 interface Props {
-  customer: Customer
+  customer: ICustomer
 }
 
 const props = defineProps<Props>()

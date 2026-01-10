@@ -5,14 +5,14 @@ import type { Component } from 'vue'
 import { Ellipsis, Eye, FilePenLine, Trash2 } from 'lucide-vue-next'
 import { useRouter } from 'vue-router'
 
-import type { Customer } from '../data/schema'
+import type { ICustomer } from '../models/customers'
 
 import { customerSchema } from '../data/schema'
 import CustomerDelete from './customer-delete.vue'
 import CustomerResourceDialog from './customer-resource-dialog.vue'
 
 interface DataTableRowActionsProps {
-  row: Row<Customer>
+  row: Row<ICustomer>
 }
 const props = defineProps<DataTableRowActionsProps>()
 const customer = computed(() => {
@@ -22,7 +22,7 @@ const customer = computed(() => {
   }
   // If validation fails, return the original data as-is (type assertion)
   // This handles cases where backend returns slightly different structure
-  return props.row.original as Customer
+  return props.row.original as ICustomer
 })
 const router = useRouter()
 

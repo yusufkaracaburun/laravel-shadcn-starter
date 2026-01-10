@@ -8,10 +8,10 @@ import { FormField } from '@/components/ui/form'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { useCustomers } from '@/composables/use-customers.composable'
 
-import type { Customer } from '../data/schema'
+import type { ICustomer } from '../models/customers'
 
 const props = defineProps<{
-  customer: Customer | null
+  customer: ICustomer | null
 }>()
 const emits = defineEmits(['close'])
 

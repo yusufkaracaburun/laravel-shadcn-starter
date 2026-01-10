@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Filter } from 'lucide-vue-next'
 
-import type { CustomerFilters } from '@/services/customers.service'
+import type { ICustomerFilters } from '@/pages/customers/models/customers'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -18,14 +18,14 @@ import {
 } from '@/components/ui/select'
 
 interface CustomersFilterProps {
-  filters: CustomerFilters
-  onFiltersChange: (filters: CustomerFilters) => void
+  filters: ICustomerFilters
+  onFiltersChange: (filters: ICustomerFilters) => void
   onClear: () => void
 }
 
 const props = defineProps<CustomersFilterProps>()
 
-const localFilters = ref<CustomerFilters>({ ...props.filters })
+const localFilters = ref<ICustomerFilters>({ ...props.filters })
 
 watch(
   () => props.filters,
@@ -35,10 +35,10 @@ watch(
   { deep: true },
 )
 
-function updateFilter(key: keyof CustomerFilters, value: any) {
+function updateFilter(key: keyof ICustomerFilters, value: any) {
   localFilters.value = {
     ...localFilters.value,
-    [key]: value || undefined,
+    [key]: value === 'all' || !value ? undefined : value,
   }
   props.onFiltersChange(localFilters.value)
 }
@@ -72,14 +72,14 @@ const hasActiveFilters = computed(() => {
         <div class="space-y-2">
           <label class="text-sm font-medium">Type</label>
           <Select
-            :model-value="localFilters.type"
+            :model-value="localFilters.type || 'all'"
             @update:model-value="(value) => updateFilter('type', value)"
           >
             <SelectTrigger>
               <SelectValue placeholder="All types" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">
+              <SelectItem value="all">
                 All types
               </SelectItem>
               <SelectItem value="business">

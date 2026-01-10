@@ -1,10 +1,10 @@
 <script lang="ts" setup>
-import type { Customer } from '../data/schema'
+import type { ICustomer } from '../models/customers'
 
 import CustomerForm from './customer-form.vue'
 
 const props = defineProps<{
-  customer: Customer | null
+  customer: ICustomer | null
 }>()
 defineEmits(['close'])
 

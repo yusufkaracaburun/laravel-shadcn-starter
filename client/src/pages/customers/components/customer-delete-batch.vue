@@ -3,10 +3,10 @@ import type { Table } from '@tanstack/vue-table'
 
 import { useCustomers } from '@/composables/use-customers.composable'
 
-import type { Customer } from '../data/schema'
+import type { ICustomer } from '../models/customers'
 
 interface Props {
-  table: Table<Customer>
+  table: Table<ICustomer>
   open?: boolean
 }
 

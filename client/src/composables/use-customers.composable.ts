@@ -1,24 +1,40 @@
+import { computed } from 'vue'
+import { useRoute } from 'vue-router'
 import type { SortingState } from '@tanstack/vue-table'
 
 import type { ServerPagination } from '@/components/data-table/types'
 import type {
   CreateCustomerRequest,
-  CustomerFilters,
   UpdateCustomerRequest,
 } from '@/services/customers.service'
+import type { IResponse } from '@/services/types/response.type'
+import type {
+  ICustomer,
+  ICustomerFilters,
+} from '@/pages/customers/models/customers'
 
 import { useToast } from '@/composables/use-toast.composable'
 import {
   useCreateCustomerMutation,
   useDeleteCustomerMutation,
   useGetCustomersQuery,
+  useGetCustomerQuery,
   useUpdateCustomerMutation,
 } from '@/services/customers.service'
 import { useErrorStore } from '@/stores/error.store'
 
+const CustomerContext = {
+  FETCH_LIST: 'fetchCustomers',
+  GET_CUSTOMER_BY_ID: 'getCustomerById',
+  CREATE: 'createCustomer',
+  UPDATE: 'updateCustomer',
+  DELETE: 'deleteCustomer',
+}
+
 export function useCustomers() {
   const toast = useToast()
   const errorStore = useErrorStore()
+  const route = useRoute()
 
   // Pagination state
   const page = ref(1)
@@ -28,7 +44,7 @@ export function useCustomers() {
   const sorting = ref<SortingState>([])
 
   // Filters state
-  const filters = ref<CustomerFilters>({})
+  const filters = ref<ICustomerFilters>({})
 
   // Include relationships state
   const include = ref<string[]>([])
@@ -119,7 +135,7 @@ export function useCustomers() {
       return customersResponse.data
     } catch (error: any) {
       // Store error with context
-      errorStore.setError(error, { context: 'fetchCustomers' })
+      errorStore.setError(error, { context: CustomerContext.FETCH_LIST })
 
       // Use error store utilities for messages
       const message = errorStore.getErrorMessage(error)
@@ -140,7 +156,7 @@ export function useCustomers() {
       return response
     } catch (error: any) {
       // Store error with context
-      errorStore.setError(error, { context: 'createCustomer' })
+      errorStore.setError(error, { context: CustomerContext.CREATE })
 
       // Use error store utilities for messages
       const message = errorStore.getErrorMessage(error)
@@ -170,7 +186,7 @@ export function useCustomers() {
       return response
     } catch (error: any) {
       // Store error with context
-      errorStore.setError(error, { context: 'updateCustomer' })
+      errorStore.setError(error, { context: CustomerContext.UPDATE })
 
       // Use error store utilities for messages
       const message = errorStore.getErrorMessage(error)
@@ -193,9 +209,46 @@ export function useCustomers() {
       toast.showSuccess('Customer deleted successfully!')
     } catch (error: any) {
       // Store error with context
-      errorStore.setError(error, { context: 'deleteCustomer' })
+      errorStore.setError(error, { context: CustomerContext.DELETE })
 
       // Use error store utilities for messages
+      const message = errorStore.getErrorMessage(error)
+      toast.showError(message)
+      throw error
+    }
+  }
+
+  // Single customer query
+  const customerId = computed(() => {
+    if (!route) {
+      return undefined
+    }
+    const params = route.params as { id?: string | string[] }
+    const idParam = Array.isArray(params.id) ? params.id[0] : params.id
+    if (
+      !idParam ||
+      typeof idParam !== 'string' ||
+      Number.isNaN(Number(idParam))
+    ) {
+      return undefined
+    }
+    return Number(idParam)
+  })
+
+  const {
+    data: customerByIdResponse,
+    isLoading: isLoadingCustomerById,
+    isError: isErrorCustomerById,
+    error: errorCustomerById,
+    refetch: refetchCustomerById,
+  } = useGetCustomerQuery(customerId)
+
+  async function fetchCustomerByIdData(): Promise<IResponse<ICustomer>> {
+    try {
+      const response = await refetchCustomerById()
+      return response.data as IResponse<Customer>
+    } catch (error: any) {
+      errorStore.setError(error, { context: CustomerContext.GET_CUSTOMER_BY_ID })
       const message = errorStore.getErrorMessage(error)
       toast.showError(message)
       throw error
@@ -220,5 +273,11 @@ export function useCustomers() {
     updateCustomerMutation,
     deleteCustomer,
     deleteCustomerMutation,
+    customerId,
+    customerByIdResponse,
+    isLoadingCustomerById,
+    isErrorCustomerById,
+    errorCustomerById,
+    fetchCustomerByIdData,
   }
 }

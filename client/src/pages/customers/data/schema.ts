@@ -1,9 +1,12 @@
 import { z } from 'zod'
 
 /**
- * Contact schema matching backend ContactResource
+ * Contact schema matching backend ContactResource exactly
  * @see api/app/Http/Resources/ContactResource.php
+ * @see api/app/Models/Contact.php
  * Backend returns snake_case fields
+ * Note: name is from full_name accessor
+ * Note: user is conditionally loaded (via whenLoaded)
  */
 export const contactSchema = z.object({
   id: z.number(),
@@ -16,9 +19,9 @@ export const contactSchema = z.object({
   zipcode: z.string().nullable(),
   city: z.string().nullable(),
   country: z.string().nullable(),
-  created_at: z.string(),
-  updated_at: z.string(),
-  user: z.any().nullable().optional(), // User type can be defined if needed
+  created_at: z.string(), // Formatted timestamp from formatTimestamp()
+  updated_at: z.string(), // Formatted timestamp from formatTimestamp()
+  user: z.any().nullable().optional(), // UserResource when loaded (via whenLoaded)
 })
 
 export type Contact = z.infer<typeof contactSchema>
@@ -30,23 +33,23 @@ export type Contact = z.infer<typeof contactSchema>
 export const customerTypeSchema = z.enum(['business', 'private'])
 
 /**
- * Customer schema matching backend CustomerResource
+ * Customer schema matching backend CustomerResource exactly
  * @see api/app/Http/Resources/CustomerResource.php
+ * @see api/app/Models/Customer.php
  * Backend returns snake_case fields
- * Note: formatted_address is an array from accessor
- * Note: primary_contact is always loaded
+ * Note: number is always present (generated from id, padded to 6 digits)
+ * Note: formatted_address is always present (accessor returns array from AddressHelper)
+ * Note: primary_contact is always loaded (via $with)
  */
 export const customerSchema = z.object({
   id: z.number(),
-  number: z.string().nullable().optional(),
+  number: z.string(), // Generated from id, padded to 6 digits (e.g., "000001")
   type: customerTypeSchema,
   name: z.string(),
 
   // Address fields
   address: z.string().nullable(),
-  formatted_address: z
-    .union([z.array(z.string()), z.record(z.any())])
-    .optional(), // accessor - can be array or object
+  formatted_address: z.array(z.string()), // accessor - always returns array from AddressHelper
   zipcode: z.string().nullable(),
   city: z.string().nullable(),
   country: z.string().nullable(),
@@ -62,7 +65,7 @@ export const customerSchema = z.object({
   created_at: z.string(),
   updated_at: z.string(),
 
-  // Primary contact (always loaded)
+  // Primary contact (always loaded via $with)
   primary_contact: contactSchema.nullable(),
 
   // Collections (when loaded)

@@ -3,20 +3,21 @@ import type { Table } from '@tanstack/vue-table'
 
 import { X } from 'lucide-vue-next'
 
-import type { CustomerFilters } from '@/services/customers.service'
+import type {
+  ICustomer,
+  ICustomerFilters,
+} from '@/pages/customers/models/customers'
 
 import DataTableViewOptions from '@/components/data-table/view-options.vue'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 
-import type { Customer } from '../data/schema'
-
 import CustomersFilter from './customers-filter.vue'
 
 interface DataTableToolbarProps {
-  table: Table<Customer>
-  filters: CustomerFilters
-  onFiltersChange: (filters: CustomerFilters) => void
+  table: Table<ICustomer>
+  filters: ICustomerFilters
+  onFiltersChange: (filters: ICustomerFilters) => void
   onClearFilters: () => void
 }
 

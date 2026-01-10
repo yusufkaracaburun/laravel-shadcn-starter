@@ -4,79 +4,26 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query'
 
 import { useAxios } from '@/composables/use-axios.composable'
 
-import type { IUser } from '@/pages/users/models/users'
-
 import type { IResponse } from './types/response.type'
 
-/**
- * Contact interface matching backend ContactResource exactly
- * @see api/app/Http/Resources/ContactResource.php
- * Note: User is always loaded on Contact (via $with)
- */
-export interface Contact {
-  id: number
-  name: string // full_name accessor
-  first_name: string
-  last_name: string
-  email: string
-  phone: string | null
-  address: string | null
-  zipcode: string | null
-  city: string | null
-  country: string | null
-  created_at: string
-  updated_at: string
-  user?: IUser | null // Always loaded on Contact
-  [key: string]: unknown
-}
+// Re-export types from models for convenience
+export type {
+  ICustomer,
+  IContact,
+  ICustomerFilters,
+  ECustomerType,
+  TCustomerType,
+} from '@/pages/customers/models/customers'
 
-/**
- * Customer type enum matching backend CustomerType
- * @see api/app/Enums/CustomerType.php
- */
-export type CustomerType = 'business' | 'private'
-
-/**
- * Customer interface matching backend CustomerResource exactly
- * @see api/app/Http/Resources/CustomerResource.php
- * Note: primary_contact is always loaded (via $with)
- */
-export interface Customer {
-  id: number
-  type: CustomerType
-  name: string
-
-  // Address fields
-  address: string | null
-  formatted_address: string[] // accessor - array format
-  zipcode: string | null
-  city: string | null
-  country: string | null
-
-  // Contact / business info
-  email: string | null
-  phone: string | null
-  kvk_number: string | null
-  vat_number: string | null
-  iban_number: string | null
-
-  // Timestamps
-  created_at: string // Format: "d-m-Y H:i:s"
-  updated_at: string // Format: "d-m-Y H:i:s"
-
-  // Primary contact (always loaded)
-  primary_contact: Contact | null
-
-  // Collections (when loaded)
-  contacts?: Contact[]
-  invoices?: unknown[] // Invoice type can be defined later if needed
-
-  // Counts (when counted)
-  contacts_count?: number
-  invoices_count?: number
-
-  [key: string]: unknown
-}
+// Legacy exports for backward compatibility (deprecated - use models instead)
+/** @deprecated Use ICustomer from @/pages/customers/models/customers instead */
+export type Customer = import('@/pages/customers/models/customers').ICustomer
+/** @deprecated Use IContact from @/pages/customers/models/customers instead */
+export type Contact = import('@/pages/customers/models/customers').IContact
+/** @deprecated Use ICustomerFilters from @/pages/customers/models/customers instead */
+export type CustomerFilters = import('@/pages/customers/models/customers').ICustomerFilters
+/** @deprecated Use TCustomerType from @/pages/customers/models/customers instead */
+export type CustomerType = import('@/pages/customers/models/customers').TCustomerType
 
 /**
  * Paginated customers response interface matching Laravel's pagination JSON structure
@@ -84,7 +31,7 @@ export interface Customer {
  * @see api/app/Http/Controllers/Api/CustomerController.php::index()
  */
 export interface PaginatedCustomersResponse {
-  data: Customer[]
+  data: ICustomer[]
   current_page: number
   per_page: number
   total: number
@@ -118,25 +65,7 @@ function convertSortingToQueryString(
     .join(',')
 }
 
-/**
- * Customer filters interface matching backend filter structure
- * @see api/app/Http/Controllers/Api/CustomerController.php::index()
- */
-export interface CustomerFilters {
-  id?: number
-  type?: CustomerType
-  name?: string
-  email?: string
-  phone?: string
-  city?: string
-  country?: string
-  kvk_number?: string
-  vat_number?: string
-  iban_number?: string
-  created_at?: string
-  between?: string // Format: "YYYY-MM-DD,YYYY-MM-DD"
-  search?: string
-}
+// CustomerFilters is now exported from models - see above
 
 /**
  * List all customers with pagination, sorting, and filtering
@@ -151,7 +80,7 @@ export function useGetCustomersQuery(
   page: MaybeRef<number> = 1,
   pageSize: MaybeRef<number> = 15,
   sorting: MaybeRef<Array<{ id: string, desc: boolean }>> = [],
-  filters: MaybeRef<CustomerFilters> = {},
+  filters: MaybeRef<ICustomerFilters> = {},
   include: MaybeRef<string[]> = [],
 ) {
   const { axiosInstance } = useAxios()
@@ -257,9 +186,9 @@ export function useGetCustomerQuery(customerId: MaybeRef<number>) {
   // Normalize MaybeRef parameter to ref for proper reactivity
   const customerIdRef = isRef(customerId) ? customerId : ref(customerId)
 
-  return useQuery<IResponse<Customer>, AxiosError>({
+  return useQuery<IResponse<ICustomer>, AxiosError>({
     queryKey: ['customer', computed(() => toValue(customerIdRef))],
-    queryFn: async (): Promise<IResponse<Customer>> => {
+    queryFn: async (): Promise<IResponse<ICustomer>> => {
       const currentCustomerId = toValue(customerIdRef)
       const response = await axiosInstance.get(
         `/api/customers/${currentCustomerId}`,
@@ -289,7 +218,7 @@ export function useGetCustomerQuery(customerId: MaybeRef<number>) {
  * Note: Based on Customer model fields from migration, not the request validation
  */
 export interface CreateCustomerRequest {
-  type: CustomerType
+  type: TCustomerType
   name: string
   email?: string | null
   phone?: string | null
@@ -308,7 +237,7 @@ export interface CreateCustomerRequest {
  * Note: Based on Customer model fields from migration, not the request validation
  */
 export interface UpdateCustomerRequest {
-  type?: CustomerType
+  type?: TCustomerType
   name?: string
   email?: string | null
   phone?: string | null
@@ -329,10 +258,10 @@ export function useCreateCustomerMutation() {
   const { axiosInstance } = useAxios()
   const queryClient = useQueryClient()
 
-  return useMutation<IResponse<Customer>, AxiosError, CreateCustomerRequest>({
+  return useMutation<IResponse<ICustomer>, AxiosError, CreateCustomerRequest>({
     mutationFn: async (
       data: CreateCustomerRequest,
-    ): Promise<IResponse<Customer>> => {
+    ): Promise<IResponse<ICustomer>> => {
       const response = await axiosInstance.post('/api/customers', data)
       return response.data
     },
@@ -352,11 +281,11 @@ export function useUpdateCustomerMutation() {
   const queryClient = useQueryClient()
 
   return useMutation<
-    IResponse<Customer>,
+    IResponse<ICustomer>,
     AxiosError,
     { customerId: number, data: UpdateCustomerRequest }
   >({
-    mutationFn: async ({ customerId, data }): Promise<IResponse<Customer>> => {
+    mutationFn: async ({ customerId, data }): Promise<IResponse<ICustomer>> => {
       const response = await axiosInstance.put(
         `/api/customers/${customerId}`,
         data,

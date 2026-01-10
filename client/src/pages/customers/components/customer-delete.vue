@@ -1,10 +1,10 @@
 <script lang="ts" setup>
 import { useCustomers } from '@/composables/use-customers.composable'
 
-import type { Customer } from '../data/schema'
+import type { ICustomer } from '../models/customers'
 
 const props = defineProps<{
-  customer: Customer
+  customer: ICustomer
 }>()
 
 const emits = defineEmits<{

@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import type { Customer } from '@/services/customers.service'
+import type { ICustomer } from '@/pages/customers/models/customers'
 
 import Loading from '@/components/loading.vue'
 
 import CustomerCard from './customer-card.vue'
 
 interface Props {
-  customers: Customer[]
+  customers: ICustomer[]
   loading?: boolean
 }
 
