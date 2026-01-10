@@ -184,8 +184,8 @@ function prepareRequestData(
     }
   }
 
-  // Check if there's a file to upload
-  const hasFile = Object.values(data).some((value) => value instanceof File)
+  // Check if there's a file to upload (profile_photo is set in handlePhotoChange)
+  const hasFile = data.profile_photo instanceof File
 
   if (!hasFile) {
     return data
