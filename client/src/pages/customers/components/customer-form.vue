@@ -3,8 +3,9 @@ import { toTypedSchema } from '@vee-validate/zod'
 import { useForm } from 'vee-validate'
 import { computed, watch } from 'vue'
 
+import { Button } from '@/components/ui/button'
+import { ButtonGroup } from '@/components/ui/button-group'
 import { FormField } from '@/components/ui/form'
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { useCustomers } from '@/composables/use-customers.composable'
 import { Building2Icon, UserIcon } from '@/composables/use-icons.composable'
 import { setFormFieldErrors } from '@/utils/form'
@@ -46,10 +47,14 @@ const form = useForm({
   initialValues: initialValues.value,
 })
 
-const { values, handleSubmit, setFieldError, resetForm } = form
+const { values, handleSubmit, setFieldError, resetForm, setFieldValue } = form
 
 // Watch customer type to show/hide business fields
 const customerType = computed(() => values.type)
+
+function setCustomerType(type: 'private' | 'business') {
+  setFieldValue('type', type, true) // true = validate
+}
 
 // Reset form when customer changes
 watch(
@@ -114,42 +119,32 @@ const onSubmit = handleSubmit(async (formValues) => {
       <UiFormItem class="space-y-1">
         <UiFormLabel>Customer Type</UiFormLabel>
         <UiFormMessage />
-        <RadioGroup class="grid grid-cols-2 gap-4 pt-2" v-bind="componentField">
-          <UiFormItem class="h-full w-full">
-            <UiFormLabel
-              class="[&:has([data-state=checked])>div]:border-primary flex flex-col cursor-pointer h-full w-full"
-            >
-              <UiFormControl>
-                <RadioGroupItem value="private" class="sr-only" />
-              </UiFormControl>
-              <div
-                class="p-2 border-2 rounded-md border-muted hover:border-accent transition-colors h-full w-full flex items-center justify-center"
-              >
-                <div class="flex items-center gap-2">
-                  <UserIcon class="size-4 text-muted-foreground" />
-                  <div class="font-semibold text-foreground">Private</div>
-                </div>
-              </div>
-            </UiFormLabel>
-          </UiFormItem>
-          <UiFormItem class="h-full w-full">
-            <UiFormLabel
-              class="[&:has([data-state=checked])>div]:border-primary flex flex-col cursor-pointer h-full w-full"
-            >
-              <UiFormControl>
-                <RadioGroupItem value="business" class="sr-only" />
-              </UiFormControl>
-              <div
-                class="p-2 border-2 rounded-md border-muted hover:border-accent transition-colors h-full w-full flex items-center justify-center"
-              >
-                <div class="flex items-center gap-2">
-                  <Building2Icon class="size-4 text-muted-foreground" />
-                  <div class="font-semibold text-foreground">Business</div>
-                </div>
-              </div>
-            </UiFormLabel>
-          </UiFormItem>
-        </RadioGroup>
+        <ButtonGroup class="w-full pt-2">
+          <Button
+            type="button"
+            variant="outline"
+            class="flex-1"
+            :class="{
+              'bg-primary/10': values.type === 'private',
+            }"
+            @click="setCustomerType('private')"
+          >
+            <UserIcon class="size-4 text-muted-foreground" />
+            <span class="font-semibold">Private</span>
+          </Button>
+          <Button
+            type="button"
+            variant="outline"
+            class="flex-1"
+            :class="{
+              'bg-primary/10': values.type === 'business',
+            }"
+            @click="setCustomerType('business')"
+          >
+            <Building2Icon class="size-4 text-muted-foreground" />
+            <span class="font-semibold">Business</span>
+          </Button>
+        </ButtonGroup>
       </UiFormItem>
     </FormField>
 
