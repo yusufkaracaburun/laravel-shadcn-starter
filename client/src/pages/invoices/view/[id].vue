@@ -6,15 +6,16 @@ meta:
 <script setup lang="ts">
 import type { ComputedRef } from 'vue'
 
+import InvoiceSidebar from '.components/invoice-sidebar.vue'
 import { computed, ref } from 'vue'
-
-import type { IInvoice } from '@/pages/invoices/models/invoice'
 
 import Page from '@/components/global-layout/basic-page.vue'
 import { useInvoices } from '@/composables/use-invoices.composable'
-import InvoiceNavbar from '@/pages/invoices/view/components/invoice-navbar.vue'
-import InvoiceSidebar from '@/pages/invoices/view/components/invoice-sidebar.vue'
-import InvoiceViewLayout from '@/pages/invoices/view/components/invoice-view-layout.vue'
+
+import type { IInvoice } from '../models/invoice'
+
+import InvoiceNavbar from './components/invoice-navbar.vue'
+import InvoiceViewLayout from './components/invoice-view-layout.vue'
 
 const {
   invoiceId,
