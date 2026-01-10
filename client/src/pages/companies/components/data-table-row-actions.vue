@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import type { Row } from '@tanstack/vue-table'
 import type { Component } from 'vue'
 
 import {
@@ -10,19 +9,18 @@ import {
 } from '@/composables/use-icons.composable'
 import { useRouter } from 'vue-router'
 
+import type { IDataTableRowActionsProps } from '@/components/data-table/types'
 import type { ICompany } from '@/pages/companies/models/companies'
 
 import CompanyDelete from './company-delete.vue'
-import CompanyResourceDialog from './company-resource-dialog.vue'
+import CompanyEditDialog from './company-edit-dialog.vue'
 
-interface DataTableRowActionsProps {
-  row: Row<ICompany>
-}
-const props = defineProps<DataTableRowActionsProps>()
+const props = defineProps<IDataTableRowActionsProps<ICompany>>()
 const company = computed(() => props.row.original)
 const router = useRouter()
 
 const showComponent = shallowRef<Component | null>(null)
+const isEditDialogOpen = ref(false)
 
 type TCommand = 'view' | 'edit' | 'delete'
 function handleSelect(command: TCommand) {
@@ -34,7 +32,7 @@ function handleSelect(command: TCommand) {
       })
       break
     case 'edit':
-      showComponent.value = CompanyResourceDialog
+      isEditDialogOpen.value = true
       break
     case 'delete':
       showComponent.value = CompanyDelete
@@ -65,14 +63,12 @@ const isOpen = ref(false)
           </UiDropdownMenuShortcut>
         </UiDropdownMenuItem>
 
-        <UiDialogTrigger as-child>
-          <UiDropdownMenuItem @select.stop="handleSelect('edit')">
-            <span>Edit</span>
-            <UiDropdownMenuShortcut>
-              <FilePenLineIcon class="size-4" />
-            </UiDropdownMenuShortcut>
-          </UiDropdownMenuItem>
-        </UiDialogTrigger>
+        <UiDropdownMenuItem @select.stop="handleSelect('edit')">
+          <span>Edit</span>
+          <UiDropdownMenuShortcut>
+            <FilePenLineIcon class="size-4" />
+          </UiDropdownMenuShortcut>
+        </UiDropdownMenuItem>
 
         <UiDialogTrigger as-child>
           <UiDropdownMenuItem @select.stop="handleSelect('delete')">
@@ -85,12 +81,15 @@ const isOpen = ref(false)
       </UiDropdownMenuContent>
     </UiDropdownMenu>
 
-    <UiDialogContent>
-      <component
-        :is="showComponent"
-        :company="company"
-        @close="isOpen = false"
-      />
+    <UiDialogContent class="sm:max-w-[425px]">
+      <component :is="showComponent" :company="company" @close="isOpen = false" />
     </UiDialogContent>
   </UiDialog>
+
+  <CompanyEditDialog
+    :company="company"
+    :open="isEditDialogOpen"
+    @update:open="isEditDialogOpen = $event"
+    @close="isEditDialogOpen = false"
+  />
 </template>

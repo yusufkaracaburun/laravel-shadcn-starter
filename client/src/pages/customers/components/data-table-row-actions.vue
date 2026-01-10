@@ -1,6 +1,9 @@
 <script setup lang="ts">
-import type { Row } from '@tanstack/vue-table'
 import type { Component } from 'vue'
+
+import { useRouter } from 'vue-router'
+
+import type { IDataTableRowActionsProps } from '@/components/data-table/types'
 
 import {
   EllipsisIcon,
@@ -8,30 +11,18 @@ import {
   FilePenLineIcon,
   Trash2Icon,
 } from '@/composables/use-icons.composable'
-import { useRouter } from 'vue-router'
 
 import type { ICustomer } from '../models/customers'
 
-import { customerSchema } from '../data/schema'
 import CustomerDelete from './customer-delete.vue'
-import CustomerResourceDialog from './customer-resource-dialog.vue'
+import CustomerEditDialog from './customer-edit-dialog.vue'
 
-interface DataTableRowActionsProps {
-  row: Row<ICustomer>
-}
-const props = defineProps<DataTableRowActionsProps>()
-const customer = computed(() => {
-  const result = customerSchema.safeParse(props.row.original)
-  if (result.success) {
-    return result.data
-  }
-  // If validation fails, return the original data as-is (type assertion)
-  // This handles cases where backend returns slightly different structure
-  return props.row.original as ICustomer
-})
+const props = defineProps<IDataTableRowActionsProps<ICustomer>>()
+const customer = computed(() => props.row.original)
 const router = useRouter()
 
 const showComponent = shallowRef<Component | null>(null)
+const isEditDialogOpen = ref(false)
 
 type TCommand = 'view' | 'edit' | 'delete'
 function handleSelect(command: TCommand) {
@@ -43,7 +34,7 @@ function handleSelect(command: TCommand) {
       })
       break
     case 'edit':
-      showComponent.value = CustomerResourceDialog
+      isEditDialogOpen.value = true
       break
     case 'delete':
       showComponent.value = CustomerDelete
@@ -58,9 +49,12 @@ const isOpen = ref(false)
   <UiDialog v-model:open="isOpen">
     <UiDropdownMenu>
       <UiDropdownMenuTrigger as-child>
-        <UiButton variant="ghost" class="size-8 p-0">
-          <span class="sr-only">Open menu</span>
+        <UiButton
+          variant="ghost"
+          class="flex h-8 w-8 p-0 data-[state=open]:bg-muted"
+        >
           <EllipsisIcon class="size-4" />
+          <span class="sr-only">Open menu</span>
         </UiButton>
       </UiDropdownMenuTrigger>
       <UiDropdownMenuContent align="end" class="w-[160px]">
@@ -71,14 +65,12 @@ const isOpen = ref(false)
           </UiDropdownMenuShortcut>
         </UiDropdownMenuItem>
 
-        <UiDialogTrigger as-child>
-          <UiDropdownMenuItem @select.stop="handleSelect('edit')">
-            <span>Edit</span>
-            <UiDropdownMenuShortcut>
-              <FilePenLineIcon class="size-4" />
-            </UiDropdownMenuShortcut>
-          </UiDropdownMenuItem>
-        </UiDialogTrigger>
+        <UiDropdownMenuItem @select.stop="handleSelect('edit')">
+          <span>Edit</span>
+          <UiDropdownMenuShortcut>
+            <FilePenLineIcon class="size-4" />
+          </UiDropdownMenuShortcut>
+        </UiDropdownMenuItem>
 
         <UiDialogTrigger as-child>
           <UiDropdownMenuItem @select.stop="handleSelect('delete')">
@@ -91,17 +83,19 @@ const isOpen = ref(false)
       </UiDropdownMenuContent>
     </UiDropdownMenu>
 
-    <UiDialogContent>
+    <UiDialogContent class="sm:max-w-[425px]">
       <component
         :is="showComponent"
         :customer="customer"
-        @close="
-          () => {
-            isOpen = false
-            showComponent = null
-          }
-        "
+        @close="isOpen = false"
       />
     </UiDialogContent>
   </UiDialog>
+
+  <CustomerEditDialog
+    :customer="customer"
+    :open="isEditDialogOpen"
+    @update:open="isEditDialogOpen = $event"
+    @close="isEditDialogOpen = false"
+  />
 </template>
