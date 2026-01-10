@@ -4,17 +4,8 @@ meta:
 </route>
 
 <script setup lang="ts">
-import {
-  ArrowLeft,
-  Calendar,
-  FilePenLine,
-  Mail,
-  Shield,
-  Trash2,
-  Users,
-} from 'lucide-vue-next'
 import { computed } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { useRouter } from 'vue-router'
 
 import type { IUser } from '@/pages/users/models/users'
 
@@ -31,36 +22,31 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { useUserService } from '@/services/users.service'
+import {
+  ArrowLeftIcon,
+  CalendarIcon,
+  FilePenLineIcon,
+  MailIcon,
+  ShieldIcon,
+  Trash2Icon,
+  UsersIcon,
+} from '@/composables/use-icons.composable'
+import { useUsers } from '@/composables/use-users.composable'
 
 import UserDelete from '../components/user-delete.vue'
 import UserResourceDialog from '../components/user-resource-dialog.vue'
 
-const route = useRoute()
 const router = useRouter()
 
-const userService = useUserService()
-const userId = computed(() => {
-  const idParam = route.params.id
-  if (
-    !idParam ||
-    typeof idParam !== 'string' ||
-    Number.isNaN(Number(idParam))
-  ) {
-    return undefined
-  }
-  return Number(idParam)
-})
-
 const {
-  data: userResponse,
-  isLoading,
-  isError,
-  error,
-  refetch,
-} = userService.getUserByIdQuery(userId)
+  userByIdResponse,
+  isLoadingUserById: isLoading,
+  isErrorUserById: isError,
+  errorUserById: error,
+  fetchUserByIdData,
+} = useUsers()
 
-const user = computed<IUser | null>(() => userResponse.value?.data ?? null)
+const user = computed<IUser | null>(() => userByIdResponse.value?.data ?? null)
 
 // Get initials from name
 function getInitials(name: string): string {
@@ -100,7 +86,7 @@ const editDialogOpen = ref(false)
 function handleEditClose() {
   editDialogOpen.value = false
   // Refetch user data after edit
-  refetch()
+  fetchUserByIdData()
 }
 
 // Handle delete
@@ -129,15 +115,15 @@ const isNotFound = computed(() => {
     <template #actions>
       <div v-if="user" class="flex items-center gap-2">
         <Button variant="outline" @click="router.push('/users')">
-          <ArrowLeft class="mr-2 size-4" />
+          <ArrowLeftIcon class="mr-2 size-4" />
           Back
         </Button>
         <Button variant="outline" @click="editDialogOpen = true">
-          <FilePenLine class="mr-2 size-4" />
+          <FilePenLineIcon class="mr-2 size-4" />
           Edit
         </Button>
         <Button variant="destructive" @click="deleteDialogOpen = true">
-          <Trash2 class="mr-2 size-4" />
+          <Trash2Icon class="mr-2 size-4" />
           Delete
         </Button>
       </div>
@@ -171,7 +157,7 @@ const isNotFound = computed(() => {
           subtitle="Error Loading User"
           error="An error occurred while loading the user information. Please try again."
         />
-        <Button class="mt-4" @click="refetch()"> Retry </Button>
+        <Button class="mt-4" @click="fetchUserByIdData()"> Retry </Button>
       </div>
     </div>
 
@@ -195,7 +181,7 @@ const isNotFound = computed(() => {
                 {{ user.name }}
               </CardTitle>
               <CardDescription class="text-base flex items-center gap-2">
-                <Mail class="size-4" />
+                <MailIcon class="size-4" />
                 {{ user.email }}
               </CardDescription>
               <div class="mt-4 flex items-center gap-2">
@@ -269,7 +255,7 @@ const isNotFound = computed(() => {
               <div
                 class="text-sm font-medium text-muted-foreground mb-1 flex items-center gap-2"
               >
-                <Calendar class="size-4" />
+                <CalendarIcon class="size-4" />
                 Created At
               </div>
               <div class="text-base">
@@ -280,7 +266,7 @@ const isNotFound = computed(() => {
               <div
                 class="text-sm font-medium text-muted-foreground mb-1 flex items-center gap-2"
               >
-                <Calendar class="size-4" />
+                <CalendarIcon class="size-4" />
                 Updated At
               </div>
               <div class="text-base">
@@ -302,7 +288,7 @@ const isNotFound = computed(() => {
         <Card v-if="user.roles && user.roles.length > 0">
           <CardHeader>
             <CardTitle class="flex items-center gap-2">
-              <Shield class="size-5" />
+              <ShieldIcon class="size-5" />
               Roles & Permissions
             </CardTitle>
             <CardDescription>Assigned roles for this user</CardDescription>
@@ -324,7 +310,7 @@ const isNotFound = computed(() => {
         <Card v-if="user.teams && user.teams.length > 0">
           <CardHeader>
             <CardTitle class="flex items-center gap-2">
-              <Users class="size-5" />
+              <UsersIcon class="size-5" />
               Teams
             </CardTitle>
             <CardDescription>Teams this user belongs to</CardDescription>
