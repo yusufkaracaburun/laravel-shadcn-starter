@@ -5,7 +5,7 @@ import { z } from 'zod'
 
 import { Field, FieldError, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
-import { useAuth } from '@/composables/use-auth'
+import { useAuth } from '@/composables/use-auth.composable'
 
 import GitHubButton from './github-button.vue'
 import GoogleButton from './google-button.vue'

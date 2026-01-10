@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { BadgeCheckIcon } from '@/composables/use-icons'
+import { BadgeCheckIcon } from '@/composables/use-icons.composable'
 
 import type { IUser } from '../models/users'
 

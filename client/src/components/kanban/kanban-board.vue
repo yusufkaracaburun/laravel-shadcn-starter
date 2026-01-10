@@ -75,7 +75,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
-import { useKanban } from '@/composables/use-kanban'
+import { useKanban } from '@/composables/use-kanban.composable'
 import { cn } from '@/lib/utils'
 // Import TaskResourceDialog for tasks page integration
 import TaskResourceDialogWrapper from '@/pages/tasks/components/task-resource-dialog.vue'

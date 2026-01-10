@@ -11,7 +11,7 @@ import {
   ReceiptIcon,
   SendIcon,
   XCircleIcon,
-} from '@/composables/use-icons'
+} from '@/composables/use-icons.composable'
 import {
   getInvoiceStatusColor,
   getPaymentStatusColor,

@@ -11,7 +11,7 @@ import { computed, ref } from 'vue'
 import type { IInvoice } from '@/pages/invoices/models/invoice'
 
 import Page from '@/components/global-layout/basic-page.vue'
-import { useInvoices } from '@/composables/use-invoices'
+import { useInvoices } from '@/composables/use-invoices.composable'
 import InvoiceNavbar from '@/pages/invoices/view/components/invoice-navbar.vue'
 import InvoiceSidebar from '@/pages/invoices/view/components/invoice-sidebar.vue'
 import InvoiceViewLayout from '@/pages/invoices/view/components/invoice-view-layout.vue'

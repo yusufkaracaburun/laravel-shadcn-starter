@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import Page from '@/components/global-layout/basic-page.vue'
-import { useCompanies } from '@/composables/use-companies'
+import { useCompanies } from '@/composables/use-companies.composable'
 
 import { columns } from './components/columns'
 import CompanyCreate from './components/company-create.vue'

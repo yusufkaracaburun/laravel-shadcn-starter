@@ -12,7 +12,7 @@ import type {
   IUpdateInvoiceRequest,
 } from '@/pages/invoices/models/invoice'
 
-import { useAxios } from '@/composables/use-axios'
+import { useAxios } from '@/composables/use-axios.composable'
 
 import type { ISorting } from './query-utils'
 import type { IPaginatedResponse, IResponse } from './types/response.type'

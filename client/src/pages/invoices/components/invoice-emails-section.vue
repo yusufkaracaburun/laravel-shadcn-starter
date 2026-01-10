@@ -12,7 +12,7 @@ import {
   ClockIcon,
   MailIcon,
   XCircleIcon,
-} from '@/composables/use-icons'
+} from '@/composables/use-icons.composable'
 
 import { formatDateTime } from '../utils/formatters'
 

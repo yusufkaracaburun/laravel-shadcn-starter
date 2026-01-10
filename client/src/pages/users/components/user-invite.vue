@@ -20,7 +20,7 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from '@/components/ui/drawer'
-import { MailPlusIcon } from '@/composables/use-icons'
+import { MailPlusIcon } from '@/composables/use-icons.composable'
 
 import UserInviteForm from './user-invite-form.vue'
 

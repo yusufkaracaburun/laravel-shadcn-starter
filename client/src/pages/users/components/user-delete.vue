@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { IUser } from '@/pages/users/models/users'
 
-import { useUsers } from '@/composables/use-users'
+import { useUsers } from '@/composables/use-users.composable'
 
 interface IUserDeleteProps {
   user: IUser

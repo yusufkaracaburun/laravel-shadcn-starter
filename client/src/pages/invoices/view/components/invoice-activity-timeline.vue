@@ -12,7 +12,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
-import { ClockIcon, UserIcon } from '@/composables/use-icons'
+import { ClockIcon, UserIcon } from '@/composables/use-icons.composable'
 import { formatDateTime } from '@/pages/invoices/utils/formatters'
 
 interface Props {

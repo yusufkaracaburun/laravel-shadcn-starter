@@ -10,8 +10,8 @@ import DataTableFacetedFilter from '@/components/data-table/faceted-filter.vue'
 import DataTableViewOptions from '@/components/data-table/view-options.vue'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { XIcon } from '@/composables/use-icons'
-import { useUsers } from '@/composables/use-users'
+import { XIcon } from '@/composables/use-icons.composable'
+import { useUsers } from '@/composables/use-users.composable'
 
 import type { IRole, IUser, IUserFilters } from '../models/users'
 

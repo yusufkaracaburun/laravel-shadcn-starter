@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { Table } from '@tanstack/vue-table'
 
-import { useInvoices } from '@/composables/use-invoices'
+import { useInvoices } from '@/composables/use-invoices.composable'
 
 import type { IInvoice } from '../models/invoice'
 

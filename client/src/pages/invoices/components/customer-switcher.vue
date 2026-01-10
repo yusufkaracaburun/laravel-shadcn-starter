@@ -6,7 +6,7 @@ import {
   ChevronsUpDownIcon,
   PlusIcon,
   UserIcon,
-} from '@/composables/use-icons'
+} from '@/composables/use-icons.composable'
 
 interface IProps {
   customers: Customer[]

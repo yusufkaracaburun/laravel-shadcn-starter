@@ -1,7 +1,7 @@
 import { createApp, nextTick } from 'vue'
 
 import App from './App.vue'
-import { useAuth } from './composables/use-auth'
+import { useAuth } from './composables/use-auth.composable'
 import { setupPlugins } from './plugins'
 
 import '@/assets/index.css'

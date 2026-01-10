@@ -2,7 +2,7 @@ import type { AxiosError } from 'axios'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query'
 
-import { useAxios } from '@/composables/use-axios'
+import { useAxios } from '@/composables/use-axios.composable'
 
 import type { IUser } from '@/pages/users/models/users'
 

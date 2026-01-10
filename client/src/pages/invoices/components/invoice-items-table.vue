@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Button } from '@/components/ui/button'
-import { PencilIcon, Trash2Icon } from '@/composables/use-icons'
+import { PencilIcon, Trash2Icon } from '@/composables/use-icons.composable'
 
 import { formatMoney, formatNumber } from '../utils/formatters'
 

@@ -11,9 +11,9 @@ import type { TInvoiceForm, TInvoiceItem } from '@/pages/invoices/data/schema'
 
 import Page from '@/components/global-layout/basic-page.vue'
 import { Button } from '@/components/ui/button'
-import { ArrowLeftIcon, SendIcon } from '@/composables/use-icons'
-import { useInvoices } from '@/composables/use-invoices'
-import { useToast } from '@/composables/use-toast'
+import { ArrowLeftIcon, SendIcon } from '@/composables/use-icons.composable'
+import { useInvoices } from '@/composables/use-invoices.composable'
+import { useToast } from '@/composables/use-toast.composable'
 import InvoiceForm from '@/pages/invoices/components/invoice-form.vue'
 import InvoiceEditorLayout from '@/pages/invoices/edit/components/invoice-editor-layout.vue'
 

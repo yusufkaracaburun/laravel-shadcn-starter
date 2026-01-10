@@ -6,7 +6,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion'
-import { CreditCardIcon, HashIcon } from '@/composables/use-icons'
+import { CreditCardIcon, HashIcon } from '@/composables/use-icons.composable'
 import { paymentStatuses } from '@/pages/invoices/data/data'
 import { formatDateTime } from '@/pages/invoices/utils/formatters'
 import { formatMoney } from '@/utils/money'

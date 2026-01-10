@@ -8,7 +8,7 @@ import type {
 } from '@/services/types/response.type'
 
 import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE } from '@/components/data-table/types'
-import { useToast } from '@/composables/use-toast'
+import { useToast } from '@/composables/use-toast.composable'
 import { useErrorStore } from '@/stores/error.store'
 
 export interface ResourceService<

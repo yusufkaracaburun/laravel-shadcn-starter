@@ -16,7 +16,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { FilterIcon } from '@/composables/use-icons'
+import { FilterIcon } from '@/composables/use-icons.composable'
 import { useGetCustomersQuery } from '@/services/customers.service'
 
 import type { IInvoiceFilters } from '../models/invoice'

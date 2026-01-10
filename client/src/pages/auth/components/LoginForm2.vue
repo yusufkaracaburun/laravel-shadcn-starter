@@ -14,7 +14,7 @@ import {
   FieldSeparator,
 } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
-import { useAuth } from '@/composables/use-auth'
+import { useAuth } from '@/composables/use-auth.composable'
 import { cn } from '@/lib/utils'
 
 import GitHubButton from './github-button.vue'

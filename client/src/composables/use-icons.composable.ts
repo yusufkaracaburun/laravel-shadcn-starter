@@ -3,7 +3,7 @@
  * All icons are exported with the "Icon" suffix for consistency
  *
  * Usage:
- * import { Trash2Icon, XIcon } from '@/composables/use-icons'
+ * import { Trash2Icon, XIcon } from '@/composables/use-icons.composable'
  */
 
 // Action icons

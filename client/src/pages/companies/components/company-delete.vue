@@ -2,7 +2,7 @@
 import type { Company } from '@/services/companies.service'
 
 import { Button } from '@/components/ui/button'
-import { useToast } from '@/composables/use-toast'
+import { useToast } from '@/composables/use-toast.composable'
 import { useDeleteCompanyMutation } from '@/services/companies.service'
 import { useErrorStore } from '@/stores/error.store'
 

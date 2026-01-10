@@ -2,7 +2,7 @@ import { storeToRefs } from 'pinia'
 
 import type { LoginRequest, RegisterRequest } from '@/services/auth.service'
 
-import { useToast } from '@/composables/use-toast'
+import { useToast } from '@/composables/use-toast.composable'
 import { RouterPath } from '@/constants/route-path'
 import {
   useLoginMutation,

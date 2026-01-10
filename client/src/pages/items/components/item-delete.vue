@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { useItems } from '@/composables/use-items'
+import { useItems } from '@/composables/use-items.composable'
 
 import type { Item } from '../data/schema'
 

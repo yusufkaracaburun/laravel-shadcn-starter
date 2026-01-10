@@ -6,7 +6,7 @@ import type {
   UpdateProjectRequest,
 } from '@/services/projects.service'
 
-import { useToast } from '@/composables/use-toast'
+import { useToast } from '@/composables/use-toast.composable'
 import {
   useCreateProjectMutation,
   useDeleteProjectMutation,

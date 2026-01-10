@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useAuth } from '@/composables/use-auth'
+import { useAuth } from '@/composables/use-auth.composable'
 import env from '@/utils/env'
 
 import { testusers } from '../../../tests/.data/users.data'

@@ -6,7 +6,7 @@ import type {
 import type { Item } from '@/services/items.service'
 
 import { Button } from '@/components/ui/button'
-import { PlusIcon } from '@/composables/use-icons'
+import { PlusIcon } from '@/composables/use-icons.composable'
 import InvoiceItemSelector from '@/pages/invoices/components/invoice-item-selector.vue'
 
 interface IProps {

@@ -8,7 +8,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog'
-import { XIcon } from '@/composables/use-icons'
+import { XIcon } from '@/composables/use-icons.composable'
 import { formatDateTime } from '@/pages/invoices/utils/formatters'
 
 const props = defineProps<{

@@ -7,7 +7,7 @@ import { useRouter } from 'vue-router'
 import type { TInvoice } from '@/pages/invoices/data/schema'
 import type { IInvoiceItem } from '@/pages/invoices/models/invoice'
 
-import { useInvoices } from '@/composables/use-invoices'
+import { useInvoices } from '@/composables/use-invoices.composable'
 import InvoiceCustomerSection from '@/pages/invoices/components/invoice-customer-section.vue'
 import InvoiceDatesSection from '@/pages/invoices/components/invoice-dates-section.vue'
 import InvoiceDetailsSection from '@/pages/invoices/components/invoice-details-section.vue'

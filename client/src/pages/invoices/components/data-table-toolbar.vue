@@ -4,7 +4,7 @@ import type { IDataTableToolbarProps } from '@/components/data-table/types'
 import DataTableViewOptions from '@/components/data-table/view-options.vue'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { XIcon } from '@/composables/use-icons'
+import { XIcon } from '@/composables/use-icons.composable'
 
 import type { IInvoice, IInvoiceFilters } from '../models/invoice'
 

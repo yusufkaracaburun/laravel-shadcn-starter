@@ -12,7 +12,7 @@ import { computed } from 'vue'
 
 import type { User as SidebarUser } from '@/components/app-sidebar/types'
 
-import { useAuth } from '@/composables/use-auth'
+import { useAuth } from '@/composables/use-auth.composable'
 import { useAuthStore } from '@/stores/auth.store'
 
 const authStore = useAuthStore()

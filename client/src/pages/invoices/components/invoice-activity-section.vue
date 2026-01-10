@@ -3,7 +3,7 @@ import type { IInvoiceActivity } from '@/services/invoices.service'
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
-import { HistoryIcon } from '@/composables/use-icons'
+import { HistoryIcon } from '@/composables/use-icons.composable'
 
 import { formatDateTime } from '../utils/formatters'
 

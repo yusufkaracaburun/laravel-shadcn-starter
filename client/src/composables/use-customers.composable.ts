@@ -2,33 +2,36 @@ import type { SortingState } from '@tanstack/vue-table'
 
 import type { ServerPagination } from '@/components/data-table/types'
 import type {
-  CreateItemRequest,
-  ItemFilters,
-  UpdateItemRequest,
-} from '@/services/items.service'
+  CreateCustomerRequest,
+  CustomerFilters,
+  UpdateCustomerRequest,
+} from '@/services/customers.service'
 
-import { useToast } from '@/composables/use-toast'
+import { useToast } from '@/composables/use-toast.composable'
 import {
-  useCreateItemMutation,
-  useDeleteItemMutation,
-  useGetItemsQuery,
-  useUpdateItemMutation,
-} from '@/services/items.service'
+  useCreateCustomerMutation,
+  useDeleteCustomerMutation,
+  useGetCustomersQuery,
+  useUpdateCustomerMutation,
+} from '@/services/customers.service'
 import { useErrorStore } from '@/stores/error.store'
 
-export function useItems() {
+export function useCustomers() {
   const toast = useToast()
   const errorStore = useErrorStore()
 
   // Pagination state
   const page = ref(1)
-  const pageSize = ref(10)
+  const pageSize = ref(15)
 
   // Sorting state - managed here and passed to table
   const sorting = ref<SortingState>([])
 
   // Filters state
-  const filters = ref<ItemFilters>({})
+  const filters = ref<CustomerFilters>({})
+
+  // Include relationships state
+  const include = ref<string[]>([])
 
   // Handler for sorting changes from table
   function onSortingChange(newSorting: SortingState) {
@@ -38,7 +41,7 @@ export function useItems() {
   }
 
   // Handler for filter changes
-  function onFiltersChange(newFilters: ItemFilters) {
+  function onFiltersChange(newFilters: CustomerFilters) {
     filters.value = newFilters
     // Reset to first page when filters change
     page.value = 1
@@ -51,11 +54,11 @@ export function useItems() {
   }
 
   const {
-    data: itemsResponse,
+    data: customersResponse,
     isLoading,
     isFetching,
-    refetch: fetchItems,
-  } = useGetItemsQuery(page, pageSize, sorting, filters)
+    refetch: fetchCustomers,
+  } = useGetCustomersQuery(page, pageSize, sorting, filters, include)
 
   // Watch for page and pageSize changes to trigger refetch
   // Vue Query tracks computed refs in queryKey, but explicit watch ensures refetch on changes
@@ -66,13 +69,13 @@ export function useItems() {
     }
     // Only refetch if values actually changed
     if (oldPage !== newPage || oldPageSize !== newPageSize) {
-      fetchItems()
+      fetchCustomers()
     }
   })
 
-  // Items data from response
-  const items = computed(() => {
-    return itemsResponse.value?.data?.data ?? []
+  // Customers data from response
+  const customers = computed(() => {
+    return customersResponse.value?.data?.data ?? []
   })
 
   const loading = computed(() => isLoading.value || isFetching.value)
@@ -80,10 +83,10 @@ export function useItems() {
   // Extract pagination metadata from Laravel's pagination structure
   const pagination = computed(
     () =>
-      itemsResponse.value?.data ?? {
+      customersResponse.value?.data ?? {
         current_page: 1,
         last_page: 1,
-        per_page: 10,
+        per_page: 15,
         total: 0,
         from: null,
         to: null,
@@ -110,13 +113,13 @@ export function useItems() {
     onPageSizeChange,
   }))
 
-  async function fetchItemsData() {
+  async function fetchCustomersData() {
     try {
-      const itemsResponse = await fetchItems()
-      return itemsResponse.data
+      const customersResponse = await fetchCustomers()
+      return customersResponse.data
     } catch (error: any) {
       // Store error with context
-      errorStore.setError(error, { context: 'fetchItems' })
+      errorStore.setError(error, { context: 'fetchCustomers' })
 
       // Use error store utilities for messages
       const message = errorStore.getErrorMessage(error)
@@ -125,19 +128,19 @@ export function useItems() {
     }
   }
 
-  // Create item mutation
-  const createItemMutation = useCreateItemMutation()
-  const updateItemMutation = useUpdateItemMutation()
-  const deleteItemMutation = useDeleteItemMutation()
+  // Create customer mutation
+  const createCustomerMutation = useCreateCustomerMutation()
+  const updateCustomerMutation = useUpdateCustomerMutation()
+  const deleteCustomerMutation = useDeleteCustomerMutation()
 
-  async function createItem(data: CreateItemRequest) {
+  async function createCustomer(data: CreateCustomerRequest) {
     try {
-      const response = await createItemMutation.mutateAsync(data)
-      toast.showSuccess('Item created successfully!')
+      const response = await createCustomerMutation.mutateAsync(data)
+      toast.showSuccess('Customer created successfully!')
       return response
     } catch (error: any) {
       // Store error with context
-      errorStore.setError(error, { context: 'createItem' })
+      errorStore.setError(error, { context: 'createCustomer' })
 
       // Use error store utilities for messages
       const message = errorStore.getErrorMessage(error)
@@ -154,14 +157,20 @@ export function useItems() {
     }
   }
 
-  async function updateItem(itemId: number, data: UpdateItemRequest) {
+  async function updateCustomer(
+    customerId: number,
+    data: UpdateCustomerRequest,
+  ) {
     try {
-      const response = await updateItemMutation.mutateAsync({ itemId, data })
-      toast.showSuccess('Item updated successfully!')
+      const response = await updateCustomerMutation.mutateAsync({
+        customerId,
+        data,
+      })
+      toast.showSuccess('Customer updated successfully!')
       return response
     } catch (error: any) {
       // Store error with context
-      errorStore.setError(error, { context: 'updateItem' })
+      errorStore.setError(error, { context: 'updateCustomer' })
 
       // Use error store utilities for messages
       const message = errorStore.getErrorMessage(error)
@@ -178,13 +187,13 @@ export function useItems() {
     }
   }
 
-  async function deleteItem(itemId: number) {
+  async function deleteCustomer(customerId: number) {
     try {
-      await deleteItemMutation.mutateAsync(itemId)
-      toast.showSuccess('Item deleted successfully!')
+      await deleteCustomerMutation.mutateAsync(customerId)
+      toast.showSuccess('Customer deleted successfully!')
     } catch (error: any) {
       // Store error with context
-      errorStore.setError(error, { context: 'deleteItem' })
+      errorStore.setError(error, { context: 'deleteCustomer' })
 
       // Use error store utilities for messages
       const message = errorStore.getErrorMessage(error)
@@ -194,21 +203,22 @@ export function useItems() {
   }
 
   return {
-    items,
+    customers,
     loading,
-    fetchItemsData,
-    itemsResponse,
+    fetchCustomersData,
+    customersResponse,
     serverPagination,
     sorting,
     onSortingChange,
     filters,
     onFiltersChange,
     clearFilters,
-    createItem,
-    createItemMutation,
-    updateItem,
-    updateItemMutation,
-    deleteItem,
-    deleteItemMutation,
+    include,
+    createCustomer,
+    createCustomerMutation,
+    updateCustomer,
+    updateCustomerMutation,
+    deleteCustomer,
+    deleteCustomerMutation,
   }
 }

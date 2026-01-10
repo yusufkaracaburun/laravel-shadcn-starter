@@ -2,20 +2,21 @@ import type { SortingState } from '@tanstack/vue-table'
 
 import type { ServerPagination } from '@/components/data-table/types'
 import type {
-  CreateCompanyRequest,
-  UpdateCompanyRequest,
-} from '@/services/companies.service'
+  CreateItemRequest,
+  ItemFilters,
+  UpdateItemRequest,
+} from '@/services/items.service'
 
-import { useToast } from '@/composables/use-toast'
+import { useToast } from '@/composables/use-toast.composable'
 import {
-  useCreateCompanyMutation,
-  useDeleteCompanyMutation,
-  useGetCompaniesQuery,
-  useUpdateCompanyMutation,
-} from '@/services/companies.service'
+  useCreateItemMutation,
+  useDeleteItemMutation,
+  useGetItemsQuery,
+  useUpdateItemMutation,
+} from '@/services/items.service'
 import { useErrorStore } from '@/stores/error.store'
 
-export function useCompanies() {
+export function useItems() {
   const toast = useToast()
   const errorStore = useErrorStore()
 
@@ -26,6 +27,9 @@ export function useCompanies() {
   // Sorting state - managed here and passed to table
   const sorting = ref<SortingState>([])
 
+  // Filters state
+  const filters = ref<ItemFilters>({})
+
   // Handler for sorting changes from table
   function onSortingChange(newSorting: SortingState) {
     sorting.value = newSorting
@@ -33,12 +37,25 @@ export function useCompanies() {
     page.value = 1
   }
 
+  // Handler for filter changes
+  function onFiltersChange(newFilters: ItemFilters) {
+    filters.value = newFilters
+    // Reset to first page when filters change
+    page.value = 1
+  }
+
+  // Clear all filters
+  function clearFilters() {
+    filters.value = {}
+    page.value = 1
+  }
+
   const {
-    data: companiesResponse,
+    data: itemsResponse,
     isLoading,
     isFetching,
-    refetch: fetchCompanies,
-  } = useGetCompaniesQuery(page, pageSize, sorting)
+    refetch: fetchItems,
+  } = useGetItemsQuery(page, pageSize, sorting, filters)
 
   // Watch for page and pageSize changes to trigger refetch
   // Vue Query tracks computed refs in queryKey, but explicit watch ensures refetch on changes
@@ -49,18 +66,21 @@ export function useCompanies() {
     }
     // Only refetch if values actually changed
     if (oldPage !== newPage || oldPageSize !== newPageSize) {
-      fetchCompanies()
+      fetchItems()
     }
   })
 
-  // Computed refs for easy access
-  const companies = computed(() => companiesResponse.value?.data?.data ?? [])
+  // Items data from response
+  const items = computed(() => {
+    return itemsResponse.value?.data?.data ?? []
+  })
+
   const loading = computed(() => isLoading.value || isFetching.value)
 
   // Extract pagination metadata from Laravel's pagination structure
   const pagination = computed(
     () =>
-      companiesResponse.value?.data ?? {
+      itemsResponse.value?.data ?? {
         current_page: 1,
         last_page: 1,
         per_page: 10,
@@ -90,13 +110,13 @@ export function useCompanies() {
     onPageSizeChange,
   }))
 
-  async function fetchCompaniesData() {
+  async function fetchItemsData() {
     try {
-      const companiesResponse = await fetchCompanies()
-      return companiesResponse.data
+      const itemsResponse = await fetchItems()
+      return itemsResponse.data
     } catch (error: any) {
       // Store error with context
-      errorStore.setError(error, { context: 'fetchCompanies' })
+      errorStore.setError(error, { context: 'fetchItems' })
 
       // Use error store utilities for messages
       const message = errorStore.getErrorMessage(error)
@@ -105,19 +125,19 @@ export function useCompanies() {
     }
   }
 
-  // Create company mutation
-  const createCompanyMutation = useCreateCompanyMutation()
-  const updateCompanyMutation = useUpdateCompanyMutation()
-  const deleteCompanyMutation = useDeleteCompanyMutation()
+  // Create item mutation
+  const createItemMutation = useCreateItemMutation()
+  const updateItemMutation = useUpdateItemMutation()
+  const deleteItemMutation = useDeleteItemMutation()
 
-  async function createCompany(data: CreateCompanyRequest) {
+  async function createItem(data: CreateItemRequest) {
     try {
-      const response = await createCompanyMutation.mutateAsync(data)
-      toast.showSuccess('Company created successfully!')
+      const response = await createItemMutation.mutateAsync(data)
+      toast.showSuccess('Item created successfully!')
       return response
     } catch (error: any) {
       // Store error with context
-      errorStore.setError(error, { context: 'createCompany' })
+      errorStore.setError(error, { context: 'createItem' })
 
       // Use error store utilities for messages
       const message = errorStore.getErrorMessage(error)
@@ -134,17 +154,14 @@ export function useCompanies() {
     }
   }
 
-  async function updateCompany(companyId: number, data: UpdateCompanyRequest) {
+  async function updateItem(itemId: number, data: UpdateItemRequest) {
     try {
-      const response = await updateCompanyMutation.mutateAsync({
-        companyId,
-        data,
-      })
-      toast.showSuccess('Company updated successfully!')
+      const response = await updateItemMutation.mutateAsync({ itemId, data })
+      toast.showSuccess('Item updated successfully!')
       return response
     } catch (error: any) {
       // Store error with context
-      errorStore.setError(error, { context: 'updateCompany' })
+      errorStore.setError(error, { context: 'updateItem' })
 
       // Use error store utilities for messages
       const message = errorStore.getErrorMessage(error)
@@ -161,13 +178,13 @@ export function useCompanies() {
     }
   }
 
-  async function deleteCompany(companyId: number) {
+  async function deleteItem(itemId: number) {
     try {
-      await deleteCompanyMutation.mutateAsync(companyId)
-      toast.showSuccess('Company deleted successfully!')
+      await deleteItemMutation.mutateAsync(itemId)
+      toast.showSuccess('Item deleted successfully!')
     } catch (error: any) {
       // Store error with context
-      errorStore.setError(error, { context: 'deleteCompany' })
+      errorStore.setError(error, { context: 'deleteItem' })
 
       // Use error store utilities for messages
       const message = errorStore.getErrorMessage(error)
@@ -177,18 +194,21 @@ export function useCompanies() {
   }
 
   return {
-    companies,
+    items,
     loading,
-    fetchCompaniesData,
-    companiesResponse,
+    fetchItemsData,
+    itemsResponse,
     serverPagination,
     sorting,
     onSortingChange,
-    createCompany,
-    createCompanyMutation,
-    updateCompany,
-    updateCompanyMutation,
-    deleteCompany,
-    deleteCompanyMutation,
+    filters,
+    onFiltersChange,
+    clearFilters,
+    createItem,
+    createItemMutation,
+    updateItem,
+    updateItemMutation,
+    deleteItem,
+    deleteItemMutation,
   }
 }

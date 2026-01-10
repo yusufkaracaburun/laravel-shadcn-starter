@@ -2,7 +2,7 @@
 import type { TInvoice } from '@/pages/invoices/data/schema'
 import type { IInvoiceItem } from '@/services/invoices.service'
 
-import { ReceiptIcon } from '@/composables/use-icons'
+import { ReceiptIcon } from '@/composables/use-icons.composable'
 import {
   formatDateForPreview,
   formatMoney,

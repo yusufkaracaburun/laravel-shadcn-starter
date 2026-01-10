@@ -22,8 +22,8 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
-import { SendIcon } from '@/composables/use-icons'
-import { useToast } from '@/composables/use-toast'
+import { SendIcon } from '@/composables/use-icons.composable'
+import { useToast } from '@/composables/use-toast.composable'
 
 import { userRoleSchema } from '../data/schema'
 import { EUserRole } from '../models/users'

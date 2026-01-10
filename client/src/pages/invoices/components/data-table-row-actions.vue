@@ -9,7 +9,7 @@ import {
   EyeIcon,
   FilePenLineIcon,
   Trash2Icon,
-} from '@/composables/use-icons'
+} from '@/composables/use-icons.composable'
 
 import type { IInvoice } from '../models/invoice'
 

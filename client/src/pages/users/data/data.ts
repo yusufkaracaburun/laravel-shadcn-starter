@@ -8,7 +8,7 @@ import {
   HandshakeIcon,
   ShieldIcon,
   UserIcon,
-} from '@/composables/use-icons'
+} from '@/composables/use-icons.composable'
 
 import { EUserRole } from '../models/users'
 

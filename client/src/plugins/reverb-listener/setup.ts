@@ -3,8 +3,8 @@ import type { App } from 'vue'
 import { storeToRefs } from 'pinia'
 import { nextTick, watch } from 'vue'
 
-import { useEcho } from '@/composables/use-echo'
-import { useToast } from '@/composables/use-toast'
+import { useEcho } from '@/composables/use-echo.composable'
+import { useToast } from '@/composables/use-toast.composable'
 import { useAuthStore } from '@/stores/auth.store'
 
 import pinia from '../pinia/setup'

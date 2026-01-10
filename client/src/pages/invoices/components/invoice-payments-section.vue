@@ -4,7 +4,7 @@ import type { IInvoicePayment } from '@/services/invoices.service'
 import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
-import { CreditCardIcon } from '@/composables/use-icons'
+import { CreditCardIcon } from '@/composables/use-icons.composable'
 
 import { formatDate, formatMoney } from '../utils/formatters'
 

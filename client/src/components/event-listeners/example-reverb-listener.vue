@@ -2,7 +2,7 @@
 import { onMounted, onUnmounted, ref } from 'vue'
 import { toast } from 'vue-sonner'
 
-import { useEcho } from '@/composables/use-echo'
+import { useEcho } from '@/composables/use-echo.composable'
 
 const echo = useEcho()
 const messages = ref<Array<{ message: string, timestamp: string }>>([])

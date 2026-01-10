@@ -7,7 +7,7 @@ import {
   AccordionTrigger,
 } from '@/components/ui/accordion'
 import { Button } from '@/components/ui/button'
-import { MailIcon } from '@/composables/use-icons'
+import { MailIcon } from '@/composables/use-icons.composable'
 import { formatDateTime } from '@/pages/invoices/utils/formatters'
 import SentEmailDialog from '@/pages/invoices/view/components/sent-email-dialog.vue'
 

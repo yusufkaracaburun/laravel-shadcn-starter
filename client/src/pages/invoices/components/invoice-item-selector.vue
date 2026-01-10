@@ -14,7 +14,7 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
-import { CheckIcon, PlusIcon, SearchIcon } from '@/composables/use-icons'
+import { CheckIcon, PlusIcon, SearchIcon } from '@/composables/use-icons.composable'
 import { formatMoney } from '@/pages/invoices/utils/formatters'
 
 interface IProps {

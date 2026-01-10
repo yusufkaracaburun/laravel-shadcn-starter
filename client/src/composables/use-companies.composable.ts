@@ -2,36 +2,29 @@ import type { SortingState } from '@tanstack/vue-table'
 
 import type { ServerPagination } from '@/components/data-table/types'
 import type {
-  CreateCustomerRequest,
-  CustomerFilters,
-  UpdateCustomerRequest,
-} from '@/services/customers.service'
+  CreateCompanyRequest,
+  UpdateCompanyRequest,
+} from '@/services/companies.service'
 
-import { useToast } from '@/composables/use-toast'
+import { useToast } from '@/composables/use-toast.composable'
 import {
-  useCreateCustomerMutation,
-  useDeleteCustomerMutation,
-  useGetCustomersQuery,
-  useUpdateCustomerMutation,
-} from '@/services/customers.service'
+  useCreateCompanyMutation,
+  useDeleteCompanyMutation,
+  useGetCompaniesQuery,
+  useUpdateCompanyMutation,
+} from '@/services/companies.service'
 import { useErrorStore } from '@/stores/error.store'
 
-export function useCustomers() {
+export function useCompanies() {
   const toast = useToast()
   const errorStore = useErrorStore()
 
   // Pagination state
   const page = ref(1)
-  const pageSize = ref(15)
+  const pageSize = ref(10)
 
   // Sorting state - managed here and passed to table
   const sorting = ref<SortingState>([])
-
-  // Filters state
-  const filters = ref<CustomerFilters>({})
-
-  // Include relationships state
-  const include = ref<string[]>([])
 
   // Handler for sorting changes from table
   function onSortingChange(newSorting: SortingState) {
@@ -40,25 +33,12 @@ export function useCustomers() {
     page.value = 1
   }
 
-  // Handler for filter changes
-  function onFiltersChange(newFilters: CustomerFilters) {
-    filters.value = newFilters
-    // Reset to first page when filters change
-    page.value = 1
-  }
-
-  // Clear all filters
-  function clearFilters() {
-    filters.value = {}
-    page.value = 1
-  }
-
   const {
-    data: customersResponse,
+    data: companiesResponse,
     isLoading,
     isFetching,
-    refetch: fetchCustomers,
-  } = useGetCustomersQuery(page, pageSize, sorting, filters, include)
+    refetch: fetchCompanies,
+  } = useGetCompaniesQuery(page, pageSize, sorting)
 
   // Watch for page and pageSize changes to trigger refetch
   // Vue Query tracks computed refs in queryKey, but explicit watch ensures refetch on changes
@@ -69,24 +49,21 @@ export function useCustomers() {
     }
     // Only refetch if values actually changed
     if (oldPage !== newPage || oldPageSize !== newPageSize) {
-      fetchCustomers()
+      fetchCompanies()
     }
   })
 
-  // Customers data from response
-  const customers = computed(() => {
-    return customersResponse.value?.data?.data ?? []
-  })
-
+  // Computed refs for easy access
+  const companies = computed(() => companiesResponse.value?.data?.data ?? [])
   const loading = computed(() => isLoading.value || isFetching.value)
 
   // Extract pagination metadata from Laravel's pagination structure
   const pagination = computed(
     () =>
-      customersResponse.value?.data ?? {
+      companiesResponse.value?.data ?? {
         current_page: 1,
         last_page: 1,
-        per_page: 15,
+        per_page: 10,
         total: 0,
         from: null,
         to: null,
@@ -113,13 +90,13 @@ export function useCustomers() {
     onPageSizeChange,
   }))
 
-  async function fetchCustomersData() {
+  async function fetchCompaniesData() {
     try {
-      const customersResponse = await fetchCustomers()
-      return customersResponse.data
+      const companiesResponse = await fetchCompanies()
+      return companiesResponse.data
     } catch (error: any) {
       // Store error with context
-      errorStore.setError(error, { context: 'fetchCustomers' })
+      errorStore.setError(error, { context: 'fetchCompanies' })
 
       // Use error store utilities for messages
       const message = errorStore.getErrorMessage(error)
@@ -128,19 +105,19 @@ export function useCustomers() {
     }
   }
 
-  // Create customer mutation
-  const createCustomerMutation = useCreateCustomerMutation()
-  const updateCustomerMutation = useUpdateCustomerMutation()
-  const deleteCustomerMutation = useDeleteCustomerMutation()
+  // Create company mutation
+  const createCompanyMutation = useCreateCompanyMutation()
+  const updateCompanyMutation = useUpdateCompanyMutation()
+  const deleteCompanyMutation = useDeleteCompanyMutation()
 
-  async function createCustomer(data: CreateCustomerRequest) {
+  async function createCompany(data: CreateCompanyRequest) {
     try {
-      const response = await createCustomerMutation.mutateAsync(data)
-      toast.showSuccess('Customer created successfully!')
+      const response = await createCompanyMutation.mutateAsync(data)
+      toast.showSuccess('Company created successfully!')
       return response
     } catch (error: any) {
       // Store error with context
-      errorStore.setError(error, { context: 'createCustomer' })
+      errorStore.setError(error, { context: 'createCompany' })
 
       // Use error store utilities for messages
       const message = errorStore.getErrorMessage(error)
@@ -157,20 +134,17 @@ export function useCustomers() {
     }
   }
 
-  async function updateCustomer(
-    customerId: number,
-    data: UpdateCustomerRequest,
-  ) {
+  async function updateCompany(companyId: number, data: UpdateCompanyRequest) {
     try {
-      const response = await updateCustomerMutation.mutateAsync({
-        customerId,
+      const response = await updateCompanyMutation.mutateAsync({
+        companyId,
         data,
       })
-      toast.showSuccess('Customer updated successfully!')
+      toast.showSuccess('Company updated successfully!')
       return response
     } catch (error: any) {
       // Store error with context
-      errorStore.setError(error, { context: 'updateCustomer' })
+      errorStore.setError(error, { context: 'updateCompany' })
 
       // Use error store utilities for messages
       const message = errorStore.getErrorMessage(error)
@@ -187,13 +161,13 @@ export function useCustomers() {
     }
   }
 
-  async function deleteCustomer(customerId: number) {
+  async function deleteCompany(companyId: number) {
     try {
-      await deleteCustomerMutation.mutateAsync(customerId)
-      toast.showSuccess('Customer deleted successfully!')
+      await deleteCompanyMutation.mutateAsync(companyId)
+      toast.showSuccess('Company deleted successfully!')
     } catch (error: any) {
       // Store error with context
-      errorStore.setError(error, { context: 'deleteCustomer' })
+      errorStore.setError(error, { context: 'deleteCompany' })
 
       // Use error store utilities for messages
       const message = errorStore.getErrorMessage(error)
@@ -203,22 +177,18 @@ export function useCustomers() {
   }
 
   return {
-    customers,
+    companies,
     loading,
-    fetchCustomersData,
-    customersResponse,
+    fetchCompaniesData,
+    companiesResponse,
     serverPagination,
     sorting,
     onSortingChange,
-    filters,
-    onFiltersChange,
-    clearFilters,
-    include,
-    createCustomer,
-    createCustomerMutation,
-    updateCustomer,
-    updateCustomerMutation,
-    deleteCustomer,
-    deleteCustomerMutation,
+    createCompany,
+    createCompanyMutation,
+    updateCompany,
+    updateCompanyMutation,
+    deleteCompany,
+    deleteCompanyMutation,
   }
 }

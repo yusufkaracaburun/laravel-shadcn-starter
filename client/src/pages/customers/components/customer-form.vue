@@ -6,7 +6,7 @@ import { z } from 'zod'
 
 import { FormField } from '@/components/ui/form'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
-import { useCustomers } from '@/composables/use-customers'
+import { useCustomers } from '@/composables/use-customers.composable'
 
 import type { Customer } from '../data/schema'
 

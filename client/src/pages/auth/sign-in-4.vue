@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useAuth } from '@/composables/use-auth'
+import { useAuth } from '@/composables/use-auth.composable'
 import LoginForm4 from '@/pages/auth/components/LoginForm4.vue'
 import env from '@/utils/env'
 

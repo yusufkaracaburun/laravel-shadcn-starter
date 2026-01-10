@@ -4,7 +4,7 @@ import { useForm } from 'vee-validate'
 import { z } from 'zod'
 
 import { FormField } from '@/components/ui/form'
-import { useProjects } from '@/composables/use-projects'
+import { useProjects } from '@/composables/use-projects.composable'
 
 import type { Project } from '../data/schema'
 

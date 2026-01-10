@@ -10,8 +10,8 @@ import type {
 } from '@/pages/users/models/users'
 import type { IResponse } from '@/services/types/response.type'
 
-import { useResourceBase } from '@/composables/use-resource-base'
-import { useToast } from '@/composables/use-toast'
+import { useResourceBase } from '@/composables/use-resource-base.composable'
+import { useToast } from '@/composables/use-toast.composable'
 import { EUserRole } from '@/pages/users/models/users'
 import { useUserService } from '@/services/users.service'
 import { useErrorStore } from '@/stores/error.store'

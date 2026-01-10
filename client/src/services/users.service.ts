@@ -12,7 +12,7 @@ import type {
   IUserPrerequisites,
 } from '@/pages/users/models/users'
 
-import { useAxios } from '@/composables/use-axios'
+import { useAxios } from '@/composables/use-axios.composable'
 import { convertToFormData } from '@/utils/form'
 
 import type { ISorting } from './query-utils'

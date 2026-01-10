@@ -10,8 +10,8 @@ import type {
 } from '@/pages/invoices/models/invoice'
 import type { IResponse } from '@/services/types/response.type'
 
-import { useResourceBase } from '@/composables/use-resource-base'
-import { useToast } from '@/composables/use-toast'
+import { useResourceBase } from '@/composables/use-resource-base.composable'
+import { useToast } from '@/composables/use-toast.composable'
 import { useInvoiceService } from '@/services/invoices.service'
 import { useErrorStore } from '@/stores/error.store'
 import { downloadBlobFromAxiosResponse } from '@/utils/blob'

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { useProjects } from '@/composables/use-projects'
+import { useProjects } from '@/composables/use-projects.composable'
 
 import type { Project } from '../data/schema'
 

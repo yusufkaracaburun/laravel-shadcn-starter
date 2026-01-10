@@ -8,7 +8,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
-import { useItems } from '@/composables/use-items'
+import { useItems } from '@/composables/use-items.composable'
 
 import { columns } from './components/columns'
 import DataTable from './components/data-table.vue'

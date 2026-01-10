@@ -3,7 +3,7 @@ import type { AxiosError, InternalAxiosRequestConfig } from 'axios'
 import axios from 'axios'
 import { useRouter } from 'vue-router'
 
-import { useToast } from '@/composables/use-toast'
+import { useToast } from '@/composables/use-toast.composable'
 import { RouterPath } from '@/constants/route-path'
 import { getCookieValue } from '@/plugins/cookie/setup'
 import { useErrorStore } from '@/stores/error.store'

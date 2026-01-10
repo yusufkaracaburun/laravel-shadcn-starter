@@ -3,7 +3,7 @@ import { storeToRefs } from 'pinia'
 
 import Loading from '@/components/loading.vue'
 import { Toaster } from '@/components/ui/sonner'
-import { defaultToasterProps } from '@/composables/use-toast'
+import { defaultToasterProps } from '@/composables/use-toast.composable'
 import { SCALES, THEMES } from '@/constants/themes'
 import { useThemeStore } from '@/stores/theme.store'
 

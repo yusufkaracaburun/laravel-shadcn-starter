@@ -18,9 +18,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { XIcon } from '@/composables/use-icons'
-import { useToast } from '@/composables/use-toast'
-import { useUsers } from '@/composables/use-users'
+import { XIcon } from '@/composables/use-icons.composable'
+import { useToast } from '@/composables/use-toast.composable'
+import { useUsers } from '@/composables/use-users.composable'
 import { handleFileUpload } from '@/utils/file'
 import { setFormFieldErrors } from '@/utils/form'
 

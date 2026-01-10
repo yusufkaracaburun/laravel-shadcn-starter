@@ -4,7 +4,7 @@ import { useForm } from 'vee-validate'
 import { z } from 'zod'
 
 import { FormField } from '@/components/ui/form'
-import { useItems } from '@/composables/use-items'
+import { useItems } from '@/composables/use-items.composable'
 
 import type { Item } from '../data/schema'
 

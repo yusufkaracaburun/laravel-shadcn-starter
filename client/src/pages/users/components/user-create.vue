@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { UserRoundPlusIcon } from '@/composables/use-icons'
+import { UserRoundPlusIcon } from '@/composables/use-icons.composable'
 
 import UserResource from './user-resource.vue'
 
