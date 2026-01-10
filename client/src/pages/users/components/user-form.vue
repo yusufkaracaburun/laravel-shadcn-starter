@@ -18,6 +18,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { XIcon } from '@/composables/use-icons'
 import { useToast } from '@/composables/use-toast'
 import { useUsers } from '@/composables/use-users'
 import { handleFileUpload } from '@/utils/file'
@@ -69,6 +70,7 @@ const profilePhotoPreview = ref<string | null>(null)
 const existingProfilePhotoUrl = computed(
   () => props.user?.profile_photo_url || null,
 )
+const fileInputRef = ref<HTMLInputElement | null>(null)
 
 watch(
   () => props.user,
@@ -91,6 +93,14 @@ function handlePhotoChange(event: Event) {
       toast.showError(message)
     },
   })
+}
+
+function resetImage() {
+  form.setFieldValue('profile_photo', null)
+  profilePhotoPreview.value = null
+  if (fileInputRef.value) {
+    fileInputRef.value.value = ''
+  }
 }
 
 const validFields = [
@@ -241,20 +251,35 @@ const onSubmit = handleSubmit(async (values) => {
         <FormLabel>Profile Photo</FormLabel>
         <FormControl>
           <div class="space-y-2">
-            <Input type="file" accept="image/*" @change="handlePhotoChange" />
+            <Input
+              ref="fileInputRef"
+              type="file"
+              accept="image/*"
+              @change="handlePhotoChange"
+            />
             <p class="text-xs text-muted-foreground">
               Upload a profile photo (max 2MB). Accepted formats: JPG, PNG, GIF,
               etc.
             </p>
             <div
               v-if="profilePhotoPreview || existingProfilePhotoUrl"
-              class="mt-2"
+              class="mt-2 relative inline-block"
             >
               <img
                 :src="(profilePhotoPreview || existingProfilePhotoUrl) ?? ''"
                 alt="Profile preview"
                 class="h-24 w-24 rounded-full object-cover border"
               />
+              <button
+                type="button"
+                class="absolute -top-1 -right-1 rounded-full bg-destructive text-white p-1 hover:bg-destructive/90 transition-colors"
+                :aria-label="
+                  isEditMode ? 'Remove profile photo' : 'Clear selected image'
+                "
+                @click="resetImage"
+              >
+                <XIcon class="h-3 w-3" />
+              </button>
             </div>
           </div>
         </FormControl>
