@@ -17,7 +17,7 @@ enum UserRole: string
 {
     use HasEnumsTrait;
 
-    case SUPER_ADMIN = 'super_admin';
+    case SUPER_ADMIN = 'super-admin';
     case ADMIN = 'admin';
     case MANAGER = 'manager';
     case USER = 'user';
