@@ -5,7 +5,6 @@ import {
   BadgeHelpIcon,
   BanknoteIcon,
   BellDotIcon,
-  BoxIcon,
   Building2Icon,
   CalendarDaysIcon,
   CarIcon,
@@ -52,19 +51,14 @@ export function useSidebar() {
           icon: UsersIcon,
         },
         {
-          title: 'Items',
-          url: '/items',
-          icon: PackageIcon,
-        },
-        {
           title: 'Vehicles',
           url: '/vehicles',
           icon: CarIcon,
         },
         {
-          title: 'Inventory',
-          url: '/inventory',
-          icon: BoxIcon,
+          title: 'Equipment',
+          url: '/equipment',
+          icon: WrenchIcon,
         },
       ],
     },
@@ -75,6 +69,11 @@ export function useSidebar() {
           title: 'Projects',
           url: '/projects',
           icon: FolderKanbanIcon,
+        },
+        {
+          title: 'Teams',
+          url: '/teams',
+          icon: UsersIcon,
         },
         {
           title: 'Timesheets',
@@ -100,6 +99,11 @@ export function useSidebar() {
           title: 'Customers',
           url: '/customers',
           icon: UserCircleIcon,
+        },
+        {
+          title: 'Products',
+          url: '/products',
+          icon: PackageIcon,
         },
         {
           title: 'Production list',
