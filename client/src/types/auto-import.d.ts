@@ -236,11 +236,11 @@ declare global {
   const useFilters: typeof import('../composables/use-filters.composable').useFilters
   const useId: typeof import('vue').useId
   const useInvoices: typeof import('../pages/invoices/composables/use-invoices.composable').useInvoices
-  const useItems: typeof import('../pages/items/composables/use-items.composable').useItems
   const useKanban: typeof import('../composables/use-kanban.composable').useKanban
   const useLink: typeof import('vue-router')['useLink']
   const useModel: typeof import('vue').useModel
   const usePagination: typeof import('../composables/use-pagination.composable').usePagination
+  const useProducts: typeof import('../pages/products/composables/use-products.composable').useProducts
   const useProjects: typeof import('../pages/projects/composables/use-projects.composable').useProjects
   const useResourceBase: typeof import('../composables/use-resource-base.composable').useResourceBase
   const useResourceList: typeof import('../composables/use-resource-list.composable').useResourceList

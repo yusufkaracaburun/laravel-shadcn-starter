@@ -1,0 +1,24 @@
+{
+  "products": {
+    "title": "产品",
+    "description": "产品描述",
+    "columns": {
+      "id": "产品ID",
+      "name": "名称",
+      "description": "描述",
+      "unitPrice": "单价",
+      "vatRate": "增值税率",
+      "unit": "单位",
+      "createdAt": "创建时间"
+    },
+    "actions": {
+      "create": "创建产品",
+      "reset": "重置",
+      "cancel": "取消"
+    },
+    "filters": {
+      "filterByName": "按名称筛选产品...",
+      "filterByDescription": "按描述筛选产品..."
+    }
+  }
+}

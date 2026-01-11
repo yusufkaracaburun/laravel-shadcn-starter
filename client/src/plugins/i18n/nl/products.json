@@ -1,0 +1,24 @@
+{
+  "products": {
+    "title": "Producten",
+    "description": "Producten beschrijving",
+    "columns": {
+      "id": "Product ID",
+      "name": "Naam",
+      "description": "Beschrijving",
+      "unitPrice": "Eenheidsprijs",
+      "vatRate": "BTW-tarief",
+      "unit": "Eenheid",
+      "createdAt": "Aangemaakt op"
+    },
+    "actions": {
+      "create": "Product aanmaken",
+      "reset": "Resetten",
+      "cancel": "Annuleren"
+    },
+    "filters": {
+      "filterByName": "Filter producten op naam...",
+      "filterByDescription": "Filter producten op beschrijving..."
+    }
+  }
+}

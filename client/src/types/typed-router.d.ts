@@ -253,20 +253,6 @@ declare module 'vue-router/auto-routes' {
       { id: ParamValue<false> },
       | never
     >,
-    '/items/': RouteRecordInfo<
-      '/items/',
-      '/items',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
-    '/items/view/[id]': RouteRecordInfo<
-      '/items/view/[id]',
-      '/items/view/:id',
-      { id: ParamValue<true> },
-      { id: ParamValue<false> },
-      | never
-    >,
     '/marketing/': RouteRecordInfo<
       '/marketing/',
       '/marketing',
@@ -279,6 +265,20 @@ declare module 'vue-router/auto-routes' {
       '/marketing/hello',
       Record<never, never>,
       Record<never, never>,
+      | never
+    >,
+    '/products/': RouteRecordInfo<
+      '/products/',
+      '/products',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
+    '/products/view/[id]': RouteRecordInfo<
+      '/products/view/[id]',
+      '/products/view/:id',
+      { id: ParamValue<true> },
+      { id: ParamValue<false> },
       | never
     >,
     '/projects/': RouteRecordInfo<
@@ -593,18 +593,6 @@ declare module 'vue-router/auto-routes' {
       views:
         | never
     }
-    'src/pages/items/index.vue': {
-      routes:
-        | '/items/'
-      views:
-        | never
-    }
-    'src/pages/items/view/[id].vue': {
-      routes:
-        | '/items/view/[id]'
-      views:
-        | never
-    }
     'src/pages/marketing/index.vue': {
       routes:
         | '/marketing/'
@@ -614,6 +602,18 @@ declare module 'vue-router/auto-routes' {
     'src/pages/marketing/hello.vue': {
       routes:
         | '/marketing/hello'
+      views:
+        | never
+    }
+    'src/pages/products/index.vue': {
+      routes:
+        | '/products/'
+      views:
+        | never
+    }
+    'src/pages/products/view/[id].vue': {
+      routes:
+        | '/products/view/[id]'
       views:
         | never
     }
