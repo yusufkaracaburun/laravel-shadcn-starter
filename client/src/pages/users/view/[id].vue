@@ -20,12 +20,16 @@ import {
 import { useUsers } from '@/pages/users/composables/use-users.composable'
 
 import UserAccountStatusCard from './components/user-account-status-card.vue'
-import UserHeader from './components/user-header.vue'
+import UserActivityCard from './components/user-activity-card.vue'
+import UserConnectionsCard from './components/user-connections-card.vue'
 import UserInvoicesCard from './components/user-invoices-card.vue'
 import UserNavbar from './components/user-navbar.vue'
-import UserProfileCard from './components/user-profile-card.vue'
+import UserProfileCompletionCard from './components/user-profile-completion-card.vue'
+import UserProfileSummaryCard from './components/user-profile-summary-card.vue'
 import UserRolesCard from './components/user-roles-card.vue'
+import UserSkillsCard from './components/user-skills-card.vue'
 import UserTeamsCard from './components/user-teams-card.vue'
+import UserTransactionsCard from './components/user-transactions-card.vue'
 import UserViewLayout from './components/user-view-layout.vue'
 
 // Composables
@@ -75,13 +79,6 @@ const userInitials = computed(() => {
   return name[0].toUpperCase()
 })
 
-const isEmailVerified = computed(() => {
-  if (!user.value) {
-    return false
-  }
-  return !!user.value.email_verified_at
-})
-
 const formattedCreatedAt = computed(() => {
   if (!user.value?.created_at) {
     return '—'
@@ -102,20 +99,6 @@ const formattedUpdatedAt = computed(() => {
   }
 
   return new Date(user.value.updated_at).toLocaleString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-  })
-})
-
-const formattedEmailVerifiedAt = computed(() => {
-  if (!user.value?.email_verified_at) {
-    return null
-  }
-
-  return new Date(user.value.email_verified_at).toLocaleString('en-US', {
     year: 'numeric',
     month: 'long',
     day: 'numeric',
@@ -156,25 +139,10 @@ function handleDeleteClosed() {
     >
       <template v-if="user">
         <div class="space-y-8">
-          <!-- Enhanced Header Section -->
-          <div
-            class="relative overflow-hidden rounded-xl border bg-gradient-to-br from-background to-muted/20 p-8 shadow-sm"
-          >
-            <div class="relative z-10">
-              <UserHeader
-                :user="user"
-                :initials="userInitials"
-                :is-email-verified="isEmailVerified"
-              />
-            </div>
-          </div>
-
           <!-- Modern Tabs Section -->
           <div class="space-y-6">
             <Tabs v-model="activeTab" class="w-full">
-              <TabsList
-                class="h-auto w-full justify-start gap-1 bg-muted/50 p-1"
-              >
+              <TabsList class="h-auto justify-start gap-1 bg-muted/50 p-1">
                 <TabsTrigger
                   value="overview"
                   class="gap-2 rounded-md px-4 py-2.5 data-[state=active]:bg-background data-[state=active]:shadow-sm"
@@ -213,18 +181,25 @@ function handleDeleteClosed() {
               </TabsList>
 
               <TabsContent value="overview" class="mt-8">
-                <div class="grid gap-6 lg:grid-cols-2">
-                  <UserProfileCard
-                    :user="user"
-                    :is-email-verified="isEmailVerified"
-                    :email-verified-at="formattedEmailVerifiedAt"
-                  />
+                <div class="grid gap-6 grid-cols-3">
+                  <!-- Left Column (1/3 width) -->
+                  <div class="space-y-6">
+                    <UserProfileSummaryCard
+                      :user="user"
+                      :initials="userInitials"
+                    />
+                    <UserProfileCompletionCard />
+                    <UserSkillsCard />
+                  </div>
 
-                  <UserAccountStatusCard
-                    :user="user"
-                    :created-at="formattedCreatedAt"
-                    :updated-at="formattedUpdatedAt"
-                  />
+                  <!-- Right Column (2/3 width) -->
+                  <div class="space-y-6 col-span-2">
+                    <UserActivityCard />
+                    <div class="grid gap-6 grid-cols-2">
+                      <UserTransactionsCard />
+                      <UserConnectionsCard />
+                    </div>
+                  </div>
                 </div>
               </TabsContent>
 
