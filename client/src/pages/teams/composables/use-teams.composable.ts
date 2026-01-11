@@ -1,13 +1,16 @@
 import { computed, ref } from 'vue'
 import { useRoute } from 'vue-router'
 
+import type { TPageSize } from '@/components/data-table/types'
 import type {
+  IAddUsersToTeamRequest,
   ICreateTeamRequest,
   ITeam,
   ITeamFilters,
   ITeamPrerequisites,
   IUpdateTeamRequest,
 } from '@/pages/teams/models/teams'
+import type { ISorting } from '@/services/query-utils'
 import type { IResponse } from '@/services/types/response.type'
 
 import { useResourceBase } from '@/composables/use-resource-base.composable'
@@ -23,6 +26,7 @@ const TeamContext = {
   CREATE: 'createTeam',
   UPDATE: 'updateTeam',
   DELETE: 'deleteTeam',
+  ADD_USERS_TO_TEAM: 'addUsersToTeam',
 }
 
 const TeamMessages = {
@@ -37,7 +41,34 @@ export function useTeams() {
   const teamService = useTeamService()
   const route = useRoute()
 
-  const includes = {}
+  const includes = {
+    owner: 'owner',
+    users: 'users',
+    usersCount: 'usersCount',
+    teamInvitations: 'teamInvitations',
+  }
+
+  // Create a custom getListQuery that includes both users and usersCount
+  const customGetListQuery = (
+    page: Ref<number>,
+    per_page: Ref<TPageSize>,
+    sort: Ref<ISorting>,
+    filter: Ref<ITeamFilters>,
+    include: Ref<string[]>,
+  ) => {
+    // Always include users and usersCount in the include array
+    const combinedInclude = computed(() => [
+      includes.users,
+      includes.usersCount,
+    ])
+    return teamService.getTeamsQuery(
+      page,
+      per_page,
+      sort,
+      filter,
+      combinedInclude as Ref<string[]>,
+    )
+  }
 
   const base = useResourceBase<
     ITeam,
@@ -48,8 +79,7 @@ export function useTeams() {
   >({
     service: {
       getPrerequisitesQuery: () => teamService.getTeamPrerequisitesQuery(),
-      getListQuery: (page, per_page, sort, filter, include) =>
-        teamService.getTeamsQuery(page, per_page, sort, filter, include),
+      getListQuery: customGetListQuery,
       createMutation: () => teamService.createTeamMutation(),
       updateMutation: () => teamService.updateTeamMutation(),
       deleteMutation: () => teamService.deleteTeamMutation(),
@@ -59,6 +89,7 @@ export function useTeams() {
     messages: TeamMessages,
     defaultSort: { id: 'created_at', desc: true },
     includes,
+    defaultIncludeKey: 'users',
     onFetchList: (refetch) => {
       refetch()
     },
@@ -114,11 +145,42 @@ export function useTeams() {
     }
   }
 
+  // Team-User management functions
+  const addUsersToTeamMutation = teamService.addUsersToTeamMutation()
+  const { isPending: isAddingUsers } = addUsersToTeamMutation
+
+  /**
+   * Add users to a team
+   * @param teamId - The team ID to add users to
+   * @param userIds - Array of user IDs to add
+   * @returns Promise with the updated team response
+   */
+  async function addUsersToTeam(
+    teamId: number,
+    userIds: number[],
+  ): Promise<IResponse<ITeam>> {
+    try {
+      const data: IAddUsersToTeamRequest = { user_ids: userIds }
+      const response = await addUsersToTeamMutation.mutateAsync({
+        teamId,
+        data,
+      })
+      toast.showSuccess('Users added to team successfully!')
+      return response
+    } catch (error: any) {
+      errorStore.setError(error, { context: TeamContext.ADD_USERS_TO_TEAM })
+      const message = errorStore.getErrorMessage(error)
+      toast.showError(message || 'Failed to add users to team')
+      throw error
+    }
+  }
+
   return {
     sort: base.sort,
     filter: base.filter,
     includes: base.includes,
     teams: base.items,
+    pageSize: base.pageSize,
     onSortingChange: base.onSortingChange,
     onFiltersChange: base.onFiltersChange,
     clearFilters: base.clearFilters,
@@ -146,5 +208,7 @@ export function useTeams() {
     errorTeamById,
     fetchTeamByIdData,
     getTeamFormInitialValues,
+    addUsersToTeam,
+    isAddingUsers,
   }
 }
