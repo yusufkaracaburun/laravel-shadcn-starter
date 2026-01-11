@@ -48,28 +48,6 @@ export function useTeams() {
     teamInvitations: 'teamInvitations',
   }
 
-  // Create a custom getListQuery that includes both users and usersCount
-  const customGetListQuery = (
-    page: Ref<number>,
-    per_page: Ref<TPageSize>,
-    sort: Ref<ISorting>,
-    filter: Ref<ITeamFilters>,
-    include: Ref<string[]>,
-  ) => {
-    // Always include users and usersCount in the include array
-    const combinedInclude = computed(() => [
-      includes.users,
-      includes.usersCount,
-    ])
-    return teamService.getTeamsQuery(
-      page,
-      per_page,
-      sort,
-      filter,
-      combinedInclude as Ref<string[]>,
-    )
-  }
-
   const base = useResourceBase<
     ITeam,
     ITeamFilters,
@@ -79,7 +57,7 @@ export function useTeams() {
   >({
     service: {
       getPrerequisitesQuery: () => teamService.getTeamPrerequisitesQuery(),
-      getListQuery: customGetListQuery,
+      getListQuery: teamService.getTeamsQuery,
       createMutation: () => teamService.createTeamMutation(),
       updateMutation: () => teamService.updateTeamMutation(),
       deleteMutation: () => teamService.deleteTeamMutation(),
