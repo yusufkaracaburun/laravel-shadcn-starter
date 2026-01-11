@@ -68,7 +68,7 @@ final class InvoiceFactory extends Factory
 
                     $inv_items[] = InvoiceItem::factory()->create([
                         'invoice_id'     => $invoice->id,
-                        'item_id'        => $item->id,
+                        'product_id'     => $item->id,
                         'name'           => $item->name,
                         'description'    => $item->description,
                         'quantity'       => fake()->randomFloat(2, 1, 5),
@@ -91,7 +91,7 @@ final class InvoiceFactory extends Factory
 
                     $inv_items[] = InvoiceItem::factory()->create([
                         'invoice_id'     => $invoice->id,
-                        'item_id'        => null,
+                        'product_id'     => null,
                         'name'           => $item->name,
                         'description'    => fake()->sentence(3),
                         'quantity'       => $quantity,

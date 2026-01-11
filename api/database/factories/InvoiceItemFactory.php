@@ -25,7 +25,7 @@ final class InvoiceItemFactory extends Factory
     {
         return [
             'invoice_id'  => Invoice::factory(),
-            'item_id'     => Product::factory(),
+            'product_id'  => Product::factory(),
             'description' => fake()->words(3, true),
             'quantity'    => fake()->randomFloat(5, 1, 10), // 5 decimalen
             'unit_price'  => fake()->randomFloat(5, 50, 500),
@@ -42,7 +42,7 @@ final class InvoiceItemFactory extends Factory
     {
         // Factuurregel zonder gekoppeld artikel (losse beschrijving)
         return $this->state(fn (): array => [
-            'item_id'     => null,
+            'product_id'  => null,
             'description' => fake()->sentence(3),
         ]);
     }
