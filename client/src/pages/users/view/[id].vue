@@ -180,56 +180,60 @@ function handleDeleteClosed() {
                 </TabsTrigger>
               </TabsList>
 
-              <TabsContent value="overview" class="mt-8">
-                <div class="grid gap-6 grid-cols-3">
-                  <!-- Left Column (1/3 width) -->
-                  <div class="space-y-6">
-                    <UserProfileSummaryCard
-                      :user="user"
-                      :initials="userInitials"
-                    />
+              <div class="mt-8 grid gap-6 grid-cols-3">
+                <!-- Fixed Left Column (1/3 width) -->
+                <div class="space-y-6">
+                  <UserProfileSummaryCard
+                    :user="user"
+                    :initials="userInitials"
+                  />
+                  <div v-if="activeTab === 'overview'" class="space-y-6">
                     <UserProfileCompletionCard />
                     <UserSkillsCard />
                   </div>
+                </div>
 
-                  <!-- Right Column (2/3 width) -->
-                  <div class="space-y-6 col-span-2">
-                    <UserActivityCard />
-                    <div class="grid gap-6 grid-cols-2">
-                      <UserTransactionsCard />
-                      <UserConnectionsCard />
+                <!-- Right Column (2/3 width) - Tab Content -->
+                <div class="space-y-6 col-span-2">
+                  <TabsContent value="overview" class="mt-0">
+                    <div class="space-y-6">
+                      <UserActivityCard />
+                      <div class="grid gap-6 grid-cols-2">
+                        <UserTransactionsCard />
+                        <UserConnectionsCard />
+                      </div>
                     </div>
-                  </div>
-                </div>
-              </TabsContent>
+                  </TabsContent>
 
-              <TabsContent value="account" class="mt-8">
-                <div class="max-w-2xl">
-                  <UserAccountStatusCard
-                    :user="user"
-                    :created-at="formattedCreatedAt"
-                    :updated-at="formattedUpdatedAt"
-                  />
-                </div>
-              </TabsContent>
+                  <TabsContent value="account" class="mt-0">
+                    <div class="max-w-2xl">
+                      <UserAccountStatusCard
+                        :user="user"
+                        :created-at="formattedCreatedAt"
+                        :updated-at="formattedUpdatedAt"
+                      />
+                    </div>
+                  </TabsContent>
 
-              <TabsContent value="roles" class="mt-8">
-                <div class="max-w-2xl">
-                  <UserRolesCard :user="user" />
-                </div>
-              </TabsContent>
+                  <TabsContent value="roles" class="mt-0">
+                    <div class="max-w-2xl">
+                      <UserRolesCard :user="user" />
+                    </div>
+                  </TabsContent>
 
-              <TabsContent value="teams" class="mt-8">
-                <div class="max-w-2xl">
-                  <UserTeamsCard :user="user" />
-                </div>
-              </TabsContent>
+                  <TabsContent value="teams" class="mt-0">
+                    <div class="max-w-2xl">
+                      <UserTeamsCard :user="user" />
+                    </div>
+                  </TabsContent>
 
-              <TabsContent value="invoices" class="mt-8">
-                <div class="max-w-2xl">
-                  <UserInvoicesCard :user="user" />
+                  <TabsContent value="invoices" class="mt-0">
+                    <div class="max-w-2xl">
+                      <UserInvoicesCard :user="user" />
+                    </div>
+                  </TabsContent>
                 </div>
-              </TabsContent>
+              </div>
             </Tabs>
           </div>
         </div>
