@@ -1,0 +1,12 @@
+{
+  "vehicles": {
+    "columns": {
+      "licensePlate": "车牌号",
+      "make": "品牌",
+      "model": "型号",
+      "year": "年份",
+      "color": "颜色",
+      "createdAt": "创建时间"
+    }
+  }
+}

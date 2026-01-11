@@ -2,9 +2,9 @@ import type { App } from 'vue'
 
 import { createI18n } from 'vue-i18n'
 
-import en from './en.json'
-import nl from './nl.json'
-import zh from './zh.json'
+import en from './en'
+import nl from './nl'
+import zh from './zh'
 
 const numberFormats = {
   en: {

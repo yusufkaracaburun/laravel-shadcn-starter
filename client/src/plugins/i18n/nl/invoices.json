@@ -1,0 +1,29 @@
+{
+  "invoices": {
+    "columns": {
+      "invoiceNumber": "Factuurnummer",
+      "customer": "Klant",
+      "date": "Datum",
+      "dueDate": "Vervaldatum",
+      "status": "Status",
+      "total": "Totaal",
+      "createdAt": "Aangemaakt op"
+    },
+    "actions": {
+      "reset": "Resetten"
+    },
+    "deleteSelectedInvoices": "Facturen verwijderen",
+    "search": "Zoek facturen...",
+    "filters": {
+      "title": "Filters",
+      "status": "Status",
+      "allStatuses": "Alle statussen",
+      "customer": "Klant",
+      "allCustomers": "Alle klanten",
+      "invoiceNumber": "Factuurnummer",
+      "invoiceNumberPlaceholder": "Filter op factuurnummer",
+      "dateFrom": "Datum vanaf",
+      "clearFilters": "Filters wissen"
+    }
+  }
+}

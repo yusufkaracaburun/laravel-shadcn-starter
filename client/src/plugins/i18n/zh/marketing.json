@@ -1,8 +1,4 @@
 {
-  "premium": {
-    "premium": "会员计划",
-    "UpgradeNow": "现在升级"
-  },
   "marketing": {
     "hero": {
       "learnPeople": "超过 1K+ 人加入",
@@ -96,51 +92,5 @@
       "title": "快速开始",
       "subtitle": "只需 3 分钟即可开始使用"
     }
-  },
-  "invoices": {
-    "columns": {
-      "invoiceNumber": "发票号码",
-      "customer": "客户",
-      "date": "日期",
-      "dueDate": "到期日期",
-      "status": "状态",
-      "total": "总计",
-      "createdAt": "创建时间"
-    },
-    "actions": {
-      "reset": "重置"
-    },
-    "deleteSelectedInvoices": "删除选中的发票",
-    "search": "搜索发票..."
-  },
-  "users": {
-    "title": "用户",
-    "description": "用户描述",
-    "columns": {
-      "name": "姓名",
-      "email": "电子邮件",
-      "roles": "角色",
-      "verified": "已验证",
-      "unverified": "未验证",
-      "createdAt": "创建时间"
-    },
-    "actions": {
-      "invite": "邀请用户",
-      "create": "创建用户",
-      "reset": "重置",
-      "cancel": "取消"
-    },
-    "invite": {
-      "title": "邀请用户",
-      "description": "通过发送电子邮件邀请新用户加入您的团队。分配角色以定义他们的访问级别。"
-    },
-    "filters": {
-      "filterByName": "按姓名筛选用户...",
-      "filterByEmail": "按电子邮件筛选用户..."
-    }
-  },
-  "login": "登录",
-  "register": "注册",
-  "language": "中文",
-  "changeLanguage": "语言切换"
+  }
 }

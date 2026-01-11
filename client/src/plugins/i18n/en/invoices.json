@@ -1,0 +1,29 @@
+{
+  "invoices": {
+    "columns": {
+      "invoiceNumber": "Invoice Number",
+      "customer": "Customer",
+      "date": "Date",
+      "dueDate": "Due Date",
+      "status": "Status",
+      "total": "Total",
+      "createdAt": "Created At"
+    },
+    "actions": {
+      "reset": "Reset"
+    },
+    "deleteSelectedInvoices": "Delete Selected Invoices",
+    "search": "Search Invoices...",
+    "filters": {
+      "title": "Filters",
+      "status": "Status",
+      "allStatuses": "All statuses",
+      "customer": "Customer",
+      "allCustomers": "All customers",
+      "invoiceNumber": "Invoice Number",
+      "invoiceNumberPlaceholder": "Filter by invoice number",
+      "dateFrom": "Date From",
+      "clearFilters": "Clear Filters"
+    }
+  }
+}
