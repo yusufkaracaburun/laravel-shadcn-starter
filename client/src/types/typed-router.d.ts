@@ -351,6 +351,13 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       | never
     >,
+    '/timesheets/': RouteRecordInfo<
+      '/timesheets/',
+      '/timesheets',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
     '/users/': RouteRecordInfo<
       '/users/',
       '/users',
@@ -667,6 +674,12 @@ declare module 'vue-router/auto-routes' {
     'src/pages/teams/index.vue': {
       routes:
         | '/teams/'
+      views:
+        | never
+    }
+    'src/pages/timesheets/index.vue': {
+      routes:
+        | '/timesheets/'
       views:
         | never
     }

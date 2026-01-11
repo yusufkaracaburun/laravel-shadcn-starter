@@ -1,0 +1,10 @@
+{
+  "teams": {
+    "columns": {
+      "name": "Naam",
+      "personalTeam": "Persoonlijk Team",
+      "owner": "Eigenaar",
+      "createdAt": "Aangemaakt op"
+    }
+  }
+}

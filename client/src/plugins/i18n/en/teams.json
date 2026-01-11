@@ -1,0 +1,10 @@
+{
+  "teams": {
+    "columns": {
+      "name": "Name",
+      "personalTeam": "Personal Team",
+      "owner": "Owner",
+      "createdAt": "Created At"
+    }
+  }
+}

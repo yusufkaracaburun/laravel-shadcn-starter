@@ -1,0 +1,12 @@
+{
+  "equipment": {
+    "columns": {
+      "name": "名称",
+      "type": "类型",
+      "model": "型号",
+      "serialNumber": "序列号",
+      "status": "状态",
+      "createdAt": "创建时间"
+    }
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "timesheets": {
+    "columns": {
+      "date": "日期",
+      "user": "用户",
+      "project": "项目",
+      "task": "任务",
+      "hours": "小时",
+      "description": "描述",
+      "status": "状态",
+      "createdAt": "创建时间"
+    }
+  }
+}

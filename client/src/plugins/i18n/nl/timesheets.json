@@ -1,0 +1,14 @@
+{
+  "timesheets": {
+    "columns": {
+      "date": "Datum",
+      "user": "Gebruiker",
+      "project": "Project",
+      "task": "Taak",
+      "hours": "Uren",
+      "description": "Beschrijving",
+      "status": "Status",
+      "createdAt": "Aangemaakt op"
+    }
+  }
+}
