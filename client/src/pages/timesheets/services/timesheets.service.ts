@@ -66,7 +66,16 @@ export function useTimesheetsService() {
           per_page: per_page.value,
           sort: sort.value,
           filter: filter.value,
-          include: include.value,
+        }
+
+        // Only add include if it's a valid non-empty array
+        if (
+          include.value
+          && Array.isArray(include.value)
+          && include.value.length > 0
+          && include.value.every((item) => item !== undefined && item !== null && item !== '')
+        ) {
+          params.include = include.value.filter((item) => item && item !== '')
         }
 
         const response = await axiosInstance.get(

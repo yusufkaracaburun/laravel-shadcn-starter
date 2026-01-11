@@ -182,8 +182,8 @@ export function useSidebar() {
               icon: PictureInPicture2Icon,
             },
             {
-              title: 'Apps',
-              url: '/apps',
+              title: 'Integrations',
+              url: '/integrations',
               icon: AppWindowIcon,
             },
           ],

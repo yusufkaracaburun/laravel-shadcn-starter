@@ -167,7 +167,6 @@ const onSubmit = handleSubmit(async (values) => {
               <SelectValue placeholder="Select a project (optional)" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">None</SelectItem>
               <SelectItem
                 v-for="project in projects"
                 :key="project.id"
@@ -195,7 +194,6 @@ const onSubmit = handleSubmit(async (values) => {
               <SelectValue placeholder="Select a task (optional)" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">None</SelectItem>
               <SelectItem
                 v-for="task in tasks"
                 :key="task.id"
@@ -268,7 +266,6 @@ const onSubmit = handleSubmit(async (values) => {
               <SelectValue placeholder="Select a status (optional)" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">None</SelectItem>
               <SelectItem
                 v-for="status in statuses"
                 :key="status.value"

@@ -6,12 +6,6 @@ import { ClockIcon } from '@/composables/use-icons.composable'
 import TimesheetResourceDialog from './timesheet-resource-dialog.vue'
 
 const isOpen = ref(false)
-
-function handleClose() {
-  nextTick(() => {
-    isOpen.value = false
-  })
-}
 </script>
 
 <template>
@@ -25,7 +19,7 @@ function handleClose() {
     <DialogContent
       class="top-5 right-5 bottom-5 left-auto translate-x-0 translate-y-0 sm:max-w-[425px]"
     >
-      <TimesheetResourceDialog :timesheet="null" @close="handleClose" />
+      <TimesheetResourceDialog :timesheet="null" @close="isOpen = false" />
     </DialogContent>
   </Dialog>
 </template>
