@@ -4,128 +4,128 @@ declare(strict_types=1);
 
 namespace App\Observers;
 
-use App\Models\Item;
+use App\Models\Product;
 
 /**
- * Observer for Item model events.
+ * Observer for Product model events.
  *
- * Handles logging for all Item model events.
+ * Handles logging for all Product model events.
  */
-final class ItemObserver extends BaseObserver
+final class ProductObserver extends BaseObserver
 {
     /**
-     * Handle the Item "retrieved" event.
+     * Handle the Product "retrieved" event.
      * Executed when an existing model is retrieved from the database.
      */
-    public function retrieved(Item $model): void
+    public function retrieved(Product $model): void
     {
         $this->log('retrieved', $model);
     }
 
     /**
-     * Handle the Item "creating" event.
+     * Handle the Product "creating" event.
      * Executed before creating (INSERT).
      */
-    public function creating(Item $model): void
+    public function creating(Product $model): void
     {
         $this->log('creating', $model);
     }
 
     /**
-     * Handle the Item "created" event.
+     * Handle the Product "created" event.
      * Executed after creating (INSERT).
      */
-    public function created(Item $model): void
+    public function created(Product $model): void
     {
         $this->log('created', $model);
     }
 
     /**
-     * Handle the Item "updating" event.
+     * Handle the Product "updating" event.
      * Executed before updating (UPDATE).
      */
-    public function updating(Item $model): void
+    public function updating(Product $model): void
     {
         $this->log('updating', $model);
     }
 
     /**
-     * Handle the Item "updated" event.
+     * Handle the Product "updated" event.
      * Executed after updating (UPDATE).
      */
-    public function updated(Item $model): void
+    public function updated(Product $model): void
     {
         $this->log('updated', $model);
     }
 
     /**
-     * Handle the Item "saving" event.
+     * Handle the Product "saving" event.
      * Executed before saving (both create and update).
      */
-    public function saving(Item $model): void
+    public function saving(Product $model): void
     {
         $this->log('saving', $model);
     }
 
     /**
-     * Handle the Item "saved" event.
+     * Handle the Product "saved" event.
      * Executed after saving (both create and update).
      */
-    public function saved(Item $model): void
+    public function saved(Product $model): void
     {
         $this->log('saved', $model);
     }
 
     /**
-     * Handle the Item "deleting" event.
+     * Handle the Product "deleting" event.
      * Executed before soft delete.
      */
-    public function deleting(Item $model): void
+    public function deleting(Product $model): void
     {
         $this->log('deleting', $model);
     }
 
     /**
-     * Handle the Item "deleted" event.
+     * Handle the Product "deleted" event.
      * Executed after soft delete.
      */
-    public function deleted(Item $model): void
+    public function deleted(Product $model): void
     {
         $this->log('deleted', $model);
     }
 
     /**
-     * Handle the Item "restoring" event.
+     * Handle the Product "restoring" event.
      * Executed before restoring (soft-delete → active).
      */
-    public function restoring(Item $model): void
+    public function restoring(Product $model): void
     {
         $this->log('restoring', $model);
     }
 
     /**
-     * Handle the Item "restored" event.
+     * Handle the Product "restored" event.
      * Executed after restoring (soft-delete → active).
      */
-    public function restored(Item $model): void
+    public function restored(Product $model): void
     {
         $this->log('restored', $model);
     }
 
     /**
-     * Handle the Item "forceDeleting" event.
+     * Handle the Product "forceDeleting" event.
      * Executed before permanent deletion (force delete).
      */
-    public function forceDeleting(Item $model): void
+    public function forceDeleting(Product $model): void
     {
         $this->log('forceDeleting', $model);
     }
 
     /**
-     * Handle the Item "forceDeleted" event.
+     * Handle the Product "forceDeleted" event.
      * Executed after permanent deletion (force delete).
      */
-    public function forceDeleted(Item $model): void
+    public function forceDeleted(Product $model): void
     {
         $this->log('forceDeleted', $model);
     }

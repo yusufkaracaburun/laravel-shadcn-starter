@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace Database\Factories;
 
-use App\Models\Item;
+use App\Models\Product;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends Factory<Item>
+ * @extends Factory<Product>
  */
-final class ItemFactory extends Factory
+final class ProductFactory extends Factory
 {
-    protected $model = Item::class;
+    protected $model = Product::class;
 
     /**
      * Define the model's default state.

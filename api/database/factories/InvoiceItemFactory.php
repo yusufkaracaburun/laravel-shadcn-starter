@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Database\Factories;
 
-use App\Models\Item;
 use App\Models\Invoice;
+use App\Models\Product;
 use App\Models\InvoiceItem;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -25,7 +25,7 @@ final class InvoiceItemFactory extends Factory
     {
         return [
             'invoice_id'  => Invoice::factory(),
-            'item_id'     => Item::factory(),
+            'item_id'     => Product::factory(),
             'description' => fake()->words(3, true),
             'quantity'    => fake()->randomFloat(5, 1, 10), // 5 decimalen
             'unit_price'  => fake()->randomFloat(5, 50, 500),

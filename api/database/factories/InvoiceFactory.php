@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Database\Factories;
 
-use App\Models\Item;
 use Cknow\Money\Money;
 use App\Models\Invoice;
+use App\Models\Product;
 use App\Models\Customer;
 use App\Models\InvoiceItem;
 use App\Enums\InvoiceStatus;
@@ -50,7 +50,7 @@ final class InvoiceFactory extends Factory
         return $this
             ->afterCreating(function (Invoice $invoice): void {
                 // Pak willekeurige items (1 tot 3 regels)
-                $items = Item::query()->inRandomOrder()->take(random_int(1, 3))->get();
+                $items = Product::query()->inRandomOrder()->take(random_int(1, 3))->get();
 
                 $inv_items = [];
 

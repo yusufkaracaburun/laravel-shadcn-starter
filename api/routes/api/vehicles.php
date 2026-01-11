@@ -14,13 +14,10 @@ use App\Http\Controllers\Api\UserController;
 |
 */
 
-Route::middleware('auth:sanctum')->name('api.users.')->group(function (): void {
-    Route::get('/users/prerequisites', [UserController::class, 'prerequisites'])->name('prerequisites');
-    Route::get('/users/all', [UserController::class, 'all'])->name('all');
-    Route::get('/users/active', [UserController::class, 'active'])->name('active');
-    Route::get('/users/current', [UserController::class, 'current'])->name('current');
+Route::middleware('auth:sanctum')->name('api.vehicles.')->group(function (): void {
+    Route::get('/vehicles/prerequisites', [UserController::class, 'prerequisites'])->name('prerequisites');
+    Route::get('/vehicles/all', [UserController::class, 'all'])->name('all');
+    Route::get('/vehicles/active', [UserController::class, 'active'])->name('active');
 
-    Route::get('/users/roles', [UserController::class, 'roles'])->name('roles');
-
-    Route::apiResource('users', UserController::class);
+    Route::apiResource('vehicles', UserController::class);
 });

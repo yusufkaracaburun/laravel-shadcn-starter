@@ -31,7 +31,7 @@ enum UserRole: string
      */
     public static function permissions(): array
     {
-        $features = ['companies', 'invoices', 'items', 'permissions', 'roles', 'users'];
+        $features = ['companies', 'invoices', 'products', 'permissions', 'roles', 'users'];
 
         return collect($features)->map(fn (string $feature): array => PermissionsEnum::values($feature))->values()->all();
     }
@@ -45,7 +45,7 @@ enum UserRole: string
     {
         return match ($this) {
             self::SUPER_ADMIN, self::ADMIN => $this->permissions(),
-            self::MANAGER => ['view users', 'view companies', 'view invoices', 'update invoices', 'view items'],
+            self::MANAGER => ['view users', 'view companies', 'view invoices', 'update invoices', 'view products'],
             self::USER, self::CUSTOMER, self::CONTRACTOR => ['view invoices'],
         };
     }

@@ -2,18 +2,18 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Requests\Items;
+namespace App\Http\Requests\Products;
 
 use Illuminate\Validation\Rule;
 use App\Http\Requests\BaseFormRequest;
 use Illuminate\Contracts\Validation\ValidationRule;
 
 /**
- * Store item request validation.
+ * Store product request validation.
  *
- * Validates item creation data.
+ * Validates product creation data.
  */
-final class StoreItemRequest extends BaseFormRequest
+final class StoreProductRequest extends BaseFormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -24,7 +24,7 @@ final class StoreItemRequest extends BaseFormRequest
     {
         return [
             // Core fields
-            'name'        => ['required', 'string', 'max:255', Rule::unique('items', 'name')],
+            'name'        => ['required', 'string', 'max:255', Rule::unique('products', 'name')],
             'description' => ['nullable', 'string'],
 
             // Price & VAT
@@ -44,7 +44,7 @@ final class StoreItemRequest extends BaseFormRequest
     public function attributes(): array
     {
         return array_merge(parent::attributes(), [
-            'name'        => 'item name',
+            'name'        => 'product name',
             'description' => 'description',
             'unit_price'  => 'unit price',
             'vat_rate'    => 'VAT rate',
@@ -60,8 +60,8 @@ final class StoreItemRequest extends BaseFormRequest
     public function messages(): array
     {
         return array_merge(parent::messages(), [
-            'name.required'       => 'The item name is required.',
-            'name.unique'         => 'An item with this name already exists.',
+            'name.required'       => 'The product name is required.',
+            'name.unique'         => 'An product with this name already exists.',
             'unit_price.required' => 'The unit price is required.',
             'unit_price.numeric'  => 'The unit price must be a valid number.',
             'unit_price.min'      => 'The unit price must be zero or greater.',

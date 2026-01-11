@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
-use App\Models\Item;
 use App\Models\Invoice;
+use App\Models\Product;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
@@ -18,7 +18,7 @@ return new class extends Migration
         Schema::create('invoice_items', function (Blueprint $table): void {
             $table->id();
             $table->foreignIdFor(Invoice::class)->constrained()->cascadeOnDelete();
-            $table->foreignIdFor(Item::class)->nullable()->constrained()->nullOnDelete();
+            $table->foreignIdFor(Product::class)->nullable()->constrained()->nullOnDelete();
             $table->string('name')->nullable();
             $table->string('description')->nullable();
             $table->decimal('quantity', 10, 5)->default(1);

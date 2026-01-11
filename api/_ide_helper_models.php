@@ -46,7 +46,7 @@ namespace App\Models{
 namespace App\Models{
 /**
  * Contact model.
- * 
+ *
  * Represents a contact person associated with customers.
  *
  * @property int $id
@@ -89,7 +89,7 @@ namespace App\Models{
 namespace App\Models{
 /**
  * Customer model.
- * 
+ *
  * Represents a customer (business or private) in the system.
  *
  * @property int $id
@@ -143,7 +143,7 @@ namespace App\Models{
 namespace App\Models{
 /**
  * Invoice model.
- * 
+ *
  * Represents an invoice sent to a customer.
  *
  * @property int $id
@@ -201,7 +201,7 @@ namespace App\Models{
 namespace App\Models{
 /**
  * InvoiceItem model.
- * 
+ *
  * Represents a line item on an invoice.
  *
  * @property int $id
@@ -256,18 +256,18 @@ namespace App\Models{
  * @property \Carbon\CarbonImmutable|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\InvoiceItem> $invoiceLines
  * @property-read int|null $invoice_lines_count
- * @method static \Database\Factories\ItemFactory factory($count = null, $state = [])
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Item newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Item newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Item query()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Item whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Item whereDescription($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Item whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Item whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Item whereUnit($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Item whereUnitPrice($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Item whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Item whereVatRate($value)
+ * @method static \Database\Factories\ProductFactory factory($count = null, $state = [])
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereUnit($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereUnitPrice($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereVatRate($value)
  */
 	final class Item extends \Eloquent {}
 }
@@ -331,7 +331,7 @@ namespace App\Models{
 namespace App\Models{
 /**
  * Payment model.
- * 
+ *
  * Represents a payment made by a customer, optionally linked to an invoice.
  *
  * @property int $id

@@ -12,11 +12,11 @@ use App\Http\Responses\ApiResponse;
 use Illuminate\Contracts\View\View;
 use App\Http\Controllers\Controller;
 use Illuminate\Contracts\View\Factory;
-use App\Services\Contracts\ItemServiceInterface;
 use App\Http\Controllers\Concerns\UsesQueryBuilder;
 use App\Http\Requests\Invoices\IndexInvoiceRequest;
 use App\Http\Requests\Invoices\StoreInvoiceRequest;
 use App\Services\Contracts\InvoiceServiceInterface;
+use App\Services\Contracts\ProductServiceInterface;
 use App\Http\Requests\Invoices\UpdateInvoiceRequest;
 use App\Services\Contracts\CustomerServiceInterface;
 use App\Http\Controllers\Concerns\UsesCachedResponses;
@@ -32,7 +32,7 @@ final class InvoiceController extends Controller
 
     public function __construct(
         private readonly InvoiceServiceInterface $invoiceService,
-        private readonly ItemServiceInterface $itemService,
+        private readonly ProductServiceInterface $itemService,
         private readonly CustomerServiceInterface $customerService,
     ) {}
 

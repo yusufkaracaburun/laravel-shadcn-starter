@@ -18,8 +18,6 @@ enum CustomerStatus: string
     case REGISTERED = 'registered';
     case ACTIVE = 'active';
     case INACTIVE = 'inactive';
-    case BLOCKED = 'blocked';
-    case SUSPENDED = 'suspended';
 
     /**
      * Get the color associated with this status.
@@ -30,8 +28,6 @@ enum CustomerStatus: string
             self::REGISTERED => 'warning',
             self::ACTIVE     => 'success',
             self::INACTIVE   => 'danger',
-            self::BLOCKED    => 'dark',
-            self::SUSPENDED  => 'secondary',
         };
     }
 
@@ -44,8 +40,6 @@ enum CustomerStatus: string
             self::REGISTERED => 'badge badge-light-warning',
             self::ACTIVE     => 'badge badge-light-success',
             self::INACTIVE   => 'badge badge-light-danger',
-            self::BLOCKED    => 'badge badge-dark',
-            self::SUSPENDED  => 'badge badge-light-secondary',
         };
     }
 
@@ -55,14 +49,6 @@ enum CustomerStatus: string
     public function isRegistered(): bool
     {
         return $this === self::REGISTERED;
-    }
-
-    /**
-     * Check if the status is suspended.
-     */
-    public function isSuspended(): bool
-    {
-        return $this === self::SUSPENDED;
     }
 
     /**
@@ -76,18 +62,10 @@ enum CustomerStatus: string
     /**
      * Check if the status is inactive.
      *
-     * Includes INACTIVE, BLOCKED, SUSPENDED, and REGISTERED statuses.
+     * Includes INACTIVE, PENDING, SUSPENDED, and REGISTERED statuses.
      */
     public function isInactive(): bool
     {
-        return in_array($this, [self::INACTIVE, self::BLOCKED, self::SUSPENDED, self::REGISTERED], true);
-    }
-
-    /**
-     * Check if the status is blocked.
-     */
-    public function isBlocked(): bool
-    {
-        return $this === self::BLOCKED;
+        return in_array($this, [self::INACTIVE, self::REGISTERED], true);
     }
 }

@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\ItemController;
+use App\Http\Controllers\Api\ProductController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,7 +14,7 @@ use App\Http\Controllers\Api\ItemController;
 |
 */
 
-Route::middleware('auth:sanctum')->name('api.items.')->group(function (): void {
+Route::middleware('auth:sanctum')->name('api.products.')->group(function (): void {
     // Item resource routes
-    Route::apiResource('items', ItemController::class);
+    Route::apiResource('products', ProductController::class);
 });

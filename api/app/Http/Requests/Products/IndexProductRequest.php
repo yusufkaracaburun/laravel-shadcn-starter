@@ -2,27 +2,27 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Requests\Items;
+namespace App\Http\Requests\Products;
 
 use App\Http\Requests\BaseIndexFormRequest;
 use Illuminate\Contracts\Validation\ValidationRule;
 
 /**
- * Index item request validation.
+ * Index product request validation.
  *
- * Validates pagination, filtering, sorting, includes, and fields for item listing.
+ * Validates pagination, filtering, sorting, includes, and fields for product listing.
  */
-final class IndexItemRequest extends BaseIndexFormRequest
+final class IndexProductRequest extends BaseIndexFormRequest
 {
     /**
-     * Custom validation messages specific to items.
+     * Custom validation messages specific to products.
      *
      * @return array<string, string>
      */
     public function messages(): array
     {
         return array_merge(parent::messages(), [
-            'filter.id.exists'          => 'The selected item does not exist.',
+            'filter.id.exists'          => 'The selected product does not exist.',
             'filter.name.string'        => 'The name must be a valid string.',
             'filter.unit.string'        => 'The unit must be a valid string.',
             'filter.description.string' => 'The description must be a valid string.',
@@ -42,7 +42,7 @@ final class IndexItemRequest extends BaseIndexFormRequest
     public function attributes(): array
     {
         return array_merge(parent::attributes(), [
-            'filter.id'          => 'item ID',
+            'filter.id'          => 'product ID',
             'filter.name'        => 'name',
             'filter.description' => 'description',
             'filter.unit_price'  => 'unit price',
@@ -55,7 +55,7 @@ final class IndexItemRequest extends BaseIndexFormRequest
     }
 
     /**
-     * Filter validation rules specific to items.
+     * Filter validation rules specific to products.
      *
      * @return array<string, ValidationRule|array<mixed>|string>
      */

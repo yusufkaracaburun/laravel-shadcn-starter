@@ -4,21 +4,21 @@ declare(strict_types=1);
 
 namespace App\Repositories\Concretes;
 
-use App\Models\Item;
+use App\Models\Product;
 use Spatie\QueryBuilder\QueryBuilder;
 use Spatie\QueryBuilder\AllowedFilter;
 use App\Repositories\QueryableRepository;
 use Spatie\QueryBuilder\QueryBuilderRequest;
-use App\Repositories\Contracts\ItemRepositoryInterface;
+use App\Repositories\Contracts\ProductRepositoryInterface;
 
-final class ItemRepository extends QueryableRepository implements ItemRepositoryInterface
+final class ProductRepository extends QueryableRepository implements ProductRepositoryInterface
 {
     /**
-     * Find an item by ID with relations.
+     * Find an product by ID with relations.
      */
-    public function findOrFail(int $id, array $columns = ['*']): Item
+    public function findOrFail(int $id, array $columns = ['*']): Product
     {
-        return Item::query()
+        return Product::query()
             ->findOrFail($id, $columns);
     }
 
@@ -106,6 +106,6 @@ final class ItemRepository extends QueryableRepository implements ItemRepository
      */
     protected function model(): string
     {
-        return Item::class;
+        return Product::class;
     }
 }

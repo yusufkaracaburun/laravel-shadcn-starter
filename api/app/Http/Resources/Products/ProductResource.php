@@ -2,15 +2,16 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\Products;
 
-use App\Models\Item;
+use App\Models\Product;
 use Illuminate\Http\Request;
+use App\Http\Resources\BaseResource;
 
 /**
- * @mixin Item
+ * @mixin Product
  */
-final class ItemResource extends BaseResource
+final class ProductResource extends BaseResource
 {
     /**
      * Transform the resource into an array.
