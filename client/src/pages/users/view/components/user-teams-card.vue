@@ -42,10 +42,7 @@ defineProps<Props>()
               {{ team.personal_team ? 'Personal Team' : 'Team' }}
             </div>
           </div>
-          <Badge
-            v-if="user.current_team_id === team.id"
-            variant="default"
-          >
+          <Badge v-if="user.current_team_id === team.id" variant="default">
             Current
           </Badge>
         </div>

@@ -206,31 +206,23 @@ function handleDeleteClosed() {
                   </TabsContent>
 
                   <TabsContent value="account" class="mt-0">
-                    <div class="max-w-2xl">
-                      <UserAccountStatusCard
-                        :user="user"
-                        :created-at="formattedCreatedAt"
-                        :updated-at="formattedUpdatedAt"
-                      />
-                    </div>
+                    <UserAccountStatusCard
+                      :user="user"
+                      :created-at="formattedCreatedAt"
+                      :updated-at="formattedUpdatedAt"
+                    />
                   </TabsContent>
 
                   <TabsContent value="roles" class="mt-0">
-                    <div class="max-w-2xl">
-                      <UserRolesCard :user="user" />
-                    </div>
+                    <UserRolesCard :user="user" />
                   </TabsContent>
 
                   <TabsContent value="teams" class="mt-0">
-                    <div class="max-w-2xl">
-                      <UserTeamsCard :user="user" />
-                    </div>
+                    <UserTeamsCard :user="user" />
                   </TabsContent>
 
                   <TabsContent value="invoices" class="mt-0">
-                    <div class="max-w-2xl">
-                      <UserInvoicesCard :user="user" />
-                    </div>
+                    <UserInvoicesCard :user="user" />
                   </TabsContent>
                 </div>
               </div>
