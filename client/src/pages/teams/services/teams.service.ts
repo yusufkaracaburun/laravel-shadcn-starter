@@ -72,6 +72,7 @@ export function useTeamService() {
           per_page: per_page.value,
           sort: sort.value,
           filter: filter.value,
+          include: include.value,
         }
 
         const response = await axiosInstance.get(

@@ -8,7 +8,6 @@ import type {
   ITeamPrerequisites,
   IUpdateTeamRequest,
 } from '@/pages/teams/models/teams'
-import type { IUser } from '@/pages/users/models/users'
 import type { IResponse } from '@/services/types/response.type'
 
 import { useResourceBase } from '@/composables/use-resource-base.composable'
@@ -24,7 +23,6 @@ const TeamContext = {
   CREATE: 'createTeam',
   UPDATE: 'updateTeam',
   DELETE: 'deleteTeam',
-  ADD_USERS_TO_TEAM: 'addUsersToTeam',
 }
 
 const TeamMessages = {
@@ -39,9 +37,7 @@ export function useTeams() {
   const teamService = useTeamService()
   const route = useRoute()
 
-  const includes = {
-    members: 'members',
-  }
+  const includes = {}
 
   const base = useResourceBase<
     ITeam,
@@ -63,7 +59,6 @@ export function useTeams() {
     messages: TeamMessages,
     defaultSort: { id: 'created_at', desc: true },
     includes,
-    defaultIncludeKey: 'members',
     onFetchList: (refetch) => {
       refetch()
     },
@@ -119,63 +114,11 @@ export function useTeams() {
     }
   }
 
-  // Team-User management functions
-  const addUsersToTeamMutation = teamService.addUsersToTeamMutation()
-  const { isPending: isAddingUsers } = addUsersToTeamMutation
-
-  /**
-   * Add users to a team
-   * @param teamId - The team ID to add users to
-   * @param userIds - Array of user IDs to add
-   * @returns Promise with the updated team response
-   */
-  async function addUsersToTeam(
-    teamId: number,
-    userIds: number[],
-  ): Promise<IResponse<ITeam>> {
-    try {
-      const response = await addUsersToTeamMutation.mutateAsync({
-        teamId,
-        data: { user_ids: userIds },
-      })
-      toast.showSuccess('Users added to team successfully!')
-      return response
-    } catch (error: any) {
-      errorStore.setError(error, { context: TeamContext.ADD_USERS_TO_TEAM })
-      const message = errorStore.getErrorMessage(error)
-      toast.showError(message || 'Failed to add users to team')
-      throw error
-    }
-  }
-
-  /**
-   * Check if a user is already in a team
-   * @param user - The user to check
-   * @param team - The team to check against
-   * @returns boolean indicating if user is in team
-   */
-  function isUserInTeam(user: IUser, team: ITeam): boolean {
-    return user.teams?.some((t) => t.id === team.id) ?? false
-  }
-
-  /**
-   * Get users that are not in any team
-   * @param users - Array of all users
-   * @param teams - Array of all teams
-   * @returns Array of users not in any team
-   */
-  function getUsersNotInTeams(users: IUser[], teams: ITeam[]): IUser[] {
-    return users.filter(
-      (user) => !teams.some((team) => isUserInTeam(user, team)),
-    )
-  }
-
   return {
     sort: base.sort,
     filter: base.filter,
     includes: base.includes,
     teams: base.items,
-    pageSize: base.pageSize,
     onSortingChange: base.onSortingChange,
     onFiltersChange: base.onFiltersChange,
     clearFilters: base.clearFilters,
@@ -203,9 +146,5 @@ export function useTeams() {
     errorTeamById,
     fetchTeamByIdData,
     getTeamFormInitialValues,
-    addUsersToTeam,
-    isAddingUsers,
-    isUserInTeam,
-    getUsersNotInTeams,
   }
 }

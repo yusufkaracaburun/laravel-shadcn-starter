@@ -11,6 +11,24 @@ export interface ITeam {
   user_id: number
   created_at: string
   updated_at: string
+  members?: Array<{
+    id: number
+    name: string
+    email: string
+    profile_photo_url?: string | null
+    email_verified_at?: string | null
+    created_at?: string
+    updated_at?: string
+  }>
+  users?: Array<{
+    id: number
+    name: string
+    email: string
+    profile_photo_url?: string | null
+    email_verified_at?: string | null
+    created_at?: string
+    updated_at?: string
+  }>
 }
 
 export interface ITeamFilters {

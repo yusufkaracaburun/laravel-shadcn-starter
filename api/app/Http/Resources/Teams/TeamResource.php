@@ -22,8 +22,9 @@ final class TeamResource extends BaseResource
         return [
             'id'            => $this->id,
             'name'          => $this->name,
-            'personal_team' => (bool) $this->personal_team, // Ensure boolean, not null
+            'personal_team' => (bool) $this->personal_team,
             'user_id'       => $this->user_id,
+            'users'         => UserResource::collection($this->whenLoaded('users')),
             'created_at'    => $this->formatTimestamp($this->created_at),
             'updated_at'    => $this->formatTimestamp($this->updated_at),
         ];

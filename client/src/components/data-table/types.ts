@@ -5,7 +5,7 @@ import type { ISorting } from '@/services/query-utils'
 export const DEFAULT_PAGE = 1
 export const DEFAULT_PAGE_SIZE: TPageSize = 10
 
-export type TPageSize = 10 | 20 | 30 | 40 | 50
+export type TPageSize = 10 | 20 | 30 | 40 | 50 | 100 | 99999
 export interface IFacetedFilterOption {
   label: string
   value: string

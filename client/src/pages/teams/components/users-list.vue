@@ -119,13 +119,23 @@ function getInitials(name: string): string {
               </div>
             </div>
 
-            <Badge
-              v-if="user.role"
-              variant="outline"
-              class="shrink-0 text-[9px] px-1 py-0 capitalize"
-            >
-              {{ user.roles }}
-            </Badge>
+            <div class="flex items-center gap-1 shrink-0 flex-wrap">
+              <Badge
+                v-for="role in user.roles"
+                :key="role.id"
+                variant="outline"
+                class="text-[9px] px-1 py-0 capitalize"
+              >
+                {{ role.name }}
+              </Badge>
+              <Badge
+                v-if="user.status"
+                :variant="user.status === 'active' ? 'default' : 'secondary'"
+                class="text-[9px] px-1 py-0 capitalize"
+              >
+                {{ user.status }}
+              </Badge>
+            </div>
           </CardContent>
         </Card>
       </template>
