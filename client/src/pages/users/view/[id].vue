@@ -145,35 +145,35 @@ function handleDeleteClosed() {
               <TabsList class="h-auto justify-start gap-1 bg-muted/50 p-1">
                 <TabsTrigger
                   value="overview"
-                  class="gap-2 rounded-md px-4 py-2.5 data-[state=active]:bg-background data-[state=active]:shadow-sm"
+                  class="gap-2 rounded-md px-4 py-1 data-[state=active]:bg-background data-[state=active]:shadow-sm"
                 >
                   <LayoutGridIcon class="size-4" />
                   <span>Overview</span>
                 </TabsTrigger>
                 <TabsTrigger
                   value="account"
-                  class="gap-2 rounded-md px-4 py-2.5 data-[state=active]:bg-background data-[state=active]:shadow-sm"
+                  class="gap-2 rounded-md px-4 py-1 data-[state=active]:bg-background data-[state=active]:shadow-sm"
                 >
                   <UserCircleIcon class="size-4" />
                   <span>Account</span>
                 </TabsTrigger>
                 <TabsTrigger
                   value="roles"
-                  class="gap-2 rounded-md px-4 py-2.5 data-[state=active]:bg-background data-[state=active]:shadow-sm"
+                  class="gap-2 rounded-md px-4 py-1 data-[state=active]:bg-background data-[state=active]:shadow-sm"
                 >
                   <ShieldIcon class="size-4" />
                   <span>Roles & Permissions</span>
                 </TabsTrigger>
                 <TabsTrigger
                   value="teams"
-                  class="gap-2 rounded-md px-4 py-2.5 data-[state=active]:bg-background data-[state=active]:shadow-sm"
+                  class="gap-2 rounded-md px-4 py-1 data-[state=active]:bg-background data-[state=active]:shadow-sm"
                 >
                   <UsersIcon class="size-4" />
                   <span>Teams</span>
                 </TabsTrigger>
                 <TabsTrigger
                   value="invoices"
-                  class="gap-2 rounded-md px-4 py-2.5 data-[state=active]:bg-background data-[state=active]:shadow-sm"
+                  class="gap-2 rounded-md px-4 py-1 data-[state=active]:bg-background data-[state=active]:shadow-sm"
                 >
                   <FileTextIcon class="size-4" />
                   <span>Invoices</span>
