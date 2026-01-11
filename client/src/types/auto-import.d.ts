@@ -25,6 +25,7 @@ declare global {
   const BanknoteIcon: typeof import('../composables/use-icons.composable').BanknoteIcon
   const BellDot: typeof import('../composables/use-icons.composable').BellDot
   const BellDotIcon: typeof import('../composables/use-icons.composable').BellDotIcon
+  const BoxIcon: typeof import('../composables/use-icons.composable').BoxIcon
   const Bug: typeof import('../composables/use-icons.composable').Bug
   const BugIcon: typeof import('../composables/use-icons.composable').BugIcon
   const Building2: typeof import('../composables/use-icons.composable').Building2
@@ -34,6 +35,7 @@ declare global {
   const CalendarDays: typeof import('../composables/use-icons.composable').CalendarDays
   const CalendarDaysIcon: typeof import('../composables/use-icons.composable').CalendarDaysIcon
   const CalendarIcon: typeof import('../composables/use-icons.composable').CalendarIcon
+  const CarIcon: typeof import('../composables/use-icons.composable').CarIcon
   const Check: typeof import('../composables/use-icons.composable').Check
   const CheckCircle2Icon: typeof import('../composables/use-icons.composable').CheckCircle2Icon
   const CheckIcon: typeof import('../composables/use-icons.composable').CheckIcon
@@ -67,9 +69,11 @@ declare global {
   const FileCheckIcon: typeof import('../composables/use-icons.composable').FileCheckIcon
   const FileDown: typeof import('../composables/use-icons.composable').FileDown
   const FileDownIcon: typeof import('../composables/use-icons.composable').FileDownIcon
+  const FilePenIcon: typeof import('../composables/use-icons.composable').FilePenIcon
   const FilePenLine: typeof import('../composables/use-icons.composable').FilePenLine
   const FilePenLineIcon: typeof import('../composables/use-icons.composable').FilePenLineIcon
   const FilePlusIcon: typeof import('../composables/use-icons.composable').FilePlusIcon
+  const FileSpreadsheetIcon: typeof import('../composables/use-icons.composable').FileSpreadsheetIcon
   const FileText: typeof import('../composables/use-icons.composable').FileText
   const FileTextIcon: typeof import('../composables/use-icons.composable').FileTextIcon
   const FileXIcon: typeof import('../composables/use-icons.composable').FileXIcon
