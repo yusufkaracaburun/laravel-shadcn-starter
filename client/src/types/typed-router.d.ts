@@ -157,6 +157,13 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       | never
     >,
+    '/equipments/': RouteRecordInfo<
+      '/equipments/',
+      '/equipments',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
     '/errors': RouteRecordInfo<
       '/errors',
       '/errors',
@@ -337,6 +344,13 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       | never
     >,
+    '/teams/': RouteRecordInfo<
+      '/teams/',
+      '/teams',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
     '/users/': RouteRecordInfo<
       '/users/',
       '/users',
@@ -485,6 +499,12 @@ declare module 'vue-router/auto-routes' {
     'src/pages/dashboard/index.vue': {
       routes:
         | '/dashboard/'
+      views:
+        | never
+    }
+    'src/pages/equipments/index.vue': {
+      routes:
+        | '/equipments/'
       views:
         | never
     }
@@ -641,6 +661,12 @@ declare module 'vue-router/auto-routes' {
     'src/pages/tasks/index.vue': {
       routes:
         | '/tasks/'
+      views:
+        | never
+    }
+    'src/pages/teams/index.vue': {
+      routes:
+        | '/teams/'
       views:
         | never
     }

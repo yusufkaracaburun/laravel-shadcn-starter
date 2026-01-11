@@ -56,8 +56,8 @@ export function useSidebar() {
           icon: CarIcon,
         },
         {
-          title: 'Equipment',
-          url: '/equipment',
+          title: 'Equipments',
+          url: '/equipments',
           icon: WrenchIcon,
         },
       ],
