@@ -5,19 +5,24 @@ import { computed } from 'vue'
 
 import type { TPageSize } from '@/components/data-table/types'
 import type {
+  IAddUsersToTeamRequest,
   ICreateTeamRequest,
-  IUpdateTeamRequest,
   ITeam,
   ITeamFilters,
   ITeamPrerequisites,
+  IUpdateTeamRequest,
 } from '@/pages/teams/models/teams'
+import type { ISorting } from '@/services/query-utils'
+import type {
+  IPaginatedResponse,
+  IResponse,
+} from '@/services/types/response.type'
 
 import { useAxios } from '@/composables/use-axios.composable'
-
-import type { ISorting } from '@/services/query-utils'
-import type { IPaginatedResponse, IResponse } from '@/services/types/response.type'
-
-import { buildQueryString, defaultAxiosQueryOptions } from '@/services/query-utils'
+import {
+  buildQueryString,
+  defaultAxiosQueryOptions,
+} from '@/services/query-utils'
 
 enum QueryKeys {
   TEAM_PREREQUISITES = 'teamPrerequisites',
@@ -27,6 +32,7 @@ enum QueryKeys {
   CREATE_TEAM = 'createTeam',
   UPDATE_TEAM = 'updateTeam',
   DELETE_TEAM = 'deleteTeam',
+  ADD_USERS_TO_TEAM = 'addUsersToTeam',
 }
 
 const API_URL = '/api/teams'
@@ -66,7 +72,6 @@ export function useTeamService() {
           per_page: per_page.value,
           sort: sort.value,
           filter: filter.value,
-          include: include.value,
         }
 
         const response = await axiosInstance.get(
@@ -195,6 +200,38 @@ export function useTeamService() {
     })
   }
 
+  function addUsersToTeamMutation(): ReturnType<
+    typeof useMutation<
+      IResponse<ITeam>,
+      AxiosError,
+      { teamId: number; data: IAddUsersToTeamRequest }
+    >
+  > {
+    return useMutation<
+      IResponse<ITeam>,
+      AxiosError,
+      { teamId: number; data: IAddUsersToTeamRequest }
+    >({
+      mutationKey: [QueryKeys.ADD_USERS_TO_TEAM],
+      mutationFn: async ({ teamId, data }): Promise<IResponse<ITeam>> => {
+        const response = await axiosInstance.post(
+          `${API_URL}/${teamId}/users`,
+          data,
+        )
+        return response.data
+      },
+      onSuccess: (_, variables) => {
+        queryClient.invalidateQueries({ queryKey: [QueryKeys.TEAM_LIST] })
+        queryClient.invalidateQueries({
+          queryKey: [QueryKeys.GET_TEAM_BY_ID, variables.teamId],
+        })
+      },
+      onError: (error) => {
+        console.error('Add users to team error:', error)
+      },
+    })
+  }
+
   return {
     getTeamPrerequisitesQuery,
     getTeamsQuery,
@@ -203,5 +240,6 @@ export function useTeamService() {
     createTeamMutation,
     updateTeamMutation,
     deleteTeamMutation,
+    addUsersToTeamMutation,
   }
 }

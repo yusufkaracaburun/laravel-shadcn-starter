@@ -15,11 +15,14 @@ declare global {
   const BadgeCheckIcon: typeof import('./src/composables/use-icons.composable').BadgeCheckIcon
   const BadgeDollarSignIcon: typeof import('./src/composables/use-icons.composable').BadgeDollarSignIcon
   const BadgeHelpIcon: typeof import('./src/composables/use-icons.composable').BadgeHelpIcon
+  const BanknoteIcon: typeof import('./src/composables/use-icons.composable').BanknoteIcon
   const BellDotIcon: typeof import('./src/composables/use-icons.composable').BellDotIcon
+  const BoxIcon: typeof import('./src/composables/use-icons.composable').BoxIcon
   const BugIcon: typeof import('./src/composables/use-icons.composable').BugIcon
   const Building2Icon: typeof import('./src/composables/use-icons.composable').Building2Icon
   const CalendarDaysIcon: typeof import('./src/composables/use-icons.composable').CalendarDaysIcon
   const CalendarIcon: typeof import('./src/composables/use-icons.composable').CalendarIcon
+  const CarIcon: typeof import('./src/composables/use-icons.composable').CarIcon
   const CheckCircle2Icon: typeof import('./src/composables/use-icons.composable').CheckCircle2Icon
   const CheckIcon: typeof import('./src/composables/use-icons.composable').CheckIcon
   const ChevronsUpDownIcon: typeof import('./src/composables/use-icons.composable').ChevronsUpDownIcon
@@ -31,6 +34,7 @@ declare global {
   const ClockIcon: typeof import('./src/composables/use-icons.composable').ClockIcon
   const ComponentIcon: typeof import('./src/composables/use-icons.composable').ComponentIcon
   const CreditCardIcon: typeof import('./src/composables/use-icons.composable').CreditCardIcon
+  const DollarSignIcon: typeof import('./src/composables/use-icons.composable').DollarSignIcon
   const DownloadIcon: typeof import('./src/composables/use-icons.composable').DownloadIcon
   const EditIcon: typeof import('./src/composables/use-icons.composable').EditIcon
   const EffectScope: typeof import('vue').EffectScope
@@ -38,8 +42,10 @@ declare global {
   const EyeIcon: typeof import('./src/composables/use-icons.composable').EyeIcon
   const FileCheckIcon: typeof import('./src/composables/use-icons.composable').FileCheckIcon
   const FileDownIcon: typeof import('./src/composables/use-icons.composable').FileDownIcon
+  const FilePenIcon: typeof import('./src/composables/use-icons.composable').FilePenIcon
   const FilePenLineIcon: typeof import('./src/composables/use-icons.composable').FilePenLineIcon
   const FilePlusIcon: typeof import('./src/composables/use-icons.composable').FilePlusIcon
+  const FileSpreadsheetIcon: typeof import('./src/composables/use-icons.composable').FileSpreadsheetIcon
   const FileTextIcon: typeof import('./src/composables/use-icons.composable').FileTextIcon
   const FileXIcon: typeof import('./src/composables/use-icons.composable').FileXIcon
   const FilterIcon: typeof import('./src/composables/use-icons.composable').FilterIcon
@@ -51,6 +57,7 @@ declare global {
   const LayoutDashboardIcon: typeof import('./src/composables/use-icons.composable').LayoutDashboardIcon
   const LayoutGridIcon: typeof import('./src/composables/use-icons.composable').LayoutGridIcon
   const ListIcon: typeof import('./src/composables/use-icons.composable').ListIcon
+  const ListOrderedIcon: typeof import('./src/composables/use-icons.composable').ListOrderedIcon
   const ListTodoIcon: typeof import('./src/composables/use-icons.composable').ListTodoIcon
   const MailIcon: typeof import('./src/composables/use-icons.composable').MailIcon
   const MailPlusIcon: typeof import('./src/composables/use-icons.composable').MailPlusIcon
@@ -70,6 +77,7 @@ declare global {
   const SendIcon: typeof import('./src/composables/use-icons.composable').SendIcon
   const SettingsIcon: typeof import('./src/composables/use-icons.composable').SettingsIcon
   const ShieldIcon: typeof import('./src/composables/use-icons.composable').ShieldIcon
+  const ShoppingCartIcon: typeof import('./src/composables/use-icons.composable').ShoppingCartIcon
   const SquareUserRoundIcon: typeof import('./src/composables/use-icons.composable').SquareUserRoundIcon
   const TimerOffIcon: typeof import('./src/composables/use-icons.composable').TimerOffIcon
   const Trash2Icon: typeof import('./src/composables/use-icons.composable').Trash2Icon

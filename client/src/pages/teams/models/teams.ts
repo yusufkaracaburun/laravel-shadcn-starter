@@ -38,3 +38,7 @@ export interface ITeamPrerequisites {
   users?: Array<{ id: number; name: string; email: string }>
   statuses?: IStatus[]
 }
+
+export interface IAddUsersToTeamRequest {
+  user_ids: number[]
+}
