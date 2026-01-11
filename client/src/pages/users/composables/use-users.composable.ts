@@ -145,6 +145,7 @@ export function useUsers() {
     filter: base.filter,
     includes: base.includes,
     users: base.items,
+    pageSize: base.pageSize,
     onSortingChange: base.onSortingChange,
     onFiltersChange: base.onFiltersChange,
     clearFilters: base.clearFilters,

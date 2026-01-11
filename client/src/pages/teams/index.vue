@@ -12,16 +12,24 @@ const {
   teams,
   fetchTeamsData,
   addUsersToTeam,
-  isAddingUsers,
+  pageSize: teamsPageSize,
 } = useTeams()
 
-const { loading: usersLoading, users, fetchUsersData } = useUsers()
+const {
+  loading: usersLoading,
+  users,
+  fetchUsersData,
+  pageSize: usersPageSize,
+} = useUsers()
 
 const loadingTeamId = ref<number | null>(null)
 const isDragging = ref(false)
 
-// Fetch data on mount
+// Set high page size to fetch all items
 onMounted(() => {
+  // Set page size to a very high number to fetch all teams and users
+  teamsPageSize.value = 100
+  usersPageSize.value = 100
   fetchTeamsData()
   fetchUsersData()
 })
@@ -32,25 +40,23 @@ async function handleUserDropped(teamId: number, userId: number) {
     await addUsersToTeam(teamId, [userId])
     // Refetch teams and users to update the UI
     await Promise.all([fetchTeamsData(), fetchUsersData()])
-  } catch (error) {
+  } catch {
     // Error is already handled in the composable
   } finally {
     loadingTeamId.value = null
   }
 }
 
-function handleDragEnter(teamId: number) {
+function handleDragEnter(_teamId: number) {
   isDragging.value = true
 }
 
-function handleDragLeave(teamId: number) {
+function handleDragLeave(_teamId: number) {
   // Only reset if not dragging over another team
   setTimeout(() => {
     isDragging.value = false
   }, 100)
 }
-
-const loading = computed(() => teamsLoading.value || usersLoading.value)
 </script>
 
 <template>

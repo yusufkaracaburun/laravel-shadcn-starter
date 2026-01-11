@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { User } from 'lucide-vue-next'
+import { Search, User } from 'lucide-vue-next'
 import Draggable from 'vuedraggable'
 
 import type { IUser } from '@/pages/users/models/users'
@@ -7,6 +7,7 @@ import type { IUser } from '@/pages/users/models/users'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import Badge from '@/components/ui/badge/Badge.vue'
 import { Card, CardContent } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
 
 interface Props {
   users: IUser[]
@@ -15,6 +16,21 @@ interface Props {
 
 const props = withDefaults(defineProps<Props>(), {
   loading: false,
+})
+
+const searchQuery = ref('')
+
+const filteredUsers = computed(() => {
+  if (!searchQuery.value.trim()) {
+    return props.users
+  }
+
+  const query = searchQuery.value.toLowerCase().trim()
+  return props.users.filter(
+    (user) =>
+      user.name.toLowerCase().includes(query) ||
+      user.email.toLowerCase().includes(query),
+  )
 })
 
 function getInitials(name: string): string {
@@ -31,7 +47,18 @@ function getInitials(name: string): string {
   <div class="space-y-4">
     <div class="flex items-center justify-between">
       <h2 class="text-lg font-semibold">Users</h2>
-      <Badge variant="secondary"> {{ users.length }} users </Badge>
+      <Badge variant="secondary"> {{ filteredUsers.length }} users </Badge>
+    </div>
+
+    <div class="relative">
+      <Search
+        class="absolute left-2 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
+      />
+      <Input
+        v-model="searchQuery"
+        placeholder="Search users by name or email..."
+        class="h-8 pl-8"
+      />
     </div>
 
     <div v-if="loading && users.length === 0" class="space-y-2">
@@ -46,14 +73,16 @@ function getInitials(name: string): string {
       </Card>
     </div>
 
-    <div v-else-if="users.length === 0" class="text-center py-12">
+    <div v-else-if="filteredUsers.length === 0" class="text-center py-12">
       <User class="mx-auto size-12 text-muted-foreground mb-4" />
-      <p class="text-muted-foreground">No users found</p>
+      <p class="text-muted-foreground">
+        {{ searchQuery ? 'No users match your search' : 'No users found' }}
+      </p>
     </div>
 
     <Draggable
       v-else
-      :model-value="users"
+      :model-value="filteredUsers"
       :group="{ name: 'team-users', pull: 'clone', put: false }"
       item-key="id"
       :sort="false"
