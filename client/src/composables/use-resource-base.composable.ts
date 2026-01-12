@@ -110,6 +110,7 @@ export function useResourceBase<
   const pageSize = ref<TPageSize>(DEFAULT_PAGE_SIZE)
   const sort = ref<ISorting>(config.defaultSort)
   const filter = ref<TFilter>({} as TFilter)
+  const include = ref<string[]>([config.includes[config.defaultIncludeKey]])
 
   function onSortingChange(newSorting: ISorting): void {
     sort.value = newSorting
@@ -133,6 +134,11 @@ export function useResourceBase<
   function onPageSizeChange(newPageSize: TPageSize): void {
     page.value = DEFAULT_PAGE
     pageSize.value = newPageSize
+  }
+
+  function onIncludeChange(newIncludes: string[]): void {
+    include.value = newIncludes
+    page.value = DEFAULT_PAGE
   }
 
   const getPrerequisitesQuery = config.service.getPrerequisitesQuery()
@@ -163,7 +169,7 @@ export function useResourceBase<
     pageSize,
     sort,
     filter as Ref<TFilter>,
-    ref([config.includes[config.defaultIncludeKey]]),
+    include,
   )
   const {
     data: listData,
@@ -305,6 +311,7 @@ export function useResourceBase<
     sort,
     filter,
     includes: config.includes,
+    include,
 
     // Handlers
     onSortingChange,
@@ -312,6 +319,7 @@ export function useResourceBase<
     clearFilters,
     onPageChange,
     onPageSizeChange,
+    onIncludeChange,
 
     // Prerequisites
     prerequisitesResponse,

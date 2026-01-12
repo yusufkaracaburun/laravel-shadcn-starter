@@ -8,14 +8,11 @@ import TeamCreate from './components/team-create-dialog.vue'
 import TeamsList from './components/teams-list.vue'
 import UsersList from './components/users-list.vue'
 
-// Define custom includes for teams - if not provided, will use defaultIncludeKey ('users')
-// Always includes 'users' and 'usersCount' regardless of what's specified
-const customTeamIncludes = ['users', 'usersCount']
-
 const {
   loading: teamsLoading,
   teams,
   fetchTeamsData,
+  onIncludeChange: onTeamsIncludeChange,
   addUsersToTeam,
   pageSize: teamsPageSize,
 } = useTeams()
@@ -39,13 +36,11 @@ const users = computed(() => {
 const loadingTeamId = ref<number | null>(null)
 const isDragging = ref(false)
 
-// Set high page size to fetch all items
-// Teams are already configured to fetch with members (defaultIncludeKey: 'members')
 onMounted(() => {
   teamsPageSize.value = 99999
   usersPageSize.value = 99999
 
-  fetchTeamsData()
+  onTeamsIncludeChange(['users', 'usersCount'])
   fetchUsersData()
 })
 

@@ -57,7 +57,8 @@ export function useTeams() {
   >({
     service: {
       getPrerequisitesQuery: () => teamService.getTeamPrerequisitesQuery(),
-      getListQuery: teamService.getTeamsQuery,
+      getListQuery: (page, per_page, sort, filter, include) =>
+        teamService.getTeamsQuery(page, per_page, sort, filter, include),
       createMutation: () => teamService.createTeamMutation(),
       updateMutation: () => teamService.updateTeamMutation(),
       deleteMutation: () => teamService.deleteTeamMutation(),
@@ -157,6 +158,7 @@ export function useTeams() {
     sort: base.sort,
     filter: base.filter,
     includes: base.includes,
+    include: base.include,
     teams: base.items,
     pageSize: base.pageSize,
     onSortingChange: base.onSortingChange,
@@ -164,6 +166,7 @@ export function useTeams() {
     clearFilters: base.clearFilters,
     onPageChange: base.onPageChange,
     onPageSizeChange: base.onPageSizeChange,
+    onIncludeChange: base.onIncludeChange,
     teamPrerequisitesResponse: base.prerequisitesResponse,
     isLoadingTeamPrerequisites: base.isLoadingPrerequisites,
     isErrorTeamPrerequisites: base.isErrorPrerequisites,
