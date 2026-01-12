@@ -8,6 +8,10 @@ import TeamCreate from './components/team-create-dialog.vue'
 import TeamsList from './components/teams-list.vue'
 import UsersList from './components/users-list.vue'
 
+// Define custom includes for teams - if not provided, will use defaultIncludeKey ('users')
+// Always includes 'users' and 'usersCount' regardless of what's specified
+const customTeamIncludes = ['users', 'usersCount']
+
 const {
   loading: teamsLoading,
   teams,
@@ -21,8 +25,6 @@ const {
   users: allUsers,
   fetchUsersData,
   pageSize: usersPageSize,
-  filter: usersFilter,
-  onFiltersChange: onUsersFiltersChange,
 } = useUsers()
 
 // Filter users to only show active and registered status
@@ -40,12 +42,8 @@ const isDragging = ref(false)
 // Set high page size to fetch all items
 // Teams are already configured to fetch with members (defaultIncludeKey: 'members')
 onMounted(() => {
-  // Set page size to a very high number to fetch all teams and users
   teamsPageSize.value = 99999
   usersPageSize.value = 99999
-
-  // Fetch all users, then filter to active and registered on frontend
-  onUsersFiltersChange({ ...usersFilter.value })
 
   fetchTeamsData()
   fetchUsersData()
@@ -55,8 +53,6 @@ async function handleUserDropped(teamId: number, userId: number) {
   try {
     loadingTeamId.value = teamId
     await addUsersToTeam(teamId, [userId])
-    // Refetch teams and users to update the UI
-    onUsersFiltersChange({ ...usersFilter.value })
     await Promise.all([fetchTeamsData(), fetchUsersData()])
   } catch {
     // Error is already handled in the composable
