@@ -81,7 +81,7 @@ export function useTeamService() {
         return response.data
       },
       staleTime: STALE_TIME,
-      enabled: computed(() => page.value > 0 && per_page.value > 0),
+      enabled: false,
       ...defaultAxiosQueryOptions(),
     })
   }

@@ -16,6 +16,8 @@ const {
   addUsersToTeam,
   pageSize: teamsPageSize,
 } = useTeams()
+teamsPageSize.value = 99999
+onTeamsIncludeChange(['users', 'usersCount'])
 
 const {
   loading: usersLoading,
@@ -23,6 +25,7 @@ const {
   fetchUsersData,
   pageSize: usersPageSize,
 } = useUsers()
+usersPageSize.value = 99999
 
 // Filter users to only show active and registered status
 const users = computed(() => {
@@ -36,13 +39,7 @@ const users = computed(() => {
 const loadingTeamId = ref<number | null>(null)
 const isDragging = ref(false)
 
-onMounted(() => {
-  teamsPageSize.value = 99999
-  usersPageSize.value = 99999
-
-  onTeamsIncludeChange(['users', 'usersCount'])
-  fetchUsersData()
-})
+onMounted(() => {})
 
 async function handleUserDropped(teamId: number, userId: number) {
   try {
