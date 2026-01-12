@@ -207,8 +207,8 @@ function showUserDetails(userId: number) {
               </Avatar>
             </div>
             <div class="text-xs text-muted-foreground">
-              {{ getTeamMembers(team).length }}
-              {{ getTeamMembers(team).length === 1 ? 'member' : 'members' }}
+              {{ team.users_count }}
+              {{ team.users_count === 1 ? 'member' : 'members' }}
             </div>
           </div>
 

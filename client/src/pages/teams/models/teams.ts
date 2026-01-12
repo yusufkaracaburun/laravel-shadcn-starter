@@ -1,3 +1,4 @@
+import type { IUser } from '@/pages/users/models/users'
 import type { IStatus } from '@/services/types/response.type'
 
 /**
@@ -11,24 +12,8 @@ export interface ITeam {
   user_id: number
   created_at: string
   updated_at: string
-  members?: Array<{
-    id: number
-    name: string
-    email: string
-    profile_photo_url?: string | null
-    email_verified_at?: string | null
-    created_at?: string
-    updated_at?: string
-  }>
-  users?: Array<{
-    id: number
-    name: string
-    email: string
-    profile_photo_url?: string | null
-    email_verified_at?: string | null
-    created_at?: string
-    updated_at?: string
-  }>
+  users?: Array<IUser>
+  users_count?: number
 }
 
 export interface ITeamFilters {
@@ -53,7 +38,7 @@ export interface IUpdateTeamRequest {
 }
 
 export interface ITeamPrerequisites {
-  users?: Array<{ id: number; name: string; email: string }>
+  users?: Array<IUser>
   statuses?: IStatus[]
 }
 
