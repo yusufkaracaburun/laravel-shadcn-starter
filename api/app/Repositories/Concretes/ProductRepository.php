@@ -14,15 +14,6 @@ use App\Repositories\Contracts\ProductRepositoryInterface;
 final class ProductRepository extends QueryableRepository implements ProductRepositoryInterface
 {
     /**
-     * Find an product by ID with relations.
-     */
-    public function findOrFail(int $id, array $columns = ['*']): Product
-    {
-        return Product::query()
-            ->findOrFail($id, $columns);
-    }
-
-    /**
      * Base query with eager loads and filters.
      */
     public function query(): QueryBuilder
@@ -37,17 +28,11 @@ final class ProductRepository extends QueryableRepository implements ProductRepo
             ->allowedIncludes($this->getAllowedIncludes());
     }
 
-    /**
-     * Default sorting (by name asc).
-     */
     public function getDefaultSorts(): array
     {
         return ['name'];
     }
 
-    /**
-     * Allowed sorts for QueryBuilder.
-     */
     public function getAllowedSorts(): array
     {
         return [
@@ -61,9 +46,6 @@ final class ProductRepository extends QueryableRepository implements ProductRepo
         ];
     }
 
-    /**
-     * Allowed sparse fieldsets.
-     */
     public function getAllowedFields(): array
     {
         return [
@@ -78,17 +60,11 @@ final class ProductRepository extends QueryableRepository implements ProductRepo
         ];
     }
 
-    /**
-     * Allowed includes.
-     */
     public function getAllowedIncludes(): array
     {
         return ['invoiceLines'];
     }
 
-    /**
-     * Allowed filters for QueryBuilder.
-     */
     public function getAllowedFilters(): array
     {
         return [
@@ -100,10 +76,12 @@ final class ProductRepository extends QueryableRepository implements ProductRepo
             AllowedFilter::exact('unit_price'),
         ];
     }
+    public function findOrFail(int $id, array $columns = ['*']): Product
+    {
+        return Product::query()
+            ->findOrFail($id, $columns);
+    }
 
-    /**
-     * Base model for this repository.
-     */
     protected function model(): string
     {
         return Product::class;

@@ -4,18 +4,14 @@ declare(strict_types=1);
 
 namespace App\Repositories\Concretes;
 
-use App\Models\Team;
-use Illuminate\Http\Request;
-use Spatie\QueryBuilder\AllowedInclude;
+use App\Models\Equipment;
 use Spatie\QueryBuilder\QueryBuilder;
 use Spatie\QueryBuilder\AllowedFilter;
 use App\Repositories\QueryableRepository;
-use Illuminate\Database\Eloquent\Collection;
 use Spatie\QueryBuilder\QueryBuilderRequest;
-use Illuminate\Pagination\LengthAwarePaginator;
-use App\Repositories\Contracts\TeamRepositoryInterface;
+use App\Repositories\Contracts\EquipmentRepositoryInterface;
 
-final class TeamRepository extends QueryableRepository implements TeamRepositoryInterface
+final class EquipmentRepository extends QueryableRepository implements EquipmentRepositoryInterface
 {
     public function query(): QueryBuilder
     {
@@ -39,6 +35,9 @@ final class TeamRepository extends QueryableRepository implements TeamRepository
         return [
             'id', '-id',
             'name', '-name',
+            'serial_number', '-serial_number',
+            'type', '-type',
+            'status', '-status',
             'created_at', '-created_at',
             'updated_at', '-updated_at',
         ];
@@ -49,38 +48,39 @@ final class TeamRepository extends QueryableRepository implements TeamRepository
         return [
             'id',
             'name',
-            'personal_team'
+            'serial_number',
+            'type',
+            'status',
+            'image',
+            'created_at',
+            'updated_at',
         ];
     }
 
     public function getAllowedIncludes(): array
     {
-        return [
-            'owner',
-            'users',
-            AllowedInclude::count('usersCount'),
-            'teamInvitations'
-        ];
+        return [];
     }
 
     public function getAllowedFilters(): array
     {
         return [
-            AllowedFilter::exact('id'),
-            AllowedFilter::exact('name'),
-            AllowedFilter::exact('personal_team'),
-            AllowedFilter::exact('user_id'),
+            AllowedFilter::partial('name'),
+            AllowedFilter::partial('serial_number'),
+            AllowedFilter::partial('type'),
+            AllowedFilter::exact('status'),
+            AllowedFilter::scope('active'),
             AllowedFilter::scope('created_at'),
         ];
     }
 
-    public function findOrFail(int $id, array $columns = ['*']): Team
+    public function findOrFail(int $id, array $columns = ['*']): Equipment
     {
-        return Team::query()->findOrFail($id, $columns);
+        return Equipment::query()->findOrFail($id, $columns);
     }
 
     protected function model(): string
     {
-        return Team::class;
+        return Equipment::class;
     }
 }

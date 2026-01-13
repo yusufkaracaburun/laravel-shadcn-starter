@@ -9,12 +9,44 @@ use Spatie\QueryBuilder\AllowedFilter;
 use App\Repositories\QueryableRepository;
 use Illuminate\Database\Eloquent\Collection;
 use App\Repositories\Contracts\PermissionRepositoryInterface;
+use Spatie\QueryBuilder\QueryBuilder;
+use Spatie\QueryBuilder\QueryBuilderRequest;
 
 final class PermissionRepository extends QueryableRepository implements PermissionRepositoryInterface
 {
-    public function getPermissions(): Collection
+    public function query(): QueryBuilder
     {
-        return $this->getFiltered();
+        $queryRequest = QueryBuilderRequest::fromRequest($this->request ?? request());
+
+        return QueryBuilder::for($this->model(), $queryRequest)
+            ->defaultSorts($this->getDefaultSorts())
+            ->allowedFilters($this->getAllowedFilters())
+            ->allowedSorts($this->getAllowedSorts())
+            ->allowedFields($this->getAllowedFields())
+            ->allowedIncludes($this->getAllowedIncludes());
+    }
+
+    public function getDefaultSorts(): array
+    {
+        return ['name'];
+    }
+
+    public function getAllowedSorts(): array
+    {
+        return [
+            'id', '-id',
+            'name', '-name'
+        ];
+    }
+
+    public function getAllowedFields(): array
+    {
+        return ['id', 'name', 'guard_name'];
+    }
+
+    public function getAllowedIncludes(): array
+    {
+        return ['roles', 'users'];
     }
 
     public function getAllowedFilters(): array
@@ -25,19 +57,9 @@ final class PermissionRepository extends QueryableRepository implements Permissi
         ];
     }
 
-    public function getAllowedSorts(): array
+    public function findOrFail(int $id, array $columns = ['*']): Permission
     {
-        return ['id', '-id', 'name', '-name'];
-    }
-
-    public function getAllowedIncludes(): array
-    {
-        return ['roles', 'users'];
-    }
-
-    public function getAllowedFields(): array
-    {
-        return ['id', 'name', 'guard_name'];
+        return Permission::query()->findOrFail($id, $columns);
     }
 
     protected function model(): string

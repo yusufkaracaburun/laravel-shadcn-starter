@@ -74,7 +74,7 @@ final class UserService extends BaseService implements UserServiceInterface
      */
     public function createUser(array $data, ?int $teamId = null): UserResource
     {
-        $user = $this->userRepository->createUser($data, $teamId);
+        $user = $this->userRepository->create($data, $teamId);
 
         return new UserResource($user);
     }

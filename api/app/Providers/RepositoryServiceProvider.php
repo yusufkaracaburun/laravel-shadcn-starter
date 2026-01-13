@@ -14,6 +14,7 @@ use App\Repositories\Concretes\ProductRepository;
 use App\Repositories\Concretes\ProjectRepository;
 use App\Repositories\Concretes\VehicleRepository;
 use App\Repositories\Concretes\CustomerRepository;
+use App\Repositories\Concretes\EquipmentRepository;
 use App\Repositories\Concretes\TestFinalRepository;
 use App\Repositories\Concretes\PermissionRepository;
 use App\Repositories\Contracts\RoleRepositoryInterface;
@@ -25,6 +26,7 @@ use App\Repositories\Contracts\ProductRepositoryInterface;
 use App\Repositories\Contracts\ProjectRepositoryInterface;
 use App\Repositories\Contracts\VehicleRepositoryInterface;
 use App\Repositories\Contracts\CustomerRepositoryInterface;
+use App\Repositories\Contracts\EquipmentRepositoryInterface;
 use App\Repositories\Contracts\TestFinalRepositoryInterface;
 use App\Repositories\Contracts\PermissionRepositoryInterface;
 
@@ -46,5 +48,6 @@ final class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(PermissionRepositoryInterface::class, PermissionRepository::class);
         $this->app->bind(RoleRepositoryInterface::class, RoleRepository::class);
         $this->app->bind(VehicleRepositoryInterface::class, VehicleRepository::class);
+        $this->app->bind(EquipmentRepositoryInterface::class, EquipmentRepository::class);
     }
 }

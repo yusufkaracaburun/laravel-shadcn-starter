@@ -15,17 +15,6 @@ use App\Repositories\Contracts\InvoiceRepositoryInterface;
 
 final class InvoiceRepository extends QueryableRepository implements InvoiceRepositoryInterface
 {
-    /**
-     * Return paginated invoices with filters and sorting applied.
-     */
-    public function getInvoices(int $perPage = 10): LengthAwarePaginator
-    {
-        return $this->query()->paginate($perPage);
-    }
-
-    /**
-     * Define the base query for invoices using Spatie QueryBuilder.
-     */
     public function query(): QueryBuilder
     {
         $queryRequest = QueryBuilderRequest::fromRequest($this->request ?? request());
@@ -39,17 +28,11 @@ final class InvoiceRepository extends QueryableRepository implements InvoiceRepo
             ->allowedIncludes($this->getAllowedIncludes());
     }
 
-    /**
-     * Default sorting: latest invoice first.
-     */
     public function getDefaultSorts(): array
     {
         return ['-date'];
     }
 
-    /**
-     * Allowed sorts for invoices.
-     */
     public function getAllowedSorts(): array
     {
         return [
@@ -66,9 +49,6 @@ final class InvoiceRepository extends QueryableRepository implements InvoiceRepo
         ];
     }
 
-    /**
-     * Allowed fields for sparse fieldsets.
-     */
     public function getAllowedFields(): array
     {
         return [
@@ -89,17 +69,11 @@ final class InvoiceRepository extends QueryableRepository implements InvoiceRepo
         ];
     }
 
-    /**
-     * Allowed includes for eager loading.
-     */
     public function getAllowedIncludes(): array
     {
         return ['customer', 'items', 'payments', 'emails', 'activities'];
     }
 
-    /**
-     * Allowed filters for invoice listing.
-     */
     public function getAllowedFilters(): array
     {
         return [
@@ -116,9 +90,6 @@ final class InvoiceRepository extends QueryableRepository implements InvoiceRepo
         ];
     }
 
-    /**
-     * Find an invoice by ID with related models.
-     */
     public function findOrFail(int $id, array $columns = ['*']): Invoice
     {
         return Invoice::query()
@@ -126,9 +97,6 @@ final class InvoiceRepository extends QueryableRepository implements InvoiceRepo
             ->findOrFail($id, $columns);
     }
 
-    /**
-     * Define the associated Eloquent model.
-     */
     protected function model(): string
     {
         return Invoice::class;

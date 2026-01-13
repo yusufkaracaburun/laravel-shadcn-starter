@@ -5,132 +5,66 @@ declare(strict_types=1);
 namespace App\Repositories\Concretes;
 
 use App\Models\Project;
-use Illuminate\Http\Request;
 use Spatie\QueryBuilder\QueryBuilder;
 use Spatie\QueryBuilder\AllowedFilter;
 use App\Repositories\QueryableRepository;
-use Illuminate\Database\Eloquent\Collection;
 use Spatie\QueryBuilder\QueryBuilderRequest;
-use Illuminate\Pagination\LengthAwarePaginator;
 use App\Repositories\Contracts\ProjectRepositoryInterface;
 
 final class ProjectRepository extends QueryableRepository implements ProjectRepositoryInterface
 {
-    /**
-     * Get paginated projects with QueryBuilder support.
-     * Supports filtering, sorting, and including relationships via request parameters.
-     */
-    public function getPaginated(int $perPage, ?int $teamId = null): LengthAwarePaginator
+    public function query(): QueryBuilder
     {
-        // Start with base query
-        $query = Project::query();
+        $queryRequest = QueryBuilderRequest::fromRequest($this->request ?? request());
 
-        // Apply team filtering if teamId is provided
-        if ($teamId !== null) {
-            $query->where('team_id', $teamId);
-        }
-
-        // Get the original request and create a modified version with our per_page
-        $originalRequest = request();
-        $queryParams = $originalRequest->query->all();
-        $queryParams['per_page'] = (string) $perPage;
-        $queryParams['page'] = (string) ($originalRequest->input('page', 1));
-
-        // Build URL with query string
-        $url = $originalRequest->url();
-        $queryString = http_build_query($queryParams);
-        $fullUrl = $queryString !== '' && $queryString !== '0' ? $url.'?'.$queryString : $url;
-
-        // Create a new request with modified query parameters
-        $modifiedRequest = Request::create(
-            $fullUrl,
-            $originalRequest->method(),
-            $originalRequest->request->all(),
-            $originalRequest->cookies->all(),
-            $originalRequest->files->all(),
-            $originalRequest->server->all(),
-            $originalRequest->getContent()
-        );
-
-        // Build query with QueryBuilder for filtering, sorting, and includes
-        $queryRequest = QueryBuilderRequest::fromRequest($modifiedRequest);
-        $queryBuilder = QueryBuilder::for($query, $queryRequest)
+        return QueryBuilder::for($this->model(), $queryRequest)
+            ->defaultSorts($this->getDefaultSorts())
             ->allowedFilters($this->getAllowedFilters())
             ->allowedSorts($this->getAllowedSorts())
+            ->allowedFields($this->getAllowedFields())
             ->allowedIncludes($this->getAllowedIncludes());
-
-        // Get the underlying Eloquent builder after QueryBuilder has applied filters/sorts/includes
-        // Then paginate directly with our per_page value
-        $eloquentBuilder = $queryBuilder->getEloquentBuilder();
-
-        // Get the page number from the modified request
-        $page = (int) $modifiedRequest->input('page', 1);
-
-        // Paginate directly on the Eloquent builder
-        return $eloquentBuilder->paginate($perPage, ['*'], 'page', $page);
     }
 
-    /**
-     * Find a project by ID with relationships loaded.
-     */
-    public function findById(int $projectId, ?int $teamId = null): Project
+    public function getDefaultSorts(): array
     {
-        $query = Project::query()->where('id', $projectId);
-
-        // Apply team filtering if teamId is provided
-        if ($teamId !== null) {
-            $query->where('team_id', $teamId);
-        }
-
-        return $query->firstOrFail();
+        return ['name'];
     }
 
     /**
-     * Create a new project with team context.
-     *
-     * @param  array<string, mixed>  $data
-     * @param  int|null  $teamId  Team ID for team-scoped project creation
+     * Get allowed sorts for this repository.
      */
-    public function createProject(array $data, ?int $teamId = null): Project
+    public function getAllowedSorts(): array
     {
-        // Set team_id if provided
-        if ($teamId !== null) {
-            $data['team_id'] = $teamId;
-        }
-
-        return Project::query()->create($data);
+        return [
+            'id', '-id',
+            'name', '-name',
+            'status', '-status',
+            'category', '-category',
+            'start_date', '-start_date',
+            'end_date', '-end_date',
+            'progress', '-progress',
+            'created_at', '-created_at',
+            'updated_at', '-updated_at',
+        ];
     }
 
-    /**
-     * Update a project by model instance.
-     *
-     * @param  array<string, mixed>  $data
-     * @param  int|null  $teamId  Team ID for team-scoped updates
-     */
-    public function updateProject(Project $project, array $data, ?int $teamId = null): Project
+    public function getAllowedFields(): array
     {
-        // Set team_id if provided
-        if ($teamId !== null) {
-            $data['team_id'] = $teamId;
-        }
-
-        $project->update($data);
-        $project->refresh();
-
-        return $project;
+        return [
+            'id', '-id',
+            'name', '-name',
+            'category', '-category',
+            'status', '-status',
+            'created_at', '-created_at',
+            'updated_at', '-updated_at',
+        ];
     }
 
-    /**
-     * Delete a project by model instance.
-     */
-    public function deleteProject(Project $project): bool
+    public function getAllowedIncludes(): array
     {
-        return $project->delete();
+        return ['team'];
     }
 
-    /**
-     * Get allowed filters for this repository.
-     */
     public function getAllowedFilters(): array
     {
         return [
@@ -143,25 +77,11 @@ final class ProjectRepository extends QueryableRepository implements ProjectRepo
         ];
     }
 
-    /**
-     * Get allowed sorts for this repository.
-     */
-    public function getAllowedSorts(): array
+    public function findOrFail(int $id, array $columns = ['*']): Project
     {
-        return ['id', 'name', 'status', 'category', 'start_date', 'end_date', 'progress', 'created_at'];
+        return Project::query()->findOrFail($id, $columns);
     }
 
-    /**
-     * Get allowed includes for this repository.
-     */
-    public function getAllowedIncludes(): array
-    {
-        return ['team'];
-    }
-
-    /**
-     * Model binding.
-     */
     protected function model(): string
     {
         return Project::class;

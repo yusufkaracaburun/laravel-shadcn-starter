@@ -10,7 +10,5 @@ use App\Repositories\QueryableRepositoryInterface;
 
 interface InvoiceRepositoryInterface extends QueryableRepositoryInterface
 {
-    public function getInvoices(): LengthAwarePaginator;
-
     public function findOrFail(int $id, array $columns = ['*']): Invoice;
 }

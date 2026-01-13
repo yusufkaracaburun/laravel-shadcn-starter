@@ -26,12 +26,7 @@ final class VehicleService extends BaseService implements VehicleServiceInterfac
 
     public function getPaginated(int $perPage, ?int $teamId = null): VehicleCollection
     {
-        $request = request();
-        $request->query->set('per_page', (string) $perPage);
-
-        $this->repo->withRequest($request);
-
-        $paginated = $this->repo->query()->paginate($perPage);
+        $paginated = $this->repo->getPaginated($perPage, $teamId);
 
         return new VehicleCollection($paginated);
     }
@@ -39,7 +34,7 @@ final class VehicleService extends BaseService implements VehicleServiceInterfac
     public function findById(int $vehicleId, ?int $teamId = null): VehicleResource
     {
         try {
-            $vehicle = $this->repo->findById($vehicleId);
+            $vehicle = $this->repo->findById($vehicleId, $teamId);
 
             return new VehicleResource($vehicle);
         } catch (ModelNotFoundException) {
@@ -49,7 +44,7 @@ final class VehicleService extends BaseService implements VehicleServiceInterfac
 
     public function createVehicle(array $data, ?int $teamId = null): VehicleResource
     {
-        $vehicle = $this->repo->createVehicle(Arr::except($data, ['drivers']));
+        $vehicle = $this->repo->createVehicle(Arr::except($data, ['drivers']), $teamId);
 
         if (isset($data['drivers'])) {
             $vehicle->drivers()->sync($data['drivers']);
@@ -61,7 +56,7 @@ final class VehicleService extends BaseService implements VehicleServiceInterfac
     public function updateVehicle(Vehicle $vehicle, array $data, ?int $teamId = null): VehicleResource
     {
         try {
-            $updated = $this->repo->updateVehicle($vehicle->id, Arr::except($data, ['drivers']));
+            $updated = $this->repo->updateVehicle($vehicle->id, Arr::except($data, ['drivers']), $teamId);
 
             if (isset($data['drivers'])) {
                 $updated->drivers()->sync($data['drivers']);
@@ -76,7 +71,7 @@ final class VehicleService extends BaseService implements VehicleServiceInterfac
     public function deleteVehicle(Vehicle $vehicle): bool
     {
         try {
-            $this->repo->deleteVehicle($vehicle->id);
+            $this->repo->deleteVehicle($vehicle);
 
             return true;
         } catch (ModelNotFoundException) {

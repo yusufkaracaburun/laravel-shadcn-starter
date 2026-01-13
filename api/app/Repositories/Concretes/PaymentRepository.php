@@ -13,19 +13,6 @@ use App\Repositories\Contracts\PaymentRepositoryInterface;
 
 final class PaymentRepository extends QueryableRepository implements PaymentRepositoryInterface
 {
-    /**
-     * Find a payment by ID with relations.
-     */
-    public function findOrFail(int $id, array $columns = ['*']): Payment
-    {
-        return Payment::query()
-            ->with(['invoice', 'customer'])
-            ->findOrFail($id, $columns);
-    }
-
-    /**
-     * Base query with eager loads and filters.
-     */
     public function query(): QueryBuilder
     {
         $queryRequest = QueryBuilderRequest::fromRequest($this->request ?? request());
@@ -39,17 +26,11 @@ final class PaymentRepository extends QueryableRepository implements PaymentRepo
             ->allowedIncludes($this->getAllowedIncludes());
     }
 
-    /**
-     * Default sorting (latest payments first).
-     */
     public function getDefaultSorts(): array
     {
         return ['-date'];
     }
 
-    /**
-     * Allowed sorts for QueryBuilder.
-     */
     public function getAllowedSorts(): array
     {
         return [
@@ -68,9 +49,6 @@ final class PaymentRepository extends QueryableRepository implements PaymentRepo
         ];
     }
 
-    /**
-     * Allowed sparse fieldsets.
-     */
     public function getAllowedFields(): array
     {
         return [
@@ -91,17 +69,11 @@ final class PaymentRepository extends QueryableRepository implements PaymentRepo
         ];
     }
 
-    /**
-     * Allowed includes.
-     */
     public function getAllowedIncludes(): array
     {
         return ['invoice', 'customer'];
     }
 
-    /**
-     * Allowed filters for QueryBuilder.
-     */
     public function getAllowedFilters(): array
     {
         return [
@@ -120,9 +92,13 @@ final class PaymentRepository extends QueryableRepository implements PaymentRepo
         ];
     }
 
-    /**
-     * Base model for this repository.
-     */
+    public function findOrFail(int $id, array $columns = ['*']): Payment
+    {
+        return Payment::query()
+            ->with(['invoice', 'customer'])
+            ->findOrFail($id, $columns);
+    }
+
     protected function model(): string
     {
         return Payment::class;

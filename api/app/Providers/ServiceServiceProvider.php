@@ -14,6 +14,7 @@ use App\Services\Concretes\ProductService;
 use App\Services\Concretes\ProjectService;
 use App\Services\Concretes\VehicleService;
 use App\Services\Concretes\CustomerService;
+use App\Services\Concretes\EquipmentService;
 use App\Services\Concretes\PermissionService;
 use App\Services\Contracts\RoleServiceInterface;
 use App\Services\Contracts\TeamServiceInterface;
@@ -24,6 +25,7 @@ use App\Services\Contracts\ProductServiceInterface;
 use App\Services\Contracts\ProjectServiceInterface;
 use App\Services\Contracts\VehicleServiceInterface;
 use App\Services\Contracts\CustomerServiceInterface;
+use App\Services\Contracts\EquipmentServiceInterface;
 use App\Services\Contracts\PermissionServiceInterface;
 
 final class ServiceServiceProvider extends ServiceProvider
@@ -43,5 +45,6 @@ final class ServiceServiceProvider extends ServiceProvider
         $this->app->bind(PermissionServiceInterface::class, PermissionService::class);
         $this->app->bind(RoleServiceInterface::class, RoleService::class);
         $this->app->bind(VehicleServiceInterface::class, VehicleService::class);
+        $this->app->bind(EquipmentServiceInterface::class, EquipmentService::class);
     }
 }

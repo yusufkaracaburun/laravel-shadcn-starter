@@ -10,69 +10,27 @@ use Spatie\QueryBuilder\AllowedFilter;
 use App\Repositories\QueryableRepository;
 use Illuminate\Pagination\LengthAwarePaginator;
 use App\Repositories\Contracts\CustomerRepositoryInterface;
+use Spatie\QueryBuilder\QueryBuilderRequest;
 
 final class CustomerRepository extends QueryableRepository implements CustomerRepositoryInterface
 {
-    /**
-     * Return all business customers, paginated.
-     */
-    public function getBusinessCustomers(int $perPage = 10): LengthAwarePaginator
-    {
-        return $this->query()
-            ->business()
-            ->paginate($perPage);
-    }
-
-    /**
-     * Base query with eager loads, counts and filters.
-     */
     public function query(): QueryBuilder
     {
-        return parent::query()
-            ->with(['contacts'])
-            ->withCount(['invoices']);
+        $queryRequest = QueryBuilderRequest::fromRequest($this->request ?? request());
+
+        return QueryBuilder::for($this->model(), $queryRequest)
+            ->defaultSorts($this->getDefaultSorts())
+            ->allowedFilters($this->getAllowedFilters())
+            ->allowedSorts($this->getAllowedSorts())
+            ->allowedFields($this->getAllowedFields())
+            ->allowedIncludes($this->getAllowedIncludes());
     }
 
-    /**
-     * Return all private customers, paginated.
-     */
-    public function getPrivateCustomers(int $perPage = 10): LengthAwarePaginator
-    {
-        return $this->query()
-            ->private()
-            ->paginate($perPage);
-    }
-
-    /**
-     * Default sort order.
-     */
     public function getDefaultSorts(): array
     {
         return ['name'];
     }
 
-    /**
-     * Allowed filters.
-     */
-    public function getAllowedFilters(): array
-    {
-        return [
-            AllowedFilter::exact('type'),
-            AllowedFilter::partial('name'),
-            AllowedFilter::partial('email'),
-            AllowedFilter::partial('phone'),
-            AllowedFilter::partial('city'),
-            AllowedFilter::partial('zipcode'),
-            AllowedFilter::partial('country'),
-            AllowedFilter::partial('kvk_number'),
-            AllowedFilter::partial('vat_number'),
-            AllowedFilter::partial('iban_number'),
-        ];
-    }
-
-    /**
-     * Allowed sorts.
-     */
     public function getAllowedSorts(): array
     {
         return [
@@ -93,9 +51,6 @@ final class CustomerRepository extends QueryableRepository implements CustomerRe
         ];
     }
 
-    /**
-     * Allowed fields.
-     */
     public function getAllowedFields(): array
     {
         return [
@@ -116,22 +71,42 @@ final class CustomerRepository extends QueryableRepository implements CustomerRe
         ];
     }
 
-    /**
-     * Allowed includes.
-     */
     public function getAllowedIncludes(): array
     {
         return ['contacts', 'invoices'];
     }
 
-    /**
-     * Find a customer with related counts.
-     */
+    public function getAllowedFilters(): array
+    {
+        return [
+            AllowedFilter::exact('type'),
+            AllowedFilter::partial('name'),
+            AllowedFilter::partial('email'),
+            AllowedFilter::partial('phone'),
+            AllowedFilter::partial('city'),
+            AllowedFilter::partial('zipcode'),
+            AllowedFilter::partial('country'),
+            AllowedFilter::partial('kvk_number'),
+            AllowedFilter::partial('vat_number'),
+            AllowedFilter::partial('iban_number'),
+        ];
+    }
+
     public function findOrFail(int $id, array $columns = ['*']): Customer
     {
         return Customer::query()
             ->withCount(['invoices', 'contacts'])
             ->findOrFail($id, $columns);
+    }
+
+    public function getBusinessCustomers(int $perPage = 9999): LengthAwarePaginator
+    {
+        return Customer::query()->business()->paginate($perPage);
+    }
+
+    public function getPrivateCustomers(int $perPage = 9999): LengthAwarePaginator
+    {
+        return Customer::query()->private()->paginate($perPage);
     }
 
     protected function model(): string

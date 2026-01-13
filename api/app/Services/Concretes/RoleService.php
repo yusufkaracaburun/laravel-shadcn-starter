@@ -141,7 +141,7 @@ final class RoleService extends BaseService implements RoleServiceInterface
      */
     public function getNonSystemRoles(): RoleCollection
     {
-        $roles = $this->repo->getNonSystemRoles();
+        $roles = $this->repo->getSystemRoles();
 
         return new RoleCollection($roles);
     }

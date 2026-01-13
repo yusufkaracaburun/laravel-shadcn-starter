@@ -10,36 +10,59 @@ use Spatie\QueryBuilder\AllowedInclude;
 use App\Repositories\QueryableRepository;
 use Illuminate\Database\Eloquent\Collection;
 use App\Repositories\Contracts\RoleRepositoryInterface;
+use Spatie\QueryBuilder\QueryBuilder;
+use Spatie\QueryBuilder\QueryBuilderRequest;
 
 final class RoleRepository extends QueryableRepository implements RoleRepositoryInterface
 {
-    /**
-     * Get all roles.
-     */
-    public function getRoles(): Collection
+    public function query(): QueryBuilder
     {
-        return $this->getFiltered();
+        $queryRequest = QueryBuilderRequest::fromRequest($this->request ?? request());
+
+        return QueryBuilder::for($this->model(), $queryRequest)
+            ->defaultSorts($this->getDefaultSorts())
+            ->allowedFilters($this->getAllowedFilters())
+            ->allowedSorts($this->getAllowedSorts())
+            ->allowedFields($this->getAllowedFields())
+            ->allowedIncludes($this->getAllowedIncludes());
     }
 
-    /**
-     * Get role by name.
-     */
-    public function findByName(string $name): ?Role
+    public function getDefaultSorts(): array
     {
-        return $this->findByField('name', $name);
+        return ['name'];
     }
 
-    /**
-     * Get non-system roles.
-     */
-    public function getNonSystemRoles(): Collection
+    public function getAllowedSorts(): array
     {
-        return $this->model->where('is_system', false)->get();
+        return [
+            'id', '-id',
+            'name', '-name',
+            'is_system', '-is_system',
+            'created_at', '-created_at'
+        ];
     }
 
-    /**
-     * Get allowed filters for this repository.
-     */
+    public function getAllowedFields(): array
+    {
+        return [
+            'id',
+            'name',
+            'is_system',
+            'created_at',
+            'updated_at'
+        ];
+    }
+
+    public function getAllowedIncludes(): array
+    {
+        return [
+            'users',
+            'permissions',
+            AllowedInclude::count('usersCount'),
+            AllowedInclude::count('permissionsCount')
+        ];
+    }
+
     public function getAllowedFilters(): array
     {
         return [
@@ -49,41 +72,21 @@ final class RoleRepository extends QueryableRepository implements RoleRepository
         ];
     }
 
-    /**
-     * Get default sorts for this repository.
-     */
-    public function getDefaultSorts(): array
+    public function findOrFail(int $id, array $columns = ['*']): Role
     {
-        return ['name'];
+        return Role::query()->findOrFail($id, $columns);
     }
 
-    /**
-     * Get allowed sorts for this repository.
-     */
-    public function getAllowedSorts(): array
+    public function findByName(string $name): ?Role
     {
-        return ['id', '-id', 'name', '-name', 'is_system', '-is_system', 'created_at', '-created_at'];
+        return $this->findByField('name', $name);
     }
 
-    /**
-     * Get allowed includes for this repository.
-     */
-    public function getAllowedIncludes(): array
+    public function getSystemRoles(bool $is_system = false): Collection
     {
-        return ['users', 'permissions', AllowedInclude::count('usersCount'), AllowedInclude::count('permissionsCount')];
+        return Role::query()->where('is_system', $is_system)->get();
     }
 
-    /**
-     * Get allowed fields for this repository.
-     */
-    public function getAllowedFields(): array
-    {
-        return ['id', 'name', 'is_system', 'created_at', 'updated_at'];
-    }
-
-    /**
-     * Specify Model class name.
-     */
     protected function model(): string
     {
         return Role::class;

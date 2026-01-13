@@ -10,18 +10,6 @@ use App\Repositories\QueryableRepositoryInterface;
 
 interface RoleRepositoryInterface extends QueryableRepositoryInterface
 {
-    /**
-     * Get all roles.
-     */
-    public function getRoles(): Collection;
-
-    /**
-     * Get role by name.
-     */
-    public function findByName(string $name): ?Role;
-
-    /**
-     * Get non-system roles.
-     */
-    public function getNonSystemRoles(): Collection;
+    public function findOrFail(int $id, array $columns = ['*']): Role;
+    public function getSystemRoles(bool $is_system = false): Collection;
 }

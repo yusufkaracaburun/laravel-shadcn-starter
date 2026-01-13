@@ -13,19 +13,6 @@ use App\Repositories\Contracts\VehicleRepositoryInterface;
 
 final class VehicleRepository extends QueryableRepository implements VehicleRepositoryInterface
 {
-    /**
-     * Find a payment by ID with relations.
-     */
-    public function findOrFail(int $id, array $columns = ['*']): Vehicle
-    {
-        return Vehicle::query()
-            ->with(['drivers'])
-            ->findOrFail($id, $columns);
-    }
-
-    /**
-     * Define the base query for vehicles using Spatie QueryBuilder.
-     */
     public function query(): QueryBuilder
     {
         $queryRequest = QueryBuilderRequest::fromRequest($this->request ?? request());
@@ -38,17 +25,11 @@ final class VehicleRepository extends QueryableRepository implements VehicleRepo
             ->allowedIncludes($this->getAllowedIncludes());
     }
 
-    /**
-     * Default sorting: latest created first.
-     */
     public function getDefaultSorts(): array
     {
         return ['license_plate'];
     }
 
-    /**
-     * Allowed sorts.
-     */
     public function getAllowedSorts(): array
     {
         return [
@@ -62,9 +43,6 @@ final class VehicleRepository extends QueryableRepository implements VehicleRepo
         ];
     }
 
-    /**
-     * Allowed fields.
-     */
     public function getAllowedFields(): array
     {
         return [
@@ -80,17 +58,11 @@ final class VehicleRepository extends QueryableRepository implements VehicleRepo
         ];
     }
 
-    /**
-     * Allowed includes.
-     */
     public function getAllowedIncludes(): array
     {
         return ['drivers'];
     }
 
-    /**
-     * Allowed filters.
-     */
     public function getAllowedFilters(): array
     {
         return [
@@ -102,6 +74,13 @@ final class VehicleRepository extends QueryableRepository implements VehicleRepo
             AllowedFilter::exact('year'),
             AllowedFilter::scope('active'),
         ];
+    }
+
+    public function findOrFail(int $id, array $columns = ['*']): Vehicle
+    {
+        return Vehicle::query()
+            ->with(['drivers'])
+            ->findOrFail($id, $columns);
     }
 
     protected function model(): string

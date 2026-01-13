@@ -10,9 +10,7 @@ use App\Repositories\QueryableRepositoryInterface;
 
 interface CustomerRepositoryInterface extends QueryableRepositoryInterface
 {
-    public function getBusinessCustomers(int $perPage = 10): LengthAwarePaginator;
-
-    public function getPrivateCustomers(int $perPage = 10): LengthAwarePaginator;
-
     public function findOrFail(int $id, array $columns = ['*']): Customer;
+    public function getBusinessCustomers(int $perPage = 9999): LengthAwarePaginator;
+    public function getPrivateCustomers(int $perPage = 9999): LengthAwarePaginator;
 }
