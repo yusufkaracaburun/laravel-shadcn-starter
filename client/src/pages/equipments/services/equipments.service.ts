@@ -6,18 +6,22 @@ import { computed } from 'vue'
 import type { TPageSize } from '@/components/data-table/types'
 import type {
   ICreateEquipmentRequest,
-  IUpdateEquipmentRequest,
   IEquipment,
   IEquipmentFilters,
   IEquipmentPrerequisites,
+  IUpdateEquipmentRequest,
 } from '@/pages/equipments/models/equipments'
+import type { ISorting } from '@/services/query-utils'
+import type {
+  IPaginatedResponse,
+  IResponse,
+} from '@/services/types/response.type'
 
 import { useAxios } from '@/composables/use-axios.composable'
-
-import type { ISorting } from '@/services/query-utils'
-import type { IPaginatedResponse, IResponse } from '@/services/types/response.type'
-
-import { buildQueryString, defaultAxiosQueryOptions } from '@/services/query-utils'
+import {
+  buildQueryString,
+  defaultAxiosQueryOptions,
+} from '@/services/query-utils'
 
 enum QueryKeys {
   EQUIPMENT_PREREQUISITES = 'equipmentPrerequisites',
@@ -59,14 +63,24 @@ export function useEquipmentsService() {
     include: Ref<string[]>,
   ): ReturnType<typeof useQuery<IPaginatedResponse<IEquipment>, AxiosError>> {
     return useQuery({
-      queryKey: [QueryKeys.EQUIPMENT_LIST, page, per_page, sort, filter, include],
+      queryKey: [
+        QueryKeys.EQUIPMENT_LIST,
+        page,
+        per_page,
+        sort,
+        filter,
+        include,
+      ],
       queryFn: async (): Promise<IPaginatedResponse<IEquipment>> => {
         const params: Record<string, any> = {
           page: page.value,
           per_page: per_page.value,
           sort: sort.value,
           filter: filter.value,
-          include: include.value,
+        }
+
+        if (include.value && include.value.length > 0) {
+          params.include = include.value.join(',')
         }
 
         const response = await axiosInstance.get(
@@ -130,9 +144,17 @@ export function useEquipmentsService() {
   }
 
   function createEquipmentsMutation(): ReturnType<
-    typeof useMutation<IResponse<IEquipment>, AxiosError, ICreateEquipmentRequest>
+    typeof useMutation<
+      IResponse<IEquipment>,
+      AxiosError,
+      ICreateEquipmentRequest
+    >
   > {
-    return useMutation<IResponse<IEquipment>, AxiosError, ICreateEquipmentRequest>({
+    return useMutation<
+      IResponse<IEquipment>,
+      AxiosError,
+      ICreateEquipmentRequest
+    >({
       mutationKey: [QueryKeys.CREATE_EQUIPMENT],
       mutationFn: async (
         data: ICreateEquipmentRequest,

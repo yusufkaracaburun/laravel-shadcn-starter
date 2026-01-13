@@ -3,10 +3,10 @@ import { useRoute } from 'vue-router'
 
 import type {
   ICreateEquipmentRequest,
-  IUpdateEquipmentRequest,
   IEquipment,
   IEquipmentFilters,
   IEquipmentPrerequisites,
+  IUpdateEquipmentRequest,
 } from '@/pages/equipments/models/equipments'
 import type { IResponse } from '@/services/types/response.type'
 
@@ -47,9 +47,16 @@ export function useEquipments() {
     IEquipmentPrerequisites
   >({
     service: {
-      getPrerequisitesQuery: () => equipmentsService.getEquipmentsPrerequisitesQuery(),
+      getPrerequisitesQuery: () =>
+        equipmentsService.getEquipmentsPrerequisitesQuery(),
       getListQuery: (page, per_page, sort, filter, include) =>
-        equipmentsService.getEquipmentsQuery(page, per_page, sort, filter, include),
+        equipmentsService.getEquipmentsQuery(
+          page,
+          per_page,
+          sort,
+          filter,
+          include,
+        ),
       createMutation: () => equipmentsService.createEquipmentsMutation(),
       updateMutation: () => equipmentsService.updateEquipmentsMutation(),
       deleteMutation: () => equipmentsService.deleteEquipmentsMutation(),
@@ -71,9 +78,9 @@ export function useEquipments() {
     const params = route.params as { id?: string | string[] }
     const idParam = Array.isArray(params.id) ? params.id[0] : params.id
     if (
-      !idParam
-      || typeof idParam !== 'string'
-      || Number.isNaN(Number(idParam))
+      !idParam ||
+      typeof idParam !== 'string' ||
+      Number.isNaN(Number(idParam))
     ) {
       return undefined
     }
@@ -97,7 +104,9 @@ export function useEquipments() {
       const response = await refetchEquipmentsById()
       return response.data as IResponse<IEquipment>
     } catch (error: any) {
-      errorStore.setError(error, { context: EquipmentContext.GET_EQUIPMENT_BY_ID })
+      errorStore.setError(error, {
+        context: EquipmentContext.GET_EQUIPMENT_BY_ID,
+      })
       const message = errorStore.getErrorMessage(error)
       toast.showError(message)
       throw error

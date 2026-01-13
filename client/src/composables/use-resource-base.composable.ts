@@ -84,7 +84,7 @@ export interface ResourceConfig<
   messages: Record<string, string>
   defaultSort: ISorting
   includes: Record<string, string>
-  defaultIncludeKey: string
+  defaultIncludeKey?: string
   onFetchList?: (refetch: () => Promise<any>) => void
 }
 
