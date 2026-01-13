@@ -6,8 +6,8 @@ namespace App\Services\Contracts;
 
 use App\Models\Payment;
 use App\Services\BaseServiceInterface;
-use App\Http\Resources\PaymentResource;
-use App\Http\Resources\PaymentCollection;
+use App\Http\Resources\Payments\PaymentResource;
+use App\Http\Resources\Payments\PaymentCollection;
 
 interface PaymentServiceInterface extends BaseServiceInterface
 {

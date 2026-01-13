@@ -2,10 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\Projects;
 
 use App\Models\Project;
 use Illuminate\Http\Request;
+use App\Http\Resources\BaseResource;
 
 /**
  * @mixin Project

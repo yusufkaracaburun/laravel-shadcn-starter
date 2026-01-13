@@ -19,11 +19,11 @@ final class VehicleIndexRequest extends BaseIndexFormRequest
         return array_merge(
             parent::attributes(),
             [
-                'filter.make' => 'make filter',
-                'filter.model' => 'model filter',
-                'filter.year' => 'year filter',
+                'filter.make'          => 'make filter',
+                'filter.model'         => 'model filter',
+                'filter.year'          => 'year filter',
                 'filter.license_plate' => 'license plate filter',
-                'filter.status' => 'status filter',
+                'filter.status'        => 'status filter',
             ],
         );
     }
@@ -38,11 +38,11 @@ final class VehicleIndexRequest extends BaseIndexFormRequest
         return array_merge(
             parent::filterRules(),
             [
-                'filter.make' => 'sometimes|string|max:255',
-                'filter.model' => 'sometimes|string|max:255',
-                'filter.year' => 'sometimes|integer',
+                'filter.make'          => 'sometimes|string|max:255',
+                'filter.model'         => 'sometimes|string|max:255',
+                'filter.year'          => 'sometimes|integer',
                 'filter.license_plate' => 'sometimes|string|max:20',
-                'filter.status' => 'sometimes|string|in:active,maintenance,inactive',
+                'filter.status'        => 'sometimes|string|in:active,maintenance,inactive',
             ],
         );
     }

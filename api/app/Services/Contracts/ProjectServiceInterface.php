@@ -6,8 +6,8 @@ namespace App\Services\Contracts;
 
 use App\Models\Project;
 use App\Services\BaseServiceInterface;
-use App\Http\Resources\ProjectResource;
-use App\Http\Resources\ProjectCollection;
+use App\Http\Resources\Projects\ProjectResource;
+use App\Http\Resources\Projects\ProjectCollection;
 
 interface ProjectServiceInterface extends BaseServiceInterface
 {

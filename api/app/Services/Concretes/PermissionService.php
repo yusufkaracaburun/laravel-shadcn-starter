@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Services\Concretes;
 
 use App\Services\BaseService;
-use App\Http\Resources\PermissionResource;
-use App\Http\Resources\PermissionCollection;
+use App\Http\Resources\Permissions\PermissionResource;
 use App\Services\Contracts\PermissionServiceInterface;
+use App\Http\Resources\Permissions\PermissionCollection;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Repositories\Contracts\PermissionRepositoryInterface;
 

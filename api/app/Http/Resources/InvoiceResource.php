@@ -7,6 +7,9 @@ namespace App\Http\Resources;
 use App\Models\Invoice;
 use App\Enums\InvoiceStatus;
 use Illuminate\Http\Request;
+use App\Http\Resources\Emails\SentEmailResource;
+use App\Http\Resources\Payments\PaymentResource;
+use App\Http\Resources\Activities\ActivityResource;
 
 /**
  * @mixin Invoice

@@ -12,6 +12,7 @@ use App\Services\Concretes\InvoiceService;
 use App\Services\Concretes\PaymentService;
 use App\Services\Concretes\ProductService;
 use App\Services\Concretes\ProjectService;
+use App\Services\Concretes\VehicleService;
 use App\Services\Concretes\CustomerService;
 use App\Services\Concretes\PermissionService;
 use App\Services\Contracts\RoleServiceInterface;
@@ -21,10 +22,9 @@ use App\Services\Contracts\InvoiceServiceInterface;
 use App\Services\Contracts\PaymentServiceInterface;
 use App\Services\Contracts\ProductServiceInterface;
 use App\Services\Contracts\ProjectServiceInterface;
+use App\Services\Contracts\VehicleServiceInterface;
 use App\Services\Contracts\CustomerServiceInterface;
 use App\Services\Contracts\PermissionServiceInterface;
-use App\Services\Concretes\VehicleService;
-use App\Services\Contracts\VehicleServiceInterface;
 
 final class ServiceServiceProvider extends ServiceProvider
 {

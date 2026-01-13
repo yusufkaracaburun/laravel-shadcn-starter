@@ -2,9 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\Activities;
 
 use Illuminate\Http\Request;
+use App\Http\Resources\BaseResource;
 use Spatie\Activitylog\Models\Activity;
 
 /**

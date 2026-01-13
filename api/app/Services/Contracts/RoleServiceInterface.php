@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Services\Contracts;
 
 use App\Models\Role;
-use App\Http\Resources\RoleResource;
-use App\Http\Resources\RoleCollection;
 use App\Services\BaseServiceInterface;
+use App\Http\Resources\Roles\RoleResource;
+use App\Http\Resources\Roles\RoleCollection;
 use Illuminate\Database\Eloquent\Collection;
 
 interface RoleServiceInterface extends BaseServiceInterface

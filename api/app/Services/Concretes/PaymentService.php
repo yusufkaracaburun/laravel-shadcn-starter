@@ -6,8 +6,8 @@ namespace App\Services\Concretes;
 
 use App\Models\Payment;
 use App\Services\BaseService;
-use App\Http\Resources\PaymentResource;
-use App\Http\Resources\PaymentCollection;
+use App\Http\Resources\Payments\PaymentResource;
+use App\Http\Resources\Payments\PaymentCollection;
 use App\Services\Contracts\PaymentServiceInterface;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Repositories\Contracts\PaymentRepositoryInterface;

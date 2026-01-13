@@ -43,14 +43,14 @@ final class IndexUserRequest extends BaseIndexFormRequest
     {
         return array_merge(
             parent::attributes(),
-            array(
+            [
                 'filter.id'                => 'user ID filter',
                 'filter.name'              => 'name filter',
                 'filter.email'             => 'email filter',
                 'filter.status'            => 'status filter',
                 'filter.email_verified_at' => 'email verified filter',
                 'filter.created_at'        => 'created at filter',
-            ),
+            ],
         );
     }
 

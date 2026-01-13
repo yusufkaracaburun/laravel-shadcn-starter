@@ -10,7 +10,6 @@ use App\Models\Vehicle;
 use App\Enums\VehicleStatus;
 use Laravel\Sanctum\Sanctum;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 
 final class VehicleTest extends TestCase
 {
@@ -32,12 +31,12 @@ final class VehicleTest extends TestCase
         Sanctum::actingAs($user);
 
         $data = [
-            'make' => 'Test Make',
-            'model' => 'Test Model',
-            'year' => 2023,
+            'make'          => 'Test Make',
+            'model'         => 'Test Model',
+            'year'          => 2023,
             'license_plate' => 'TEST-' . rand(1000, 9999),
-            'vin' => 'VIN-' . rand(1000, 9999),
-            'status' => 'active',
+            'vin'           => 'VIN-' . rand(1000, 9999),
+            'status'        => 'active',
         ];
 
         $response = $this->postJson(route('api.vehicles.vehicles.store'), $data);
@@ -53,20 +52,20 @@ final class VehicleTest extends TestCase
         Sanctum::actingAs($user);
 
         $data = [
-            'make' => 'Test Make Driver',
-            'model' => 'Test Model',
-            'year' => 2023,
+            'make'          => 'Test Make Driver',
+            'model'         => 'Test Model',
+            'year'          => 2023,
             'license_plate' => 'DRV-' . rand(1000, 9999),
-            'vin' => 'VIN-DRV-' . rand(1000, 9999),
-            'status' => 'active',
-            'drivers' => [$driver->id],
+            'vin'           => 'VIN-DRV-' . rand(1000, 9999),
+            'status'        => 'active',
+            'drivers'       => [$driver->id],
         ];
 
         $response = $this->postJson(route('api.vehicles.vehicles.store'), $data);
 
         $response->assertStatus(201)
             ->assertJsonPath('data.make', 'Test Make Driver');
-        
+
         $this->assertTrue(Vehicle::where('license_plate', $data['license_plate'])->first()->drivers->contains($driver));
     }
 
@@ -76,11 +75,11 @@ final class VehicleTest extends TestCase
         Sanctum::actingAs($user);
 
         $vehicle = Vehicle::create([
-             'make' => 'Test',
-             'model' => 'Model',
-             'year' => 2020,
-             'license_plate' => 'SHOW-' . rand(1000,9999),
-             'status' => VehicleStatus::ACTIVE,
+            'make'          => 'Test',
+            'model'         => 'Model',
+            'year'          => 2020,
+            'license_plate' => 'SHOW-' . rand(1000, 9999),
+            'status'        => VehicleStatus::ACTIVE,
         ]);
 
         $response = $this->getJson(route('api.vehicles.vehicles.show', $vehicle));
@@ -95,11 +94,11 @@ final class VehicleTest extends TestCase
         Sanctum::actingAs($user);
 
         $vehicle = Vehicle::create([
-             'make' => 'Test',
-             'model' => 'Model',
-             'year' => 2020,
-             'license_plate' => 'UPD-' . rand(1000,9999),
-             'status' => VehicleStatus::ACTIVE,
+            'make'          => 'Test',
+            'model'         => 'Model',
+            'year'          => 2020,
+            'license_plate' => 'UPD-' . rand(1000, 9999),
+            'status'        => VehicleStatus::ACTIVE,
         ]);
 
         $data = ['make' => 'Updated Make'];
@@ -116,11 +115,11 @@ final class VehicleTest extends TestCase
         Sanctum::actingAs($user);
 
         $vehicle = Vehicle::create([
-             'make' => 'Test',
-             'model' => 'Model',
-             'year' => 2020,
-             'license_plate' => 'DEL-' . rand(1000,9999),
-             'status' => VehicleStatus::ACTIVE,
+            'make'          => 'Test',
+            'model'         => 'Model',
+            'year'          => 2020,
+            'license_plate' => 'DEL-' . rand(1000, 9999),
+            'status'        => VehicleStatus::ACTIVE,
         ]);
 
         $response = $this->deleteJson(route('api.vehicles.vehicles.destroy', $vehicle));
@@ -140,9 +139,9 @@ final class VehicleTest extends TestCase
             ->assertJsonStructure([
                 'data' => [
                     'statuses' => [
-                        '*' => ['label', 'value', 'color', 'style']
-                    ]
-                ]
+                        '*' => ['label', 'value', 'color', 'style'],
+                    ],
+                ],
             ]);
     }
 }

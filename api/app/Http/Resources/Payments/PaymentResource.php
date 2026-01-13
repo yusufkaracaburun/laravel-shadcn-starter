@@ -2,11 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\Payments;
 
 use App\Models\Payment;
 use App\Enums\PaymentStatus;
 use Illuminate\Http\Request;
+use App\Http\Resources\BaseResource;
+use App\Http\Resources\InvoiceResource;
+use App\Http\Resources\CustomerResource;
 
 /**
  * @mixin Payment

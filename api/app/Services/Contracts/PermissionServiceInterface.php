@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Services\Contracts;
 
 use App\Services\BaseServiceInterface;
-use App\Http\Resources\PermissionResource;
-use App\Http\Resources\PermissionCollection;
 use Illuminate\Database\Eloquent\Collection;
+use App\Http\Resources\Permissions\PermissionResource;
+use App\Http\Resources\Permissions\PermissionCollection;
 
 interface PermissionServiceInterface extends BaseServiceInterface
 {

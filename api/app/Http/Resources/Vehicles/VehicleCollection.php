@@ -2,22 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Resources\Vehicles; // Updated namespace
+namespace App\Http\Resources\Vehicles;
 
-use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\ResourceCollection;
+use App\Http\Resources\BaseCollection;
 
-final class VehicleCollection extends ResourceCollection
+final class VehicleCollection extends BaseCollection
 {
-    public $collects = VehicleResource::class;
-
-    /**
-     * Transform the resource collection into an array.
-     *
-     * @return array<int|string, mixed>
-     */
-    public function toArray(Request $request): array
-    {
-        return parent::toArray($request);
-    }
+    protected string $resourceClass = VehicleResource::class;
 }

@@ -9,7 +9,7 @@ use App\Enums\VehicleStatus;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Vehicle>
+ * @extends Factory<Vehicle>
  */
 final class VehicleFactory extends Factory
 {
@@ -28,12 +28,12 @@ final class VehicleFactory extends Factory
     public function definition(): array
     {
         return [
-            'make' => $this->faker->randomElement(['Toyota', 'Ford', 'Honda', 'BMW', 'Mercedes']),
-            'model' => $this->faker->word(),
-            'year' => $this->faker->year(),
-            'license_plate' => strtoupper($this->faker->bothify('??-###-??')),
-            'vin' => strtoupper($this->faker->bothify('VIN#########')),
-            'status' => $this->faker->randomElement(VehicleStatus::cases()),
+            'make'          => $this->faker->randomElement(['Toyota', 'Ford', 'Honda', 'BMW', 'Mercedes']),
+            'model'         => $this->faker->word(),
+            'year'          => $this->faker->year(),
+            'license_plate' => mb_strtoupper($this->faker->bothify('??-###-??')),
+            'vin'           => mb_strtoupper($this->faker->bothify('VIN#########')),
+            'status'        => $this->faker->randomElement(VehicleStatus::cases()),
         ];
     }
 }

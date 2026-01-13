@@ -6,6 +6,7 @@ namespace App\Http\Requests\Vehicles;
 
 use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Contracts\Validation\ValidationRule;
 
 final class UpdateVehicleRequest extends FormRequest
 {
@@ -20,14 +21,14 @@ final class UpdateVehicleRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * @return array<string, ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {
         return [
-            'make' => ['sometimes', 'string', 'max:255'],
-            'model' => ['sometimes', 'string', 'max:255'],
-            'year' => ['sometimes', 'integer', 'min:1900', 'max:' . (date('Y') + 1)],
+            'make'          => ['sometimes', 'string', 'max:255'],
+            'model'         => ['sometimes', 'string', 'max:255'],
+            'year'          => ['sometimes', 'integer', 'min:1900', 'max:' . (date('Y') + 1)],
             'license_plate' => [
                 'sometimes', 'string', 'max:20',
                 Rule::unique('vehicles', 'license_plate')->ignore($this->vehicle),
@@ -36,8 +37,8 @@ final class UpdateVehicleRequest extends FormRequest
                 'nullable', 'string', 'max:255',
                 Rule::unique('vehicles', 'vin')->ignore($this->vehicle),
             ],
-            'status' => ['sometimes', 'string', 'in:active,maintenance,inactive'],
-            'drivers' => ['sometimes', 'array'],
+            'status'    => ['sometimes', 'string', 'in:active,maintenance,inactive'],
+            'drivers'   => ['sometimes', 'array'],
             'drivers.*' => ['exists:users,id'],
         ];
     }

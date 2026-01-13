@@ -45,7 +45,7 @@ final class Vehicle extends BaseModel
     {
         return [
             'status' => VehicleStatus::class,
-            'year' => 'integer',
+            'year'   => 'integer',
         ];
     }
 

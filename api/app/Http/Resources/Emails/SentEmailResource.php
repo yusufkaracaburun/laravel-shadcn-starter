@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Resources\Invoices;
+namespace App\Http\Resources\Emails;
 
-use App\Http\Resources\BaseResource;
 use App\Models\SentEmail;
 use Illuminate\Http\Request;
+use App\Http\Resources\BaseResource;
 
 /**
  * @mixin SentEmail

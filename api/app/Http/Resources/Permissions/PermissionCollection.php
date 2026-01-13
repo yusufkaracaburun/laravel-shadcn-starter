@@ -2,7 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\Permissions;
+
+use App\Http\Resources\BaseCollection;
 
 final class PermissionCollection extends BaseCollection
 {

@@ -5,25 +5,45 @@ declare(strict_types=1);
 namespace App\Repositories\Concretes;
 
 use App\Models\Vehicle;
+use Spatie\QueryBuilder\QueryBuilder;
 use Spatie\QueryBuilder\AllowedFilter;
 use App\Repositories\QueryableRepository;
+use Spatie\QueryBuilder\QueryBuilderRequest;
 use App\Repositories\Contracts\VehicleRepositoryInterface;
 
 final class VehicleRepository extends QueryableRepository implements VehicleRepositoryInterface
 {
     /**
-     * Allowed filters.
+     * Find a payment by ID with relations.
      */
-    public function getAllowedFilters(): array
+    public function findOrFail(int $id, array $columns = ['*']): Vehicle
     {
-        return [
-            AllowedFilter::exact('status'),
-            AllowedFilter::partial('make'),
-            AllowedFilter::partial('model'),
-            AllowedFilter::partial('license_plate'),
-            AllowedFilter::partial('vin'),
-            AllowedFilter::exact('year'),
-        ];
+        return Vehicle::query()
+            ->with(['drivers'])
+            ->findOrFail($id, $columns);
+    }
+
+    /**
+     * Define the base query for vehicles using Spatie QueryBuilder.
+     */
+    public function query(): QueryBuilder
+    {
+        $queryRequest = QueryBuilderRequest::fromRequest($this->request ?? request());
+
+        return QueryBuilder::for($this->model(), $queryRequest)
+            ->defaultSorts($this->getDefaultSorts())
+            ->allowedFilters($this->getAllowedFilters())
+            ->allowedSorts($this->getAllowedSorts())
+            ->allowedFields($this->getAllowedFields())
+            ->allowedIncludes($this->getAllowedIncludes());
+    }
+
+    /**
+     * Default sorting: latest created first.
+     */
+    public function getDefaultSorts(): array
+    {
+        return ['license_plate'];
     }
 
     /**
@@ -69,11 +89,19 @@ final class VehicleRepository extends QueryableRepository implements VehicleRepo
     }
 
     /**
-     * Find a vehicle.
+     * Allowed filters.
      */
-    public function findOrFail(int $id, array $columns = ['*']): Vehicle
+    public function getAllowedFilters(): array
     {
-        return Vehicle::query()->findOrFail($id, $columns);
+        return [
+            AllowedFilter::exact('status'),
+            AllowedFilter::partial('make'),
+            AllowedFilter::partial('model'),
+            AllowedFilter::partial('license_plate'),
+            AllowedFilter::partial('vin'),
+            AllowedFilter::exact('year'),
+            AllowedFilter::scope('active'),
+        ];
     }
 
     protected function model(): string

@@ -2,10 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\Permissions;
 
 use App\Models\Permission;
 use Illuminate\Http\Request;
+use App\Http\Resources\BaseResource;
+use App\Http\Resources\Roles\RoleResource;
 use App\Http\Resources\Users\UserResource;
 
 /**

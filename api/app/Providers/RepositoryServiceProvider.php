@@ -12,6 +12,7 @@ use App\Repositories\Concretes\InvoiceRepository;
 use App\Repositories\Concretes\PaymentRepository;
 use App\Repositories\Concretes\ProductRepository;
 use App\Repositories\Concretes\ProjectRepository;
+use App\Repositories\Concretes\VehicleRepository;
 use App\Repositories\Concretes\CustomerRepository;
 use App\Repositories\Concretes\TestFinalRepository;
 use App\Repositories\Concretes\PermissionRepository;
@@ -22,11 +23,10 @@ use App\Repositories\Contracts\InvoiceRepositoryInterface;
 use App\Repositories\Contracts\PaymentRepositoryInterface;
 use App\Repositories\Contracts\ProductRepositoryInterface;
 use App\Repositories\Contracts\ProjectRepositoryInterface;
+use App\Repositories\Contracts\VehicleRepositoryInterface;
 use App\Repositories\Contracts\CustomerRepositoryInterface;
 use App\Repositories\Contracts\TestFinalRepositoryInterface;
 use App\Repositories\Contracts\PermissionRepositoryInterface;
-use App\Repositories\Concretes\VehicleRepository;
-use App\Repositories\Contracts\VehicleRepositoryInterface;
 
 final class RepositoryServiceProvider extends ServiceProvider
 {

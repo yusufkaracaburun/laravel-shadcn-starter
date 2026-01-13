@@ -2,11 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\Roles;
 
 use App\Models\Role;
 use Illuminate\Http\Request;
+use App\Http\Resources\BaseResource;
 use App\Http\Resources\Users\UserResource;
+use App\Http\Resources\Permissions\PermissionResource;
 
 /**
  * @mixin Role

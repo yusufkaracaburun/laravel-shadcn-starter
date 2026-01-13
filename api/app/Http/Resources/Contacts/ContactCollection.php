@@ -2,9 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\Contacts;
 
-final class CustomerCollection extends BaseCollection
+use App\Http\Resources\BaseCollection;
+use App\Http\Resources\ContactResource;
+
+final class ContactCollection extends BaseCollection
 {
-    protected string $resourceClass = CustomerResource::class;
+    protected string $resourceClass = ContactResource::class;
 }

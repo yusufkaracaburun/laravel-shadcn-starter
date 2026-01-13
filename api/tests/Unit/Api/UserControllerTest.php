@@ -6,10 +6,10 @@ use Tests\TestCase;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Requests\UserIndexRequest;
 use App\Http\Resources\Users\UserResource;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Resources\Users\UserCollection;
+use App\Http\Requests\Users\UserIndexRequest;
 use Illuminate\Pagination\LengthAwarePaginator;
 use App\Services\Contracts\UserServiceInterface;
 

@@ -10,12 +10,12 @@ use Illuminate\Http\JsonResponse;
 use App\Http\Responses\ApiResponse;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Requests\ProjectIndexRequest;
-use App\Http\Requests\StoreProjectRequest;
-use App\Http\Requests\UpdateProjectRequest;
 use App\Helpers\Cache\CacheInvalidationService;
 use App\Http\Controllers\Concerns\UsesQueryBuilder;
+use App\Http\Requests\Projects\ProjectIndexRequest;
+use App\Http\Requests\Projects\StoreProjectRequest;
 use App\Services\Contracts\ProjectServiceInterface;
+use App\Http\Requests\Projects\UpdateProjectRequest;
 use App\Http\Controllers\Concerns\UsesCachedResponses;
 use App\Http\Controllers\Concerns\InvalidatesCachedModels;
 

@@ -20,9 +20,9 @@ enum VehicleStatus: string
     public function color(): string
     {
         return match ($this) {
-            self::ACTIVE => 'success',
+            self::ACTIVE      => 'success',
             self::MAINTENANCE => 'warning',
-            self::INACTIVE => 'danger',
+            self::INACTIVE    => 'danger',
         };
     }
 
@@ -32,9 +32,9 @@ enum VehicleStatus: string
     public function style(): string
     {
         return match ($this) {
-            self::ACTIVE => 'badge badge-light-success',
+            self::ACTIVE      => 'badge badge-light-success',
             self::MAINTENANCE => 'badge badge-light-warning',
-            self::INACTIVE => 'badge badge-light-danger',
+            self::INACTIVE    => 'badge badge-light-danger',
         };
     }
 
