@@ -16,50 +16,49 @@ final class TeamService extends BaseService implements TeamServiceInterface
 {
     private readonly TeamRepositoryInterface $teamRepository;
 
-    public function __construct(
-        TeamRepositoryInterface $repository,
-    ) {
+    public function __construct(TeamRepositoryInterface $repository)
+    {
         $this->setRepository($repository);
         $this->teamRepository = $repository;
     }
 
     public function getPaginatedByRequest(Request $request, array $columns = ['*']): TeamCollection
     {
-        $response = $this->teamRepository->paginateFiltered($request, $columns);
-
-        return new TeamCollection($response);
+        return new TeamCollection(
+            $this->teamRepository->paginateFiltered($request, $columns),
+        );
     }
 
     public function getAll(array $columns = ['*']): TeamCollection
     {
-        $response = $this->teamRepository->all($columns);
-
-        return new TeamCollection($response);
+        return new TeamCollection(
+            $this->teamRepository->all($columns),
+        );
     }
 
     public function findById(int $id): TeamResource
     {
-        $response = $this->teamRepository->find($id);
-
-        return new TeamResource($response);
+        return new TeamResource(
+            $this->teamRepository->find($id),
+        );
     }
 
     public function createTeam(array $data): TeamResource
     {
-        $response = $this->teamRepository->create($data);
-
-        return new TeamResource($response);
+        return new TeamResource(
+            parent::create($data),
+        );
     }
 
     public function updateTeam(Team $team, array $data): TeamResource
     {
-        $response = $this->teamRepository->update($team->id, $data);
-
-        return new TeamResource($response);
+        return new TeamResource(
+            parent::update($team, $data),
+        );
     }
 
     public function deleteTeam(Team $team): bool
     {
-        return $this->teamRepository->delete($team->id);
+        return parent::delete($team);
     }
 }

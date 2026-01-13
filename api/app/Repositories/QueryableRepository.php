@@ -27,12 +27,25 @@ abstract class QueryableRepository extends BaseRepository implements QueryableRe
     {
         $queryRequest = QueryBuilderRequest::fromRequest($this->request ?? request());
 
-        return QueryBuilder::for($this->model(), $queryRequest)
+        return QueryBuilder::for($this->model->newQuery(), $queryRequest)
             ->defaultSorts($this->getDefaultSorts())
             ->allowedFilters($this->getMergedAllowedFilters())
             ->allowedSorts($this->getAllowedSorts())
             ->allowedFields($this->getAllowedFields())
             ->allowedIncludes($this->getAllowedIncludes());
+    }
+
+    final public function getFiltered(array $columns = ['*']): Collection
+    {
+        return $this->query()->get($columns);
+    }
+
+    final public function paginateFiltered(Request $request, array $columns = ['*']): LengthAwarePaginator
+    {
+        $this->withRequest($request);
+        $perPage = $request->input('per_page', $this->DEFAULT_PER_PAGE);
+
+        return $this->query()->paginate($perPage, $columns);
     }
 
     public function getDefaultSorts(): array
@@ -42,7 +55,7 @@ abstract class QueryableRepository extends BaseRepository implements QueryableRe
 
     public function getAllowedSorts(): array
     {
-        return ['id', '-id', 'created_at', '-created_at', 'updated_at', '-updated_at'];
+        return ['id', 'created_at', 'updated_at'];
     }
 
     public function getAllowedFields(): array

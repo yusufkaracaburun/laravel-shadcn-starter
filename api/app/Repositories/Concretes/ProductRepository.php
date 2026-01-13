@@ -23,13 +23,13 @@ final class ProductRepository extends QueryableRepository implements ProductRepo
     public function getAllowedSorts(): array
     {
         return [
-            'id', '-id',
-            'name', '-name',
-            'unit_price', '-unit_price',
-            'vat_rate', '-vat_rate',
-            'unit', '-unit',
-            'created_at', '-created_at',
-            'updated_at', '-updated_at',
+            'id',
+            'name',
+            'unit_price',
+            'vat_rate',
+            'unit',
+            'created_at',
+            'updated_at',
         ];
     }
 
@@ -63,12 +63,6 @@ final class ProductRepository extends QueryableRepository implements ProductRepo
             AllowedFilter::exact('unit_price'),
         ];
     }
-    public function findOrFail(int $id, array $columns = ['*']): Product
-    {
-        return Product::query()
-            ->findOrFail($id, $columns);
-    }
-
     protected function model(): string
     {
         return Product::class;

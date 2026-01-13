@@ -23,13 +23,13 @@ final class EquipmentRepository extends QueryableRepository implements Equipment
     public function getAllowedSorts(): array
     {
         return [
-            'id', '-id',
-            'name', '-name',
-            'serial_number', '-serial_number',
-            'type', '-type',
-            'status', '-status',
-            'created_at', '-created_at',
-            'updated_at', '-updated_at',
+            'id',
+            'name',
+            'serial_number',
+            'type',
+            'status',
+            'created_at',
+            'updated_at',
         ];
     }
 
@@ -62,11 +62,6 @@ final class EquipmentRepository extends QueryableRepository implements Equipment
             AllowedFilter::scope('active'),
             AllowedFilter::scope('created_at'),
         ];
-    }
-
-    public function findOrFail(int $id, array $columns = ['*']): Equipment
-    {
-        return Equipment::query()->findOrFail($id, $columns);
     }
 
     protected function model(): string

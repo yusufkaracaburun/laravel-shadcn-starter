@@ -24,27 +24,27 @@ final class ProjectRepository extends QueryableRepository implements ProjectRepo
     public function getAllowedSorts(): array
     {
         return [
-            'id', '-id',
-            'name', '-name',
-            'status', '-status',
-            'category', '-category',
-            'start_date', '-start_date',
-            'end_date', '-end_date',
-            'progress', '-progress',
-            'created_at', '-created_at',
-            'updated_at', '-updated_at',
+            'id',
+            'name',
+            'status',
+            'category',
+            'start_date',
+            'end_date',
+            'progress',
+            'created_at',
+            'updated_at',
         ];
     }
 
     public function getAllowedFields(): array
     {
         return [
-            'id', '-id',
-            'name', '-name',
-            'category', '-category',
-            'status', '-status',
-            'created_at', '-created_at',
-            'updated_at', '-updated_at',
+            'id',
+            'name',
+            'category',
+            'status',
+            'created_at',
+            'updated_at',
         ];
     }
 
@@ -63,11 +63,6 @@ final class ProjectRepository extends QueryableRepository implements ProjectRepo
             AllowedFilter::exact('team_id'),
             AllowedFilter::scope('created_at'),
         ];
-    }
-
-    public function findOrFail(int $id, array $columns = ['*']): Project
-    {
-        return Project::query()->findOrFail($id, $columns);
     }
 
     protected function model(): string

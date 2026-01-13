@@ -8,6 +8,6 @@ use App\Models\Invoice;
 use Illuminate\Pagination\LengthAwarePaginator;
 use App\Repositories\QueryableRepositoryInterface;
 
-interface InvoiceRepositoryInterface
+interface InvoiceRepositoryInterface extends QueryableRepositoryInterface
 {
 }

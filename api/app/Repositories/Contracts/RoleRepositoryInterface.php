@@ -8,7 +8,7 @@ use App\Models\Role;
 use Illuminate\Database\Eloquent\Collection;
 use App\Repositories\QueryableRepositoryInterface;
 
-interface RoleRepositoryInterface
+interface RoleRepositoryInterface extends QueryableRepositoryInterface
 {
     public function getSystemRoles(bool $is_system = false): Collection;
 }

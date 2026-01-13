@@ -4,28 +4,23 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Pagination\LengthAwarePaginator;
 use App\Repositories\QueryableRepositoryInterface;
 
 interface BaseServiceInterface
 {
-    public function getFiltered(array $columns = ['*']): Collection;
+    public function getPaginatedByRequest(Request $request, array $columns = ['*']): mixed;
 
-    public function all(array $columns = ['*']): Collection;
+    public function getAll(array $columns = ['*']): mixed;
 
-    public function paginate(int $perPage = 25, array $columns = ['*']): LengthAwarePaginator;
+    public function findById(int $id): mixed;
 
-    public function find(int $id, array $columns = ['*']): ?Model;
+    public function create(array $data): mixed;
 
-    public function findOrFail(int $id, array $columns = ['*']): Model;
+    public function update(Model $model, array $data): mixed;
 
-    public function create(array $data): Model;
-
-    public function update(int $id, array $data): Model;
-
-    public function delete(int $id): bool;
+    public function delete(Model $model): bool;
 
     public function exists(int $id): bool;
 

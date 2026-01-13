@@ -24,8 +24,8 @@ final class PermissionRepository extends QueryableRepository implements Permissi
     public function getAllowedSorts(): array
     {
         return [
-            'id', '-id',
-            'name', '-name'
+            'id',
+            'name'
         ];
     }
 
@@ -45,11 +45,6 @@ final class PermissionRepository extends QueryableRepository implements Permissi
             AllowedFilter::exact('id'),
             'name',
         ];
-    }
-
-    public function findOrFail(int $id, array $columns = ['*']): Permission
-    {
-        return Permission::query()->findOrFail($id, $columns);
     }
 
     protected function model(): string

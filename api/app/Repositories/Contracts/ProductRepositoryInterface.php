@@ -7,6 +7,6 @@ namespace App\Repositories\Contracts;
 use App\Models\Product;
 use App\Repositories\QueryableRepositoryInterface;
 
-interface ProductRepositoryInterface
+interface ProductRepositoryInterface extends QueryableRepositoryInterface
 {
 }

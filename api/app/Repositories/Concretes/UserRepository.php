@@ -30,12 +30,12 @@ final class UserRepository extends QueryableRepository implements UserRepository
     public function getAllowedSorts(): array
     {
         return [
-            'id', '-id',
-            'name', '-name',
-            'email', '-email',
-            'status', '-status',
-            'created_at', '-created_at',
-            'updated_at', '-updated_at',
+            'id',
+            'name',
+            'email',
+            'status',
+            'created_at',
+            'updated_at',
         ];
     }
 
@@ -48,11 +48,6 @@ final class UserRepository extends QueryableRepository implements UserRepository
             AllowedFilter::exact('status'),
             AllowedFilter::scope('created_at'),
         ];
-    }
-
-    public function findOrFail(int $id, array $columns = ['*']): User
-    {
-        return User::query()->findOrFail($id, $columns);
     }
 
     public function getAllowedIncludes(): array

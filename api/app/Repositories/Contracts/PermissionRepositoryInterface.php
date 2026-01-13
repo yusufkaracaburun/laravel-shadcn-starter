@@ -8,6 +8,6 @@ use App\Models\Permission;
 use Illuminate\Database\Eloquent\Collection;
 use App\Repositories\QueryableRepositoryInterface;
 
-interface PermissionRepositoryInterface
+interface PermissionRepositoryInterface extends QueryableRepositoryInterface
 {
 }

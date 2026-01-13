@@ -42,34 +42,39 @@ abstract class BaseRepository implements BaseRepositoryInterface
         }
     }
 
+    public function newQuery(): Builder
+    {
+        return $this->model->newQuery();
+    }
+
     final public function all(array $columns = ['*']): Collection
     {
-        return $this->query()->get($columns);
+        return $this->newQuery()->get($columns);
     }
 
     final public function paginate(int $perPage = 10, array $columns = ['*']): LengthAwarePaginator
     {
-        return $this->query()->paginate($perPage, $columns);
+        return $this->newQuery()->paginate($perPage, $columns);
     }
 
     final public function find(int $id, array $columns = ['*']): ?Model
     {
-        return $this->query()->find($id, $columns);
+        return $this->newQuery()->find($id, $columns);
     }
 
     final public function findByField(string $field, mixed $value, array $columns = ['*']): ?Model
     {
-        return $this->query()->where($field, $value)->first($columns);
+        return $this->newQuery()->where($field, $value)->first($columns);
     }
 
     public function findOrFail(int $id, array $columns = ['*']): Model
     {
-        return $this->query()->findOrFail($id, $columns);
+        return $this->newQuery()->findOrFail($id, $columns);
     }
 
     final public function create(array $data): Model
     {
-        return $this->query()->create($data);
+        return $this->newQuery()->create($data);
     }
 
     final public function update(int $id, array $data): Model
@@ -87,24 +92,11 @@ abstract class BaseRepository implements BaseRepositoryInterface
 
     final public function exists(int $id): bool
     {
-        return $this->query()->where('id', $id)->exists();
+        return $this->newQuery()->where('id', $id)->exists();
     }
 
     final public function getModel(): Model
     {
         return $this->model;
-    }
-
-    final public function getFiltered(array $columns = ['*']): Collection
-    {
-        return $this->query()->get($columns);
-    }
-
-    final public function paginateFiltered(Request $request, array $columns = ['*']): LengthAwarePaginator
-    {
-        $this->withRequest($request);
-        $perPage = $request->input('per_page', $this->DEFAULT_PER_PAGE);
-
-        return $this->query()->paginate($perPage, $columns);
     }
 }

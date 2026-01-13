@@ -21,13 +21,13 @@ final class VehicleRepository extends QueryableRepository implements VehicleRepo
     public function getAllowedSorts(): array
     {
         return [
-            'id', '-id',
-            'make', '-make',
-            'model', '-model',
-            'year', '-year',
-            'license_plate', '-license_plate',
-            'created_at', '-created_at',
-            'updated_at', '-updated_at',
+            'id',
+            'make',
+            'model',
+            'year',
+            'license_plate',
+            'created_at',
+            'updated_at',
         ];
     }
 

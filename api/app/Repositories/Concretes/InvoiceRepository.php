@@ -25,16 +25,16 @@ final class InvoiceRepository extends QueryableRepository implements InvoiceRepo
     public function getAllowedSorts(): array
     {
         return [
-            'id', '-id',
-            'invoice_number', '-invoice_number',
-            'customer_id', '-customer_id',
-            'status', '-status',
-            'date', '-date',
-            'date_due', '-date_due',
-            'subtotal', '-subtotal',
-            'total', '-total',
-            'created_at', '-created_at',
-            'updated_at', '-updated_at',
+            'id',
+            'invoice_number',
+            'customer_id',
+            'status',
+            'date',
+            'date_due',
+            'subtotal',
+            'total',
+            'created_at',
+            'updated_at',
         ];
     }
 
@@ -77,13 +77,6 @@ final class InvoiceRepository extends QueryableRepository implements InvoiceRepo
             AllowedFilter::exact('subtotal'),
             AllowedFilter::exact('total'),
         ];
-    }
-
-    public function findOrFail(int $id, array $columns = ['*']): Invoice
-    {
-        return Invoice::query()
-            ->with(['customer', 'items', 'payments', 'emails', 'activities.causer'])
-            ->findOrFail($id, $columns);
     }
 
     protected function model(): string

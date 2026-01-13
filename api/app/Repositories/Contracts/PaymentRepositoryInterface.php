@@ -7,6 +7,6 @@ namespace App\Repositories\Contracts;
 use App\Models\Payment;
 use App\Repositories\QueryableRepositoryInterface;
 
-interface PaymentRepositoryInterface
+interface PaymentRepositoryInterface extends QueryableRepositoryInterface
 {
 }

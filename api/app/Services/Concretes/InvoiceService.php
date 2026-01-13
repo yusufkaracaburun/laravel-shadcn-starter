@@ -5,55 +5,54 @@ declare(strict_types=1);
 namespace App\Services\Concretes;
 
 use App\Models\Invoice;
+use Illuminate\Http\Request;
 use App\Services\BaseService;
 use App\Http\Resources\InvoiceResource;
 use App\Http\Resources\InvoiceCollection;
 use App\Services\Contracts\InvoiceServiceInterface;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Repositories\Contracts\InvoiceRepositoryInterface;
+
+ // Added this import
 
 final class InvoiceService extends BaseService implements InvoiceServiceInterface
 {
     private readonly InvoiceRepositoryInterface $invoiceRepository;
 
-    public function __construct(
-        InvoiceRepositoryInterface $repo,
-    ) {
+    public function __construct(InvoiceRepositoryInterface $repo)
+    {
         $this->setRepository($repo);
         $this->invoiceRepository = $repo;
     }
 
-    public function getPaginated(int $perPage, ?int $teamId = null): InvoiceCollection
+    public function getPaginatedByRequest(Request $request, array $columns = ['*']): InvoiceCollection
     {
-        $request = request();
-        $request->query->set('per_page', (string) $perPage);
-
-        $this->invoiceRepository->withRequest($request);
-
-        $paginated = $this->invoiceRepository->query()->paginate($perPage);
-
-        return new InvoiceCollection($paginated);
+        return new InvoiceCollection(
+            $this->invoiceRepository->paginateFiltered($request, $columns),
+        );
     }
 
-    public function findById(int $invoiceId, ?int $teamId = null): InvoiceResource
+    public function getAll(array $columns = ['*']): InvoiceCollection
     {
-        try {
-            $invoice = $this->invoiceRepository->findOrFail($invoiceId);
-
-            return new InvoiceResource($invoice);
-        } catch (ModelNotFoundException) {
-            throw new ModelNotFoundException('Invoice not found');
-        }
+        return new InvoiceCollection(
+            $this->invoiceRepository->all($columns),
+        );
     }
 
-    public function createInvoice(array $data, ?int $teamId = null): InvoiceResource
+    public function findById(int $id): InvoiceResource
+    {
+        $invoice = $this->invoiceRepository->find($id);
+
+        return new InvoiceResource($invoice->load(['customer', 'items', 'payments', 'emails', 'activities.causer']));
+    }
+
+    public function createInvoice(array $data): InvoiceResource
     {
         // Extract items from data
         $items = $data['items'] ?? [];
         unset($data['items']);
 
         // Create invoice
-        $invoice = $this->invoiceRepository->create($data);
+        $invoice = parent::create($data);
 
         // Create invoice items if provided
         foreach ($items as $index => $itemData) {
@@ -70,57 +69,45 @@ final class InvoiceService extends BaseService implements InvoiceServiceInterfac
         $invoice->calculateInvoiceTotals();
         $invoice->save();
 
-        return new InvoiceResource($invoice);
+        return new InvoiceResource($invoice->load('items'));
     }
 
-    public function updateInvoice(Invoice $invoice, array $data, ?int $teamId = null): InvoiceResource
+    public function updateInvoice(Invoice $invoice, array $data): InvoiceResource
     {
-        try {
-            // Extract items from data
-            $items = $data['items'] ?? null;
-            unset($data['items']);
+        // Extract items from data
+        $items = $data['items'] ?? null;
+        unset($data['items']);
 
-            // Update invoice
-            $updated = $this->invoiceRepository->update($invoice->id, $data);
+        // Update invoice
+        $updated = parent::update($invoice, $data);
 
-            // Update items if provided
-            if ($items !== null) {
-                // Delete existing items
-                $updated->items()->delete();
+        // Update items if provided
+        if ($items !== null) {
+            // Delete existing items
+            $updated->items()->delete();
 
-                // Create new items
-                if (!empty($items)) {
-                    foreach ($items as $index => $itemData) {
-                        // Set default sort_order if not provided
-                        if (!isset($itemData['sort_order'])) {
-                            $itemData['sort_order'] = $index;
-                        }
-
-                        $updated->items()->create($itemData);
-                    }
+            // Create new items
+            foreach ($items as $index => $itemData) {
+                // Set default sort_order if not provided
+                if (!isset($itemData['sort_order'])) {
+                    $itemData['sort_order'] = $index;
                 }
 
-                // Recalculate invoice totals
-                $updated->refresh();
-                $updated->calculateInvoiceTotals();
-                $updated->save();
+                $updated->items()->create($itemData);
             }
 
-            return new InvoiceResource($updated);
-        } catch (ModelNotFoundException) {
-            throw new ModelNotFoundException('Invoice not found');
+            // Recalculate invoice totals
+            $updated->refresh();
+            $updated->calculateInvoiceTotals();
+            $updated->save();
         }
+
+        return new InvoiceResource($updated->load('items'));
     }
 
     public function deleteInvoice(Invoice $invoice): bool
     {
-        try {
-            $this->invoiceRepository->delete($invoice->id);
-
-            return true;
-        } catch (ModelNotFoundException) {
-            throw new ModelNotFoundException('Invoice not found');
-        }
+        return parent::delete($invoice);
     }
 
     public function getNextInvoiceNumber(string $prefix = 'INV', ?int $year = null): string

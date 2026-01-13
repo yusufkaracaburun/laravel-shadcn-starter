@@ -6,10 +6,11 @@ namespace App\Services\Contracts;
 
 use App\Models\Vehicle;
 use Illuminate\Http\Request;
+use App\Services\BaseServiceInterface;
 use App\Http\Resources\Vehicles\VehicleResource;
 use App\Http\Resources\Vehicles\VehicleCollection;
 
-interface VehicleServiceInterface
+interface VehicleServiceInterface extends BaseServiceInterface
 {
     public function getPaginatedByRequest(Request $request, array $columns = ['*']): VehicleCollection;
 

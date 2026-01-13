@@ -4,9 +4,8 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Pagination\LengthAwarePaginator;
 use App\Repositories\QueryableRepositoryInterface;
 
 abstract class BaseService implements BaseServiceInterface
@@ -23,47 +22,37 @@ abstract class BaseService implements BaseServiceInterface
         return $this->repository;
     }
 
-    final public function getFiltered(array $columns = ['*']): Collection
+    public function getPaginatedByRequest(Request $request, array $columns = ['*']): mixed
     {
-        return $this->repository->getFiltered($columns);
+        return $this->repository->paginateFiltered($request, $columns);
     }
 
-    final public function all(array $columns = ['*']): Collection
+    public function getAll(array $columns = ['*']): mixed
     {
         return $this->repository->all($columns);
     }
 
-    final public function paginate(int $perPage = 25, array $columns = ['*']): LengthAwarePaginator
+    public function findById(int $id): mixed
     {
-        return $this->repository->paginate($perPage, $columns);
+        return $this->repository->find($id);
     }
 
-    final public function find(int $id, array $columns = ['*']): ?Model
-    {
-        return $this->repository->find($id, $columns);
-    }
-
-    final public function findOrFail(int $id, array $columns = ['*']): Model
-    {
-        return $this->repository->findOrFail($id, $columns);
-    }
-
-    final public function create(array $data): Model
+    public function create(array $data): mixed
     {
         return $this->repository->create($data);
     }
 
-    final public function update(int $id, array $data): Model
+    public function update(Model $model, array $data): mixed
     {
-        return $this->repository->update($id, $data);
+        return $this->repository->update($model->id, $data);
     }
 
-    final public function delete(int $id): bool
+    public function delete(Model $model): bool
     {
-        return $this->repository->delete($id);
+        return $this->repository->delete($model->id);
     }
 
-    final public function exists(int $id): bool
+    public function exists(int $id): bool
     {
         return $this->repository->exists($id);
     }

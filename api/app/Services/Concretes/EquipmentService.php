@@ -5,68 +5,61 @@ declare(strict_types=1);
 namespace App\Services\Concretes;
 
 use App\Models\Equipment;
+use Illuminate\Http\Request;
 use App\Services\BaseService;
 use App\Http\Resources\Equipments\EquipmentResource;
 use App\Services\Contracts\EquipmentServiceInterface;
 use App\Http\Resources\Equipments\EquipmentCollection;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Repositories\Contracts\EquipmentRepositoryInterface;
 
 final class EquipmentService extends BaseService implements EquipmentServiceInterface
 {
-    private readonly EquipmentRepositoryInterface $repo;
+    private readonly EquipmentRepositoryInterface $equipmentRepository;
 
     public function __construct(
         EquipmentRepositoryInterface $repo,
     ) {
         $this->setRepository($repo);
-        $this->repo = $repo;
+        $this->equipmentRepository = $repo;
     }
 
-    public function getPaginated(int $perPage): EquipmentCollection
+    public function getPaginatedByRequest(Request $request, array $columns = ['*']): EquipmentCollection
     {
-        $paginated = $this->repo->getPaginated($perPage);
+        return new EquipmentCollection(
+            $this->equipmentRepository->paginateFiltered($request, $columns),
+        );
+    }
 
-        return new EquipmentCollection($paginated);
+    public function getAll(array $columns = ['*']): EquipmentCollection
+    {
+        return new EquipmentCollection(
+            $this->equipmentRepository->all($columns),
+        );
     }
 
     public function findById(int $id): EquipmentResource
     {
-        try {
-            $equipment = $this->repo->findOrFail($id);
-
-            return new EquipmentResource($equipment);
-        } catch (ModelNotFoundException) {
-            throw new ModelNotFoundException('Equipment not found');
-        }
+        return new EquipmentResource(
+            $this->equipmentRepository->find($id),
+        );
     }
 
     public function createEquipment(array $data): EquipmentResource
     {
-        $equipment = $this->repo->create($data);
-
-        return new EquipmentResource($equipment);
+        return new EquipmentResource(
+            parent::create($data),
+        );
     }
 
     public function updateEquipment(Equipment $equipment, array $data): EquipmentResource
     {
-        try {
-            $updated = $this->repo->update($equipment->id, $data);
-
-            return new EquipmentResource($updated);
-        } catch (ModelNotFoundException) {
-            throw new ModelNotFoundException('Equipment not found');
-        }
+        return new EquipmentResource(
+            parent::update($equipment, $data),
+        );
     }
 
     public function deleteEquipment(Equipment $equipment): bool
     {
-        try {
-            $this->repo->delete($equipment->id);
-
-            return true;
-        } catch (ModelNotFoundException) {
-            throw new ModelNotFoundException('Equipment not found');
-        }
+        return parent::delete($equipment);
     }
 }

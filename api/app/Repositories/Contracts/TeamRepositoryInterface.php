@@ -9,6 +9,6 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
 use App\Repositories\QueryableRepositoryInterface;
 
-interface TeamRepositoryInterface
+interface TeamRepositoryInterface extends QueryableRepositoryInterface
 {
 }

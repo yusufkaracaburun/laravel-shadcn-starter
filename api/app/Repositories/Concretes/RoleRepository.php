@@ -25,10 +25,10 @@ final class RoleRepository extends QueryableRepository implements RoleRepository
     public function getAllowedSorts(): array
     {
         return [
-            'id', '-id',
-            'name', '-name',
-            'is_system', '-is_system',
-            'created_at', '-created_at'
+            'id',
+            'name',
+            'is_system',
+            'created_at'
         ];
     }
 
@@ -62,9 +62,9 @@ final class RoleRepository extends QueryableRepository implements RoleRepository
         ];
     }
 
-    public function findOrFail(int $id, array $columns = ['*']): Role
+    protected function model(): string
     {
-        return Role::query()->findOrFail($id, $columns);
+        return Role::class;
     }
 
     public function findByName(string $name): ?Role
@@ -75,10 +75,5 @@ final class RoleRepository extends QueryableRepository implements RoleRepository
     public function getSystemRoles(bool $is_system = false): Collection
     {
         return Role::query()->where('is_system', $is_system)->get();
-    }
-
-    protected function model(): string
-    {
-        return Role::class;
     }
 }

@@ -5,16 +5,17 @@ declare(strict_types=1);
 namespace App\Services\Contracts;
 
 use Illuminate\Http\Request;
+use App\Services\BaseServiceInterface;
 use App\Http\Resources\Permissions\PermissionResource;
 use App\Http\Resources\Permissions\PermissionCollection;
 
-interface PermissionServiceInterface
+interface PermissionServiceInterface extends BaseServiceInterface
 {
     public function getPaginatedByRequest(Request $request, array $columns = ['*']): PermissionCollection;
 
-    public function getAll(): PermissionCollection;
+    public function getAll(array $columns = ['*']): PermissionCollection;
 
-    public function findById(int $permissionId): PermissionResource;
+    public function findById(int $id): PermissionResource;
 
     public function createPermission(array $data): PermissionResource;
 

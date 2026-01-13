@@ -21,6 +21,4 @@ interface BaseRepositoryInterface
     public function delete(int $id): bool;
     public function exists(int $id): bool;
     public function getModel(): Model;
-    public function getFiltered(array $columns = ['*']): Collection;
-    public function paginateFiltered(Request $request, array $columns = ['*']): LengthAwarePaginator;
 }

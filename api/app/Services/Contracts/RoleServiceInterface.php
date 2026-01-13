@@ -6,14 +6,15 @@ namespace App\Services\Contracts;
 
 use App\Models\Role;
 use Illuminate\Http\Request;
+use App\Services\BaseServiceInterface;
 use App\Http\Resources\Roles\RoleResource;
 use App\Http\Resources\Roles\RoleCollection;
 
-interface RoleServiceInterface
+interface RoleServiceInterface extends BaseServiceInterface
 {
     public function getPaginatedByRequest(Request $request, array $columns = ['*']): RoleCollection;
 
-    public function getAll(): RoleCollection;
+    public function getAll(array $columns = ['*']): RoleCollection;
 
     public function getNonSystemRoles(): RoleCollection;
 

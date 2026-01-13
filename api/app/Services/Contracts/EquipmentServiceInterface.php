@@ -6,14 +6,15 @@ namespace App\Services\Contracts;
 
 use App\Models\Equipment;
 use Illuminate\Http\Request;
+use App\Services\BaseServiceInterface;
 use App\Http\Resources\Equipments\EquipmentResource;
 use App\Http\Resources\Equipments\EquipmentCollection;
 
-interface EquipmentServiceInterface
+interface EquipmentServiceInterface extends BaseServiceInterface
 {
     public function getPaginatedByRequest(Request $request, array $columns = ['*']): EquipmentCollection;
 
-    public function getAll(): EquipmentCollection;
+    public function getAll(array $columns = ['*']): EquipmentCollection;
 
     public function findById(int $id): EquipmentResource;
 

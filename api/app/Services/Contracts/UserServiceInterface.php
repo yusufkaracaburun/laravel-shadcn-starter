@@ -7,15 +7,16 @@ namespace App\Services\Contracts;
 use App\Models\User;
 use App\Enums\UserStatus;
 use Illuminate\Http\Request;
+use App\Services\BaseServiceInterface;
 use App\Http\Resources\Users\UserResource;
 use App\Http\Resources\Users\UserCollection;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
-interface UserServiceInterface
+interface UserServiceInterface extends BaseServiceInterface
 {
     public function getPaginatedByRequest(Request $request, array $columns = ['*']): UserCollection;
 
-    public function getAll(): UserCollection;
+    public function getAll(array $columns = ['*']): UserCollection;
 
     public function findById(int $id): UserResource;
 

@@ -9,76 +9,55 @@ use App\Services\BaseService;
 use App\Http\Resources\CustomerResource;
 use App\Http\Resources\CustomerCollection;
 use App\Services\Contracts\CustomerServiceInterface;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Repositories\Contracts\CustomerRepositoryInterface;
 
 final class CustomerService extends BaseService implements CustomerServiceInterface
 {
     private readonly CustomerRepositoryInterface $customerRepository;
 
-    public function __construct(
-        CustomerRepositoryInterface $repo,
-    ) {
+    public function __construct(CustomerRepositoryInterface $repo)
+    {
         $this->setRepository($repo);
         $this->customerRepository = $repo;
     }
 
-    public function getPaginated(int $perPage, ?int $teamId = null): CustomerCollection
+    public function getPaginatedByRequest(Request $request, array $columns = ['*']): CustomerCollection
     {
-        $request = request();
-        $request->query->set('per_page', (string) $perPage);
-
-        $this->customerRepository->withRequest($request);
-
-        $paginated = $this->customerRepository->query()->paginate($perPage);
-
-        return new CustomerCollection($paginated);
+        return new CustomerCollection(
+            $this->customerRepository->paginateFiltered($request, $columns),
+        );
     }
 
-    public function findById(int $customerId, ?int $teamId = null): CustomerResource
+    public function getAll(array $columns = ['*']): CustomerCollection
     {
-        try {
-            $customer = $this->customerRepository->findOrFail($customerId);
-
-            return new CustomerResource($customer);
-        } catch (ModelNotFoundException) {
-            throw new ModelNotFoundException('Customer not found');
-        }
+        return new CustomerCollection(
+            $this->customerRepository->all($columns),
+        );
     }
 
-    public function createCustomer(array $data, ?int $teamId = null): CustomerResource
+    public function findById(int $id): CustomerResource
     {
-        $customer = $this->customerRepository->create($data);
-
-        return new CustomerResource($customer);
+        return new CustomerResource(
+            $this->customerRepository->find($id),
+        );
     }
 
-    public function updateCustomer(Customer $customer, array $data, ?int $teamId = null): CustomerResource
+    public function createCustomer(array $data): CustomerResource
     {
-        try {
-            $updated = $this->customerRepository->update($customer->id, $data);
+        return new CustomerResource(
+            parent::create($data),
+        );
+    }
 
-            return new CustomerResource($updated);
-        } catch (ModelNotFoundException) {
-            throw new ModelNotFoundException('Customer not found');
-        }
+    public function updateCustomer(Customer $customer, array $data): CustomerResource
+    {
+        return new CustomerResource(
+            parent::update($customer, $data),
+        );
     }
 
     public function deleteCustomer(Customer $customer): bool
     {
-        try {
-            $this->customerRepository->delete($customer->id);
-
-            return true;
-        } catch (ModelNotFoundException) {
-            throw new ModelNotFoundException('Customer not found');
-        }
-    }
-
-    public function getAll(): CustomerCollection
-    {
-        $customers = $this->customerRepository->all();
-
-        return new CustomerCollection($customers);
+        return parent::delete($customer);
     }
 }

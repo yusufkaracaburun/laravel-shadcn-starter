@@ -18,51 +18,50 @@ final class UserService extends BaseService implements UserServiceInterface
 {
     private readonly UserRepositoryInterface $userRepository;
 
-    public function __construct(
-        UserRepositoryInterface $repository,
-    ) {
+    public function __construct(UserRepositoryInterface $repository)
+    {
         $this->setRepository($repository);
         $this->userRepository = $repository;
     }
 
     public function getPaginatedByRequest(Request $request, array $columns = ['*']): UserCollection
     {
-        $response = $this->userRepository->paginateFiltered($request, $columns);
-
-        return new UserCollection($response);
+        return new UserCollection(
+            $this->userRepository->paginateFiltered($request, $columns),
+        );
     }
 
     public function getAll(array $columns = ['*']): UserCollection
     {
-        $response = $this->userRepository->all($columns);
-
-        return new UserCollection($response);
+        return new UserCollection(
+            $this->userRepository->all($columns),
+        );
     }
 
     public function findById(int $id): UserResource
     {
-        $response = $this->userRepository->find($id);
+        $user = $this->userRepository->find($id);
 
-        return new UserResource($response);
+        return new UserResource($user->load(['teams', 'currentTeam', 'ownedTeams', 'roles']));
     }
 
     public function createUser(array $data): UserResource
     {
-        $response = $this->userRepository->create($data);
-
-        return new UserResource($response);
+        return new UserResource(
+            parent::create($data),
+        );
     }
 
     public function updateUser(User $user, array $data): UserResource
     {
-        $response = $this->userRepository->update($user->id, $data);
-
-        return new UserResource($response);
+        return new UserResource(
+            parent::update($user, $data),
+        );
     }
 
     public function deleteUser(User $user): bool
     {
-        return $this->userRepository->delete($user->id);
+        return parent::delete($user);
     }
 
     public function getCurrentUser(User $user): UserResource

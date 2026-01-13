@@ -27,10 +27,10 @@ final class TeamRepository extends QueryableRepository implements TeamRepository
     public function getAllowedSorts(): array
     {
         return [
-            'id', '-id',
-            'name', '-name',
-            'created_at', '-created_at',
-            'updated_at', '-updated_at',
+            'id',
+            'name',
+            'created_at',
+            'updated_at',
         ];
     }
 
@@ -62,11 +62,6 @@ final class TeamRepository extends QueryableRepository implements TeamRepository
             AllowedFilter::exact('user_id'),
             AllowedFilter::scope('created_at'),
         ];
-    }
-
-    public function findOrFail(int $id, array $columns = ['*']): Team
-    {
-        return Team::query()->findOrFail($id, $columns);
     }
 
     protected function model(): string

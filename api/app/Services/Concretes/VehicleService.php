@@ -47,28 +47,28 @@ final class VehicleService extends BaseService implements VehicleServiceInterfac
 
     public function createVehicle(array $data): VehicleResource
     {
-        $response = $this->vehicleRepository->create(Arr::except($data, ['drivers']));
+        $vehicle = parent::create(Arr::except($data, ['drivers']));
 
         if (isset($data['drivers'])) {
-            $response->drivers()->sync($data['drivers']);
+            $vehicle->drivers()->sync($data['drivers']);
         }
 
-        return new VehicleResource($response->load('drivers'));
+        return new VehicleResource($vehicle->load('drivers'));
     }
 
     public function updateVehicle(Vehicle $vehicle, array $data): VehicleResource
     {
-        $response = $this->vehicleRepository->update($vehicle->id, Arr::except($data, ['drivers']));
+        $updated = parent::update($vehicle, Arr::except($data, ['drivers']));
 
         if (isset($data['drivers'])) {
-            $response->drivers()->sync($data['drivers']);
+            $updated->drivers()->sync($data['drivers']);
         }
 
-        return new VehicleResource($response->load('drivers'));
+        return new VehicleResource($updated->load('drivers'));
     }
 
     public function deleteVehicle(Vehicle $vehicle): bool
     {
-        return $this->vehicleRepository->delete($vehicle->id);
+        return parent::delete($vehicle);
     }
 }
