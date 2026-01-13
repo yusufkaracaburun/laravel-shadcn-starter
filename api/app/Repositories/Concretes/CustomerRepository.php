@@ -16,7 +16,7 @@ final class CustomerRepository extends QueryableRepository implements CustomerRe
     /**
      * Return all business customers, paginated.
      */
-    public function getBusinessCustomers(int $perPage = 25): LengthAwarePaginator
+    public function getBusinessCustomers(int $perPage = 10): LengthAwarePaginator
     {
         return $this->query()
             ->business()
@@ -36,7 +36,7 @@ final class CustomerRepository extends QueryableRepository implements CustomerRe
     /**
      * Return all private customers, paginated.
      */
-    public function getPrivateCustomers(int $perPage = 25): LengthAwarePaginator
+    public function getPrivateCustomers(int $perPage = 10): LengthAwarePaginator
     {
         return $this->query()
             ->private()

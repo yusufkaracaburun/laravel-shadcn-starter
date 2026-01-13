@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Teams;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\BaseIndexFormRequest;
 use Illuminate\Contracts\Validation\ValidationRule;
 
 final class TeamIndexRequest extends BaseIndexFormRequest
@@ -19,9 +19,9 @@ final class TeamIndexRequest extends BaseIndexFormRequest
         return array_merge(
             parent::messages(),
             [
-                'filter.id.integer'        => 'Filter ID must be a number.',
-                'filter.id.exists'         => 'The selected role does not exist.',
-                'filter.name.string'       => 'Filter name must be a string.',
+                'filter.id.integer'  => 'Filter ID must be a number.',
+                'filter.id.exists'   => 'The selected role does not exist.',
+                'filter.name.string' => 'Filter name must be a string.',
             ],
         );
     }
@@ -36,8 +36,8 @@ final class TeamIndexRequest extends BaseIndexFormRequest
         return array_merge(
             parent::attributes(),
             [
-                'filter.id'        => 'role ID filter',
-                'filter.name'      => 'name filter',
+                'filter.id'   => 'role ID filter',
+                'filter.name' => 'name filter',
             ],
         );
     }
@@ -52,8 +52,8 @@ final class TeamIndexRequest extends BaseIndexFormRequest
         return array_merge(
             parent::filterRules(),
             [
-                'filter.id'        => 'sometimes|integer|exists:roles,id',
-                'filter.name'      => 'sometimes|string|max:255',
+                'filter.id'   => 'sometimes|integer|exists:roles,id',
+                'filter.name' => 'sometimes|string|max:255',
             ],
         );
     }
@@ -80,7 +80,7 @@ final class TeamIndexRequest extends BaseIndexFormRequest
      */
     protected function getAllowedIncludes(): array
     {
-        return ['owner', 'users', 'teamInvitations'];
+        return ['owner', 'users', 'usersCount', 'teamInvitations'];
     }
 
     /**

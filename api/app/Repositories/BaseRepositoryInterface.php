@@ -18,7 +18,7 @@ interface BaseRepositoryInterface
     /**
      * Get paginated resources
      */
-    public function paginate(int $perPage = 25, array $columns = ['*']): LengthAwarePaginator;
+    public function paginate(int $perPage = 10, array $columns = ['*']): LengthAwarePaginator;
 
     /**
      * Find resource by id

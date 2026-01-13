@@ -214,6 +214,7 @@ final class UserRepository extends QueryableRepository implements UserRepository
             AllowedFilter::exact('id'),
             AllowedFilter::exact('name'),
             AllowedFilter::exact('email'),
+            AllowedFilter::exact('status'),
             AllowedFilter::scope('created_at'),
         ];
     }
@@ -223,7 +224,7 @@ final class UserRepository extends QueryableRepository implements UserRepository
      */
     public function getAllowedSorts(): array
     {
-        return ['id', 'name', 'email', 'created_at'];
+        return ['id', 'name', 'status', 'email', 'created_at'];
     }
 
     /**
@@ -264,7 +265,7 @@ final class UserRepository extends QueryableRepository implements UserRepository
 
         // Then, load team-scoped roles from all teams the user belongs to
         $teamScopedRoles = collect();
-        
+
         // Get all unique team IDs the user belongs to (from teams and ownedTeams)
         $allTeamIds = $user->teams->pluck('id')
             ->merge($user->ownedTeams->pluck('id'))

@@ -2,10 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\Users;
 
 use App\Models\User;
+use App\Enums\UserStatus;
 use Illuminate\Http\Request;
+use App\Http\Resources\BaseResource;
+use App\Http\Resources\Teams\TeamResource;
 use Illuminate\Database\Eloquent\Collection;
 
 /**
@@ -21,12 +24,15 @@ final class UserResource extends BaseResource
     protected function resolvePayload(Request $request): array
     {
         return [
-            'id'    => $this->id,
-            'name'  => $this->name,
-            'email' => $this->email,
+            'id'               => $this->id,
+            'name'             => $this->name,
+            'email'            => $this->email,
+            'status_formatted' => UserStatus::toArrayItem($this->status),
+            'status'           => $this->status,
 
             'email_verified_at' => $this->formatTimestamp($this->email_verified_at),
             'current_team_id'   => $this->current_team_id,
+            'current_team'      => TeamResource::make($this->whenLoaded('currentTeam')),
 
             'created_at' => $this->formatTimestamp($this->created_at),
             'updated_at' => $this->formatTimestamp($this->updated_at),

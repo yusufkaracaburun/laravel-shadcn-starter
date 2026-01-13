@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Services\Contracts;
 
 use App\Models\Team;
-use App\Http\Resources\TeamResource;
-use App\Http\Resources\TeamCollection;
 use App\Services\BaseServiceInterface;
+use App\Http\Resources\Teams\TeamResource;
+use App\Http\Resources\Teams\TeamCollection;
 
 interface TeamServiceInterface extends BaseServiceInterface
 {

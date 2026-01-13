@@ -60,7 +60,7 @@ abstract class BaseRepository implements BaseRepositoryInterface
     /**
      * Get paginated resources
      */
-    final public function paginate(int $perPage = 25, array $columns = ['*']): LengthAwarePaginator
+    final public function paginate(int $perPage = 10, array $columns = ['*']): LengthAwarePaginator
     {
         return $this->model->paginate($perPage, $columns);
     }

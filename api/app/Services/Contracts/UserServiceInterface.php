@@ -6,9 +6,9 @@ namespace App\Services\Contracts;
 
 use App\Models\User;
 use App\Enums\UserStatus;
-use App\Http\Resources\UserResource;
-use App\Http\Resources\UserCollection;
 use App\Services\BaseServiceInterface;
+use App\Http\Resources\Users\UserResource;
+use App\Http\Resources\Users\UserCollection;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 interface UserServiceInterface extends BaseServiceInterface

@@ -43,13 +43,14 @@ final class IndexUserRequest extends BaseIndexFormRequest
     {
         return array_merge(
             parent::attributes(),
-            [
+            array(
                 'filter.id'                => 'user ID filter',
                 'filter.name'              => 'name filter',
                 'filter.email'             => 'email filter',
+                'filter.status'            => 'status filter',
                 'filter.email_verified_at' => 'email verified filter',
                 'filter.created_at'        => 'created at filter',
-            ],
+            ),
         );
     }
 
@@ -66,6 +67,7 @@ final class IndexUserRequest extends BaseIndexFormRequest
                 'filter.id'                => 'sometimes|integer|exists:users,id',
                 'filter.name'              => 'sometimes|string|max:255',
                 'filter.email'             => 'sometimes|email|max:255',
+                'filter.status'            => 'sometimes',
                 'filter.email_verified_at' => 'sometimes|date',
                 'filter.created_at'        => 'sometimes|date',
             ],
@@ -82,6 +84,7 @@ final class IndexUserRequest extends BaseIndexFormRequest
         return [
             'id', '-id',
             'name', '-name',
+            'status', '-status',
             'email', '-email',
             'created_at', '-created_at',
         ];
@@ -104,7 +107,7 @@ final class IndexUserRequest extends BaseIndexFormRequest
      */
     protected function getAllowedFields(): array
     {
-        return ['id', 'name', 'email', 'email_verified_at', 'created_at', 'updated_at'];
+        return ['id', 'name', 'status', 'email', 'email_verified_at', 'created_at', 'updated_at'];
     }
 
     /**

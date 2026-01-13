@@ -6,6 +6,7 @@ namespace App\Http\Resources;
 
 use App\Models\Permission;
 use Illuminate\Http\Request;
+use App\Http\Resources\Users\UserResource;
 
 /**
  * @mixin Permission
