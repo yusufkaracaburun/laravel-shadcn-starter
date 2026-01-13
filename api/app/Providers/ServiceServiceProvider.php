@@ -23,6 +23,8 @@ use App\Services\Contracts\ProductServiceInterface;
 use App\Services\Contracts\ProjectServiceInterface;
 use App\Services\Contracts\CustomerServiceInterface;
 use App\Services\Contracts\PermissionServiceInterface;
+use App\Services\Concretes\VehicleService;
+use App\Services\Contracts\VehicleServiceInterface;
 
 final class ServiceServiceProvider extends ServiceProvider
 {
@@ -40,5 +42,6 @@ final class ServiceServiceProvider extends ServiceProvider
         $this->app->bind(PaymentServiceInterface::class, PaymentService::class);
         $this->app->bind(PermissionServiceInterface::class, PermissionService::class);
         $this->app->bind(RoleServiceInterface::class, RoleService::class);
+        $this->app->bind(VehicleServiceInterface::class, VehicleService::class);
     }
 }

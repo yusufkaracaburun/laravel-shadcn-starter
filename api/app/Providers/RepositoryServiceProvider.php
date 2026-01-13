@@ -25,6 +25,8 @@ use App\Repositories\Contracts\ProjectRepositoryInterface;
 use App\Repositories\Contracts\CustomerRepositoryInterface;
 use App\Repositories\Contracts\TestFinalRepositoryInterface;
 use App\Repositories\Contracts\PermissionRepositoryInterface;
+use App\Repositories\Concretes\VehicleRepository;
+use App\Repositories\Contracts\VehicleRepositoryInterface;
 
 final class RepositoryServiceProvider extends ServiceProvider
 {
@@ -43,5 +45,6 @@ final class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(PaymentRepositoryInterface::class, PaymentRepository::class);
         $this->app->bind(PermissionRepositoryInterface::class, PermissionRepository::class);
         $this->app->bind(RoleRepositoryInterface::class, RoleRepository::class);
+        $this->app->bind(VehicleRepositoryInterface::class, VehicleRepository::class);
     }
 }

@@ -88,6 +88,16 @@ final class User extends Authenticatable implements HasMedia
     }
 
     /**
+     * Get all vehicles assigned to the user.
+     *
+     * @return BelongsToMany<Vehicle>
+     */
+    public function vehicles(): BelongsToMany
+    {
+        return $this->belongsToMany(Vehicle::class, 'vehicle_user');
+    }
+
+    /**
      * Get teams owned by the user.
      *
      * @return HasMany<Team>
