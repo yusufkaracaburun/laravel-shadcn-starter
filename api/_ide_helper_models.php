@@ -13,40 +13,8 @@
 
 namespace App\Models{
 /**
- * @property int $id
- * @property string $name
- * @property string $email
- * @property string|null $phone
- * @property string $industry
- * @property string $status
- * @property string $employees
- * @property int|null $team_id
- * @property Carbon|null $created_at
- * @property Carbon|null $updated_at
- * @property-read Team|null $team
- * @method static \Database\Factories\CompanyFactory factory($count = null, $state = [])
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Company forTeam(?int $teamId)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Company newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Company newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Company query()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Company whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Company whereEmail($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Company whereEmployees($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Company whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Company whereIndustry($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Company whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Company wherePhone($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Company whereStatus($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Company whereTeamId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Company whereUpdatedAt($value)
- */
-	final class Company extends \Eloquent {}
-}
-
-namespace App\Models{
-/**
  * Contact model.
- *
+ * 
  * Represents a contact person associated with customers.
  *
  * @property int $id
@@ -89,7 +57,7 @@ namespace App\Models{
 namespace App\Models{
 /**
  * Customer model.
- *
+ * 
  * Represents a customer (business or private) in the system.
  *
  * @property int $id
@@ -104,6 +72,7 @@ namespace App\Models{
  * @property string|null $kvk_number
  * @property string|null $vat_number
  * @property string|null $iban_number
+ * @property \App\Enums\CustomerStatus $status
  * @property \Carbon\CarbonImmutable|null $created_at
  * @property \Carbon\CarbonImmutable|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Contact> $contacts
@@ -132,10 +101,12 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Customer whereKvkNumber($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Customer whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Customer wherePhone($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Customer whereStatus($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Customer whereType($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Customer whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Customer whereVatNumber($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Customer whereZipcode($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Customer withStatus(string $status)
  */
 	final class Customer extends \Eloquent {}
 }
@@ -143,7 +114,7 @@ namespace App\Models{
 namespace App\Models{
 /**
  * Invoice model.
- *
+ * 
  * Represents an invoice sent to a customer.
  *
  * @property int $id
@@ -201,12 +172,12 @@ namespace App\Models{
 namespace App\Models{
 /**
  * InvoiceItem model.
- *
+ * 
  * Represents a line item on an invoice.
  *
  * @property int $id
  * @property int $invoice_id
- * @property int|null $item_id
+ * @property int|null $product_id
  * @property string|null $name
  * @property string|null $description
  * @property numeric $quantity
@@ -229,8 +200,8 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem whereDescription($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem whereInvoiceId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem whereItemId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem whereProductId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem whereQuantity($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem whereSortOrder($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem whereTotalExclVat($value)
@@ -242,34 +213,6 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem whereVatRate($value)
  */
 	final class InvoiceItem extends \Eloquent {}
-}
-
-namespace App\Models{
-/**
- * @property int $id
- * @property string $name
- * @property string|null $description
- * @property \Cknow\Money\Money $unit_price
- * @property numeric $vat_rate
- * @property string|null $unit
- * @property \Carbon\CarbonImmutable|null $created_at
- * @property \Carbon\CarbonImmutable|null $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\InvoiceItem> $invoiceLines
- * @property-read int|null $invoice_lines_count
- * @method static \Database\Factories\ProductFactory factory($count = null, $state = [])
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Product newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Product newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Product query()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereDescription($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereUnit($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereUnitPrice($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereVatRate($value)
- */
-	final class Item extends \Eloquent {}
 }
 
 namespace App\Models{
@@ -331,7 +274,7 @@ namespace App\Models{
 namespace App\Models{
 /**
  * Payment model.
- *
+ * 
  * Represents a payment made by a customer, optionally linked to an invoice.
  *
  * @property int $id
@@ -410,6 +353,34 @@ namespace App\Models{
  * @property int $id
  * @property string $name
  * @property string|null $description
+ * @property \Cknow\Money\Money $unit_price
+ * @property numeric $vat_rate
+ * @property string|null $unit
+ * @property \Carbon\CarbonImmutable|null $created_at
+ * @property \Carbon\CarbonImmutable|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\InvoiceItem> $invoiceLines
+ * @property-read int|null $invoice_lines_count
+ * @method static \Database\Factories\ProductFactory factory($count = null, $state = [])
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereUnit($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereUnitPrice($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereVatRate($value)
+ */
+	final class Product extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * @property int $id
+ * @property string $name
+ * @property string|null $description
  * @property string $status
  * @property string $category
  * @property Carbon|null $start_date
@@ -445,6 +416,8 @@ namespace App\Models{
  * @property int|null $team_id
  * @property string $name
  * @property string $guard_name
+ * @property string $slug
+ * @property bool $is_system
  * @property \Carbon\CarbonImmutable|null $created_at
  * @property \Carbon\CarbonImmutable|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \Spatie\Permission\Models\Permission> $permissions
@@ -459,7 +432,9 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Role whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Role whereGuardName($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Role whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Role whereIsSystem($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Role whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Role whereSlug($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Role whereTeamId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Role whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Role withoutPermission($permissions)
