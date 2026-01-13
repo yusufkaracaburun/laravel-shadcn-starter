@@ -3,7 +3,6 @@ import { Users } from 'lucide-vue-next'
 import Draggable from 'vuedraggable'
 
 import type { ITeam } from '@/pages/teams/models/teams'
-import type { IUser } from '@/pages/users/models/users'
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import Badge from '@/components/ui/badge/Badge.vue'
@@ -14,15 +13,8 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog'
 import { cn } from '@/lib/utils'
-import { useUserService } from '@/pages/users/services/users.service'
+import UserDetailsDialog from './user-details-dialog.vue'
 
 interface Props {
   teams: ITeam[]
@@ -47,27 +39,6 @@ const draggedOverTeamId = ref<number | null>(null)
 const teamDropZones = ref<Record<number, any[]>>({})
 const selectedUserId = ref<number | null>(null)
 const isUserDialogOpen = ref(false)
-
-const userService = useUserService()
-const selectedUserIdRef = computed(() => selectedUserId.value ?? undefined)
-
-const getUserByIdQuery = userService.getUserByIdQuery(
-  selectedUserIdRef,
-  ref(['roles', 'teams']),
-)
-
-const { data: userByIdResponse } = getUserByIdQuery
-
-const selectedUser = computed<IUser | null>(() => {
-  if (!selectedUserId.value) {
-    return null
-  }
-  const data = userByIdResponse.value?.data
-  if (Array.isArray(data)) {
-    return data[0] ?? null
-  }
-  return data ?? null
-})
 
 // Initialize empty arrays for each team
 watch(
@@ -112,8 +83,7 @@ function onAdd(
 
 function getTeamMembers(team: ITeam) {
   // Backend returns users array when include=users is used
-  // Check both members and users for compatibility
-  const members = team.users || team.members || []
+  const members = team.users || []
   return Array.isArray(members) ? members : []
 }
 
@@ -255,84 +225,9 @@ function showUserDetails(userId: number) {
     </div>
 
     <!-- User Details Dialog -->
-    <Dialog v-model:open="isUserDialogOpen">
-      <DialogContent class="sm:max-w-[500px]">
-        <DialogHeader>
-          <DialogTitle>User Details</DialogTitle>
-          <DialogDescription> View user information </DialogDescription>
-        </DialogHeader>
-        <div v-if="selectedUser" class="space-y-4 py-4">
-          <div class="flex items-center gap-4">
-            <Avatar class="size-16">
-              <AvatarImage
-                v-if="selectedUser.profile_photo_url"
-                :src="selectedUser.profile_photo_url"
-                :alt="selectedUser.name"
-              />
-              <AvatarFallback class="text-lg">
-                {{ getInitials(selectedUser.name) }}
-              </AvatarFallback>
-            </Avatar>
-            <div>
-              <h3 class="text-lg font-semibold">
-                {{ selectedUser.name }}
-              </h3>
-              <p class="text-sm text-muted-foreground">
-                {{ selectedUser.email }}
-              </p>
-            </div>
-          </div>
-          <div class="grid grid-cols-2 gap-4 text-sm">
-            <div>
-              <div class="text-muted-foreground mb-1">Roles</div>
-              <div
-                v-if="selectedUser.roles && selectedUser.roles.length > 0"
-                class="flex flex-wrap gap-1"
-              >
-                <Badge
-                  v-for="role in selectedUser.roles"
-                  :key="role.id"
-                  variant="outline"
-                  class="capitalize"
-                >
-                  {{ role.name }}
-                </Badge>
-              </div>
-              <div v-else class="font-medium text-muted-foreground">
-                No roles assigned
-              </div>
-            </div>
-            <div>
-              <div class="text-muted-foreground mb-1">Status</div>
-              <Badge
-                v-if="selectedUser.status"
-                :variant="
-                  selectedUser.status === 'active' ? 'default' : 'secondary'
-                "
-                class="capitalize"
-              >
-                {{ selectedUser.status }}
-              </Badge>
-              <div v-else class="font-medium text-muted-foreground">
-                Not set
-              </div>
-            </div>
-            <div v-if="selectedUser.email_verified_at">
-              <div class="text-muted-foreground">Email Verified</div>
-              <div class="font-medium">Yes</div>
-            </div>
-            <div>
-              <div class="text-muted-foreground">Member Since</div>
-              <div class="font-medium">
-                {{ new Date(selectedUser.created_at).toLocaleDateString() }}
-              </div>
-            </div>
-          </div>
-        </div>
-        <div v-else class="py-8 text-center text-muted-foreground">
-          Loading user details...
-        </div>
-      </DialogContent>
-    </Dialog>
+    <UserDetailsDialog
+      :user-id="selectedUserId"
+      v-model:open="isUserDialogOpen"
+    />
   </div>
 </template>
