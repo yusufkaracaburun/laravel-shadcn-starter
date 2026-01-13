@@ -178,7 +178,15 @@ export function useResourceBase<
     refetch: fetchList,
   } = getListQuery
 
-  const items = computed(() => listData.value?.data.data ?? [])
+  const items = computed(() => {
+    const responseData = listData.value?.data
+    if (!responseData) return []
+    // Handle both array and object with data property
+    if (Array.isArray(responseData)) {
+      return responseData
+    }
+    return responseData.data ?? []
+  })
 
   async function fetchListData(): Promise<IPaginatedResponse<TEntity>> {
     try {
@@ -285,9 +293,9 @@ export function useResourceBase<
   const serverPagination = computed(() => {
     const response = listData.value?.data
     return {
-      page: response ? response.current_page : page.value,
+      page: response?.current_page ?? page.value ?? 1,
       pageSize: pageSize.value,
-      total: response ? response.total : 0,
+      total: response?.total ?? 0,
       onPageChange,
       onPageSizeChange,
     }

@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { Grid3x3Icon, ListIcon } from '@/composables/use-icons.composable'
-
 import Page from '@/components/global-layout/basic-page.vue'
 import { Button } from '@/components/ui/button'
 import {
@@ -8,6 +6,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
+import { Grid3x3Icon, ListIcon } from '@/composables/use-icons.composable'
 import { useCustomers } from '@/pages/customers/composables/use-customers.composable'
 
 import { columns } from './components/columns'
@@ -31,7 +30,12 @@ const {
 </script>
 
 <template>
-  <Page title="Customers" description="Manage your customers" sticky>
+  <Page
+    title="Customers"
+    description="Manage your customers"
+    sticky
+    data-testid="customers_page"
+  >
     <template #actions>
       <div class="flex items-center gap-2">
         <Tooltip>

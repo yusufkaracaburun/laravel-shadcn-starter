@@ -32,7 +32,7 @@ const {
       <!-- <UserInvite /> -->
       <UserCreate />
     </template>
-    <div class="overflow-x-auto">
+    <div class="overflow-x-auto" data-testid="users_table">
       <DataTable
         :loading="loading"
         :data="users"

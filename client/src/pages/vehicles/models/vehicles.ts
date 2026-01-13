@@ -1,3 +1,4 @@
+import type { IUser } from '@/pages/users/models/users'
 import type { IStatus } from '@/services/types/response.type'
 
 /**
@@ -12,6 +13,9 @@ export interface IVehicle {
   year: number | null
   color: string | null
   vin: string | null
+  status: string
+  status_formatted: IStatus
+  drivers?: IUser[]
   created_at: string
   updated_at: string
 }
@@ -21,6 +25,7 @@ export interface IVehicleFilters {
   make?: string
   model?: string
   year?: number
+  status?: string
   search?: string
   between?: string
 }

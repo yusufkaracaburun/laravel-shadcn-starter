@@ -37,7 +37,9 @@ export function useVehicles() {
   const vehicleService = useVehicleService()
   const route = useRoute()
 
-  const includes = {}
+  const includes = {
+    drivers: 'drivers',
+  }
 
   const base = useResourceBase<
     IVehicle,
@@ -47,7 +49,8 @@ export function useVehicles() {
     IVehiclePrerequisites
   >({
     service: {
-      getPrerequisitesQuery: () => vehicleService.getVehiclePrerequisitesQuery(),
+      getPrerequisitesQuery: () =>
+        vehicleService.getVehiclePrerequisitesQuery(),
       getListQuery: (page, per_page, sort, filter, include) =>
         vehicleService.getVehiclesQuery(page, per_page, sort, filter, include),
       createMutation: () => vehicleService.createVehicleMutation(),
@@ -57,8 +60,9 @@ export function useVehicles() {
     },
     context: VehicleContext,
     messages: VehicleMessages,
-    defaultSort: { id: 'created_at', desc: true },
+    defaultSort: { id: 'license_plate', desc: false },
     includes,
+    defaultIncludeKey: 'drivers',
     onFetchList: (refetch) => {
       refetch()
     },
@@ -71,9 +75,9 @@ export function useVehicles() {
     const params = route.params as { id?: string | string[] }
     const idParam = Array.isArray(params.id) ? params.id[0] : params.id
     if (
-      !idParam
-      || typeof idParam !== 'string'
-      || Number.isNaN(Number(idParam))
+      !idParam ||
+      typeof idParam !== 'string' ||
+      Number.isNaN(Number(idParam))
     ) {
       return undefined
     }

@@ -30,7 +30,7 @@ const {
     <template #actions>
       <VehicleCreate />
     </template>
-    <div class="overflow-x-auto">
+    <div class="overflow-x-auto" data-testid="vehicles_table">
       <DataTable
         :loading="loading"
         :data="vehicles"

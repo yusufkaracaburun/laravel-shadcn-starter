@@ -5,6 +5,7 @@ import { h } from 'vue'
 import DataTableColumnHeader from '@/components/data-table/column-header.vue'
 import { SelectColumn } from '@/components/data-table/table-columns'
 import { Copy } from '@/components/sva-ui/copy'
+import Badge from '@/components/ui/badge/Badge.vue'
 import { getT } from '@/plugins/i18n/setup'
 import { formatDate } from '@/utils/date'
 
@@ -52,6 +53,35 @@ function createDateCell(dateValue: unknown) {
 }
 
 /**
+ * Helper function to create status badge cell
+ */
+function createStatusCell(vehicle: IVehicle) {
+  const statusFormatted = vehicle.status_formatted
+  if (!statusFormatted) {
+    return h('div', { class: CELL_CLASSES.EMPTY_STATE }, '—')
+  }
+
+  // Map color to variant
+  let variant: 'default' | 'secondary' | 'destructive' | 'outline' = 'secondary'
+  if (statusFormatted.color === 'danger') {
+    variant = 'destructive'
+  } else if (statusFormatted.color === 'success') {
+    variant = 'default'
+  }
+
+  // Use Badge with status_formatted styling
+  // status_formatted.style contains the full CSS classes from backend
+  return h(
+    Badge,
+    {
+      variant,
+      class: statusFormatted.style || '',
+    },
+    [statusFormatted.label || vehicle.status],
+  )
+}
+
+/**
  * Creates the column definitions array
  * This is the single source of truth for vehicle columns (DRY principle)
  *
@@ -78,6 +108,20 @@ function createColumns(): ColumnDef<IVehicle>[] {
       enableResizing: true,
     },
     {
+      accessorKey: 'status',
+      header: ({ column }) =>
+        h(DataTableColumnHeader<IVehicle>, {
+          column,
+          title: t('vehicles.columns.status') || 'Status',
+        }),
+      cell: ({ row }) => {
+        const vehicle = row.original
+        return createStatusCell(vehicle)
+      },
+      enableSorting: true,
+      enableResizing: true,
+    },
+    {
       accessorKey: 'make',
       header: ({ column }) =>
         h(DataTableColumnHeader<IVehicle>, {
@@ -86,11 +130,7 @@ function createColumns(): ColumnDef<IVehicle>[] {
         }),
       cell: ({ row }) => {
         const make = row.getValue('make')
-        return h(
-          'div',
-          {},
-          (typeof make === 'string' ? make : null) || '—',
-        )
+        return h('div', {}, (typeof make === 'string' ? make : null) || '—')
       },
       enableSorting: true,
       enableResizing: true,
@@ -104,11 +144,7 @@ function createColumns(): ColumnDef<IVehicle>[] {
         }),
       cell: ({ row }) => {
         const model = row.getValue('model')
-        return h(
-          'div',
-          {},
-          (typeof model === 'string' ? model : null) || '—',
-        )
+        return h('div', {}, (typeof model === 'string' ? model : null) || '—')
       },
       enableSorting: true,
       enableResizing: true,
@@ -140,11 +176,7 @@ function createColumns(): ColumnDef<IVehicle>[] {
         }),
       cell: ({ row }) => {
         const color = row.getValue('color')
-        return h(
-          'div',
-          {},
-          (typeof color === 'string' ? color : null) || '—',
-        )
+        return h('div', {}, (typeof color === 'string' ? color : null) || '—')
       },
       enableSorting: true,
       enableResizing: true,

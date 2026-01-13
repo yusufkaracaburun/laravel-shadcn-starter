@@ -13,11 +13,11 @@ export default {
       {
         overrides: {
           '=': 'after',
-          '?': 'before',
-          ':': 'before',
-          '&&': 'before',
-          '||': 'before',
-          '??': 'before',
+          '?': 'after',
+          ':': 'after',
+          '&&': 'after',
+          '||': 'after',
+          '??': 'after',
         },
       },
     ],
@@ -27,11 +27,11 @@ export default {
       {
         overrides: {
           '=': 'after',
-          '?': 'before',
-          ':': 'before',
-          '&&': 'before',
-          '||': 'before',
-          '??': 'before',
+          '?': 'after',
+          ':': 'after',
+          '&&': 'after',
+          '||': 'after',
+          '??': 'after',
         },
       },
     ],
