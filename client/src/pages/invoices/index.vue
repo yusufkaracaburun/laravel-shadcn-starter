@@ -1,33 +1,43 @@
 <script setup lang="ts">
-import { Grid3x3, List } from 'lucide-vue-next'
-
 import Page from '@/components/global-layout/basic-page.vue'
 import { Button } from '@/components/ui/button'
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
-import { useInvoices } from '@/composables/use-invoices'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
+import { Grid3x3Icon, ListIcon } from '@/composables/use-icons.composable'
+import { useInvoices } from '@/pages/invoices/composables/use-invoices.composable'
 
-import { columns } from './components/columns'
+import { getInvoiceColumns } from './components/columns'
 import DataTable from './components/data-table.vue'
 import InvoiceCreate from './components/invoice-create.vue'
 import InvoicesCardGrid from './components/invoices-card-grid.vue'
 
 type TViewMode = 'table' | 'card'
 
+const columns = getInvoiceColumns()
+
 const viewMode = ref<TViewMode>('table')
 const {
   loading,
   invoices,
   serverPagination,
-  sorting,
+  sort,
   onSortingChange,
-  filters,
+  filter,
   onFiltersChange,
   clearFilters,
 } = useInvoices()
 </script>
 
 <template>
-  <Page title="Invoices" description="Manage your invoices" sticky>
+  <Page
+    title="Invoices"
+    description="Manage your invoices"
+    sticky
+    data-testid="invoices_page"
+  >
     <template #actions>
       <div class="flex items-center gap-2">
         <Tooltip>
@@ -39,7 +49,7 @@ const {
               data-testid="invoices_table-view_button"
               @click="viewMode = 'table'"
             >
-              <List class="size-4" />
+              <ListIcon class="size-4" />
               <span class="sr-only">Table view</span>
             </Button>
           </TooltipTrigger>
@@ -56,7 +66,7 @@ const {
               data-testid="invoices_card-view_button"
               @click="viewMode = 'card'"
             >
-              <Grid3x3 class="size-4" />
+              <Grid3x3Icon class="size-4" />
               <span class="sr-only">Card view</span>
             </Button>
           </TooltipTrigger>
@@ -73,9 +83,9 @@ const {
         :data="invoices"
         :columns="columns"
         :server-pagination="serverPagination"
-        :sorting="sorting"
+        :sorting="sort"
         :on-sorting-change="onSortingChange"
-        :filters="filters"
+        :filters="filter"
         :on-filters-change="onFiltersChange"
         :on-clear-filters="clearFilters"
       />

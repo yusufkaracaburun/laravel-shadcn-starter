@@ -16,7 +16,12 @@ test.describe('Authentication Flow', () => {
     })
 
     await test.step('Fill registration form', async () => {
-      await registerPage.fillForm(user.name, user.email, user.password, user.password)
+      await registerPage.fillForm(
+        user.name,
+        user.email,
+        user.password,
+        user.password,
+      )
     })
 
     await test.step('Submit registration form', async () => {

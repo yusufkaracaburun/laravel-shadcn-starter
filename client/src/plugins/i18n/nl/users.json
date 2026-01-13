@@ -1,0 +1,28 @@
+{
+  "users": {
+    "title": "Gebruikers",
+    "description": "Gebruikers beschrijving",
+    "columns": {
+      "name": "Naam",
+      "email": "E-mail",
+      "roles": "Rollen",
+      "verified": "Geverifieerd",
+      "unverified": "Niet geverifieerd",
+      "createdAt": "Aangemaakt op"
+    },
+    "actions": {
+      "invite": "Gebruiker uitnodigen",
+      "create": "Gebruiker aanmaken",
+      "reset": "Resetten",
+      "cancel": "Annuleren"
+    },
+    "invite": {
+      "title": "Gebruiker uitnodigen",
+      "description": "Nodig een nieuwe gebruiker uit om lid te worden van je team door hen een e-mailuitnodiging te sturen. Wijs een rol toe om hun toegangsniveau te definiëren."
+    },
+    "filters": {
+      "filterByName": "Filter gebruikers op naam...",
+      "filterByEmail": "Filter gebruikers op e-mail..."
+    }
+  }
+}

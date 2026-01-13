@@ -1,7 +1,7 @@
 import { createApp, nextTick } from 'vue'
 
 import App from './App.vue'
-import { useAuth } from './composables/use-auth'
+import { useAuth } from './pages/auth/composables/use-auth.composable'
 import { setupPlugins } from './plugins'
 
 import '@/assets/index.css'
@@ -20,7 +20,7 @@ async function bootstrap() {
   app.mount('#app')
 
   await nextTick()
-  await checkUserAuth()
+  // await checkUserAuth()
 }
 
 async function checkUserAuth() {

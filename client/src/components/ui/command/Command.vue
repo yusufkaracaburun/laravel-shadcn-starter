@@ -7,9 +7,12 @@ import { reactive, ref, watch } from 'vue'
 import { cn } from '@/lib/utils'
 import { provideCommandContext } from '.'
 
-const props = withDefaults(defineProps<ListboxRootProps & { class?: HTMLAttributes['class'] }>(), {
-  modelValue: '',
-})
+const props = withDefaults(
+  defineProps<ListboxRootProps & { class?: HTMLAttributes['class'] }>(),
+  {
+    modelValue: '',
+  },
+)
 
 const emits = defineEmits<ListboxRootEmits>()
 

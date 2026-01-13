@@ -3,7 +3,13 @@ import { VisArea, VisAxis, VisLine, VisXYContainer } from '@unovis/vue'
 
 import type { ChartConfig } from '@/components/ui/chart'
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
 import {
   ChartContainer,
   ChartCrosshair,
@@ -176,10 +182,14 @@ const filterRange = computed(() => {
 
 <template>
   <Card class="pt-0">
-    <CardHeader class="flex items-center gap-2 space-y-0 border-b py-5 sm:flex-row">
+    <CardHeader
+      class="flex items-center gap-2 space-y-0 border-b py-5 sm:flex-row"
+    >
       <div class="grid flex-1 gap-1">
         <CardTitle>Area Chart - Interactive</CardTitle>
-        <CardDescription> Showing total visitors for the last 3 months </CardDescription>
+        <CardDescription>
+          Showing total visitors for the last 3 months
+        </CardDescription>
       </div>
       <Select v-model="timeRange">
         <SelectTrigger
@@ -189,14 +199,24 @@ const filterRange = computed(() => {
           <SelectValue placeholder="Last 3 months" />
         </SelectTrigger>
         <SelectContent class="rounded-xl">
-          <SelectItem value="90d" class="rounded-lg"> Last 3 months </SelectItem>
-          <SelectItem value="30d" class="rounded-lg"> Last 30 days </SelectItem>
-          <SelectItem value="7d" class="rounded-lg"> Last 7 days </SelectItem>
+          <SelectItem value="90d" class="rounded-lg">
+            Last 3 months
+          </SelectItem>
+          <SelectItem value="30d" class="rounded-lg">
+            Last 30 days
+          </SelectItem>
+          <SelectItem value="7d" class="rounded-lg">
+            Last 7 days
+          </SelectItem>
         </SelectContent>
       </Select>
     </CardHeader>
     <CardContent class="px-2 pt-4 sm:px-6 sm:pt-6 pb-4">
-      <ChartContainer :config="chartConfig" class="aspect-auto h-[250px] w-full" :cursor="false">
+      <ChartContainer
+        :config="chartConfig"
+        class="aspect-auto h-[250px] w-full"
+        :cursor="false"
+      >
         <VisXYContainer
           :data="filterRange"
           :svg-defs="svgDefs"
@@ -206,14 +226,18 @@ const filterRange = computed(() => {
           <VisArea
             :x="(d: Data) => d.date"
             :y="[(d: Data) => d.mobile, (d: Data) => d.desktop]"
-            :color="(_d: Data, i: number) => ['url(#fillMobile)', 'url(#fillDesktop)'][i]"
+            :color="
+              (_d: Data, i: number) =>
+                ['url(#fillMobile)', 'url(#fillDesktop)'][i]
+            "
             :opacity="0.6"
           />
           <VisLine
             :x="(d: Data) => d.date"
             :y="[(d: Data) => d.mobile, (d: Data) => d.mobile + d.desktop]"
             :color="
-              (_d: Data, i: number) => [chartConfig.mobile.color, chartConfig.desktop.color][i]
+              (_d: Data, i: number) =>
+                [chartConfig.mobile.color, chartConfig.desktop.color][i]
             "
             :line-width="1"
           />
@@ -234,7 +258,12 @@ const filterRange = computed(() => {
               }
             "
           />
-          <VisAxis type="y" :num-ticks="3" :tick-line="false" :domain-line="false" />
+          <VisAxis
+            type="y"
+            :num-ticks="3"
+            :tick-line="false"
+            :domain-line="false"
+          />
           <ChartTooltip />
           <ChartCrosshair
             :template="
@@ -248,7 +277,8 @@ const filterRange = computed(() => {
               })
             "
             :color="
-              (_d: Data, i: number) => [chartConfig.mobile.color, chartConfig.desktop.color][i % 2]
+              (_d: Data, i: number) =>
+                [chartConfig.mobile.color, chartConfig.desktop.color][i % 2]
             "
           />
         </VisXYContainer>

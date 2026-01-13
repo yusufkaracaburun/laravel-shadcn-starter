@@ -5,7 +5,9 @@ import { reactiveOmit } from '@vueuse/core'
 import { ComboboxEmpty } from 'reka-ui'
 import { cn } from '@/lib/utils'
 
-const props = defineProps<ComboboxEmptyProps & { class?: HTMLAttributes['class'] }>()
+const props = defineProps<
+  ComboboxEmptyProps & { class?: HTMLAttributes['class'] }
+>()
 
 const delegatedProps = reactiveOmit(props, 'class')
 </script>

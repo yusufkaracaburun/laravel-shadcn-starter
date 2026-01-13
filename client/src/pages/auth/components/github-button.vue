@@ -3,7 +3,11 @@ import { Icon } from '@iconify/vue'
 </script>
 
 <template>
-  <UiButton variant="outline" class="w-full" data-testid="github-button_login_button">
+  <UiButton
+    variant="outline"
+    class="w-full"
+    data-testid="github-button_login_button"
+  >
     <Icon icon="simple-icons:github" class="size-5 mr-2" />
     GitHub
   </UiButton>

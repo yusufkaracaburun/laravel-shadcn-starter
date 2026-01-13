@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Enums\CustomerType;
+use App\Enums\CustomerStatus;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
@@ -29,6 +30,8 @@ return new class extends Migration
             $table->string('kvk_number')->nullable();
             $table->string('vat_number')->nullable();
             $table->string('iban_number', 34)->nullable();
+
+            $table->enum('status', CustomerStatus::values())->default(CustomerStatus::REGISTERED->value);
             $table->timestamps();
 
             $table->index(['type']);

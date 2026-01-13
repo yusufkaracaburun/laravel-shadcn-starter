@@ -1,0 +1,18 @@
+{
+  "invoices": {
+    "columns": {
+      "invoiceNumber": "发票号码",
+      "customer": "客户",
+      "date": "日期",
+      "dueDate": "到期日期",
+      "status": "状态",
+      "total": "总计",
+      "createdAt": "创建时间"
+    },
+    "actions": {
+      "reset": "重置"
+    },
+    "deleteSelectedInvoices": "删除选中的发票",
+    "search": "搜索发票..."
+  }
+}

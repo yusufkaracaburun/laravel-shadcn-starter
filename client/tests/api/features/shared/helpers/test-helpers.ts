@@ -36,7 +36,8 @@ export function expectStatus(response: APIResponse, statusCode: number): void {
 export function expectError(response: APIResponse, statusCode?: number): void {
   if (statusCode) {
     expect(response.status()).toBe(statusCode)
-  } else {
+  }
+  else {
     expect(response.status()).toBeGreaterThanOrEqual(400)
   }
 }
@@ -64,7 +65,9 @@ export async function expectValidUser(
 /**
  * Assert that response contains validation errors (422)
  */
-export async function expectValidationErrors(response: APIResponse): Promise<void> {
+export async function expectValidationErrors(
+  response: APIResponse,
+): Promise<void> {
   expectError(response, HttpStatus.UNPROCESSABLE_ENTITY)
   const body = await response.json()
   expect(body).toHaveProperty('message')
@@ -80,7 +83,9 @@ export function expectUnauthenticated(response: APIResponse): void {
   const status = response.status()
   // In test environments, destroyed sessions can cause 500 errors
   // Accept both 401 (proper unauthenticated) and 500 (session destroyed)
-  expect([HttpStatus.UNAUTHORIZED, HttpStatus.INTERNAL_SERVER_ERROR]).toContain(status)
+  expect([HttpStatus.UNAUTHORIZED, HttpStatus.INTERNAL_SERVER_ERROR]).toContain(
+    status,
+  )
 }
 
 /**

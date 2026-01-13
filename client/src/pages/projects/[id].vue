@@ -4,7 +4,14 @@ meta:
 </route>
 
 <script setup lang="ts">
-import { ArrowLeft, Calendar, FilePenLine, FolderKanban, Target, Trash2 } from 'lucide-vue-next'
+import {
+  ArrowLeft,
+  Calendar,
+  FilePenLine,
+  FolderKanban,
+  Target,
+  Trash2,
+} from 'lucide-vue-next'
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
@@ -13,9 +20,15 @@ import Page from '@/components/global-layout/basic-page.vue'
 import Loading from '@/components/loading.vue'
 import Badge from '@/components/ui/badge/Badge.vue'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
 import { StatusBadge } from '@/components/ui/status-badge'
-import { useGetProjectQuery } from '@/services/projects.service'
+import { useGetProjectQuery } from '@/pages/projects/services/projects.service'
 
 import type { Project } from './data/schema'
 
@@ -28,13 +41,22 @@ const router = useRouter()
 
 const projectId = computed(() => Number(route.params.id))
 
-const { data: projectResponse, isLoading, isError, error, refetch } = useGetProjectQuery(projectId)
+const {
+  data: projectResponse,
+  isLoading,
+  isError,
+  error,
+  refetch,
+} = useGetProjectQuery(projectId)
 
-const project = computed<Project | null>(() => projectResponse.value?.data ?? null)
+const project = computed<Project | null>(
+  () => projectResponse.value?.data ?? null,
+)
 
 // Format date
 function formatDate(dateString: string | null): string {
-  if (!dateString) return '—'
+  if (!dateString)
+    return '—'
   return new Date(dateString).toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'long',
@@ -44,7 +66,8 @@ function formatDate(dateString: string | null): string {
 
 // Format datetime
 function formatDateTime(dateString: string | null): string {
-  if (!dateString) return '—'
+  if (!dateString)
+    return '—'
   return new Date(dateString).toLocaleString('en-US', {
     year: 'numeric',
     month: 'long',
@@ -56,12 +79,12 @@ function formatDateTime(dateString: string | null): string {
 
 // Get status info
 function getStatusInfo(status: string) {
-  return statuses.find((s) => s.value === status) || null
+  return statuses.find(s => s.value === status) || null
 }
 
 // Get category label
 function getCategoryLabel(category: string) {
-  return categories.find((c) => c.value === category)?.label || category
+  return categories.find(c => c.value === category)?.label || category
 }
 
 // Handle edit
@@ -84,7 +107,8 @@ function handleDeleteClose() {
 
 // Check if error is 404
 const isNotFound = computed(() => {
-  if (!isError.value || !error.value) return false
+  if (!isError.value || !error.value)
+    return false
   return (error.value as any)?.response?.status === 404
 })
 </script>
@@ -92,7 +116,11 @@ const isNotFound = computed(() => {
 <template>
   <Page
     :title="project ? project.name : 'Project Details'"
-    :description="project ? `View details for ${project.name}` : 'Loading project information...'"
+    :description="
+      project
+        ? `View details for ${project.name}`
+        : 'Loading project information...'
+    "
   >
     <template #actions>
       <div v-if="project" class="flex items-center gap-2">
@@ -111,11 +139,17 @@ const isNotFound = computed(() => {
       </div>
     </template>
 
-    <div v-if="isLoading" class="flex items-center justify-center min-h-[400px]">
+    <div
+      v-if="isLoading"
+      class="flex items-center justify-center min-h-[400px]"
+    >
       <Loading />
     </div>
 
-    <div v-else-if="isError && isNotFound" class="flex items-center justify-center min-h-[400px]">
+    <div
+      v-else-if="isError && isNotFound"
+      class="flex items-center justify-center min-h-[400px]"
+    >
       <Error
         :code="404"
         subtitle="Project Not Found"
@@ -123,14 +157,19 @@ const isNotFound = computed(() => {
       />
     </div>
 
-    <div v-else-if="isError" class="flex items-center justify-center min-h-[400px]">
+    <div
+      v-else-if="isError"
+      class="flex items-center justify-center min-h-[400px]"
+    >
       <div class="text-center">
         <Error
           :code="500"
           subtitle="Error Loading Project"
           error="An error occurred while loading the project information. Please try again."
         />
-        <Button class="mt-4" @click="refetch()"> Retry </Button>
+        <Button class="mt-4" @click="refetch()">
+          Retry
+        </Button>
       </div>
     </div>
 
@@ -139,7 +178,9 @@ const isNotFound = computed(() => {
       <Card>
         <CardHeader>
           <div class="flex items-start gap-6">
-            <div class="flex size-24 items-center justify-center rounded-full bg-primary/10">
+            <div
+              class="flex size-24 items-center justify-center rounded-full bg-primary/10"
+            >
               <FolderKanban class="size-12 text-primary" />
             </div>
             <div class="flex-1">
@@ -155,7 +196,10 @@ const isNotFound = computed(() => {
                   :class="getStatusInfo(project.status)!.color"
                   variant="secondary"
                 >
-                  <component :is="getStatusInfo(project.status)!.icon" class="mr-1 size-3" />
+                  <component
+                    :is="getStatusInfo(project.status)!.icon"
+                    class="mr-1 size-3"
+                  />
                   {{ getStatusInfo(project.status)!.label }}
                 </Badge>
                 <Badge variant="outline">
@@ -177,19 +221,25 @@ const isNotFound = computed(() => {
           </CardHeader>
           <CardContent class="space-y-4">
             <div>
-              <div class="text-sm font-medium text-muted-foreground mb-1">Name</div>
+              <div class="text-sm font-medium text-muted-foreground mb-1">
+                Name
+              </div>
               <div class="text-base">
                 {{ project.name }}
               </div>
             </div>
             <div v-if="project.description">
-              <div class="text-sm font-medium text-muted-foreground mb-1">Description</div>
+              <div class="text-sm font-medium text-muted-foreground mb-1">
+                Description
+              </div>
               <div class="text-base">
                 {{ project.description }}
               </div>
             </div>
             <div>
-              <div class="text-sm font-medium text-muted-foreground mb-1">Category</div>
+              <div class="text-sm font-medium text-muted-foreground mb-1">
+                Category
+              </div>
               <div class="text-base">
                 <Badge variant="outline">
                   {{ getCategoryLabel(project.category) }}
@@ -197,7 +247,9 @@ const isNotFound = computed(() => {
               </div>
             </div>
             <div>
-              <div class="text-sm font-medium text-muted-foreground mb-1">Status</div>
+              <div class="text-sm font-medium text-muted-foreground mb-1">
+                Status
+              </div>
               <div class="text-base">
                 <StatusBadge
                   v-if="getStatusInfo(project.status)"
@@ -209,7 +261,9 @@ const isNotFound = computed(() => {
               </div>
             </div>
             <div>
-              <div class="text-sm font-medium text-muted-foreground mb-1 flex items-center gap-2">
+              <div
+                class="text-sm font-medium text-muted-foreground mb-1 flex items-center gap-2"
+              >
                 <Target class="size-4" />
                 Progress
               </div>
@@ -232,11 +286,15 @@ const isNotFound = computed(() => {
         <Card>
           <CardHeader>
             <CardTitle>Timeline & Dates</CardTitle>
-            <CardDescription>Project schedule and timeline information</CardDescription>
+            <CardDescription>
+              Project schedule and timeline information
+            </CardDescription>
           </CardHeader>
           <CardContent class="space-y-4">
             <div>
-              <div class="text-sm font-medium text-muted-foreground mb-1 flex items-center gap-2">
+              <div
+                class="text-sm font-medium text-muted-foreground mb-1 flex items-center gap-2"
+              >
                 <Calendar class="size-4" />
                 Start Date
               </div>
@@ -245,7 +303,9 @@ const isNotFound = computed(() => {
               </div>
             </div>
             <div>
-              <div class="text-sm font-medium text-muted-foreground mb-1 flex items-center gap-2">
+              <div
+                class="text-sm font-medium text-muted-foreground mb-1 flex items-center gap-2"
+              >
                 <Calendar class="size-4" />
                 End Date
               </div>
@@ -254,7 +314,9 @@ const isNotFound = computed(() => {
               </div>
             </div>
             <div>
-              <div class="text-sm font-medium text-muted-foreground mb-1 flex items-center gap-2">
+              <div
+                class="text-sm font-medium text-muted-foreground mb-1 flex items-center gap-2"
+              >
                 <Calendar class="size-4" />
                 Created At
               </div>
@@ -263,7 +325,9 @@ const isNotFound = computed(() => {
               </div>
             </div>
             <div>
-              <div class="text-sm font-medium text-muted-foreground mb-1 flex items-center gap-2">
+              <div
+                class="text-sm font-medium text-muted-foreground mb-1 flex items-center gap-2"
+              >
                 <Calendar class="size-4" />
                 Updated At
               </div>
@@ -272,7 +336,9 @@ const isNotFound = computed(() => {
               </div>
             </div>
             <div v-if="project.team_id">
-              <div class="text-sm font-medium text-muted-foreground mb-1">Team ID</div>
+              <div class="text-sm font-medium text-muted-foreground mb-1">
+                Team ID
+              </div>
               <div class="text-base">
                 {{ project.team_id }}
               </div>

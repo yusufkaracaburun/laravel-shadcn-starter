@@ -1,0 +1,28 @@
+{
+  "users": {
+    "title": "用户",
+    "description": "用户描述",
+    "columns": {
+      "name": "姓名",
+      "email": "电子邮件",
+      "roles": "角色",
+      "verified": "已验证",
+      "unverified": "未验证",
+      "createdAt": "创建时间"
+    },
+    "actions": {
+      "invite": "邀请用户",
+      "create": "创建用户",
+      "reset": "重置",
+      "cancel": "取消"
+    },
+    "invite": {
+      "title": "邀请用户",
+      "description": "通过发送电子邮件邀请新用户加入您的团队。分配角色以定义他们的访问级别。"
+    },
+    "filters": {
+      "filterByName": "按姓名筛选用户...",
+      "filterByEmail": "按电子邮件筛选用户..."
+    }
+  }
+}

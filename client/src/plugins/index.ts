@@ -1,6 +1,6 @@
 import type { App } from 'vue'
 
-import { setupVueSonner } from '@/composables/use-toast'
+import { setupVueSonner } from '@/composables/use-toast.composable'
 
 import { setupAutoAnimate } from './auto-animate/setup'
 import { setupCookie } from './cookie/setup'

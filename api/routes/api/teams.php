@@ -15,9 +15,8 @@ use App\Http\Controllers\Api\TeamController;
 */
 
 Route::middleware('auth:sanctum')->name('api.teams.')->group(function (): void {
-    // Team resource routes
-    Route::apiResource('teams', TeamController::class);
+    Route::get('/teams/prerequisites', [TeamController::class, 'prerequisites'])->name('prerequisites');
+    Route::put('/teams/current-team', [TeamController::class, 'switch'])->name('switch');
 
-    // Current team switching
-    Route::put('/current-team', [TeamController::class, 'switch'])->name('switch');
+    Route::apiResource('teams', TeamController::class);
 });

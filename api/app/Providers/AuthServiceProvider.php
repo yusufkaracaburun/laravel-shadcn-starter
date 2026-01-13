@@ -4,18 +4,18 @@ declare(strict_types=1);
 
 namespace App\Providers;
 
-use App\Models\Item;
 use App\Models\Team;
 use App\Models\User;
 use App\Models\Invoice;
 use App\Models\Payment;
+use App\Models\Product;
 use App\Models\Customer;
-use App\Policies\ItemPolicy;
 use App\Policies\RolePolicy;
 use App\Policies\TeamPolicy;
 use App\Policies\UserPolicy;
 use App\Policies\InvoicePolicy;
 use App\Policies\PaymentPolicy;
+use App\Policies\ProductPolicy;
 use App\Policies\CustomerPolicy;
 use App\Policies\PermissionPolicy;
 use Spatie\Permission\Models\Role;
@@ -36,7 +36,7 @@ final class AuthServiceProvider extends ServiceProvider
         User::class       => UserPolicy::class,
         Permission::class => PermissionPolicy::class,
         Role::class       => RolePolicy::class,
-        Item::class       => ItemPolicy::class,
+        Product::class    => ProductPolicy::class,
         Payment::class    => PaymentPolicy::class,
         Invoice::class    => InvoicePolicy::class,
         Customer::class   => CustomerPolicy::class,

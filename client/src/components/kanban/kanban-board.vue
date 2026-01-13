@@ -57,7 +57,11 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover'
 import {
   Select,
   SelectContent,
@@ -66,11 +70,15 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import { Textarea } from '@/components/ui/textarea'
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
-import { useKanban } from '@/composables/use-kanban'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
 import { cn } from '@/lib/utils'
 // Import TaskResourceDialog for tasks page integration
 import TaskResourceDialogWrapper from '@/pages/tasks/components/task-resource-dialog.vue'
+import { useKanban } from '@/pages/tasks/composables/use-kanban.composable'
 import { getPriorityColor } from '@/utils/status-colors'
 
 interface Props {
@@ -86,8 +94,15 @@ const emit = defineEmits<{
   'task-created': [task: Task, columnId: string]
 }>()
 
-const { board, addTask, updateTask, removeTask, setColumns, removeColumn, updateColumn } =
-  useKanban()
+const {
+  board,
+  addTask,
+  updateTask,
+  removeTask,
+  setColumns,
+  removeColumn,
+  updateColumn,
+} = useKanban()
 
 // Generate task ID function (same as in useKanban)
 function generateTaskId(): string {
@@ -220,7 +235,9 @@ function editTask() {
 }
 
 function showEditTask(colId: string, taskId: string) {
-  const task = board.value.columns.find((c) => c.id === colId)?.tasks.find((t) => t.id === taskId)
+  const task = board.value.columns
+    .find((c) => c.id === colId)
+    ?.tasks.find((t) => t.id === taskId)
   if (!task) return
 
   // If using TaskForm, convert to table task format
@@ -272,7 +289,8 @@ function handleTaskFormUpdate(updatedTask: any) {
   const isNewTask =
     !taskId ||
     taskId === '' ||
-    (selectedTableTask.value && (!selectedTableTask.value.id || selectedTableTask.value.id === ''))
+    (selectedTableTask.value &&
+      (!selectedTableTask.value.id || selectedTableTask.value.id === ''))
 
   if (isNewTask) {
     // Create new task
@@ -394,7 +412,9 @@ function iconPriority(p?: Task['priority']) {
   return ChevronUp
 }
 
-function getLabelVariant(label: string): 'default' | 'secondary' | 'destructive' | 'outline' {
+function getLabelVariant(
+  label: string,
+): 'default' | 'secondary' | 'destructive' | 'outline' {
   const normalizedLabel = label.toLowerCase()
   if (normalizedLabel === 'bug') return 'destructive'
   if (normalizedLabel === 'feature') return 'default'
@@ -421,7 +441,9 @@ const timeAgoOptions = {
     >
       <template #item="{ element: col }: { element: Column }">
         <Card class="w-[272px] shrink-0 py-2 gap-4 self-start">
-          <CardHeader class="flex flex-row items-center justify-between gap-2 px-2">
+          <CardHeader
+            class="flex flex-row items-center justify-between gap-2 px-2"
+          >
             <CardTitle class="font-semibold text-sm flex items-center gap-2">
               <GripVertical class="col-handle cursor-grab opacity-60 size-4" />
               <span
@@ -432,7 +454,10 @@ const timeAgoOptions = {
                 @keydown.enter.prevent
                 >{{ col.title }}</span
               >
-              <Badge variant="secondary" class="h-5 min-w-5 px-1 font-mono tabular-nums">
+              <Badge
+                variant="secondary"
+                class="h-5 min-w-5 px-1 font-mono tabular-nums"
+              >
                 {{ col.tasks.length }}
               </Badge>
             </CardTitle>
@@ -447,7 +472,11 @@ const timeAgoOptions = {
               </Button>
               <DropdownMenu>
                 <DropdownMenuTrigger as-child>
-                  <Button size="icon-sm" variant="ghost" class="size-7 text-muted-foreground">
+                  <Button
+                    size="icon-sm"
+                    variant="ghost"
+                    class="size-7 text-muted-foreground"
+                  >
                     <EllipsisVertical class="size-4" />
                   </Button>
                 </DropdownMenuTrigger>
@@ -530,7 +559,10 @@ const timeAgoOptions = {
                   <p class="text-sm font-medium leading-5 mt-1">
                     {{ t.title }}
                   </p>
-                  <div v-if="t.labels && t.labels.length > 0" class="mt-2 flex items-center gap-1">
+                  <div
+                    v-if="t.labels && t.labels.length > 0"
+                    class="mt-2 flex items-center gap-1"
+                  >
                     <Badge
                       v-for="label in t.labels"
                       :key="label"
@@ -542,11 +574,15 @@ const timeAgoOptions = {
                   </div>
                   <div class="mt-3 flex items-center justify-between gap-2">
                     <div class="flex items-center gap-2">
-                      <div class="flex items-center text-[10px] text-muted-foreground gap-1">
+                      <div
+                        class="flex items-center text-[10px] text-muted-foreground gap-1"
+                      >
                         <Folder class="size-3" />
                         <span>4</span>
                       </div>
-                      <div class="flex items-center text-[10px] text-muted-foreground gap-1">
+                      <div
+                        class="flex items-center text-[10px] text-muted-foreground gap-1"
+                      >
                         <MessageSquare class="size-3" />
                         <span>2</span>
                       </div>
@@ -572,8 +608,13 @@ const timeAgoOptions = {
                         </TooltipContent>
                       </Tooltip>
                       <Avatar class="size-6">
-                        <AvatarImage src="/avatars/avatartion.png" alt="avatar" />
-                        <AvatarFallback class="text-[10px]"> DP </AvatarFallback>
+                        <AvatarImage
+                          src="/avatars/avatartion.png"
+                          alt="avatar"
+                        />
+                        <AvatarFallback class="text-[10px]">
+                          DP
+                        </AvatarFallback>
                       </Avatar>
                     </div>
                   </div>
@@ -601,9 +642,15 @@ const timeAgoOptions = {
   <Dialog v-model:open="showModalTask.open">
     <DialogContent class="sm:max-w-[520px]">
       <DialogHeader>
-        <DialogTitle>{{ showModalTask.type === 'create' ? 'New Task' : 'Edit Task' }}</DialogTitle>
+        <DialogTitle>
+          {{ showModalTask.type === 'create' ? 'New Task' : 'Edit Task' }}
+        </DialogTitle>
         <DialogDescription class="sr-only">
-          {{ showModalTask.type === 'create' ? 'Add a new task to the board' : 'Edit the task' }}
+          {{
+            showModalTask.type === 'create'
+              ? 'Add a new task to the board'
+              : 'Edit the task'
+          }}
         </DialogDescription>
       </DialogHeader>
       <div class="flex flex-col gap-3">
@@ -613,7 +660,11 @@ const timeAgoOptions = {
           <Label>Title</Label>
           <Input v-model="newTask.title" placeholder="Title" />
           <Label>Description</Label>
-          <Textarea v-model="newTask.description" placeholder="Description (optional)" rows="4" />
+          <Textarea
+            v-model="newTask.description"
+            placeholder="Description (optional)"
+            rows="4"
+          />
           <Label>Priority</Label>
           <Select v-model="newTask.priority">
             <SelectTrigger class="w-full">
@@ -639,7 +690,11 @@ const timeAgoOptions = {
                   "
                 >
                   <CalendarIcon class="mr-2 size-4" />
-                  {{ dueDate ? df.format(dueDate.toDate(getLocalTimeZone())) : 'Pick a date' }}
+                  {{
+                    dueDate
+                      ? df.format(dueDate.toDate(getLocalTimeZone()))
+                      : 'Pick a date'
+                  }}
                 </Button>
               </PopoverTrigger>
               <PopoverContent class="w-auto p-0">
@@ -658,8 +713,12 @@ const timeAgoOptions = {
         </div>
       </div>
       <DialogFooter>
-        <Button variant="secondary" @click="showModalTask.open = false"> Cancel </Button>
-        <Button @click="showModalTask.type === 'create' ? createTask() : editTask()">
+        <Button variant="secondary" @click="showModalTask.open = false">
+          Cancel
+        </Button>
+        <Button
+          @click="showModalTask.type === 'create' ? createTask() : editTask()"
+        >
           {{ showModalTask.type === 'create' ? 'Create' : 'Update' }}
         </Button>
       </DialogFooter>

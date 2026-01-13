@@ -98,10 +98,11 @@ export function parseDutchNumber(value: string): number {
  * Uses vue-i18n to respect current locale setting
  */
 export function formatDate(dateString: string | null | undefined): string {
-  if (!dateString) return '—'
+  if (!dateString)
+    return '—'
   try {
     const date = new Date(dateString)
-    if (!isNaN(date.getTime())) {
+    if (!Number.isNaN(date.getTime())) {
       const i18n = getI18n()
       if (i18n) {
         return i18n.d(date, 'long')
@@ -123,11 +124,14 @@ export function formatDate(dateString: string | null | undefined): string {
  * Format date for preview display (shorter format, e.g., "Mar 10, 2025")
  * Uses vue-i18n to respect current locale setting
  */
-export function formatDateForPreview(dateString: string | null | undefined): string {
-  if (!dateString) return '—'
+export function formatDateForPreview(
+  dateString: string | null | undefined,
+): string {
+  if (!dateString)
+    return '—'
   try {
     const date = new Date(dateString)
-    if (!isNaN(date.getTime())) {
+    if (!Number.isNaN(date.getTime())) {
       const i18n = getI18n()
       if (i18n) {
         return i18n.d(date, 'preview')
@@ -148,8 +152,11 @@ export function formatDateForPreview(dateString: string | null | undefined): str
 /**
  * Format date for input field (YYYY-MM-DD)
  */
-export function formatDateForInput(dateString: string | null | undefined): string {
-  if (!dateString) return ''
+export function formatDateForInput(
+  dateString: string | null | undefined,
+): string {
+  if (!dateString)
+    return ''
   // Try parsing as "d-m-Y H:i:s" format first
   if (dateString.includes('-') && dateString.includes(' ')) {
     const [datePart] = dateString.split(' ')
@@ -160,7 +167,7 @@ export function formatDateForInput(dateString: string | null | undefined): strin
   }
   // Try parsing as "Y-m-d" format
   const date = new Date(dateString)
-  if (!isNaN(date.getTime())) {
+  if (!Number.isNaN(date.getTime())) {
     const year = date.getFullYear()
     const month = String(date.getMonth() + 1).padStart(2, '0')
     const day = String(date.getDate()).padStart(2, '0')
@@ -174,7 +181,8 @@ export function formatDateForInput(dateString: string | null | undefined): strin
  * Uses vue-i18n to respect current locale setting
  */
 export function formatDateTime(dateString: string | null | undefined): string {
-  if (!dateString) return '—'
+  if (!dateString)
+    return '—'
   try {
     // Try parsing as "d-m-Y H:i:s" format first
     if (dateString.includes('-') && dateString.includes(' ')) {
@@ -182,7 +190,7 @@ export function formatDateTime(dateString: string | null | undefined): string {
       const [day, month, year] = datePart.split('-')
       if (day && month && year && year.length === 4) {
         const date = new Date(`${year}-${month}-${day} ${timePart}`)
-        if (!isNaN(date.getTime())) {
+        if (!Number.isNaN(date.getTime())) {
           const i18n = getI18n()
           if (i18n) {
             return i18n.d(date, 'long')
@@ -200,7 +208,7 @@ export function formatDateTime(dateString: string | null | undefined): string {
     }
     // Try parsing as ISO format
     const date = new Date(dateString)
-    if (!isNaN(date.getTime())) {
+    if (!Number.isNaN(date.getTime())) {
       const i18n = getI18n()
       if (i18n) {
         return i18n.d(date, 'long')

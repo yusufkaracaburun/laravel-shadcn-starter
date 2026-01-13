@@ -1,41 +1,40 @@
 <script setup lang="ts">
-import type { Row } from '@tanstack/vue-table'
 import type { Component } from 'vue'
 
-import { Ellipsis, Eye, FilePenLine, Trash2 } from 'lucide-vue-next'
 import { useRouter } from 'vue-router'
 
-import type { Customer } from '../data/schema'
+import type { IDataTableRowActionsProps } from '@/components/data-table/types'
 
-import { customerSchema } from '../data/schema'
+import {
+  EllipsisIcon,
+  EyeIcon,
+  FilePenLineIcon,
+  Trash2Icon,
+} from '@/composables/use-icons.composable'
+
+import type { ICustomer } from '../models/customers'
+
 import CustomerDelete from './customer-delete.vue'
-import CustomerResourceDialog from './customer-resource-dialog.vue'
+import CustomerEditDialog from './customer-edit-dialog.vue'
 
-interface DataTableRowActionsProps {
-  row: Row<Customer>
-}
-const props = defineProps<DataTableRowActionsProps>()
-const customer = computed(() => {
-  const result = customerSchema.safeParse(props.row.original)
-  if (result.success) {
-    return result.data
-  }
-  // If validation fails, return the original data as-is (type assertion)
-  // This handles cases where backend returns slightly different structure
-  return props.row.original as Customer
-})
+const props = defineProps<IDataTableRowActionsProps<ICustomer>>()
+const customer = computed(() => props.row.original)
 const router = useRouter()
 
 const showComponent = shallowRef<Component | null>(null)
+const isEditDialogOpen = ref(false)
 
 type TCommand = 'view' | 'edit' | 'delete'
 function handleSelect(command: TCommand) {
   switch (command) {
     case 'view':
-      router.push({ name: '/customers/[id]', params: { id: customer.value.id.toString() } })
+      router.push({
+        name: '/customers/view/[id]',
+        params: { id: customer.value.id.toString() },
+      })
       break
     case 'edit':
-      showComponent.value = CustomerResourceDialog
+      isEditDialogOpen.value = true
       break
     case 'delete':
       showComponent.value = CustomerDelete
@@ -50,44 +49,53 @@ const isOpen = ref(false)
   <UiDialog v-model:open="isOpen">
     <UiDropdownMenu>
       <UiDropdownMenuTrigger as-child>
-        <UiButton variant="ghost" class="size-8 p-0">
+        <UiButton
+          variant="ghost"
+          class="flex h-8 w-8 p-0 data-[state=open]:bg-muted"
+        >
+          <EllipsisIcon class="size-4" />
           <span class="sr-only">Open menu</span>
-          <Ellipsis class="size-4" />
         </UiButton>
       </UiDropdownMenuTrigger>
       <UiDropdownMenuContent align="end" class="w-[160px]">
         <UiDropdownMenuItem @select.stop="handleSelect('view')">
           <span>View</span>
-          <UiDropdownMenuShortcut> <Eye class="size-4" /> </UiDropdownMenuShortcut>
+          <UiDropdownMenuShortcut>
+            <EyeIcon class="size-4" />
+          </UiDropdownMenuShortcut>
         </UiDropdownMenuItem>
 
-        <UiDialogTrigger as-child>
-          <UiDropdownMenuItem @select.stop="handleSelect('edit')">
-            <span>Edit</span>
-            <UiDropdownMenuShortcut> <FilePenLine class="size-4" /> </UiDropdownMenuShortcut>
-          </UiDropdownMenuItem>
-        </UiDialogTrigger>
+        <UiDropdownMenuItem @select.stop="handleSelect('edit')">
+          <span>Edit</span>
+          <UiDropdownMenuShortcut>
+            <FilePenLineIcon class="size-4" />
+          </UiDropdownMenuShortcut>
+        </UiDropdownMenuItem>
 
         <UiDialogTrigger as-child>
           <UiDropdownMenuItem @select.stop="handleSelect('delete')">
             <span>Delete</span>
-            <UiDropdownMenuShortcut> <Trash2 class="size-4" /> </UiDropdownMenuShortcut>
+            <UiDropdownMenuShortcut>
+              <Trash2Icon class="size-4" />
+            </UiDropdownMenuShortcut>
           </UiDropdownMenuItem>
         </UiDialogTrigger>
       </UiDropdownMenuContent>
     </UiDropdownMenu>
 
-    <UiDialogContent>
+    <UiDialogContent class="sm:max-w-[425px]">
       <component
         :is="showComponent"
         :customer="customer"
-        @close="
-          () => {
-            isOpen = false
-            showComponent = null
-          }
-        "
+        @close="isOpen = false"
       />
     </UiDialogContent>
   </UiDialog>
+
+  <CustomerEditDialog
+    :customer="customer"
+    :open="isEditDialogOpen"
+    @update:open="isEditDialogOpen = $event"
+    @close="isEditDialogOpen = false"
+  />
 </template>

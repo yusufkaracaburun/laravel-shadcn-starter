@@ -24,6 +24,10 @@ interface ChartContextProps {
   config: Ref<ChartConfig>
 }
 
-export const [useChart, provideChartContext] = createContext<ChartContextProps>('Chart')
+export const [useChart, provideChartContext] =
+  createContext<ChartContextProps>('Chart')
 
-export { VisCrosshair as ChartCrosshair, VisTooltip as ChartTooltip } from '@unovis/vue'
+export {
+  VisCrosshair as ChartCrosshair,
+  VisTooltip as ChartTooltip,
+} from '@unovis/vue'

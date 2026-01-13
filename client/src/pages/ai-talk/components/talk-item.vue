@@ -32,7 +32,9 @@ const type = computed(() => (talk.role === 'user' ? 'self' : 'robot'))
         :class="
           cn(
             'p-4 rounded-lg bg-muted',
-            type === 'self' ? 'bg-primary text-primary-foreground' : 'bg-secondary',
+            type === 'self'
+              ? 'bg-primary text-primary-foreground'
+              : 'bg-secondary',
           )
         "
       >

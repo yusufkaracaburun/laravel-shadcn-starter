@@ -1,4 +1,8 @@
-import type { UnwrapRefCarouselApi as CarouselApi, CarouselEmits, CarouselProps } from './interface'
+import type {
+  UnwrapRefCarouselApi as CarouselApi,
+  CarouselEmits,
+  CarouselProps,
+} from './interface'
 import { createInjectionState } from '@vueuse/core'
 import emblaCarouselVue from 'embla-carousel-vue'
 import { onMounted, ref } from 'vue'
@@ -53,7 +57,8 @@ const [useProvideCarousel, useInjectCarousel] = createInjectionState(
 function useCarousel() {
   const carouselState = useInjectCarousel()
 
-  if (!carouselState) throw new Error('useCarousel must be used within a <Carousel />')
+  if (!carouselState)
+    throw new Error('useCarousel must be used within a <Carousel />')
 
   return carouselState
 }

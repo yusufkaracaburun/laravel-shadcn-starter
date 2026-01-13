@@ -36,7 +36,10 @@ const { handleSubmit, resetForm } = useForm({
   validationSchema: profileFormSchema,
   initialValues: {
     bio: 'I own a computer.',
-    urls: [{ value: 'https://shadcn.com' }, { value: 'http://twitter.com/shadcn' }],
+    urls: [
+      { value: 'https://shadcn.com' },
+      { value: 'http://twitter.com/shadcn' },
+    ],
   },
 })
 
@@ -53,8 +56,12 @@ const onSubmit = handleSubmit((values) => {
 
 <template>
   <div>
-    <h3 class="text-lg font-medium">Profile</h3>
-    <p class="text-sm text-muted-foreground">This is how others will see you on the site.</p>
+    <h3 class="text-lg font-medium">
+      Profile
+    </h3>
+    <p class="text-sm text-muted-foreground">
+      This is how others will see you on the site.
+    </p>
   </div>
   <Separator orientation="horizontal" class="my-4" />
   <form class="space-y-8" @submit="onSubmit">
@@ -65,8 +72,8 @@ const onSubmit = handleSubmit((values) => {
           <Input type="text" placeholder="shadcn" v-bind="componentField" />
         </FormControl>
         <FormDescription>
-          This is your public display name. It can be your real name or a pseudonym. You can only
-          change this once every 30 days.
+          This is your public display name. It can be your real name or a
+          pseudonym. You can only change this once every 30 days.
         </FormDescription>
         <FormMessage />
       </FormItem>
@@ -84,7 +91,11 @@ const onSubmit = handleSubmit((values) => {
           </FormControl>
           <SelectContent>
             <SelectGroup>
-              <SelectItem v-for="email in verifiedEmails" :key="email" :value="email">
+              <SelectItem
+                v-for="email in verifiedEmails"
+                :key="email"
+                :value="email"
+              >
                 {{ email }}
               </SelectItem>
             </SelectGroup>
@@ -101,10 +112,14 @@ const onSubmit = handleSubmit((values) => {
       <FormItem>
         <FormLabel>Bio</FormLabel>
         <FormControl>
-          <Textarea placeholder="Tell us a little bit about yourself" v-bind="componentField" />
+          <Textarea
+            placeholder="Tell us a little bit about yourself"
+            v-bind="componentField"
+          />
         </FormControl>
         <FormDescription>
-          You can <span>@mention</span> other users and organizations to link to them.
+          You can <span>@mention</span> other users and organizations to link to
+          them.
         </FormDescription>
         <FormMessage />
       </FormItem>
@@ -112,10 +127,16 @@ const onSubmit = handleSubmit((values) => {
 
     <div>
       <FieldArray v-slot="{ fields, push, remove }" name="urls">
-        <div v-for="(field, index) in fields" :key="`urls-${field.key}`" class="mb-2">
+        <div
+          v-for="(field, index) in fields"
+          :key="`urls-${field.key}`"
+          class="mb-2"
+        >
           <FormField v-slot="{ componentField }" :name="`urls[${index}].value`">
             <FormItem>
-              <FormLabel :class="cn(index !== 0 && 'sr-only')"> URLs </FormLabel>
+              <FormLabel :class="cn(index !== 0 && 'sr-only')">
+                URLs
+              </FormLabel>
               <FormDescription :class="cn(index !== 0 && 'sr-only')">
                 Add links to your website, blog, or social media profiles.
               </FormDescription>
@@ -149,9 +170,13 @@ const onSubmit = handleSubmit((values) => {
     </div>
 
     <div class="flex justify-start gap-2">
-      <Button type="submit"> Update profile </Button>
+      <Button type="submit">
+        Update profile
+      </Button>
 
-      <Button type="button" variant="outline" @click="resetForm"> Reset form </Button>
+      <Button type="button" variant="outline" @click="resetForm">
+        Reset form
+      </Button>
     </div>
   </form>
 </template>

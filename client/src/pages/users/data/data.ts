@@ -1,9 +1,18 @@
-import { Award, BadgeDollarSign, Handshake, Shield } from 'lucide-vue-next'
 import { h } from 'vue'
 
-import type { FacetedFilterOption } from '@/components/data-table/types'
+import type { IFacetedFilterOption } from '@/components/data-table/types'
 
-export const callTypes: (FacetedFilterOption & { style: string })[] = [
+import {
+  AwardIcon,
+  BadgeDollarSignIcon,
+  HandshakeIcon,
+  ShieldIcon,
+  UserIcon,
+} from '@/composables/use-icons.composable'
+
+import { EUserRole } from '../models/users'
+
+export const callTypes: (IFacetedFilterOption & { style: string })[] = [
   {
     label: 'Active',
     value: 'active',
@@ -27,25 +36,30 @@ export const callTypes: (FacetedFilterOption & { style: string })[] = [
   },
 ]
 
-export const userTypes: FacetedFilterOption[] = [
+export const userTypes: IFacetedFilterOption[] = [
   {
-    label: 'Superadmin',
-    value: 'superadmin',
-    icon: h(BadgeDollarSign),
+    label: 'Super Admin',
+    value: EUserRole.SUPER_ADMIN,
+    icon: h(BadgeDollarSignIcon),
   },
   {
     label: 'Admin',
-    value: 'admin',
-    icon: h(Handshake),
+    value: EUserRole.ADMIN,
+    icon: h(HandshakeIcon),
   },
   {
-    label: 'Manager',
-    value: 'manager',
-    icon: h(Award),
+    label: 'User',
+    value: EUserRole.USER,
+    icon: h(UserIcon),
   },
   {
-    label: 'Cashier',
-    value: 'cashier',
-    icon: h(Shield),
+    label: 'Customer',
+    value: EUserRole.CUSTOMER,
+    icon: h(AwardIcon),
+  },
+  {
+    label: 'Contractor',
+    value: EUserRole.CONTRACTOR,
+    icon: h(ShieldIcon),
   },
 ] as const

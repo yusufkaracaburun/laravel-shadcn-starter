@@ -1,10 +1,10 @@
 <script lang="ts" setup>
-import { useCustomers } from '@/composables/use-customers'
+import { useCustomers } from '@/pages/customers/composables/use-customers.composable'
 
-import type { Customer } from '../data/schema'
+import type { ICustomer } from '../models/customers'
 
 const props = defineProps<{
-  customer: Customer
+  customer: ICustomer
 }>()
 
 const emits = defineEmits<{
@@ -37,15 +37,20 @@ async function handleRemove() {
     <UiDialogHeader>
       <UiDialogTitle>Delete Customer</UiDialogTitle>
       <UiDialogDescription class="mt-2">
-        Are you sure you want to delete <strong>{{ customer.name }}</strong
-        >? This action cannot be undone.
+        Are you sure you want to delete <strong>{{ customer.name }}</strong>? This action cannot be undone.
       </UiDialogDescription>
     </UiDialogHeader>
     <UiDialogFooter>
       <UiDialogClose as-child>
-        <UiButton variant="outline"> Cancel </UiButton>
+        <UiButton variant="outline">
+          Cancel
+        </UiButton>
       </UiDialogClose>
-      <UiButton variant="destructive" :disabled="isDeleting" @click="handleRemove">
+      <UiButton
+        variant="destructive"
+        :disabled="isDeleting"
+        @click="handleRemove"
+      >
         <UiSpinner v-if="isDeleting" class="mr-2" />
         Delete
       </UiButton>

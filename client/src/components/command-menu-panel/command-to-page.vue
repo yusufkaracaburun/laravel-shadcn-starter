@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useSidebar } from '@/composables/use-sidebar'
+import { useSidebar } from '@/composables/use-sidebar.composable'
 
 import type { NavGroup, NavItem } from '../app-sidebar/types'
 

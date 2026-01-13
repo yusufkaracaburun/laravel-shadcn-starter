@@ -5,7 +5,7 @@ import { z } from 'zod'
 
 import { Field, FieldError, FieldLabel } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
-import { useAuth } from '@/composables/use-auth'
+import { useAuth } from '@/pages/auth/composables/use-auth.composable'
 
 import GitHubButton from './github-button.vue'
 import GoogleButton from './google-button.vue'
@@ -17,7 +17,10 @@ const { login, loading } = useAuth()
 
 const loginSchema = toTypedSchema(
   z.object({
-    email: z.string().email('Please enter a valid email address.').min(1, 'Email is required.'),
+    email: z
+      .string()
+      .email('Please enter a valid email address.')
+      .min(1, 'Email is required.'),
     password: z.string().min(1, 'Password is required.'),
   }),
 )
@@ -56,9 +59,12 @@ const onSubmit = handleSubmit(async (values) => {
 <template>
   <UiCard class="w-full max-w-sm">
     <UiCardHeader>
-      <UiCardTitle class="text-2xl"> Login </UiCardTitle>
+      <UiCardTitle class="text-2xl">
+        Login
+      </UiCardTitle>
       <UiCardDescription>
-        Enter your email and password below to log into your account. Not have an account?
+        Enter your email and password below to log into your account. Not have
+        an account?
         <UiButton
           variant="link"
           class="px-0 text-muted-foreground"
@@ -74,7 +80,9 @@ const onSubmit = handleSubmit(async (values) => {
           <div class="grid gap-2">
             <VeeField v-slot="{ field, errors }" name="email">
               <Field :data-invalid="!!errors.length">
-                <FieldLabel for="login-form-email"> Email </FieldLabel>
+                <FieldLabel for="login-form-email">
+                  Email
+                </FieldLabel>
                 <Input
                   id="login-form-email"
                   v-bind="field"
@@ -92,7 +100,9 @@ const onSubmit = handleSubmit(async (values) => {
             <VeeField v-slot="{ field, errors }" name="password">
               <Field :data-invalid="!!errors.length">
                 <div class="flex items-center justify-between">
-                  <FieldLabel for="login-form-password"> Password </FieldLabel>
+                  <FieldLabel for="login-form-password">
+                    Password
+                  </FieldLabel>
                   <ToForgotPasswordLink />
                 </div>
                 <Input
@@ -108,7 +118,12 @@ const onSubmit = handleSubmit(async (values) => {
             </VeeField>
           </div>
 
-          <UiButton type="submit" form="login-form" class="w-full" :disabled="loading">
+          <UiButton
+            type="submit"
+            form="login-form"
+            class="w-full"
+            :disabled="loading"
+          >
             <UiSpinner v-if="loading" class="mr-2" />
             Login
           </UiButton>

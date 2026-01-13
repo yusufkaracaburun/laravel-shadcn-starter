@@ -5,7 +5,9 @@ import { reactiveOmit } from '@vueuse/core'
 import { TagsInputRoot, useForwardPropsEmits } from 'reka-ui'
 import { cn } from '@/lib/utils'
 
-const props = defineProps<TagsInputRootProps & { class?: HTMLAttributes['class'] }>()
+const props = defineProps<
+  TagsInputRootProps & { class?: HTMLAttributes['class'] }
+>()
 const emits = defineEmits<TagsInputRootEmits>()
 
 const delegatedProps = reactiveOmit(props, 'class')

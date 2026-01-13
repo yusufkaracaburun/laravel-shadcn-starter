@@ -12,11 +12,13 @@ if (config('app.debug')) {
 // API Resource Routes
 require __DIR__ . '/api/users.php';
 require __DIR__ . '/api/teams.php';
-require __DIR__ . '/api/companies.php';
 require __DIR__ . '/api/projects.php';
 require __DIR__ . '/api/invoices.php';
-require __DIR__ . '/api/items.php';
+require __DIR__ . '/api/products.php';
 require __DIR__ . '/api/payments.php';
 require __DIR__ . '/api/customers.php';
 require __DIR__ . '/api/permissions.php';
 require __DIR__ . '/api/roles.php';
+require __DIR__ . '/api/vehicles.php';
+require __DIR__ . '/api/equipments.php';
+require __DIR__ . '/api/timesheets.php';

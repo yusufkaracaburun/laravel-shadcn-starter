@@ -1,0 +1,10 @@
+{
+  "teams": {
+    "columns": {
+      "name": "名称",
+      "personalTeam": "个人团队",
+      "owner": "所有者",
+      "createdAt": "创建时间"
+    }
+  }
+}

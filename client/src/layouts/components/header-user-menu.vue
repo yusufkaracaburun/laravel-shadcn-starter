@@ -4,7 +4,6 @@ import {
   Bell,
   CreditCard,
   LogOut,
-  Settings,
   Sparkles,
   UserRoundCog,
 } from 'lucide-vue-next'
@@ -13,7 +12,16 @@ import { computed } from 'vue'
 
 import type { User as SidebarUser } from '@/components/app-sidebar/types'
 
-import { useAuth } from '@/composables/use-auth'
+import {
+  AppWindowIcon,
+  BellDotIcon,
+  PaletteIcon,
+  PictureInPicture2Icon,
+  SettingsIcon,
+  UserIcon,
+  WrenchIcon,
+} from '@/composables/use-icons.composable'
+import { useAuth } from '@/pages/auth/composables/use-auth.composable'
 import { useAuthStore } from '@/stores/auth.store'
 
 const authStore = useAuthStore()
@@ -97,7 +105,6 @@ const sidebarUser = computed<SidebarUser>(() => {
         </UiDropdownMenuItem>
       </UiDropdownMenuGroup>
 
-      <UiDropdownMenuSeparator />
       <UiDropdownMenuGroup>
         <UiDropdownMenuItem @click="$router.push('/billing?type=billing')">
           <CreditCard />
@@ -121,8 +128,17 @@ const sidebarUser = computed<SidebarUser>(() => {
         </UiDropdownMenuItem>
       </UiDropdownMenuGroup>
 
+      <UiDropdownMenuGroup>
+        <UiDropdownMenuItem @click="$router.push('/settings/display')">
+          <SettingsIcon />
+          Settings
+        </UiDropdownMenuItem>
+      </UiDropdownMenuGroup>
       <UiDropdownMenuSeparator />
-      <UiDropdownMenuItem data-testid="default-layout_logout_button" @click="logout">
+      <UiDropdownMenuItem
+        data-testid="default-layout_logout_button"
+        @click="logout"
+      >
         <LogOut />
         Log out
       </UiDropdownMenuItem>

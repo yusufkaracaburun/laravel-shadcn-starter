@@ -25,3 +25,36 @@ export function calculateDueDate(invoiceDate: string, dueDays: number): string {
   }
   return ''
 }
+
+/**
+ * Format date from "d-m-Y H:i:s" or "Y-m-d" format
+ */
+export function formatDate(dateString: unknown): string {
+  const dateStringString = dateString as string | null | undefined
+  if (!dateStringString) {
+    return '-'
+  }
+  // Try parsing as "d-m-Y H:i:s" format first
+  if (dateStringString.includes('-') && dateStringString.includes(' ')) {
+    const [datePart, timePart] = dateStringString.split(' ')
+    const [day, month, year] = datePart.split('-')
+    if (day && month && year && year.length === 4) {
+      const date = new Date(`${year}-${month}-${day} ${timePart}`)
+      return date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+      })
+    }
+  }
+  // Try parsing as "Y-m-d" format
+  const date = new Date(dateStringString)
+  if (!Number.isNaN(date.getTime())) {
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+    })
+  }
+  return dateStringString ?? ''
+}

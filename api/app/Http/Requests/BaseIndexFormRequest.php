@@ -96,7 +96,6 @@ abstract class BaseIndexFormRequest extends BaseFormRequest
             [
                 'per_page.integer' => 'Per page must be a number.',
                 'per_page.min'     => 'Per page must be at least 1.',
-                'per_page.max'     => 'Per page cannot exceed 100.',
                 'page.integer'     => 'Page must be a number.',
                 'page.min'         => 'Page must be at least 1.',
                 'filter.array'     => 'Filter must be an array.',
@@ -132,8 +131,8 @@ abstract class BaseIndexFormRequest extends BaseFormRequest
     protected function paginationRules(): array
     {
         return [
-            'per_page' => 'sometimes|integer|min:1|max:100',
-            'page'     => 'sometimes|integer|min:1',
+            'page'     => ['sometimes', 'integer', 'min:1'],
+            'per_page' => ['sometimes', 'integer', 'min:1'],
         ];
     }
 
@@ -193,7 +192,8 @@ abstract class BaseIndexFormRequest extends BaseFormRequest
                 'sometimes',
                 'string',
                 function ($attribute, $value, $fail) use ($allowedIncludes): void {
-                    $requestedIncludes = array_map(trim(...), explode(',', $value));
+                    $value = is_array($value) ? implode(',', $value) : $value;
+                    $requestedIncludes = array_map(trim(...), explode(',', (string) $value));
 
                     foreach ($requestedIncludes as $include) {
                         if (!in_array($include, $allowedIncludes)) {

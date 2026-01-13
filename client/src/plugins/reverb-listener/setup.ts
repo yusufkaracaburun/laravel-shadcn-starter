@@ -3,8 +3,8 @@ import type { App } from 'vue'
 import { storeToRefs } from 'pinia'
 import { nextTick, watch } from 'vue'
 
-import { useEcho } from '@/composables/use-echo'
-import { useToast } from '@/composables/use-toast'
+import { useEcho } from '@/composables/use-echo.composable'
+import { useToast } from '@/composables/use-toast.composable'
 import { useAuthStore } from '@/stores/auth.store'
 
 import pinia from '../pinia/setup'
@@ -28,8 +28,12 @@ export function setupReverbListener(app: App) {
   nextTick(() => {
     const echo = useEcho()
     if (!echo) {
-      console.warn('⚠️ Echo is not available. Reverb listener will not be initialized.')
-      console.warn('Make sure Reverb is enabled and configured in your .env file')
+      console.warn(
+        '⚠️ Echo is not available. Reverb listener will not be initialized.',
+      )
+      console.warn(
+        'Make sure Reverb is enabled and configured in your .env file',
+      )
       return
     }
 
@@ -89,7 +93,9 @@ export function setupReverbListener(app: App) {
 
         // Subscribe to user-specific channel if authenticated
         if (currentUser?.id) {
-          console.warn(`✅ Subscribing to private channel: user.${currentUser.id}`)
+          console.warn(
+            `✅ Subscribing to private channel: user.${currentUser.id}`,
+          )
           userChannel = echo.private(`user.${currentUser.id}`)
           userChannel
             .listen('.notification.created', (data: NotificationEvent) => {
@@ -100,7 +106,9 @@ export function setupReverbListener(app: App) {
               console.error('❌ Private channel error:', error)
             })
         } else {
-          console.warn('⚠️ User not authenticated, skipping private channel subscription')
+          console.warn(
+            '⚠️ User not authenticated, skipping private channel subscription',
+          )
         }
       },
       { immediate: true },
@@ -110,16 +118,26 @@ export function setupReverbListener(app: App) {
     function handleNotification(data: NotificationEvent) {
       console.warn('🔔 handleNotification called with data:', data)
 
-      const { message, type = 'info', title, description, data: eventData } = data
+      const {
+        message,
+        type = 'info',
+        title,
+        description,
+        data: eventData,
+      } = data
 
       const notificationTitle = title || message || 'Notification'
       const notificationDescription =
-        description ||
-        (eventData && Object.keys(eventData).length > 0
+        description
+        || (eventData && Object.keys(eventData).length > 0
           ? JSON.stringify(eventData, null, 2)
           : undefined)
 
-      console.warn('🍞 Showing toast:', { notificationTitle, type, notificationDescription })
+      console.warn('🍞 Showing toast:', {
+        notificationTitle,
+        type,
+        notificationDescription,
+      })
 
       try {
         // Ensure we have a valid title
@@ -154,7 +172,9 @@ export function setupReverbListener(app: App) {
         if (toastResult) {
           console.warn('✅ Toast called successfully, ID:', toastResult)
         } else {
-          console.error('❌ Toast returned null/undefined - toast may not have rendered')
+          console.error(
+            '❌ Toast returned null/undefined - toast may not have rendered',
+          )
         }
       } catch (error) {
         console.error('❌ Toast error:', error)

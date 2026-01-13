@@ -4,18 +4,18 @@ import type { Project } from '../data/schema'
 
 // Map project statuses to kanban column IDs
 const statusToColumnId: Record<string, string> = {
-  active: 'in-progress',
+  'active': 'in-progress',
   'on-hold': 'backlog',
-  completed: 'done',
-  cancelled: 'canceled',
+  'completed': 'done',
+  'cancelled': 'canceled',
 }
 
 // Map kanban column IDs back to project statuses
 const columnIdToStatus: Record<string, string> = {
   'in-progress': 'active',
-  backlog: 'on-hold',
-  done: 'completed',
-  canceled: 'cancelled',
+  'backlog': 'on-hold',
+  'done': 'completed',
+  'canceled': 'cancelled',
 }
 
 /**
@@ -26,7 +26,9 @@ export function projectToKanbanTask(project: Project): KanbanTask {
     id: project.id.toString(),
     title: project.name,
     description: project.description || undefined,
-    status: statusToColumnId[project.status.toLowerCase()] || project.status.toLowerCase(),
+    status:
+      statusToColumnId[project.status.toLowerCase()]
+      || project.status.toLowerCase(),
     labels: project.category ? [project.category] : [],
     dueDate: project.end_date || project.endDate || undefined,
     createdAt: project.created_at || new Date().toISOString(),
@@ -36,7 +38,10 @@ export function projectToKanbanTask(project: Project): KanbanTask {
 /**
  * Convert a Kanban Task back to Project format
  */
-export function kanbanTaskToProject(task: KanbanTask, originalProject?: Project): Partial<Project> {
+export function kanbanTaskToProject(
+  task: KanbanTask,
+  originalProject?: Project,
+): Partial<Project> {
   const baseProject: Partial<Project> = {
     name: task.title,
     description: task.description || null,
@@ -75,9 +80,14 @@ export function projectsToKanbanTasks(projects: Project[]): KanbanTask[] {
 /**
  * Convert an array of Kanban Tasks to Projects
  */
-export function kanbanTasksToProjects(tasks: KanbanTask[], originalProjects: Project[]): Project[] {
+export function kanbanTasksToProjects(
+  tasks: KanbanTask[],
+  originalProjects: Project[],
+): Project[] {
   return tasks.map((task) => {
-    const originalProject = originalProjects.find((p) => p.id.toString() === task.id)
+    const originalProject = originalProjects.find(
+      p => p.id.toString() === task.id,
+    )
     const partialProject = kanbanTaskToProject(task, originalProject)
     return {
       ...originalProject!,

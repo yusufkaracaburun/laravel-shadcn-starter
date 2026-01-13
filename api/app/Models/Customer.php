@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Enums\CustomerType;
+use App\Enums\CustomerStatus;
 use App\Helpers\AddressHelper;
 use App\Observers\CustomerObserver;
 use Illuminate\Database\Eloquent\Builder;
@@ -111,7 +112,8 @@ final class Customer extends BaseModel
     protected function casts(): array
     {
         return [
-            'type' => CustomerType::class,
+            'type'   => CustomerType::class,
+            'status' => CustomerStatus::class,
         ];
     }
 
@@ -156,5 +158,17 @@ final class Customer extends BaseModel
     protected function private(Builder $query): Builder
     {
         return $query->where('type', CustomerType::PRIVATE);
+    }
+
+    /**
+     * Scope a query to filter by status.
+     *
+     * @param  Builder<Customer>  $query
+     * @return Builder<Customer>
+     */
+    #[Scope]
+    protected function withStatus(Builder $query, string $status): Builder
+    {
+        return $query->where('status', $status);
     }
 }

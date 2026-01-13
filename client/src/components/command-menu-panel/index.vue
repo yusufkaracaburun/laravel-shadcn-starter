@@ -2,7 +2,13 @@
 import { useEventListener } from '@vueuse/core'
 import { MenuIcon, SearchIcon } from 'lucide-vue-next'
 
-import { Empty, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '@/components/ui/empty'
+import {
+  Empty,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from '@/components/ui/empty'
 
 import CommandChangeTheme from './command-change-theme.vue'
 import CommandToPage from './command-to-page.vue'
@@ -20,7 +26,9 @@ function handleOpenChange() {
   open.value = !open.value
 }
 
-const firstKey = computed(() => (navigator?.userAgent.includes('Mac OS') ? '⌘' : 'Ctrl'))
+const firstKey = computed(() =>
+  navigator?.userAgent.includes('Mac OS') ? '⌘' : 'Ctrl',
+)
 </script>
 
 <template>
@@ -36,7 +44,12 @@ const firstKey = computed(() => (navigator?.userAgent.includes('Mac OS') ? '⌘'
       <UiKbd>{{ firstKey }} + k</UiKbd>
     </div>
 
-    <UiButton variant="outline" size="icon" class="md:hidden" @click="handleOpenChange">
+    <UiButton
+      variant="outline"
+      size="icon"
+      class="md:hidden"
+      @click="handleOpenChange"
+    >
       <SearchIcon />
     </UiButton>
 

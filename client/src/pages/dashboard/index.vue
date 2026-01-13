@@ -22,7 +22,12 @@ const activeTab = ref(tabs.value[0].value)
 </script>
 
 <template>
-  <Page title="workspace" description="workspace description" sticky data-testid="dashboard_page">
+  <Page
+    title="workspace"
+    description="workspace description"
+    sticky
+    data-testid="dashboard_page"
+  >
     <template #actions>
       <Button
         @click="

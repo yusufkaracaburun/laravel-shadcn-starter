@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Helpers\Cache\CacheInvalidationService;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphMany; // Added for MailTracker
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -97,6 +98,16 @@ final class User extends Authenticatable implements HasMedia
     }
 
     /**
+     * Get all emails sent by this user.
+     *
+     * @return MorphMany<SentEmail>
+     */
+    public function emails(): MorphMany
+    {
+        return $this->morphMany(SentEmail::class, 'emailable');
+    }
+
+    /**
      * Get the contact associated with this user.
      *
      * @return BelongsTo<Contact, covariant $this>
@@ -150,7 +161,7 @@ final class User extends Authenticatable implements HasMedia
     {
         $this->addMediaCollection('profile-photos')
             ->singleFile()
-            ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/gif', 'image/webp']);
+            ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/jpg']);
     }
 
     /**

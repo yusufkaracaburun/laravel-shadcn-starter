@@ -22,6 +22,7 @@ final class InvoiceItemResource extends BaseResource
         return [
             'id'             => $this->id,
             'invoice_id'     => $this->invoice_id,
+            'name'           => $this->name,
             'description'    => $this->description,
             'quantity'       => $this->quantity,
             'unit'           => $this->unit,

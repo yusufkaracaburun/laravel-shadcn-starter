@@ -21,7 +21,7 @@ export default defineConfig({
     actionTimeout: 10000,
     navigationTimeout: 10000,
     extraHTTPHeaders: {
-      Accept: 'application/json',
+      'Accept': 'application/json',
       'X-Requested-With': 'XMLHttpRequest',
     },
     ignoreHTTPSErrors: true,
@@ -50,13 +50,16 @@ export default defineConfig({
     {
       name: 'api',
       testDir: './tests/api',
-      testMatch: [/tests\/api\/.*\.(api|spec)\.spec\.ts$/, /tests\/api\/scenarios\/.*\.spec\.ts$/],
+      testMatch: [
+        /tests\/api\/.*\.(api|spec)\.spec\.ts$/,
+        /tests\/api\/scenarios\/.*\.spec\.ts$/,
+      ],
       use: {
         baseURL: apiURL,
         ...devices['Desktop Chrome'],
         ignoreHTTPSErrors: true,
         extraHTTPHeaders: {
-          Accept: 'application/json',
+          'Accept': 'application/json',
           'X-Requested-With': 'XMLHttpRequest',
         },
       },

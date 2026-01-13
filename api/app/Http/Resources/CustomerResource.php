@@ -35,6 +35,7 @@ final class CustomerResource extends BaseResource
             // Contact / business info
             'email'       => $this->email,
             'phone'       => $this->phone,
+            'status'      => $this->status,
             'kvk_number'  => $this->kvk_number,
             'vat_number'  => $this->vat_number,
             'iban_number' => $this->iban_number,

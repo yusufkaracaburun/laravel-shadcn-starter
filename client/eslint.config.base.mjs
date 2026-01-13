@@ -24,20 +24,34 @@ export default antfu({
     '**/lib/**',
     '**/components/ui/**',
   ],
-  ignores: ['**/node_modules/**', '**/dist/**', '**/build/**', '**/lib/**', '**/components/ui/**'],
+  ignores: [
+    '**/node_modules/**',
+    '**/dist/**',
+    '**/build/**',
+    '**/lib/**',
+    '**/components/ui/**',
+  ],
   settings: {
     'import/core-modules': ['vue-router/auto-routes'],
+    'import/resolver': {
+      typescript: {
+        alwaysTryTypes: true,
+      },
+    },
   },
   globals: {
     definePage: 'readonly',
   },
   rules: {
     'perfectionist/sort-imports': [
-      'error',
+      'warn',
       {
         tsconfigRootDir: '.',
       },
     ],
+    // Disable operator-linebreak rules - Prettier handles formatting
+    '@stylistic/operator-linebreak': 'off',
+    'vue/operator-linebreak': 'off',
   },
   ...pluginQuery.configs['flat/recommended'],
 })

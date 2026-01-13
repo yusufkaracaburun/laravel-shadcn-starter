@@ -5,7 +5,11 @@ import { XIcon } from 'lucide-vue-next'
 
 import { Button } from '@/components/ui/button'
 import { Separator } from '@/components/ui/separator'
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
 import { cn } from '@/lib/utils'
 
 interface BulkActionsProps<T> {
@@ -67,8 +71,14 @@ function handleClearSelection() {
 
       <Separator class="h-5" orientation="vertical" aria-hidden="true" />
 
-      <section id="bulk-actions-description" class="flex items-center gap-x-1 text-sm">
-        <UiBadge class="min-w-8 rounded-lg" :aria-label="`${selectedCount} selected`">
+      <section
+        id="bulk-actions-description"
+        class="flex items-center gap-x-1 text-sm"
+      >
+        <UiBadge
+          class="min-w-8 rounded-lg"
+          :aria-label="`${selectedCount} selected`"
+        >
           {{ selectedCount }}
         </UiBadge>
         {{ entityName }} selected

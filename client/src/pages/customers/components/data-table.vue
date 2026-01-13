@@ -1,26 +1,21 @@
 <script setup lang="ts">
-import { Trash2Icon } from 'lucide-vue-next'
+import { Trash2Icon } from '@/composables/use-icons.composable'
 
-import type { DataTableProps } from '@/components/data-table/types'
-import type { CustomerFilters } from '@/services/customers.service'
+import type { IDataTableProps } from '@/components/data-table/types'
+import type {
+  ICustomer,
+  ICustomerFilters,
+} from '@/pages/customers/models/customers'
 
 import BulkActions from '@/components/data-table/bulk-actions.vue'
 import DataTable from '@/components/data-table/data-table.vue'
 import { generateVueTable } from '@/components/data-table/use-generate-vue-table'
 
-import type { Customer } from '../data/schema'
-
 import CustomerDeleteBatch from './customer-delete-batch.vue'
 import DataTableToolbar from './data-table-toolbar.vue'
 
-interface ExtendedDataTableProps extends DataTableProps<Customer> {
-  filters?: CustomerFilters
-  onFiltersChange?: (filters: CustomerFilters) => void
-  onClearFilters?: () => void
-}
-
-const props = defineProps<ExtendedDataTableProps>()
-const { table } = generateVueTable<Customer>(props)
+const props = defineProps<IDataTableProps<ICustomer, ICustomerFilters>>()
+const { table } = generateVueTable<ICustomer, ICustomerFilters>(props)
 
 const customerDeleteBatchOpen = ref(false)
 </script>
@@ -49,13 +44,18 @@ const customerDeleteBatchOpen = ref(false)
     <CustomerDeleteBatch v-model:open="customerDeleteBatchOpen" :table />
   </BulkActions>
 
-  <DataTable :columns :table :data :loading>
+  <DataTable
+    :table="table"
+    :columns="columns"
+    :loading="loading"
+    :server-pagination="serverPagination"
+  >
     <template #toolbar>
       <DataTableToolbar
         :table="table"
-        :filters="filters || {}"
-        :on-filters-change="onFiltersChange || (() => {})"
-        :on-clear-filters="onClearFilters || (() => {})"
+        :filters="filters"
+        :on-filters-change="onFiltersChange"
+        :on-clear-filters="onClearFilters"
         class="w-full overflow-x-auto"
       />
     </template>

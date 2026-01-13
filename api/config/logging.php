@@ -137,6 +137,15 @@ return [
             'driver' => 'pail',
         ],
 
+        'mail' => [
+            'driver'               => 'daily',
+            'path'                 => storage_path('logs/mail/laravel.log'),
+            'level'                => env('LOG_LEVEL', 'debug'),
+            'days'                 => env('LOG_DAILY_DAYS', 14),
+            'replace_placeholders' => true,
+            'tap'                  => [SanitizeProcessorTap::class],
+        ],
+
     ],
 
 ];

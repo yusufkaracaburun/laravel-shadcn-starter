@@ -45,7 +45,7 @@
   },
   "dependencies": {
     "@formkit/auto-animate": "^0.9.0",
-    "@internationalized/date": "^3.10.0",
+    "@internationalized/date": "^3.10.1",
     "@tailwindcss/vite": "^4.1.18",
     "@tanstack/vue-query": "^5.92.1",
     "@tanstack/vue-table": "^8.21.3",

@@ -1,13 +1,18 @@
 <script setup lang="ts">
-import { CheckCircle2, Clock, Mail, XCircle } from 'lucide-vue-next'
 import { ref } from 'vue'
 
-import type { IInvoiceEmail } from '@/services/invoices.service'
+import type { IInvoiceEmail } from '@/pages/invoices/services/invoices.service'
 
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
+import {
+  CheckCircle2Icon,
+  ClockIcon,
+  MailIcon,
+  XCircleIcon,
+} from '@/composables/use-icons.composable'
 
 import { formatDateTime } from '../utils/formatters'
 
@@ -30,13 +35,13 @@ function toggleEmail(id: number) {
 function getStatusIcon(status: string) {
   switch (status) {
     case 'sent':
-      return CheckCircle2
+      return CheckCircle2Icon
     case 'failed':
-      return XCircle
+      return XCircleIcon
     case 'pending':
-      return Clock
+      return ClockIcon
     default:
-      return Mail
+      return MailIcon
   }
 }
 </script>
@@ -45,8 +50,10 @@ function getStatusIcon(status: string) {
   <Card>
     <CardHeader class="pb-4">
       <div class="flex items-center gap-2">
-        <Mail class="size-4 text-muted-foreground" />
-        <CardTitle class="text-base font-semibold"> Sent Emails </CardTitle>
+        <MailIcon class="size-4 text-muted-foreground" />
+        <CardTitle class="text-base font-semibold">
+          Sent Emails
+        </CardTitle>
       </div>
     </CardHeader>
     <CardContent>
@@ -58,7 +65,10 @@ function getStatusIcon(status: string) {
                 <Badge
                   :class="`text-xs ${email.status_formatted.style || 'bg-gray-100 text-gray-800'}`"
                 >
-                  <component :is="getStatusIcon(email.status)" class="size-3 mr-1" />
+                  <component
+                    :is="getStatusIcon(email.status)"
+                    class="size-3 mr-1"
+                  />
                   {{ email.status_formatted.label }}
                 </Badge>
                 <span class="text-xs text-muted-foreground">
@@ -68,15 +78,21 @@ function getStatusIcon(status: string) {
               <p class="text-sm font-medium text-foreground">
                 {{ email.subject }}
               </p>
-              <p class="text-xs text-muted-foreground">To: {{ email.to }}</p>
+              <p class="text-xs text-muted-foreground">
+                To: {{ email.to }}
+              </p>
             </div>
           </div>
           <div
             v-if="email.opened_at || email.clicked_at"
             class="flex items-center gap-4 text-xs text-muted-foreground"
           >
-            <span v-if="email.opened_at"> Opened: {{ formatDateTime(email.opened_at) }} </span>
-            <span v-if="email.clicked_at"> Clicked: {{ formatDateTime(email.clicked_at) }} </span>
+            <span v-if="email.opened_at">
+              Opened: {{ formatDateTime(email.opened_at) }}
+            </span>
+            <span v-if="email.clicked_at">
+              Clicked: {{ formatDateTime(email.clicked_at) }}
+            </span>
           </div>
           <div
             v-if="email.error_message"
@@ -104,11 +120,17 @@ function getStatusIcon(status: string) {
         </div>
       </div>
       <div v-else class="py-8 text-center">
-        <div class="inline-flex items-center justify-center size-10 rounded-full bg-muted mb-3">
+        <div
+          class="inline-flex items-center justify-center size-10 rounded-full bg-muted mb-3"
+        >
           <Mail class="size-5 text-muted-foreground" />
         </div>
-        <p class="text-sm font-medium text-muted-foreground">No emails sent</p>
-        <p class="text-xs text-muted-foreground mt-1">Sent emails will appear here.</p>
+        <p class="text-sm font-medium text-muted-foreground">
+          No emails sent
+        </p>
+        <p class="text-xs text-muted-foreground mt-1">
+          Sent emails will appear here.
+        </p>
       </div>
     </CardContent>
   </Card>

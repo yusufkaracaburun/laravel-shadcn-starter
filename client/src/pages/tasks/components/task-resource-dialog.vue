@@ -7,7 +7,7 @@ const props = defineProps<{
   task: Task | null
 }>()
 const emit = defineEmits<{
-  close: []
+  'close': []
   'task-updated': [task: Task]
   'task-created': [task: Task]
 }>()

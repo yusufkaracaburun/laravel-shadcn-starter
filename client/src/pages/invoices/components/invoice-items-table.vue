@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import { Pencil, Trash2 } from 'lucide-vue-next'
-
 import { Button } from '@/components/ui/button'
+import { PencilIcon, Trash2Icon } from '@/composables/use-icons.composable'
 
 import { formatMoney, formatNumber } from '../utils/formatters'
 
@@ -42,20 +41,37 @@ function handleDelete(index: number) {
     <table class="w-full text-sm">
       <thead>
         <tr class="border-b">
-          <th class="text-left p-2 font-medium text-muted-foreground">Name</th>
-          <th class="text-right p-2 font-medium text-muted-foreground">Quantity</th>
-          <th class="text-right p-2 font-medium text-muted-foreground">Unit</th>
-          <th class="text-right p-2 font-medium text-muted-foreground">Unit Price</th>
-          <th class="text-right p-2 font-medium text-muted-foreground">VAT Rate</th>
-          <th class="text-right p-2 font-medium text-muted-foreground">Incl. VAT</th>
-          <th class="text-right p-2 font-medium text-muted-foreground">Actions</th>
+          <th class="text-left p-2 font-medium text-muted-foreground">
+            Name
+          </th>
+          <th class="text-right p-2 font-medium text-muted-foreground">
+            Quantity
+          </th>
+          <th class="text-right p-2 font-medium text-muted-foreground">
+            Unit
+          </th>
+          <th class="text-right p-2 font-medium text-muted-foreground">
+            Unit Price
+          </th>
+          <th class="text-right p-2 font-medium text-muted-foreground">
+            VAT Rate
+          </th>
+          <th class="text-right p-2 font-medium text-muted-foreground">
+            Incl. VAT
+          </th>
+          <th class="text-right p-2 font-medium text-muted-foreground">
+            Actions
+          </th>
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(item, index) in items" :key="index" class="border-b hover:bg-muted/50">
+        <tr
+          v-for="(item, index) in items"
+          :key="index"
+          class="border-b hover:bg-muted/50"
+        >
           <td class="p-2 font-medium">
             {{ item.name || '—' }}
-            <div class="text-xs text-muted-foreground">{{ item.description || '—' }}</div>
           </td>
           <td class="p-2 text-right">
             {{ formatNumber(item.quantity, 2) }}
@@ -66,7 +82,9 @@ function handleDelete(index: number) {
           <td class="p-2 text-right">
             {{ formatMoney(item.unit_price) }}
           </td>
-          <td class="p-2 text-right">{{ item.vat_rate }}%</td>
+          <td class="p-2 text-right">
+            {{ item.vat_rate }}%
+          </td>
           <td class="p-2 text-right font-semibold">
             {{ formatMoney(item.total_incl_vat) }}
           </td>
@@ -78,7 +96,7 @@ function handleDelete(index: number) {
                 size="sm"
                 @click="handleEdit(item, index)"
               >
-                <Pencil class="size-4" />
+                <PencilIcon class="size-4" />
               </Button>
               <Button
                 v-if="editingItemIndex !== index"
@@ -86,7 +104,7 @@ function handleDelete(index: number) {
                 size="sm"
                 @click="handleDelete(index)"
               >
-                <Trash2 class="size-4" />
+                <Trash2Icon class="size-4" />
               </Button>
             </div>
           </td>

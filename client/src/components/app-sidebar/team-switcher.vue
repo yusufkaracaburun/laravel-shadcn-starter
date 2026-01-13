@@ -24,7 +24,9 @@ type TComponent = 'team-add'
 function handleSelect(command: TComponent) {
   switch (command) {
     case 'team-add':
-      showComponent.value = defineAsyncComponent(() => import('./nav-team-add.vue'))
+      showComponent.value = defineAsyncComponent(
+        () => import('./nav-team-add.vue'),
+      )
       break
   }
 }
@@ -46,7 +48,9 @@ function handleSelect(command: TComponent) {
                 <component :is="activeTeam.logo" class="size-4" />
               </div>
               <div class="grid flex-1 text-sm leading-tight text-left">
-                <span class="font-semibold truncate">{{ activeTeam.name }}</span>
+                <span class="font-semibold truncate">{{
+                  activeTeam.name
+                }}</span>
                 <span class="text-xs truncate">{{ activeTeam.plan }}</span>
               </div>
               <ChevronsUpDown class="ml-auto" />
@@ -58,14 +62,18 @@ function handleSelect(command: TComponent) {
             :side="isMobile || open ? 'bottom' : 'right'"
             :side-offset="4"
           >
-            <UiDropdownMenuLabel class="text-xs text-muted-foreground"> Teams </UiDropdownMenuLabel>
+            <UiDropdownMenuLabel class="text-xs text-muted-foreground">
+              Teams
+            </UiDropdownMenuLabel>
             <UiDropdownMenuItem
               v-for="(team, index) in teams"
               :key="team.name"
               class="gap-2 p-2"
               @click="setActiveTeam(team)"
             >
-              <div class="flex items-center justify-center border rounded-sm size-6">
+              <div
+                class="flex items-center justify-center border rounded-sm size-6"
+              >
                 <component :is="team.logo" class="size-4 shrink-0" />
               </div>
               {{ team.name }}
@@ -74,13 +82,18 @@ function handleSelect(command: TComponent) {
             <UiDropdownMenuSeparator />
 
             <UiDialogTrigger as-child>
-              <UiDropdownMenuItem class="gap-2 p-2" @click.stop="handleSelect('team-add')">
+              <UiDropdownMenuItem
+                class="gap-2 p-2"
+                @click.stop="handleSelect('team-add')"
+              >
                 <div
                   class="flex items-center justify-center border rounded-md size-6 bg-background"
                 >
                   <Plus class="size-4" />
                 </div>
-                <div class="font-medium text-muted-foreground">Add team</div>
+                <div class="font-medium text-muted-foreground">
+                  Add team
+                </div>
               </UiDropdownMenuItem>
             </UiDialogTrigger>
           </UiDropdownMenuContent>

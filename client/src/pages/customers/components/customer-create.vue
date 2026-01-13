@@ -1,24 +1,25 @@
 <script lang="ts" setup>
-import { UserPlus } from 'lucide-vue-next'
+import { Button } from '@/components/ui/button'
+import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog'
+import { UserPlusIcon } from '@/composables/use-icons.composable'
 
-import CustomerResource from './customer-resource.vue'
+import CustomerResourceDialog from './customer-resource-dialog.vue'
 
 const isOpen = ref(false)
 </script>
 
 <template>
-  <UiDrawer v-model:open="isOpen" direction="right">
-    <UiDrawerTrigger as-child>
-      <UiButton>
-        <UserPlus />
+  <Dialog v-model:open="isOpen">
+    <DialogTrigger as-child>
+      <Button>
+        <UserPlusIcon />
         Create Customer
-      </UiButton>
-    </UiDrawerTrigger>
-
-    <UiDrawerContent class="px-4 pb-4">
-      <div class="overflow-y-auto max-h-[calc(100vh-4rem)]">
-        <CustomerResource @close="isOpen = false" />
-      </div>
-    </UiDrawerContent>
-  </UiDrawer>
+      </Button>
+    </DialogTrigger>
+    <DialogContent
+      class="top-5 right-5 bottom-5 left-auto translate-x-0 translate-y-0 sm:max-w-[425px]"
+    >
+      <CustomerResourceDialog :customer="null" @close="isOpen = false" />
+    </DialogContent>
+  </Dialog>
 </template>

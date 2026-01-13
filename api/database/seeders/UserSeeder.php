@@ -40,7 +40,7 @@ final class UserSeeder extends Seeder
      */
     private function getRoles(): array
     {
-        $roleNames = ['super-admin', 'admin', 'customer', 'contractor'];
+        $roleNames = ['super-admin', 'admin', 'customer', 'contractor', 'user'];
         $roles = [];
 
         foreach ($roleNames as $roleName) {
@@ -61,12 +61,10 @@ final class UserSeeder extends Seeder
     private function createTestUsers(array $roles): void
     {
         // Super admin (global role, no team)
-        if (isset($roles['super-admin'])) {
-            $superAdmin = $this->createUser('super-admin@example.com', 'Super Admin');
-            $superAdmin->teams()->detach();
-            $superAdmin->update(['current_team_id' => null]);
-            $this->assignGlobalRole($superAdmin, $roles['super-admin']);
-        }
+        $superAdmin = $this->createUser('super-admin@example.com', 'Super Admin');
+        $superAdmin->teams()->detach();
+        $superAdmin->update(['current_team_id' => null]);
+        $this->assignGlobalRole($superAdmin, $roles['super-admin']);
 
         // Test users with team-scoped roles
         $team = Team::query()->first();
@@ -79,6 +77,7 @@ final class UserSeeder extends Seeder
             ['email' => 'admin@example.com', 'name' => 'Admin User', 'role' => 'admin', 'teamRole' => 'owner'],
             ['email' => 'customer@example.com', 'name' => 'Customer User', 'role' => 'customer', 'teamRole' => 'member'],
             ['email' => 'contractor@example.com', 'name' => 'Contractor User', 'role' => 'contractor', 'teamRole' => 'member'],
+            ['email' => 'user@example.com', 'name' => 'User', 'role' => 'user', 'teamRole' => 'member'],
         ];
 
         foreach ($testUsers as $userData) {
@@ -103,6 +102,7 @@ final class UserSeeder extends Seeder
             'admin'      => User::factory()->count(2)->create(),
             'customer'   => User::factory()->count(50)->create(),
             'contractor' => User::factory()->count(25)->create(),
+            'user'       => User::factory()->count(25)->create(),
         ];
 
         $allUsers = collect($usersByRole)->flatten();

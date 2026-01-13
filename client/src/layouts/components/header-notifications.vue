@@ -53,7 +53,7 @@ const notifications = ref<Notification[]>([
 
 // Notification handlers
 function markAsRead(id: number) {
-  const notification = notifications.value.find((n) => n.id === id)
+  const notification = notifications.value.find(n => n.id === id)
   if (notification && !notification.read) {
     notification.read = true
     unreadCount.value = Math.max(0, unreadCount.value - 1)
@@ -123,7 +123,10 @@ function markAllAsRead() {
                 {{ notification.time }}
               </p>
             </div>
-            <div v-if="!notification.read" class="h-2 w-2 rounded-full bg-primary shrink-0 mt-1" />
+            <div
+              v-if="!notification.read"
+              class="h-2 w-2 rounded-full bg-primary shrink-0 mt-1"
+            />
           </div>
         </UiDropdownMenuItem>
         <UiDropdownMenuItem

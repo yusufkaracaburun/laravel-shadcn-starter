@@ -57,7 +57,7 @@ final class LoginLinkController extends Controller
             'expires_at' => now()->addMinutes((int) config('login-link.expiration_minutes', 15)),
         ]);
 
-        defer(fn () => $user->notify(new LoginLinkMail($magicLink)), 'login-link-notification');
+        defer(fn () => $user->notify(new LoginLinkMail($magicLink, $user)), 'login-link-notification');
 
         session()->flash('success', __('Magic link sent to your email!'));
 

@@ -1,0 +1,56 @@
+{
+  "sidebar": {
+    "sections": {
+      "general": "General",
+      "pages": "Pages",
+      "example": "Example",
+      "other": "Other"
+    },
+    "navigation": {
+      "dashboard": "Dashboard",
+      "users": "Users",
+      "projects": "Projects",
+      "tasks": "Tasks",
+      "vehicles": "Vehicles",
+      "equipments": "Equipments",
+      "teams": "Teams",
+      "timesheets": "Timesheets",
+      "aiTalkExample": "Ai Talk Example",
+      "auth": "Auth",
+      "errors": "Errors",
+      "settings": "Settings",
+      "svaComponents": "SVA Components",
+      "helpCenter": "Help Center",
+      "plansPricing": "Plans & Pricing"
+    },
+    "auth": {
+      "signIn": "Sign In",
+      "signIn2Col": "Sign In(2 Col)",
+      "signUp": "Sign Up",
+      "forgotPassword": "Forgot Password",
+      "otp": "OTP"
+    },
+    "errors": {
+      "401": "401 | Unauthorized",
+      "403": "403 | Forbidden",
+      "404": "404 | Not Found",
+      "500": "500 | Internal Server Error",
+      "503": "503 | Maintenance Error"
+    },
+    "settings": {
+      "profile": "Profile",
+      "account": "Account",
+      "appearance": "Appearance",
+      "notifications": "Notifications",
+      "display": "Display"
+    },
+    "userMenu": {
+      "upgradeToPro": "Upgrade to Pro",
+      "billing": "Billing",
+      "profile": "Profile",
+      "account": "Account",
+      "notifications": "Notifications",
+      "logOut": "Log out"
+    }
+  }
+}

@@ -18,14 +18,16 @@ export const columns: ColumnDef<Project>[] = [
   SelectColumn as ColumnDef<Project>,
   {
     accessorKey: 'id',
-    header: ({ column }) => h(DataTableColumnHeader<Project>, { column, title: 'Project ID' }),
+    header: ({ column }) =>
+      h(DataTableColumnHeader<Project>, { column, title: 'Project ID' }),
     cell: ({ row }) => h('div', { class: 'w-24' }, row.getValue('id')),
     enableSorting: false,
     enableHiding: false,
   },
   {
     accessorKey: 'name',
-    header: ({ column }) => h(DataTableColumnHeader<Project>, { column, title: 'Name' }),
+    header: ({ column }) =>
+      h(DataTableColumnHeader<Project>, { column, title: 'Name' }),
     cell: ({ row }) => {
       const project = row.original
       const router = useRouter()
@@ -38,7 +40,10 @@ export const columns: ColumnDef<Project>[] = [
           class:
             'max-w-[500px] truncate font-medium text-left hover:underline cursor-pointer focus:outline-none focus:underline',
           onClick: () => {
-            router.push({ name: '/projects/[id]', params: { id: project.id.toString() } })
+            router.push({
+              name: '/projects/[id]',
+              params: { id: project.id.toString() },
+            })
           },
         },
         name,
@@ -50,12 +55,17 @@ export const columns: ColumnDef<Project>[] = [
   },
   {
     accessorKey: 'category',
-    header: ({ column }) => h(DataTableColumnHeader<Project>, { column, title: 'Category' }),
+    header: ({ column }) =>
+      h(DataTableColumnHeader<Project>, { column, title: 'Category' }),
     cell: ({ row }) => {
-      const category = categories.find((category) => category.value === row.getValue('category'))
+      const category = categories.find(
+        category => category.value === row.getValue('category'),
+      )
 
       return h('div', { class: 'flex items-center' }, [
-        category ? h(Badge, { variant: 'outline' }, () => category.label) : null,
+        category
+          ? h(Badge, { variant: 'outline' }, () => category.label)
+          : null,
       ])
     },
     filterFn: (row, id, value) => {
@@ -64,11 +74,15 @@ export const columns: ColumnDef<Project>[] = [
   },
   {
     accessorKey: 'status',
-    header: ({ column }) => h(DataTableColumnHeader<Project>, { column, title: 'Status' }),
+    header: ({ column }) =>
+      h(DataTableColumnHeader<Project>, { column, title: 'Status' }),
     cell: ({ row }) => {
-      const status = statuses.find((status) => status.value === row.getValue('status'))
+      const status = statuses.find(
+        status => status.value === row.getValue('status'),
+      )
 
-      if (!status) return null
+      if (!status)
+        return null
 
       return h(StatusBadge, {
         status: status.value,
@@ -83,7 +97,8 @@ export const columns: ColumnDef<Project>[] = [
   },
   {
     accessorKey: 'progress',
-    header: ({ column }) => h(DataTableColumnHeader<Project>, { column, title: 'Progress' }),
+    header: ({ column }) =>
+      h(DataTableColumnHeader<Project>, { column, title: 'Progress' }),
     cell: ({ row }) => {
       const progress = row.getValue('progress') as number
       return h('div', { class: 'flex w-[120px] items-center gap-2' }, [
@@ -94,7 +109,8 @@ export const columns: ColumnDef<Project>[] = [
   },
   {
     accessorKey: 'startDate',
-    header: ({ column }) => h(DataTableColumnHeader<Project>, { column, title: 'Start Date' }),
+    header: ({ column }) =>
+      h(DataTableColumnHeader<Project>, { column, title: 'Start Date' }),
     cell: ({ row }) => {
       const dateValue = row.getValue('startDate') as string | null | undefined
       if (!dateValue) {
@@ -104,13 +120,18 @@ export const columns: ColumnDef<Project>[] = [
       return h(
         'div',
         { class: 'w-[100px]' },
-        date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }),
+        date.toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'short',
+          day: 'numeric',
+        }),
       )
     },
   },
   {
     accessorKey: 'endDate',
-    header: ({ column }) => h(DataTableColumnHeader<Project>, { column, title: 'End Date' }),
+    header: ({ column }) =>
+      h(DataTableColumnHeader<Project>, { column, title: 'End Date' }),
     cell: ({ row }) => {
       const dateValue = row.getValue('endDate') as string | null | undefined
       if (!dateValue) {
@@ -120,7 +141,11 @@ export const columns: ColumnDef<Project>[] = [
       return h(
         'div',
         { class: 'w-[100px]' },
-        date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }),
+        date.toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'short',
+          day: 'numeric',
+        }),
       )
     },
   },

@@ -1,26 +1,17 @@
 <script setup lang="ts">
-import { Trash2Icon } from 'lucide-vue-next'
-
-import type { DataTableProps } from '@/components/data-table/types'
-import type { IInvoiceFilters } from '@/services/invoices.service'
+import type { IDataTableProps } from '@/components/data-table/types'
+import type { IInvoice, IInvoiceFilters } from '@/pages/invoices/models/invoice'
 
 import BulkActions from '@/components/data-table/bulk-actions.vue'
 import DataTable from '@/components/data-table/data-table.vue'
 import { generateVueTable } from '@/components/data-table/use-generate-vue-table'
-
-import type { TInvoice } from '../data/schema'
+import { Trash2Icon } from '@/composables/use-icons.composable'
 
 import DataTableToolbar from './data-table-toolbar.vue'
 import InvoiceDeleteBatch from './invoice-delete-batch.vue'
 
-interface IExtendedDataTableProps extends DataTableProps<TInvoice> {
-  filters?: IInvoiceFilters
-  onFiltersChange?: (filters: IInvoiceFilters) => void
-  onClearFilters?: () => void
-}
-
-const props = defineProps<IExtendedDataTableProps>()
-const { table } = generateVueTable<TInvoice>(props)
+const props = defineProps<IDataTableProps<IInvoice, IInvoiceFilters>>()
+const { table } = generateVueTable<IInvoice, IInvoiceFilters>(props)
 
 const invoiceDeleteBatchOpen = ref(false)
 </script>
@@ -33,29 +24,36 @@ const invoiceDeleteBatchOpen = ref(false)
           variant="destructive"
           size="icon"
           class="size-8"
-          aria-label="Delete selected invoices"
-          title="Delete selected invoices"
+          :aria-label="$t('invoices.deleteSelectedInvoices')"
+          :title="$t('invoices.deleteSelectedInvoices')"
           @click="invoiceDeleteBatchOpen = true"
         >
           <Trash2Icon />
-          <span class="sr-only">Delete selected invoices</span>
+          <span class="sr-only">{{
+            $t('invoices.deleteSelectedInvoices')
+          }}</span>
         </UiButton>
       </UiTooltipTrigger>
       <UiTooltipContent>
-        <p>Delete selected invoices</p>
+        <p>{{ $t('invoices.deleteSelectedInvoices') }}</p>
       </UiTooltipContent>
     </UiTooltip>
 
     <InvoiceDeleteBatch v-model:open="invoiceDeleteBatchOpen" :table />
   </BulkActions>
 
-  <DataTable :columns :table :data :loading>
+  <DataTable
+    :table="table"
+    :columns="columns"
+    :loading="loading"
+    :server-pagination="serverPagination"
+  >
     <template #toolbar>
       <DataTableToolbar
         :table="table"
-        :filters="filters || {}"
-        :on-filters-change="onFiltersChange || (() => {})"
-        :on-clear-filters="onClearFilters || (() => {})"
+        :filters="filters"
+        :on-filters-change="onFiltersChange"
+        :on-clear-filters="onClearFilters"
         class="w-full overflow-x-auto"
       />
     </template>

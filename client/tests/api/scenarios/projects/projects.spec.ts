@@ -20,7 +20,9 @@ import { expect, test } from '../../fixtures'
  * Pure function: Create unique test project data
  * Uses timestamp to ensure uniqueness
  */
-function createUniqueTestProject(baseName = 'Test Project'): CreateProjectRequest {
+function createUniqueTestProject(
+  baseName = 'Test Project',
+): CreateProjectRequest {
   const timestamp = Date.now()
   return {
     name: `${baseName} ${timestamp}`,
@@ -36,13 +38,18 @@ function createUniqueTestProject(baseName = 'Test Project'): CreateProjectReques
 /**
  * Pure function: Create update data
  */
-function createUpdateData(updates: Partial<UpdateProjectRequest>): UpdateProjectRequest {
+function createUpdateData(
+  updates: Partial<UpdateProjectRequest>,
+): UpdateProjectRequest {
   return { ...updates }
 }
 
 test.describe('Projects API', { tag: ['@api', '@projects'] }, () => {
   test.describe('List Projects', () => {
-    test('should get paginated list of projects', async ({ request, authenticatedAuthClient }) => {
+    test('should get paginated list of projects', async ({
+      request,
+      authenticatedAuthClient,
+    }) => {
       // Arrange
       const projectClient = new ProjectClient(request)
       projectClient.copyAuthStateFrom(authenticatedAuthClient)
@@ -55,7 +62,8 @@ test.describe('Projects API', { tag: ['@api', '@projects'] }, () => {
       expect(response.status()).toBe(HttpStatus.OK)
 
       // Assert - Response structure matches IResponse<PaginatedProjectsResponse>
-      const projectsBody = await expectIResponse<PaginatedProjectsResponse>(response)
+      const projectsBody =
+        await expectIResponse<PaginatedProjectsResponse>(response)
 
       // Assert - Pagination structure
       expect(projectsBody.data).toHaveProperty('data')
@@ -82,7 +90,10 @@ test.describe('Projects API', { tag: ['@api', '@projects'] }, () => {
       }
     })
 
-    test('should handle pagination parameters', async ({ request, authenticatedAuthClient }) => {
+    test('should handle pagination parameters', async ({
+      request,
+      authenticatedAuthClient,
+    }) => {
       // Arrange
       const projectClient = new ProjectClient(request)
       projectClient.copyAuthStateFrom(authenticatedAuthClient)
@@ -92,7 +103,8 @@ test.describe('Projects API', { tag: ['@api', '@projects'] }, () => {
 
       // Assert
       expectSuccess(response)
-      const projectsBody = await expectIResponse<PaginatedProjectsResponse>(response)
+      const projectsBody =
+        await expectIResponse<PaginatedProjectsResponse>(response)
       expect(projectsBody.data.per_page).toBe(5)
       expect(projectsBody.data.current_page).toBe(1)
     })
@@ -110,7 +122,10 @@ test.describe('Projects API', { tag: ['@api', '@projects'] }, () => {
   })
 
   test.describe('Show Project', () => {
-    test('should get project by id', async ({ request, authenticatedAuthClient }) => {
+    test('should get project by id', async ({
+      request,
+      authenticatedAuthClient,
+    }) => {
       // Arrange - Create a project first
       const projectClient = new ProjectClient(request)
       projectClient.copyAuthStateFrom(authenticatedAuthClient)
@@ -170,7 +185,10 @@ test.describe('Projects API', { tag: ['@api', '@projects'] }, () => {
   })
 
   test.describe('Create Project', () => {
-    test('should create project successfully', async ({ request, authenticatedAuthClient }) => {
+    test('should create project successfully', async ({
+      request,
+      authenticatedAuthClient,
+    }) => {
       // Arrange - Create unique test project data
       const projectClient = new ProjectClient(request)
       projectClient.copyAuthStateFrom(authenticatedAuthClient)
@@ -318,7 +336,10 @@ test.describe('Projects API', { tag: ['@api', '@projects'] }, () => {
   })
 
   test.describe('Update Project', () => {
-    test('should update project successfully', async ({ request, authenticatedAuthClient }) => {
+    test('should update project successfully', async ({
+      request,
+      authenticatedAuthClient,
+    }) => {
       // Arrange - Create a project first
       const projectClient = new ProjectClient(request)
       projectClient.copyAuthStateFrom(authenticatedAuthClient)
@@ -347,7 +368,10 @@ test.describe('Projects API', { tag: ['@api', '@projects'] }, () => {
       await projectClient.deleteProject(projectId)
     })
 
-    test('should update project status', async ({ request, authenticatedAuthClient }) => {
+    test('should update project status', async ({
+      request,
+      authenticatedAuthClient,
+    }) => {
       // Arrange
       const projectClient = new ProjectClient(request)
       projectClient.copyAuthStateFrom(authenticatedAuthClient)
@@ -411,7 +435,10 @@ test.describe('Projects API', { tag: ['@api', '@projects'] }, () => {
       })
 
       // Act
-      const response = await projectClient.updateProject(nonExistentProjectId, updateData)
+      const response = await projectClient.updateProject(
+        nonExistentProjectId,
+        updateData,
+      )
 
       // Assert
       expectError(response, HttpStatus.NOT_FOUND)
@@ -433,7 +460,10 @@ test.describe('Projects API', { tag: ['@api', '@projects'] }, () => {
   })
 
   test.describe('Delete Project', () => {
-    test('should delete project successfully', async ({ request, authenticatedAuthClient }) => {
+    test('should delete project successfully', async ({
+      request,
+      authenticatedAuthClient,
+    }) => {
       // Arrange - Create a project first
       const projectClient = new ProjectClient(request)
       projectClient.copyAuthStateFrom(authenticatedAuthClient)
@@ -446,7 +476,9 @@ test.describe('Projects API', { tag: ['@api', '@projects'] }, () => {
       const response = await projectClient.deleteProject(projectId)
 
       // Assert - Should return 204 No Content or 200 OK
-      expect([HttpStatus.OK, HttpStatus.NO_CONTENT]).toContain(response.status())
+      expect([HttpStatus.OK, HttpStatus.NO_CONTENT]).toContain(
+        response.status(),
+      )
 
       // Verify project is deleted
       const getResponse = await projectClient.getProject(projectId)

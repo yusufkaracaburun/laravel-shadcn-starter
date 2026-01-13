@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-import { FilePlus } from 'lucide-vue-next'
 import { useRouter } from 'vue-router'
 
 import { Button } from '@/components/ui/button'
+import { FilePlusIcon } from '@/composables/use-icons.composable'
 
 const router = useRouter()
 
@@ -13,7 +13,7 @@ function handleCreate() {
 
 <template>
   <Button @click="handleCreate">
-    <FilePlus />
+    <FilePlusIcon />
     Create Invoice
   </Button>
 </template>

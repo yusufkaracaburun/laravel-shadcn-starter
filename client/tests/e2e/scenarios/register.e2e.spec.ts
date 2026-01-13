@@ -4,7 +4,10 @@ import { registerUser } from '../helpers/api-helpers'
 import { generateTestUser } from '../helpers/test-data'
 
 test.describe('User Registration', () => {
-  test('User can register successfully with valid data', async ({ page, registerPage }) => {
+  test('User can register successfully with valid data', async ({
+    page,
+    registerPage,
+  }) => {
     const user = generateTestUser()
 
     await test.step('Navigate to register page', async () => {
@@ -13,7 +16,12 @@ test.describe('User Registration', () => {
     })
 
     await test.step('Fill registration form', async () => {
-      await registerPage.fillForm(user.name, user.email, user.password, user.password_confirmation)
+      await registerPage.fillForm(
+        user.name,
+        user.email,
+        user.password,
+        user.password_confirmation,
+      )
     })
 
     await test.step('Submit registration form', async () => {
@@ -29,7 +37,11 @@ test.describe('User Registration', () => {
     })
   })
 
-  test('User cannot register with duplicate email', async ({ page, registerPage, request }) => {
+  test('User cannot register with duplicate email', async ({
+    page,
+    registerPage,
+    request,
+  }) => {
     const existingUser = testusers.customer
 
     await test.step('Register user via API', async () => {
@@ -60,7 +72,9 @@ test.describe('User Registration', () => {
     })
 
     await test.step('Verify error message about duplicate email', async () => {
-      const errorText = page.getByText(/already|taken|exists|duplicate/i).first()
+      const errorText = page
+        .getByText(/already|taken|exists|duplicate/i)
+        .first()
       await expect(errorText).toBeVisible()
     })
 
@@ -81,7 +95,12 @@ test.describe('User Registration', () => {
     })
 
     await test.step('Fill registration form', async () => {
-      await registerPage.fillForm(user.name, user.email, user.password, user.password_confirmation)
+      await registerPage.fillForm(
+        user.name,
+        user.email,
+        user.password,
+        user.password_confirmation,
+      )
     })
 
     await test.step('Submit registration form', async () => {

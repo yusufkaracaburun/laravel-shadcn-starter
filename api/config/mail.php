@@ -103,7 +103,7 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Global "From" Address
+    | Global "From" and "Reply To" Address
     |--------------------------------------------------------------------------
     |
     | You may wish for all emails sent by your application to be sent from
@@ -113,6 +113,11 @@ return [
     */
 
     'from' => [
+        'address' => env('MAIL_FROM_ADDRESS', 'hello@example.com'),
+        'name'    => env('MAIL_FROM_NAME', 'Example'),
+    ],
+
+    'reply_to' => [
         'address' => env('MAIL_FROM_ADDRESS', 'hello@example.com'),
         'name'    => env('MAIL_FROM_NAME', 'Example'),
     ],

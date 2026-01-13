@@ -18,7 +18,7 @@ final class InvoiceRepository extends QueryableRepository implements InvoiceRepo
     /**
      * Return paginated invoices with filters and sorting applied.
      */
-    public function getInvoices(int $perPage = 25): LengthAwarePaginator
+    public function getInvoices(int $perPage = 10): LengthAwarePaginator
     {
         return $this->query()->paginate($perPage);
     }

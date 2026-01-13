@@ -1,5 +1,10 @@
 <script setup lang="ts">
-import { CalendarDate, DateFormatter, getLocalTimeZone, today } from '@internationalized/date'
+import {
+  CalendarDate,
+  DateFormatter,
+  getLocalTimeZone,
+  today,
+} from '@internationalized/date'
 import { toTypedSchema } from '@vee-validate/zod'
 import { CalendarDays, Check, ChevronsUpDown } from 'lucide-vue-next'
 import { toDate } from 'reka-ui/date'
@@ -25,7 +30,11 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover'
 import { Separator } from '@/components/ui/separator'
 import { cn } from '@/lib/utils'
 
@@ -68,7 +77,9 @@ async function onSubmit(values: any) {
 
 <template>
   <div>
-    <h3 class="text-lg font-medium">Account</h3>
+    <h3 class="text-lg font-medium">
+      Account
+    </h3>
     <p class="text-sm text-muted-foreground">
       Update your account settings. Set your preferred language and timezone.
     </p>
@@ -110,7 +121,9 @@ async function onSubmit(values: any) {
               >
                 <CalendarDays class="size-4 opacity-50" />
                 <span>{{
-                  value ? df.format(toDate(dateValue, getLocalTimeZone())) : 'Pick a date'
+                  value
+                    ? df.format(toDate(dateValue, getLocalTimeZone()))
+                    : 'Pick a date'
                 }}</span>
               </Button>
             </FormControl>
@@ -128,7 +141,8 @@ async function onSubmit(values: any) {
                   if (v) {
                     dateValue = v
                     setFieldValue('dob', toDate(v).toISOString())
-                  } else {
+                  }
+                  else {
                     dateValue = undefined
                     setFieldValue('dob', undefined)
                   }
@@ -137,10 +151,12 @@ async function onSubmit(values: any) {
             />
           </PopoverContent>
         </Popover>
-        <FormDescription> Your date of birth is used to calculate your age. </FormDescription>
+        <FormDescription>
+          Your date of birth is used to calculate your age.
+        </FormDescription>
         <FormMessage />
       </FormItem>
-      <input type="hidden" v-bind="field" />
+      <input type="hidden" v-bind="field">
     </FormField>
 
     <FormField v-slot="{ value }" name="language">
@@ -154,11 +170,17 @@ async function onSubmit(values: any) {
                 variant="outline"
                 role="combobox"
                 :aria-expanded="open"
-                :class="cn('w-[200px] justify-between', !value && 'text-muted-foreground')"
+                :class="
+                  cn(
+                    'w-[200px] justify-between',
+                    !value && 'text-muted-foreground',
+                  )
+                "
               >
                 {{
                   value
-                    ? languages.find((language) => language.value === value)?.label
+                    ? languages.find((language) => language.value === value)
+                      ?.label
                     : 'Select language...'
                 }}
 
@@ -185,7 +207,12 @@ async function onSubmit(values: any) {
                   >
                     <Check
                       :class="
-                        cn('mr-2 h-4 w-4', value === language.value ? 'opacity-100' : 'opacity-0')
+                        cn(
+                          'mr-2 h-4 w-4',
+                          value === language.value
+                            ? 'opacity-100'
+                            : 'opacity-0',
+                        )
                       "
                     />
                     {{ language.label }}
@@ -204,7 +231,9 @@ async function onSubmit(values: any) {
     </FormField>
 
     <div class="flex justify-start">
-      <Button type="submit"> Update account </Button>
+      <Button type="submit">
+        Update account
+      </Button>
     </div>
   </Form>
 </template>

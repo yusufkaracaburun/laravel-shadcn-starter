@@ -4,7 +4,7 @@ import { useForm } from 'vee-validate'
 import { z } from 'zod'
 
 import { FormField } from '@/components/ui/form'
-import { useProjects } from '@/composables/use-projects'
+import { useProjects } from '@/pages/projects/composables/use-projects.composable'
 
 import type { Project } from '../data/schema'
 
@@ -82,27 +82,46 @@ const onSubmit = handleSubmit(async (values) => {
 
 <template>
   <form class="space-y-4" @submit="onSubmit">
-    <FormField v-slot="{ componentField }" name="name" :validate-on-blur="!isFieldDirty">
+    <FormField
+      v-slot="{ componentField }"
+      name="name"
+      :validate-on-blur="!isFieldDirty"
+    >
       <UiFormItem>
         <UiFormLabel>Name</UiFormLabel>
         <UiFormControl>
-          <UiInput type="text" placeholder="Project name" v-bind="componentField" />
+          <UiInput
+            type="text"
+            placeholder="Project name"
+            v-bind="componentField"
+          />
         </UiFormControl>
         <UiFormMessage />
       </UiFormItem>
     </FormField>
 
-    <FormField v-slot="{ componentField }" name="description" :validate-on-blur="!isFieldDirty">
+    <FormField
+      v-slot="{ componentField }"
+      name="description"
+      :validate-on-blur="!isFieldDirty"
+    >
       <UiFormItem>
         <UiFormLabel>Description</UiFormLabel>
         <UiFormControl>
-          <UiTextarea placeholder="Project description" v-bind="componentField" />
+          <UiTextarea
+            placeholder="Project description"
+            v-bind="componentField"
+          />
         </UiFormControl>
         <UiFormMessage />
       </UiFormItem>
     </FormField>
 
-    <FormField v-slot="{ componentField }" name="category" :validate-on-blur="!isFieldDirty">
+    <FormField
+      v-slot="{ componentField }"
+      name="category"
+      :validate-on-blur="!isFieldDirty"
+    >
       <UiFormItem>
         <UiFormLabel>Category</UiFormLabel>
         <UiFormControl>
@@ -127,7 +146,11 @@ const onSubmit = handleSubmit(async (values) => {
       </UiFormItem>
     </FormField>
 
-    <FormField v-slot="{ componentField }" name="status" :validate-on-blur="!isFieldDirty">
+    <FormField
+      v-slot="{ componentField }"
+      name="status"
+      :validate-on-blur="!isFieldDirty"
+    >
       <UiFormItem>
         <UiFormLabel>Status</UiFormLabel>
         <UiFormControl>
@@ -137,7 +160,11 @@ const onSubmit = handleSubmit(async (values) => {
             </UiSelectTrigger>
             <UiSelectContent>
               <UiSelectGroup>
-                <UiSelectItem v-for="status in statuses" :key="status.value" :value="status.value">
+                <UiSelectItem
+                  v-for="status in statuses"
+                  :key="status.value"
+                  :value="status.value"
+                >
                   <div class="flex items-center gap-2">
                     <component :is="status.icon" class="size-4 shrink-0" />
                     {{ status.label }}
@@ -151,7 +178,11 @@ const onSubmit = handleSubmit(async (values) => {
       </UiFormItem>
     </FormField>
 
-    <FormField v-slot="{ componentField }" name="startDate" :validate-on-blur="!isFieldDirty">
+    <FormField
+      v-slot="{ componentField }"
+      name="startDate"
+      :validate-on-blur="!isFieldDirty"
+    >
       <UiFormItem>
         <UiFormLabel>Start Date</UiFormLabel>
         <UiFormControl>
@@ -161,7 +192,11 @@ const onSubmit = handleSubmit(async (values) => {
       </UiFormItem>
     </FormField>
 
-    <FormField v-slot="{ componentField }" name="endDate" :validate-on-blur="!isFieldDirty">
+    <FormField
+      v-slot="{ componentField }"
+      name="endDate"
+      :validate-on-blur="!isFieldDirty"
+    >
       <UiFormItem>
         <UiFormLabel>End Date</UiFormLabel>
         <UiFormControl>
@@ -171,7 +206,11 @@ const onSubmit = handleSubmit(async (values) => {
       </UiFormItem>
     </FormField>
 
-    <FormField v-slot="{ componentField }" name="progress" :validate-on-blur="!isFieldDirty">
+    <FormField
+      v-slot="{ componentField }"
+      name="progress"
+      :validate-on-blur="!isFieldDirty"
+    >
       <UiFormItem>
         <UiFormLabel>Progress (%)</UiFormLabel>
         <UiFormControl>
@@ -182,7 +221,13 @@ const onSubmit = handleSubmit(async (values) => {
     </FormField>
 
     <UiButton type="submit" class="w-full" :disabled="isSubmitting">
-      {{ isSubmitting ? 'Submitting...' : project ? 'Update Project' : 'Create Project' }}
+      {{
+        isSubmitting
+          ? 'Submitting...'
+          : project
+            ? 'Update Project'
+            : 'Create Project'
+      }}
     </UiButton>
   </form>
 </template>

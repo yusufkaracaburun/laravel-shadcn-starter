@@ -1,10 +1,10 @@
 <script lang="ts" setup>
-import { useInvoices } from '@/composables/use-invoices'
+import { useInvoices } from '@/pages/invoices/composables/use-invoices.composable'
 
-import type { TInvoice } from '../data/schema'
+import type { IInvoice } from '../models/invoice'
 
 const props = defineProps<{
-  invoice: TInvoice
+  invoice: IInvoice
 }>()
 
 const emits = defineEmits<{
@@ -38,15 +38,20 @@ async function handleRemove() {
       <UiDialogTitle>Delete Invoice</UiDialogTitle>
       <UiDialogDescription class="mt-2">
         Are you sure you want to delete invoice
-        <strong>{{ invoice.invoice_number || `#${invoice.id}` }}</strong
-        >? This action cannot be undone.
+        <strong>{{ invoice.invoice_number || `#${invoice.id}` }}</strong>? This action cannot be undone.
       </UiDialogDescription>
     </UiDialogHeader>
     <UiDialogFooter>
       <UiDialogClose as-child>
-        <UiButton variant="outline"> Cancel </UiButton>
+        <UiButton variant="outline">
+          Cancel
+        </UiButton>
       </UiDialogClose>
-      <UiButton variant="destructive" :disabled="isDeleting" @click="handleRemove">
+      <UiButton
+        variant="destructive"
+        :disabled="isDeleting"
+        @click="handleRemove"
+      >
         <UiSpinner v-if="isDeleting" class="mr-2" />
         Delete
       </UiButton>

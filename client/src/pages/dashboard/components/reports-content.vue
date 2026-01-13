@@ -89,7 +89,9 @@ function formatDate(dateString: string) {
   <UiCard data-testid="reports-content_card">
     <UiCardHeader>
       <UiCardTitle>Reports</UiCardTitle>
-      <UiCardDescription> View and download your generated reports </UiCardDescription>
+      <UiCardDescription>
+        View and download your generated reports
+      </UiCardDescription>
     </UiCardHeader>
     <UiCardContent>
       <div class="border rounded-md" data-testid="reports-content_table">
@@ -100,7 +102,9 @@ function formatDate(dateString: string) {
               <TableHead>Type</TableHead>
               <TableHead>Date Generated</TableHead>
               <TableHead>Status</TableHead>
-              <TableHead class="text-right"> Actions </TableHead>
+              <TableHead class="text-right">
+                Actions
+              </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>

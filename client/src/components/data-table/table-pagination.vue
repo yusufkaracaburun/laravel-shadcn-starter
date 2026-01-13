@@ -1,13 +1,18 @@
 <script setup lang="ts" generic="T">
 import type { Table } from '@tanstack/vue-table'
 
-import { ChevronLeftIcon, ChevronRightIcon, ChevronsLeft, ChevronsRight } from 'lucide-vue-next'
+import {
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  ChevronsLeft,
+  ChevronsRight,
+} from 'lucide-vue-next'
 
-import type { ServerPagination } from './types'
+import type { IServerPagination, TPageSize } from './types'
 
 interface DataTablePaginationProps {
   table: Table<T>
-  serverPagination?: ServerPagination
+  serverPagination?: IServerPagination
 }
 const props = defineProps<DataTablePaginationProps>()
 
@@ -29,7 +34,9 @@ const currentPageSize = computed(() => {
 
 const totalPages = computed(() => {
   if (isServerPagination.value && props.serverPagination) {
-    return Math.ceil(props.serverPagination.total / props.serverPagination.pageSize)
+    return Math.ceil(
+      props.serverPagination.total / props.serverPagination.pageSize,
+    )
   }
   return props.table.getPageCount()
 })
@@ -49,10 +56,11 @@ const canNextPage = computed(() => {
 })
 
 function handlePageSizeChange(value: any) {
-  if (!value) return
+  if (!value)
+    return
   const newPageSize = Number(value)
   if (isServerPagination.value && props.serverPagination?.onPageSizeChange) {
-    props.serverPagination.onPageSizeChange(newPageSize)
+    props.serverPagination.onPageSizeChange(newPageSize as TPageSize)
   } else {
     props.table.setPageSize(newPageSize)
   }
@@ -96,8 +104,13 @@ function goToLastPage() {
     <div class="flex-1" />
     <div class="flex items-center space-x-6 lg:space-x-8">
       <div class="flex items-center space-x-2">
-        <p class="hidden text-sm font-medium line-clamp-1 md:block">Rows per page</p>
-        <UiSelect :model-value="`${currentPageSize}`" @update:model-value="handlePageSizeChange">
+        <p class="hidden text-sm font-medium line-clamp-1 md:block">
+          Rows per page
+        </p>
+        <UiSelect
+          :model-value="`${currentPageSize}`"
+          @update:model-value="handlePageSizeChange"
+        >
           <UiSelectTrigger class="h-8 w-[70px]">
             <UiSelectValue :placeholder="`${currentPageSize}`" />
           </UiSelectTrigger>
@@ -112,7 +125,9 @@ function goToLastPage() {
           </UiSelectContent>
         </UiSelect>
       </div>
-      <div class="flex w-[100px] items-center justify-center text-sm font-medium">
+      <div
+        class="flex w-[100px] items-center justify-center text-sm font-medium"
+      >
         Page {{ currentPage }} of {{ totalPages }}
       </div>
       <div class="flex items-center space-x-2">

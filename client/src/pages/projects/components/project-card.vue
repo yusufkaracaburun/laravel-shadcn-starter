@@ -2,7 +2,7 @@
 import { Calendar, FolderKanban, MoreVertical } from 'lucide-vue-next'
 import { useRouter } from 'vue-router'
 
-import type { Project } from '@/services/projects.service'
+import type { Project } from '@/pages/projects/services/projects.service'
 
 import { Badge } from '@/components/ui/badge'
 import {
@@ -33,7 +33,9 @@ interface Props {
 const props = defineProps<Props>()
 const router = useRouter()
 
-const showComponent = shallowRef<typeof ProjectResourceDialog | typeof ProjectDelete | null>(null)
+const showComponent = shallowRef<
+  typeof ProjectResourceDialog | typeof ProjectDelete | null
+>(null)
 const isDialogOpen = ref(false)
 
 type TCommand = 'view' | 'edit' | 'delete'
@@ -41,7 +43,10 @@ type TCommand = 'view' | 'edit' | 'delete'
 function handleSelect(command: TCommand) {
   switch (command) {
     case 'view':
-      router.push({ name: '/projects/[id]', params: { id: props.project.id.toString() } })
+      router.push({
+        name: '/projects/[id]',
+        params: { id: props.project.id.toString() },
+      })
       break
     case 'edit':
       showComponent.value = ProjectResourceDialog
@@ -55,7 +60,8 @@ function handleSelect(command: TCommand) {
 }
 
 function formatDate(dateString: string | null): string {
-  if (!dateString) return '—'
+  if (!dateString)
+    return '—'
   return new Date(dateString).toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'short',
@@ -63,14 +69,23 @@ function formatDate(dateString: string | null): string {
   })
 }
 
-const status = computed(() => statuses.find((s) => s.value === props.project.status))
-const category = computed(() => categories.find((c) => c.value === props.project.category))
+const status = computed(() =>
+  statuses.find(s => s.value === props.project.status),
+)
+const category = computed(() =>
+  categories.find(c => c.value === props.project.category),
+)
 </script>
 
 <template>
   <Card
     class="hover:shadow-md transition-shadow cursor-pointer"
-    @click="router.push({ name: '/projects/[id]', params: { id: project.id.toString() } })"
+    @click="
+      router.push({
+        name: '/projects/[id]',
+        params: { id: project.id.toString() },
+      })
+    "
   >
     <CardHeader>
       <div class="flex items-start justify-between">
@@ -84,18 +99,30 @@ const category = computed(() => categories.find((c) => c.value === props.project
         </div>
         <DropdownMenu @click.stop>
           <DropdownMenuTrigger as-child @click.stop>
-            <UiButton variant="ghost" size="icon" class="size-8 shrink-0" @click.stop>
+            <UiButton
+              variant="ghost"
+              size="icon"
+              class="size-8 shrink-0"
+              @click.stop
+            >
               <MoreVertical class="size-4" />
               <span class="sr-only">Open menu</span>
             </UiButton>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuItem @click.stop="handleSelect('view')"> View </DropdownMenuItem>
+            <DropdownMenuItem @click.stop="handleSelect('view')">
+              View
+            </DropdownMenuItem>
             <UiDialogTrigger as-child>
-              <DropdownMenuItem @click.stop="handleSelect('edit')"> Edit </DropdownMenuItem>
+              <DropdownMenuItem @click.stop="handleSelect('edit')">
+                Edit
+              </DropdownMenuItem>
             </UiDialogTrigger>
             <UiDialogTrigger as-child>
-              <DropdownMenuItem class="text-destructive" @click.stop="handleSelect('delete')">
+              <DropdownMenuItem
+                class="text-destructive"
+                @click.stop="handleSelect('delete')"
+              >
                 Delete
               </DropdownMenuItem>
             </UiDialogTrigger>

@@ -15,11 +15,9 @@ import {
   FieldSeparator,
 } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
-import { useAuth } from '@/composables/use-auth'
+import { useAuth } from '@/pages/auth/composables/use-auth.composable'
 import { cn } from '@/lib/utils'
 
-import GitHubButton from './github-button.vue'
-import GoogleButton from './google-button.vue'
 import ToForgotPasswordLink from './to-forgot-password-link.vue'
 
 const props = defineProps<{
@@ -30,7 +28,10 @@ const { login, loading } = useAuth()
 
 const loginSchema = toTypedSchema(
   z.object({
-    email: z.string().email('Please enter a valid email address.').min(1, 'Email is required.'),
+    email: z
+      .string()
+      .email('Please enter a valid email address.')
+      .min(1, 'Email is required.'),
     password: z.string().min(1, 'Password is required.'),
   }),
 )
@@ -73,12 +74,18 @@ const onSubmit = handleSubmit(async (values) => {
         <form id="login-form-4" class="p-6 md:p-8" @submit="onSubmit">
           <FieldGroup>
             <div class="flex flex-col items-center gap-2 text-center">
-              <h1 class="text-2xl font-bold">Welcome back</h1>
-              <p class="text-muted-foreground text-balance">Login to your Acme Inc account</p>
+              <h1 class="text-2xl font-bold">
+                Welcome back
+              </h1>
+              <p class="text-muted-foreground text-balance">
+                Login to your Acme Inc account
+              </p>
             </div>
             <Field>
               <VeeField v-slot="{ field, errors }" name="email">
-                <FieldLabel for="login-form-4-email"> Email </FieldLabel>
+                <FieldLabel for="login-form-4-email">
+                  Email
+                </FieldLabel>
                 <Input
                   id="login-form-4-email"
                   v-bind="field"
@@ -93,7 +100,9 @@ const onSubmit = handleSubmit(async (values) => {
             <Field>
               <VeeField v-slot="{ field, errors }" name="password">
                 <div class="flex items-center justify-between">
-                  <FieldLabel for="login-form-4-password"> Password </FieldLabel>
+                  <FieldLabel for="login-form-4-password">
+                    Password
+                  </FieldLabel>
                   <ToForgotPasswordLink />
                 </div>
                 <Input
@@ -108,12 +117,19 @@ const onSubmit = handleSubmit(async (values) => {
               </VeeField>
             </Field>
             <Field>
-              <UiButton type="submit" form="login-form-4" class="w-full" :disabled="loading">
+              <UiButton
+                type="submit"
+                form="login-form-4"
+                class="w-full"
+                :disabled="loading"
+              >
                 <UiSpinner v-if="loading" class="mr-2" />
                 Login
               </UiButton>
             </Field>
-            <FieldSeparator class="*:data-[slot=field-separator-content]:bg-card">
+            <FieldSeparator
+              class="*:data-[slot=field-separator-content]:bg-card"
+            >
               Or continue with
             </FieldSeparator>
             <Field class="grid grid-cols-3 gap-4">
@@ -162,13 +178,13 @@ const onSubmit = handleSubmit(async (values) => {
             src="/placeholder.png"
             alt=""
             class="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
-          />
+          >
         </div>
       </CardContent>
     </Card>
     <FieldDescription class="px-6 text-center">
-      By clicking continue, you agree to our <a href="#">Terms of Service</a> and
-      <a href="#">Privacy Policy</a>.
+      By clicking continue, you agree to our
+      <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.
     </FieldDescription>
   </div>
 </template>

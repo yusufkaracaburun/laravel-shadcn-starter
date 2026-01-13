@@ -4,20 +4,20 @@ import type { Task as TableTask } from '../data/schema'
 
 // Map task statuses to kanban column IDs
 const statusToColumnId: Record<string, string> = {
-  backlog: 'backlog',
-  todo: 'todo',
+  'backlog': 'backlog',
+  'todo': 'todo',
   'in progress': 'in-progress',
-  done: 'done',
-  canceled: 'canceled',
+  'done': 'done',
+  'canceled': 'canceled',
 }
 
 // Map kanban column IDs back to task statuses
 const columnIdToStatus: Record<string, string> = {
-  backlog: 'backlog',
-  todo: 'todo',
+  'backlog': 'backlog',
+  'todo': 'todo',
   'in-progress': 'in progress',
-  done: 'done',
-  canceled: 'canceled',
+  'done': 'done',
+  'canceled': 'canceled',
 }
 
 /**
@@ -29,7 +29,8 @@ export function tableTaskToKanbanTask(task: TableTask): KanbanTask {
     title: task.title,
     description: task.description,
     priority: task.priority as 'low' | 'medium' | 'high' | undefined,
-    status: statusToColumnId[task.status.toLowerCase()] || task.status.toLowerCase(),
+    status:
+      statusToColumnId[task.status.toLowerCase()] || task.status.toLowerCase(),
     labels: task.labels || [],
     dueDate: task.dueDate,
     createdAt: task.createdAt || new Date().toISOString(),

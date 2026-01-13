@@ -5,7 +5,9 @@ import { reactiveOmit } from '@vueuse/core'
 import { PinInputInput, useForwardProps } from 'reka-ui'
 import { cn } from '@/lib/utils'
 
-const props = defineProps<PinInputInputProps & { class?: HTMLAttributes['class'] }>()
+const props = defineProps<
+  PinInputInputProps & { class?: HTMLAttributes['class'] }
+>()
 
 const delegatedProps = reactiveOmit(props, 'class')
 

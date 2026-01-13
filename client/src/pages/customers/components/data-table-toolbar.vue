@@ -1,29 +1,33 @@
 <script setup lang="ts">
 import type { Table } from '@tanstack/vue-table'
 
-import { X } from 'lucide-vue-next'
+import { XIcon } from '@/composables/use-icons.composable'
 
-import type { CustomerFilters } from '@/services/customers.service'
+import type {
+  ICustomer,
+  ICustomerFilters,
+} from '@/pages/customers/models/customers'
 
 import DataTableViewOptions from '@/components/data-table/view-options.vue'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 
-import type { Customer } from '../data/schema'
-
 import CustomersFilter from './customers-filter.vue'
 
 interface DataTableToolbarProps {
-  table: Table<Customer>
-  filters: CustomerFilters
-  onFiltersChange: (filters: CustomerFilters) => void
+  table: Table<ICustomer>
+  filters: ICustomerFilters
+  onFiltersChange: (filters: ICustomerFilters) => void
   onClearFilters: () => void
 }
 
 const props = defineProps<DataTableToolbarProps>()
 
 const isFiltered = computed(() => {
-  return props.table.getState().columnFilters.length > 0 || Object.keys(props.filters).length > 0
+  return (
+    props.table.getState().columnFilters.length > 0
+    || Object.keys(props.filters).length > 0
+  )
 })
 </script>
 
@@ -34,7 +38,9 @@ const isFiltered = computed(() => {
     >
       <Input
         placeholder="Search customers..."
-        :model-value="(table.getColumn('name')?.getFilterValue() as string) ?? ''"
+        :model-value="
+          (table.getColumn('name')?.getFilterValue() as string) ?? ''
+        "
         class="h-8 w-[150px] lg:w-[250px]"
         @input="table.getColumn('name')?.setFilterValue($event.target.value)"
       />
@@ -57,7 +63,7 @@ const isFiltered = computed(() => {
         "
       >
         Reset
-        <X class="size-4" />
+        <XIcon class="size-4" />
       </Button>
     </div>
     <DataTableViewOptions :table="table" />

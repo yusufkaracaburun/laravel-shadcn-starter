@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useAuth } from '@/composables/use-auth'
+import { useAuth } from '@/pages/auth/composables/use-auth.composable'
 import LoginForm4 from '@/pages/auth/components/LoginForm4.vue'
 import env from '@/utils/env'
 
@@ -25,7 +25,9 @@ async function quickLogin(userKey: keyof typeof testusers) {
 </script>
 
 <template>
-  <div class="bg-muted flex min-h-svh flex-col items-center justify-center p-6 md:p-10">
+  <div
+    class="bg-muted flex min-h-svh flex-col items-center justify-center p-6 md:p-10"
+  >
     <div class="w-full max-w-sm md:max-w-4xl">
       <LoginForm4 />
     </div>

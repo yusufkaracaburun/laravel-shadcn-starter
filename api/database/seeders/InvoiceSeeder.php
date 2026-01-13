@@ -17,16 +17,18 @@ final class InvoiceSeeder extends Seeder
     {
         $customers = Customer::all();
 
+        $randomCustomer = $customers->random();
+
+        Invoice::factory()->count(5)->for($randomCustomer)->sent()->create();
+        Invoice::factory()->count(20)->for($randomCustomer)->paid()->create();
+        Invoice::factory()->count(5)->for($randomCustomer)->unpaid()->create();
+        Invoice::factory()->count(3)->for($randomCustomer)->overdue()->create();
+
         $customers->each(function (Customer $customer): void {
             Invoice::factory()
                 ->count(random_int(2, 4))
                 ->for($customer)
                 ->create();
         });
-
-        $randomCustomer = $customers->random();
-
-        Invoice::factory()->count(5)->for($randomCustomer)->state(['status' => 'draft'])->create();
-        Invoice::factory()->count(5)->for($randomCustomer)->state(['status' => 'paid'])->create();
     }
 }

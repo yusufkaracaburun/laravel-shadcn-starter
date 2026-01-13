@@ -42,9 +42,9 @@ final class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         /**
-         * This is optional, but it's recommended to register Telescope in local environment.
-         * You are free to remove this if you don't want to use Telescope.
-         * Remove the migration files if you don't want to use Telescope.
+         * This is optional, but it\'s recommended to register Telescope in local environment.
+         * You are free to remove this if you don\'t want to use Telescope.
+         * Remove the migration files if you don\'t want to use Telescope.
          *
          * @see https://laravel.com/docs/telescope
          */
@@ -69,7 +69,7 @@ final class AppServiceProvider extends ServiceProvider
     }
 
     /**
-     * Configure the application's commands.
+     * Configure the application\'s commands.
      */
     private function configureCommands(): void
     {
@@ -77,7 +77,7 @@ final class AppServiceProvider extends ServiceProvider
     }
 
     /**
-     * It's recommended to use CarbonImmutable as it's immutable and thread-safe to avoid issues with mutability.
+     * It\'s recommended to use CarbonImmutable as it\'s immutable and thread-safe to avoid issues with mutability.
      *
      * @see https://dyrynda.com.au/blog/laravel-immutable-dates
      */
@@ -97,8 +97,8 @@ final class AppServiceProvider extends ServiceProvider
     }
 
     /**
-     * Configure the application's models.
-     * This is optional, but it's recommended to enable strict mode and disable mass assignment.
+     * Configure the application\'s models.
+     * This is optional, but it\'s recommended to enable strict mode and disable mass assignment.
      *
      * @see https://laravel.com/docs/eloquent#configuring-eloquent-strictness
      */
@@ -110,8 +110,8 @@ final class AppServiceProvider extends ServiceProvider
     }
 
     /**
-     * Configure the application's URL.
-     * This is optional, but it's recommended to force HTTPS in production.
+     * Configure the application\'s URL.
+     * This is optional, but it\'s recommended to force HTTPS in production.
      *
      * @see https://laravel.com/docs/octane#serving-your-application-via-https
      */
@@ -121,8 +121,8 @@ final class AppServiceProvider extends ServiceProvider
     }
 
     /**
-     * Configure the application's Vite loading strategy.
-     * This is optional, but it's recommended to use aggressive prefetching so the UI feels snappy.
+     * Configure the application\'s Vite loading strategy.
+     * This is optional, but it\'s recommended to use aggressive prefetching so the UI feels snappy.
      */
     private function configureVite(): void
     {
@@ -130,7 +130,7 @@ final class AppServiceProvider extends ServiceProvider
     }
 
     /**
-     * Configure the application's rate limiting.
+     * Configure the application\'s rate limiting.
      *
      * @see https://laravel.com/docs/12.x/routing#rate-limiting
      */

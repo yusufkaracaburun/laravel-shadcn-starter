@@ -1,0 +1,14 @@
+{
+  "timesheets": {
+    "columns": {
+      "date": "Date",
+      "user": "User",
+      "project": "Project",
+      "task": "Task",
+      "hours": "Hours",
+      "description": "Description",
+      "status": "Status",
+      "createdAt": "Created At"
+    }
+  }
+}

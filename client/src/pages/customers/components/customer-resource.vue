@@ -1,15 +1,17 @@
 <script lang="ts" setup>
-import type { Customer } from '../data/schema'
+import type { ICustomer } from '../models/customers'
 
 import CustomerForm from './customer-form.vue'
 
 const props = defineProps<{
-  customer?: Customer | null
+  customer?: ICustomer | null
 }>()
 
 defineEmits(['close'])
 
-const title = computed(() => (props.customer ? 'Edit Customer' : 'Create New Customer'))
+const title = computed(() =>
+  props.customer ? 'Edit Customer' : 'Create New Customer',
+)
 const description = computed(() =>
   props.customer
     ? `Update customer information for ${props.customer.name}.`

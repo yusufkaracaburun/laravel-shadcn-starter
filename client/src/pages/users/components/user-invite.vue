@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { createReusableTemplate, useMediaQuery } from '@vueuse/core'
-import { MailPlus } from 'lucide-vue-next'
 
 import Button from '@/components/ui/button/Button.vue'
 import {
@@ -21,6 +20,7 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from '@/components/ui/drawer'
+import { MailPlusIcon } from '@/composables/use-icons.composable'
 
 import UserInviteForm from './user-invite-form.vue'
 
@@ -37,7 +37,7 @@ const isOpen = ref(false)
   <Dialog v-if="isDesktop" v-model:open="isOpen">
     <DialogTrigger>
       <Button variant="outline">
-        <MailPlus />
+        <MailPlusIcon />
         Invite User
       </Button>
     </DialogTrigger>
@@ -45,13 +45,13 @@ const isOpen = ref(false)
       <DialogHeader>
         <DialogTitle>
           <div class="flex items-center gap-2">
-            <MailPlus />
+            <MailPlusIcon />
             <span>Invite User</span>
           </div>
         </DialogTitle>
         <DialogDescription>
-          Invite new user to join your team by sending them an email invitation. Assign a role to
-          define their access level.
+          Invite new user to join your team by sending them an email invitation.
+          Assign a role to define their access level.
         </DialogDescription>
       </DialogHeader>
       <GridForm />
@@ -62,20 +62,20 @@ const isOpen = ref(false)
     <DrawerTrigger as-child>
       <Button variant="outline">
         Invite User
-        <MailPlus />
+        <MailPlusIcon />
       </Button>
     </DrawerTrigger>
     <DrawerContent class="px-4">
       <DrawerHeader class="text-left">
         <DrawerTitle>
           <div class="flex items-center gap-2">
-            <MailPlus />
+            <MailPlusIcon />
             <span>Invite User</span>
           </div>
         </DrawerTitle>
         <DrawerDescription>
-          Invite new user to join your team by sending them an email invitation. Assign a role to
-          define their access level.
+          Invite new user to join your team by sending them an email invitation.
+          Assign a role to define their access level.
         </DrawerDescription>
       </DrawerHeader>
 

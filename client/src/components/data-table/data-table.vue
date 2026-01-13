@@ -14,12 +14,12 @@ import {
   TableRow,
 } from '@/components/ui/table'
 
-import type { DataTableProps } from './types'
+import type { IDataTableProps } from './types'
 
 import NoResultFound from '../no-result-found.vue'
 
 const props = defineProps<
-  DataTableProps<T> & {
+  IDataTableProps<T> & {
     table: VueTable<T>
   }
 >()
@@ -32,7 +32,10 @@ const props = defineProps<
     <div class="border rounded-md">
       <Table>
         <TableHeader>
-          <TableRow v-for="headerGroup in table.getHeaderGroups()" :key="headerGroup.id">
+          <TableRow
+            v-for="headerGroup in table.getHeaderGroups()"
+            :key="headerGroup.id"
+          >
             <TableHead v-for="header in headerGroup.headers" :key="header.id">
               <FlexRender
                 v-if="!header.isPlaceholder"
@@ -50,7 +53,10 @@ const props = defineProps<
               :data-state="row.getIsSelected() && 'selected'"
             >
               <TableCell v-for="cell in row.getVisibleCells()" :key="cell.id">
-                <FlexRender :render="cell.column.columnDef.cell" :props="cell.getContext()" />
+                <FlexRender
+                  :render="cell.column.columnDef.cell"
+                  :props="cell.getContext()"
+                />
               </TableCell>
             </TableRow>
           </template>

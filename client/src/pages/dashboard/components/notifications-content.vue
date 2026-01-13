@@ -22,7 +22,8 @@ const notifications = ref<Notification[]>([
   {
     id: '2',
     title: 'System maintenance scheduled',
-    description: 'Scheduled maintenance on June 20, 2024 from 2:00 AM to 4:00 AM',
+    description:
+      'Scheduled maintenance on June 20, 2024 from 2:00 AM to 4:00 AM',
     timestamp: '2024-06-15T09:15:00',
     read: false,
     type: 'info',
@@ -38,7 +39,8 @@ const notifications = ref<Notification[]>([
   {
     id: '4',
     title: 'Low inventory alert',
-    description: 'Product "Widget A" is running low on stock (5 units remaining)',
+    description:
+      'Product "Widget A" is running low on stock (5 units remaining)',
     timestamp: '2024-06-14T14:20:00',
     read: false,
     type: 'warning',
@@ -62,7 +64,8 @@ const notifications = ref<Notification[]>([
   {
     id: '7',
     title: 'Report generated',
-    description: 'Monthly sales report has been generated and is ready for download',
+    description:
+      'Monthly sales report has been generated and is ready for download',
     timestamp: '2024-06-13T08:00:00',
     read: true,
     type: 'success',
@@ -72,10 +75,14 @@ const notifications = ref<Notification[]>([
 function formatTimestamp(timestamp: string) {
   const date = new Date(timestamp)
   const now = new Date()
-  const diffInHours = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60))
+  const diffInHours = Math.floor(
+    (now.getTime() - date.getTime()) / (1000 * 60 * 60),
+  )
 
   if (diffInHours < 1) {
-    const diffInMinutes = Math.floor((now.getTime() - date.getTime()) / (1000 * 60))
+    const diffInMinutes = Math.floor(
+      (now.getTime() - date.getTime()) / (1000 * 60),
+    )
     return `${diffInMinutes} minutes ago`
   } else if (diffInHours < 24) {
     return `${diffInHours} hours ago`
@@ -108,7 +115,9 @@ function markAsRead(notification: Notification) {
   <UiCard data-testid="notifications-content_card">
     <UiCardHeader>
       <UiCardTitle>Notifications</UiCardTitle>
-      <UiCardDescription> Stay updated with your latest notifications </UiCardDescription>
+      <UiCardDescription>
+        Stay updated with your latest notifications
+      </UiCardDescription>
     </UiCardHeader>
     <UiCardContent>
       <div class="space-y-4" data-testid="notifications-content_list">

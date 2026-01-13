@@ -55,7 +55,7 @@ final class InvoiceObserver extends BaseObserver
      */
     public function updated(Invoice $invoice): void
     {
-        $this->log('updated', $invoice);
+        $this->log('updating', $invoice);
     }
 
     /**

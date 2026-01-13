@@ -1,0 +1,56 @@
+{
+  "sidebar": {
+    "sections": {
+      "general": "Algemeen",
+      "pages": "Pagina's",
+      "example": "Voorbeeld",
+      "other": "Overig"
+    },
+    "navigation": {
+      "dashboard": "Dashboard",
+      "users": "Gebruikers",
+      "projects": "Projecten",
+      "tasks": "Taken",
+      "vehicles": "Voertuigen",
+      "equipments": "Uitrusting",
+      "teams": "Teams",
+      "timesheets": "Urenregistratie",
+      "aiTalkExample": "Ai Talk Voorbeeld",
+      "auth": "Authenticatie",
+      "errors": "Fouten",
+      "settings": "Instellingen",
+      "svaComponents": "SVA Componenten",
+      "helpCenter": "Helpcentrum",
+      "plansPricing": "Plannen & Prijzen"
+    },
+    "auth": {
+      "signIn": "Inloggen",
+      "signIn2Col": "Inloggen (2 Kol)",
+      "signUp": "Registreren",
+      "forgotPassword": "Wachtwoord vergeten",
+      "otp": "OTP"
+    },
+    "errors": {
+      "401": "401 | Ongeautoriseerd",
+      "403": "403 | Verboden",
+      "404": "404 | Niet gevonden",
+      "500": "500 | Interne serverfout",
+      "503": "503 | Onderhoudsfout"
+    },
+    "settings": {
+      "profile": "Profiel",
+      "account": "Account",
+      "appearance": "Weergave",
+      "notifications": "Meldingen",
+      "display": "Weergave"
+    },
+    "userMenu": {
+      "upgradeToPro": "Upgraden naar Pro",
+      "billing": "Facturering",
+      "profile": "Profiel",
+      "account": "Account",
+      "notifications": "Meldingen",
+      "logOut": "Uitloggen"
+    }
+  }
+}

@@ -30,6 +30,15 @@ final class ApiResponse
     }
 
     /**
+     * Create a OK API response.
+     */
+    public static function ok(
+        mixed $data = null,
+    ): JsonResponse {
+        return response()->json($data);
+    }
+
+    /**
      * Create an error API response.
      *
      * @param  array<string, mixed>  $extra

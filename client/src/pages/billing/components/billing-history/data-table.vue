@@ -66,10 +66,13 @@ const table = useVueTable({
     },
   },
   enableRowSelection: true,
-  onSortingChange: (updaterOrValue) => valueUpdater(updaterOrValue, sorting),
-  onColumnFiltersChange: (updaterOrValue) => valueUpdater(updaterOrValue, columnFilters),
-  onColumnVisibilityChange: (updaterOrValue) => valueUpdater(updaterOrValue, columnVisibility),
-  onRowSelectionChange: (updaterOrValue) => valueUpdater(updaterOrValue, rowSelection),
+  onSortingChange: updaterOrValue => valueUpdater(updaterOrValue, sorting),
+  onColumnFiltersChange: updaterOrValue =>
+    valueUpdater(updaterOrValue, columnFilters),
+  onColumnVisibilityChange: updaterOrValue =>
+    valueUpdater(updaterOrValue, columnVisibility),
+  onRowSelectionChange: updaterOrValue =>
+    valueUpdater(updaterOrValue, rowSelection),
   getCoreRowModel: getCoreRowModel(),
   getFilteredRowModel: getFilteredRowModel(),
   getPaginationRowModel: getPaginationRowModel(),
@@ -85,7 +88,10 @@ const table = useVueTable({
     <div class="border rounded-md">
       <Table>
         <TableHeader>
-          <TableRow v-for="headerGroup in table.getHeaderGroups()" :key="headerGroup.id">
+          <TableRow
+            v-for="headerGroup in table.getHeaderGroups()"
+            :key="headerGroup.id"
+          >
             <TableHead v-for="header in headerGroup.headers" :key="header.id">
               <FlexRender
                 v-if="!header.isPlaceholder"
@@ -103,13 +109,18 @@ const table = useVueTable({
               :data-state="row.getIsSelected() && 'selected'"
             >
               <TableCell v-for="cell in row.getVisibleCells()" :key="cell.id">
-                <FlexRender :render="cell.column.columnDef.cell" :props="cell.getContext()" />
+                <FlexRender
+                  :render="cell.column.columnDef.cell"
+                  :props="cell.getContext()"
+                />
               </TableCell>
             </TableRow>
           </template>
 
           <TableRow v-else>
-            <TableCell :colspan="columns.length" class="h-24 text-center"> No results. </TableCell>
+            <TableCell :colspan="columns.length" class="h-24 text-center">
+              No results.
+            </TableCell>
           </TableRow>
         </TableBody>
       </Table>

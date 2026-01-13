@@ -1,0 +1,24 @@
+{
+  "products": {
+    "title": "Products",
+    "description": "Products description",
+    "columns": {
+      "id": "Product ID",
+      "name": "Name",
+      "description": "Description",
+      "unitPrice": "Unit Price",
+      "vatRate": "VAT Rate",
+      "unit": "Unit",
+      "createdAt": "Created At"
+    },
+    "actions": {
+      "create": "Create Product",
+      "reset": "Reset",
+      "cancel": "Cancel"
+    },
+    "filters": {
+      "filterByName": "Filter products by name...",
+      "filterByDescription": "Filter products by description..."
+    }
+  }
+}

@@ -1,9 +1,9 @@
 import { defineStore } from 'pinia'
 
-import type { User } from '@/services/users.service'
+import type { IUser } from '@/pages/users/models/users'
 
 export const useAuthStore = defineStore('user', () => {
-  const user = ref<User | null>(null)
+  const user = ref<IUser | null>(null)
 
   const isAuthenticated = computed(() => user.value !== null)
 
@@ -17,7 +17,7 @@ export const useAuthStore = defineStore('user', () => {
     },
   })
 
-  function setUser(userData: User | null) {
+  function setUser(userData: IUser | null) {
     user.value = userData
   }
 

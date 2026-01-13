@@ -17,7 +17,10 @@ export class ProjectClient extends BaseClient {
    * @param perPage - Number of items per page (default: 15)
    * Returns raw APIResponse
    */
-  async getProjects(page: number = 1, perPage: number = 15): Promise<APIResponse> {
+  async getProjects(
+    page: number = 1,
+    perPage: number = 15,
+  ): Promise<APIResponse> {
     const endpoint = `/api/project?page=${page}&per_page=${perPage}`
     return this.get(endpoint)
   }
@@ -71,7 +74,9 @@ export class ProjectClient extends BaseClient {
    * @param data - Project creation data
    * Returns IResponse<Project>
    */
-  async createProjectTyped(data: CreateProjectRequest): Promise<IResponse<Project>> {
+  async createProjectTyped(
+    data: CreateProjectRequest,
+  ): Promise<IResponse<Project>> {
     const response = await this.createProject(data)
     return response.json() as Promise<IResponse<Project>>
   }
@@ -82,7 +87,10 @@ export class ProjectClient extends BaseClient {
    * @param data - Project update data
    * Returns raw APIResponse
    */
-  async updateProject(projectId: number, data: UpdateProjectRequest): Promise<APIResponse> {
+  async updateProject(
+    projectId: number,
+    data: UpdateProjectRequest,
+  ): Promise<APIResponse> {
     await this.ensureCsrfCookie()
     const endpoint = `/api/project/${projectId}`
     return this.put(endpoint, data)

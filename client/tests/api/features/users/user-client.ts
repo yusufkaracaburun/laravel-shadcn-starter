@@ -158,7 +158,10 @@ export class UserClient extends BaseClient {
    * @param data - User update data
    * Returns raw APIResponse
    */
-  async updateUser(userId: number, data: UpdateUserRequest): Promise<APIResponse> {
+  async updateUser(
+    userId: number,
+    data: UpdateUserRequest,
+  ): Promise<APIResponse> {
     await this.ensureCsrfCookie()
     const endpoint = `${ApiEndpoints.USER_UPDATE}/${userId}`
     return this.put(endpoint, data)
@@ -170,7 +173,10 @@ export class UserClient extends BaseClient {
    * @param data - User update data
    * Returns IResponse<User>
    */
-  async updateUserTyped(userId: number, data: UpdateUserRequest): Promise<IResponse<User>> {
+  async updateUserTyped(
+    userId: number,
+    data: UpdateUserRequest,
+  ): Promise<IResponse<User>> {
     const response = await this.updateUser(userId, data)
     return response.json() as Promise<IResponse<User>>
   }

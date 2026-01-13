@@ -80,7 +80,9 @@ export class LoginPage extends BasePage {
    * Click Forgot Password link
    */
   async clickForgotPasswordLink(): Promise<void> {
-    const forgotPasswordLink = this.getByTestId('login-form_forgot-password_link')
+    const forgotPasswordLink = this.getByTestId(
+      'login-form_forgot-password_link',
+    )
     await forgotPasswordLink.click()
   }
 

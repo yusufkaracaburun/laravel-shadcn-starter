@@ -1,12 +1,17 @@
 <script lang="ts" setup>
-import type { User } from '@/services/users.service'
+import type { IUser } from '@/pages/users/models/users'
 
 import UserForm from './user-form.vue'
 
-const props = defineProps<{
-  user?: User | null
+interface IUserResourceDialogProps {
+  user: IUser | null
+}
+
+const props = defineProps<IUserResourceDialogProps>()
+
+const emits = defineEmits<{
+  close: []
 }>()
-defineEmits(['close'])
 
 const title = computed(() => (props.user ? 'Edit User' : 'New User'))
 const description = computed(() =>
@@ -26,6 +31,6 @@ const description = computed(() =>
         {{ description }}
       </UiDialogDescription>
     </UiDialogHeader>
-    <UserForm :user="user" class="mt-2" @close="$emit('close')" />
+    <UserForm :user="user" class="mt-2" @close="emits('close')" />
   </div>
 </template>

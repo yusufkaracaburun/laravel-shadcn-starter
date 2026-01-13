@@ -13,7 +13,9 @@ function handleCreated() {
   <div>
     <UiDialogHeader>
       <UiDialogTitle>Add New Customer</UiDialogTitle>
-      <UiDialogDescription>Add a new customer to your system.</UiDialogDescription>
+      <UiDialogDescription>
+        Add a new customer to your system.
+      </UiDialogDescription>
     </UiDialogHeader>
 
     <CustomerForm :customer="null" @close="handleCreated" />

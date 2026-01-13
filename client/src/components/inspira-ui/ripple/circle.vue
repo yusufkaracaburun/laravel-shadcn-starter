@@ -16,7 +16,9 @@ const props = withDefaults(defineProps<Props>(), {
 </script>
 
 <template>
-  <div :class="cn('absolute shadow-xl', 'animate-ripple-circle', props.class)" />
+  <div
+    :class="cn('absolute shadow-xl', 'animate-ripple-circle', props.class)"
+  />
 </template>
 
 <style scoped>

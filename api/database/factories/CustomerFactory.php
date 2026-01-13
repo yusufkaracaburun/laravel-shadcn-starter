@@ -69,4 +69,14 @@ final class CustomerFactory extends Factory
             'email'      => fake()->unique()->safeEmail(),
         ]);
     }
+
+    /**
+     * State: customer with status.
+     */
+    public function withStatus(string $status): static
+    {
+        return $this->state(fn (): array => [
+            'status' => $status,
+        ]);
+    }
 }

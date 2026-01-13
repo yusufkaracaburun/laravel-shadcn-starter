@@ -1,0 +1,12 @@
+{
+  "equipment": {
+    "columns": {
+      "name": "Naam",
+      "type": "Type",
+      "model": "Model",
+      "serialNumber": "Serienummer",
+      "status": "Status",
+      "createdAt": "Aangemaakt op"
+    }
+  }
+}

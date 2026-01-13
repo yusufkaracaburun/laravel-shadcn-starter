@@ -82,7 +82,10 @@ export class ItemClient extends BaseClient {
    * @param data - Item update data
    * Returns raw APIResponse
    */
-  async updateItem(itemId: number, data: UpdateItemRequest): Promise<APIResponse> {
+  async updateItem(
+    itemId: number,
+    data: UpdateItemRequest,
+  ): Promise<APIResponse> {
     await this.ensureCsrfCookie()
     const endpoint = `/api/items/${itemId}`
     return this.put(endpoint, data)
@@ -94,7 +97,10 @@ export class ItemClient extends BaseClient {
    * @param data - Item update data
    * Returns IResponse<Item>
    */
-  async updateItemTyped(itemId: number, data: UpdateItemRequest): Promise<IResponse<Item>> {
+  async updateItemTyped(
+    itemId: number,
+    data: UpdateItemRequest,
+  ): Promise<IResponse<Item>> {
     const response = await this.updateItem(itemId, data)
     return response.json() as Promise<IResponse<Item>>
   }

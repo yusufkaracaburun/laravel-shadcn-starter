@@ -1,6 +1,6 @@
 import { AudioWaveform, Command, GalleryVerticalEnd } from 'lucide-vue-next'
 
-import { useSidebar } from '@/composables/use-sidebar'
+import { useSidebar } from '@/composables/use-sidebar.composable'
 
 import type { SidebarData, Team, User } from '../types'
 

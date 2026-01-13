@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace Database\Seeders;
 
+use App\Models\Role;
 use App\Models\Team;
 use App\Models\User;
+use App\Enums\UserRole;
+use App\Models\Permission;
 use Illuminate\Database\Seeder;
-use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Hash;
-use Spatie\Permission\Models\Permission;
 use Spatie\Permission\PermissionRegistrar;
 
 final class RolePermissionSeeder extends Seeder
@@ -19,164 +20,33 @@ final class RolePermissionSeeder extends Seeder
      */
     public function run(): void
     {
-        // Reset cached roles and permissions
         app()[PermissionRegistrar::class]->forgetCachedPermissions();
 
-        // Create permissions
-        $permissions = $this->createPermissions();
+        foreach (UserRole::permissions() as $permission) {
+            collect($permission)->each(fn ($permission) => Permission::query()->firstOrCreate(['name' => $permission]));
+        }
 
-        // Create roles
-        $roles = $this->createRoles();
-
-        // Assign permissions to roles
-        $this->assignPermissionsToRoles($roles, $permissions);
-
-        // Clear cache after creating roles and permissions
+        foreach (UserRole::cases() as $userRole) {
+            $this->createRoles($userRole);
+        }
         app()[PermissionRegistrar::class]->forgetCachedPermissions();
 
-        // Create admin user first (needed for team ownership)
-        $admin = $this->createAdminUser($roles);
-
-        // Create teams (owned by admin user)
+        $admin = $this->createAdminUser(UserRole::values());
         $teams = $this->createTeams($admin);
-
-        // Assign team-scoped roles
-        $this->assignTeamScopedRoles($admin, $teams, $roles);
+        $this->assignTeamScopedRoles($admin, $teams, UserRole::values());
     }
 
-    /**
-     * Create all permissions.
-     *
-     * @return array<string, Permission>
-     */
-    private function createPermissions(): array
+    private function createRoles(UserRole $user_role): void
     {
-        $modules = [
-            'students'   => ['view', 'create', 'update', 'delete'],
-            'teachers'   => ['view', 'create', 'update', 'delete'],
-            'attendance' => ['view', 'create', 'update', 'delete'],
-            'invoices'   => ['view', 'create', 'update', 'delete'],
-            'payments'   => ['view', 'create', 'update', 'delete'],
-            'customers'  => ['view', 'create', 'update', 'delete'],
-            'teams'      => ['view', 'create', 'update', 'delete', 'manage'],
-            'users'      => ['view', 'create', 'update', 'delete'],
-            'items'      => ['view', 'create', 'update', 'delete'],
-            'projects'   => ['view', 'create', 'update', 'delete'],
-        ];
-
-        $permissions = [];
-
-        foreach ($modules as $module => $actions) {
-            foreach ($actions as $action) {
-                $name = "{$module}.{$action}";
-                $permissions[$name] = Permission::query()->firstOrCreate(['name' => $name, 'guard_name' => 'web']);
-            }
-        }
-
-        return $permissions;
+        $role = Role::query()->firstOrCreate([
+            'name'       => $user_role->value,
+            'slug'       => str($user_role->value)->slug(),
+            'guard_name' => 'web',
+            'is_system'  => true,
+        ]);
+        $role->syncPermissions($user_role->rolePermissions());
     }
 
-    /**
-     * Create all roles.
-     *
-     * @return array<string, Role>
-     */
-    private function createRoles(): array
-    {
-        $roles = [
-            'super-admin' => 'Super Administrator with full access',
-            'admin'       => 'Administrator with management access',
-            'customer'    => 'Customer with limited access',
-            'contractor'  => 'Contractor with project access',
-        ];
-
-        $createdRoles = [];
-
-        foreach (array_keys($roles) as $name) {
-            $createdRoles[$name] = Role::query()->firstOrCreate(['name' => $name, 'guard_name' => 'web']);
-        }
-
-        return $createdRoles;
-    }
-
-    /**
-     * Assign permissions to roles.
-     *
-     * @param  array<string, Role>  $roles
-     * @param  array<string, Permission>  $permissions
-     */
-    private function assignPermissionsToRoles(array $roles, array $permissions): void
-    {
-        // Super Admin gets all permissions
-        $roles['super-admin']->givePermissionTo(Permission::all());
-
-        // Admin gets most permissions except super-admin specific ones
-        $roles['admin']->givePermissionTo([
-            $permissions['students.view'],
-            $permissions['students.create'],
-            $permissions['students.update'],
-            $permissions['students.delete'],
-            $permissions['teachers.view'],
-            $permissions['teachers.create'],
-            $permissions['teachers.update'],
-            $permissions['teachers.delete'],
-            $permissions['attendance.view'],
-            $permissions['attendance.create'],
-            $permissions['attendance.update'],
-            $permissions['attendance.delete'],
-            $permissions['invoices.view'],
-            $permissions['invoices.create'],
-            $permissions['invoices.update'],
-            $permissions['invoices.delete'],
-            $permissions['payments.view'],
-            $permissions['payments.create'],
-            $permissions['payments.update'],
-            $permissions['payments.delete'],
-            $permissions['customers.view'],
-            $permissions['customers.create'],
-            $permissions['customers.update'],
-            $permissions['customers.delete'],
-            $permissions['teams.view'],
-            $permissions['teams.create'],
-            $permissions['teams.update'],
-            $permissions['teams.delete'],
-            $permissions['teams.manage'],
-            $permissions['users.view'],
-            $permissions['users.create'],
-            $permissions['users.update'],
-            $permissions['users.delete'],
-            $permissions['items.view'],
-            $permissions['items.create'],
-            $permissions['items.update'],
-            $permissions['items.delete'],
-            $permissions['projects.view'],
-            $permissions['projects.create'],
-            $permissions['projects.update'],
-            $permissions['projects.delete'],
-        ]);
-
-        // Customer permissions
-        $roles['customer']->givePermissionTo([
-            $permissions['students.view'],
-            $permissions['attendance.view'],
-            $permissions['invoices.view'],
-        ]);
-
-        // Contractor permissions
-        $roles['contractor']->givePermissionTo([
-            $permissions['students.view'],
-            $permissions['attendance.view'],
-            $permissions['attendance.create'],
-            $permissions['attendance.update'],
-            $permissions['invoices.view'],
-        ]);
-    }
-
-    /**
-     * Create admin user.
-     *
-     * @param  array<string, Role>  $roles
-     */
     private function createAdminUser(array $roles): User
     {
         $admin = User::query()->firstOrCreate(['email' => 'admin@example.com'], [
@@ -194,11 +64,6 @@ final class RolePermissionSeeder extends Seeder
         return $admin;
     }
 
-    /**
-     * Create default teams.
-     *
-     * @return array<Team>
-     */
     private function createTeams(User $admin): array
     {
         return [Team::query()->firstOrCreate(['name' => 'Default Team'], [
@@ -207,12 +72,6 @@ final class RolePermissionSeeder extends Seeder
         ])];
     }
 
-    /**
-     * Assign team-scoped roles.
-     *
-     * @param  array<Team>  $teams
-     * @param  array<string, Role>  $roles
-     */
     private function assignTeamScopedRoles(User $admin, array $teams, array $roles): void
     {
         if ($teams === [] || !isset($roles['admin'])) {
@@ -229,9 +88,6 @@ final class RolePermissionSeeder extends Seeder
         $this->assignTeamScopedRole($admin, $team, $roles['admin']);
     }
 
-    /**
-     * Assign a global role to a user (team_id = null).
-     */
     private function assignGlobalRole(User $user, Role $role): void
     {
         if ($user->hasRole($role)) {
@@ -248,9 +104,6 @@ final class RolePermissionSeeder extends Seeder
         $permissionRegistrar->forgetCachedPermissions();
     }
 
-    /**
-     * Assign a team-scoped role to a user.
-     */
     private function assignTeamScopedRole(User $user, Team $team, Role $role): void
     {
         if ($user->hasRole($role)) {

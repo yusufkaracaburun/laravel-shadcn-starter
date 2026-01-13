@@ -1,32 +1,33 @@
 <script setup lang="ts">
-import type { Row } from '@tanstack/vue-table'
 import type { Component } from 'vue'
 
 import { Ellipsis, Eye, FilePenLine, Trash2 } from 'lucide-vue-next'
 import { useRouter } from 'vue-router'
 
-import type { User } from '@/services/users.service'
+import type { IDataTableRowActionsProps } from '@/components/data-table/types'
+import type { IUser } from '@/pages/users/models/users'
 
 import UserDelete from './user-delete.vue'
-import UserResourceDialog from './user-resource-dialog.vue'
+import UserEditDialog from './user-edit-dialog.vue'
 
-interface DataTableRowActionsProps {
-  row: Row<User>
-}
-const props = defineProps<DataTableRowActionsProps>()
+const props = defineProps<IDataTableRowActionsProps<IUser>>()
 const user = computed(() => props.row.original)
 const router = useRouter()
 
 const showComponent = shallowRef<Component | null>(null)
+const isEditDialogOpen = ref(false)
 
 type TCommand = 'view' | 'edit' | 'delete'
 function handleSelect(command: TCommand) {
   switch (command) {
     case 'view':
-      router.push({ name: '/users/[id]', params: { id: user.value.id.toString() } })
+      router.push({
+        name: '/users/view/[id]',
+        params: { id: user.value.id.toString() },
+      })
       break
     case 'edit':
-      showComponent.value = UserResourceDialog
+      isEditDialogOpen.value = true
       break
     case 'delete':
       showComponent.value = UserDelete
@@ -41,7 +42,10 @@ const isOpen = ref(false)
   <UiDialog v-model:open="isOpen">
     <UiDropdownMenu>
       <UiDropdownMenuTrigger as-child>
-        <UiButton variant="ghost" class="flex h-8 w-8 p-0 data-[state=open]:bg-muted">
+        <UiButton
+          variant="ghost"
+          class="flex h-8 w-8 p-0 data-[state=open]:bg-muted"
+        >
           <Ellipsis class="size-4" />
           <span class="sr-only">Open menu</span>
         </UiButton>
@@ -49,27 +53,38 @@ const isOpen = ref(false)
       <UiDropdownMenuContent align="end" class="w-[160px]">
         <UiDropdownMenuItem @select.stop="handleSelect('view')">
           <span>View</span>
-          <UiDropdownMenuShortcut> <Eye class="size-4" /> </UiDropdownMenuShortcut>
+          <UiDropdownMenuShortcut>
+            <Eye class="size-4" />
+          </UiDropdownMenuShortcut>
         </UiDropdownMenuItem>
 
-        <UiDialogTrigger as-child>
-          <UiDropdownMenuItem @select.stop="handleSelect('edit')">
-            <span>Edit</span>
-            <UiDropdownMenuShortcut> <FilePenLine class="size-4" /> </UiDropdownMenuShortcut>
-          </UiDropdownMenuItem>
-        </UiDialogTrigger>
+        <UiDropdownMenuItem @select.stop="handleSelect('edit')">
+          <span>Edit</span>
+          <UiDropdownMenuShortcut>
+            <FilePenLine class="size-4" />
+          </UiDropdownMenuShortcut>
+        </UiDropdownMenuItem>
 
         <UiDialogTrigger as-child>
           <UiDropdownMenuItem @select.stop="handleSelect('delete')">
             <span>Delete</span>
-            <UiDropdownMenuShortcut> <Trash2 class="size-4" /> </UiDropdownMenuShortcut>
+            <UiDropdownMenuShortcut>
+              <Trash2 class="size-4" />
+            </UiDropdownMenuShortcut>
           </UiDropdownMenuItem>
         </UiDialogTrigger>
       </UiDropdownMenuContent>
     </UiDropdownMenu>
 
-    <UiDialogContent>
+    <UiDialogContent class="sm:max-w-[425px]">
       <component :is="showComponent" :user="user" @close="isOpen = false" />
     </UiDialogContent>
   </UiDialog>
+
+  <UserEditDialog
+    :user="user"
+    :open="isEditDialogOpen"
+    @update:open="isEditDialogOpen = $event"
+    @close="isEditDialogOpen = false"
+  />
 </template>

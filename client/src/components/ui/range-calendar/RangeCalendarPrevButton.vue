@@ -7,7 +7,9 @@ import { RangeCalendarPrev, useForwardProps } from 'reka-ui'
 import { cn } from '@/lib/utils'
 import { buttonVariants } from '@/components/ui/button'
 
-const props = defineProps<RangeCalendarPrevProps & { class?: HTMLAttributes['class'] }>()
+const props = defineProps<
+  RangeCalendarPrevProps & { class?: HTMLAttributes['class'] }
+>()
 
 const delegatedProps = reactiveOmit(props, 'class')
 

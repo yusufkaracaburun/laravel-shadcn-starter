@@ -6,8 +6,8 @@ namespace App\Services\Concretes;
 
 use App\Models\Team;
 use App\Services\BaseService;
-use App\Http\Resources\TeamResource;
-use App\Http\Resources\TeamCollection;
+use App\Http\Resources\Teams\TeamResource;
+use App\Http\Resources\Teams\TeamCollection;
 use App\Services\Contracts\TeamServiceInterface;
 use App\Repositories\Contracts\TeamRepositoryInterface;
 

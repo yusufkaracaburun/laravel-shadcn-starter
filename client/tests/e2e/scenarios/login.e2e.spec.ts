@@ -48,7 +48,10 @@ test.describe('User Login', () => {
     })
   })
 
-  test('User cannot login with invalid credentials', async ({ page, loginPage }) => {
+  test('User cannot login with invalid credentials', async ({
+    page,
+    loginPage,
+  }) => {
     await test.step('Navigate to login page', async () => {
       await loginPage.navigate()
       await loginPage.verifyOnPage()
@@ -63,7 +66,9 @@ test.describe('User Login', () => {
     })
 
     await test.step('Verify error message is displayed', async () => {
-      const errorText = page.getByText(/error|invalid|incorrect|failed/i).first()
+      const errorText = page
+        .getByText(/error|invalid|incorrect|failed/i)
+        .first()
       await expect(errorText).toBeVisible()
     })
 

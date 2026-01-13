@@ -50,7 +50,9 @@ export class RegisterPage extends BasePage {
    * Fill password confirmation input
    */
   async fillPasswordConfirmation(password: string): Promise<void> {
-    const passwordConfirmationInput = this.getByTestId('register-form_password-confirmation_input')
+    const passwordConfirmationInput = this.getByTestId(
+      'register-form_password-confirmation_input',
+    )
     await passwordConfirmationInput.fill(password)
   }
 

@@ -16,7 +16,11 @@ import { z } from 'zod'
 import { Calendar } from '@/components/ui/calendar'
 import { Checkbox } from '@/components/ui/checkbox'
 import { FormField } from '@/components/ui/form'
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover'
 import { cn } from '@/lib/utils'
 
 import type { Task } from '../data/schema'
@@ -27,7 +31,7 @@ const props = defineProps<{
   task: Task | null
 }>()
 const emits = defineEmits<{
-  close: []
+  'close': []
   'task-updated': [task: Task]
   'task-created': [task: Task]
 }>()
@@ -52,7 +56,8 @@ if (props.task?.dueDate) {
 watch(
   () => dueTime.value,
   (newVal) => {
-    if (!newVal) return
+    if (!newVal)
+      return
     if (dueDate.value) {
       const [hours, minutes] = newVal.split(':').map(Number)
       dueDate.value = new CalendarDateTime(
@@ -90,7 +95,9 @@ const { isFieldDirty, handleSubmit } = useForm({
 const onSubmit = handleSubmit((values) => {
   const submitValues = {
     ...values,
-    dueDate: dueDate.value ? dueDate.value.toDate(getLocalTimeZone()) : undefined,
+    dueDate: dueDate.value
+      ? dueDate.value.toDate(getLocalTimeZone())
+      : undefined,
   }
 
   // If editing existing task, emit update event
@@ -122,17 +129,29 @@ const onSubmit = handleSubmit((values) => {
 <template>
   <div>
     <form class="w-2/3 space-y-6" @submit="onSubmit">
-      <FormField v-slot="{ componentField }" name="title" :validate-on-blur="!isFieldDirty">
+      <FormField
+        v-slot="{ componentField }"
+        name="title"
+        :validate-on-blur="!isFieldDirty"
+      >
         <UiFormItem>
           <UiFormLabel>Title</UiFormLabel>
           <UiFormControl>
-            <UiInput type="text" placeholder="Enter task title" v-bind="componentField" />
+            <UiInput
+              type="text"
+              placeholder="Enter task title"
+              v-bind="componentField"
+            />
           </UiFormControl>
           <UiFormDescription />
           <UiFormMessage />
         </UiFormItem>
       </FormField>
-      <FormField v-slot="{ componentField }" name="description" :validate-on-blur="!isFieldDirty">
+      <FormField
+        v-slot="{ componentField }"
+        name="description"
+        :validate-on-blur="!isFieldDirty"
+      >
         <UiFormItem>
           <UiFormLabel>Description</UiFormLabel>
           <UiFormControl>
@@ -146,7 +165,11 @@ const onSubmit = handleSubmit((values) => {
           <UiFormMessage />
         </UiFormItem>
       </FormField>
-      <FormField v-slot="{ componentField }" name="status" :validate-on-blur="!isFieldDirty">
+      <FormField
+        v-slot="{ componentField }"
+        name="status"
+        :validate-on-blur="!isFieldDirty"
+      >
         <UiFormItem>
           <UiFormLabel>Status</UiFormLabel>
           <UiFormControl>
@@ -174,7 +197,11 @@ const onSubmit = handleSubmit((values) => {
           <UiFormMessage />
         </UiFormItem>
       </FormField>
-      <FormField v-slot="{ componentField }" name="labels" :validate-on-blur="!isFieldDirty">
+      <FormField
+        v-slot="{ componentField }"
+        name="labels"
+        :validate-on-blur="!isFieldDirty"
+      >
         <UiFormItem>
           <UiFormLabel>Labels</UiFormLabel>
           <UiFormControl>
@@ -192,7 +219,8 @@ const onSubmit = handleSubmit((values) => {
                         const current = componentField.modelValue || []
                         if (checked) {
                           componentField.modelValue = [...current, label.value]
-                        } else {
+                        }
+                        else {
                           componentField.modelValue = current.filter(
                             (l: string) => l !== label.value,
                           )
@@ -211,11 +239,18 @@ const onSubmit = handleSubmit((values) => {
           <UiFormMessage />
         </UiFormItem>
       </FormField>
-      <FormField v-slot="{ componentField }" name="priority" :validate-on-blur="!isFieldDirty">
+      <FormField
+        v-slot="{ componentField }"
+        name="priority"
+        :validate-on-blur="!isFieldDirty"
+      >
         <UiFormItem>
           <UiFormLabel>Priority</UiFormLabel>
           <UiFormControl>
-            <UiRadioGroup class="flex flex-col space-y-1" v-bind="componentField">
+            <UiRadioGroup
+              class="flex flex-col space-y-1"
+              v-bind="componentField"
+            >
               <UiFormItem
                 v-for="priority in priorities"
                 :key="priority.value"
@@ -251,7 +286,11 @@ const onSubmit = handleSubmit((values) => {
                     "
                   >
                     <CalendarIcon class="mr-2 size-4" />
-                    {{ dueDate ? df.format(dueDate.toDate(getLocalTimeZone())) : 'Pick a date' }}
+                    {{
+                      dueDate
+                        ? df.format(dueDate.toDate(getLocalTimeZone()))
+                        : 'Pick a date'
+                    }}
                   </UiButton>
                 </PopoverTrigger>
                 <PopoverContent class="w-auto p-0">
@@ -273,7 +312,9 @@ const onSubmit = handleSubmit((values) => {
         </UiFormItem>
       </FormField>
 
-      <UiButton type="submit"> Submit </UiButton>
+      <UiButton type="submit">
+        Submit
+      </UiButton>
     </form>
   </div>
 </template>

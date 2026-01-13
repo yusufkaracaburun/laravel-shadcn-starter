@@ -6,14 +6,18 @@ import {
   expectIResponse,
   expectSuccess,
   expectValidationErrors,
-  expectValidUser,
 } from '../../features/shared/helpers'
 import { expect, invalidUser, test, testUser } from '../../fixtures'
 
 test.describe('Login', { tag: ['@api', '@auth', '@login'] }, () => {
-  test('should login successfully and validate user data', async ({ authClient }) => {
+  test('should login successfully and validate user data', async ({
+    authClient,
+  }) => {
     // Arrange & Act
-    const loginResponse = await authClient.login(testUser.email, testUser.password)
+    const loginResponse = await authClient.login(
+      testUser.email,
+      testUser.password,
+    )
 
     // Assert - Login should succeed
     expectSuccess(loginResponse)
@@ -63,13 +67,18 @@ test.describe('Login', { tag: ['@api', '@auth', '@login'] }, () => {
 
   test('should not login with invalid credentials', async ({ authClient }) => {
     // Arrange & Act
-    const response = await authClient.login(invalidUser.email, invalidUser.password)
+    const response = await authClient.login(
+      invalidUser.email,
+      invalidUser.password,
+    )
 
     // Assert
     await expectValidationErrors(response)
   })
 
-  test('should handle login with automatic CSRF cookie', async ({ authClient }) => {
+  test('should handle login with automatic CSRF cookie', async ({
+    authClient,
+  }) => {
     // Arrange: Try to login without manually getting CSRF cookie first
     // Note: AuthClient handles CSRF internally via ensureCsrfCookie()
     // Act: Login should still work as AuthClient handles CSRF internally
@@ -86,7 +95,9 @@ test.describe('Login', { tag: ['@api', '@auth', '@login'] }, () => {
     expect(loginBody).toHaveProperty('name')
   })
 
-  test('should extract CSRF token and use it in subsequent requests', async ({ authClient }) => {
+  test('should extract CSRF token and use it in subsequent requests', async ({
+    authClient,
+  }) => {
     // Arrange: Get CSRF cookie first
     const csrfResponse = await authClient.getCsrfCookie()
     expectSuccess(csrfResponse)
@@ -97,14 +108,21 @@ test.describe('Login', { tag: ['@api', '@auth', '@login'] }, () => {
     expect(setCookieHeader).toBeTruthy()
 
     // Verify XSRF-TOKEN cookie is present in response
-    const cookies = Array.isArray(setCookieHeader) ? setCookieHeader : [setCookieHeader]
-    const xsrfCookie = cookies.find((cookie: string) => cookie.startsWith('XSRF-TOKEN='))
+    const cookies = Array.isArray(setCookieHeader)
+      ? setCookieHeader
+      : [setCookieHeader]
+    const xsrfCookie = cookies.find((cookie: string) =>
+      cookie.startsWith('XSRF-TOKEN='),
+    )
     expect(xsrfCookie).toBeTruthy()
 
     // Act: Login should use the extracted CSRF token
     // Note: AuthClient.ensureCsrfCookie() checks if token exists, so it won't fetch again
     // However, the token is already extracted from the CSRF response above
-    const loginResponse = await authClient.login(testUser.email, testUser.password)
+    const loginResponse = await authClient.login(
+      testUser.email,
+      testUser.password,
+    )
 
     // Assert: Login should succeed with the CSRF token
     // This verifies that the token was extracted and used correctly

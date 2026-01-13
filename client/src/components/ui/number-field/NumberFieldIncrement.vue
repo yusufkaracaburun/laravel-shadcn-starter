@@ -6,7 +6,9 @@ import { Plus } from 'lucide-vue-next'
 import { NumberFieldIncrement, useForwardProps } from 'reka-ui'
 import { cn } from '@/lib/utils'
 
-const props = defineProps<NumberFieldIncrementProps & { class?: HTMLAttributes['class'] }>()
+const props = defineProps<
+  NumberFieldIncrementProps & { class?: HTMLAttributes['class'] }
+>()
 
 const delegatedProps = reactiveOmit(props, 'class')
 

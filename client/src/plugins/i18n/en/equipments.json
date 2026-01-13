@@ -1,0 +1,12 @@
+{
+  "equipment": {
+    "columns": {
+      "name": "Name",
+      "type": "Type",
+      "model": "Model",
+      "serialNumber": "Serial Number",
+      "status": "Status",
+      "createdAt": "Created At"
+    }
+  }
+}

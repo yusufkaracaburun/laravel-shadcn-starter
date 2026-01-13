@@ -88,10 +88,16 @@ function extractApiErrorMessage(
 /**
  * Get default message for HTTP status code
  */
-function getStatusMessage(status: number | undefined, axiosError: AxiosError): string {
+function getStatusMessage(
+  status: number | undefined,
+  axiosError: AxiosError,
+): string {
   if (!status) {
     // Handle network/timeout errors without status
-    if (axiosError.code === 'ECONNABORTED' || axiosError.message.includes('timeout')) {
+    if (
+      axiosError.code === 'ECONNABORTED'
+      || axiosError.message.includes('timeout')
+    ) {
       return 'Request timeout. Please try again.'
     }
     if (axiosError.code === 'ERR_NETWORK' || !axiosError.response) {
@@ -120,7 +126,9 @@ function getStatusMessage(status: number | undefined, axiosError: AxiosError): s
  * Check if error is a network error based on message patterns
  */
 function isNetworkError(error: Error): boolean {
-  return NETWORK_ERROR_PATTERNS.some((pattern) => error.message.includes(pattern))
+  return NETWORK_ERROR_PATTERNS.some(pattern =>
+    error.message.includes(pattern),
+  )
 }
 
 /**
@@ -205,7 +213,9 @@ export const useErrorStore = defineStore('error', () => {
   const errorType = computed(() => currentError.value?.type ?? null)
   const errorStatus = computed(() => currentError.value?.status)
   const errorMessage = computed(() => currentError.value?.message ?? '')
-  const validationErrors = computed(() => currentError.value?.validationErrors ?? {})
+  const validationErrors = computed(
+    () => currentError.value?.validationErrors ?? {},
+  )
   const originalError = computed(() => currentError.value?.originalError)
 
   /**
@@ -278,7 +288,9 @@ export const useErrorStore = defineStore('error', () => {
    */
   function setApiError(axiosError: AxiosError, options?: SetErrorOptions) {
     const status = axiosError.response?.status
-    const responseData = axiosError.response?.data as ApiResponseData | undefined
+    const responseData = axiosError.response?.data as
+      | ApiResponseData
+      | undefined
 
     // Handle validation errors (422)
     if (status === 422 && responseData?.errors) {
@@ -307,7 +319,10 @@ export const useErrorStore = defineStore('error', () => {
   /**
    * Set validation errors from 422 responses
    */
-  function setValidationError(errors: Record<string, string[]>, options?: ValidationErrorOptions) {
+  function setValidationError(
+    errors: Record<string, string[]>,
+    options?: ValidationErrorOptions,
+  ) {
     const message = extractFirstValidationError(errors)
 
     currentError.value = createErrorState('validation', message, {
@@ -320,7 +335,10 @@ export const useErrorStore = defineStore('error', () => {
   /**
    * Set network/connection errors
    */
-  function setNetworkError(error: Error | AxiosError, options?: SetErrorOptions) {
+  function setNetworkError(
+    error: Error | AxiosError,
+    options?: SetErrorOptions,
+  ) {
     const message = extractNetworkErrorMessage(error)
 
     currentError.value = createErrorState('network', message, {

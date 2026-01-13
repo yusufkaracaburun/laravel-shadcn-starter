@@ -46,7 +46,7 @@ namespace App\Models{
 namespace App\Models{
 /**
  * Contact model.
- * 
+ *
  * Represents a contact person associated with customers.
  *
  * @property int $id
@@ -89,7 +89,7 @@ namespace App\Models{
 namespace App\Models{
 /**
  * Customer model.
- * 
+ *
  * Represents a customer (business or private) in the system.
  *
  * @property int $id
@@ -143,7 +143,7 @@ namespace App\Models{
 namespace App\Models{
 /**
  * Invoice model.
- * 
+ *
  * Represents an invoice sent to a customer.
  *
  * @property int $id
@@ -164,7 +164,7 @@ namespace App\Models{
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \Spatie\Activitylog\Models\Activity> $activities
  * @property-read int|null $activities_count
  * @property-read \App\Models\Customer $customer
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\InvoiceEmail> $emails
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\SentEmail> $emails
  * @property-read int|null $emails_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\InvoiceItem> $items
  * @property-read int|null $items_count
@@ -200,63 +200,25 @@ namespace App\Models{
 
 namespace App\Models{
 /**
- * InvoiceEmail model.
- * 
- * Represents an email sent for an invoice.
- *
- * @property int $id
- * @property int $invoice_id
- * @property string $to
- * @property string $subject
- * @property string|null $body
- * @property \App\Enums\EmailStatus $status
- * @property \Carbon\CarbonImmutable|null $sent_at
- * @property \Carbon\CarbonImmutable|null $opened_at
- * @property \Carbon\CarbonImmutable|null $clicked_at
- * @property string|null $error_message
- * @property \Carbon\CarbonImmutable|null $created_at
- * @property \Carbon\CarbonImmutable|null $updated_at
- * @property-read \App\Models\Invoice $invoice
- * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceEmail newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceEmail newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceEmail query()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceEmail whereBody($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceEmail whereClickedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceEmail whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceEmail whereErrorMessage($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceEmail whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceEmail whereInvoiceId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceEmail whereOpenedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceEmail whereSentAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceEmail whereStatus($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceEmail whereSubject($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceEmail whereTo($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceEmail whereUpdatedAt($value)
- */
-	final class InvoiceEmail extends \Eloquent {}
-}
-
-namespace App\Models{
-/**
  * InvoiceItem model.
- * 
+ *
  * Represents a line item on an invoice.
  *
  * @property int $id
  * @property int $invoice_id
+ * @property int|null $item_id
  * @property string|null $name
  * @property string|null $description
  * @property numeric $quantity
  * @property \Cknow\Money\Money $unit_price
  * @property numeric $vat_rate
+ * @property string|null $unit
  * @property \Cknow\Money\Money $total_excl_vat
  * @property \Cknow\Money\Money $total_vat
  * @property \Cknow\Money\Money $total_incl_vat
  * @property int $sort_order
  * @property \Carbon\CarbonImmutable|null $created_at
  * @property \Carbon\CarbonImmutable|null $updated_at
- * @property int|null $item_id
- * @property string|null $unit
  * @property-read \App\Models\Invoice $invoice
  * @method static \Database\Factories\InvoiceItemFactory factory($count = null, $state = [])
  * @method static \Illuminate\Database\Eloquent\Builder<static>|InvoiceItem newModelQuery()
@@ -294,18 +256,18 @@ namespace App\Models{
  * @property \Carbon\CarbonImmutable|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\InvoiceItem> $invoiceLines
  * @property-read int|null $invoice_lines_count
- * @method static \Database\Factories\ItemFactory factory($count = null, $state = [])
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Item newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Item newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Item query()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Item whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Item whereDescription($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Item whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Item whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Item whereUnit($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Item whereUnitPrice($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Item whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Item whereVatRate($value)
+ * @method static \Database\Factories\ProductFactory factory($count = null, $state = [])
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereUnit($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereUnitPrice($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Product whereVatRate($value)
  */
 	final class Item extends \Eloquent {}
 }
@@ -369,7 +331,7 @@ namespace App\Models{
 namespace App\Models{
 /**
  * Payment model.
- * 
+ *
  * Represents a payment made by a customer, optionally linked to an invoice.
  *
  * @property int $id
@@ -508,6 +470,61 @@ namespace App\Models{
 namespace App\Models{
 /**
  * @property int $id
+ * @property string $hash
+ * @property string|null $headers
+ * @property string $subject
+ * @property string|null $content
+ * @property int $opens
+ * @property int $clicks
+ * @property \Carbon\CarbonImmutable|null $created_at
+ * @property \Carbon\CarbonImmutable|null $updated_at
+ * @property string|null $message_id
+ * @property \Illuminate\Support\Collection<array-key, mixed>|null $meta
+ * @property string|null $recipient_email
+ * @property string|null $recipient_name
+ * @property string|null $sender_email
+ * @property string|null $sender_name
+ * @property \Carbon\CarbonImmutable|null $clicked_at
+ * @property \Carbon\CarbonImmutable|null $opened_at
+ * @property string|null $emailable_type
+ * @property int|null $emailable_id
+ * @property-read \Illuminate\Database\Eloquent\Model|\Eloquent|null $emailable
+ * @property-read mixed $domains_in_context
+ * @property-read mixed $recipient
+ * @property-read \jdavidbakr\MailTracker\Model\[type] $report_class
+ * @property-read mixed $sender
+ * @property-read \jdavidbakr\MailTracker\Model\[type] $smtp_info
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \jdavidbakr\MailTracker\Model\SentEmailUrlClicked> $urlClicks
+ * @property-read int|null $url_clicks_count
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SentEmail newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SentEmail newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SentEmail query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SentEmail whereClickedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SentEmail whereClicks($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SentEmail whereContent($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SentEmail whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SentEmail whereEmailableId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SentEmail whereEmailableType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SentEmail whereHash($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SentEmail whereHeaders($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SentEmail whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SentEmail whereMessageId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SentEmail whereMeta($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SentEmail whereOpenedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SentEmail whereOpens($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SentEmail whereRecipientEmail($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SentEmail whereRecipientName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SentEmail whereSenderEmail($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SentEmail whereSenderName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SentEmail whereSubject($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|SentEmail whereUpdatedAt($value)
+ */
+	final class SentEmail extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * @property int $id
  * @property int $user_id
  * @property string $name
  * @property bool $personal_team
@@ -571,6 +588,8 @@ namespace App\Models{
  * @property int|null $contact_id
  * @property-read \App\Models\Contact|null $contact
  * @property-read \App\Models\Team|null $currentTeam
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\SentEmail> $emails
+ * @property-read int|null $emails_count
  * @property-read string|null $profile_photo_url
  * @property-read \Spatie\MediaLibrary\MediaCollections\Models\Collections\MediaCollection<int, \Spatie\MediaLibrary\MediaCollections\Models\Media> $media
  * @property-read int|null $media_count

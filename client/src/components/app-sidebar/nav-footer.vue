@@ -10,6 +10,8 @@ import {
 } from 'lucide-vue-next'
 
 import { useSidebar } from '@/components/ui/sidebar'
+import { SettingsIcon } from '@/composables/use-icons.composable'
+import { useAuth } from '@/pages/auth/composables/use-auth.composable'
 
 import type { User } from './types'
 
@@ -67,7 +69,6 @@ const { isMobile, open } = useSidebar()
             </UiDropdownMenuItem>
           </UiDropdownMenuGroup>
 
-          <UiDropdownMenuSeparator />
           <UiDropdownMenuGroup>
             <UiDropdownMenuItem @click="$router.push('/billing?type=billing')">
               <CreditCard />
@@ -85,14 +86,26 @@ const { isMobile, open } = useSidebar()
               <BadgeCheck />
               Account
             </UiDropdownMenuItem>
-            <UiDropdownMenuItem @click="$router.push('/settings/notifications')">
+            <UiDropdownMenuItem
+              @click="$router.push('/settings/notifications')"
+            >
               <Bell />
               Notifications
             </UiDropdownMenuItem>
           </UiDropdownMenuGroup>
 
+          <UiDropdownMenuGroup>
+            <UiDropdownMenuItem @click="$router.push('/settings/display')">
+              <SettingsIcon />
+              Settings
+            </UiDropdownMenuItem>
+          </UiDropdownMenuGroup>
+
           <UiDropdownMenuSeparator />
-          <UiDropdownMenuItem data-testid="dashboard_logout_button" @click="logout">
+          <UiDropdownMenuItem
+            data-testid="dashboard_logout_button"
+            @click="logout"
+          >
             <LogOut />
             Log out
           </UiDropdownMenuItem>

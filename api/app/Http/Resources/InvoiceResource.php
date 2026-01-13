@@ -39,7 +39,7 @@ final class InvoiceResource extends BaseResource
             'customer'    => new CustomerResource($this->whenLoaded('customer')),
             'items'       => InvoiceItemResource::collection($this->whenLoaded('items')),
             'payments'    => PaymentResource::collection($this->whenLoaded('payments')),
-            'emails'      => InvoiceEmailResource::collection($this->whenLoaded('emails')),
+            'emails'      => SentEmailResource::collection($this->whenLoaded('emails')),
             'activities'  => ActivityResource::collection($this->whenLoaded('activities')),
 
             'created_at' => $this->formatDateTime($this->created_at),

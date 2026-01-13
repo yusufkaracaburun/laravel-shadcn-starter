@@ -13,10 +13,10 @@ use Illuminate\Http\JsonResponse;
 use App\Http\Responses\ApiResponse;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Requests\StoreTeamRequest;
-use App\Http\Requests\TeamIndexRequest;
-use App\Http\Requests\UpdateTeamRequest;
 use Spatie\Permission\PermissionRegistrar;
+use App\Http\Requests\Teams\StoreTeamRequest;
+use App\Http\Requests\Teams\TeamIndexRequest;
+use App\Http\Requests\Teams\UpdateTeamRequest;
 use App\Helpers\Cache\CacheInvalidationService;
 use App\Services\Contracts\TeamServiceInterface;
 use App\Http\Controllers\Concerns\UsesQueryBuilder;
@@ -32,7 +32,7 @@ final class TeamController extends Controller
     use UsesQueryBuilder;
 
     public function __construct(
-        private readonly TeamServiceInterface $teamService,
+        private readonly TeamServiceInterface $service,
     ) {}
 
     /**
@@ -50,7 +50,7 @@ final class TeamController extends Controller
         $user->refresh();
 
         $perPage = (int) $validated['per_page'];
-        $collection = $this->teamService->getPaginated($perPage, $user->id);
+        $collection = $this->service->getPaginated($perPage);
 
         return ApiResponse::success($collection);
     }
@@ -72,11 +72,11 @@ final class TeamController extends Controller
 
         if ($isSuperAdmin) {
             // Super admin can access any team - pass null to skip user filtering
-            $teamResource = $this->teamService->findById($team->id);
+            $teamResource = $this->service->findById($team->id);
         } else {
             // For regular users, findById will throw 404 if team doesn't belong to user
             // This matches the expected behavior where teams not belonging to user return 404
-            $teamResource = $this->teamService->findById($team->id, $currentUser->id);
+            $teamResource = $this->service->findById($team->id, $currentUser->id);
             // After finding, check if user has permission to view (for teams they belong to)
             $this->authorize('view', $team);
         }
@@ -95,7 +95,7 @@ final class TeamController extends Controller
         $currentUser = Auth::user();
         $currentUser->refresh();
 
-        $teamResource = $this->teamService->createTeam($request->validated(), $currentUser->id);
+        $teamResource = $this->service->createTeam($request->validated(), $currentUser->id);
 
         // Add user to team as owner (if not already attached)
         $team = $teamResource->resource;
@@ -134,12 +134,12 @@ final class TeamController extends Controller
             // For regular users, check authorization first
             $this->authorize('update', $team);
             // Then verify team belongs to user (this will throw 404 if not found)
-            $this->teamService->findById($team->id, $currentUser->id);
+            $this->service->findById($team->id, $currentUser->id);
         }
 
         $validated = $request->validated();
 
-        $teamResource = $this->teamService->updateTeam($team, $validated);
+        $teamResource = $this->service->updateTeam($team, $validated);
 
         // Invalidate team and user caches
         CacheInvalidationService::invalidateTeam($team->id);
@@ -168,7 +168,7 @@ final class TeamController extends Controller
             // For regular users, check authorization first
             $this->authorize('delete', $team);
             // Then verify team belongs to user (this will throw 404 if not found)
-            $this->teamService->findById($team->id, $currentUser->id);
+            $this->service->findById($team->id, $currentUser->id);
         }
 
         // If this was the current team for any user, clear it
@@ -177,7 +177,7 @@ final class TeamController extends Controller
         }
 
         $teamId = $team->id;
-        $this->teamService->deleteTeam($team);
+        $this->service->deleteTeam($team);
 
         // Invalidate caches
         CacheInvalidationService::invalidateTeam($teamId);
@@ -225,6 +225,11 @@ final class TeamController extends Controller
             'user'         => $user,
             'current_team' => $user->currentTeam,
         ]);
+    }
+
+    public function prerequisites()
+    {
+        return [];
     }
 
     /**

@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use App\Models\Invoice;
+use App\Models\Product;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
@@ -17,11 +18,13 @@ return new class extends Migration
         Schema::create('invoice_items', function (Blueprint $table): void {
             $table->id();
             $table->foreignIdFor(Invoice::class)->constrained()->cascadeOnDelete();
+            $table->foreignIdFor(Product::class)->nullable()->constrained()->nullOnDelete();
             $table->string('name')->nullable();
             $table->string('description')->nullable();
             $table->decimal('quantity', 10, 5)->default(1);
             $table->money('unit_price')->default(0);
             $table->decimal('vat_rate', 5, 2)->default(21.00);
+            $table->string('unit')->nullable();
             $table->money('total_excl_vat')->default(0);
             $table->money('total_vat')->default(0);
             $table->money('total_incl_vat')->default(0);

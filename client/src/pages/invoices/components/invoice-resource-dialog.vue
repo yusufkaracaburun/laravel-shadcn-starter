@@ -1,15 +1,17 @@
 <script lang="ts" setup>
-import type { TInvoice } from '../data/schema'
+import type { IInvoice } from '../models/invoice'
 
 import InvoiceForm from './invoice-form.vue'
 
 const props = defineProps<{
-  invoice: TInvoice | null
+  invoice: IInvoice | null
 }>()
 defineEmits(['close'])
 
 const invoice = computed(() => props.invoice)
-const title = computed(() => (invoice.value?.id ? 'Edit Invoice' : 'New Invoice'))
+const title = computed(() =>
+  invoice.value?.id ? 'Edit Invoice' : 'New Invoice',
+)
 const description = computed(() =>
   invoice.value?.id
     ? `Edit invoice ${invoice.value.invoice_number || invoice.value.id}`

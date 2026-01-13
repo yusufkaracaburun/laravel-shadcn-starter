@@ -136,20 +136,6 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       | never
     >,
-    '/companies/': RouteRecordInfo<
-      '/companies/',
-      '/companies',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
-    '/companies/[id]': RouteRecordInfo<
-      '/companies/[id]',
-      '/companies/:id',
-      { id: ParamValue<true> },
-      { id: ParamValue<false> },
-      | never
-    >,
     '/customers/': RouteRecordInfo<
       '/customers/',
       '/customers',
@@ -157,9 +143,9 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       | never
     >,
-    '/customers/[id]': RouteRecordInfo<
-      '/customers/[id]',
-      '/customers/:id',
+    '/customers/view/[id]': RouteRecordInfo<
+      '/customers/view/[id]',
+      '/customers/view/:id',
       { id: ParamValue<true> },
       { id: ParamValue<false> },
       | never
@@ -167,6 +153,13 @@ declare module 'vue-router/auto-routes' {
     '/dashboard/': RouteRecordInfo<
       '/dashboard/',
       '/dashboard',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
+    '/equipments/': RouteRecordInfo<
+      '/equipments/',
+      '/equipments',
       Record<never, never>,
       Record<never, never>,
       | never
@@ -239,13 +232,6 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       | never
     >,
-    '/invoices/[id]': RouteRecordInfo<
-      '/invoices/[id]',
-      '/invoices/:id',
-      { id: ParamValue<true> },
-      { id: ParamValue<false> },
-      | never
-    >,
     '/invoices/create': RouteRecordInfo<
       '/invoices/create',
       '/invoices/create',
@@ -253,23 +239,16 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       | never
     >,
-    '/invoices/edit-[id]': RouteRecordInfo<
-      '/invoices/edit-[id]',
-      '/invoices/edit-:id',
+    '/invoices/edit/[id]': RouteRecordInfo<
+      '/invoices/edit/[id]',
+      '/invoices/edit/:id',
       { id: ParamValue<true> },
       { id: ParamValue<false> },
       | never
     >,
-    '/items/': RouteRecordInfo<
-      '/items/',
-      '/items',
-      Record<never, never>,
-      Record<never, never>,
-      | never
-    >,
-    '/items/[id]': RouteRecordInfo<
-      '/items/[id]',
-      '/items/:id',
+    '/invoices/view/[id]': RouteRecordInfo<
+      '/invoices/view/[id]',
+      '/invoices/view/:id',
       { id: ParamValue<true> },
       { id: ParamValue<false> },
       | never
@@ -286,6 +265,20 @@ declare module 'vue-router/auto-routes' {
       '/marketing/hello',
       Record<never, never>,
       Record<never, never>,
+      | never
+    >,
+    '/products/': RouteRecordInfo<
+      '/products/',
+      '/products',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
+    '/products/view/[id]': RouteRecordInfo<
+      '/products/view/[id]',
+      '/products/view/:id',
+      { id: ParamValue<true> },
+      { id: ParamValue<false> },
       | never
     >,
     '/projects/': RouteRecordInfo<
@@ -351,6 +344,20 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       | never
     >,
+    '/teams/': RouteRecordInfo<
+      '/teams/',
+      '/teams',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
+    '/timesheets/': RouteRecordInfo<
+      '/timesheets/',
+      '/timesheets',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
     '/users/': RouteRecordInfo<
       '/users/',
       '/users',
@@ -358,11 +365,18 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       | never
     >,
-    '/users/[id]': RouteRecordInfo<
-      '/users/[id]',
-      '/users/:id',
+    '/users/view/[id]': RouteRecordInfo<
+      '/users/view/[id]',
+      '/users/view/:id',
       { id: ParamValue<true> },
       { id: ParamValue<false> },
+      | never
+    >,
+    '/vehicles/': RouteRecordInfo<
+      '/vehicles/',
+      '/vehicles',
+      Record<never, never>,
+      Record<never, never>,
       | never
     >,
   }
@@ -477,33 +491,27 @@ declare module 'vue-router/auto-routes' {
       views:
         | never
     }
-    'src/pages/companies/index.vue': {
-      routes:
-        | '/companies/'
-      views:
-        | never
-    }
-    'src/pages/companies/[id].vue': {
-      routes:
-        | '/companies/[id]'
-      views:
-        | never
-    }
     'src/pages/customers/index.vue': {
       routes:
         | '/customers/'
       views:
         | never
     }
-    'src/pages/customers/[id].vue': {
+    'src/pages/customers/view/[id].vue': {
       routes:
-        | '/customers/[id]'
+        | '/customers/view/[id]'
       views:
         | never
     }
     'src/pages/dashboard/index.vue': {
       routes:
         | '/dashboard/'
+      views:
+        | never
+    }
+    'src/pages/equipments/index.vue': {
+      routes:
+        | '/equipments/'
       views:
         | never
     }
@@ -567,33 +575,21 @@ declare module 'vue-router/auto-routes' {
       views:
         | never
     }
-    'src/pages/invoices/[id].vue': {
-      routes:
-        | '/invoices/[id]'
-      views:
-        | never
-    }
     'src/pages/invoices/create.vue': {
       routes:
         | '/invoices/create'
       views:
         | never
     }
-    'src/pages/invoices/edit-[id].vue': {
+    'src/pages/invoices/edit/[id].vue': {
       routes:
-        | '/invoices/edit-[id]'
+        | '/invoices/edit/[id]'
       views:
         | never
     }
-    'src/pages/items/index.vue': {
+    'src/pages/invoices/view/[id].vue': {
       routes:
-        | '/items/'
-      views:
-        | never
-    }
-    'src/pages/items/[id].vue': {
-      routes:
-        | '/items/[id]'
+        | '/invoices/view/[id]'
       views:
         | never
     }
@@ -606,6 +602,18 @@ declare module 'vue-router/auto-routes' {
     'src/pages/marketing/hello.vue': {
       routes:
         | '/marketing/hello'
+      views:
+        | never
+    }
+    'src/pages/products/index.vue': {
+      routes:
+        | '/products/'
+      views:
+        | never
+    }
+    'src/pages/products/view/[id].vue': {
+      routes:
+        | '/products/view/[id]'
       views:
         | never
     }
@@ -663,15 +671,33 @@ declare module 'vue-router/auto-routes' {
       views:
         | never
     }
+    'src/pages/teams/index.vue': {
+      routes:
+        | '/teams/'
+      views:
+        | never
+    }
+    'src/pages/timesheets/index.vue': {
+      routes:
+        | '/timesheets/'
+      views:
+        | never
+    }
     'src/pages/users/index.vue': {
       routes:
         | '/users/'
       views:
         | never
     }
-    'src/pages/users/[id].vue': {
+    'src/pages/users/view/[id].vue': {
       routes:
-        | '/users/[id]'
+        | '/users/view/[id]'
+      views:
+        | never
+    }
+    'src/pages/vehicles/index.vue': {
+      routes:
+        | '/vehicles/'
       views:
         | never
     }

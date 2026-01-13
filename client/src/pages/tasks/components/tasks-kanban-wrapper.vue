@@ -4,11 +4,14 @@ import { nextTick, onMounted, watch } from 'vue'
 import type { Column, Task as KanbanTask } from '@/types/kanban'
 
 import KanbanBoard from '@/components/kanban/kanban-board.vue'
-import { useKanban } from '@/composables/use-kanban'
 
 import type { Task as TableTask } from '../data/schema'
 
-import { kanbanTaskToTableTask, tableTasksToKanbanTasks } from '../utils/task-converter'
+import { useKanban } from '../composables/use-kanban.composable'
+import {
+  kanbanTaskToTableTask,
+  tableTasksToKanbanTasks,
+} from '../utils/task-converter'
 
 interface Props {
   tasks: TableTask[]
@@ -33,7 +36,10 @@ const defaultColumns: Column[] = [
 
 // Initialize board state immediately with tasks data (before useKanban's onMounted loads from localStorage)
 const initialKanbanTasks = tableTasksToKanbanTasks(props.tasks)
-const initialColumns = defaultColumns.map((col) => ({ ...col, tasks: [] as KanbanTask[] }))
+const initialColumns = defaultColumns.map((col) => ({
+  ...col,
+  tasks: [] as KanbanTask[],
+}))
 
 initialKanbanTasks.forEach((task) => {
   const columnId = task.status || 'todo'
@@ -44,7 +50,8 @@ initialKanbanTasks.forEach((task) => {
 })
 
 const visibleInitialColumns = initialColumns.filter(
-  (col) => col.tasks.length > 0 || ['todo', 'in-progress', 'done'].includes(col.id),
+  (col) =>
+    col.tasks.length > 0 || ['todo', 'in-progress', 'done'].includes(col.id),
 )
 
 // Set board state immediately to override any localStorage data
@@ -58,7 +65,10 @@ function organizeTasksIntoColumns() {
   if (isSyncing.value) return
 
   isSyncing.value = true
-  const columns = defaultColumns.map((col) => ({ ...col, tasks: [] as KanbanTask[] }))
+  const columns = defaultColumns.map((col) => ({
+    ...col,
+    tasks: [] as KanbanTask[],
+  }))
   const kanbanTasks = tableTasksToKanbanTasks(props.tasks)
 
   kanbanTasks.forEach((task) => {
@@ -71,7 +81,8 @@ function organizeTasksIntoColumns() {
 
   // Show default columns (todo, in-progress, done) even if empty, and columns that have tasks
   const visibleColumns = columns.filter(
-    (col) => col.tasks.length > 0 || ['todo', 'in-progress', 'done'].includes(col.id),
+    (col) =>
+      col.tasks.length > 0 || ['todo', 'in-progress', 'done'].includes(col.id),
   )
 
   // Update the kanban board with organized tasks
@@ -171,7 +182,9 @@ watch(
     if (!hasForcedInit.value && newColumns.length > 0) {
       const hasOurTasks = props.tasks.some((task) => {
         const kanbanTask = tableTasksToKanbanTasks([task])[0]
-        return newColumns.some((col) => col.tasks.some((t) => t.id === kanbanTask.id))
+        return newColumns.some((col) =>
+          col.tasks.some((t) => t.id === kanbanTask.id),
+        )
       })
 
       // If localStorage data doesn't contain our tasks, override it

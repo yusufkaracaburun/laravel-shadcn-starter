@@ -1,13 +1,21 @@
 <script lang="ts" setup>
-import type { User } from '@/services/users.service'
+import type { IUser } from '@/pages/users/models/users'
 
+import {
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+} from '@/components/ui/sheet'
 import UserForm from './user-form.vue'
 
-const props = defineProps<{
-  user?: User | null
-}>()
+interface IUserResourceProps {
+  user?: IUser | null
+}
+const props = defineProps<IUserResourceProps>()
 
-defineEmits(['close'])
+const emits = defineEmits<{
+  close: []
+}>()
 
 const title = computed(() => (props.user ? 'Edit User' : 'Create New User'))
 const description = computed(() =>
@@ -18,14 +26,14 @@ const description = computed(() =>
 </script>
 
 <template>
-  <UiDrawerHeader>
-    <UiDrawerTitle>
+  <SheetHeader>
+    <SheetTitle>
       {{ title }}
-    </UiDrawerTitle>
-    <UiDrawerDescription>
+    </SheetTitle>
+    <SheetDescription>
       {{ description }}
-    </UiDrawerDescription>
-  </UiDrawerHeader>
+    </SheetDescription>
+  </SheetHeader>
 
-  <UserForm :user="user" class="mt-4" @close="$emit('close')" />
+  <UserForm :user="user" class="mt-4" @close="emits('close')" />
 </template>

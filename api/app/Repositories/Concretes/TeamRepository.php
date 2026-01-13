@@ -6,6 +6,7 @@ namespace App\Repositories\Concretes;
 
 use App\Models\Team;
 use Illuminate\Http\Request;
+use Spatie\QueryBuilder\AllowedInclude;
 use Spatie\QueryBuilder\QueryBuilder;
 use Spatie\QueryBuilder\AllowedFilter;
 use App\Repositories\QueryableRepository;
@@ -162,7 +163,7 @@ final class TeamRepository extends QueryableRepository implements TeamRepository
      */
     public function getAllowedIncludes(): array
     {
-        return ['owner', 'users', 'teamInvitations'];
+        return ['owner', 'users', AllowedInclude::count('usersCount'), 'teamInvitations'];
     }
 
     /**

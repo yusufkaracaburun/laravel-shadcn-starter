@@ -13,7 +13,10 @@ import HeaderUserMenu from './header-user-menu.vue'
   >
     <!-- Left Section: Sidebar Toggle + Breadcrumbs -->
     <div class="flex items-center gap-3 sm:gap-4">
-      <UiSidebarTrigger class="-ml-1" data-testid="default-layout_sidebar-toggle" />
+      <UiSidebarTrigger
+        class="-ml-1"
+        data-testid="default-layout_sidebar-toggle"
+      />
       <UiSeparator orientation="vertical" class="h-6" />
       <HeaderBreadcrumbs />
     </div>

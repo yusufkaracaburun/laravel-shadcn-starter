@@ -3,7 +3,6 @@ import { useCookies } from '@vueuse/integrations/useCookies'
 import { storeToRefs } from 'pinia'
 
 import AppSidebar from '@/components/app-sidebar/index.vue'
-import { cn } from '@/lib/utils'
 import { useThemeStore } from '@/stores/theme.store'
 
 import Header from './components/header.vue'

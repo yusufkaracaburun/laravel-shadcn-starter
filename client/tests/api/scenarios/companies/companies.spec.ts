@@ -20,7 +20,9 @@ import { expect, test } from '../../fixtures'
  * Pure function: Create unique test company data
  * Uses timestamp to ensure uniqueness
  */
-function createUniqueTestCompany(baseName = 'Test Company'): CreateCompanyRequest {
+function createUniqueTestCompany(
+  baseName = 'Test Company',
+): CreateCompanyRequest {
   const timestamp = Date.now()
   return {
     name: `${baseName} ${timestamp}`,
@@ -35,13 +37,18 @@ function createUniqueTestCompany(baseName = 'Test Company'): CreateCompanyReques
 /**
  * Pure function: Create update data
  */
-function createUpdateData(updates: Partial<UpdateCompanyRequest>): UpdateCompanyRequest {
+function createUpdateData(
+  updates: Partial<UpdateCompanyRequest>,
+): UpdateCompanyRequest {
   return { ...updates }
 }
 
 test.describe('Companies API', { tag: ['@api', '@companies'] }, () => {
   test.describe('List Companies', () => {
-    test('should get paginated list of companies', async ({ request, authenticatedAuthClient }) => {
+    test('should get paginated list of companies', async ({
+      request,
+      authenticatedAuthClient,
+    }) => {
       // Arrange
       const companyClient = new CompanyClient(request)
       companyClient.copyAuthStateFrom(authenticatedAuthClient)
@@ -54,7 +61,8 @@ test.describe('Companies API', { tag: ['@api', '@companies'] }, () => {
       expect(response.status()).toBe(HttpStatus.OK)
 
       // Assert - Response structure matches IResponse<PaginatedCompaniesResponse>
-      const companiesBody = await expectIResponse<PaginatedCompaniesResponse>(response)
+      const companiesBody =
+        await expectIResponse<PaginatedCompaniesResponse>(response)
 
       // Assert - Pagination structure
       expect(companiesBody.data).toHaveProperty('data')
@@ -81,7 +89,10 @@ test.describe('Companies API', { tag: ['@api', '@companies'] }, () => {
       }
     })
 
-    test('should handle pagination parameters', async ({ request, authenticatedAuthClient }) => {
+    test('should handle pagination parameters', async ({
+      request,
+      authenticatedAuthClient,
+    }) => {
       // Arrange
       const companyClient = new CompanyClient(request)
       companyClient.copyAuthStateFrom(authenticatedAuthClient)
@@ -91,7 +102,8 @@ test.describe('Companies API', { tag: ['@api', '@companies'] }, () => {
 
       // Assert
       expectSuccess(response)
-      const companiesBody = await expectIResponse<PaginatedCompaniesResponse>(response)
+      const companiesBody =
+        await expectIResponse<PaginatedCompaniesResponse>(response)
       expect(companiesBody.data.per_page).toBe(5)
       expect(companiesBody.data.current_page).toBe(1)
     })
@@ -109,7 +121,10 @@ test.describe('Companies API', { tag: ['@api', '@companies'] }, () => {
   })
 
   test.describe('Show Company', () => {
-    test('should get company by id', async ({ request, authenticatedAuthClient }) => {
+    test('should get company by id', async ({
+      request,
+      authenticatedAuthClient,
+    }) => {
       // Arrange - Create a company first
       const companyClient = new CompanyClient(request)
       companyClient.copyAuthStateFrom(authenticatedAuthClient)
@@ -168,7 +183,10 @@ test.describe('Companies API', { tag: ['@api', '@companies'] }, () => {
   })
 
   test.describe('Create Company', () => {
-    test('should create company successfully', async ({ request, authenticatedAuthClient }) => {
+    test('should create company successfully', async ({
+      request,
+      authenticatedAuthClient,
+    }) => {
       // Arrange - Create unique test company data
       const companyClient = new CompanyClient(request)
       companyClient.copyAuthStateFrom(authenticatedAuthClient)
@@ -308,7 +326,10 @@ test.describe('Companies API', { tag: ['@api', '@companies'] }, () => {
   })
 
   test.describe('Update Company', () => {
-    test('should update company successfully', async ({ request, authenticatedAuthClient }) => {
+    test('should update company successfully', async ({
+      request,
+      authenticatedAuthClient,
+    }) => {
       // Arrange - Create a company first
       const companyClient = new CompanyClient(request)
       companyClient.copyAuthStateFrom(authenticatedAuthClient)
@@ -337,7 +358,10 @@ test.describe('Companies API', { tag: ['@api', '@companies'] }, () => {
       await companyClient.deleteCompany(companyId)
     })
 
-    test('should update company email', async ({ request, authenticatedAuthClient }) => {
+    test('should update company email', async ({
+      request,
+      authenticatedAuthClient,
+    }) => {
       // Arrange
       const companyClient = new CompanyClient(request)
       companyClient.copyAuthStateFrom(authenticatedAuthClient)
@@ -402,7 +426,10 @@ test.describe('Companies API', { tag: ['@api', '@companies'] }, () => {
       })
 
       // Act
-      const response = await companyClient.updateCompany(nonExistentCompanyId, updateData)
+      const response = await companyClient.updateCompany(
+        nonExistentCompanyId,
+        updateData,
+      )
 
       // Assert
       expectError(response, HttpStatus.NOT_FOUND)
@@ -424,7 +451,10 @@ test.describe('Companies API', { tag: ['@api', '@companies'] }, () => {
   })
 
   test.describe('Delete Company', () => {
-    test('should delete company successfully', async ({ request, authenticatedAuthClient }) => {
+    test('should delete company successfully', async ({
+      request,
+      authenticatedAuthClient,
+    }) => {
       // Arrange - Create a company first
       const companyClient = new CompanyClient(request)
       companyClient.copyAuthStateFrom(authenticatedAuthClient)
@@ -437,7 +467,9 @@ test.describe('Companies API', { tag: ['@api', '@companies'] }, () => {
       const response = await companyClient.deleteCompany(companyId)
 
       // Assert - Should return 204 No Content or 200 OK
-      expect([HttpStatus.OK, HttpStatus.NO_CONTENT]).toContain(response.status())
+      expect([HttpStatus.OK, HttpStatus.NO_CONTENT]).toContain(
+        response.status(),
+      )
 
       // Verify company is deleted
       const getResponse = await companyClient.getCompany(companyId)

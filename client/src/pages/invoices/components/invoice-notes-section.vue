@@ -1,5 +1,11 @@
 <script setup lang="ts">
-import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form'
 import { Textarea } from '@/components/ui/textarea'
 
 interface IProps {
@@ -13,9 +19,15 @@ withDefaults(defineProps<IProps>(), {
 
 <template>
   <div class="space-y-4">
-    <h3 class="text-sm font-semibold text-muted-foreground uppercase">Notes</h3>
+    <h3 class="text-sm font-semibold text-muted-foreground uppercase">
+      Notes
+    </h3>
 
-    <FormField v-slot="{ componentField }" name="notes" :validate-on-blur="!isFieldDirty">
+    <FormField
+      v-slot="{ componentField }"
+      name="notes"
+      :validate-on-blur="!isFieldDirty"
+    >
       <FormItem>
         <FormLabel>Notes</FormLabel>
         <FormControl>

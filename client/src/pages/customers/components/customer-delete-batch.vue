@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import type { Table } from '@tanstack/vue-table'
 
-import { useCustomers } from '@/composables/use-customers'
+import { useCustomers } from '@/pages/customers/composables/use-customers.composable'
 
-import type { Customer } from '../data/schema'
+import type { ICustomer } from '../models/customers'
 
 interface Props {
-  table: Table<Customer>
+  table: Table<ICustomer>
   open?: boolean
 }
 
@@ -20,13 +20,15 @@ const emit = defineEmits<{
 
 const isOpen = computed({
   get: () => props.open,
-  set: (value) => emit('update:open', value),
+  set: value => emit('update:open', value),
 })
 
 const { deleteCustomer } = useCustomers()
 const isDeleting = ref(false)
 
-const selectedRows = computed(() => props.table.getFilteredSelectedRowModel().rows)
+const selectedRows = computed(
+  () => props.table.getFilteredSelectedRowModel().rows,
+)
 const selectedCount = computed(() => selectedRows.value.length)
 
 async function handleBatchDelete() {
@@ -36,7 +38,9 @@ async function handleBatchDelete() {
 
   try {
     isDeleting.value = true
-    const deletePromises = selectedRows.value.map((row) => deleteCustomer(row.original.id))
+    const deletePromises = selectedRows.value.map(row =>
+      deleteCustomer(row.original.id),
+    )
     await Promise.all(deletePromises)
     props.table.resetRowSelection()
     isOpen.value = false
@@ -55,15 +59,22 @@ async function handleBatchDelete() {
       <UiDialogHeader>
         <UiDialogTitle>Delete Customers</UiDialogTitle>
         <UiDialogDescription class="mt-2">
-          Are you sure you want to delete <strong>{{ selectedCount }}</strong> customer(s)? This
-          action cannot be undone.
+          Are you sure you want to delete
+          <strong>{{ selectedCount }}</strong> customer(s)? This action cannot
+          be undone.
         </UiDialogDescription>
       </UiDialogHeader>
       <UiDialogFooter>
         <UiDialogClose as-child>
-          <UiButton variant="outline"> Cancel </UiButton>
+          <UiButton variant="outline">
+            Cancel
+          </UiButton>
         </UiDialogClose>
-        <UiButton variant="destructive" :disabled="isDeleting" @click="handleBatchDelete">
+        <UiButton
+          variant="destructive"
+          :disabled="isDeleting"
+          @click="handleBatchDelete"
+        >
           <UiSpinner v-if="isDeleting" class="mr-2" />
           Delete
         </UiButton>

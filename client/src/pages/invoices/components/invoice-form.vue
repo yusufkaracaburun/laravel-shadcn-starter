@@ -1,45 +1,66 @@
 <script lang="ts" setup>
-import { computed, nextTick, ref, watch } from 'vue'
 import { toTypedSchema } from '@vee-validate/zod'
 import { useForm } from 'vee-validate'
+import { computed, nextTick, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 
-import type { Customer } from '@/services/customers.service'
-import type { Item } from '@/services/items.service'
+import type { TInvoice } from '@/pages/invoices/data/schema'
+import type { IInvoiceItem } from '@/pages/invoices/models/invoice'
 
-import { useInvoices } from '@/composables/use-invoices'
-import { mapObjectDeep } from '@/utils/form'
-import { calculateDueDate, getTodayDate } from '@/utils/date'
-
-import { invoiceFormSchema, type TInvoice, type TInvoiceItem } from '../data/schema'
-
+import { useInvoices } from '@/pages/invoices/composables/use-invoices.composable'
+import InvoiceCustomerSection from '@/pages/invoices/components/invoice-customer-section.vue'
+import InvoiceDatesSection from '@/pages/invoices/components/invoice-dates-section.vue'
+import InvoiceDetailsSection from '@/pages/invoices/components/invoice-details-section.vue'
+import InvoiceItemsManagement from '@/pages/invoices/components/invoice-items-management.vue'
+import InvoiceNotesSection from '@/pages/invoices/components/invoice-notes-section.vue'
+import { invoiceFormSchema } from '@/pages/invoices/data/schema'
 import {
   calculateInvoiceTotals,
   calculateItemTotals,
   formatCalculatedTotals,
   toMoneyObject,
-} from '../utils/calculations'
-import { formatDateForInput } from '../utils/formatters'
-import InvoiceCustomerSection from './invoice-customer-section.vue'
-import InvoiceDatesSection from './invoice-dates-section.vue'
-import InvoiceDetailsSection from './invoice-details-section.vue'
-import InvoiceItemsManagement from './invoice-items-management.vue'
-import InvoiceNotesSection from './invoice-notes-section.vue'
+} from '@/pages/invoices/utils/calculations'
+import { formatDateForInput } from '@/pages/invoices/utils/formatters'
+import { calculateDueDate, getTodayDate } from '@/utils/date'
+import { mapObjectDeep } from '@/utils/form'
 
-const props = defineProps<{
+interface IProps {
   modelValue: TInvoice | null
-  nextInvoiceNumber?: string | null
-  items?: Item[]
-  customers?: Customer[]
-}>()
-const emits = defineEmits(['close', 'submit', 'update:modelValue', 'update:formItems'])
+  invoiceId?: number
+}
+
+const props = withDefaults(defineProps<IProps>(), {
+  modelValue: null,
+  invoiceId: undefined,
+})
+
+const emits = defineEmits([
+  'close',
+  'submit',
+  'update:modelValue',
+  'update:formItems',
+])
+
+const {
+  invoicePrerequisitesResponse,
+  fetchInvoicePrerequisitesData,
+  createInvoice,
+  updateInvoice,
+} = useInvoices()
+
+const customers = computed(() => {
+  return invoicePrerequisitesResponse.value?.data?.customers ?? []
+})
+
+const catalogItems = computed(() => {
+  return invoicePrerequisitesResponse.value?.data?.items ?? []
+})
+
+const nextInvoiceNumber = computed(() => {
+  return invoicePrerequisitesResponse.value?.data?.next_invoice_number ?? null
+})
 
 const router = useRouter()
-
-const { createInvoice, updateInvoice } = useInvoices()
-
-// Use customers from props (from prerequisites) or fallback to empty array
-const customers = computed(() => props.customers ?? [])
 
 const formSchema = toTypedSchema(invoiceFormSchema)
 
@@ -48,7 +69,8 @@ let blockEmits = false
 
 // Compute initial values reactively
 function getInitialValues() {
-  const invoiceDate = formatDateForInput(props.modelValue?.date) || getTodayDate()
+  const invoiceDate =
+    formatDateForInput(props.modelValue?.date) || getTodayDate()
   const dueDays = props.modelValue?.due_days ?? 30
   let calculatedDueDate = ''
   if (props.modelValue?.date_due) {
@@ -59,7 +81,8 @@ function getInitialValues() {
 
   return {
     customer_id: props.modelValue?.customer_id ?? undefined,
-    invoice_number: props.modelValue?.invoice_number ?? props.nextInvoiceNumber ?? null,
+    invoice_number:
+      props.modelValue?.invoice_number ?? props.nextInvoiceNumber ?? null,
     date: invoiceDate,
     due_days: dueDays,
     date_due: calculatedDueDate,
@@ -96,11 +119,11 @@ interface ILocalInvoiceItem {
   sort_order: number
   id?: number
 }
-const localItems = ref<ILocalInvoiceItem[]>(
+const localItems = ref<IInvoiceItem[]>(
   (Array.isArray(props.modelValue?.items)
     ? props.modelValue?.items
     : (props.modelValue?.items as any)?.data || []
-  ).map((item: any) => {
+  ).map((item: IInvoiceItem) => {
     let unitPrice = 0
     if (typeof item.unit_price === 'object' && 'amount' in item.unit_price) {
       unitPrice = Number.parseFloat(item.unit_price.amount) / 100
@@ -112,7 +135,10 @@ const localItems = ref<ILocalInvoiceItem[]>(
     let totalVat = 0
     let totalInclVat = 0
 
-    if (typeof item.total_excl_vat === 'object' && 'amount' in item.total_excl_vat) {
+    if (
+      typeof item.total_excl_vat === 'object'
+      && 'amount' in item.total_excl_vat
+    ) {
       totalExclVat = Number.parseFloat(item.total_excl_vat.amount) / 100
     } else if (typeof item.total_excl_vat === 'number') {
       totalExclVat = item.total_excl_vat
@@ -124,14 +150,21 @@ const localItems = ref<ILocalInvoiceItem[]>(
       totalVat = item.total_vat
     }
 
-    if (typeof item.total_incl_vat === 'object' && 'amount' in item.total_incl_vat) {
+    if (
+      typeof item.total_incl_vat === 'object'
+      && 'amount' in item.total_incl_vat
+    ) {
       totalInclVat = Number.parseFloat(item.total_incl_vat.amount) / 100
     } else if (typeof item.total_incl_vat === 'number') {
       totalInclVat = item.total_incl_vat
     }
 
     if (totalExclVat === 0 && unitPrice > 0 && item.quantity > 0) {
-      const calculated = calculateItemTotals(item.quantity, unitPrice, item.vat_rate)
+      const calculated = calculateItemTotals(
+        item.quantity,
+        unitPrice,
+        item.vat_rate,
+      )
       totalExclVat = calculated.totalExclVat
       totalVat = calculated.totalVat
       totalInclVat = calculated.totalInclVat
@@ -155,10 +188,14 @@ const editingItemIndex = ref<number | null>(null)
 const showAddForm = ref(false)
 
 // Raw numeric totals from calculations
-const rawInvoiceTotals = computed(() => calculateInvoiceTotals(localItems.value))
+const rawInvoiceTotals = computed(() =>
+  calculateInvoiceTotals(localItems.value),
+)
 
 // Formatted invoice totals (Money objects)
-const invoiceTotals = computed(() => formatCalculatedTotals(rawInvoiceTotals.value))
+const invoiceTotals = computed(() =>
+  formatCalculatedTotals(rawInvoiceTotals.value),
+)
 
 function handleItemsSelected(itemsData: any[]) {
   // Add multiple items to local state
@@ -168,7 +205,11 @@ function handleItemsSelected(itemsData: any[]) {
       typeof itemData.vat_rate === 'string'
         ? Number.parseInt(itemData.vat_rate)
         : Number(itemData.vat_rate)
-    const totals = calculateItemTotals(itemData.quantity, itemData.unit_price, vatRate)
+    const totals = calculateItemTotals(
+      itemData.quantity,
+      itemData.unit_price,
+      vatRate,
+    )
     localItems.value.push({
       ...itemData,
       name: itemData.name || itemData.description, // Ensure name is always set
@@ -188,7 +229,11 @@ function handleItemSave(itemData: any, itemIdOrIndex?: number) {
     typeof itemData.vat_rate === 'string'
       ? Number.parseInt(itemData.vat_rate)
       : Number(itemData.vat_rate)
-  const totals = calculateItemTotals(itemData.quantity, itemData.unit_price, vatRate)
+  const totals = calculateItemTotals(
+    itemData.quantity,
+    itemData.unit_price,
+    vatRate,
+  )
   if (typeof itemIdOrIndex === 'number' && itemIdOrIndex >= 0) {
     // Update existing item
     localItems.value[itemIdOrIndex] = {
@@ -227,7 +272,7 @@ function handleItemDelete(itemIdOrIndex: number) {
   }
 }
 
-function startEditItem(_item: TInvoiceItem | any, index: number) {
+function startEditItem(_item: IInvoiceItem, index: number) {
   editingItemIndex.value = index
   showAddForm.value = false
 }
@@ -260,7 +305,10 @@ watch(
 watch(
   () => [props.modelValue, props.nextInvoiceNumber],
   (values) => {
-    const [newInvoice, nextInvoiceNumber] = values as [TInvoice | null, string | null | undefined]
+    const [newInvoice, nextInvoiceNumber] = values as [
+      TInvoice | null,
+      string | null | undefined,
+    ]
     if (newInvoice) {
       setFieldValue('customer_id', newInvoice.customer_id ?? undefined)
       setFieldValue('invoice_number', newInvoice.invoice_number ?? null)
@@ -275,7 +323,10 @@ watch(
       const defaultDueDays = 30
       const calculatedDueDate = calculateDueDate(todayDate, defaultDueDays)
       setFieldValue('customer_id', undefined)
-      setFieldValue('invoice_number', (nextInvoiceNumber ?? null) as string | null)
+      setFieldValue(
+        'invoice_number',
+        (nextInvoiceNumber ?? null) as string | null,
+      )
       setFieldValue('date', todayDate)
       setFieldValue('due_days', defaultDueDays)
       setFieldValue('date_due', calculatedDueDate)
@@ -288,9 +339,9 @@ watch(
 
 // Convert localItems to InvoiceItem format for preview
 const itemsForPreview = computed(() => {
-  return localItems.value.map((item) => ({
+  return localItems.value.map(item => ({
     id: item.id || 0,
-    invoice_id: props.modelValue?.id || 0,
+    invoice_id: props.invoiceId || null,
     name: item.name,
     description: item.description,
     quantity: item.quantity,
@@ -303,14 +354,15 @@ const itemsForPreview = computed(() => {
     sort_order: item.sort_order,
     created_at: '',
     updated_at: '',
-  })) as TInvoiceItem[]
+  })) as IInvoiceItem[]
 })
 
 // Watch for changes in values and localItems and emit to parent
 watch(
   values,
   (newValues) => {
-    if (blockEmits) return
+    if (blockEmits)
+      return
     emits('update:modelValue', {
       ...(newValues as TInvoice),
       subtotal: toMoneyObject(rawInvoiceTotals.value.subtotal),
@@ -320,9 +372,9 @@ watch(
       total: toMoneyObject(rawInvoiceTotals.value.total),
       total_excl_vat: toMoneyObject(rawInvoiceTotals.value.subtotal),
       total_vat: toMoneyObject(
-        rawInvoiceTotals.value.totalVat0 +
-          rawInvoiceTotals.value.totalVat9 +
-          rawInvoiceTotals.value.totalVat21,
+        rawInvoiceTotals.value.totalVat0
+        + rawInvoiceTotals.value.totalVat9
+        + rawInvoiceTotals.value.totalVat21,
       ),
       items: itemsForPreview.value,
     } as TInvoice)
@@ -333,7 +385,8 @@ watch(
 watch(
   localItems,
   (_newItems) => {
-    if (blockEmits) return
+    if (blockEmits)
+      return
     emits('update:formItems', itemsForPreview.value)
   },
   { deep: true },
@@ -343,7 +396,7 @@ watch(
 watch(
   () => props.modelValue,
   (newInvoice) => {
-    if (newInvoice && newInvoice.id !== values.id) {
+    if (newInvoice && newInvoice.id !== props.modelValue?.id) {
       blockEmits = true
       setFieldValue('customer_id', newInvoice.customer_id ?? undefined)
       setFieldValue('invoice_number', newInvoice.invoice_number ?? null)
@@ -353,10 +406,15 @@ watch(
       setFieldValue('status', newInvoice.status ?? 'draft')
       setFieldValue('notes', newInvoice.notes ?? null)
       localItems.value = (
-        Array.isArray(newInvoice.items) ? newInvoice.items : (newInvoice.items as any)?.data || []
-      ).map((item: any) => {
+        Array.isArray(newInvoice.items)
+          ? newInvoice.items
+          : (newInvoice.items as any)?.data || []
+      ).map((item: IInvoiceItem) => {
         let unitPrice = 0
-        if (typeof item.unit_price === 'object' && 'amount' in item.unit_price) {
+        if (
+          typeof item.unit_price === 'object'
+          && 'amount' in item.unit_price
+        ) {
           unitPrice = Number.parseFloat(item.unit_price.amount) / 100
         } else if (typeof item.unit_price === 'number') {
           unitPrice = item.unit_price
@@ -364,7 +422,10 @@ watch(
         let totalExclVat = 0
         let totalVat = 0
         let totalInclVat = 0
-        if (typeof item.total_excl_vat === 'object' && 'amount' in item.total_excl_vat) {
+        if (
+          typeof item.total_excl_vat === 'object'
+          && 'amount' in item.total_excl_vat
+        ) {
           totalExclVat = Number.parseFloat(item.total_excl_vat.amount) / 100
         } else if (typeof item.total_excl_vat === 'number') {
           totalExclVat = item.total_excl_vat
@@ -374,13 +435,20 @@ watch(
         } else if (typeof item.total_vat === 'number') {
           totalVat = item.total_vat
         }
-        if (typeof item.total_incl_vat === 'object' && 'amount' in item.total_incl_vat) {
+        if (
+          typeof item.total_incl_vat === 'object'
+          && 'amount' in item.total_incl_vat
+        ) {
           totalInclVat = Number.parseFloat(item.total_incl_vat.amount) / 100
         } else if (typeof item.total_incl_vat === 'number') {
           totalInclVat = item.total_incl_vat
         }
         if (totalExclVat === 0 && unitPrice > 0 && item.quantity > 0) {
-          const calculated = calculateItemTotals(item.quantity, unitPrice, item.vat_rate)
+          const calculated = calculateItemTotals(
+            item.quantity,
+            unitPrice,
+            item.vat_rate,
+          )
           totalExclVat = calculated.totalExclVat
           totalVat = calculated.totalVat
           totalInclVat = calculated.totalInclVat
@@ -414,7 +482,7 @@ const onSubmit = handleSubmit(async (formValues) => {
     }
 
     // Prepare items data from local state
-    const itemsData = localItems.value.map((item) => ({
+    const itemsData = localItems.value.map(item => ({
       name: item.name,
       description: item.description || null,
       quantity: item.quantity,
@@ -424,7 +492,7 @@ const onSubmit = handleSubmit(async (formValues) => {
       sort_order: item.sort_order ?? 0,
     }))
 
-    let backendData: any = {
+    let backendData: IUpdateInvoiceRequest | ICreateInvoiceRequest = {
       customer_id: formValues.customer_id,
       invoice_number: formValues.invoice_number || null,
       date: formValues.date,
@@ -435,7 +503,8 @@ const onSubmit = handleSubmit(async (formValues) => {
     }
 
     // Convert empty strings to null recursively
-    backendData = mapObjectDeep(backendData, (value) => (value === '' ? null : value))
+    backendData = mapObjectDeep(backendData, value =>
+      value === '' ? null : value)
 
     // Add calculated totals to backendData, ensuring they are numbers or strings as expected by backend
     backendData.subtotal = rawInvoiceTotals.value.subtotal
@@ -445,27 +514,29 @@ const onSubmit = handleSubmit(async (formValues) => {
     backendData.total = rawInvoiceTotals.value.total
     backendData.total_excl_vat = rawInvoiceTotals.value.subtotal
     backendData.total_vat =
-      rawInvoiceTotals.value.totalVat0 +
-      rawInvoiceTotals.value.totalVat9 +
-      rawInvoiceTotals.value.totalVat21
+      rawInvoiceTotals.value.totalVat0
+      + rawInvoiceTotals.value.totalVat9
+      + rawInvoiceTotals.value.totalVat21
 
     // Always include items
     backendData.items = itemsData || []
 
-    if (props.modelValue?.id) {
-      // Update existing invoice
-      await updateInvoice(props.modelValue.id, backendData)
-      // Navigate to invoice detail page
-      router.push({ name: '/invoices/[id]', params: { id: props.modelValue.id.toString() } })
+    if (props.invoiceId) {
+      backendData.id = props.invoiceId
+      await updateInvoice(props.invoiceId, backendData)
+      router.push({
+        name: '/invoices/[id]',
+        params: { id: props.invoiceId.toString() },
+      })
     } else {
-      // Create new invoice
       const response = await createInvoice(backendData)
-      // Navigate to the new invoice detail page
       const newInvoice = response?.data
       if (newInvoice?.id) {
-        router.push({ name: '/invoices/[id]', params: { id: newInvoice.id.toString() } })
+        router.push({
+          name: '/invoices/[id]',
+          params: { id: newInvoice.id.toString() },
+        })
       } else {
-        // Fallback: navigate to invoices list
         router.push('/invoices')
       }
     }
@@ -473,21 +544,17 @@ const onSubmit = handleSubmit(async (formValues) => {
     emits('submit', formValues)
     emits('close')
   } catch (error: any) {
-    // Handle backend validation errors (422)
     if (error.response?.status === 422) {
       const backendErrors = error.response.data.errors || {}
-      // Set field errors from backend response
       Object.keys(backendErrors).forEach((field) => {
         const fieldErrors = backendErrors[field]
         if (Array.isArray(fieldErrors) && fieldErrors.length > 0) {
-          // Map backend field names to form field names if needed
-          const formFieldName = field === 'invoice_number' ? 'invoice_number' : field
+          const formFieldName =
+            field === 'invoice_number' ? 'invoice_number' : field
           setFieldError(formFieldName as any, fieldErrors[0])
         }
       })
     }
-    // Error handling is also done in the composable (toast messages)
-    // Log for debugging
     console.error('Invoice form submission error:', error)
   }
 })
@@ -504,7 +571,10 @@ defineExpose({
 
 <template>
   <form class="space-y-6" @submit.prevent="onSubmit">
-    <InvoiceCustomerSection :customers="customers" :is-field-dirty="isFieldDirty" />
+    <InvoiceCustomerSection
+      :customers="customers"
+      :is-field-dirty="isFieldDirty"
+    />
 
     <InvoiceDetailsSection :is-field-dirty="isFieldDirty" />
 
@@ -516,7 +586,7 @@ defineExpose({
       :show-add-form="showAddForm"
       :invoice-totals="invoiceTotals"
       :invoice-id="props.modelValue?.id"
-      :catalog-items="items"
+      :catalog-items="catalogItems"
       @save="handleItemSave"
       @cancel="cancelItemEdit"
       @edit="startEditItem"

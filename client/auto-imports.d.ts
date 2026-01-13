@@ -6,12 +6,95 @@
 // biome-ignore lint: disable
 export {}
 declare global {
+  const AppWindowIcon: typeof import('./src/composables/use-icons.composable').AppWindowIcon
+  const ArrowDownIcon: typeof import('./src/composables/use-icons.composable').ArrowDownIcon
+  const ArrowLeftIcon: typeof import('./src/composables/use-icons.composable').ArrowLeftIcon
+  const ArrowRightIcon: typeof import('./src/composables/use-icons.composable').ArrowRightIcon
+  const ArrowUpIcon: typeof import('./src/composables/use-icons.composable').ArrowUpIcon
+  const AwardIcon: typeof import('./src/composables/use-icons.composable').AwardIcon
+  const BadgeCheckIcon: typeof import('./src/composables/use-icons.composable').BadgeCheckIcon
+  const BadgeDollarSignIcon: typeof import('./src/composables/use-icons.composable').BadgeDollarSignIcon
+  const BadgeHelpIcon: typeof import('./src/composables/use-icons.composable').BadgeHelpIcon
+  const BanknoteIcon: typeof import('./src/composables/use-icons.composable').BanknoteIcon
+  const BellDotIcon: typeof import('./src/composables/use-icons.composable').BellDotIcon
+  const BoxIcon: typeof import('./src/composables/use-icons.composable').BoxIcon
+  const BugIcon: typeof import('./src/composables/use-icons.composable').BugIcon
+  const Building2Icon: typeof import('./src/composables/use-icons.composable').Building2Icon
+  const CalendarDaysIcon: typeof import('./src/composables/use-icons.composable').CalendarDaysIcon
+  const CalendarIcon: typeof import('./src/composables/use-icons.composable').CalendarIcon
+  const CarIcon: typeof import('./src/composables/use-icons.composable').CarIcon
+  const CheckCircle2Icon: typeof import('./src/composables/use-icons.composable').CheckCircle2Icon
+  const CheckIcon: typeof import('./src/composables/use-icons.composable').CheckIcon
+  const ChevronsUpDownIcon: typeof import('./src/composables/use-icons.composable').ChevronsUpDownIcon
+  const CircleCheckIcon: typeof import('./src/composables/use-icons.composable').CircleCheckIcon
+  const CircleDotIcon: typeof import('./src/composables/use-icons.composable').CircleDotIcon
+  const CircleHelpIcon: typeof import('./src/composables/use-icons.composable').CircleHelpIcon
+  const CircleIcon: typeof import('./src/composables/use-icons.composable').CircleIcon
+  const CirclePlusIcon: typeof import('./src/composables/use-icons.composable').CirclePlusIcon
+  const ClockIcon: typeof import('./src/composables/use-icons.composable').ClockIcon
+  const ComponentIcon: typeof import('./src/composables/use-icons.composable').ComponentIcon
+  const CreditCardIcon: typeof import('./src/composables/use-icons.composable').CreditCardIcon
+  const DollarSignIcon: typeof import('./src/composables/use-icons.composable').DollarSignIcon
+  const DownloadIcon: typeof import('./src/composables/use-icons.composable').DownloadIcon
+  const EditIcon: typeof import('./src/composables/use-icons.composable').EditIcon
   const EffectScope: typeof import('vue').EffectScope
+  const EllipsisIcon: typeof import('./src/composables/use-icons.composable').EllipsisIcon
+  const EyeIcon: typeof import('./src/composables/use-icons.composable').EyeIcon
+  const FileCheckIcon: typeof import('./src/composables/use-icons.composable').FileCheckIcon
+  const FileDownIcon: typeof import('./src/composables/use-icons.composable').FileDownIcon
+  const FilePenIcon: typeof import('./src/composables/use-icons.composable').FilePenIcon
+  const FilePenLineIcon: typeof import('./src/composables/use-icons.composable').FilePenLineIcon
+  const FilePlusIcon: typeof import('./src/composables/use-icons.composable').FilePlusIcon
+  const FileSpreadsheetIcon: typeof import('./src/composables/use-icons.composable').FileSpreadsheetIcon
+  const FileTextIcon: typeof import('./src/composables/use-icons.composable').FileTextIcon
+  const FileXIcon: typeof import('./src/composables/use-icons.composable').FileXIcon
+  const FilterIcon: typeof import('./src/composables/use-icons.composable').FilterIcon
+  const FolderKanbanIcon: typeof import('./src/composables/use-icons.composable').FolderKanbanIcon
+  const Grid3x3Icon: typeof import('./src/composables/use-icons.composable').Grid3x3Icon
+  const HandshakeIcon: typeof import('./src/composables/use-icons.composable').HandshakeIcon
+  const HashIcon: typeof import('./src/composables/use-icons.composable').HashIcon
+  const HistoryIcon: typeof import('./src/composables/use-icons.composable').HistoryIcon
+  const LayoutDashboardIcon: typeof import('./src/composables/use-icons.composable').LayoutDashboardIcon
+  const LayoutGridIcon: typeof import('./src/composables/use-icons.composable').LayoutGridIcon
+  const ListIcon: typeof import('./src/composables/use-icons.composable').ListIcon
+  const ListOrderedIcon: typeof import('./src/composables/use-icons.composable').ListOrderedIcon
+  const ListTodoIcon: typeof import('./src/composables/use-icons.composable').ListTodoIcon
+  const MailIcon: typeof import('./src/composables/use-icons.composable').MailIcon
+  const MailPlusIcon: typeof import('./src/composables/use-icons.composable').MailPlusIcon
+  const MegaphoneIcon: typeof import('./src/composables/use-icons.composable').MegaphoneIcon
+  const MilestoneIcon: typeof import('./src/composables/use-icons.composable').MilestoneIcon
+  const MoreVerticalIcon: typeof import('./src/composables/use-icons.composable').MoreVerticalIcon
+  const PackageIcon: typeof import('./src/composables/use-icons.composable').PackageIcon
+  const PaletteIcon: typeof import('./src/composables/use-icons.composable').PaletteIcon
+  const PencilIcon: typeof import('./src/composables/use-icons.composable').PencilIcon
+  const PhoneIcon: typeof import('./src/composables/use-icons.composable').PhoneIcon
+  const PictureInPicture2Icon: typeof import('./src/composables/use-icons.composable').PictureInPicture2Icon
+  const PlusIcon: typeof import('./src/composables/use-icons.composable').PlusIcon
+  const PodcastIcon: typeof import('./src/composables/use-icons.composable').PodcastIcon
+  const ReceiptIcon: typeof import('./src/composables/use-icons.composable').ReceiptIcon
+  const SaveIcon: typeof import('./src/composables/use-icons.composable').SaveIcon
+  const SearchIcon: typeof import('./src/composables/use-icons.composable').SearchIcon
+  const SendIcon: typeof import('./src/composables/use-icons.composable').SendIcon
+  const SettingsIcon: typeof import('./src/composables/use-icons.composable').SettingsIcon
+  const ShieldIcon: typeof import('./src/composables/use-icons.composable').ShieldIcon
+  const ShoppingCartIcon: typeof import('./src/composables/use-icons.composable').ShoppingCartIcon
+  const SquareUserRoundIcon: typeof import('./src/composables/use-icons.composable').SquareUserRoundIcon
+  const TimerOffIcon: typeof import('./src/composables/use-icons.composable').TimerOffIcon
+  const Trash2Icon: typeof import('./src/composables/use-icons.composable').Trash2Icon
+  const UploadIcon: typeof import('./src/composables/use-icons.composable').UploadIcon
+  const UserCircleIcon: typeof import('./src/composables/use-icons.composable').UserCircleIcon
+  const UserIcon: typeof import('./src/composables/use-icons.composable').UserIcon
+  const UserPlusIcon: typeof import('./src/composables/use-icons.composable').UserPlusIcon
+  const UserRoundPlusIcon: typeof import('./src/composables/use-icons.composable').UserRoundPlusIcon
+  const UsersIcon: typeof import('./src/composables/use-icons.composable').UsersIcon
+  const WrenchIcon: typeof import('./src/composables/use-icons.composable').WrenchIcon
+  const XCircleIcon: typeof import('./src/composables/use-icons.composable').XCircleIcon
+  const XIcon: typeof import('./src/composables/use-icons.composable').XIcon
   const computed: typeof import('vue').computed
   const createApp: typeof import('vue').createApp
   const customRef: typeof import('vue').customRef
   const defaultToastOptions: typeof import('./src/composables/use-toast').defaultToastOptions
-  const defaultToasterProps: typeof import('./src/composables/use-toast').defaultToasterProps
+  const defaultToasterProps: typeof import('./src/composables/use-toast.composable').defaultToasterProps
   const defineAsyncComponent: typeof import('vue').defineAsyncComponent
   const defineComponent: typeof import('vue').defineComponent
   const effectScope: typeof import('vue').effectScope
@@ -58,7 +141,7 @@ declare global {
   const readonly: typeof import('vue').readonly
   const ref: typeof import('vue').ref
   const resolveComponent: typeof import('vue').resolveComponent
-  const setupVueSonner: typeof import('./src/composables/use-toast').setupVueSonner
+  const setupVueSonner: typeof import('./src/composables/use-toast.composable').setupVueSonner
   const shallowReactive: typeof import('vue').shallowReactive
   const shallowReadonly: typeof import('vue').shallowReadonly
   const shallowRef: typeof import('vue').shallowRef
@@ -72,30 +155,31 @@ declare global {
   const useAttrs: typeof import('vue').useAttrs
   const useAuth: typeof import('./src/composables/use-auth').useAuth
   const useAuthStore: typeof import('./src/stores/auth.store').useAuthStore
-  const useAxios: typeof import('./src/composables/use-axios').useAxios
+  const useAxios: typeof import('./src/composables/use-axios.composable').useAxios
   const useCompanies: typeof import('./src/composables/use-companies').useCompanies
   const useCssModule: typeof import('vue').useCssModule
   const useCssVars: typeof import('vue').useCssVars
   const useCustomers: typeof import('./src/composables/use-customers').useCustomers
-  const useEcho: typeof import('./src/composables/use-echo').useEcho
+  const useEcho: typeof import('./src/composables/use-echo.composable').useEcho
   const useErrorStore: typeof import('./src/stores/error.store').useErrorStore
   const useId: typeof import('vue').useId
   const useInvoices: typeof import('./src/composables/use-invoices').useInvoices
   const useItems: typeof import('./src/composables/use-items').useItems
-  const useKanban: typeof import('./src/composables/use-kanban').useKanban
+  const useKanban: typeof import('./src/composables/use-kanban.composable').useKanban
   const useLink: typeof import('vue-router').useLink
   const useModel: typeof import('vue').useModel
   const useProjects: typeof import('./src/composables/use-projects').useProjects
-  const useReverbNotifications: typeof import('./src/composables/use-reverb-notifications').useReverbNotifications
+  const useResourceBase: typeof import('./src/composables/use-resource-base.composable').useResourceBase
+  const useReverbNotifications: typeof import('./src/composables/use-reverb-notifications.composable').useReverbNotifications
   const useRoute: typeof import('vue-router').useRoute
-  const useRouteHelper: typeof import('./src/composables/use-route-helper').useRouteHelper
+  const useRouteHelper: typeof import('./src/composables/use-route-helper.composable').useRouteHelper
   const useRouter: typeof import('vue-router').useRouter
-  const useSeoMetaTags: typeof import('./src/composables/use-seo-meta-tags').useSeoMetaTags
-  const useSidebar: typeof import('./src/composables/use-sidebar').useSidebar
+  const useSeoMetaTags: typeof import('./src/composables/use-seo-meta-tags.composable').useSeoMetaTags
+  const useSidebar: typeof import('./src/composables/use-sidebar.composable').useSidebar
   const useSlots: typeof import('vue').useSlots
   const useTemplateRef: typeof import('vue').useTemplateRef
   const useThemeStore: typeof import('./src/stores/theme.store').useThemeStore
-  const useToast: typeof import('./src/composables/use-toast').useToast
+  const useToast: typeof import('./src/composables/use-toast.composable').useToast
   const useUsers: typeof import('./src/composables/use-users').useUsers
   const watch: typeof import('vue').watch
   const watchEffect: typeof import('vue').watchEffect
@@ -107,6 +191,9 @@ declare global {
   // @ts-ignore
   export type { Component, Slot, Slots, ComponentPublicInstance, ComputedRef, DirectiveBinding, ExtractDefaultPropTypes, ExtractPropTypes, ExtractPublicPropTypes, InjectionKey, PropType, Ref, ShallowRef, MaybeRef, MaybeRefOrGetter, VNode, WritableComputedRef } from 'vue'
   import('vue')
+  // @ts-ignore
+  export type { ResourceService, ResourceConfig } from './src/composables/use-resource-base.composable'
+  import('./src/composables/use-resource-base.composable')
   // @ts-ignore
   export type { ErrorType, ErrorState, SetErrorOptions } from './src/stores/error.store'
   import('./src/stores/error.store')

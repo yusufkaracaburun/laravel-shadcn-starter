@@ -53,7 +53,10 @@ const isOpen = ref(false)
   <UiDialog v-model:open="isOpen">
     <UiDropdownMenu>
       <UiDropdownMenuTrigger as-child>
-        <UiButton variant="ghost" class="flex h-8 w-8 p-0 data-[state=open]:bg-muted">
+        <UiButton
+          variant="ghost"
+          class="flex h-8 w-8 p-0 data-[state=open]:bg-muted"
+        >
           <Ellipsis class="size-4" />
           <span class="sr-only">Open menu</span>
         </UiButton>
@@ -62,19 +65,27 @@ const isOpen = ref(false)
         <UiDialogTrigger as-child>
           <UiDropdownMenuItem @select.stop="handleSelect('edit')">
             <span>Edit</span>
-            <UiDropdownMenuShortcut> <FilePenLine class="size-4" /> </UiDropdownMenuShortcut>
+            <UiDropdownMenuShortcut>
+              <FilePenLine class="size-4" />
+            </UiDropdownMenuShortcut>
           </UiDropdownMenuItem>
         </UiDialogTrigger>
 
-        <UiDropdownMenuItem disabled> Make a copy </UiDropdownMenuItem>
-        <UiDropdownMenuItem disabled> Favorite </UiDropdownMenuItem>
+        <UiDropdownMenuItem disabled>
+          Make a copy
+        </UiDropdownMenuItem>
+        <UiDropdownMenuItem disabled>
+          Favorite
+        </UiDropdownMenuItem>
 
         <UiDropdownMenuSeparator />
 
         <UiDialogTrigger as-child>
           <UiDropdownMenuItem @select.stop="handleSelect('delete')">
             <span>Delete</span>
-            <UiDropdownMenuShortcut> <Trash2 class="size-4" /> </UiDropdownMenuShortcut>
+            <UiDropdownMenuShortcut>
+              <Trash2 class="size-4" />
+            </UiDropdownMenuShortcut>
           </UiDropdownMenuItem>
         </UiDialogTrigger>
       </UiDropdownMenuContent>

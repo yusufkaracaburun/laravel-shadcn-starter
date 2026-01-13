@@ -1,11 +1,17 @@
 <script lang="ts" setup>
 import { toTypedSchema } from '@vee-validate/zod'
 import { useForm } from 'vee-validate'
-import { computed, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { z } from 'zod'
 
 import { Button } from '@/components/ui/button'
-import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import {
   InputGroup,
@@ -13,7 +19,6 @@ import {
   InputGroupInput,
   InputGroupText,
 } from '@/components/ui/input-group'
-import { Label } from '@/components/ui/label'
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
 
 import type { TInvoiceItem } from '../data/schema'
@@ -46,7 +51,8 @@ const formSchema = toTypedSchema(
 
 // Extract unit_price value - handle both Money object and number
 function getUnitPriceValue(item: TInvoiceItem | null): number {
-  if (!item?.unit_price) return 0
+  if (!item?.unit_price)
+    return 0
   if (typeof item.unit_price === 'object' && 'amount' in item.unit_price) {
     const amount = Number.parseFloat(item.unit_price.amount)
     return amount / 100
@@ -57,24 +63,56 @@ function getUnitPriceValue(item: TInvoiceItem | null): number {
   return 0
 }
 
+// Local refs for string inputs to handle comma as decimal separator
+const localQuantity = ref('')
+const localUnitPrice = ref('')
+
 function getInitialValues() {
   const vatRate = props.item?.vat_rate ?? 21
-  // Convert number to string for enum validation, then transform back to number
-  // Default to '21' if vatRate is not 0, 9, or 21
-  const vatRateStr: '0' | '9' | '21' = vatRate === 0 ? '0' : vatRate === 9 ? '9' : '21'
+  const vatRateStr: '0' | '9' | '21' =
+    vatRate === 0 ? '0' : vatRate === 9 ? '9' : '21'
+
+  // Set local string refs for quantity and unit_price
+  localQuantity.value = (props.item?.quantity ?? 1).toString().replace('.', ',')
+  localUnitPrice.value = getUnitPriceValue(props.item)
+    .toString()
+    .replace('.', ',')
+
   return {
     description: props.item?.description ?? null,
     quantity: props.item?.quantity ?? 1,
     unit_price: getUnitPriceValue(props.item),
     unit: (props.item as any)?.unit ?? null,
-    vat_rate: vatRateStr, // Defaults to '21' when no item or vat_rate is not 0 or 9
+    vat_rate: vatRateStr,
   }
 }
+
+// Watch for changes in localQuantity and localUnitPrice to update form fields
+watch(localQuantity, (newValue) => {
+  const parsedValue = Number.parseFloat(newValue.replace(',', '.'))
+  if (!Number.isNaN(parsedValue)) {
+    setFieldValue('quantity', parsedValue)
+  }
+})
+
+watch(localUnitPrice, (newValue) => {
+  const parsedValue = Number.parseFloat(newValue.replace(',', '.'))
+  if (!Number.isNaN(parsedValue)) {
+    setFieldValue('unit_price', parsedValue)
+  }
+})
 
 // Make initial values reactive
 const initialValues = computed(() => getInitialValues())
 
-const { values, isFieldDirty, handleSubmit, isSubmitting, resetForm, setFieldValue } = useForm({
+const {
+  values,
+  isFieldDirty,
+  handleSubmit,
+  isSubmitting,
+  resetForm,
+  setFieldValue,
+} = useForm({
   validationSchema: formSchema,
   initialValues: initialValues.value,
 })
@@ -82,7 +120,11 @@ const { values, isFieldDirty, handleSubmit, isSubmitting, resetForm, setFieldVal
 // Calculate totals in real-time
 const calculatedTotals = computed(() => {
   const vatRate = Number.parseInt(values.vat_rate || '21')
-  return calculateItemTotals(values.quantity || 0, values.unit_price || 0, vatRate)
+  return calculateItemTotals(
+    values.quantity || 0,
+    values.unit_price || 0,
+    vatRate,
+  )
 })
 
 // Reset form when item changes
@@ -91,7 +133,15 @@ watch(
   () => {
     const newValues = getInitialValues()
     resetForm({
-      values: newValues,
+      values: {
+        ...newValues,
+        quantity: Number.parseFloat(
+          newValues.quantity.toString().replace(',', '.'),
+        ),
+        unit_price: Number.parseFloat(
+          newValues.unit_price.toString().replace(',', '.'),
+        ),
+      },
     })
     // Explicitly set the vat_rate field to ensure ToggleGroup receives the correct value
     setFieldValue('vat_rate', newValues.vat_rate)
@@ -105,7 +155,7 @@ const onSubmit = handleSubmit(async (formValues) => {
     quantity: formValues.quantity,
     unit_price: formValues.unit_price,
     unit: formValues.unit || null,
-    vat_rate: Number.parseInt(formValues.vat_rate), // Convert string to number for submission
+    vat_rate: Number.parseInt(formValues.vat_rate),
   })
 })
 
@@ -117,7 +167,11 @@ function onCancel() {
 <template>
   <form class="space-y-4" @submit.prevent="onSubmit">
     <!-- Name - Full Width -->
-    <FormField v-slot="{ componentField }" name="description" :validate-on-blur="!isFieldDirty">
+    <FormField
+      v-slot="{ componentField }"
+      name="description"
+      :validate-on-blur="!isFieldDirty"
+    >
       <FormItem>
         <FormLabel>Name</FormLabel>
         <FormControl>
@@ -140,11 +194,12 @@ function onCancel() {
           <FormControl>
             <InputGroup>
               <InputGroupInput
-                type="number"
+                v-model="localQuantity"
+                type="text"
+                inputmode="decimal"
                 step="0.01"
                 min="0.01"
                 placeholder="1,00"
-                v-bind="quantityField"
               />
               <FormField
                 v-slot="{ componentField: unitField }"
@@ -187,11 +242,12 @@ function onCancel() {
                 <InputGroupText>€</InputGroupText>
               </InputGroupAddon>
               <InputGroupInput
-                type="number"
+                v-model="localUnitPrice"
+                type="text"
+                inputmode="decimal"
                 step="0.01"
                 min="0"
                 placeholder="0,00"
-                v-bind="priceField"
               />
               <FormField
                 v-slot="{ componentField: vatField }"
@@ -212,7 +268,11 @@ function onCancel() {
                     >
                       <span class="font-semibold text-xs">0%</span>
                     </ToggleGroupItem>
-                    <ToggleGroupItem value="9" class="flex-1 rounded-none" aria-label="VAT 9%">
+                    <ToggleGroupItem
+                      value="9"
+                      class="flex-1 rounded-none"
+                      aria-label="VAT 9%"
+                    >
                       <span class="font-semibold text-xs">9%</span>
                     </ToggleGroupItem>
                     <ToggleGroupItem
@@ -243,19 +303,25 @@ function onCancel() {
     <div class="rounded-lg border bg-muted/50 p-4">
       <div class="grid grid-cols-3 gap-4 text-sm">
         <div>
-          <p class="text-muted-foreground">Excl. VAT</p>
+          <p class="text-muted-foreground">
+            Excl. VAT
+          </p>
           <p class="font-semibold">
             {{ formatMoney(calculatedTotals.totalExclVat) }}
           </p>
         </div>
         <div>
-          <p class="text-muted-foreground">VAT</p>
+          <p class="text-muted-foreground">
+            VAT
+          </p>
           <p class="font-semibold">
             {{ formatMoney(calculatedTotals.totalVat) }}
           </p>
         </div>
         <div>
-          <p class="text-muted-foreground">Incl. VAT</p>
+          <p class="text-muted-foreground">
+            Incl. VAT
+          </p>
           <p class="font-semibold">
             {{ formatMoney(calculatedTotals.totalInclVat) }}
           </p>
@@ -264,8 +330,12 @@ function onCancel() {
     </div>
 
     <div class="flex justify-end gap-2">
-      <Button type="button" variant="outline" @click="onCancel"> Cancel </Button>
-      <Button type="submit" :disabled="isSubmitting"> {{ item ? 'Update' : 'Add' }} Item </Button>
+      <Button type="button" variant="outline" @click="onCancel">
+        Cancel
+      </Button>
+      <Button type="submit" :disabled="isSubmitting">
+        {{ item ? 'Update' : 'Add' }} Item
+      </Button>
     </div>
   </form>
 </template>

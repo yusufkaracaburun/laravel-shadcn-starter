@@ -1,17 +1,25 @@
 <script lang="ts" setup>
-import type { Customer } from '../data/schema'
+import type { ICustomer } from '../models/customers'
 
 import CustomerForm from './customer-form.vue'
 
-const props = defineProps<{
-  customer: Customer | null
-}>()
-defineEmits(['close'])
+interface ICustomerResourceDialogProps {
+  customer: ICustomer | null
+}
 
-const customer = computed(() => props.customer)
-const title = computed(() => (customer.value?.id ? 'Edit Customer' : 'New Customer'))
+const props = defineProps<ICustomerResourceDialogProps>()
+
+const emits = defineEmits<{
+  close: []
+}>()
+
+const title = computed(() =>
+  props.customer ? 'Edit Customer' : 'New Customer',
+)
 const description = computed(() =>
-  customer.value?.id ? `Edit customer ${customer.value.id}` : 'Create new customer',
+  props.customer
+    ? `Update customer information for ${props.customer.name}.`
+    : 'Add a new customer to the system. Fill in the required information below.',
 )
 </script>
 
@@ -25,6 +33,10 @@ const description = computed(() =>
         {{ description }}
       </UiDialogDescription>
     </UiDialogHeader>
-    <CustomerForm class="mt-2" :customer="customer" @close="$emit('close')" />
+    <CustomerForm
+      :customer="props.customer"
+      class="mt-2"
+      @close="emits('close')"
+    />
   </div>
 </template>

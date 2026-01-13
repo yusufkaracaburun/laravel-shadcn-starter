@@ -6,9 +6,9 @@ namespace App\Services\Concretes;
 
 use App\Models\User;
 use App\Services\BaseService;
-use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use App\Http\Resources\Users\UserResource;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Contracts\Auth\Authenticatable;
 use App\Services\Contracts\AuthServiceInterface;

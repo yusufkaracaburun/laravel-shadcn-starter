@@ -10,7 +10,8 @@ export function downloadBlobFromAxiosResponse(
   const blob = response.data
   const disposition = response.headers['content-disposition']
 
-  const filename = disposition?.match(/filename="(.+)"/)?.[1] ?? fallbackFilename
+  const filename =
+    disposition?.match(/filename="(.+)"/)?.[1] ?? fallbackFilename
 
   const url = URL.createObjectURL(blob)
 

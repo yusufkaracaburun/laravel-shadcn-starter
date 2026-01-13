@@ -1,0 +1,12 @@
+{
+  "vehicles": {
+    "columns": {
+      "licensePlate": "Kenteken",
+      "make": "Merk",
+      "model": "Model",
+      "year": "Jaar",
+      "color": "Kleur",
+      "createdAt": "Aangemaakt op"
+    }
+  }
+}

@@ -1,0 +1,96 @@
+{
+  "marketing": {
+    "hero": {
+      "learnPeople": "Meer dan 1K+ mensen hebben zich aangesloten",
+      "getMore": "Meer krijgen",
+      "title": "Durf je 365 dagen te gebruiken om een complete transformatie te zien?",
+      "subtitle": "Het zandloper van de tijd barst van de donder. Wanneer de kwantitatieve verandering het kritieke punt doorbreekt, zal elke ochtend en avond dat je hard werkt veranderen in een zee van sterren!"
+    },
+    "features": {
+      "title": "Functies",
+      "feature1": {
+        "title": "Gebruik moderne technologie",
+        "description": "Modernere componentbibliotheek, vrij om elke component aan te passen"
+      },
+      "feature2": {
+        "title": "Eenvoudig te implementeren",
+        "description": "Implementatie met één klik naar uw server, geen ingewikkelde configuratie vereist"
+      },
+      "feature3": {
+        "title": "Open source code",
+        "description": "Elke regel code is open source, je kunt het vrijelijk aanpassen en uitbreiden"
+      },
+      "feature4": {
+        "title": "Community ondersteuning",
+        "description": "Je kunt hulp vinden in de community en je ervaring delen"
+      }
+    },
+    "evaluation": {
+      "title": "Evaluatie",
+      "subtitle": "Deze evaluaties zijn gesimuleerde gegevens, geen echte gegevens"
+    },
+    "pricingPlans": {
+      "title": "Prijzen",
+      "subtitle": "Kies het plan dat bij je past",
+      "buy": "Nu krijgen",
+      "hobby": {
+        "title": "Hobby",
+        "description": "Geschikt voor beginners",
+        "price": "399",
+        "discount": "599",
+        "unit": "$",
+        "billing": {
+          "cycle": "",
+          "period": ""
+        },
+        "features": {
+          "feature1": "Gebruik een deel van de websitecode",
+          "feature2": "Krijg de nieuwste technologie-updates",
+          "feature3": "Meer dan 100 componenten",
+          "feature4": "Meer dan 100 pagina's"
+        }
+      },
+      "starter": {
+        "title": "Starter",
+        "description": "Geschikt voor beginners",
+        "price": "599",
+        "discount": "899",
+        "unit": "$",
+        "billing": {
+          "cycle": "",
+          "period": ""
+        },
+        "features": {
+          "feature1": "Gebruik de volledige sitecode",
+          "feature2": "Lees de uitstekende online documentatie",
+          "feature3": "Krijg de nieuwste technische updates",
+          "feature4": "Meer dan 200 componenten",
+          "feature5": "Meer dan 200 pagina's"
+        }
+      },
+      "business": {
+        "title": "Business",
+        "description": "Geschikt voor beginners",
+        "price": "199",
+        "discount": "399",
+        "unit": "$",
+        "billing": {
+          "cycle": "",
+          "period": ""
+        },
+        "features": {
+          "feature1": "Gebruik de volledige sitecode",
+          "feature2": "Lees de uitstekende online documentatie",
+          "feature3": "Krijg de nieuwste technische updates",
+          "feature4": "Meer dan 200 componenten",
+          "feature5": "Meer dan 200 pagina's",
+          "feature6": "Privé assistent ondersteuning"
+        }
+      }
+    },
+    "setup": {
+      "title": "Installatie",
+      "subtitle": "Slechts 3 minuten om te beginnen met gebruiken"
+    }
+  }
+}
