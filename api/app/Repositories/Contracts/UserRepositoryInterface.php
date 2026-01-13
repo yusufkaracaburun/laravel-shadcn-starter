@@ -10,9 +10,8 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
 use App\Repositories\QueryableRepositoryInterface;
 
-interface UserRepositoryInterface extends QueryableRepositoryInterface
+interface UserRepositoryInterface
 {
-    public function findOrFail(int $id, array $columns = ['*']): User;
     public function getCurrentUser(User $user): User;
     public function getVerifiedUsers(): Collection;
     public function getActiveUsers(): Collection;

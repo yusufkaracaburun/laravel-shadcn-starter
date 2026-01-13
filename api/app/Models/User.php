@@ -8,7 +8,6 @@ use App\Enums\UserStatus;
 use InvalidArgumentException;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\MediaLibrary\HasMedia;
-use Database\Factories\UserFactory;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Notifications\Notifiable;
 use Spatie\MediaLibrary\InteractsWithMedia;
@@ -23,31 +22,19 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 final class User extends Authenticatable implements HasMedia
 {
-    /** @use HasFactory<UserFactory> */
     use HasApiTokens;
-
     use HasFactory;
     use HasRoles;
     use InteractsWithMedia;
     use Notifiable;
     use SoftDeletes;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
     protected $guarded = [
         'id',
         'created_at',
         'updated_at',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var list<string>
-     */
     protected $hidden = [
         'password',
         'remember_token',
@@ -55,31 +42,16 @@ final class User extends Authenticatable implements HasMedia
         'two_factor_secret',
     ];
 
-    /**
-     * Get the Oauth Connections for the user.
-     *
-     * @return HasMany<OauthConnection, covariant $this>
-     */
     public function oauthConnections(): HasMany
     {
         return $this->hasMany(OauthConnection::class);
     }
 
-    /**
-     * Get the current team for the user.
-     *
-     * @return BelongsTo<Team, covariant $this>
-     */
     public function currentTeam(): BelongsTo
     {
         return $this->belongsTo(Team::class, 'current_team_id');
     }
 
-    /**
-     * Get all teams the user belongs to.
-     *
-     * @return BelongsToMany<Team>
-     */
     public function teams(): BelongsToMany
     {
         return $this->belongsToMany(Team::class, 'team_user')
@@ -87,51 +59,26 @@ final class User extends Authenticatable implements HasMedia
             ->withTimestamps();
     }
 
-    /**
-     * Get all vehicles assigned to the user.
-     *
-     * @return BelongsToMany<Vehicle>
-     */
     public function vehicles(): BelongsToMany
     {
         return $this->belongsToMany(Vehicle::class, 'vehicle_user');
     }
 
-    /**
-     * Get teams owned by the user.
-     *
-     * @return HasMany<Team>
-     */
     public function ownedTeams(): HasMany
     {
         return $this->hasMany(Team::class, 'user_id');
     }
 
-    /**
-     * Get all emails sent by this user.
-     *
-     * @return MorphMany<SentEmail>
-     */
     public function emails(): MorphMany
     {
         return $this->morphMany(SentEmail::class, 'emailable');
     }
 
-    /**
-     * Get the contact associated with this user.
-     *
-     * @return BelongsTo<Contact, covariant $this>
-     */
     public function contact(): BelongsTo
     {
         return $this->belongsTo(Contact::class);
     }
 
-    /**
-     * Switch the user's current team.
-     *
-     * @param  Team|int  $team
-     */
     public function switchTeam($team): void
     {
         $teamId = $team instanceof Team ? $team->id : $team;
@@ -153,20 +100,11 @@ final class User extends Authenticatable implements HasMedia
         }
     }
 
-    /**
-     * Get the guard name for Spatie Permission.
-     *
-     * This ensures permissions are checked using the 'sanctum' guard
-     * which is appropriate for API authentication.
-     */
     public function getGuardName(): string
     {
         return 'sanctum';
     }
 
-    /**
-     * Register media collections for the model.
-     */
     public function registerMediaCollections(): void
     {
         $this->addMediaCollection('profile-photos')
@@ -174,12 +112,6 @@ final class User extends Authenticatable implements HasMedia
             ->acceptsMimeTypes(['image/jpeg', 'image/png', 'image/jpg']);
     }
 
-    /**
-     * Get the profile photo URL attribute.
-     *
-     * First checks for uploaded media files via Spatie Media Library.
-     * Falls back to the profile_photo_path column if no media file exists.
-     */
     protected function getProfilePhotoUrlAttribute(): ?string
     {
         $url = $this->getFirstMediaUrl('profile-photos');
@@ -187,11 +119,6 @@ final class User extends Authenticatable implements HasMedia
         return $url ?: $this->profile_photo_path;
     }
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
     protected function casts(): array
     {
         return [

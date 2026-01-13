@@ -8,8 +8,7 @@ use App\Models\Vehicle;
 use Illuminate\Pagination\LengthAwarePaginator;
 use App\Repositories\QueryableRepositoryInterface;
 
-interface VehicleRepositoryInterface extends QueryableRepositoryInterface
+interface VehicleRepositoryInterface
 {
-    public function findOrFail(int $id, array $columns = ['*']): Vehicle;
 
 }

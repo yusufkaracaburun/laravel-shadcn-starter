@@ -9,7 +9,6 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
 use App\Repositories\QueryableRepositoryInterface;
 
-interface TeamRepositoryInterface extends QueryableRepositoryInterface
+interface TeamRepositoryInterface
 {
-    public function findOrFail(int $id, array $columns = ['*']): Team;
 }

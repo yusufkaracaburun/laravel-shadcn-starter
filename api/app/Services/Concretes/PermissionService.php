@@ -13,9 +13,6 @@ use App\Repositories\Contracts\PermissionRepositoryInterface;
 
 final class PermissionService extends BaseService implements PermissionServiceInterface
 {
-    /**
-     * Create a new class instance.
-     */
     public function __construct(
         PermissionRepositoryInterface $repo,
     ) {
@@ -29,7 +26,7 @@ final class PermissionService extends BaseService implements PermissionServiceIn
         return new PermissionCollection($permissions);
     }
 
-    public function getAllPermissions(): PermissionCollection
+    public function getAll(): PermissionCollection
     {
         $permissions = $this->all();
 

@@ -13,18 +13,6 @@ use App\Repositories\Contracts\VehicleRepositoryInterface;
 
 final class VehicleRepository extends QueryableRepository implements VehicleRepositoryInterface
 {
-    public function query(): QueryBuilder
-    {
-        $queryRequest = QueryBuilderRequest::fromRequest($this->request ?? request());
-
-        return QueryBuilder::for($this->model(), $queryRequest)
-            ->defaultSorts($this->getDefaultSorts())
-            ->allowedFilters($this->getAllowedFilters())
-            ->allowedSorts($this->getAllowedSorts())
-            ->allowedFields($this->getAllowedFields())
-            ->allowedIncludes($this->getAllowedIncludes());
-    }
-
     public function getDefaultSorts(): array
     {
         return ['license_plate'];
@@ -74,13 +62,6 @@ final class VehicleRepository extends QueryableRepository implements VehicleRepo
             AllowedFilter::exact('year'),
             AllowedFilter::scope('active'),
         ];
-    }
-
-    public function findOrFail(int $id, array $columns = ['*']): Vehicle
-    {
-        return Vehicle::query()
-            ->with(['drivers'])
-            ->findOrFail($id, $columns);
     }
 
     protected function model(): string

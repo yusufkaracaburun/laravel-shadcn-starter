@@ -78,7 +78,7 @@ final class RoleController extends Controller
     {
         $this->authorize('view', $role);
 
-        $roleResource = $this->roleService->getRoleById($role->id);
+        $roleResource = $this->roleService->findById($role->id);
 
         return ApiResponse::success($roleResource);
     }

@@ -13,18 +13,7 @@ use App\Repositories\Contracts\PaymentRepositoryInterface;
 
 final class PaymentRepository extends QueryableRepository implements PaymentRepositoryInterface
 {
-    public function query(): QueryBuilder
-    {
-        $queryRequest = QueryBuilderRequest::fromRequest($this->request ?? request());
 
-        return QueryBuilder::for($this->model(), $queryRequest)
-            ->with(['customer', 'invoice'])
-            ->defaultSorts($this->getDefaultSorts())
-            ->allowedFilters($this->getMergedAllowedFilters())
-            ->allowedSorts($this->getAllowedSorts())
-            ->allowedFields($this->getAllowedFields())
-            ->allowedIncludes($this->getAllowedIncludes());
-    }
 
     public function getDefaultSorts(): array
     {

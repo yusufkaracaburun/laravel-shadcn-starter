@@ -13,20 +13,7 @@ use App\Repositories\Contracts\ProductRepositoryInterface;
 
 final class ProductRepository extends QueryableRepository implements ProductRepositoryInterface
 {
-    /**
-     * Base query with eager loads and filters.
-     */
-    public function query(): QueryBuilder
-    {
-        $queryRequest = QueryBuilderRequest::fromRequest($this->request ?? request());
 
-        return QueryBuilder::for($this->model(), $queryRequest)
-            ->defaultSorts($this->getDefaultSorts())
-            ->allowedFilters($this->getMergedAllowedFilters())
-            ->allowedSorts($this->getAllowedSorts())
-            ->allowedFields($this->getAllowedFields())
-            ->allowedIncludes($this->getAllowedIncludes());
-    }
 
     public function getDefaultSorts(): array
     {

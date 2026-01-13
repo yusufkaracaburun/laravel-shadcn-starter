@@ -8,7 +8,6 @@ use App\Models\Permission;
 use Illuminate\Database\Eloquent\Collection;
 use App\Repositories\QueryableRepositoryInterface;
 
-interface PermissionRepositoryInterface extends QueryableRepositoryInterface
+interface PermissionRepositoryInterface
 {
-    public function findOrFail(int $id, array $columns = ['*']): Permission;
 }

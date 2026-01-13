@@ -8,7 +8,6 @@ use App\Models\Invoice;
 use Illuminate\Pagination\LengthAwarePaginator;
 use App\Repositories\QueryableRepositoryInterface;
 
-interface InvoiceRepositoryInterface extends QueryableRepositoryInterface
+interface InvoiceRepositoryInterface
 {
-    public function findOrFail(int $id, array $columns = ['*']): Invoice;
 }

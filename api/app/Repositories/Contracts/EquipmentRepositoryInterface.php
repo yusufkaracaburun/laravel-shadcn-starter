@@ -7,7 +7,6 @@ namespace App\Repositories\Contracts;
 use App\Models\Equipment;
 use App\Repositories\QueryableRepositoryInterface;
 
-interface EquipmentRepositoryInterface extends QueryableRepositoryInterface
+interface EquipmentRepositoryInterface
 {
-    public function findOrFail(int $id, array $columns = ['*']): Equipment;
 }

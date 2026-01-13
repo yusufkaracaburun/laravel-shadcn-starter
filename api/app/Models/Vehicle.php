@@ -14,11 +14,6 @@ final class Vehicle extends BaseModel
 {
     use HasFactory;
 
-    /**
-     * Searchable fields for this model.
-     *
-     * @var list<string>
-     */
     public static array $searchable = [
         'make',
         'model',
@@ -28,19 +23,11 @@ final class Vehicle extends BaseModel
         'drivers.email',
     ];
 
-    /**
-     * Get the drivers (users) associated with the vehicle.
-     */
     public function drivers(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'vehicle_user');
     }
 
-    /**
-     * The attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
     protected function casts(): array
     {
         return [
@@ -49,9 +36,6 @@ final class Vehicle extends BaseModel
         ];
     }
 
-    /**
-     * Scope a query to only include active vehicles.
-     */
     #[Scope]
     protected function active(Builder $query): Builder
     {

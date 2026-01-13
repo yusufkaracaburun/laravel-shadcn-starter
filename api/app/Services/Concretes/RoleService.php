@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Services\Concretes;
 
 use App\Models\Role;
+use Illuminate\Http\Request;
 use App\Services\BaseService;
 use InvalidArgumentException;
 use App\Http\Resources\Roles\RoleResource;
@@ -15,49 +16,30 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 final class RoleService extends BaseService implements RoleServiceInterface
 {
-    /**
-     * Create a new class instance.
-     */
+    private readonly RoleRepositoryInterface $roleRepository;
+
     public function __construct(
-        private readonly RoleRepositoryInterface $repo,
+        RoleRepositoryInterface $repo,
     ) {
         $this->setRepository($repo);
+        $this->roleRepository = $repo;
     }
 
-    /**
-     * Get all roles.
-     */
-    public function getRoles(): RoleCollection
+    public function getPaginatedByRequest(Request $request, array $columns = ['*']): RoleCollection
     {
-        $roles = $this->getFiltered();
+        $response = $this->roleRepository->paginateFiltered($request, $columns);
 
-        return new RoleCollection($roles);
+        return new RoleCollection($response);
     }
 
-    /**
-     * Get all roles without pagination.
-     */
-    public function getAllRoles(): RoleCollection
+    public function getAll(array $columns = ['*']): RoleCollection
     {
-        $roles = $this->all();
+        $response = $this->roleRepository->all($columns);
 
-        return new RoleCollection($roles);
+        return new RoleCollection($response);
     }
 
-    /**
-     * Get filtered roles with pagination.
-     */
-    public function getPaginated(int $perPage): RoleCollection
-    {
-        $paginated = $this->paginate($perPage);
-
-        return new RoleCollection($paginated);
-    }
-
-    /**
-     * Get role by id.
-     */
-    public function getRoleById(int $id): RoleResource
+    public function findById(int $id): RoleResource
     {
         try {
             $role = $this->findOrFail($id);
@@ -68,17 +50,11 @@ final class RoleService extends BaseService implements RoleServiceInterface
         }
     }
 
-    /**
-     * Get role by name.
-     */
-    public function getRoleByName(string $name): ?Role
+    public function findByName(string $name): ?Role
     {
         return $this->repo->findByName($name);
     }
 
-    /**
-     * Create new role.
-     */
     public function createRole(array $data): RoleResource
     {
         $role = $this->create($data);
@@ -86,9 +62,6 @@ final class RoleService extends BaseService implements RoleServiceInterface
         return new RoleResource($role);
     }
 
-    /**
-     * Update role.
-     */
     public function updateRole(int $id, array $data): RoleResource
     {
         try {
@@ -105,9 +78,6 @@ final class RoleService extends BaseService implements RoleServiceInterface
         }
     }
 
-    /**
-     * Delete role.
-     */
     public function deleteRole(int $id): bool
     {
         try {
@@ -124,21 +94,15 @@ final class RoleService extends BaseService implements RoleServiceInterface
         }
     }
 
-    /**
-     * Assign permissions to role.
-     */
     public function assignPermissions(int $roleId, array $permissionIds): RoleResource
     {
-        $role = $this->getRoleById($roleId)->resource;
+        $role = $this->findById($roleId)->resource;
 
         $role->syncPermissions($permissionIds);
 
         return new RoleResource($role->fresh(['permissions']));
     }
 
-    /**
-     * Get non-system roles.
-     */
     public function getNonSystemRoles(): RoleCollection
     {
         $roles = $this->repo->getSystemRoles();

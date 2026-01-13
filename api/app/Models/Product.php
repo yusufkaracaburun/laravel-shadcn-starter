@@ -22,11 +22,6 @@ final class Product extends BaseModel
         'vat_rate'   => 'decimal:0',
     ];
 
-    /**
-     * Get all invoice items that use this item.
-     *
-     * @return HasMany<InvoiceItem>
-     */
     public function invoiceLines(): HasMany
     {
         return $this->hasMany(InvoiceItem::class);

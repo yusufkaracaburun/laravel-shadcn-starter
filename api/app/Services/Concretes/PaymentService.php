@@ -16,9 +16,6 @@ final class PaymentService extends BaseService implements PaymentServiceInterfac
 {
     private readonly PaymentRepositoryInterface $paymentRepository;
 
-    /**
-     * Create a new class instance.
-     */
     public function __construct(
         PaymentRepositoryInterface $repo,
     ) {

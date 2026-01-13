@@ -13,26 +13,14 @@ use App\Repositories\Contracts\ProjectRepositoryInterface;
 
 final class ProjectRepository extends QueryableRepository implements ProjectRepositoryInterface
 {
-    public function query(): QueryBuilder
-    {
-        $queryRequest = QueryBuilderRequest::fromRequest($this->request ?? request());
 
-        return QueryBuilder::for($this->model(), $queryRequest)
-            ->defaultSorts($this->getDefaultSorts())
-            ->allowedFilters($this->getAllowedFilters())
-            ->allowedSorts($this->getAllowedSorts())
-            ->allowedFields($this->getAllowedFields())
-            ->allowedIncludes($this->getAllowedIncludes());
-    }
 
     public function getDefaultSorts(): array
     {
         return ['name'];
     }
 
-    /**
-     * Get allowed sorts for this repository.
-     */
+
     public function getAllowedSorts(): array
     {
         return [

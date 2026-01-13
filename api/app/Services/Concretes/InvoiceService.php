@@ -16,9 +16,6 @@ final class InvoiceService extends BaseService implements InvoiceServiceInterfac
 {
     private readonly InvoiceRepositoryInterface $invoiceRepository;
 
-    /**
-     * Create a new class instance.
-     */
     public function __construct(
         InvoiceRepositoryInterface $repo,
     ) {

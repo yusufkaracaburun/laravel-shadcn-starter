@@ -16,9 +16,6 @@ final class ProductService extends BaseService implements ProductServiceInterfac
 {
     private readonly ProductRepositoryInterface $repo;
 
-    /**
-     * Create a new class instance.
-     */
     public function __construct(
         ProductRepositoryInterface $repo,
     ) {

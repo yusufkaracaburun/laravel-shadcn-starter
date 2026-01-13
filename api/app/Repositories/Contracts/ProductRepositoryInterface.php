@@ -7,7 +7,6 @@ namespace App\Repositories\Contracts;
 use App\Models\Product;
 use App\Repositories\QueryableRepositoryInterface;
 
-interface ProductRepositoryInterface extends QueryableRepositoryInterface
+interface ProductRepositoryInterface
 {
-    public function findOrFail(int $id, array $columns = ['*']): Product;
 }

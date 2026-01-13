@@ -6,76 +6,69 @@ namespace App\Services\Concretes;
 
 use App\Models\Vehicle;
 use Illuminate\Support\Arr;
+use Illuminate\Http\Request;
 use App\Services\BaseService;
 use App\Http\Resources\Vehicles\VehicleResource;
 use App\Http\Resources\Vehicles\VehicleCollection;
 use App\Services\Contracts\VehicleServiceInterface;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Repositories\Contracts\VehicleRepositoryInterface;
 
 final class VehicleService extends BaseService implements VehicleServiceInterface
 {
-    private readonly VehicleRepositoryInterface $repo;
+    private readonly VehicleRepositoryInterface $vehicleRepository;
 
     public function __construct(
         VehicleRepositoryInterface $repo,
     ) {
         $this->setRepository($repo);
-        $this->repo = $repo;
+        $this->vehicleRepository = $repo;
     }
 
-    public function getPaginated(int $perPage, ?int $teamId = null): VehicleCollection
+    public function getPaginatedByRequest(Request $request, array $columns = ['*']): VehicleCollection
     {
-        $paginated = $this->repo->paginateFiltered($perPage, $teamId);
+        $response = $this->vehicleRepository->paginateFiltered($request, $columns);
 
-        return new VehicleCollection($paginated);
+        return new VehicleCollection($response);
     }
 
-    public function findById(int $vehicleId, ?int $teamId = null): VehicleResource
+    public function getAll(array $columns = ['*']): VehicleCollection
     {
-        try {
-            $vehicle = $this->repo->findById($vehicleId, $teamId);
+        $response = $this->vehicleRepository->all($columns);
 
-            return new VehicleResource($vehicle);
-        } catch (ModelNotFoundException) {
-            throw new ModelNotFoundException('Vehicle not found');
-        }
+        return new VehicleCollection($response);
     }
 
-    public function createVehicle(array $data, ?int $teamId = null): VehicleResource
+    public function findById(int $id): VehicleResource
     {
-        $vehicle = $this->repo->createVehicle(Arr::except($data, ['drivers']), $teamId);
+        $response = $this->vehicleRepository->find($id);
+
+        return new VehicleResource($response);
+    }
+
+    public function createVehicle(array $data): VehicleResource
+    {
+        $response = $this->vehicleRepository->create(Arr::except($data, ['drivers']));
 
         if (isset($data['drivers'])) {
-            $vehicle->drivers()->sync($data['drivers']);
+            $response->drivers()->sync($data['drivers']);
         }
 
-        return new VehicleResource($vehicle->load('drivers'));
+        return new VehicleResource($response->load('drivers'));
     }
 
-    public function updateVehicle(Vehicle $vehicle, array $data, ?int $teamId = null): VehicleResource
+    public function updateVehicle(Vehicle $vehicle, array $data): VehicleResource
     {
-        try {
-            $updated = $this->repo->updateVehicle($vehicle->id, Arr::except($data, ['drivers']), $teamId);
+        $response = $this->vehicleRepository->update($vehicle->id, Arr::except($data, ['drivers']));
 
-            if (isset($data['drivers'])) {
-                $updated->drivers()->sync($data['drivers']);
-            }
-
-            return new VehicleResource($updated->load('drivers'));
-        } catch (ModelNotFoundException) {
-            throw new ModelNotFoundException('Vehicle not found');
+        if (isset($data['drivers'])) {
+            $response->drivers()->sync($data['drivers']);
         }
+
+        return new VehicleResource($response->load('drivers'));
     }
 
     public function deleteVehicle(Vehicle $vehicle): bool
     {
-        try {
-            $this->repo->deleteVehicle($vehicle);
-
-            return true;
-        } catch (ModelNotFoundException) {
-            throw new ModelNotFoundException('Vehicle not found');
-        }
+        return $this->vehicleRepository->delete($vehicle->id);
     }
 }

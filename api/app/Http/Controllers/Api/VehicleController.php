@@ -53,7 +53,8 @@ final class VehicleController extends Controller
         $validated = $request->validated();
         $perPage = (int) $validated['per_page'];
 
-        $vehicles = $this->service->getPaginated($perPage);
+        $vehicles = $this->service->getPaginatedByRequest($request);
+        //        $vehicles = $this->service->getPaginated($perPage);
 
         return ApiResponse::success($vehicles);
     }

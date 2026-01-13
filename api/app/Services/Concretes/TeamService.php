@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Services\Concretes;
 
 use App\Models\Team;
+use Illuminate\Http\Request;
 use App\Services\BaseService;
 use App\Http\Resources\Teams\TeamResource;
 use App\Http\Resources\Teams\TeamCollection;
@@ -22,58 +23,43 @@ final class TeamService extends BaseService implements TeamServiceInterface
         $this->teamRepository = $repository;
     }
 
-    /**
-     * Get paginated teams with QueryBuilder support.
-     * Supports filtering, sorting, and including relationships via request parameters.
-     * Teams are scoped to the authenticated user (teams they own or belong to).
-     */
-    public function getPaginated(int $perPage, ?int $userId = null): TeamCollection
+    public function getPaginatedByRequest(Request $request, array $columns = ['*']): TeamCollection
     {
-        $paginated = $this->teamRepository->getPaginated($perPage, $userId);
+        $response = $this->teamRepository->paginateFiltered($request, $columns);
 
-        return new TeamCollection($paginated);
+        return new TeamCollection($response);
     }
 
-    /**
-     * Find a team by ID with user access check.
-     */
-    public function findById(int $teamId, ?int $userId = null): TeamResource
+    public function getAll(array $columns = ['*']): TeamCollection
     {
-        $team = $this->teamRepository->findById($teamId, $userId);
+        $response = $this->teamRepository->all($columns);
 
-        return new TeamResource($team);
+        return new TeamCollection($response);
     }
 
-    /**
-     * Create a new team for a user.
-     *
-     * @param  array<string, mixed>  $data
-     * @param  int  $userId  User ID for team creation
-     */
-    public function createTeam(array $data, int $userId): TeamResource
+    public function findById(int $id): TeamResource
     {
-        $team = $this->teamRepository->createTeam($data, $userId);
+        $response = $this->teamRepository->find($id);
 
-        return new TeamResource($team);
+        return new TeamResource($response);
     }
 
-    /**
-     * Update a team by model instance.
-     *
-     * @param  array<string, mixed>  $data
-     */
+    public function createTeam(array $data): TeamResource
+    {
+        $response = $this->teamRepository->create($data);
+
+        return new TeamResource($response);
+    }
+
     public function updateTeam(Team $team, array $data): TeamResource
     {
-        $team = $this->teamRepository->updateTeam($team, $data);
+        $response = $this->teamRepository->update($team->id, $data);
 
-        return new TeamResource($team);
+        return new TeamResource($response);
     }
 
-    /**
-     * Delete a team by model instance.
-     */
     public function deleteTeam(Team $team): bool
     {
-        return $this->teamRepository->deleteTeam($team);
+        return $this->teamRepository->delete($team->id);
     }
 }

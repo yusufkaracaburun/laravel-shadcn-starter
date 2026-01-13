@@ -7,7 +7,6 @@ namespace App\Repositories\Contracts;
 use App\Models\Payment;
 use App\Repositories\QueryableRepositoryInterface;
 
-interface PaymentRepositoryInterface extends QueryableRepositoryInterface
+interface PaymentRepositoryInterface
 {
-    public function findOrFail(int $id, array $columns = ['*']): Payment;
 }

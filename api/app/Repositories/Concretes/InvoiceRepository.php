@@ -15,18 +15,7 @@ use App\Repositories\Contracts\InvoiceRepositoryInterface;
 
 final class InvoiceRepository extends QueryableRepository implements InvoiceRepositoryInterface
 {
-    public function query(): QueryBuilder
-    {
-        $queryRequest = QueryBuilderRequest::fromRequest($this->request ?? request());
 
-        return QueryBuilder::for($this->model(), $queryRequest)
-            ->with(['customer'])
-            ->defaultSorts($this->getDefaultSorts())
-            ->allowedFilters($this->getMergedAllowedFilters())
-            ->allowedSorts($this->getAllowedSorts())
-            ->allowedFields($this->getAllowedFields())
-            ->allowedIncludes($this->getAllowedIncludes());
-    }
 
     public function getDefaultSorts(): array
     {

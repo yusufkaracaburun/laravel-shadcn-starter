@@ -16,17 +16,13 @@ abstract class QueryableRepository extends BaseRepository implements QueryableRe
 {
     protected ?Request $request = null;
 
-    /**
-     * Get filtered, sorted, and included resources.
-     */
-    final public function getFiltered(array $columns = ['*']): Collection
+    final public function withRequest(Request $request): static
     {
-        return $this->query()->get($columns);
+        $this->request = $request;
+
+        return $this;
     }
 
-    /**
-     * Get a query builder instance with filters, sorts, and includes applied.
-     */
     public function query(): QueryBuilder
     {
         $queryRequest = QueryBuilderRequest::fromRequest($this->request ?? request());
@@ -39,73 +35,35 @@ abstract class QueryableRepository extends BaseRepository implements QueryableRe
             ->allowedIncludes($this->getAllowedIncludes());
     }
 
-    /**
-     * Get default sorts for this repository.
-     */
     public function getDefaultSorts(): array
     {
-        return [];
+        return ['created_at'];
     }
 
-    /**
-     * Get allowed sorts for this repository.
-     */
     public function getAllowedSorts(): array
     {
-        return [];
+        return ['id', '-id', 'created_at', '-created_at', 'updated_at', '-updated_at'];
     }
 
-    /**
-     * Get allowed fields for this repository.
-     */
     public function getAllowedFields(): array
     {
-        return [];
+        return ['id'];
     }
 
-    /**
-     * Get allowed includes for this repository.
-     */
     public function getAllowedIncludes(): array
     {
         return [];
     }
 
-    /**
-     * Get allowed filters for this repository.
-     */
     public function getAllowedFilters(): array
     {
         return [
             AllowedFilter::exact('id'),
             AllowedFilter::scope('created_at'),
+            AllowedFilter::scope('updated_at'),
         ];
     }
 
-    /**
-     * Get paginated, filtered, sorted, and included resources.
-     */
-    final public function paginateFiltered(Request $request, array $columns = ['*']): LengthAwarePaginator
-    {
-        $this->withRequest($request);
-        $perPage = $request->input('per_page', 10);
-
-        return $this->query()->paginate($perPage, $columns);
-    }
-
-    /**
-     * Set the request instance for query building
-     */
-    final public function withRequest(Request $request): static
-    {
-        $this->request = $request;
-
-        return $this;
-    }
-
-    /**
-     * Merge allowed filters with an automatic search filter if the model has $searchable fields.
-     */
     protected function getMergedAllowedFilters(): array
     {
         $filters = $this->getAllowedFilters();
