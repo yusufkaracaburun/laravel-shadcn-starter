@@ -26,7 +26,7 @@ final class VehicleService extends BaseService implements VehicleServiceInterfac
 
     public function getPaginated(int $perPage, ?int $teamId = null): VehicleCollection
     {
-        $paginated = $this->repo->getPaginated($perPage, $teamId);
+        $paginated = $this->repo->paginateFiltered($perPage, $teamId);
 
         return new VehicleCollection($paginated);
     }

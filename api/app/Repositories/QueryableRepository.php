@@ -48,17 +48,6 @@ abstract class QueryableRepository extends BaseRepository implements QueryableRe
     }
 
     /**
-     * Get allowed filters for this repository.
-     */
-    public function getAllowedFilters(): array
-    {
-        return [
-            AllowedFilter::exact('id'),
-            AllowedFilter::scope('created_at'),
-        ];
-    }
-
-    /**
      * Get allowed sorts for this repository.
      */
     public function getAllowedSorts(): array
@@ -80,6 +69,17 @@ abstract class QueryableRepository extends BaseRepository implements QueryableRe
     public function getAllowedIncludes(): array
     {
         return [];
+    }
+
+    /**
+     * Get allowed filters for this repository.
+     */
+    public function getAllowedFilters(): array
+    {
+        return [
+            AllowedFilter::exact('id'),
+            AllowedFilter::scope('created_at'),
+        ];
     }
 
     /**

@@ -32,11 +32,6 @@ interface QueryableRepositoryInterface extends BaseRepositoryInterface
     public function paginateFiltered(Request $request, array $columns = ['*']): LengthAwarePaginator;
 
     /**
-     * Get allowed filters for this repository.
-     */
-    public function getAllowedFilters(): array;
-
-    /**
      * Get default sorts for this repository.
      */
     public function getDefaultSorts(): array;
@@ -47,12 +42,17 @@ interface QueryableRepositoryInterface extends BaseRepositoryInterface
     public function getAllowedSorts(): array;
 
     /**
+     * Get allowed fields for this repository.
+     */
+    public function getAllowedFields(): array;
+
+    /**
      * Get allowed includes for this repository.
      */
     public function getAllowedIncludes(): array;
 
     /**
-     * Get allowed fields for this repository.
+     * Get allowed filters for this repository.
      */
-    public function getAllowedFields(): array;
+    public function getAllowedFilters(): array;
 }
