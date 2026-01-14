@@ -5,60 +5,78 @@ declare(strict_types=1);
 namespace App\Services\Concretes;
 
 use App\Models\Team;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use App\Services\BaseService;
 use App\Http\Resources\Teams\TeamResource;
 use App\Http\Resources\Teams\TeamCollection;
+use App\Services\Concerns\TransformsResources;
 use App\Services\Contracts\TeamServiceInterface;
 use App\Repositories\Contracts\TeamRepositoryInterface;
 
 final class TeamService extends BaseService implements TeamServiceInterface
 {
-    private readonly TeamRepositoryInterface $teamRepository;
+    use TransformsResources;
 
-    public function __construct(TeamRepositoryInterface $repository)
-    {
+    public function __construct(
+        TeamRepositoryInterface $repository,
+    ) {
         $this->setRepository($repository);
-        $this->teamRepository = $repository;
     }
 
     public function getPaginatedByRequest(Request $request, array $columns = ['*']): TeamCollection
     {
-        return new TeamCollection(
-            $this->teamRepository->paginateFiltered($request, $columns),
+        return $this->toCollection(
+            $this->repository->paginateFiltered($request, $columns),
         );
     }
 
     public function getAll(array $columns = ['*']): TeamCollection
     {
-        return new TeamCollection(
-            $this->teamRepository->all($columns),
+        return $this->toCollection(
+            $this->repository->all($columns),
         );
     }
 
     public function findById(int $id): TeamResource
     {
-        return new TeamResource(
-            $this->teamRepository->find($id),
+        return $this->toResource(
+            $this->repository->find($id),
         );
     }
 
-    public function createTeam(array $data): TeamResource
+    public function create(array $data): TeamResource
     {
-        return new TeamResource(
-            parent::create($data),
+        return $this->toResource(
+            $this->repository->create($data),
         );
     }
 
-    public function updateTeam(Team $team, array $data): TeamResource
+    /**
+     * @param Team $model
+     */
+    public function update(Model $model, array $data): TeamResource
     {
-        return new TeamResource(
-            parent::update($team, $data),
+        return $this->toResource(
+            $this->repository->update($model->id, $data),
         );
     }
 
-    public function deleteTeam(Team $team): bool
+    /**
+     * @param Team $model
+     */
+    public function delete(Model $model): bool
     {
-        return parent::delete($team);
+        return $this->repository->delete($model->id);
+    }
+
+    protected function getResourceClass(): string
+    {
+        return TeamResource::class;
+    }
+
+    protected function getCollectionClass(): string
+    {
+        return TeamCollection::class;
     }
 }

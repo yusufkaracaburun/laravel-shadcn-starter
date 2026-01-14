@@ -7,6 +7,7 @@ namespace App\Services\Contracts;
 use App\Models\User;
 use App\Enums\UserStatus;
 use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\Model;
 use App\Services\BaseServiceInterface;
 use App\Http\Resources\Users\UserResource;
 use App\Http\Resources\Users\UserCollection;
@@ -20,11 +21,11 @@ interface UserServiceInterface extends BaseServiceInterface
 
     public function findById(int $id): UserResource;
 
-    public function createUser(array $data): UserResource;
+    public function create(array $data): UserResource;
 
-    public function updateUser(User $user, array $data): UserResource;
+    public function update(Model $model, array $data): UserResource;
 
-    public function deleteUser(User $user): bool;
+    public function delete(Model $model): bool;
 
     public function getCurrentUser(User $user): UserResource;
 
@@ -33,4 +34,8 @@ interface UserServiceInterface extends BaseServiceInterface
     public function getActiveUsers(): AnonymousResourceCollection;
 
     public function getUsersByStatus(UserStatus|string $status = UserStatus::ACTIVE): AnonymousResourceCollection;
+
+    public function getAllFiltered(): AnonymousResourceCollection;
+
+    public function getVerifiedFiltered(): AnonymousResourceCollection;
 }

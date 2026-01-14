@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace App\Services\Concretes;
 
 use App\Models\Vehicle;
-use Illuminate\Support\Arr;
 use Illuminate\Http\Request;
 use App\Services\BaseService;
+use Illuminate\Database\Eloquent\Model;
+use App\Services\Concerns\TransformsResources;
+use App\Services\Concerns\HandlesRelationships;
 use App\Http\Resources\Vehicles\VehicleResource;
 use App\Http\Resources\Vehicles\VehicleCollection;
 use App\Services\Contracts\VehicleServiceInterface;
@@ -15,60 +17,62 @@ use App\Repositories\Contracts\VehicleRepositoryInterface;
 
 final class VehicleService extends BaseService implements VehicleServiceInterface
 {
-    private readonly VehicleRepositoryInterface $vehicleRepository;
+    use HandlesRelationships;
 
     public function __construct(
-        VehicleRepositoryInterface $repo,
+        VehicleRepositoryInterface $repository,
     ) {
-        $this->setRepository($repo);
-        $this->vehicleRepository = $repo;
+        $this->setRepository($repository);
     }
 
-    public function getPaginatedByRequest(Request $request, array $columns = ['*']): VehicleCollection
+    public function getPaginatedByRequest(array $columns = ['*']): VehicleCollection
     {
-        $response = $this->vehicleRepository->paginateFiltered($request, $columns);
-
-        return new VehicleCollection($response);
+        /** @var VehicleCollection */
+        return parent::getPaginatedByRequest($columns);
     }
 
     public function getAll(array $columns = ['*']): VehicleCollection
     {
-        $response = $this->vehicleRepository->all($columns);
-
-        return new VehicleCollection($response);
+        /** @var VehicleCollection */
+        return parent::getAll($columns);
     }
 
-    public function findById(int $id): VehicleResource
+    public function find(int|string $id): VehicleResource
     {
-        $response = $this->vehicleRepository->find($id);
-
-        return new VehicleResource($response);
+        /** @var VehicleResource */
+        return parent::find($id);
     }
 
-    public function createVehicle(array $data): VehicleResource
+    public function create(array $data): VehicleResource
     {
-        $vehicle = parent::create(Arr::except($data, ['drivers']));
+        $vehicle = $this->repository->create($this->exceptRelationships($data, ['drivers']));
+        $this->syncRelationships($vehicle, $data, ['drivers']);
 
-        if (isset($data['drivers'])) {
-            $vehicle->drivers()->sync($data['drivers']);
-        }
-
-        return new VehicleResource($vehicle->load('drivers'));
+        /** @var VehicleResource */
+        return $this->toResource($vehicle->load('drivers'));
     }
 
-    public function updateVehicle(Vehicle $vehicle, array $data): VehicleResource
+    public function update(Vehicle $model, array $data): VehicleResource
     {
-        $updated = parent::update($vehicle, Arr::except($data, ['drivers']));
+        $updated = $this->repository->update($model, $this->exceptRelationships($data, ['drivers']));
+        $this->syncRelationships($updated, $data, ['drivers']);
 
-        if (isset($data['drivers'])) {
-            $updated->drivers()->sync($data['drivers']);
-        }
-
-        return new VehicleResource($updated->load('drivers'));
+        /** @var VehicleResource */
+        return $this->toResource($updated->load('drivers'));
     }
 
-    public function deleteVehicle(Vehicle $vehicle): bool
+    public function delete(Vehicle $model): bool
     {
-        return parent::delete($vehicle);
+        return $this->repository->delete($model);
+    }
+
+    protected function getResourceClass(): string
+    {
+        return VehicleResource::class;
+    }
+
+    protected function getCollectionClass(): string
+    {
+        return VehicleCollection::class;
     }
 }

@@ -13,12 +13,12 @@ interface BaseRepositoryInterface
 {
     public function all(array $columns = ['*']): Collection;
     public function paginate(int $perPage = 10, array $columns = ['*']): LengthAwarePaginator;
-    public function find(int $id, array $columns = ['*']): ?Model;
+    public function find(int|string $id, array $columns = ['*']): ?Model;
     public function findByField(string $field, mixed $value, array $columns = ['*']): ?Model;
-    public function findOrFail(int $id, array $columns = ['*']): Model;
+    public function findOrFail(int|string $id, array $columns = ['*']): Model;
     public function create(array $data): Model;
-    public function update(int $id, array $data): Model;
-    public function delete(int $id): bool;
-    public function exists(int $id): bool;
+    public function update(Model $model, array $data): Model;
+    public function delete(Model $model): bool;
+    public function exists(int|string $id): bool;
     public function getModel(): Model;
 }

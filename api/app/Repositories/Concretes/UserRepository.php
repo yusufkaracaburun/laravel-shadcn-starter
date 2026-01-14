@@ -9,6 +9,8 @@ use App\Enums\UserStatus;
 use Illuminate\Http\Request;
 use App\Helpers\Cache\TeamCache;
 use Spatie\Permission\Models\Role;
+use App\Models\Team;
+use App\Filters\UserTeamFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 use Spatie\QueryBuilder\AllowedFilter;
 use App\Repositories\QueryableRepository;
@@ -20,6 +22,10 @@ use App\Repositories\Contracts\UserRepositoryInterface;
 
 final class UserRepository extends QueryableRepository implements UserRepositoryInterface
 {
+    public function query(): QueryBuilder
+    {
+        return parent::query();
+    }
 
 
     public function getDefaultSorts(): array
@@ -29,25 +35,23 @@ final class UserRepository extends QueryableRepository implements UserRepository
 
     public function getAllowedSorts(): array
     {
-        return [
-            'id',
-            'name',
-            'email',
-            'status',
-            'created_at',
-            'updated_at',
-        ];
+        return array_merge(
+            parent::getAllowedSorts(),
+            ['name', 'email', 'status']
+        );
     }
 
     public function getAllowedFilters(): array
     {
-        return [
-            AllowedFilter::exact('id'),
-            AllowedFilter::exact('name'),
-            AllowedFilter::exact('email'),
-            AllowedFilter::exact('status'),
-            AllowedFilter::scope('created_at'),
-        ];
+        return array_merge(
+            parent::getAllowedFilters(),
+            [
+                AllowedFilter::exact('name'),
+                AllowedFilter::exact('email'),
+                AllowedFilter::exact('status'),
+                AllowedFilter::custom('team_id', new UserTeamFilter()),
+            ]
+        );
     }
 
     public function getAllowedIncludes(): array
@@ -81,6 +85,18 @@ final class UserRepository extends QueryableRepository implements UserRepository
 
         return User::query()
             ->where('status', $statusEnum->value)
+            ->get();
+    }
+
+    public function getAllFiltered(): Collection
+    {
+        return $this->getFiltered();
+    }
+
+    public function getVerifiedFiltered(): Collection
+    {
+        return $this->query()
+            ->whereNotNull('email_verified_at')
             ->get();
     }
 

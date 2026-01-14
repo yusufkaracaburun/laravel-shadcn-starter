@@ -7,24 +7,13 @@ namespace App\Http\Controllers\Api;
 use App\Models\Equipment;
 use App\Enums\EquipmentStatus;
 use Illuminate\Http\JsonResponse;
-use App\Http\Responses\ApiResponse;
-use App\Http\Controllers\Controller;
-use App\Http\Controllers\Concerns\UsesQueryBuilder;
 use App\Services\Contracts\EquipmentServiceInterface;
-use App\Http\Controllers\Concerns\UsesCachedResponses;
 use App\Http\Requests\Equipments\EquipmentIndexRequest;
 use App\Http\Requests\Equipments\StoreEquipmentRequest;
 use App\Http\Requests\Equipments\UpdateEquipmentRequest;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use App\Http\Controllers\Concerns\InvalidatesCachedModels;
 
-final class EquipmentController extends Controller
+final class EquipmentController extends BaseApiController
 {
-    use AuthorizesRequests;
-    use InvalidatesCachedModels;
-    use UsesCachedResponses;
-    use UsesQueryBuilder;
-
     public function __construct(
         private readonly EquipmentServiceInterface $service,
     ) {}
@@ -36,12 +25,9 @@ final class EquipmentController extends Controller
     {
         // $this->authorize('viewAny', Equipment::class);
 
-        $validated = $request->validated();
-        $perPage = (int) $validated['per_page'];
-
-        $equipments = $this->service->getPaginated($perPage);
-
-        return ApiResponse::success($equipments);
+        return $this->respondWithCollection(
+            $this->service->getPaginatedByRequest($request),
+        );
     }
 
     /**
@@ -51,9 +37,9 @@ final class EquipmentController extends Controller
     {
         // $this->authorize('create', Equipment::class);
 
-        $equipment = $this->service->createEquipment($request->validated());
-
-        return ApiResponse::created($equipment);
+        return $this->respondCreated(
+            $this->service->create($request->validated()),
+        );
     }
 
     /**
@@ -63,9 +49,9 @@ final class EquipmentController extends Controller
     {
         // $this->authorize('view', $equipment);
 
-        $equipmentResource = $this->service->findById($equipment->id);
-
-        return ApiResponse::success($equipmentResource);
+        return $this->respondWithResource(
+            $this->service->findById($equipment->id),
+        );
     }
 
     /**
@@ -75,9 +61,9 @@ final class EquipmentController extends Controller
     {
         // $this->authorize('update', $equipment);
 
-        $equipmentResource = $this->service->updateEquipment($equipment, $request->validated());
-
-        return ApiResponse::success($equipmentResource);
+        return $this->respondWithResource(
+            $this->service->update($equipment, $request->validated()),
+        );
     }
 
     /**
@@ -87,9 +73,9 @@ final class EquipmentController extends Controller
     {
         // $this->authorize('delete', $equipment);
 
-        $this->service->deleteEquipment($equipment);
+        $this->service->delete($equipment);
 
-        return ApiResponse::noContent('Equipment deleted successfully');
+        return $this->respondNoContent('Equipment deleted successfully');
     }
 
     /**
@@ -97,7 +83,7 @@ final class EquipmentController extends Controller
      */
     public function prerequisites(): JsonResponse
     {
-        return ApiResponse::success([
+        return $this->respondWithPrerequisites([
             'statuses' => EquipmentStatus::toArray(),
         ]);
     }

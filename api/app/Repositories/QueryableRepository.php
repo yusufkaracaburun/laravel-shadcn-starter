@@ -6,14 +6,17 @@ namespace App\Repositories;
 
 use Illuminate\Http\Request;
 use App\Filters\SearchFilter;
-use Spatie\QueryBuilder\QueryBuilder;
 use Spatie\QueryBuilder\AllowedFilter;
+use Spatie\QueryBuilder\QueryBuilder;
 use Illuminate\Database\Eloquent\Collection;
 use Spatie\QueryBuilder\QueryBuilderRequest;
 use Illuminate\Pagination\LengthAwarePaginator;
+use App\Repositories\Concerns\ConfiguresQueryBuilder;
 
 abstract class QueryableRepository extends BaseRepository implements QueryableRepositoryInterface
 {
+    use ConfiguresQueryBuilder;
+
     protected ?Request $request = null;
 
     final public function withRequest(Request $request): static
@@ -40,41 +43,11 @@ abstract class QueryableRepository extends BaseRepository implements QueryableRe
         return $this->query()->get($columns);
     }
 
-    final public function paginateFiltered(Request $request, array $columns = ['*']): LengthAwarePaginator
+    final public function paginateFiltered(array $columns = ['*']): LengthAwarePaginator
     {
-        $this->withRequest($request);
-        $perPage = $request->input('per_page', $this->DEFAULT_PER_PAGE);
+        $perPage = ($this->request ?? request())->input('per_page', $this->DEFAULT_PER_PAGE);
 
-        return $this->query()->paginate($perPage, $columns);
-    }
-
-    public function getDefaultSorts(): array
-    {
-        return ['created_at'];
-    }
-
-    public function getAllowedSorts(): array
-    {
-        return ['id', 'created_at', 'updated_at'];
-    }
-
-    public function getAllowedFields(): array
-    {
-        return ['id'];
-    }
-
-    public function getAllowedIncludes(): array
-    {
-        return [];
-    }
-
-    public function getAllowedFilters(): array
-    {
-        return [
-            AllowedFilter::exact('id'),
-            AllowedFilter::scope('created_at'),
-            AllowedFilter::scope('updated_at'),
-        ];
+        return $this->query()->paginate((int) $perPage, $columns);
     }
 
     protected function getMergedAllowedFilters(): array

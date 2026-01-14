@@ -6,6 +6,7 @@ namespace App\Services\Contracts;
 
 use App\Models\Payment;
 use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\Model;
 use App\Services\BaseServiceInterface;
 use App\Http\Resources\Payments\PaymentResource;
 use App\Http\Resources\Payments\PaymentCollection;
@@ -18,9 +19,9 @@ interface PaymentServiceInterface extends BaseServiceInterface
 
     public function findById(int $id): PaymentResource;
 
-    public function createPayment(array $data): PaymentResource;
+    public function create(array $data): PaymentResource;
 
-    public function updatePayment(Payment $payment, array $data): PaymentResource;
+    public function update(Model $model, array $data): PaymentResource;
 
-    public function deletePayment(Payment $payment): bool;
+    public function delete(Model $model): bool;
 }

@@ -5,15 +5,16 @@ declare(strict_types=1);
 namespace App\Repositories\Concretes;
 
 use App\Models\Equipment;
-use Spatie\QueryBuilder\QueryBuilder;
 use Spatie\QueryBuilder\AllowedFilter;
 use App\Repositories\QueryableRepository;
-use Spatie\QueryBuilder\QueryBuilderRequest;
 use App\Repositories\Contracts\EquipmentRepositoryInterface;
 
 final class EquipmentRepository extends QueryableRepository implements EquipmentRepositoryInterface
 {
-
+    protected function model(): string
+    {
+        return Equipment::class;
+    }
 
     public function getDefaultSorts(): array
     {
@@ -22,15 +23,10 @@ final class EquipmentRepository extends QueryableRepository implements Equipment
 
     public function getAllowedSorts(): array
     {
-        return [
-            'id',
-            'name',
-            'serial_number',
-            'type',
-            'status',
-            'created_at',
-            'updated_at',
-        ];
+        return array_merge(
+            parent::getAllowedSorts(),
+            ['name', 'serial_number', 'type', 'status']
+        );
     }
 
     public function getAllowedFields(): array
@@ -54,18 +50,15 @@ final class EquipmentRepository extends QueryableRepository implements Equipment
 
     public function getAllowedFilters(): array
     {
-        return [
-            AllowedFilter::partial('name'),
-            AllowedFilter::partial('serial_number'),
-            AllowedFilter::partial('type'),
-            AllowedFilter::exact('status'),
-            AllowedFilter::scope('active'),
-            AllowedFilter::scope('created_at'),
-        ];
-    }
-
-    protected function model(): string
-    {
-        return Equipment::class;
+        return array_merge(
+            parent::getAllowedFilters(),
+            [
+                AllowedFilter::partial('name'),
+                AllowedFilter::partial('serial_number'),
+                AllowedFilter::partial('type'),
+                AllowedFilter::exact('status'),
+                AllowedFilter::scope('active'),
+            ]
+        );
     }
 }

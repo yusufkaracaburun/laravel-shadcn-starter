@@ -5,92 +5,115 @@ declare(strict_types=1);
 namespace App\Services\Concretes;
 
 use App\Models\Role;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use App\Services\BaseService;
 use InvalidArgumentException;
 use App\Http\Resources\Roles\RoleResource;
 use App\Http\Resources\Roles\RoleCollection;
+use App\Services\Concerns\TransformsResources;
 use App\Services\Contracts\RoleServiceInterface;
 use App\Repositories\Contracts\RoleRepositoryInterface;
 
 final class RoleService extends BaseService implements RoleServiceInterface
 {
-    private readonly RoleRepositoryInterface $roleRepository;
+    use TransformsResources;
 
-    public function __construct(RoleRepositoryInterface $repo)
+    public function __construct(RoleRepositoryInterface $repository)
     {
-        $this->setRepository($repo);
-        $this->roleRepository = $repo;
+        $this->setRepository($repository);
     }
 
     public function getPaginatedByRequest(Request $request, array $columns = ['*']): RoleCollection
     {
-        return new RoleCollection(
-            $this->roleRepository->paginateFiltered($request, $columns),
+        return $this->toCollection(
+            $this->repository->paginateFiltered($request, $columns),
         );
     }
 
     public function getAll(array $columns = ['*']): RoleCollection
     {
-        return new RoleCollection(
-            $this->roleRepository->all($columns),
+        return $this->toCollection(
+            $this->repository->all($columns),
         );
     }
 
     public function findById(int $id): RoleResource
     {
-        return new RoleResource(
-            $this->roleRepository->find($id),
+        return $this->toResource(
+            $this->repository->find($id),
         );
     }
 
     public function findByName(string $name): ?Role
     {
-        return $this->roleRepository->findByName($name);
+        return $this->repository->findByName($name);
     }
 
-    public function createRole(array $data): RoleResource
+    public function create(array $data): RoleResource
     {
-        return new RoleResource(
-            parent::create($data),
+        return $this->toResource(
+            $this->repository->create($data),
         );
     }
 
-    public function updateRole(int $id, array $data): RoleResource
+    /**
+     * @param Role $model
+     */
+    public function update(Model $model, array $data): RoleResource
     {
-        $role = $this->roleRepository->find($id);
-
         // Prevent updating system roles
-        throw_if($role->is_system, InvalidArgumentException::class, 'Cannot update system roles');
+        throw_if($model->is_system, InvalidArgumentException::class, 'Cannot update system roles');
 
-        return new RoleResource(
-            parent::update($id, $data),
+        return $this->toResource(
+            $this->repository->update($model->id, $data),
         );
     }
 
-    public function deleteRole(int $id): bool
+    /**
+     * @param Role $model
+     */
+    public function delete(Model $model): bool
     {
-        $role = $this->roleRepository->find($id);
-
         // Prevent deleting system roles
-        throw_if($role->is_system, InvalidArgumentException::class, 'Cannot delete system roles');
+        throw_if($model->is_system, InvalidArgumentException::class, 'Cannot delete system roles');
 
-        return parent::delete($id);
+        return $this->repository->delete($model->id);
     }
 
     public function assignPermissions(int $roleId, array $permissionIds): RoleResource
     {
-        $role = $this->roleRepository->find($roleId);
-
+        $role = $this->repository->find($roleId);
         $role->syncPermissions($permissionIds);
 
-        return new RoleResource($role->fresh(['permissions']));
+        return $this->toResource($role->fresh(['permissions']));
     }
 
     public function getNonSystemRoles(): RoleCollection
     {
-        $roles = $this->roleRepository->getSystemRoles(false);
+        $roles = $this->repository->getSystemRoles(false);
 
-        return new RoleCollection($roles);
+        return $this->toCollection($roles);
+    }
+
+    public function getWebRolesFiltered(): array
+    {
+        return $this->repository->getWebRolesFiltered()
+            ->map(fn ($role): array => [
+                'id'   => $role->id,
+                'name' => $role->name,
+            ])
+            ->values()
+            ->all();
+    }
+
+    protected function getResourceClass(): string
+    {
+        return RoleResource::class;
+    }
+
+    protected function getCollectionClass(): string
+    {
+        return RoleCollection::class;
     }
 }

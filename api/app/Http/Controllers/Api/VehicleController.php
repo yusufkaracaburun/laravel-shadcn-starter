@@ -7,24 +7,13 @@ namespace App\Http\Controllers\Api;
 use App\Models\Vehicle;
 use App\Enums\VehicleStatus;
 use Illuminate\Http\JsonResponse;
-use App\Http\Responses\ApiResponse;
-use App\Http\Controllers\Controller;
-use App\Http\Controllers\Concerns\UsesQueryBuilder;
 use App\Http\Requests\Vehicles\StoreVehicleRequest;
 use App\Http\Requests\Vehicles\VehicleIndexRequest;
 use App\Services\Contracts\VehicleServiceInterface;
 use App\Http\Requests\Vehicles\UpdateVehicleRequest;
-use App\Http\Controllers\Concerns\UsesCachedResponses;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use App\Http\Controllers\Concerns\InvalidatesCachedModels;
 
-final class VehicleController extends Controller
+final class VehicleController extends BaseApiController
 {
-    use AuthorizesRequests;
-    use InvalidatesCachedModels;
-    use UsesCachedResponses;
-    use UsesQueryBuilder;
-
     public function __construct(
         private readonly VehicleServiceInterface $service,
     ) {}
@@ -36,7 +25,7 @@ final class VehicleController extends Controller
      */
     public function prerequisites(): JsonResponse
     {
-        return ApiResponse::success([
+        return $this->respondWithPrerequisites([
             'statuses' => VehicleStatus::toArray(),
         ]);
     }
@@ -50,13 +39,9 @@ final class VehicleController extends Controller
     {
         // $this->authorize('viewAny', Vehicle::class); // Uncomment when Policy is created
 
-        $validated = $request->validated();
-        $perPage = (int) $validated['per_page'];
-
-        $vehicles = $this->service->getPaginatedByRequest($request);
-        //        $vehicles = $this->service->getPaginated($perPage);
-
-        return ApiResponse::success($vehicles);
+        return $this->respondWithCollection(
+            $this->service->getPaginatedByRequest(),
+        );
     }
 
     /**
@@ -68,9 +53,9 @@ final class VehicleController extends Controller
     {
         // $this->authorize('create', Vehicle::class);
 
-        $vehicle = $this->service->createVehicle($request->validated());
-
-        return ApiResponse::created($vehicle);
+        return $this->respondCreated(
+            $this->service->create($request->validated()),
+        );
     }
 
     /**
@@ -82,9 +67,9 @@ final class VehicleController extends Controller
     {
         // $this->authorize('view', $vehicle);
 
-        $vehicleResource = $this->service->findById($vehicle->id);
-
-        return ApiResponse::success($vehicleResource);
+        return $this->respondWithResource(
+            $this->service->find($vehicle->id),
+        );
     }
 
     /**
@@ -96,9 +81,9 @@ final class VehicleController extends Controller
     {
         // $this->authorize('update', $vehicle);
 
-        $vehicleResource = $this->service->updateVehicle($vehicle, $request->validated());
-
-        return ApiResponse::success($vehicleResource);
+        return $this->respondWithResource(
+            $this->service->update($vehicle, $request->validated()),
+        );
     }
 
     /**
@@ -110,8 +95,8 @@ final class VehicleController extends Controller
     {
         // $this->authorize('delete', $vehicle);
 
-        $this->service->deleteVehicle($vehicle);
+        $this->service->delete($vehicle);
 
-        return ApiResponse::noContent('Vehicle deleted successfully');
+        return $this->respondNoContent('Vehicle deleted successfully');
     }
 }

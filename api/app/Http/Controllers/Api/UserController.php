@@ -8,29 +8,18 @@ use App\Models\User;
 use App\Enums\UserStatus;
 use Illuminate\Http\JsonResponse;
 use Spatie\Permission\Models\Role;
-use App\Http\Responses\ApiResponse;
-use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
-use App\Http\Resources\Users\UserResource;
 use App\Http\Requests\Users\StoreUserRequest;
 use App\Http\Requests\Users\UserIndexRequest;
 use App\Http\Requests\Users\UpdateUserRequest;
 use App\Helpers\Cache\CacheInvalidationService;
+use App\Services\Contracts\RoleServiceInterface;
 use App\Services\Contracts\UserServiceInterface;
-use App\Http\Controllers\Concerns\UsesQueryBuilder;
-use App\Http\Controllers\Concerns\UsesCachedResponses;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use App\Http\Controllers\Concerns\InvalidatesCachedModels;
 
-final class UserController extends Controller
+final class UserController extends BaseApiController
 {
-    use AuthorizesRequests;
-    use InvalidatesCachedModels;
-    use UsesCachedResponses;
-    use UsesQueryBuilder;
-
     public function __construct(
         private readonly UserServiceInterface $userService,
+        private readonly RoleServiceInterface $roleService,
     ) {}
 
     /**
@@ -40,18 +29,11 @@ final class UserController extends Controller
      */
     public function index(UserIndexRequest $request): JsonResponse
     {
-        /** @var User $user */
-        $user = Auth::user();
+        $teamId = $this->getCurrentTeamId();
 
-        $validated = $request->validated();
-
-        $user->refresh();
-        $teamId = $user->getAttributeValue('current_team_id');
-
-        $perPage = (int) $validated['per_page'];
-        $collection = $this->userService->getPaginated($perPage, $teamId);
-
-        return ApiResponse::success($collection);
+        return $this->respondWithCollection(
+            $this->userService->getPaginatedByRequest($request),
+        );
     }
 
     /**
@@ -61,16 +43,11 @@ final class UserController extends Controller
      */
     public function show(User $user): JsonResponse
     {
-        /** @var User $currentUser */
-        $currentUser = Auth::user();
+        $teamId = $this->getCurrentTeamId();
 
-        $currentUser->refresh();
-
-        $teamId = $currentUser->getAttributeValue('current_team_id');
-
-        $userResource = $this->userService->findById($user->id, $teamId);
-
-        return ApiResponse::success($userResource);
+        return $this->respondWithResource(
+            $this->userService->findById($user->id),
+        );
     }
 
     /**
@@ -80,13 +57,9 @@ final class UserController extends Controller
      */
     public function store(StoreUserRequest $request): JsonResponse
     {
-        /** @var User $currentUser */
-        $currentUser = Auth::user();
-        $currentUser->refresh();
+        $teamId = $this->getCurrentTeamId();
 
-        $teamId = $currentUser->getAttributeValue('current_team_id');
-
-        $userResource = $this->userService->createUser($request->validated(), $teamId);
+        $userResource = $this->userService->create($request->validated());
 
         // Handle profile photo upload if present
         if ($request->hasFile('profile_photo')) {
@@ -94,7 +67,7 @@ final class UserController extends Controller
                 ->toMediaCollection('profile-photos');
         }
 
-        return ApiResponse::created($userResource);
+        return $this->respondCreated($userResource);
     }
 
     /**
@@ -104,11 +77,7 @@ final class UserController extends Controller
      */
     public function update(UpdateUserRequest $request, User $user): JsonResponse
     {
-        /** @var User $currentUser */
-        $currentUser = Auth::user();
-        $currentUser->refresh();
-
-        $teamId = $currentUser->getAttributeValue('current_team_id');
+        $teamId = $this->getCurrentTeamId();
 
         $validated = $request->validated();
 
@@ -116,7 +85,7 @@ final class UserController extends Controller
         // Media Library handles file uploads separately
         unset($validated['profile_photo']);
 
-        $userResource = $this->userService->updateUser($user, $validated, $teamId);
+        $userResource = $this->userService->update($user, $validated);
 
         // Handle profile photo upload if present
         if ($request->hasFile('profile_photo')) {
@@ -133,7 +102,7 @@ final class UserController extends Controller
             CacheInvalidationService::invalidateTeam($userResource->resource->current_team_id);
         }
 
-        return ApiResponse::success($userResource);
+        return $this->respondWithResource($userResource);
     }
 
     /**
@@ -146,7 +115,7 @@ final class UserController extends Controller
         $teamId = $user->current_team_id;
         $userId = $user->id;
 
-        $this->userService->deleteUser($user);
+        $this->userService->delete($user);
 
         // Invalidate user and team caches
         CacheInvalidationService::invalidateUser($userId);
@@ -154,12 +123,12 @@ final class UserController extends Controller
             CacheInvalidationService::invalidateTeam($teamId);
         }
 
-        return ApiResponse::noContent('User deleted successfully');
+        return $this->respondNoContent('User deleted successfully');
     }
 
     /**
-     * Get prerequisites for creating a new invoice.
-     * Returns all items, all customers, and the next invoice number.
+     * Get prerequisites for creating a new user.
+     * Returns all roles and statuses.
      *
      * @authenticated
      */
@@ -170,7 +139,7 @@ final class UserController extends Controller
         $roles = Role::all();
         $statuses = UserStatus::toArray();
 
-        return ApiResponse::ok(compact('roles', 'statuses'));
+        return $this->respondWithPrerequisites(compact('roles', 'statuses'));
     }
 
     /**
@@ -180,12 +149,11 @@ final class UserController extends Controller
      */
     public function current(): JsonResponse
     {
-        /** @var User $user */
-        $user = Auth::user();
+        $user = $this->getAuthenticatedUser();
 
-        $userResource = $this->userService->getCurrentUser($user);
-
-        return ApiResponse::success($userResource);
+        return $this->respondWithResource(
+            $this->userService->getCurrentUser($user),
+        );
     }
 
     /**
@@ -195,28 +163,9 @@ final class UserController extends Controller
      */
     public function all(): JsonResponse
     {
-        /** @var User $user */
-        $user = Auth::user();
-        $user->refresh();
-
-        $teamId = $user->getAttributeValue('current_team_id');
-
-        $query = User::query();
-
-        // Apply team filtering if teamId is provided
-        if ($teamId !== null) {
-            $query->whereHas('teams', fn ($q) => $q->where('teams.id', $teamId))
-                ->orWhereHas('ownedTeams', fn ($q) => $q->where('id', $teamId));
-        }
-
-        $users = $this->buildQuery(
-            $query,
-            allowedFilters: ['id', 'name', 'email'],
-            allowedSorts: ['id', 'name', 'email', 'created_at'],
-            allowedIncludes: ['teams', 'currentTeam', 'ownedTeams', 'roles'],
-        )->get();
-
-        return ApiResponse::success(UserResource::collection($users));
+        return $this->respondWithCollection(
+            $this->userService->getAllFiltered(),
+        );
     }
 
     /**
@@ -226,28 +175,9 @@ final class UserController extends Controller
      */
     public function active(): JsonResponse
     {
-        /** @var User $user */
-        $user = Auth::user();
-        $user->refresh();
-
-        $teamId = $user->getAttributeValue('current_team_id');
-
-        $query = User::query()->whereNotNull('email_verified_at');
-
-        // Apply team filtering if teamId is provided
-        if ($teamId !== null) {
-            $query->whereHas('teams', fn ($q) => $q->where('teams.id', $teamId))
-                ->orWhereHas('ownedTeams', fn ($q) => $q->where('id', $teamId));
-        }
-
-        $users = $this->buildQuery(
-            $query,
-            allowedFilters: ['id', 'name', 'email'],
-            allowedSorts: ['id', 'name', 'email', 'created_at'],
-            allowedIncludes: ['teams', 'currentTeam', 'ownedTeams', 'roles'],
-        )->get();
-
-        return ApiResponse::success(UserResource::collection($users));
+        return $this->respondWithCollection(
+            $this->userService->getVerifiedFiltered(),
+        );
     }
 
     /**
@@ -260,17 +190,8 @@ final class UserController extends Controller
      */
     public function roles(): JsonResponse
     {
-        $roles = $this->buildQuery(
-            Role::query()->where('guard_name', 'web'),
-            allowedFilters: ['name'],
-            allowedSorts: ['id', 'name', 'created_at'],
-        )
-            ->get(['id', 'name'])
-            ->map(fn ($role): array => [
-                'id'   => $role->id,
-                'name' => $role->name,
-            ]);
-
-        return ApiResponse::success($roles->values()->all());
+        return $this->respondWithCollection(
+            $this->roleService->getWebRolesFiltered(),
+        );
     }
 }

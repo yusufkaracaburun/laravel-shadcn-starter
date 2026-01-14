@@ -26,24 +26,25 @@ abstract class BaseRepository implements BaseRepositoryInterface
 
     final public function setModel(Model|Builder|Relation|string $entity): void
     {
-        if (is_a($entity, Model::class) || is_subclass_of($entity, Model::class)) {
-            $this->model = $entity::query();
-        } elseif (
-            is_a($entity, Builder::class) ||
-            is_subclass_of($entity, Builder::class) ||
-            is_a($entity, Relation::class) ||
-            is_subclass_of($entity, Relation::class)
-        ) {
-            $this->model = $entity;
-        } elseif (is_string($entity)) {
+        if (is_string($entity)) {
             $this->model = resolve($entity)->query();
+        } elseif ($entity instanceof Model) {
+            $this->model = $entity->newQuery();
         } else {
-            throw new InvalidArgumentException('Invalid entity type');
+            $this->model = $entity;
         }
     }
 
     public function newQuery(): Builder
     {
+        if ($this->model instanceof Builder) {
+            return $this->model;
+        }
+
+        if ($this->model instanceof Relation) {
+            return $this->model->getQuery();
+        }
+
         return $this->model->newQuery();
     }
 
@@ -57,7 +58,7 @@ abstract class BaseRepository implements BaseRepositoryInterface
         return $this->newQuery()->paginate($perPage, $columns);
     }
 
-    final public function find(int $id, array $columns = ['*']): ?Model
+    final public function find(int|string $id, array $columns = ['*']): ?Model
     {
         return $this->newQuery()->find($id, $columns);
     }
@@ -67,7 +68,7 @@ abstract class BaseRepository implements BaseRepositoryInterface
         return $this->newQuery()->where($field, $value)->first($columns);
     }
 
-    public function findOrFail(int $id, array $columns = ['*']): Model
+    public function findOrFail(int|string $id, array $columns = ['*']): Model
     {
         return $this->newQuery()->findOrFail($id, $columns);
     }
@@ -77,26 +78,25 @@ abstract class BaseRepository implements BaseRepositoryInterface
         return $this->newQuery()->create($data);
     }
 
-    final public function update(int $id, array $data): Model
+    final public function update(Model $model, array $data): Model
     {
-        $model = $this->findOrFail($id);
         $model->update($data);
 
         return $model->fresh();
     }
 
-    final public function delete(int $id): bool
+    final public function delete(Model $model): bool
     {
-        return $this->findOrFail($id)->delete();
+        return (bool) $model->delete();
     }
 
-    final public function exists(int $id): bool
+    final public function exists(int|string $id): bool
     {
         return $this->newQuery()->where('id', $id)->exists();
     }
 
     final public function getModel(): Model
     {
-        return $this->model;
+        return $this->newQuery()->getModel();
     }
 }

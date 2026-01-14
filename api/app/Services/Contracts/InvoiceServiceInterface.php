@@ -6,6 +6,7 @@ namespace App\Services\Contracts;
 
 use App\Models\Invoice;
 use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\Model;
 use App\Services\BaseServiceInterface;
 use App\Http\Resources\InvoiceResource;
 use App\Http\Resources\InvoiceCollection;
@@ -18,11 +19,11 @@ interface InvoiceServiceInterface extends BaseServiceInterface
 
     public function findById(int $id): InvoiceResource;
 
-    public function createInvoice(array $data): InvoiceResource;
+    public function create(array $data): InvoiceResource;
 
-    public function updateInvoice(Invoice $invoice, array $data): InvoiceResource;
+    public function update(Model $model, array $data): InvoiceResource;
 
-    public function deleteInvoice(Invoice $invoice): bool;
+    public function delete(Model $model): bool;
 
     public function getNextInvoiceNumber(string $prefix = 'INV', ?int $year = null): string;
 }

@@ -4,25 +4,15 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api;
 
+use App\Models\Role;
 use Illuminate\Http\JsonResponse;
-use App\Http\Responses\ApiResponse;
-use App\Http\Controllers\Controller;
 use App\Http\Requests\Roles\IndexRoleRequest;
 use App\Http\Requests\Roles\StoreRoleRequest;
 use App\Http\Requests\Roles\UpdateRoleRequest;
 use App\Services\Contracts\RoleServiceInterface;
-use App\Http\Controllers\Concerns\UsesQueryBuilder;
-use App\Http\Controllers\Concerns\UsesCachedResponses;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use App\Http\Controllers\Concerns\InvalidatesCachedModels;
 
-final class RoleController extends Controller
+final class RoleController extends BaseApiController
 {
-    use AuthorizesRequests;
-    use InvalidatesCachedModels;
-    use UsesCachedResponses;
-    use UsesQueryBuilder;
-
     public function __construct(
         private readonly RoleServiceInterface $roleService,
     ) {}
@@ -39,12 +29,9 @@ final class RoleController extends Controller
     {
         $this->authorize('viewAny', Role::class);
 
-        $validated = $request->validated();
-        $perPage = (int) $validated['per_page'];
-
-        $roles = $this->roleService->getPaginated($perPage);
-
-        return ApiResponse::success($roles);
+        return $this->respondWithCollection(
+            $this->roleService->getPaginatedByRequest($request),
+        );
     }
 
     /**
@@ -60,13 +47,13 @@ final class RoleController extends Controller
         $permissionIds = $data['permission_ids'] ?? [];
         unset($data['permission_ids']);
 
-        $role = $this->roleService->createRole($data);
+        $role = $this->roleService->create($data);
 
         if (!empty($permissionIds)) {
             $role = $this->roleService->assignPermissions($role->resource->id, $permissionIds);
         }
 
-        return ApiResponse::created($role);
+        return $this->respondCreated($role);
     }
 
     /**
@@ -78,9 +65,9 @@ final class RoleController extends Controller
     {
         $this->authorize('view', $role);
 
-        $roleResource = $this->roleService->findById($role->id);
-
-        return ApiResponse::success($roleResource);
+        return $this->respondWithResource(
+            $this->roleService->findById($role->id),
+        );
     }
 
     /**
@@ -96,13 +83,13 @@ final class RoleController extends Controller
         $permissionIds = $data['permission_ids'] ?? null;
         unset($data['permission_ids']);
 
-        $roleResource = $this->roleService->updateRole($role->id, $data);
+        $roleResource = $this->roleService->update($role, $data);
 
         if ($permissionIds !== null) {
             $roleResource = $this->roleService->assignPermissions($role->id, $permissionIds);
         }
 
-        return ApiResponse::success($roleResource);
+        return $this->respondWithResource($roleResource);
     }
 
     /**
@@ -114,8 +101,8 @@ final class RoleController extends Controller
     {
         $this->authorize('delete', $role);
 
-        $this->roleService->deleteRole($role->id);
+        $this->roleService->delete($role);
 
-        return ApiResponse::noContent('Role deleted successfully');
+        return $this->respondNoContent('Role deleted successfully');
     }
 }

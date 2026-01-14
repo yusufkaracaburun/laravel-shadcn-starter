@@ -6,6 +6,7 @@ namespace App\Services\Contracts;
 
 use App\Models\Customer;
 use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\Model;
 use App\Services\BaseServiceInterface;
 use App\Http\Resources\CustomerResource;
 use App\Http\Resources\CustomerCollection;
@@ -18,9 +19,9 @@ interface CustomerServiceInterface extends BaseServiceInterface
 
     public function findById(int $id): CustomerResource;
 
-    public function createCustomer(array $data): CustomerResource;
+    public function create(array $data): CustomerResource;
 
-    public function updateCustomer(Customer $customer, array $data): CustomerResource;
+    public function update(Model $model, array $data): CustomerResource;
 
-    public function deleteCustomer(Customer $customer): bool;
+    public function delete(Model $model): bool;
 }

@@ -6,6 +6,7 @@ namespace App\Services\Contracts;
 
 use App\Models\Equipment;
 use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\Model;
 use App\Services\BaseServiceInterface;
 use App\Http\Resources\Equipments\EquipmentResource;
 use App\Http\Resources\Equipments\EquipmentCollection;
@@ -18,9 +19,9 @@ interface EquipmentServiceInterface extends BaseServiceInterface
 
     public function findById(int $id): EquipmentResource;
 
-    public function createEquipment(array $data): EquipmentResource;
+    public function create(array $data): EquipmentResource;
 
-    public function updateEquipment(Equipment $equipment, array $data): EquipmentResource;
+    public function update(Model $model, array $data): EquipmentResource;
 
-    public function deleteEquipment(Equipment $equipment): bool;
+    public function delete(Model $model): bool;
 }

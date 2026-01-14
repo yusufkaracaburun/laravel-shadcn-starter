@@ -5,15 +5,16 @@ declare(strict_types=1);
 namespace App\Repositories\Concretes;
 
 use App\Models\Payment;
-use Spatie\QueryBuilder\QueryBuilder;
 use Spatie\QueryBuilder\AllowedFilter;
 use App\Repositories\QueryableRepository;
-use Spatie\QueryBuilder\QueryBuilderRequest;
 use App\Repositories\Contracts\PaymentRepositoryInterface;
 
 final class PaymentRepository extends QueryableRepository implements PaymentRepositoryInterface
 {
-
+    protected function model(): string
+    {
+        return Payment::class;
+    }
 
     public function getDefaultSorts(): array
     {
@@ -22,20 +23,20 @@ final class PaymentRepository extends QueryableRepository implements PaymentRepo
 
     public function getAllowedSorts(): array
     {
-        return [
-            'id',
-            'payment_number',
-            'invoice_id',
-            'customer_id',
-            'status',
-            'date',
-            'paid_at',
-            'amount',
-            'method',
-            'provider',
-            'created_at',
-            'updated_at',
-        ];
+        return array_merge(
+            parent::getAllowedSorts(),
+            [
+                'payment_number',
+                'invoice_id',
+                'customer_id',
+                'status',
+                'date',
+                'paid_at',
+                'amount',
+                'method',
+                'provider',
+            ]
+        );
     }
 
     public function getAllowedFields(): array
@@ -65,24 +66,21 @@ final class PaymentRepository extends QueryableRepository implements PaymentRepo
 
     public function getAllowedFilters(): array
     {
-        return [
-            AllowedFilter::exact('id'),
-            AllowedFilter::exact('invoice_id'),
-            AllowedFilter::exact('customer_id'),
-            AllowedFilter::exact('status'),
-            AllowedFilter::partial('payment_number'),
-            AllowedFilter::partial('method'),
-            AllowedFilter::partial('provider'),
-            AllowedFilter::partial('provider_reference'),
-            AllowedFilter::scope('date'),
-            AllowedFilter::scope('paid_at'),
-            AllowedFilter::scope('refunded_at'),
-            AllowedFilter::exact('amount'),
-        ];
-    }
-
-    protected function model(): string
-    {
-        return Payment::class;
+        return array_merge(
+            parent::getAllowedFilters(),
+            [
+                AllowedFilter::exact('invoice_id'),
+                AllowedFilter::exact('customer_id'),
+                AllowedFilter::exact('status'),
+                AllowedFilter::partial('payment_number'),
+                AllowedFilter::partial('method'),
+                AllowedFilter::partial('provider'),
+                AllowedFilter::partial('provider_reference'),
+                AllowedFilter::scope('date'),
+                AllowedFilter::scope('paid_at'),
+                AllowedFilter::scope('refunded_at'),
+                AllowedFilter::exact('amount'),
+            ]
+        );
     }
 }

@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace App\Services\Concretes;
 
+use App\Models\Permission;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use App\Services\BaseService;
+use App\Services\Concerns\TransformsResources;
 use App\Http\Resources\Permissions\PermissionResource;
 use App\Services\Contracts\PermissionServiceInterface;
 use App\Http\Resources\Permissions\PermissionCollection;
@@ -13,60 +16,75 @@ use App\Repositories\Contracts\PermissionRepositoryInterface;
 
 final class PermissionService extends BaseService implements PermissionServiceInterface
 {
-    private readonly PermissionRepositoryInterface $permissionRepository;
+    use TransformsResources;
 
-    public function __construct(PermissionRepositoryInterface $repo)
-    {
-        $this->setRepository($repo);
-        $this->permissionRepository = $repo;
+    public function __construct(
+        PermissionRepositoryInterface $repository,
+    ) {
+        $this->setRepository($repository);
     }
 
     public function getPaginatedByRequest(Request $request, array $columns = ['*']): PermissionCollection
     {
-        return new PermissionCollection(
-            $this->permissionRepository->paginateFiltered($request, $columns),
+        return $this->toCollection(
+            $this->repository->paginateFiltered($request, $columns),
         );
     }
 
     public function getAll(array $columns = ['*']): PermissionCollection
     {
-        return new PermissionCollection(
-            $this->permissionRepository->all($columns),
+        return $this->toCollection(
+            $this->repository->all($columns),
         );
     }
 
     public function findById(int $id): PermissionResource
     {
-        return new PermissionResource(
-            $this->permissionRepository->find($id),
+        return $this->toResource(
+            $this->repository->find($id),
         );
     }
 
-    public function createPermission(array $data): PermissionResource
+    public function create(array $data): PermissionResource
     {
-        return new PermissionResource(
-            parent::create($data),
+        return $this->toResource(
+            $this->repository->create($data),
         );
     }
 
-    public function updatePermission(int $id, array $data): PermissionResource
+    /**
+     * @param Permission $model
+     */
+    public function update(Model $model, array $data): PermissionResource
     {
-        return new PermissionResource(
-            parent::update($id, $data),
+        return $this->toResource(
+            $this->repository->update($model->id, $data),
         );
     }
 
-    public function deletePermission(int $id): bool
+    /**
+     * @param Permission $model
+     */
+    public function delete(Model $model): bool
     {
-        return parent::delete($id);
+        return $this->repository->delete($model->id);
     }
 
     public function assignRoles(int $permissionId, array $roleIds): PermissionResource
     {
-        $permission = $this->permissionRepository->find($permissionId);
-
+        $permission = $this->repository->find($permissionId);
         $permission->syncRoles($roleIds);
 
-        return new PermissionResource($permission->fresh(['roles']));
+        return $this->toResource($permission->fresh(['roles']));
+    }
+
+    protected function getResourceClass(): string
+    {
+        return PermissionResource::class;
+    }
+
+    protected function getCollectionClass(): string
+    {
+        return PermissionCollection::class;
     }
 }

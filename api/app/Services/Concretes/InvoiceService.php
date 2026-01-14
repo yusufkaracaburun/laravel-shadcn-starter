@@ -7,52 +7,52 @@ namespace App\Services\Concretes;
 use App\Models\Invoice;
 use Illuminate\Http\Request;
 use App\Services\BaseService;
+use Illuminate\Database\Eloquent\Model;
 use App\Http\Resources\InvoiceResource;
 use App\Http\Resources\InvoiceCollection;
+use App\Services\Concerns\TransformsResources;
 use App\Services\Contracts\InvoiceServiceInterface;
 use App\Repositories\Contracts\InvoiceRepositoryInterface;
 
- // Added this import
-
 final class InvoiceService extends BaseService implements InvoiceServiceInterface
 {
-    private readonly InvoiceRepositoryInterface $invoiceRepository;
+    use TransformsResources;
 
-    public function __construct(InvoiceRepositoryInterface $repo)
-    {
-        $this->setRepository($repo);
-        $this->invoiceRepository = $repo;
+    public function __construct(
+        InvoiceRepositoryInterface $repository,
+    ) {
+        $this->setRepository($repository);
     }
 
     public function getPaginatedByRequest(Request $request, array $columns = ['*']): InvoiceCollection
     {
-        return new InvoiceCollection(
-            $this->invoiceRepository->paginateFiltered($request, $columns),
+        return $this->toCollection(
+            $this->repository->paginateFiltered($request, $columns),
         );
     }
 
     public function getAll(array $columns = ['*']): InvoiceCollection
     {
-        return new InvoiceCollection(
-            $this->invoiceRepository->all($columns),
+        return $this->toCollection(
+            $this->repository->all($columns),
         );
     }
 
     public function findById(int $id): InvoiceResource
     {
-        $invoice = $this->invoiceRepository->find($id);
+        $invoice = $this->repository->find($id);
 
-        return new InvoiceResource($invoice->load(['customer', 'items', 'payments', 'emails', 'activities.causer']));
+        return $this->toResource($invoice->load(['customer', 'items', 'payments', 'emails', 'activities.causer']));
     }
 
-    public function createInvoice(array $data): InvoiceResource
+    public function create(array $data): InvoiceResource
     {
         // Extract items from data
         $items = $data['items'] ?? [];
         unset($data['items']);
 
         // Create invoice
-        $invoice = parent::create($data);
+        $invoice = $this->repository->create($data);
 
         // Create invoice items if provided
         foreach ($items as $index => $itemData) {
@@ -69,17 +69,20 @@ final class InvoiceService extends BaseService implements InvoiceServiceInterfac
         $invoice->calculateInvoiceTotals();
         $invoice->save();
 
-        return new InvoiceResource($invoice->load('items'));
+        return $this->toResource($invoice->load('items'));
     }
 
-    public function updateInvoice(Invoice $invoice, array $data): InvoiceResource
+    /**
+     * @param Invoice $model
+     */
+    public function update(Model $model, array $data): InvoiceResource
     {
         // Extract items from data
         $items = $data['items'] ?? null;
         unset($data['items']);
 
-        // Update invoice
-        $updated = parent::update($invoice, $data);
+        // Update invoice via repository
+        $updated = $this->repository->update($model->id, $data);
 
         // Update items if provided
         if ($items !== null) {
@@ -102,12 +105,15 @@ final class InvoiceService extends BaseService implements InvoiceServiceInterfac
             $updated->save();
         }
 
-        return new InvoiceResource($updated->load('items'));
+        return $this->toResource($updated->load('items'));
     }
 
-    public function deleteInvoice(Invoice $invoice): bool
+    /**
+     * @param Invoice $model
+     */
+    public function delete(Model $model): bool
     {
-        return parent::delete($invoice);
+        return $this->repository->delete($model->id);
     }
 
     public function getNextInvoiceNumber(string $prefix = 'INV', ?int $year = null): string
@@ -125,5 +131,15 @@ final class InvoiceService extends BaseService implements InvoiceServiceInterfac
         }
 
         return sprintf('%s-%d-%06d', $prefix, $year, $next);
+    }
+
+    protected function getResourceClass(): string
+    {
+        return InvoiceResource::class;
+    }
+
+    protected function getCollectionClass(): string
+    {
+        return InvoiceCollection::class;
     }
 }

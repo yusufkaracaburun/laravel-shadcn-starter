@@ -14,7 +14,7 @@ interface QueryableRepositoryInterface extends BaseRepositoryInterface
     public function withRequest(Request $request): static;
     public function query(): QueryBuilder;
     public function getFiltered(array $columns = ['*']): Collection;
-    public function paginateFiltered(Request $request, array $columns = ['*']): LengthAwarePaginator;
+    public function paginateFiltered(array $columns = ['*']): LengthAwarePaginator;
     public function getDefaultSorts(): array;
     public function getAllowedSorts(): array;
     public function getAllowedFields(): array;

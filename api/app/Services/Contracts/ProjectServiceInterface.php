@@ -6,6 +6,7 @@ namespace App\Services\Contracts;
 
 use App\Models\Project;
 use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\Model;
 use App\Services\BaseServiceInterface;
 use App\Http\Resources\Projects\ProjectResource;
 use App\Http\Resources\Projects\ProjectCollection;
@@ -18,9 +19,9 @@ interface ProjectServiceInterface extends BaseServiceInterface
 
     public function findById(int $id): ProjectResource;
 
-    public function createProject(array $data): ProjectResource;
+    public function create(array $data): ProjectResource;
 
-    public function updateProject(Project $project, array $data): ProjectResource;
+    public function update(Model $model, array $data): ProjectResource;
 
-    public function deleteProject(Project $project): bool;
+    public function delete(Model $model): bool;
 }

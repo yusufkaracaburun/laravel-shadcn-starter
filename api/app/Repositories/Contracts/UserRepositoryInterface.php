@@ -16,4 +16,6 @@ interface UserRepositoryInterface extends QueryableRepositoryInterface
     public function getVerifiedUsers(): Collection;
     public function getActiveUsers(): Collection;
     public function getUsersByStatus(UserStatus|string $status = UserStatus::ACTIVE): Collection;
+    public function getAllFiltered(): Collection;
+    public function getVerifiedFiltered(): Collection;
 }

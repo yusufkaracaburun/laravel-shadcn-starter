@@ -7,6 +7,8 @@ namespace App\Services\Concretes;
 use App\Models\Project;
 use Illuminate\Http\Request;
 use App\Services\BaseService;
+use Illuminate\Database\Eloquent\Model;
+use App\Services\Concerns\TransformsResources;
 use App\Http\Resources\Projects\ProjectResource;
 use App\Http\Resources\Projects\ProjectCollection;
 use App\Services\Contracts\ProjectServiceInterface;
@@ -14,52 +16,67 @@ use App\Repositories\Contracts\ProjectRepositoryInterface;
 
 final class ProjectService extends BaseService implements ProjectServiceInterface
 {
-    private readonly ProjectRepositoryInterface $projectRepository;
+    use TransformsResources;
 
     public function __construct(
         ProjectRepositoryInterface $repository,
     ) {
         $this->setRepository($repository);
-        $this->projectRepository = $repository;
     }
 
     public function getPaginatedByRequest(Request $request, array $columns = ['*']): ProjectCollection
     {
-        return new ProjectCollection(
-            $this->projectRepository->paginateFiltered($request, $columns),
+        return $this->toCollection(
+            $this->repository->paginateFiltered($request, $columns),
         );
     }
 
     public function getAll(array $columns = ['*']): ProjectCollection
     {
-        return new ProjectCollection(
-            $this->projectRepository->all($columns),
+        return $this->toCollection(
+            $this->repository->all($columns),
         );
     }
 
     public function findById(int $id): ProjectResource
     {
-        return new ProjectResource(
-            $this->projectRepository->find($id),
+        return $this->toResource(
+            $this->repository->find($id),
         );
     }
 
-    public function createProject(array $data): ProjectResource
+    public function create(array $data): ProjectResource
     {
-        return new ProjectResource(
-            parent::create($data),
+        return $this->toResource(
+            $this->repository->create($data),
         );
     }
 
-    public function updateProject(Project $project, array $data): ProjectResource
+    /**
+     * @param Project $model
+     */
+    public function update(Model $model, array $data): ProjectResource
     {
-        return new ProjectResource(
-            parent::update($project, $data),
+        return $this->toResource(
+            $this->repository->update($model->id, $data),
         );
     }
 
-    public function deleteProject(Project $project): bool
+    /**
+     * @param Project $model
+     */
+    public function delete(Model $model): bool
     {
-        return parent::delete($project);
+        return $this->repository->delete($model->id);
+    }
+
+    protected function getResourceClass(): string
+    {
+        return ProjectResource::class;
+    }
+
+    protected function getCollectionClass(): string
+    {
+        return ProjectCollection::class;
     }
 }

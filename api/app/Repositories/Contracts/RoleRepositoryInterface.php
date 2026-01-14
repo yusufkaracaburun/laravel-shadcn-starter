@@ -11,4 +11,5 @@ use App\Repositories\QueryableRepositoryInterface;
 interface RoleRepositoryInterface extends QueryableRepositoryInterface
 {
     public function getSystemRoles(bool $is_system = false): Collection;
+    public function getWebRolesFiltered(): Collection;
 }

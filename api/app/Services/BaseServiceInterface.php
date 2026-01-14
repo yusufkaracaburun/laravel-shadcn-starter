@@ -10,19 +10,28 @@ use App\Repositories\QueryableRepositoryInterface;
 
 interface BaseServiceInterface
 {
-    public function getPaginatedByRequest(Request $request, array $columns = ['*']): mixed;
+    public function getPaginatedByRequest(array $columns = ['*']): mixed;
 
     public function getAll(array $columns = ['*']): mixed;
 
-    public function findById(int $id): mixed;
+    public function find(int|string $id): mixed;
 
     public function create(array $data): mixed;
 
-    public function update(Model $model, array $data): mixed;
+    /**
+     * @param mixed $model
+     * @param array $data
+     * @return mixed
+     */
+    public function update($model, array $data): mixed;
 
-    public function delete(Model $model): bool;
+    /**
+     * @param mixed $model
+     * @return bool
+     */
+    public function delete($model): bool;
 
-    public function exists(int $id): bool;
+    public function exists(int|string $id): bool;
 
     public function setRepository(QueryableRepositoryInterface $repository): QueryableRepositoryInterface;
 

@@ -6,25 +6,13 @@ namespace App\Http\Controllers\Api;
 
 use App\Models\Customer;
 use Illuminate\Http\JsonResponse;
-use App\Http\Responses\ApiResponse;
-use App\Http\Controllers\Controller;
-use App\Http\Resources\CustomerResource;
-use App\Http\Controllers\Concerns\UsesQueryBuilder;
 use App\Services\Contracts\CustomerServiceInterface;
 use App\Http\Requests\Customers\CustomerStoreRequest;
 use App\Http\Requests\Customers\IndexCustomerRequest;
-use App\Http\Controllers\Concerns\UsesCachedResponses;
 use App\Http\Requests\Customers\CustomerUpdateRequest;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use App\Http\Controllers\Concerns\InvalidatesCachedModels;
 
-final class CustomerController extends Controller
+final class CustomerController extends BaseApiController
 {
-    use AuthorizesRequests;
-    use InvalidatesCachedModels;
-    use UsesCachedResponses;
-    use UsesQueryBuilder;
-
     public function __construct(
         private readonly CustomerServiceInterface $customerService,
     ) {}
@@ -41,13 +29,9 @@ final class CustomerController extends Controller
     {
         $this->authorize('viewAny', Customer::class);
 
-        $validated = $request->validated();
-        $perPage = (int) $validated['per_page'];
-
-        /** @var CustomerResource $customers */
-        $customers = $this->customerService->getPaginated($perPage);
-
-        return ApiResponse::success($customers);
+        return $this->respondWithCollection(
+            $this->customerService->getPaginatedByRequest($request),
+        );
     }
 
     /**
@@ -59,9 +43,9 @@ final class CustomerController extends Controller
     {
         $this->authorize('create', Customer::class);
 
-        $customer = $this->customerService->createCustomer($request->validated());
-
-        return ApiResponse::created($customer);
+        return $this->respondCreated(
+            $this->customerService->create($request->validated()),
+        );
     }
 
     /**
@@ -73,9 +57,9 @@ final class CustomerController extends Controller
     {
         $this->authorize('view', $customer);
 
-        $customerResource = $this->customerService->findById($customer->id);
-
-        return ApiResponse::success($customerResource);
+        return $this->respondWithResource(
+            $this->customerService->findById($customer->id),
+        );
     }
 
     /**
@@ -87,9 +71,9 @@ final class CustomerController extends Controller
     {
         $this->authorize('update', $customer);
 
-        $customerResource = $this->customerService->updateCustomer($customer, $request->validated());
-
-        return ApiResponse::success($customerResource);
+        return $this->respondWithResource(
+            $this->customerService->update($customer, $request->validated()),
+        );
     }
 
     /**
@@ -101,8 +85,8 @@ final class CustomerController extends Controller
     {
         $this->authorize('delete', $customer);
 
-        $this->customerService->deleteCustomer($customer);
+        $this->customerService->delete($customer);
 
-        return ApiResponse::noContent('Customer deleted successfully');
+        return $this->respondNoContent('Customer deleted successfully');
     }
 }
