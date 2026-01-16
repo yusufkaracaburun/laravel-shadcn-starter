@@ -80,17 +80,17 @@ abstract class BaseService implements BaseServiceInterface
     /**
      * Update resource
      */
-    final public function update(int $id, array $data): Model
+    final public function update(Model $model, array $data): Model
     {
-        return $this->repository->update($id, $data);
+        return $this->repository->update($model, $data);
     }
 
     /**
      * Delete resource
      */
-    final public function delete(int $id): bool
+    final public function delete(Model $model): bool
     {
-        return $this->repository->delete($id);
+        return $this->repository->delete($model);
     }
 
     /**

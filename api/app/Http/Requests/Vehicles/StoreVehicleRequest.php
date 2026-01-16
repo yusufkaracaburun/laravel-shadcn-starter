@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\Vehicles;
 
+use App\Enums\VehicleStatus;
+use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\ValidationRule;
 
@@ -30,7 +32,7 @@ final class StoreVehicleRequest extends FormRequest
             'year'          => ['required', 'integer', 'min:1900', 'max:' . (date('Y') + 1)],
             'license_plate' => ['required', 'string', 'max:20', 'unique:vehicles,license_plate'],
             'vin'           => ['nullable', 'string', 'max:255', 'unique:vehicles,vin'],
-            'status'        => ['sometimes', 'string', 'in:active,maintenance,inactive'],
+            'status'        => ['sometimes', Rule::enum(VehicleStatus::class)],
             'drivers'       => ['sometimes', 'array'],
             'drivers.*'     => ['exists:users,id'],
         ];

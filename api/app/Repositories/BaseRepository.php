@@ -100,9 +100,8 @@ abstract class BaseRepository implements BaseRepositoryInterface
     /**
      * Update resource
      */
-    final public function update(int $id, array $data): Model
+    final public function update(Model $model, array $data): Model
     {
-        $model = $this->findOrFail($id);
         $model->update($data);
 
         return $model->fresh();
@@ -111,9 +110,9 @@ abstract class BaseRepository implements BaseRepositoryInterface
     /**
      * Delete resource
      */
-    final public function delete(int $id): bool
+    final public function delete(Model $model): bool
     {
-        return $this->findOrFail($id)->delete();
+        return (bool) $model->delete();
     }
 
     /**

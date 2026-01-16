@@ -12,4 +12,9 @@ interface VehicleRepositoryInterface extends QueryableRepositoryInterface
 {
     public function findOrFail(int $id, array $columns = ['*']): Vehicle;
 
+    public function findForShow(Vehicle $vehicle): Vehicle;
+
+    public function createWithRelationships(array $data): Vehicle;
+
+    public function updateWithRelationships(Vehicle $vehicle, array $data): Vehicle;
 }

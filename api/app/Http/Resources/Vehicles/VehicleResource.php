@@ -30,8 +30,8 @@ final class VehicleResource extends BaseResource
 
             'drivers' => UserResource::collection($this->whenLoaded('drivers')),
 
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
+            'created_at' => $this->formatTimestamp($this->created_at),
+            'updated_at' => $this->formatTimestamp($this->updated_at),
         ];
     }
 }

@@ -84,7 +84,7 @@ final class InvoiceService extends BaseService implements InvoiceServiceInterfac
             unset($data['items']);
 
             // Update invoice
-            $updated = $this->invoiceRepository->update($invoice->id, $data);
+            $updated = $this->invoiceRepository->update($invoice, $data);
 
             // Update items if provided
             if ($items !== null) {
@@ -117,13 +117,7 @@ final class InvoiceService extends BaseService implements InvoiceServiceInterfac
 
     public function deleteInvoice(Invoice $invoice): bool
     {
-        try {
-            $this->invoiceRepository->delete($invoice->id);
-
-            return true;
-        } catch (ModelNotFoundException) {
-            throw new ModelNotFoundException('Invoice not found');
-        }
+        return $this->invoiceRepository->delete($invoice);
     }
 
     public function getNextInvoiceNumber(string $prefix = 'INV', ?int $year = null): string

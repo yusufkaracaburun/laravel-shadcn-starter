@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Repositories\Concretes;
 
 use App\Models\Vehicle;
+use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\Model;
 use Spatie\QueryBuilder\QueryBuilder;
 use Spatie\QueryBuilder\AllowedFilter;
 use App\Repositories\QueryableRepository;
@@ -13,17 +15,6 @@ use App\Repositories\Contracts\VehicleRepositoryInterface;
 
 final class VehicleRepository extends QueryableRepository implements VehicleRepositoryInterface
 {
-    public function query(): QueryBuilder
-    {
-        $queryRequest = QueryBuilderRequest::fromRequest($this->request ?? request());
-
-        return QueryBuilder::for($this->model(), $queryRequest)
-            ->defaultSorts($this->getDefaultSorts())
-            ->allowedFilters($this->getAllowedFilters())
-            ->allowedSorts($this->getAllowedSorts())
-            ->allowedFields($this->getAllowedFields())
-            ->allowedIncludes($this->getAllowedIncludes());
-    }
 
     public function getDefaultSorts(): array
     {
@@ -81,6 +72,45 @@ final class VehicleRepository extends QueryableRepository implements VehicleRepo
         return Vehicle::query()
             ->with(['drivers'])
             ->findOrFail($id, $columns);
+    }
+
+    /**
+     * Find vehicle for show endpoint with relationships loaded.
+     */
+    public function findForShow(Vehicle $vehicle): Vehicle
+    {
+        return $this->loadRelationships($vehicle);
+    }
+
+    /**
+     * Create a new vehicle and load relationships.
+     */
+    public function createWithRelationships(array $data): Vehicle
+    {
+        /** @var Vehicle $vehicle */
+        $vehicle = parent::create($data);
+
+        return $this->loadRelationships($vehicle);
+    }
+
+    /**
+     * Update vehicle and load relationships.
+     */
+    public function updateWithRelationships(Vehicle $vehicle, array $data): Vehicle
+    {
+        /** @var Vehicle $updated */
+        $updated = parent::update($vehicle, $data);
+
+        return $this->loadRelationships($updated);
+    }
+
+    /**
+     * Standardize relationship loading in one place.
+     */
+    private function loadRelationships(Model $vehicle): Vehicle
+    {
+        /** @var Vehicle $vehicle */
+        return $vehicle->load('drivers');
     }
 
     protected function model(): string

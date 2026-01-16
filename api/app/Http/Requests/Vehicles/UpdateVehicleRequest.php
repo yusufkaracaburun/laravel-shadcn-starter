@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\Vehicles;
 
+use App\Enums\VehicleStatus;
 use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\ValidationRule;
@@ -37,7 +38,7 @@ final class UpdateVehicleRequest extends FormRequest
                 'nullable', 'string', 'max:255',
                 Rule::unique('vehicles', 'vin')->ignore($this->vehicle),
             ],
-            'status'    => ['sometimes', 'string', 'in:active,maintenance,inactive'],
+            'status'    => ['sometimes', Rule::enum(VehicleStatus::class)],
             'drivers'   => ['sometimes', 'array'],
             'drivers.*' => ['exists:users,id'],
         ];

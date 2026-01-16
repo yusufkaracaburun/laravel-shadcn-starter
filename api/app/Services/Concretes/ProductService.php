@@ -58,24 +58,14 @@ final class ProductService extends BaseService implements ProductServiceInterfac
 
     public function updateProduct(Product $product, array $data, ?int $teamId = null): ProductResource
     {
-        try {
-            $updated = $this->repo->update($product->id, $data);
+        $updated = $this->repo->update($product, $data);
 
-            return new ProductResource($updated);
-        } catch (ModelNotFoundException) {
-            throw new ModelNotFoundException('Product not found');
-        }
+        return new ProductResource($updated);
     }
 
     public function deleteProduct(Product $product): bool
     {
-        try {
-            $this->repo->delete($product->id);
-
-            return true;
-        } catch (ModelNotFoundException) {
-            throw new ModelNotFoundException('Product not found');
-        }
+        return $this->repo->delete($product);
     }
 
     public function getAll(): ProductCollection

@@ -63,24 +63,17 @@ final class PermissionService extends BaseService implements PermissionServiceIn
 
     public function updatePermission(int $id, array $data): PermissionResource
     {
-        try {
-            $permission = $this->update($id, $data);
+        $permission = $this->findOrFail($id);
+        $updated = $this->update($permission, $data);
 
-            return new PermissionResource($permission);
-        } catch (ModelNotFoundException) {
-            throw new ModelNotFoundException('Permission not found');
-        }
+        return new PermissionResource($updated);
     }
 
     public function deletePermission(int $id): bool
     {
-        try {
-            $this->delete($id);
+        $permission = $this->findOrFail($id);
 
-            return true;
-        } catch (ModelNotFoundException) {
-            throw new ModelNotFoundException('Permission not found');
-        }
+        return $this->delete($permission);
     }
 
     public function assignRoles(int $permissionId, array $roleIds): PermissionResource

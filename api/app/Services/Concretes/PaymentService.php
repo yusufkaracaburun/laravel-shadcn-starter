@@ -58,23 +58,13 @@ final class PaymentService extends BaseService implements PaymentServiceInterfac
 
     public function updatePayment(Payment $payment, array $data, ?int $teamId = null): PaymentResource
     {
-        try {
-            $updated = $this->paymentRepository->update($payment->id, $data);
+        $updated = $this->paymentRepository->update($payment, $data);
 
-            return new PaymentResource($updated);
-        } catch (ModelNotFoundException) {
-            throw new ModelNotFoundException('Payment not found');
-        }
+        return new PaymentResource($updated);
     }
 
     public function deletePayment(Payment $payment): bool
     {
-        try {
-            $this->paymentRepository->delete($payment->id);
-
-            return true;
-        } catch (ModelNotFoundException) {
-            throw new ModelNotFoundException('Payment not found');
-        }
+        return $this->paymentRepository->delete($payment);
     }
 }

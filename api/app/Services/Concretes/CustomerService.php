@@ -55,24 +55,14 @@ final class CustomerService extends BaseService implements CustomerServiceInterf
 
     public function updateCustomer(Customer $customer, array $data, ?int $teamId = null): CustomerResource
     {
-        try {
-            $updated = $this->customerRepository->update($customer->id, $data);
+        $updated = $this->customerRepository->update($customer, $data);
 
-            return new CustomerResource($updated);
-        } catch (ModelNotFoundException) {
-            throw new ModelNotFoundException('Customer not found');
-        }
+        return new CustomerResource($updated);
     }
 
     public function deleteCustomer(Customer $customer): bool
     {
-        try {
-            $this->customerRepository->delete($customer->id);
-
-            return true;
-        } catch (ModelNotFoundException) {
-            throw new ModelNotFoundException('Customer not found');
-        }
+        return $this->customerRepository->delete($customer);
     }
 
     public function getAll(): CustomerCollection

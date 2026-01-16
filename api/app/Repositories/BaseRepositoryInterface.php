@@ -43,12 +43,12 @@ interface BaseRepositoryInterface
     /**
      * Update resource
      */
-    public function update(int $id, array $data): Model;
+    public function update(Model $model, array $data): Model;
 
     /**
      * Delete resource
      */
-    public function delete(int $id): bool;
+    public function delete(Model $model): bool;
 
     /**
      * Check if resource exists

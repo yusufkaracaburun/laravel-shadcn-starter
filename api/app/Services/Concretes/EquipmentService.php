@@ -50,23 +50,13 @@ final class EquipmentService extends BaseService implements EquipmentServiceInte
 
     public function updateEquipment(Equipment $equipment, array $data): EquipmentResource
     {
-        try {
-            $updated = $this->repo->update($equipment->id, $data);
+        $updated = $this->repo->update($equipment, $data);
 
-            return new EquipmentResource($updated);
-        } catch (ModelNotFoundException) {
-            throw new ModelNotFoundException('Equipment not found');
-        }
+        return new EquipmentResource($updated);
     }
 
     public function deleteEquipment(Equipment $equipment): bool
     {
-        try {
-            $this->repo->delete($equipment->id);
-
-            return true;
-        } catch (ModelNotFoundException) {
-            throw new ModelNotFoundException('Equipment not found');
-        }
+        return $this->repo->delete($equipment);
     }
 }

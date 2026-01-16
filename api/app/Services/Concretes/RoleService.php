@@ -97,7 +97,7 @@ final class RoleService extends BaseService implements RoleServiceInterface
             // Prevent updating system roles
             throw_if($role->is_system, InvalidArgumentException::class, 'Cannot update system roles');
 
-            $updated = $this->update($id, $data);
+            $updated = $this->update($role, $data);
 
             return new RoleResource($updated);
         } catch (ModelNotFoundException) {
@@ -116,7 +116,7 @@ final class RoleService extends BaseService implements RoleServiceInterface
             // Prevent deleting system roles
             throw_if($role->is_system, InvalidArgumentException::class, 'Cannot delete system roles');
 
-            $this->delete($id);
+            $this->delete($role);
 
             return true;
         } catch (ModelNotFoundException) {
