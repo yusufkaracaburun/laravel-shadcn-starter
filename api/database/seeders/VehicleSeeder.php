@@ -22,7 +22,7 @@ final class VehicleSeeder extends Seeder
             ->create()
             ->each(function (Vehicle $vehicle) use ($users): void {
                 $vehicle->drivers()->attach(
-                    $users->random(rand(2, 5))->pluck('id')
+                    $users->random(rand(2, 5))->pluck('id'),
                 );
             });
     }
