@@ -5,26 +5,13 @@ declare(strict_types=1);
 namespace App\Repositories\Concretes;
 
 use App\Models\Equipment;
-use Spatie\QueryBuilder\QueryBuilder;
 use Spatie\QueryBuilder\AllowedFilter;
+use Illuminate\Database\Eloquent\Model;
 use App\Repositories\QueryableRepository;
-use Spatie\QueryBuilder\QueryBuilderRequest;
 use App\Repositories\Contracts\EquipmentRepositoryInterface;
 
 final class EquipmentRepository extends QueryableRepository implements EquipmentRepositoryInterface
 {
-    public function query(): QueryBuilder
-    {
-        $queryRequest = QueryBuilderRequest::fromRequest($this->request ?? request());
-
-        return QueryBuilder::for($this->model(), $queryRequest)
-            ->defaultSorts($this->getDefaultSorts())
-            ->allowedFilters($this->getAllowedFilters())
-            ->allowedSorts($this->getAllowedSorts())
-            ->allowedFields($this->getAllowedFields())
-            ->allowedIncludes($this->getAllowedIncludes());
-    }
-
     public function getDefaultSorts(): array
     {
         return ['name'];
@@ -79,8 +66,25 @@ final class EquipmentRepository extends QueryableRepository implements Equipment
         return Equipment::query()->findOrFail($id, $columns);
     }
 
+    /**
+     * Find equipment for show endpoint with relationships loaded.
+     */
+    public function findForShow(Equipment $equipment): Equipment
+    {
+        return $this->loadRelationships($equipment);
+    }
+
     protected function model(): string
     {
         return Equipment::class;
+    }
+
+    /**
+     * Standardize relationship loading in one place.
+     */
+    private function loadRelationships(Model $equipment): Equipment
+    {
+        /** @var Equipment $equipment */
+        return $equipment;
     }
 }

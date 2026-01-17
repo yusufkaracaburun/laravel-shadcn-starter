@@ -10,4 +10,6 @@ use App\Repositories\QueryableRepositoryInterface;
 interface EquipmentRepositoryInterface extends QueryableRepositoryInterface
 {
     public function findOrFail(int $id, array $columns = ['*']): Equipment;
+
+    public function findForShow(Equipment $equipment): Equipment;
 }

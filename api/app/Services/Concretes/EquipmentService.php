@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace App\Services\Concretes;
 
 use App\Models\Equipment;
+use Illuminate\Http\Request;
 use App\Services\BaseService;
 use App\Http\Resources\Equipments\EquipmentResource;
 use App\Services\Contracts\EquipmentServiceInterface;
 use App\Http\Resources\Equipments\EquipmentCollection;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Repositories\Contracts\EquipmentRepositoryInterface;
 
 final class EquipmentService extends BaseService implements EquipmentServiceInterface
@@ -23,22 +23,18 @@ final class EquipmentService extends BaseService implements EquipmentServiceInte
         $this->repo = $repo;
     }
 
-    public function getPaginated(int $perPage): EquipmentCollection
+    public function getPaginated(Request $request): EquipmentCollection
     {
-        $paginated = $this->repo->getPaginated($perPage);
+        $paginated = $this->repo->paginateFiltered($request);
 
         return new EquipmentCollection($paginated);
     }
 
-    public function findById(int $id): EquipmentResource
+    public function show(Equipment $equipment): EquipmentResource
     {
-        try {
-            $equipment = $this->repo->findOrFail($id);
+        $equipment = $this->repo->findForShow($equipment);
 
-            return new EquipmentResource($equipment);
-        } catch (ModelNotFoundException) {
-            throw new ModelNotFoundException('Equipment not found');
-        }
+        return new EquipmentResource($equipment);
     }
 
     public function createEquipment(array $data): EquipmentResource

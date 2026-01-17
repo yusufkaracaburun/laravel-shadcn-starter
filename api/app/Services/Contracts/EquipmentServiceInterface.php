@@ -5,21 +5,16 @@ declare(strict_types=1);
 namespace App\Services\Contracts;
 
 use App\Models\Equipment;
+use Illuminate\Http\Request;
 use App\Services\BaseServiceInterface;
 use App\Http\Resources\Equipments\EquipmentResource;
 use App\Http\Resources\Equipments\EquipmentCollection;
 
 interface EquipmentServiceInterface extends BaseServiceInterface
 {
-    /**
-     * Get paginated equipment with QueryBuilder support.
-     */
-    public function getPaginated(int $perPage): EquipmentCollection;
+    public function getPaginated(Request $request): EquipmentCollection;
 
-    /**
-     * Find equipment by ID.
-     */
-    public function findById(int $id): EquipmentResource;
+    public function show(Equipment $equipment): EquipmentResource;
 
     /**
      * Create new equipment.

@@ -9,7 +9,6 @@ use App\Enums\EquipmentStatus;
 use Illuminate\Http\JsonResponse;
 use App\Http\Responses\ApiResponse;
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\Concerns\UsesQueryBuilder;
 use App\Services\Contracts\EquipmentServiceInterface;
 use App\Http\Controllers\Concerns\UsesCachedResponses;
 use App\Http\Requests\Equipments\EquipmentIndexRequest;
@@ -23,53 +22,69 @@ final class EquipmentController extends Controller
     use AuthorizesRequests;
     use InvalidatesCachedModels;
     use UsesCachedResponses;
-    use UsesQueryBuilder;
 
     public function __construct(
         private readonly EquipmentServiceInterface $service,
     ) {}
 
     /**
-     * Display a listing of the resource.
+     * Get prerequisites for creating a new equipment.
+     *
+     * @authenticated
      */
-    public function index(EquipmentIndexRequest $request): JsonResponse
+    public function prerequisites(): JsonResponse
     {
-        // $this->authorize('viewAny', Equipment::class);
-
-        $validated = $request->validated();
-        $perPage = (int) $validated['per_page'];
-
-        $equipments = $this->service->getPaginated($perPage);
-
-        return ApiResponse::success($equipments);
+        return ApiResponse::success([
+            'statuses' => EquipmentStatus::toArray(),
+        ]);
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Display a listing of equipment.
+     *
+     * @authenticated
+     */
+    public function index(EquipmentIndexRequest $request): JsonResponse
+    {
+        // $this->authorize('viewAny', Equipment::class); // Uncomment when Policy is created
+
+        $collection = $this->service->getPaginated($request);
+
+        return ApiResponse::success($collection);
+    }
+
+    /**
+     * Store a newly created equipment.
+     *
+     * @authenticated
      */
     public function store(StoreEquipmentRequest $request): JsonResponse
     {
         // $this->authorize('create', Equipment::class);
 
-        $equipment = $this->service->createEquipment($request->validated());
+        $equipmentResource = $this->service->createEquipment($request->validated());
 
-        return ApiResponse::created($equipment);
+        return ApiResponse::created($equipmentResource);
     }
 
     /**
-     * Display the specified resource.
+     * Display the specified equipment.
+     *
+     * @authenticated
      */
     public function show(Equipment $equipment): JsonResponse
     {
         // $this->authorize('view', $equipment);
 
-        $equipmentResource = $this->service->findById($equipment->id);
+        $equipmentResource = $this->service->show($equipment);
 
         return ApiResponse::success($equipmentResource);
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the specified equipment.
+     *
+     * @authenticated
      */
     public function update(UpdateEquipmentRequest $request, Equipment $equipment): JsonResponse
     {
@@ -81,7 +96,9 @@ final class EquipmentController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove the specified equipment.
+     *
+     * @authenticated
      */
     public function destroy(Equipment $equipment): JsonResponse
     {
@@ -90,15 +107,5 @@ final class EquipmentController extends Controller
         $this->service->deleteEquipment($equipment);
 
         return ApiResponse::noContent('Equipment deleted successfully');
-    }
-
-    /**
-     * Get prerequisites for handling Equipment.
-     */
-    public function prerequisites(): JsonResponse
-    {
-        return ApiResponse::success([
-            'statuses' => EquipmentStatus::toArray(),
-        ]);
     }
 }
