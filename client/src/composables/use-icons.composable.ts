@@ -86,6 +86,7 @@ export { Settings as SettingsIcon } from 'lucide-vue-next'
 export { SquareUserRound as SquareUserRoundIcon } from 'lucide-vue-next'
 export { UserCircle as UserCircleIcon } from 'lucide-vue-next'
 export { Wrench as WrenchIcon } from 'lucide-vue-next'
+export { PanelRightClose as PanelRightCloseIcon } from 'lucide-vue-next'
 
 // Task status icons
 export { Circle as CircleIcon } from 'lucide-vue-next'

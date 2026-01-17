@@ -2,11 +2,13 @@
   "vehicles": {
     "columns": {
       "licensePlate": "License Plate",
+      "status": "Status",
       "make": "Make",
       "model": "Model",
       "year": "Year",
       "color": "Color",
-      "createdAt": "Created At"
+      "createdAt": "Created At",
+      "inspectionDate": "Inspection Date"
     }
   }
 }

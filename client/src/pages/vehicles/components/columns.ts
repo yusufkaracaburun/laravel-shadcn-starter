@@ -16,7 +16,7 @@ import DataTableRowActions from './data-table-row-actions.vue'
 // CSS class constants
 const CELL_CLASSES = {
   LICENSE_PLATE_CONTAINER: 'flex items-center gap-2',
-  CREATED_AT_CELL: 'w-[100px] text-muted-foreground',
+  DATE_CELL: 'w-[100px] text-muted-foreground',
   EMPTY_STATE: 'text-muted-foreground',
 } as const
 
@@ -47,8 +47,8 @@ function createDateCell(dateValue: unknown) {
   const dateValueString = dateValue as string | null | undefined
   return h(
     'div',
-    { class: CELL_CLASSES.CREATED_AT_CELL },
-    formatDate(dateValueString ?? ''),
+    { class: CELL_CLASSES.DATE_CELL },
+    dateValueString ? formatDate(dateValueString) : '—',
   )
 }
 
@@ -118,6 +118,9 @@ function createColumns(): ColumnDef<IVehicle>[] {
         const vehicle = row.original
         return createStatusCell(vehicle)
       },
+      filterFn: (row, id, value) => {
+        return value.includes(row.getValue(id))
+      },
       enableSorting: true,
       enableResizing: true,
     },
@@ -168,28 +171,14 @@ function createColumns(): ColumnDef<IVehicle>[] {
       enableResizing: true,
     },
     {
-      accessorKey: 'color',
+      accessorKey: 'inspection_date',
       header: ({ column }) =>
         h(DataTableColumnHeader<IVehicle>, {
           column,
-          title: t('vehicles.columns.color') || 'Color',
+          title: t('vehicles.columns.inspectionDate') || 'Inspection Date',
         }),
       cell: ({ row }) => {
-        const color = row.getValue('color')
-        return h('div', {}, (typeof color === 'string' ? color : null) || '—')
-      },
-      enableSorting: true,
-      enableResizing: true,
-    },
-    {
-      accessorKey: 'created_at',
-      header: ({ column }) =>
-        h(DataTableColumnHeader<IVehicle>, {
-          column,
-          title: t('vehicles.columns.createdAt') || 'Created At',
-        }),
-      cell: ({ row }) => {
-        const dateValue = row.getValue('created_at')
+        const dateValue = row.getValue('inspection_date')
         return createDateCell(dateValue)
       },
       enableSorting: true,

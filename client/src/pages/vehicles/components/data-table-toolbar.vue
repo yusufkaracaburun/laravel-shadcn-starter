@@ -5,11 +5,13 @@ import type {
   IDataTableToolbarProps,
 } from '@/components/data-table/types'
 
+import DataTableFacetedFilter from '@/components/data-table/faceted-filter.vue'
 import DataTableViewOptions from '@/components/data-table/view-options.vue'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { XIcon } from '@/composables/use-icons.composable'
 
+import { statuses } from '../data/data'
 import type { IVehicle, IVehicleFilters } from '../models/vehicles'
 
 const props = defineProps<IDataTableToolbarProps<IVehicle, IVehicleFilters>>()
@@ -40,6 +42,13 @@ function handleResetFilters() {
         v-model="searchValue"
         placeholder="Filter vehicles by license plate..."
         class="h-8 w-[150px] lg:w-[250px] focus-visible:border-input focus-visible:ring-0"
+      />
+
+      <DataTableFacetedFilter
+        v-if="table.getColumn('status')"
+        :column="table.getColumn('status')"
+        title="Status"
+        :options="statuses"
       />
 
       <Button

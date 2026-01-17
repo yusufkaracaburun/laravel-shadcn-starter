@@ -15,6 +15,8 @@ export interface IVehicle {
   vin: string | null
   status: string
   status_formatted: IStatus
+  inspection_date?: string | null
+  days_to_inspection?: number | null
   drivers?: IUser[]
   created_at: string
   updated_at: string

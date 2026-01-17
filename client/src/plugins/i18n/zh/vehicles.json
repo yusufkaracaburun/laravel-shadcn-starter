@@ -2,11 +2,13 @@
   "vehicles": {
     "columns": {
       "licensePlate": "车牌号",
+      "status": "状态",
       "make": "品牌",
       "model": "型号",
       "year": "年份",
       "color": "颜色",
-      "createdAt": "创建时间"
+      "createdAt": "创建时间",
+      "inspectionDate": "检查日期"
     }
   }
 }

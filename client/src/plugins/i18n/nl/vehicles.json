@@ -2,11 +2,13 @@
   "vehicles": {
     "columns": {
       "licensePlate": "Kenteken",
+      "status": "Status",
       "make": "Merk",
       "model": "Model",
       "year": "Jaar",
       "color": "Kleur",
-      "createdAt": "Aangemaakt op"
+      "createdAt": "Aangemaakt op",
+      "inspectionDate": "Inspectiedatum"
     }
   }
 }

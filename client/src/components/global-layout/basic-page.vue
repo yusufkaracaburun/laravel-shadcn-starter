@@ -7,15 +7,20 @@ defineProps<LayoutHeaderProps>()
 </script>
 
 <template>
-  <main>
-    <BasicHeader :title="title" :description="description" :sticky="sticky">
-      <template #actions>
-        <slot name="actions" />
-      </template>
-    </BasicHeader>
+  <div class="flex flex-row h-screen gap-4">
+    <main class="flex flex-col h-screen w-full">
+      <BasicHeader :title="title" :description="description" :sticky="sticky">
+        <template #actions>
+          <slot name="actions" />
+        </template>
+      </BasicHeader>
 
-    <main class="py-4">
-      <slot />
+      <main class="py-4 overflow-y-auto">
+        <slot />
+      </main>
     </main>
-  </main>
+    <div v-if="$slots.sidebar" class="shrink-0 h-screen overflow-y-auto">
+      <slot name="sidebar" />
+    </div>
+  </div>
 </template>
