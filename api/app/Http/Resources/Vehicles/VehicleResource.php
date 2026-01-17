@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Resources\Vehicles;
 
+use Carbon\Carbon;
 use App\Enums\VehicleStatus;
 use Illuminate\Http\Request;
 use App\Http\Resources\BaseResource;
@@ -19,14 +20,16 @@ final class VehicleResource extends BaseResource
     protected function resolvePayload(Request $request): array
     {
         return [
-            'id'               => $this->id,
-            'make'             => $this->make,
-            'model'            => $this->model,
-            'year'             => $this->year,
-            'license_plate'    => $this->license_plate,
-            'vin'              => $this->vin,
-            'status'           => $this->status,
-            'status_formatted' => VehicleStatus::toArrayItem($this->status),
+            'id'                 => $this->id,
+            'make'               => $this->make,
+            'model'              => $this->model,
+            'year'               => $this->year,
+            'license_plate'      => $this->license_plate,
+            'vin'                => $this->vin,
+            'status'             => $this->status,
+            'inspection_date'    => $this->inspection_date,
+            'days_to_inspection' => $this->inspection_date ? ceil(Carbon::now()->diffInDays($this->inspection_date, false)) : null,
+            'status_formatted'   => VehicleStatus::toArrayItem($this->status),
 
             'drivers' => UserResource::collection($this->whenLoaded('drivers')),
 

@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Enums\VehicleStatus;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
@@ -20,7 +21,8 @@ return new class extends Migration
             $table->integer('year');
             $table->string('license_plate')->unique();
             $table->string('vin')->unique()->nullable();
-            $table->string('status')->default('active');
+            $table->enum('status', VehicleStatus::values())->default(VehicleStatus::ACTIVE->value);
+            $table->date('inspection_date')->nullable();
             $table->timestamps();
         });
     }
