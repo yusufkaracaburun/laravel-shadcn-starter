@@ -84,7 +84,7 @@ export interface ResourceConfig<
   messages: Record<string, string>
   defaultSort: ISorting
   includes: Record<string, string>
-  defaultIncludeKey: string
+  defaultIncludeKey?: string
   onFetchList?: (refetch: () => Promise<any>) => void
 }
 
@@ -110,7 +110,11 @@ export function useResourceBase<
   const pageSize = ref<TPageSize>(DEFAULT_PAGE_SIZE)
   const sort = ref<ISorting>(config.defaultSort)
   const filter = ref<TFilter>({} as TFilter)
-  const include = ref<string[]>([config.includes[config.defaultIncludeKey]])
+  const include = ref<string[]>([])
+
+  if (config.defaultIncludeKey && config.includes[config.defaultIncludeKey]) {
+    include.value = [config.includes[config.defaultIncludeKey]]
+  }
 
   function onSortingChange(newSorting: ISorting): void {
     sort.value = newSorting
@@ -180,7 +184,9 @@ export function useResourceBase<
 
   const items = computed(() => {
     const responseData = listData.value?.data
-    if (!responseData) return []
+    if (!responseData) {
+      return []
+    }
     // Handle both array and object with data property
     if (Array.isArray(responseData)) {
       return responseData
