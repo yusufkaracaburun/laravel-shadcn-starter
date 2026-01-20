@@ -54,5 +54,6 @@ export interface IUpdateVehicleRequest {
 export interface IVehiclePrerequisites {
   makes?: string[]
   models?: string[]
+  drivers?: IUser[]
   statuses?: IStatus[]
 }

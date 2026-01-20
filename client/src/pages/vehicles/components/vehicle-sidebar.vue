@@ -1,11 +1,15 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 
-import type { IVehicle } from '@/pages/vehicles/models/vehicles'
+import type {
+  IVehicle,
+  IVehiclePrerequisites,
+} from '@/pages/vehicles/models/vehicles'
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import Badge from '@/components/ui/badge/Badge.vue'
 import { Progress } from '@/components/ui/progress'
+import { useAxios } from '@/composables/use-axios.composable'
 import {
   BoxIcon,
   CalendarIcon,
@@ -15,8 +19,11 @@ import {
   PanelRightCloseIcon,
   UsersIcon,
 } from '@/composables/use-icons.composable'
+import { useToast } from '@/composables/use-toast.composable'
 import { statuses } from '@/pages/vehicles/data/data'
 import { formatDate } from '@/utils/date'
+
+import AssignDriversDialog from './assign-drivers-dialog.vue'
 
 const props = defineProps<{
   vehicle: IVehicle
@@ -25,6 +32,17 @@ const props = defineProps<{
 const emit = defineEmits<{
   close: []
 }>()
+
+const { axiosInstance, getCsrfCookie } = useAxios()
+const { showSuccess } = useToast()
+
+const isAssignDriversOpen = ref(false)
+const isAssigningDrivers = ref(false)
+const selectedDriverIds = ref<number[]>(
+  props.vehicle.drivers?.map((driver) => driver.id) ?? [],
+)
+const vehiclePrerequisites = ref<IVehiclePrerequisites | null>(null)
+const isLoadingVehicleDrivers = ref(false)
 
 // Get initials from name
 function getInitials(name: string): string {
@@ -83,6 +101,49 @@ function getStatusVariant(status: string | null | undefined) {
     default:
       return 'secondary'
   }
+}
+
+async function handleAssignDriversSubmit() {
+  if (!props.vehicle) {
+    return
+  }
+
+  try {
+    isAssigningDrivers.value = true
+    await getCsrfCookie()
+    await axiosInstance.post('/api/vehicles/drivers/assign', {
+      vehicle_id: props.vehicle.id,
+      driver_ids: selectedDriverIds.value,
+    })
+    showSuccess('Drivers assigned successfully')
+    isAssignDriversOpen.value = false
+  } catch (error) {
+    // Errors are handled globally by axios interceptor / error store
+    console.error(error)
+  } finally {
+    isAssigningDrivers.value = false
+  }
+}
+
+async function ensureVehiclePrerequisitesLoaded() {
+  if (vehiclePrerequisites.value || isLoadingVehicleDrivers.value) {
+    return
+  }
+
+  try {
+    isLoadingVehicleDrivers.value = true
+    const response = await axiosInstance.get('/api/vehicles/prerequisites')
+    vehiclePrerequisites.value = response.data?.data ?? response.data
+  } catch (error) {
+    console.error(error)
+  } finally {
+    isLoadingVehicleDrivers.value = false
+  }
+}
+
+async function openAssignDriversDialog() {
+  await ensureVehiclePrerequisitesLoaded()
+  isAssignDriversOpen.value = true
 }
 </script>
 
@@ -263,7 +324,21 @@ function getStatusVariant(status: string | null | undefined) {
             </UiTabsTrigger>
           </UiTabsList>
 
-          <UiTabsContent value="drivers" class="space-y-2">
+          <UiTabsContent value="drivers" class="space-y-3">
+            <div class="flex items-center justify-between">
+              <p class="text-xs text-muted-foreground">
+                Assign drivers to this vehicle.
+              </p>
+              <UiButton
+                size="sm"
+                variant="outline"
+                class="h-7 px-2 text-xs"
+                @click="openAssignDriversDialog"
+              >
+                Assign drivers
+              </UiButton>
+            </div>
+
             <div class="space-y-2">
               <div
                 v-for="driver in vehicle.drivers"
@@ -349,6 +424,19 @@ function getStatusVariant(status: string | null | undefined) {
           </UiTabsContent>
         </UiTabs>
       </div>
+
+      <!-- Assign Drivers Dialog -->
+      <AssignDriversDialog
+        :open="isAssignDriversOpen"
+        :vehicle-id="vehicle.id"
+        :drivers="vehiclePrerequisites?.drivers"
+        :loading="isLoadingVehicleDrivers"
+        :selected-driver-ids="selectedDriverIds"
+        :assigning="isAssigningDrivers"
+        @update:open="isAssignDriversOpen = $event"
+        @update:selected-driver-ids="selectedDriverIds = $event"
+        @submit="handleAssignDriversSubmit"
+      />
     </div>
   </div>
 </template>
