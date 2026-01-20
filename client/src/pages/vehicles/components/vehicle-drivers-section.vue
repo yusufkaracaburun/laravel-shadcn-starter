@@ -5,6 +5,7 @@ import type {
 } from '@/pages/vehicles/models/vehicles'
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import Badge from '@/components/ui/badge/Badge.vue'
 import { useAxios } from '@/composables/use-axios.composable'
 import { SearchIcon } from '@/composables/use-icons.composable'
 import { useVehicles } from '@/pages/vehicles/composables/use-vehicles.composable'
@@ -146,8 +147,17 @@ async function handleAssignDriversSubmit() {
           </AvatarFallback>
         </Avatar>
         <div class="flex-1">
-          <div class="text-sm font-medium">
-            {{ driver.name }}
+          <div class="flex items-center gap-2">
+            <span class="text-sm font-medium">
+              {{ driver.name }}
+            </span>
+            <Badge
+              v-if="driver.status"
+              :variant="driver.status === 'active' ? 'default' : 'secondary'"
+              class="text-[10px] px-1.5 py-0 capitalize"
+            >
+              {{ driver.status }}
+            </Badge>
           </div>
           <div class="text-xs text-muted-foreground">
             {{ driver.email }}
@@ -200,13 +210,17 @@ async function handleAssignDriversSubmit() {
               <label
                 v-for="driver in filteredDrivers"
                 :key="driver.id"
-                class="flex items-center gap-2"
+                for="driver-{{ driver.id }}"
+                class="flex items-center gap-2 cursor-pointer"
               >
                 <UiCheckbox
-                  :checked="selectedDriverIds.includes(driver.id)"
-                  @update:checked="toggleDriver(driver.id, $event)"
+                  :model-value="selectedDriverIds.includes(driver.id)"
+                  @update:model-value="
+                    (value: boolean | 'indeterminate') =>
+                      toggleDriver(driver.id, value === true)
+                  "
                 />
-                <span>
+                <span class="flex-1">
                   {{ driver.name }}
                   <span class="text-xs text-muted-foreground">
                     ({{ driver.email }})
