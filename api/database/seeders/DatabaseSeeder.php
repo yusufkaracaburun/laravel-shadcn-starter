@@ -25,6 +25,7 @@ final class DatabaseSeeder extends Seeder
             InvoiceSeeder::class,
             PaymentSeeder::class,
             VehicleSeeder::class,
+            EquipmentSeeder::class,
         ]);
     }
 }

@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\Equipments;
 
+use App\Enums\EquipmentStatus;
+use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\ValidationRule;
 
@@ -28,7 +30,7 @@ final class StoreEquipmentRequest extends FormRequest
             'name'          => ['required', 'string', 'max:255'],
             'serial_number' => ['required', 'string', 'max:255', 'unique:equipments,serial_number'],
             'type'          => ['required', 'string', 'max:255'],
-            'status'        => ['sometimes', 'string', 'in:active,maintenance,inactive'],
+            'status'        => ['sometimes', Rule::enum(EquipmentStatus::class)],
             'image'         => ['nullable', 'string'],
         ];
     }

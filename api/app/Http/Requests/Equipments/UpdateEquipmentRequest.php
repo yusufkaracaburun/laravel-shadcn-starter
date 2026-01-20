@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\Equipments;
 
+use App\Enums\EquipmentStatus;
 use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\ValidationRule;
@@ -32,7 +33,7 @@ final class UpdateEquipmentRequest extends FormRequest
                 Rule::unique('equipments', 'serial_number')->ignore($this->equipment),
             ],
             'type'   => ['sometimes', 'string', 'max:255'],
-            'status' => ['sometimes', 'string', 'in:active,maintenance,inactive'],
+            'status' => ['sometimes', Rule::enum(EquipmentStatus::class)],
             'image'  => ['nullable', 'string'],
         ];
     }
