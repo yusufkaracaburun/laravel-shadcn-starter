@@ -1,23 +1,18 @@
 <script setup lang="ts">
-import Page from '@/components/global-layout/basic-page.vue'
+import { ref } from 'vue'
+
+import type { IEquipment } from '@/pages/equipments/models/equipments'
+
+import Page from '@/components/global-layout/basic-page-with-list.vue'
 import { useEquipments } from '@/pages/equipments/composables/use-equipments.composable'
 
-import { getEquipmentsColumns } from './components/columns'
-import DataTable from './components/data-table.vue'
+import EquipmentDetail from './components/equipment-detail.vue'
+import EquipmentList from './components/equipment-list.vue'
 import EquipmentsCreate from './components/equipments-create-dialog.vue'
 
-const columns = getEquipmentsColumns()
+const { loading, equipments } = useEquipments()
 
-const {
-  loading,
-  equipments,
-  serverPagination,
-  sort,
-  onSortingChange,
-  filter,
-  onFiltersChange,
-  clearFilters,
-} = useEquipments()
+const selectedEquipment = ref<IEquipment | null>(null)
 </script>
 
 <template>
@@ -30,18 +25,19 @@ const {
     <template #actions>
       <EquipmentsCreate />
     </template>
-    <div class="overflow-x-auto">
-      <DataTable
+
+    <template #default="{ openDetail }">
+      <EquipmentList
+        :equipments="equipments ?? []"
         :loading="loading"
-        :data="equipments"
-        :columns="columns"
-        :server-pagination="serverPagination"
-        :sorting="sort"
-        :on-sorting-change="onSortingChange"
-        :filters="filter"
-        :on-filters-change="onFiltersChange"
-        :on-clear-filters="clearFilters"
+        :selected-equipment="selectedEquipment"
+        :open-detail="openDetail"
+        @update:selected-equipment="selectedEquipment = $event"
       />
-    </div>
+    </template>
+
+    <template #detail>
+      <EquipmentDetail :equipment="selectedEquipment" />
+    </template>
   </Page>
 </template>
