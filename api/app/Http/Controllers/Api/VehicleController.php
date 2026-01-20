@@ -39,7 +39,7 @@ final class VehicleController extends Controller
     public function prerequisites(): JsonResponse
     {
         return ApiResponse::success([
-            'drivers'  => $this->userService->getActiveUsers(),
+            'drivers'  => $this->userService->getAll(),
             'statuses' => VehicleStatus::toArray(),
         ]);
     }

@@ -90,6 +90,18 @@ final class UserService extends BaseService implements UserServiceInterface
     }
 
     /**
+     * Get all users.
+     *
+     * @return AnonymousResourceCollection<int, UserResource>
+     */
+    public function getAll(): AnonymousResourceCollection
+    {
+        $users = $this->userRepository->all();
+
+        return UserResource::collection($users);
+    }
+
+    /**
      * Get all verified users.
      *
      * @return AnonymousResourceCollection<int, UserResource>

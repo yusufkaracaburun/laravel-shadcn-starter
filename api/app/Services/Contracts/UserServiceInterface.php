@@ -51,6 +51,13 @@ interface UserServiceInterface extends BaseServiceInterface
     public function getCurrentUser(User $user): UserResource;
 
     /**
+     * Get all users.
+     *
+     * @return AnonymousResourceCollection<int, UserResource>
+     */
+    public function getAll(): AnonymousResourceCollection;
+
+    /**
      * Get all verified users.
      *
      * @return AnonymousResourceCollection<int, UserResource>
