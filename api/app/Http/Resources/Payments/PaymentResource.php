@@ -9,7 +9,7 @@ use App\Enums\PaymentStatus;
 use Illuminate\Http\Request;
 use App\Http\Resources\BaseResource;
 use App\Http\Resources\InvoiceResource;
-use App\Http\Resources\CustomerResource;
+use App\Http\Resources\Customers\CustomerResource;
 
 /**
  * @mixin Payment

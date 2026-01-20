@@ -24,6 +24,16 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 final class Customer extends BaseModel
 {
     /**
+     * Cache keys for customer endpoints.
+     *
+     * @var array<string, string>
+     */
+    public const CACHE = [
+        'index' => 'api.customers.index',
+        'show'  => 'api.customers.show',
+    ];
+
+    /**
      * Searchable fields for this model.
      *
      * @var list<string>

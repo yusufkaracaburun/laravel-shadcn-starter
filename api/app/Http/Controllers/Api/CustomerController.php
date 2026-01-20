@@ -8,8 +8,7 @@ use App\Models\Customer;
 use Illuminate\Http\JsonResponse;
 use App\Http\Responses\ApiResponse;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\CustomerResource;
-use App\Http\Controllers\Concerns\UsesQueryBuilder;
+use App\Http\Resources\Customers\CustomerResource;
 use App\Services\Contracts\CustomerServiceInterface;
 use App\Http\Requests\Customers\CustomerStoreRequest;
 use App\Http\Requests\Customers\IndexCustomerRequest;
@@ -23,10 +22,9 @@ final class CustomerController extends Controller
     use AuthorizesRequests;
     use InvalidatesCachedModels;
     use UsesCachedResponses;
-    use UsesQueryBuilder;
 
     public function __construct(
-        private readonly CustomerServiceInterface $customerService,
+        private readonly CustomerServiceInterface $service,
     ) {}
 
     /**
@@ -41,13 +39,10 @@ final class CustomerController extends Controller
     {
         $this->authorize('viewAny', Customer::class);
 
-        $validated = $request->validated();
-        $perPage = (int) $validated['per_page'];
+        $cache = Customer::getCacheKeys();
+        $collection = $this->cachedResponse($cache['index'], fn () => $this->service->getPaginated($request));
 
-        /** @var CustomerResource $customers */
-        $customers = $this->customerService->getPaginated($perPage);
-
-        return ApiResponse::success($customers);
+        return ApiResponse::success($collection);
     }
 
     /**
@@ -59,7 +54,7 @@ final class CustomerController extends Controller
     {
         $this->authorize('create', Customer::class);
 
-        $customer = $this->customerService->createCustomer($request->validated());
+        $customer = $this->service->createCustomer($request->validated());
 
         return ApiResponse::created($customer);
     }
@@ -73,7 +68,11 @@ final class CustomerController extends Controller
     {
         $this->authorize('view', $customer);
 
-        $customerResource = $this->customerService->findById($customer->id);
+        $cache = Customer::getCacheKeys();
+        $customerResource = $this->cachedResponse(
+            $cache['show'] . ".{$customer->id}",
+            fn () => $this->service->show($customer),
+        );
 
         return ApiResponse::success($customerResource);
     }
@@ -87,7 +86,7 @@ final class CustomerController extends Controller
     {
         $this->authorize('update', $customer);
 
-        $customerResource = $this->customerService->updateCustomer($customer, $request->validated());
+        $customerResource = $this->service->updateCustomer($customer, $request->validated());
 
         return ApiResponse::success($customerResource);
     }
@@ -101,7 +100,7 @@ final class CustomerController extends Controller
     {
         $this->authorize('delete', $customer);
 
-        $this->customerService->deleteCustomer($customer);
+        $this->service->deleteCustomer($customer);
 
         return ApiResponse::noContent('Customer deleted successfully');
     }

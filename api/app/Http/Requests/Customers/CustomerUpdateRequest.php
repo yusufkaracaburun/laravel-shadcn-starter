@@ -7,7 +7,7 @@ namespace App\Http\Requests\Customers;
 use App\Models\Customer;
 use App\Rules\ValidPhoneNumber;
 use Illuminate\Validation\Rule;
-use App\Http\Requests\BaseFormRequest;
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\ValidationRule;
 
 /**
@@ -15,8 +15,16 @@ use Illuminate\Contracts\Validation\ValidationRule;
  *
  * Validates customer update data, including unique email validation that ignores the current customer.
  */
-final class CustomerUpdateRequest extends BaseFormRequest
+final class CustomerUpdateRequest extends FormRequest
 {
+    /**
+     * Determine if the user is authorized to make this request.
+     */
+    public function authorize(): bool
+    {
+        return true;
+    }
+
     /**
      * Get the validation rules that apply to the request.
      *

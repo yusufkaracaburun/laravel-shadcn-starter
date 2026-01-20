@@ -5,27 +5,14 @@ declare(strict_types=1);
 namespace App\Repositories\Concretes;
 
 use App\Models\Customer;
-use Spatie\QueryBuilder\QueryBuilder;
 use Spatie\QueryBuilder\AllowedFilter;
+use Illuminate\Database\Eloquent\Model;
 use App\Repositories\QueryableRepository;
 use Illuminate\Pagination\LengthAwarePaginator;
 use App\Repositories\Contracts\CustomerRepositoryInterface;
-use Spatie\QueryBuilder\QueryBuilderRequest;
 
 final class CustomerRepository extends QueryableRepository implements CustomerRepositoryInterface
 {
-    public function query(): QueryBuilder
-    {
-        $queryRequest = QueryBuilderRequest::fromRequest($this->request ?? request());
-
-        return QueryBuilder::for($this->model(), $queryRequest)
-            ->defaultSorts($this->getDefaultSorts())
-            ->allowedFilters($this->getAllowedFilters())
-            ->allowedSorts($this->getAllowedSorts())
-            ->allowedFields($this->getAllowedFields())
-            ->allowedIncludes($this->getAllowedIncludes());
-    }
-
     public function getDefaultSorts(): array
     {
         return ['name'];
@@ -97,6 +84,45 @@ final class CustomerRepository extends QueryableRepository implements CustomerRe
         return Customer::query()
             ->withCount(['invoices', 'contacts'])
             ->findOrFail($id, $columns);
+    }
+
+    /**
+     * Find customer for show endpoint with relationships loaded.
+     */
+    public function findForShow(Customer $customer): Customer
+    {
+        return $this->loadRelationships($customer);
+    }
+
+    /**
+     * Create a new customer and load relationships.
+     */
+    public function createWithRelationships(array $data): Customer
+    {
+        /** @var Customer $customer */
+        $customer = parent::create($data);
+
+        return $this->loadRelationships($customer);
+    }
+
+    /**
+     * Update customer and load relationships.
+     */
+    public function updateWithRelationships(Customer $customer, array $data): Customer
+    {
+        /** @var Customer $updated */
+        $updated = parent::update($customer, $data);
+
+        return $this->loadRelationships($updated);
+    }
+
+    /**
+     * Standardize relationship loading in one place.
+     */
+    private function loadRelationships(Model $customer): Customer
+    {
+        /** @var Customer $customer */
+        return $customer->load(['contacts', 'invoices']);
     }
 
     public function getBusinessCustomers(int $perPage = 9999): LengthAwarePaginator

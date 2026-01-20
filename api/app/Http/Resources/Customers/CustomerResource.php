@@ -2,10 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\Customers;
 
 use App\Models\Customer;
 use Illuminate\Http\Request;
+use App\Http\Resources\BaseResource;
+use App\Http\Resources\Contacts\ContactResource;
+use App\Http\Resources\InvoiceResource;
 
 /**
  * @mixin Customer
@@ -41,8 +44,8 @@ final class CustomerResource extends BaseResource
             'iban_number' => $this->iban_number,
 
             // Timestamps
-            'created_at' => $this->formatDate($this->created_at, 'd-m-Y H:i:s'),
-            'updated_at' => $this->formatDate($this->updated_at, 'd-m-Y H:i:s'),
+            'created_at' => $this->formatTimestamp($this->created_at),
+            'updated_at' => $this->formatTimestamp($this->updated_at),
 
             // Primary contact (single model)
             'primary_contact' => new ContactResource($this->primary_contact),
