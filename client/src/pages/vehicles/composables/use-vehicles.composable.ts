@@ -124,6 +124,32 @@ export function useVehicles() {
     }
   }
 
+  const assignDriversMutation = vehicleService.assignDriversMutation()
+  const {
+    mutateAsync: assignDriversMutationFn,
+    isPending: isAssigningDrivers,
+  } = assignDriversMutation
+
+  /**
+   * Assign drivers to a vehicle
+   * @param vehicleId - The ID of the vehicle
+   * @param driverIds - Array of driver IDs to assign
+   */
+  async function assignDriversToVehicle(
+    vehicleId: number,
+    driverIds: number[],
+  ): Promise<void> {
+    try {
+      await assignDriversMutationFn({ vehicleId, driverIds })
+      toast.showSuccess('Drivers assigned successfully')
+    } catch (error: any) {
+      errorStore.setError(error, { context: VehicleContext.UPDATE })
+      const message = errorStore.getErrorMessage(error)
+      toast.showError(message)
+      throw error
+    }
+  }
+
   return {
     sort: base.sort,
     filter: base.filter,
@@ -156,5 +182,7 @@ export function useVehicles() {
     errorVehicleById,
     fetchVehicleByIdData,
     getVehicleFormInitialValues,
+    assignDriversToVehicle,
+    isAssigningDrivers,
   }
 }

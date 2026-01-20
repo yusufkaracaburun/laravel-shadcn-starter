@@ -11,13 +11,17 @@ import type {
   IVehicleFilters,
   IVehiclePrerequisites,
 } from '@/pages/vehicles/models/vehicles'
+import type { ISorting } from '@/services/query-utils'
+import type {
+  IPaginatedResponse,
+  IResponse,
+} from '@/services/types/response.type'
 
 import { useAxios } from '@/composables/use-axios.composable'
-
-import type { ISorting } from '@/services/query-utils'
-import type { IPaginatedResponse, IResponse } from '@/services/types/response.type'
-
-import { buildQueryString, defaultAxiosQueryOptions } from '@/services/query-utils'
+import {
+  buildQueryString,
+  defaultAxiosQueryOptions,
+} from '@/services/query-utils'
 
 enum QueryKeys {
   VEHICLE_PREREQUISITES = 'vehiclePrerequisites',
@@ -27,6 +31,7 @@ enum QueryKeys {
   CREATE_VEHICLE = 'createVehicle',
   UPDATE_VEHICLE = 'updateVehicle',
   DELETE_VEHICLE = 'deleteVehicle',
+  ASSIGN_DRIVERS = 'assignDrivers',
 }
 
 const API_URL = '/api/vehicles'
@@ -195,6 +200,36 @@ export function useVehicleService() {
     })
   }
 
+  function assignDriversMutation(): ReturnType<
+    typeof useMutation<
+      void,
+      AxiosError,
+      { vehicleId: number; driverIds: number[] }
+    >
+  > {
+    return useMutation<
+      void,
+      AxiosError,
+      { vehicleId: number; driverIds: number[] }
+    >({
+      mutationKey: [QueryKeys.ASSIGN_DRIVERS],
+      mutationFn: async ({ vehicleId, driverIds }): Promise<void> => {
+        await axiosInstance.post(`${API_URL}/${vehicleId}/drivers/assign`, {
+          drivers: driverIds,
+        })
+      },
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: [QueryKeys.VEHICLE_LIST] })
+        queryClient.invalidateQueries({
+          queryKey: [QueryKeys.GET_VEHICLE_BY_ID],
+        })
+      },
+      onError: (error) => {
+        console.error('Assign drivers error:', error)
+      },
+    })
+  }
+
   return {
     getVehiclePrerequisitesQuery,
     getVehiclesQuery,
@@ -203,5 +238,6 @@ export function useVehicleService() {
     createVehicleMutation,
     updateVehicleMutation,
     deleteVehicleMutation,
+    assignDriversMutation,
   }
 }

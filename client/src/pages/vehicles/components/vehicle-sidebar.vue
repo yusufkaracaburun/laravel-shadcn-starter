@@ -1,29 +1,23 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed } from 'vue'
 
-import type {
-  IVehicle,
-  IVehiclePrerequisites,
-} from '@/pages/vehicles/models/vehicles'
+import type { IVehicle } from '@/pages/vehicles/models/vehicles'
 
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import Badge from '@/components/ui/badge/Badge.vue'
 import { Progress } from '@/components/ui/progress'
-import { useAxios } from '@/composables/use-axios.composable'
 import {
   BoxIcon,
   CalendarIcon,
   CircleIcon,
-  EyeIcon,
   FileTextIcon,
   PanelRightCloseIcon,
   UsersIcon,
 } from '@/composables/use-icons.composable'
-import { useToast } from '@/composables/use-toast.composable'
 import { statuses } from '@/pages/vehicles/data/data'
 import { formatDate } from '@/utils/date'
 
-import AssignDriversDialog from './assign-drivers-dialog.vue'
+import VehicleDocumentsSection from './vehicle-documents-section.vue'
+import VehicleDriversSection from './vehicle-drivers-section.vue'
 
 const props = defineProps<{
   vehicle: IVehicle
@@ -32,26 +26,6 @@ const props = defineProps<{
 const emit = defineEmits<{
   close: []
 }>()
-
-const { axiosInstance, getCsrfCookie } = useAxios()
-const { showSuccess } = useToast()
-
-const isAssignDriversOpen = ref(false)
-const isAssigningDrivers = ref(false)
-const selectedDriverIds = ref<number[]>(
-  props.vehicle.drivers?.map((driver) => driver.id) ?? [],
-)
-const vehiclePrerequisites = ref<IVehiclePrerequisites | null>(null)
-const isLoadingVehicleDrivers = ref(false)
-
-// Get initials from name
-function getInitials(name: string): string {
-  const parts = name.trim().split(/\s+/)
-  if (parts.length >= 2) {
-    return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase()
-  }
-  return name[0]?.toUpperCase() || ''
-}
 
 const formattedCreatedAt = computed(() => formatDate(props.vehicle.created_at))
 const formattedUpdatedAt = computed(() => formatDate(props.vehicle.updated_at))
@@ -101,49 +75,6 @@ function getStatusVariant(status: string | null | undefined) {
     default:
       return 'secondary'
   }
-}
-
-async function handleAssignDriversSubmit() {
-  if (!props.vehicle) {
-    return
-  }
-
-  try {
-    isAssigningDrivers.value = true
-    await getCsrfCookie()
-    await axiosInstance.post('/api/vehicles/drivers/assign', {
-      vehicle_id: props.vehicle.id,
-      driver_ids: selectedDriverIds.value,
-    })
-    showSuccess('Drivers assigned successfully')
-    isAssignDriversOpen.value = false
-  } catch (error) {
-    // Errors are handled globally by axios interceptor / error store
-    console.error(error)
-  } finally {
-    isAssigningDrivers.value = false
-  }
-}
-
-async function ensureVehiclePrerequisitesLoaded() {
-  if (vehiclePrerequisites.value || isLoadingVehicleDrivers.value) {
-    return
-  }
-
-  try {
-    isLoadingVehicleDrivers.value = true
-    const response = await axiosInstance.get('/api/vehicles/prerequisites')
-    vehiclePrerequisites.value = response.data?.data ?? response.data
-  } catch (error) {
-    console.error(error)
-  } finally {
-    isLoadingVehicleDrivers.value = false
-  }
-}
-
-async function openAssignDriversDialog() {
-  await ensureVehiclePrerequisitesLoaded()
-  isAssignDriversOpen.value = true
 }
 </script>
 
@@ -325,118 +256,14 @@ async function openAssignDriversDialog() {
           </UiTabsList>
 
           <UiTabsContent value="drivers" class="space-y-3">
-            <div class="flex items-center justify-between">
-              <p class="text-xs text-muted-foreground">
-                Assign drivers to this vehicle.
-              </p>
-              <UiButton
-                size="sm"
-                variant="outline"
-                class="h-7 px-2 text-xs"
-                @click="openAssignDriversDialog"
-              >
-                Assign drivers
-              </UiButton>
-            </div>
-
-            <div class="space-y-2">
-              <div
-                v-for="driver in vehicle.drivers"
-                :key="driver.id"
-                class="flex items-center gap-2"
-              >
-                <Avatar class="size-8">
-                  <AvatarImage
-                    v-if="driver.profile_photo_url"
-                    :src="driver.profile_photo_url"
-                    :alt="driver.name"
-                  />
-                  <AvatarFallback>
-                    {{ getInitials(driver.name) }}
-                  </AvatarFallback>
-                </Avatar>
-                <div class="flex-1">
-                  <div class="text-sm font-medium">
-                    {{ driver.name }}
-                  </div>
-                  <div class="text-xs text-muted-foreground">
-                    {{ driver.email }}
-                  </div>
-                </div>
-              </div>
-            </div>
+            <VehicleDriversSection :vehicle="vehicle" />
           </UiTabsContent>
 
           <UiTabsContent value="documents" class="space-y-3">
-            <div class="space-y-2 text-sm">
-              <div class="flex items-center justify-between">
-                <div>
-                  <div class="font-medium">Registration Certificate.pdf</div>
-                  <div class="text-xs text-muted-foreground">
-                    Uploaded Jan 12, 2025 · 240 KB
-                  </div>
-                </div>
-                <button
-                  type="button"
-                  class="inline-flex h-7 w-7 items-center justify-center rounded-full border border-border text-muted-foreground hover:text-foreground hover:border-foreground transition-colors"
-                >
-                  <EyeIcon class="h-3.5 w-3.5" />
-                  <span class="sr-only">View document</span>
-                </button>
-              </div>
-
-              <div
-                class="flex items-center justify-between pt-2 border-t border-border"
-              >
-                <div>
-                  <div class="font-medium">Insurance Policy.pdf</div>
-                  <div class="text-xs text-muted-foreground">
-                    Uploaded Feb 03, 2025 · 320 KB
-                  </div>
-                </div>
-                <button
-                  type="button"
-                  class="inline-flex h-7 w-7 items-center justify-center rounded-full border border-border text-muted-foreground hover:text-foreground hover:border-foreground transition-colors"
-                >
-                  <EyeIcon class="h-3.5 w-3.5" />
-                  <span class="sr-only">View document</span>
-                </button>
-              </div>
-
-              <div
-                class="flex items-center justify-between pt-2 border-t border-border"
-              >
-                <div>
-                  <div class="font-medium">Inspection Report.pdf</div>
-                  <div class="text-xs text-muted-foreground">
-                    Uploaded Mar 18, 2025 · 410 KB
-                  </div>
-                </div>
-                <button
-                  type="button"
-                  class="inline-flex h-7 w-7 items-center justify-center rounded-full border border-border text-muted-foreground hover:text-foreground hover:border-foreground transition-colors"
-                >
-                  <EyeIcon class="h-3.5 w-3.5" />
-                  <span class="sr-only">View document</span>
-                </button>
-              </div>
-            </div>
+            <VehicleDocumentsSection />
           </UiTabsContent>
         </UiTabs>
       </div>
-
-      <!-- Assign Drivers Dialog -->
-      <AssignDriversDialog
-        :open="isAssignDriversOpen"
-        :vehicle-id="vehicle.id"
-        :drivers="vehiclePrerequisites?.drivers"
-        :loading="isLoadingVehicleDrivers"
-        :selected-driver-ids="selectedDriverIds"
-        :assigning="isAssigningDrivers"
-        @update:open="isAssignDriversOpen = $event"
-        @update:selected-driver-ids="selectedDriverIds = $event"
-        @submit="handleAssignDriversSubmit"
-      />
     </div>
   </div>
 </template>
