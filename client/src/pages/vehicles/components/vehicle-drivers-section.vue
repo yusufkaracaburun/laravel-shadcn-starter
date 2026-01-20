@@ -18,9 +18,12 @@ const { assignDriversToVehicle, isAssigningDrivers } = useVehicles()
 
 const isAssignDriversOpen = ref(false)
 const searchTerm = ref('')
-const selectedDriverIds = ref<number[]>(
-  props.vehicle.drivers?.map((driver) => driver.id) ?? [],
-)
+const selectedDriverIds = ref<number[]>([])
+
+function resetSelectedDrivers() {
+  selectedDriverIds.value =
+    props.vehicle.drivers?.map((driver) => driver.id) ?? []
+}
 
 const vehiclePrerequisites = ref<IVehiclePrerequisites | null>(null)
 const isLoadingVehicleDrivers = ref(false)
@@ -46,10 +49,23 @@ const filteredDrivers = computed(() => {
 watch(
   () => isAssignDriversOpen.value,
   (isOpen) => {
-    if (!isOpen) {
+    if (isOpen) {
+      resetSelectedDrivers()
+    } else {
       searchTerm.value = ''
     }
   },
+)
+
+// Reset selected drivers when vehicle changes
+watch(
+  () => props.vehicle.drivers,
+  () => {
+    if (!isAssignDriversOpen.value) {
+      resetSelectedDrivers()
+    }
+  },
+  { deep: true },
 )
 
 function getInitials(name: string): string {
