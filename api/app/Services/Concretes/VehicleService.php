@@ -61,14 +61,13 @@ final class VehicleService extends BaseService implements VehicleServiceInterfac
         return $this->repo->delete($vehicle);
     }
 
-    /**
-     * Centralize drivers sync logic.
-     */
-    private function syncDrivers(Vehicle $vehicle, array $data): void
+    public function syncDrivers(Vehicle $vehicle, array $data): VehicleResource
     {
         if (isset($data['drivers'])) {
             $vehicle->drivers()->sync($data['drivers']);
             $vehicle->load('drivers');
         }
+
+        return new VehicleResource($vehicle);
     }
 }

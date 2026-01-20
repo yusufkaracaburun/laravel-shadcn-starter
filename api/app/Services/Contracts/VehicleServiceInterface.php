@@ -21,4 +21,6 @@ interface VehicleServiceInterface extends BaseServiceInterface
     public function updateVehicle(Vehicle $vehicle, array $data): VehicleResource;
 
     public function deleteVehicle(Vehicle $vehicle): bool;
+
+    public function syncDrivers(Vehicle $vehicle, array $data): VehicleResource;
 }

@@ -16,5 +16,6 @@ use App\Http\Controllers\Api\VehicleController;
 
 Route::middleware('auth:sanctum')->name('api.vehicles.')->group(function (): void {
     Route::get('vehicles/prerequisites', [VehicleController::class, 'prerequisites'])->name('vehicles.prerequisites');
+    Route::post('vehicles/{vehicle}/drivers/assign', [VehicleController::class, 'assignDrivers'])->name('vehicles.assignDrivers');
     Route::apiResource('vehicles', VehicleController::class);
 });
