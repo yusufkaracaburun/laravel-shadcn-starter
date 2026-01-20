@@ -3,13 +3,46 @@ import { computed } from 'vue'
 
 import type { IEquipment } from '@/pages/equipments/models/equipments'
 
+import Badge from '@/components/ui/badge/Badge.vue'
+import {
+  MoreVerticalIcon,
+  PencilIcon,
+  Trash2Icon,
+} from '@/composables/use-icons.composable'
 import { statuses } from '@/pages/equipments/data/data'
 import { formatDate } from '@/utils/date'
-import { getEquipmentStatusColor } from '@/utils/status-colors'
 
 const props = defineProps<{
   equipment: IEquipment | null
 }>()
+
+function getStatusInfo(status: string | null | undefined) {
+  if (!status) {
+    return null
+  }
+
+  return statuses.find((statusItem) => {
+    return statusItem.value.toLowerCase() === status.toLowerCase()
+  })
+}
+
+function getStatusVariant(status: string | null | undefined) {
+  const statusInfo = getStatusInfo(status)
+  if (!statusInfo) {
+    return 'secondary'
+  }
+
+  switch (statusInfo.value) {
+    case 'active':
+      return 'default'
+    case 'inactive':
+      return 'destructive'
+    case 'maintenance':
+      return 'secondary'
+    default:
+      return 'secondary'
+  }
+}
 
 const createdAt = computed(() =>
   props.equipment?.created_at ? formatDate(props.equipment.created_at) : null,
@@ -18,15 +51,6 @@ const createdAt = computed(() =>
 const updatedAt = computed(() =>
   props.equipment?.updated_at ? formatDate(props.equipment.updated_at) : null,
 )
-
-function getStatusInfo(status: string | null | undefined) {
-  if (!status) return null
-  return statuses.find((s) => s.value.toLowerCase() === status.toLowerCase())
-}
-
-function getStatusColor(status: string | null | undefined) {
-  return getEquipmentStatusColor(status)
-}
 </script>
 
 <template>
@@ -63,6 +87,34 @@ function getStatusColor(status: string | null | undefined) {
               {{ equipment.model || 'Unknown model' }}
             </p>
           </div>
+
+          <UiDropdownMenu>
+            <UiDropdownMenuTrigger as-child>
+              <UiButton
+                variant="ghost"
+                class="flex h-8 w-8 p-0 data-[state=open]:bg-muted"
+              >
+                <MoreVerticalIcon class="size-4" />
+                <span class="sr-only">Open menu</span>
+              </UiButton>
+            </UiDropdownMenuTrigger>
+            <UiDropdownMenuContent align="end" class="w-[160px]">
+              <UiDropdownMenuItem>
+                <span>Edit</span>
+                <UiDropdownMenuShortcut>
+                  <PencilIcon class="size-4" />
+                </UiDropdownMenuShortcut>
+              </UiDropdownMenuItem>
+              <UiDropdownMenuItem
+                class="text-destructive focus:text-destructive"
+              >
+                <span>Delete</span>
+                <UiDropdownMenuShortcut>
+                  <Trash2Icon class="size-4" />
+                </UiDropdownMenuShortcut>
+              </UiDropdownMenuItem>
+            </UiDropdownMenuContent>
+          </UiDropdownMenu>
         </div>
       </header>
 
@@ -102,16 +154,16 @@ function getStatusColor(status: string | null | undefined) {
         <div class="grid grid-cols-1 gap-3 text-xs sm:grid-cols-2">
           <div>
             <p class="text-muted-foreground">Status</p>
-            <p class="mt-0.5 font-medium">
-              <span
+            <div class="mt-0.5">
+              <Badge
                 v-if="equipment.status"
-                class="inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide"
-                :class="[getStatusColor(equipment.status)]"
+                :variant="getStatusVariant(equipment.status)"
+                :class="getStatusInfo(equipment.status)?.color || ''"
               >
                 {{ getStatusInfo(equipment.status)?.label || equipment.status }}
-              </span>
-              <span v-else> Unknown </span>
-            </p>
+              </Badge>
+              <span v-else class="text-sm font-medium">Unknown</span>
+            </div>
           </div>
           <div v-if="createdAt">
             <p class="text-muted-foreground">Created</p>

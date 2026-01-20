@@ -54,8 +54,7 @@ function handleSelect(command: TCommand) {
 function formatPrice(
   price: number | { formatted: string } | undefined,
 ): string {
-  if (!price)
-    return '$0.00'
+  if (!price) return '$0.00'
   // Handle Money object from backend
   if (typeof price === 'object' && 'formatted' in price) {
     return price.formatted
@@ -75,7 +74,10 @@ function formatPrice(
   <Card
     class="hover:shadow-md transition-shadow cursor-pointer"
     @click="
-      router.push({ name: '/products/view/[id]', params: { id: product.id.toString() } })
+      router.push({
+        name: '/products/view/[id]',
+        params: { id: product.id.toString() },
+      })
     "
   >
     <CardHeader>
@@ -117,13 +119,13 @@ function formatPrice(
       <div class="space-y-2">
         <div class="flex items-center justify-between">
           <span class="text-sm text-muted-foreground">Unit Price</span>
-          <span class="font-semibold">{{ formatPrice(product.unit_price) }}</span>
+          <span class="font-semibold">{{
+            formatPrice(product.unit_price)
+          }}</span>
         </div>
         <div class="flex items-center justify-between">
           <span class="text-sm text-muted-foreground">VAT Rate</span>
-          <Badge variant="outline">
-            {{ product.vat_rate }}%
-          </Badge>
+          <Badge variant="outline"> {{ product.vat_rate }}% </Badge>
         </div>
         <div v-if="product.unit" class="flex items-center justify-between">
           <span class="text-sm text-muted-foreground">Unit</span>

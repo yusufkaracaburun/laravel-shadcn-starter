@@ -2,8 +2,9 @@
 import { computed, ref, watch } from 'vue'
 
 import type { IEquipment } from '@/pages/equipments/models/equipments'
+
+import Badge from '@/components/ui/badge/Badge.vue'
 import { statuses } from '@/pages/equipments/data/data'
-import { getEquipmentStatusColor } from '@/utils/status-colors'
 
 const props = withDefaults(
   defineProps<{
@@ -21,8 +22,36 @@ const props = withDefaults(
 
 const emit = defineEmits<{
   'update:selectedEquipment': [equipment: IEquipment | null]
-  'select': [equipment: IEquipment]
+  select: [equipment: IEquipment]
 }>()
+
+function getStatusInfo(status: string | null | undefined) {
+  if (!status) {
+    return null
+  }
+
+  return statuses.find((statusItem) => {
+    return statusItem.value.toLowerCase() === status.toLowerCase()
+  })
+}
+
+function getStatusVariant(status: string | null | undefined) {
+  const statusInfo = getStatusInfo(status)
+  if (!statusInfo) {
+    return 'secondary'
+  }
+
+  switch (statusInfo.value) {
+    case 'active':
+      return 'default'
+    case 'inactive':
+      return 'destructive'
+    case 'maintenance':
+      return 'secondary'
+    default:
+      return 'secondary'
+  }
+}
 
 const searchTerm = ref('')
 
@@ -73,15 +102,6 @@ function handleSelectEquipment(equipment: IEquipment) {
   emit('update:selectedEquipment', equipment)
   emit('select', equipment)
   props.openDetail()
-}
-
-function getStatusInfo(status: string | null | undefined) {
-  if (!status) return null
-  return statuses.find((s) => s.value.toLowerCase() === status.toLowerCase())
-}
-
-function getStatusColor(status: string | null | undefined) {
-  return getEquipmentStatusColor(status)
 }
 </script>
 
@@ -134,8 +154,7 @@ function getStatusColor(status: string | null | undefined) {
               class="flex w-full items-center gap-3 px-4 py-3 text-left transition hover:bg-muted/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               :class="{
                 'bg-muted/70 border-l-2 border-l-primary':
-                  selectedEquipment &&
-                  selectedEquipment.id === equipment.id,
+                  selectedEquipment && selectedEquipment.id === equipment.id,
               }"
               @click="handleSelectEquipment(equipment)"
             >
@@ -149,15 +168,15 @@ function getStatusColor(status: string | null | undefined) {
                   <span class="truncate text-sm font-medium">
                     {{ equipment.name }}
                   </span>
-                  <UiBadge
+                  <Badge
                     v-if="equipment.status"
-                    :class="[
-                      getStatusColor(equipment.status),
-                      'px-1 py-0 text-[10px] font-medium uppercase tracking-wide',
-                    ]"
+                    :variant="getStatusVariant(equipment.status)"
+                    :class="getStatusInfo(equipment.status)?.color || ''"
                   >
-                    {{ getStatusInfo(equipment.status)?.label || equipment.status }}
-                  </UiBadge>
+                    {{
+                      getStatusInfo(equipment.status)?.label || equipment.status
+                    }}
+                  </Badge>
                 </div>
                 <p class="truncate text-xs text-muted-foreground">
                   {{ equipment.type || 'Unspecified type' }}

@@ -12,6 +12,7 @@ import {
   CircleIcon,
   PanelRightCloseIcon,
 } from '@/composables/use-icons.composable'
+import { statuses } from '@/pages/vehicles/data/data'
 import { formatDate } from '@/utils/date'
 
 const props = defineProps<{
@@ -52,6 +53,34 @@ const inspectionProgressValue = computed(() => {
     Math.min(100, ((365 - props.vehicle.days_to_inspection) / 365) * 100),
   )
 })
+
+function getStatusInfo(status: string | null | undefined) {
+  if (!status) {
+    return null
+  }
+
+  return statuses.find((statusItem) => {
+    return statusItem.value.toLowerCase() === status.toLowerCase()
+  })
+}
+
+function getStatusVariant(status: string | null | undefined) {
+  const statusInfo = getStatusInfo(status)
+  if (!statusInfo) {
+    return 'secondary'
+  }
+
+  switch (statusInfo.value) {
+    case 'active':
+      return 'default'
+    case 'inactive':
+      return 'destructive'
+    case 'maintenance':
+      return 'secondary'
+    default:
+      return 'secondary'
+  }
+}
 </script>
 
 <template>
@@ -133,21 +162,13 @@ const inspectionProgressValue = computed(() => {
             </div>
             <div>
               <Badge
-                v-if="vehicle.status_formatted"
-                :variant="
-                  vehicle.status_formatted.color === 'danger'
-                    ? 'destructive'
-                    : vehicle.status_formatted.color === 'success'
-                      ? 'default'
-                      : 'secondary'
-                "
-                :class="vehicle.status_formatted.style || ''"
+                v-if="vehicle.status"
+                :variant="getStatusVariant(vehicle.status)"
+                :class="getStatusInfo(vehicle.status)?.color || ''"
               >
-                {{ vehicle.status_formatted.label || vehicle.status }}
+                {{ getStatusInfo(vehicle.status)?.label || vehicle.status }}
               </Badge>
-              <span v-else class="text-sm font-medium">{{
-                vehicle.status
-              }}</span>
+              <span v-else class="text-sm font-medium">Unknown</span>
             </div>
           </div>
           <div class="flex items-center justify-between gap-2">

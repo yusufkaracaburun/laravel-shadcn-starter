@@ -53,7 +53,7 @@ const closeDetail = () => (detailOpenModel.value = false)
       <div class="flex flex-col lg:flex-row gap-4 h-full min-h-0">
         <!-- Left / list -->
         <section
-          class="flex-1 lg:flex-none lg:w-[26rem] xl:w-[30rem] min-h-0 overflow-y-auto"
+          class="flex-1 lg:flex-none lg:w-[26rem] min-h-0 overflow-y-auto"
         >
           <slot
             :open-detail="openDetail"

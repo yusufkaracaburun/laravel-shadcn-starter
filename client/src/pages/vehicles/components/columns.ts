@@ -11,6 +11,8 @@ import { formatDate } from '@/utils/date'
 
 import type { IVehicle } from '../models/vehicles'
 
+import { statuses } from '../data/data'
+
 import DataTableRowActions from './data-table-row-actions.vue'
 
 // CSS class constants
@@ -53,31 +55,57 @@ function createDateCell(dateValue: unknown) {
 }
 
 /**
+ * Helper function to get status info from statuses data
+ */
+function getStatusInfo(status: string | null | undefined) {
+  if (!status) {
+    return null
+  }
+
+  return statuses.find((statusItem) => {
+    return statusItem.value.toLowerCase() === status.toLowerCase()
+  })
+}
+
+/**
+ * Helper function to get status variant for Badge
+ */
+function getStatusVariant(status: string | null | undefined) {
+  const statusInfo = getStatusInfo(status)
+  if (!statusInfo) {
+    return 'secondary'
+  }
+
+  switch (statusInfo.value) {
+    case 'active':
+      return 'default'
+    case 'inactive':
+      return 'destructive'
+    case 'maintenance':
+      return 'secondary'
+    default:
+      return 'secondary'
+  }
+}
+
+/**
  * Helper function to create status badge cell
  */
 function createStatusCell(vehicle: IVehicle) {
-  const statusFormatted = vehicle.status_formatted
-  if (!statusFormatted) {
+  if (!vehicle.status) {
     return h('div', { class: CELL_CLASSES.EMPTY_STATE }, '—')
   }
 
-  // Map color to variant
-  let variant: 'default' | 'secondary' | 'destructive' | 'outline' = 'secondary'
-  if (statusFormatted.color === 'danger') {
-    variant = 'destructive'
-  } else if (statusFormatted.color === 'success') {
-    variant = 'default'
-  }
+  const statusInfo = getStatusInfo(vehicle.status)
+  const variant = getStatusVariant(vehicle.status)
 
-  // Use Badge with status_formatted styling
-  // status_formatted.style contains the full CSS classes from backend
   return h(
     Badge,
     {
       variant,
-      class: statusFormatted.style || '',
+      class: statusInfo?.color || '',
     },
-    [statusFormatted.label || vehicle.status],
+    [statusInfo?.label || vehicle.status],
   )
 }
 
