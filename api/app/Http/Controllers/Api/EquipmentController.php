@@ -48,7 +48,8 @@ final class EquipmentController extends Controller
     {
         // $this->authorize('viewAny', Equipment::class); // Uncomment when Policy is created
 
-        $collection = $this->service->getPaginated($request);
+        $cache = Equipment::getCacheKeys();
+        $collection = $this->cachedResponse($cache['index'], fn () => $this->service->getPaginated($request));
 
         return ApiResponse::success($collection);
     }
@@ -76,7 +77,11 @@ final class EquipmentController extends Controller
     {
         // $this->authorize('view', $equipment);
 
-        $equipmentResource = $this->service->show($equipment);
+        $cache = Equipment::getCacheKeys();
+        $equipmentResource = $this->cachedResponse(
+            $cache['show'] . ".{$equipment->id}",
+            fn () => $this->service->show($equipment),
+        );
 
         return ApiResponse::success($equipmentResource);
     }

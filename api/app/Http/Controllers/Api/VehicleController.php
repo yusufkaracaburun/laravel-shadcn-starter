@@ -48,7 +48,8 @@ final class VehicleController extends Controller
     {
         // $this->authorize('viewAny', Vehicle::class); // Uncomment when Policy is created
 
-        $collection = $this->service->getPaginated($request);
+        $cache = Vehicle::getCacheKeys();
+        $collection = $this->cachedResponse($cache['index'], fn () => $this->service->getPaginated($request));
 
         return ApiResponse::success($collection);
     }
@@ -76,7 +77,11 @@ final class VehicleController extends Controller
     {
         // $this->authorize('view', $vehicle);
 
-        $vehicleResource = $this->service->show($vehicle);
+        $cache = Vehicle::getCacheKeys();
+        $vehicleResource = $this->cachedResponse(
+            $cache['show'] . ".{$vehicle->id}",
+            fn () => $this->service->show($vehicle),
+        );
 
         return ApiResponse::success($vehicleResource);
     }

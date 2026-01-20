@@ -39,14 +39,14 @@ final class EquipmentService extends BaseService implements EquipmentServiceInte
 
     public function createEquipment(array $data): EquipmentResource
     {
-        $equipment = $this->repo->create($data);
+        $equipment = $this->repo->createWithRelationships($data);
 
         return new EquipmentResource($equipment);
     }
 
     public function updateEquipment(Equipment $equipment, array $data): EquipmentResource
     {
-        $updated = $this->repo->update($equipment, $data);
+        $updated = $this->repo->updateWithRelationships($equipment, $data);
 
         return new EquipmentResource($updated);
     }

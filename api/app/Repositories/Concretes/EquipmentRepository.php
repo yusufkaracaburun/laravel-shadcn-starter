@@ -74,6 +74,28 @@ final class EquipmentRepository extends QueryableRepository implements Equipment
         return $this->loadRelationships($equipment);
     }
 
+    /**
+     * Create a new equipment and load relationships.
+     */
+    public function createWithRelationships(array $data): Equipment
+    {
+        /** @var Equipment $equipment */
+        $equipment = parent::create($data);
+
+        return $this->loadRelationships($equipment);
+    }
+
+    /**
+     * Update equipment and load relationships.
+     */
+    public function updateWithRelationships(Equipment $equipment, array $data): Equipment
+    {
+        /** @var Equipment $updated */
+        $updated = parent::update($equipment, $data);
+
+        return $this->loadRelationships($updated);
+    }
+
     protected function model(): string
     {
         return Equipment::class;

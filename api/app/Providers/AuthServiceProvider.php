@@ -9,14 +9,18 @@ use App\Models\User;
 use App\Models\Invoice;
 use App\Models\Payment;
 use App\Models\Product;
+use App\Models\Vehicle;
 use App\Models\Customer;
+use App\Models\Equipment;
 use App\Policies\RolePolicy;
 use App\Policies\TeamPolicy;
 use App\Policies\UserPolicy;
 use App\Policies\InvoicePolicy;
 use App\Policies\PaymentPolicy;
 use App\Policies\ProductPolicy;
+use App\Policies\VehiclePolicy;
 use App\Policies\CustomerPolicy;
+use App\Policies\EquipmentPolicy;
 use App\Policies\PermissionPolicy;
 use Spatie\Permission\Models\Role;
 use Illuminate\Support\Facades\Gate;
@@ -40,6 +44,8 @@ final class AuthServiceProvider extends ServiceProvider
         Payment::class    => PaymentPolicy::class,
         Invoice::class    => InvoicePolicy::class,
         Customer::class   => CustomerPolicy::class,
+        Equipment::class  => EquipmentPolicy::class,
+        Vehicle::class    => VehiclePolicy::class,
     ];
 
     /**

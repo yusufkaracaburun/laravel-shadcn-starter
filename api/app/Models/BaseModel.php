@@ -35,6 +35,33 @@ abstract class BaseModel extends Model
     protected $hidden = ['api_key', 'secret', 'password', 'token', 'remember_token', 'two_factor_recovery_codes', 'two_factor_secret'];
 
     /**
+     * Get cache keys for model endpoints.
+     *
+     * Models can override this by defining their own CACHE constant.
+     * If not overridden, cache keys are generated based on the model's table name.
+     *
+     * @return array<string, string>
+     */
+    public static function getCacheKeys(): array
+    {
+        // Check if model has defined its own CACHE constant
+        $cacheConstant = constant(static::class . '::CACHE');
+        if ($cacheConstant !== false && is_array($cacheConstant)) {
+            /** @var array<string, string> $cacheConstant */
+            return $cacheConstant;
+        }
+
+        // Generate cache keys based on table name
+        $table = (new static)->getTable();
+        $resource = str_replace('_', '.', $table);
+
+        return [
+            'index' => "api.{$resource}.index",
+            'show'  => "api.{$resource}.show",
+        ];
+    }
+
+    /**
      * Get the attributes that should be cast.
      *
      * Models should override this method to define their specific casts.

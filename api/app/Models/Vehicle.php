@@ -5,14 +5,27 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Enums\VehicleStatus;
+use App\Observers\VehicleObserver;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
+#[ObservedBy([VehicleObserver::class])]
 final class Vehicle extends BaseModel
 {
     use HasFactory;
+
+    /**
+     * Cache keys for vehicle endpoints.
+     *
+     * @var array<string, string>
+     */
+    public const CACHE = [
+        'index' => 'api.vehicles.index',
+        'show'  => 'api.vehicles.show',
+    ];
 
     /**
      * Searchable fields for this model.

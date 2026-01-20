@@ -32,6 +32,7 @@ final class EquipmentFactory extends Factory
             'serial_number' => mb_strtoupper($this->faker->bothify('EQ-#####-??')),
             'type'          => $this->faker->randomElement(['Drill', 'Excavator', 'Saw', 'Generator']),
             'status'        => $this->faker->randomElement(EquipmentStatus::cases()),
+            'inspection_date' => now()->addWeeks(rand(1, 52)),
             'image'         => null,
         ];
     }
