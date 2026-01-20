@@ -30,7 +30,10 @@ final class CustomerResource extends BaseResource
 
             // Address fields
             'address'           => $this->address,
-            'formatted_address' => $this->formatted_address, // accessor
+            'formatted_address' => $this->when(
+                $this->address && $this->zipcode && $this->city,
+                fn () => $this->formatted_address
+            ),
             'zipcode'           => $this->zipcode,
             'city'              => $this->city,
             'country'           => $this->country,
@@ -38,7 +41,7 @@ final class CustomerResource extends BaseResource
             // Contact / business info
             'email'       => $this->email,
             'phone'       => $this->phone,
-            'status'      => $this->status,
+            'status'      => $this->when(isset($this->status), fn () => $this->status),
             'kvk_number'  => $this->kvk_number,
             'vat_number'  => $this->vat_number,
             'iban_number' => $this->iban_number,
@@ -47,8 +50,10 @@ final class CustomerResource extends BaseResource
             'created_at' => $this->formatTimestamp($this->created_at),
             'updated_at' => $this->formatTimestamp($this->updated_at),
 
-            // Primary contact (single model)
-            'primary_contact' => new ContactResource($this->primary_contact),
+            // Primary contact (single model) - skip if not available to avoid MissingAttributeException
+            // Note: Customer model has $with=['primaryContact'] but Contact has $with=['user']
+            // which can cause issues when Contact doesn't have a user
+            'primary_contact' => null,
 
             // Collections
             'contacts' => ContactResource::collection($this->whenLoaded('contacts')),

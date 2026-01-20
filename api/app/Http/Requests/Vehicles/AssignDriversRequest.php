@@ -4,19 +4,11 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\Vehicles;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\BaseFormRequest;
 use Illuminate\Contracts\Validation\ValidationRule;
 
-final class AssignDriversRequest extends FormRequest
+final class AssignDriversRequest extends BaseFormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
-    public function authorize(): bool
-    {
-        return true;
-    }
-
     /**
      * Get the validation rules that apply to the request.
      *
@@ -27,5 +19,12 @@ final class AssignDriversRequest extends FormRequest
         return [
             'drivers' => ['required', 'array', 'min:1'],
         ];
+    }
+
+    public function attributes(): array
+    {
+        return array_merge(parent::attributes(), [
+            'drivers' => 'drivers',
+        ]);
     }
 }

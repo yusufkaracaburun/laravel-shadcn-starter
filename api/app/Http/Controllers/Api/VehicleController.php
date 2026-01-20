@@ -4,21 +4,20 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Requests\Vehicles\AssignDriversRequest;
 use App\Models\Vehicle;
 use App\Enums\VehicleStatus;
-use App\Services\Contracts\UserServiceInterface;
 use Illuminate\Http\JsonResponse;
 use App\Http\Responses\ApiResponse;
 use App\Http\Controllers\Controller;
+use App\Services\Contracts\UserServiceInterface;
 use App\Http\Requests\Vehicles\StoreVehicleRequest;
 use App\Http\Requests\Vehicles\VehicleIndexRequest;
 use App\Services\Contracts\VehicleServiceInterface;
+use App\Http\Requests\Vehicles\AssignDriversRequest;
 use App\Http\Requests\Vehicles\UpdateVehicleRequest;
 use App\Http\Controllers\Concerns\UsesCachedResponses;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use App\Http\Controllers\Concerns\InvalidatesCachedModels;
-use Illuminate\Http\Request;
 
 final class VehicleController extends Controller
 {

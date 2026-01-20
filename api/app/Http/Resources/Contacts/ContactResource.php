@@ -34,7 +34,11 @@ final class ContactResource extends BaseResource
             'created_at' => $this->formatTimestamp($this->created_at),
             'updated_at' => $this->formatTimestamp($this->updated_at),
 
-            'user' => new UserResource($this->whenLoaded('user')),
+            'user' => $this->when(
+                $this->relationLoaded('user') && $this->user !== null,
+                fn () => new UserResource($this->user),
+                null
+            ),
         ];
     }
 }

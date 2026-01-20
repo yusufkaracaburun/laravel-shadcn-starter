@@ -47,13 +47,6 @@ final class Customer extends BaseModel
     ];
 
     /**
-     * The relationships that should always be loaded.
-     *
-     * @var list<string>
-     */
-    protected $with = ['primaryContact'];
-
-    /**
      * Get all payments for this customer.
      *
      * @return HasMany<Payment>
@@ -132,8 +125,14 @@ final class Customer extends BaseModel
      */
     protected function getPrimaryContactAttribute(): ?Contact
     {
+        // If primaryContact is already loaded, return it
+        if ($this->relationLoaded('primaryContact')) {
+            return $this->primaryContact->first();
+        }
+
+        // Otherwise, query for it without eager loading user to avoid MissingAttributeException
         /** @var Contact|null $contact */
-        $contact = $this->primaryContact()->first();
+        $contact = $this->primaryContact()->without('user')->first();
 
         return $contact;
     }

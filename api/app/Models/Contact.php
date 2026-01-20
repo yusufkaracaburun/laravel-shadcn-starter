@@ -22,13 +22,6 @@ use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 final class Contact extends BaseModel
 {
     /**
-     * The relationships that should always be loaded.
-     *
-     * @var list<string>
-     */
-    protected $with = ['user'];
-
-    /**
      * Get all customers associated with this contact.
      *
      * @return BelongsToMany<Customer>

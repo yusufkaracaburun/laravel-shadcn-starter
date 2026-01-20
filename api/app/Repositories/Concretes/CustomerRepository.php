@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace App\Repositories\Concretes;
 
 use App\Models\Customer;
+use Spatie\QueryBuilder\QueryBuilder;
 use Spatie\QueryBuilder\AllowedFilter;
 use Illuminate\Database\Eloquent\Model;
 use App\Repositories\QueryableRepository;
+use Spatie\QueryBuilder\QueryBuilderRequest;
 use Illuminate\Pagination\LengthAwarePaginator;
 use App\Repositories\Contracts\CustomerRepositoryInterface;
 
@@ -60,7 +62,7 @@ final class CustomerRepository extends QueryableRepository implements CustomerRe
 
     public function getAllowedIncludes(): array
     {
-        return ['contacts', 'invoices'];
+        return ['contacts', 'invoices', 'primaryContact'];
     }
 
     public function getAllowedFilters(): array
@@ -82,6 +84,7 @@ final class CustomerRepository extends QueryableRepository implements CustomerRe
     public function findOrFail(int $id, array $columns = ['*']): Customer
     {
         return Customer::query()
+            ->with('primaryContact')
             ->withCount(['invoices', 'contacts'])
             ->findOrFail($id, $columns);
     }
@@ -122,7 +125,7 @@ final class CustomerRepository extends QueryableRepository implements CustomerRe
     private function loadRelationships(Model $customer): Customer
     {
         /** @var Customer $customer */
-        return $customer->load(['contacts', 'invoices']);
+        return $customer->load('primaryContact', 'contacts', 'invoices');
     }
 
     public function getBusinessCustomers(int $perPage = 9999): LengthAwarePaginator

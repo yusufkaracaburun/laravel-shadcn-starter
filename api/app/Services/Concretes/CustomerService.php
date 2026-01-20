@@ -62,4 +62,18 @@ final class CustomerService extends BaseService implements CustomerServiceInterf
 
         return new CustomerCollection($customers);
     }
+
+    public function getBusinessCustomers(): CustomerCollection
+    {
+        $customers = $this->repo->getBusinessCustomers();
+
+        return new CustomerCollection($customers);
+    }
+
+    public function getPrivateCustomers(): CustomerCollection
+    {
+        $customers = $this->repo->getPrivateCustomers();
+
+        return new CustomerCollection($customers);
+    }
 }

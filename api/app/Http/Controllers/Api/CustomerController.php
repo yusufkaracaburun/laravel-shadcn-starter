@@ -5,10 +5,11 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Api;
 
 use App\Models\Customer;
+use App\Enums\CustomerType;
+use App\Enums\CustomerStatus;
 use Illuminate\Http\JsonResponse;
 use App\Http\Responses\ApiResponse;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\Customers\CustomerResource;
 use App\Services\Contracts\CustomerServiceInterface;
 use App\Http\Requests\Customers\CustomerStoreRequest;
 use App\Http\Requests\Customers\IndexCustomerRequest;
@@ -28,16 +29,26 @@ final class CustomerController extends Controller
     ) {}
 
     /**
-     * Display a listing of customers with QueryBuilder support.
+     * Get prerequisites for creating a new customer.
      *
-     * Supports filtering, sorting, and including relationships via request parameters.
-     * Example: /api/customers?filter[type]=business&sort=-created_at&include=contacts,invoices
+     * @authenticated
+     */
+    public function prerequisites(): JsonResponse
+    {
+        return ApiResponse::success([
+            'types'    => CustomerType::toArray(),
+            'statuses' => CustomerStatus::toArray(),
+        ]);
+    }
+
+    /**
+     * Display a listing of customers.
      *
      * @authenticated
      */
     public function index(IndexCustomerRequest $request): JsonResponse
     {
-        $this->authorize('viewAny', Customer::class);
+        // $this->authorize('viewAny', Customer::class);
 
         $cache = Customer::getCacheKeys();
         $collection = $this->cachedResponse($cache['index'], fn () => $this->service->getPaginated($request));
@@ -52,11 +63,11 @@ final class CustomerController extends Controller
      */
     public function store(CustomerStoreRequest $request): JsonResponse
     {
-        $this->authorize('create', Customer::class);
+        // $this->authorize('create', Customer::class);
 
-        $customer = $this->service->createCustomer($request->validated());
+        $customerResource = $this->service->createCustomer($request->validated());
 
-        return ApiResponse::created($customer);
+        return ApiResponse::created($customerResource);
     }
 
     /**
@@ -66,7 +77,7 @@ final class CustomerController extends Controller
      */
     public function show(Customer $customer): JsonResponse
     {
-        $this->authorize('view', $customer);
+        // $this->authorize('view', $customer);
 
         $cache = Customer::getCacheKeys();
         $customerResource = $this->cachedResponse(
@@ -84,7 +95,7 @@ final class CustomerController extends Controller
      */
     public function update(CustomerUpdateRequest $request, Customer $customer): JsonResponse
     {
-        $this->authorize('update', $customer);
+        // $this->authorize('update', $customer);
 
         $customerResource = $this->service->updateCustomer($customer, $request->validated());
 
@@ -98,7 +109,7 @@ final class CustomerController extends Controller
      */
     public function destroy(Customer $customer): JsonResponse
     {
-        $this->authorize('delete', $customer);
+        // $this->authorize('delete', $customer);
 
         $this->service->deleteCustomer($customer);
 

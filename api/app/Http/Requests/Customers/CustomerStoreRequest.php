@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\Customers;
 
+use App\Enums\CustomerStatus;
 use App\Rules\ValidPhoneNumber;
-use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
+use App\Http\Requests\BaseFormRequest;
 use Illuminate\Contracts\Validation\ValidationRule;
 
 /**
@@ -13,16 +15,8 @@ use Illuminate\Contracts\Validation\ValidationRule;
  *
  * Validates customer creation data.
  */
-final class CustomerStoreRequest extends FormRequest
+final class CustomerStoreRequest extends BaseFormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
-    public function authorize(): bool
-    {
-        return true;
-    }
-
     /**
      * Get the validation rules that apply to the request.
      *
@@ -34,7 +28,17 @@ final class CustomerStoreRequest extends FormRequest
             'name'   => ['required', 'string', 'max:255'],
             'email'  => ['nullable', 'string', 'email', 'max:255', 'unique:customers'],
             'phone'  => ['nullable', new ValidPhoneNumber()],
-            'status' => ['nullable', 'string', 'in:active,inactive,pending'],
+            'status' => ['required', Rule::enum(CustomerStatus::class)],
         ];
+    }
+
+    public function attributes(): array
+    {
+        return array_merge(parent::attributes(), [
+            'name'   => 'name',
+            'email'  => 'email address',
+            'phone'  => 'phone number',
+            'status' => 'status',
+        ]);
     }
 }

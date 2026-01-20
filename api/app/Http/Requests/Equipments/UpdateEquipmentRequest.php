@@ -6,19 +6,11 @@ namespace App\Http\Requests\Equipments;
 
 use App\Enums\EquipmentStatus;
 use Illuminate\Validation\Rule;
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\BaseFormRequest;
 use Illuminate\Contracts\Validation\ValidationRule;
 
-final class UpdateEquipmentRequest extends FormRequest
+final class UpdateEquipmentRequest extends BaseFormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
-    public function authorize(): bool
-    {
-        return true;
-    }
-
     /**
      * Get the validation rules that apply to the request.
      *
@@ -36,5 +28,16 @@ final class UpdateEquipmentRequest extends FormRequest
             'status' => ['sometimes', Rule::enum(EquipmentStatus::class)],
             'image'  => ['nullable', 'string'],
         ];
+    }
+
+    public function attributes(): array
+    {
+        return array_merge(parent::attributes(), [
+            'name'          => 'name',
+            'serial_number' => 'serial number',
+            'type'          => 'type',
+            'status'        => 'status',
+            'image'         => 'image',
+        ]);
     }
 }

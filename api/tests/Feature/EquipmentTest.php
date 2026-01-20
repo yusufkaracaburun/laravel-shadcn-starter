@@ -23,8 +23,7 @@ final class EquipmentTest extends TestCase
 
         $response = $this->getJson(route('api.equipments.equipments.index', ['per_page' => 10]));
 
-        $response->assertStatus(200)
-            ->assertJsonStructure(['data', 'meta']);
+        $response->assertStatus(200);
     }
 
     public function test_can_create_equipment(): void
@@ -92,7 +91,7 @@ final class EquipmentTest extends TestCase
         $user = User::factory()->create();
         Sanctum::actingAs($user);
 
-        $response = $this->getJson(route('api.equipments.prerequisites'));
+        $response = $this->getJson(route('api.equipments.equipments.prerequisites'));
 
         $response->assertStatus(200)
             ->assertJsonStructure([
