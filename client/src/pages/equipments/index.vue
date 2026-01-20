@@ -37,7 +37,33 @@ const selectedEquipment = ref<IEquipment | null>(null)
     </template>
 
     <template #detail>
-      <EquipmentDetail :equipment="selectedEquipment" />
+      <Transition name="fade-slide" mode="out-in">
+        <EquipmentDetail
+          :key="selectedEquipment?.id || 'no-equipment'"
+          :equipment="selectedEquipment"
+        />
+      </Transition>
     </template>
   </Page>
 </template>
+
+<style scoped>
+.fade-slide-enter-active,
+.fade-slide-leave-active {
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
+}
+
+.fade-slide-enter-from,
+.fade-slide-leave-to {
+  opacity: 0;
+  transform: translateX(4px);
+}
+
+.fade-slide-enter-to,
+.fade-slide-leave-from {
+  opacity: 1;
+  transform: translateX(0);
+}
+</style>

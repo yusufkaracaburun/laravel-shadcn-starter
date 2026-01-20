@@ -14,6 +14,6 @@ final class EquipmentSeeder extends Seeder
      */
     public function run(): void
     {
-        Equipment::factory(10)->create();
+        Equipment::factory(100)->create();
     }
 }
