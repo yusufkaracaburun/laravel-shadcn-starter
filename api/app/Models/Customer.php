@@ -103,8 +103,7 @@ final class Customer extends BaseModel
     {
         return $this->belongsToMany(Contact::class, 'contact_customer')
             ->wherePivot('is_primary', true)
-            ->withPivot(['role', 'is_primary'])
-            ->limit(1);
+            ->withPivot(['role', 'is_primary']);
     }
 
     /**
@@ -125,16 +124,7 @@ final class Customer extends BaseModel
      */
     protected function getPrimaryContactAttribute(): ?Contact
     {
-        // If primaryContact is already loaded, return it
-        if ($this->relationLoaded('primaryContact')) {
-            return $this->primaryContact->first();
-        }
-
-        // Otherwise, query for it without eager loading user to avoid MissingAttributeException
-        /** @var Contact|null $contact */
-        $contact = $this->primaryContact()->without('user')->first();
-
-        return $contact;
+        return $this->primaryContact()->first();
     }
 
     /**
