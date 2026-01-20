@@ -10,7 +10,10 @@ import {
   BoxIcon,
   CalendarIcon,
   CircleIcon,
+  EyeIcon,
+  FileTextIcon,
   PanelRightCloseIcon,
+  UsersIcon,
 } from '@/composables/use-icons.composable'
 import { statuses } from '@/pages/vehicles/data/data'
 import { formatDate } from '@/utils/date'
@@ -138,9 +141,9 @@ function getStatusVariant(status: string | null | undefined) {
             <div class="flex items-center justify-between mb-1">
               <div class="flex items-center gap-2">
                 <CalendarIcon class="size-4 text-muted-foreground" />
-                <span class="text-sm text-muted-foreground"
-                  >Days to inspection</span
-                >
+                <span class="text-sm text-muted-foreground">
+                  Days to inspection
+                </span>
               </div>
               <span class="text-sm font-medium">
                 {{ vehicle.days_to_inspection }} Days to go
@@ -231,38 +234,120 @@ function getStatusVariant(status: string | null | undefined) {
         </div>
       </div>
 
-      <!-- Drivers Section -->
+      <!-- Drivers & Documents Section -->
       <div
         v-if="vehicle.drivers && vehicle.drivers.length > 0"
         class="space-y-3 pt-6 border-t border-border"
       >
-        <h4 class="font-semibold text-sm">Drivers</h4>
-        <div class="space-y-2">
-          <div
-            v-for="driver in vehicle.drivers"
-            :key="driver.id"
-            class="flex items-center gap-2"
+        <UiTabs default-value="drivers" class="w-full space-y-3">
+          <div class="flex items-center justify-between">
+            <h4 class="font-semibold text-sm">Drivers & Documents</h4>
+          </div>
+
+          <UiTabsList
+            class="inline-flex items-center gap-2 rounded-full bg-muted px-1.5 py-1"
           >
-            <Avatar class="size-8">
-              <AvatarImage
-                v-if="driver.profile_photo_url"
-                :src="driver.profile_photo_url"
-                :alt="driver.name"
-              />
-              <AvatarFallback>
-                {{ getInitials(driver.name) }}
-              </AvatarFallback>
-            </Avatar>
-            <div class="flex-1">
-              <div class="text-sm font-medium">
-                {{ driver.name }}
-              </div>
-              <div class="text-xs text-muted-foreground">
-                {{ driver.email }}
+            <UiTabsTrigger
+              value="drivers"
+              class="flex-none rounded-full border border-transparent bg-transparent px-3 py-1.5 text-xs font-medium text-muted-foreground data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:border-border data-[state=active]:shadow-sm"
+            >
+              <UsersIcon class="mr-1 h-3.5 w-3.5" />
+              Drivers
+            </UiTabsTrigger>
+            <UiTabsTrigger
+              value="documents"
+              class="flex-none rounded-full border border-transparent bg-transparent px-3 py-1.5 text-xs font-medium text-muted-foreground data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:border-border data-[state=active]:shadow-sm"
+            >
+              <FileTextIcon class="mr-1 h-3.5 w-3.5" />
+              Documents
+            </UiTabsTrigger>
+          </UiTabsList>
+
+          <UiTabsContent value="drivers" class="space-y-2">
+            <div class="space-y-2">
+              <div
+                v-for="driver in vehicle.drivers"
+                :key="driver.id"
+                class="flex items-center gap-2"
+              >
+                <Avatar class="size-8">
+                  <AvatarImage
+                    v-if="driver.profile_photo_url"
+                    :src="driver.profile_photo_url"
+                    :alt="driver.name"
+                  />
+                  <AvatarFallback>
+                    {{ getInitials(driver.name) }}
+                  </AvatarFallback>
+                </Avatar>
+                <div class="flex-1">
+                  <div class="text-sm font-medium">
+                    {{ driver.name }}
+                  </div>
+                  <div class="text-xs text-muted-foreground">
+                    {{ driver.email }}
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-        </div>
+          </UiTabsContent>
+
+          <UiTabsContent value="documents" class="space-y-3">
+            <div class="space-y-2 text-sm">
+              <div class="flex items-center justify-between">
+                <div>
+                  <div class="font-medium">Registration Certificate.pdf</div>
+                  <div class="text-xs text-muted-foreground">
+                    Uploaded Jan 12, 2025 · 240 KB
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  class="inline-flex h-7 w-7 items-center justify-center rounded-full border border-border text-muted-foreground hover:text-foreground hover:border-foreground transition-colors"
+                >
+                  <EyeIcon class="h-3.5 w-3.5" />
+                  <span class="sr-only">View document</span>
+                </button>
+              </div>
+
+              <div
+                class="flex items-center justify-between pt-2 border-t border-border"
+              >
+                <div>
+                  <div class="font-medium">Insurance Policy.pdf</div>
+                  <div class="text-xs text-muted-foreground">
+                    Uploaded Feb 03, 2025 · 320 KB
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  class="inline-flex h-7 w-7 items-center justify-center rounded-full border border-border text-muted-foreground hover:text-foreground hover:border-foreground transition-colors"
+                >
+                  <EyeIcon class="h-3.5 w-3.5" />
+                  <span class="sr-only">View document</span>
+                </button>
+              </div>
+
+              <div
+                class="flex items-center justify-between pt-2 border-t border-border"
+              >
+                <div>
+                  <div class="font-medium">Inspection Report.pdf</div>
+                  <div class="text-xs text-muted-foreground">
+                    Uploaded Mar 18, 2025 · 410 KB
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  class="inline-flex h-7 w-7 items-center justify-center rounded-full border border-border text-muted-foreground hover:text-foreground hover:border-foreground transition-colors"
+                >
+                  <EyeIcon class="h-3.5 w-3.5" />
+                  <span class="sr-only">View document</span>
+                </button>
+              </div>
+            </div>
+          </UiTabsContent>
+        </UiTabs>
       </div>
     </div>
   </div>
