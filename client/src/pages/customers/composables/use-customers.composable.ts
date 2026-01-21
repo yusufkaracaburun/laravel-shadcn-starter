@@ -38,7 +38,11 @@ export function useCustomers() {
   const customersService = useCustomersService()
   const route = useRoute()
 
-  const includes = {}
+  const includes = {
+    invoices: 'invoices',
+    contacts: 'contacts',
+    primaryContact: 'primaryContact',
+  }
 
   const base = useResourceBase<
     ICustomer,
@@ -67,7 +71,7 @@ export function useCustomers() {
     messages: CustomerMessages,
     defaultSort: { id: 'created_at', desc: true },
     includes,
-    defaultIncludeKey: '',
+    defaultIncludeKey: 'primaryContact',
     onFetchList: (refetch) => {
       refetch()
     },
@@ -124,9 +128,9 @@ export function useCustomers() {
     // Convert type string to ECustomerType enum
     const type =
       customer?.type &&
-      Object.values(ECustomerType).includes(customer.type as ECustomerType)
-        ? (customer.type as ECustomerType)
-        : ECustomerType.PRIVATE
+      Object.values(ECustomerType).includes(customer.type as ECustomerType) ?
+          (customer.type as ECustomerType) :
+        ECustomerType.PRIVATE
 
     return {
       type,
