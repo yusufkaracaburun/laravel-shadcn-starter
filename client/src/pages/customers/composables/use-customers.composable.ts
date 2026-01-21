@@ -95,9 +95,12 @@ export function useCustomers() {
     return Number(idParam)
   })
 
+  // Default includes for customer by id query
+  const customerByIdIncludes = ref<string[]>(['contacts', 'invoices'])
+
   const getCustomersByIdQuery = customersService.getCustomersByIdQuery(
     customerId,
-    ref([]),
+    customerByIdIncludes,
   )
   const {
     data: customerByIdResponse,
@@ -107,11 +110,17 @@ export function useCustomers() {
     refetch: refetchCustomerById,
   } = getCustomersByIdQuery
 
-  async function fetchCustomerByIdData(): Promise<IResponse<ICustomer>> {
+  async function fetchCustomerByIdData(
+    includes?: string[],
+  ): Promise<IResponse<ICustomer>> {
     try {
+      // Update includes if provided
+      if (includes) {
+        customerByIdIncludes.value = includes
+      }
       const response = await refetchCustomerById()
       return response.data as IResponse<ICustomer>
-    } catch (error: any) {
+    } catch (error: unknown) {
       errorStore.setError(error, {
         context: CustomerContext.GET_CUSTOMER_BY_ID,
       })

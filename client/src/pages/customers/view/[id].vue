@@ -4,7 +4,7 @@ meta:
 </route>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 
 import type { ICustomer } from '@/pages/customers/models/customers'
 
@@ -32,6 +32,14 @@ const {
   errorCustomerById,
   fetchCustomerByIdData,
 } = useCustomers()
+
+// Define which relations to include when fetching customer data
+const customerIncludes = ['primaryContact', 'contacts', 'invoices', 'contactsCount', 'invoicesCount']
+
+// Fetch customer data with includes on mount
+onMounted(() => {
+  fetchCustomerByIdData(customerIncludes)
+})
 
 // Computed properties
 const customer = computed<ICustomer | null>(() => {
@@ -97,7 +105,7 @@ const activeTab = ref('overview')
 
 // Event handlers
 function handleEditClosed() {
-  fetchCustomerByIdData()
+  fetchCustomerByIdData(customerIncludes)
 }
 
 function handleDeleteClosed() {
@@ -124,7 +132,7 @@ function handleAddContact() {
       :is-loading="isLoadingCustomerById"
       :is-error="isErrorCustomerById"
       :error-object="errorCustomerById"
-      :on-retry="fetchCustomerByIdData"
+      :on-retry="() => fetchCustomerByIdData(customerIncludes)"
     >
       <template v-if="customer">
         <div class="flex h-full">
