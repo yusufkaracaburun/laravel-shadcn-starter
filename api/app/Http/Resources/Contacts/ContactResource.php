@@ -8,6 +8,7 @@ use App\Models\Contact;
 use Illuminate\Http\Request;
 use App\Http\Resources\BaseResource;
 use App\Http\Resources\Users\UserResource;
+
 /**
  * @mixin Contact
  */
@@ -37,7 +38,7 @@ final class ContactResource extends BaseResource
             'user' => $this->when(
                 $this->relationLoaded('user') && $this->user !== null,
                 fn () => new UserResource($this->user),
-                null
+                null,
             ),
         ];
     }

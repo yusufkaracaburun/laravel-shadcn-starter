@@ -53,7 +53,7 @@ final class CustomerController extends Controller
         $cache = Customer::getCacheKeys();
         $collection = $this->cachedResponse($cache['index'], fn () => $this->service->getPaginated($request));
 
-        return ApiResponse::success($collection);
+        return ApiResponse::success($this->service->getPaginated($request));
     }
 
     /**

@@ -20,7 +20,7 @@ return new class extends Migration
             $table->id();
 
             // Foreign keys
-            $table->foreignIdFor(Invoice::class)->nullable()->constrained()->cascadeOnUpdate()->cascadeOnDelete();
+            $table->foreignIdFor(Invoice::class)->nullable()->constrained()->cascadeOnDelete();
             $table->foreignIdFor(Customer::class)->nullable()->constrained()->nullOnDelete();
 
             // Payment details

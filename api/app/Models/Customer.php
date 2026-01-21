@@ -79,6 +79,18 @@ final class Customer extends BaseModel
     }
 
     /**
+     * Get the primary contact relationship.
+     *
+     * @return BelongsToMany<Contact>
+     */
+    public function primaryContact(): BelongsToMany
+    {
+        return $this->belongsToMany(Contact::class, 'contact_customer')
+            ->wherePivot('is_primary', true)
+            ->withPivot(['role', 'is_primary']);
+    }
+
+    /**
      * Check if the customer is a business.
      */
     public function isBusiness(): bool
@@ -92,18 +104,6 @@ final class Customer extends BaseModel
     public function isPrivate(): bool
     {
         return $this->type === CustomerType::PRIVATE;
-    }
-
-    /**
-     * Get the primary contact relationship.
-     *
-     * @return BelongsToMany<Contact>
-     */
-    public function primaryContact(): BelongsToMany
-    {
-        return $this->belongsToMany(Contact::class, 'contact_customer')
-            ->wherePivot('is_primary', true)
-            ->withPivot(['role', 'is_primary']);
     }
 
     /**
