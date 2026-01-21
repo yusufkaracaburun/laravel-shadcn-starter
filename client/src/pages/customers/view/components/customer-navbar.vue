@@ -1,14 +1,23 @@
 <script setup lang="ts">
 import { ref, shallowRef } from 'vue'
-import { useRouter } from 'vue-router'
 
 import type { ICustomer } from '@/pages/customers/models/customers'
 
 import { Button } from '@/components/ui/button'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
 import { Dialog, DialogContent } from '@/components/ui/dialog'
 import {
-  ArrowLeftIcon,
+  ArrowDownIcon,
+  DownloadIcon,
   FilePenLineIcon,
+  MoreVerticalIcon,
+  PlusIcon,
   Trash2Icon,
 } from '@/composables/use-icons.composable'
 import CustomerDelete from '@/pages/customers/components/customer-delete.vue'
@@ -23,13 +32,11 @@ const emits = defineEmits<{
   (e: 'delete-closed'): void
 }>()
 
-const router = useRouter()
-
 const showComponent = shallowRef<typeof CustomerDelete | null>(null)
 const isDialogOpen = ref(false)
 const isEditDialogOpen = ref(false)
 
-type TCommand = 'edit' | 'delete' | 'close' | 'back'
+type TCommand = 'edit' | 'delete' | 'close'
 
 function handleSelect(command: TCommand) {
   switch (command) {
@@ -44,9 +51,6 @@ function handleSelect(command: TCommand) {
       isDialogOpen.value = false
       showComponent.value = null
       break
-    case 'back':
-      router.push('/customers')
-      break
   }
 }
 
@@ -59,22 +63,85 @@ function handleDeleteClose() {
   handleSelect('close')
   emits('delete-closed')
 }
+
+// Placeholder handlers for dropdown actions
+function handleExport() {
+  // Placeholder
+}
+
+function handleExtra() {
+  // Placeholder
+}
+
+function handleAdd() {
+  // Placeholder
+}
 </script>
 
 <template>
   <div class="flex items-center gap-2">
-    <Button variant="outline" @click="handleSelect('back')">
-      <ArrowLeftIcon class="mr-2 size-4" />
-      Back
-    </Button>
     <Button variant="outline" @click="handleSelect('edit')">
       <FilePenLineIcon class="mr-2 size-4" />
-      Edit
+      Bewerken
     </Button>
-    <Button variant="destructive" @click="handleSelect('delete')">
-      <Trash2Icon class="mr-2 size-4" />
-      Delete
-    </Button>
+
+    <DropdownMenu>
+      <DropdownMenuTrigger as-child>
+        <Button variant="outline">
+          Exporteren
+          <ArrowDownIcon class="ml-2 size-4" />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent>
+        <DropdownMenuItem @select="handleExport">
+          <DownloadIcon class="mr-2 size-4" />
+          Exporteer als PDF
+        </DropdownMenuItem>
+        <DropdownMenuItem @select="handleExport">
+          <DownloadIcon class="mr-2 size-4" />
+          Exporteer als CSV
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+
+    <DropdownMenu>
+      <DropdownMenuTrigger as-child>
+        <Button variant="outline">
+          Extra
+          <ArrowDownIcon class="ml-2 size-4" />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent>
+        <DropdownMenuItem @select="handleExtra">
+          <MoreVerticalIcon class="mr-2 size-4" />
+          Optie 1
+        </DropdownMenuItem>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem @select="handleSelect('delete')" variant="destructive">
+          <Trash2Icon class="mr-2 size-4" />
+          Verwijderen
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+
+    <DropdownMenu>
+      <DropdownMenuTrigger as-child>
+        <Button variant="default" class="bg-green-600 hover:bg-green-700">
+          Toevoegen
+          <ArrowDownIcon class="ml-2 size-4" />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent>
+        <DropdownMenuItem @select="handleAdd">
+          <PlusIcon class="mr-2 size-4" />
+          Nieuwe factuur
+        </DropdownMenuItem>
+        <DropdownMenuItem @select="handleAdd">
+          <PlusIcon class="mr-2 size-4" />
+          Nieuwe contactpersoon
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
   </div>
 
   <CustomerEditDialog

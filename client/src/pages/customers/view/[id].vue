@@ -13,16 +13,15 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import {
   FileTextIcon,
   LayoutGridIcon,
-  UsersIcon,
+  ListTodoIcon,
 } from '@/composables/use-icons.composable'
 import { useCustomers } from '@/pages/customers/composables/use-customers.composable'
 
-import CustomerAccountStatusCard from './components/customer-account-status-card.vue'
-import CustomerContactsCard from './components/customer-contacts-card.vue'
-import CustomerHeader from './components/customer-header.vue'
-import CustomerInvoicesCard from './components/customer-invoices-card.vue'
+import CustomerDetailsTab from './components/customer-details-tab.vue'
 import CustomerNavbar from './components/customer-navbar.vue'
-import CustomerProfileCard from './components/customer-profile-card.vue'
+import CustomerOverviewTab from './components/customer-overview-tab.vue'
+import CustomerSidebar from './components/customer-sidebar.vue'
+import CustomerTasksTab from './components/customer-tasks-tab.vue'
 import CustomerViewLayout from './components/customer-view-layout.vue'
 
 // Composables
@@ -47,30 +46,10 @@ const customer = computed<ICustomer | null>(() => {
 const pageTitle = computed(() => customer.value?.name ?? 'Customer Details')
 
 const pageDescription = computed(() =>
-  customer.value
-    ? `View details for ${customer.value.name}`
-    : 'Loading customer information...',
+  customer.value ?
+    `View details for ${customer.value.name}` :
+    'Loading customer information...',
 )
-
-// Computed values for components
-const customerInitials = computed(() => {
-  if (!customer.value) {
-    return '?'
-  }
-
-  const name = customer.value.name
-  if (!name || name === '—') {
-    return '?'
-  }
-
-  const parts = name.trim().split(/\s+/)
-
-  if (parts.length >= 2) {
-    return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase()
-  }
-
-  return name[0].toUpperCase()
-})
 
 // Format date from "d-m-Y H:i:s" format
 function formatDateTime(dateString: string | null): string {
@@ -124,6 +103,10 @@ function handleEditClosed() {
 function handleDeleteClosed() {
   // Customer will be redirected by the navbar component
 }
+
+function handleAddContact() {
+  // Placeholder for add contact functionality
+}
 </script>
 
 <template>
@@ -144,72 +127,61 @@ function handleDeleteClosed() {
       :on-retry="fetchCustomerByIdData"
     >
       <template v-if="customer">
-        <div class="space-y-8">
-          <!-- Enhanced Header Section -->
-          <div
-            class="relative overflow-hidden rounded-xl border bg-gradient-to-br from-background to-muted/20 p-8 shadow-sm"
-          >
-            <div class="relative z-10">
-              <CustomerHeader
-                :customer="customer"
-                :initials="customerInitials"
-              />
-            </div>
-          </div>
+        <div class="flex h-full">
+          <!-- Left Sidebar -->
+          <CustomerSidebar
+            :customer="customer"
+            @add-contact="handleAddContact"
+          />
 
-          <!-- Modern Tabs Section -->
-          <div class="space-y-6">
-            <Tabs v-model="activeTab" class="w-full">
-              <TabsList
-                class="h-auto w-full justify-start gap-1 bg-muted/50 p-1"
-              >
-                <TabsTrigger
-                  value="overview"
-                  class="gap-2 rounded-md px-4 py-2.5 data-[state=active]:bg-background data-[state=active]:shadow-sm"
+          <!-- Right Main Panel -->
+          <div class="flex-1 flex flex-col min-w-0">
+            <!-- Tabs and Content -->
+            <div class="flex-1 overflow-auto p-6">
+              <Tabs v-model="activeTab" class="w-full">
+                <TabsList
+                  class="h-auto w-full justify-start gap-1 bg-muted/50 p-1 mb-6"
                 >
-                  <LayoutGridIcon class="size-4" />
-                  <span>Overview</span>
-                </TabsTrigger>
-                <TabsTrigger
-                  value="contacts"
-                  class="gap-2 rounded-md px-4 py-2.5 data-[state=active]:bg-background data-[state=active]:shadow-sm"
-                >
-                  <UsersIcon class="size-4" />
-                  <span>Contacts</span>
-                </TabsTrigger>
-                <TabsTrigger
-                  value="invoices"
-                  class="gap-2 rounded-md px-4 py-2.5 data-[state=active]:bg-background data-[state=active]:shadow-sm"
-                >
-                  <FileTextIcon class="size-4" />
-                  <span>Invoices</span>
-                </TabsTrigger>
-              </TabsList>
+                  <TabsTrigger
+                    value="overview"
+                    class="gap-2 rounded-md px-4 py-2.5 data-[state=active]:bg-background data-[state=active]:shadow-sm"
+                  >
+                    <LayoutGridIcon class="size-4" />
+                    <span>Overzicht</span>
+                  </TabsTrigger>
+                  <TabsTrigger
+                    value="details"
+                    class="gap-2 rounded-md px-4 py-2.5 data-[state=active]:bg-background data-[state=active]:shadow-sm"
+                  >
+                    <FileTextIcon class="size-4" />
+                    <span>Details</span>
+                  </TabsTrigger>
+                  <TabsTrigger
+                    value="tasks"
+                    class="gap-2 rounded-md px-4 py-2.5 data-[state=active]:bg-background data-[state=active]:shadow-sm"
+                  >
+                    <ListTodoIcon class="size-4" />
+                    <span>Taken en notities</span>
+                  </TabsTrigger>
+                </TabsList>
 
-              <TabsContent value="overview" class="mt-8">
-                <div class="grid gap-6 lg:grid-cols-2">
-                  <CustomerProfileCard :customer="customer" />
+                <TabsContent value="overview" class="mt-0">
+                  <CustomerOverviewTab :customer="customer" />
+                </TabsContent>
 
-                  <CustomerAccountStatusCard
+                <TabsContent value="details" class="mt-0">
+                  <CustomerDetailsTab
                     :customer="customer"
                     :created-at="formattedCreatedAt"
                     :updated-at="formattedUpdatedAt"
                   />
-                </div>
-              </TabsContent>
+                </TabsContent>
 
-              <TabsContent value="contacts" class="mt-8">
-                <div class="max-w-2xl">
-                  <CustomerContactsCard :customer="customer" />
-                </div>
-              </TabsContent>
-
-              <TabsContent value="invoices" class="mt-8">
-                <div class="max-w-2xl">
-                  <CustomerInvoicesCard :customer="customer" />
-                </div>
-              </TabsContent>
-            </Tabs>
+                <TabsContent value="tasks" class="mt-0">
+                  <CustomerTasksTab :customer="customer" />
+                </TabsContent>
+              </Tabs>
+            </div>
           </div>
         </div>
       </template>

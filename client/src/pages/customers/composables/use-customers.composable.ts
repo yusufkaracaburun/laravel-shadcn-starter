@@ -71,7 +71,7 @@ export function useCustomers() {
     },
     context: CustomerContext,
     messages: CustomerMessages,
-    defaultSort: { id: 'created_at', desc: true },
+    defaultSort: { id: 'name', desc: false },
     includes,
     defaultIncludeKey: ['primaryContact', 'contactsCount', 'invoicesCount'],
     onFetchList: (refetch) => {
