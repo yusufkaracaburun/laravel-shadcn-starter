@@ -5,10 +5,10 @@ import { computed } from 'vue'
 
 import type { TPageSize } from '@/components/data-table/types'
 import type {
+  ICreateCustomerRequest,
   ICustomer,
   ICustomerFilters,
   ICustomerPrerequisites,
-  ICreateCustomerRequest,
   IUpdateCustomerRequest,
 } from '@/pages/customers/models/customers'
 import type { ISorting } from '@/services/query-utils'
@@ -144,11 +144,7 @@ export function useCustomersService() {
   }
 
   function createCustomersMutation(): ReturnType<
-    typeof useMutation<
-      IResponse<ICustomer>,
-      AxiosError,
-      ICreateCustomerRequest
-    >
+    typeof useMutation<IResponse<ICustomer>, AxiosError, ICreateCustomerRequest>
   > {
     return useMutation<
       IResponse<ICustomer>,
@@ -243,9 +239,13 @@ export type Customer = import('@/pages/customers/models/customers').ICustomer
 /** @deprecated Use IContact from @/pages/customers/models/customers instead */
 export type Contact = import('@/pages/customers/models/customers').IContact
 /** @deprecated Use ICustomerFilters from @/pages/customers/models/customers instead */
-export type CustomerFilters = import('@/pages/customers/models/customers').ICustomerFilters
+export type CustomerFilters = import(
+  '@/pages/customers/models/customers',
+).ICustomerFilters
 /** @deprecated Use TCustomerType from @/pages/customers/models/customers instead */
-export type CustomerType = import('@/pages/customers/models/customers').TCustomerType
+export type CustomerType = import(
+  '@/pages/customers/models/customers',
+).TCustomerType
 
 // Re-export request types for backward compatibility
 export type {

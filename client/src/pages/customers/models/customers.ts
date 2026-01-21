@@ -135,7 +135,4 @@ export interface ICustomerFilters {
   search?: string
 }
 
-export interface ICustomerPrerequisites {
-  // Add prerequisites fields here if backend provides them
-  // For now, empty interface as no prerequisites endpoint exists
-}
+export interface ICustomerPrerequisites {}

@@ -1,17 +1,12 @@
 <script setup lang="ts">
+import { Link, MapPin } from 'lucide-vue-next'
+
 import type { IUser } from '@/pages/users/models/users'
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import Badge from '@/components/ui/badge/Badge.vue'
-import {
-  Card,
-  CardContent,
-} from '@/components/ui/card'
-import {
-  MailIcon,
-  PhoneIcon,
-} from '@/composables/use-icons.composable'
-import { MapPin, Link } from 'lucide-vue-next'
+import { Card, CardContent } from '@/components/ui/card'
+import { MailIcon, PhoneIcon } from '@/composables/use-icons.composable'
 
 interface Props {
   user: IUser
@@ -32,10 +27,7 @@ const contactInfo = {
   email: props.user.email,
   phone: '(+1-876) 8654 239 581',
   location: 'Canada',
-  websites: [
-    'https://shadcnuikit.com',
-    'https://bundui.io/',
-  ],
+  websites: ['https://shadcnuikit.com', 'https://bundui.io/'],
 }
 </script>
 
@@ -62,15 +54,11 @@ const contactInfo = {
           <h2 class="text-2xl font-bold">
             {{ user.name }}
           </h2>
-          <Badge variant="default" class="bg-blue-500 text-white">
-            Pro
-          </Badge>
+          <Badge variant="default" class="bg-blue-500 text-white"> Pro </Badge>
         </div>
 
         <!-- Title -->
-        <p class="text-muted-foreground">
-          Project Manager
-        </p>
+        <p class="text-muted-foreground">Project Manager</p>
 
         <!-- Stats -->
         <div class="flex items-center gap-6 pt-2">
@@ -78,25 +66,19 @@ const contactInfo = {
             <div class="text-xl font-bold">
               {{ stats.posts }}
             </div>
-            <div class="text-sm text-muted-foreground">
-              Post
-            </div>
+            <div class="text-sm text-muted-foreground">Post</div>
           </div>
           <div class="text-center">
             <div class="text-xl font-bold">
               {{ stats.projects }}
             </div>
-            <div class="text-sm text-muted-foreground">
-              Projects
-            </div>
+            <div class="text-sm text-muted-foreground">Projects</div>
           </div>
           <div class="text-center">
             <div class="text-xl font-bold">
               {{ stats.members }}
             </div>
-            <div class="text-sm text-muted-foreground">
-              Members
-            </div>
+            <div class="text-sm text-muted-foreground">Members</div>
           </div>
         </div>
 
@@ -112,7 +94,9 @@ const contactInfo = {
           </div>
           <div class="flex items-center gap-2 text-sm">
             <MapPin class="size-4 text-muted-foreground" />
-            <span class="text-muted-foreground">{{ contactInfo.location }}</span>
+            <span class="text-muted-foreground">{{
+              contactInfo.location
+            }}</span>
           </div>
           <div
             v-for="(website, index) in contactInfo.websites"

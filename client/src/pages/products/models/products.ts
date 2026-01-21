@@ -1,5 +1,3 @@
-import type { IStatus } from '@/services/types/response.type'
-
 /**
  * Money object structure from Money library
  */
@@ -66,6 +64,4 @@ export interface IUpdateProductRequest {
 /**
  * Product prerequisites interface (empty for products as they don't have prerequisites)
  */
-export interface IProductPrerequisites {
-  // Products don't have prerequisites like users have roles
-}
+export interface IProductPrerequisites {}

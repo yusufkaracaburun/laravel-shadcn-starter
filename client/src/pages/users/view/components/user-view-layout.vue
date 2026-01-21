@@ -40,7 +40,7 @@ const errorSubtitle = computed(() => {
 
 const errorText = computed(() => {
   if (isNotFound.value) {
-    return 'The user you are looking for might have been removed or doesn\'t exist.'
+    return "The user you are looking for might have been removed or doesn't exist."
   }
   return 'An error occurred while loading the user information. Please try again.'
 })
@@ -67,11 +67,7 @@ const errorText = computed(() => {
           :subtitle="errorSubtitle"
           :error="errorText"
         />
-        <Button
-          v-if="!isNotFound"
-          class="mt-4 print:hidden"
-          @click="onRetry"
-        >
+        <Button v-if="!isNotFound" class="mt-4 print:hidden" @click="onRetry">
           Retry
         </Button>
       </div>

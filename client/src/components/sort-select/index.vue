@@ -3,9 +3,7 @@ import { ArrowDownAZ, ArrowDownZA, SlidersHorizontal } from 'lucide-vue-next'
 
 import type { TSort } from './types'
 
-const emits = defineEmits<{
-  (e: 'update:sort', payload: TSort): void
-}>()
+const emits = defineEmits<(e: 'update:sort', payload: TSort) => void>()
 
 const sort = defineModel<TSort>({ default: 'asc' })
 watch(sort, (newValue) => {

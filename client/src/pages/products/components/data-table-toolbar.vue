@@ -3,7 +3,10 @@ import type { Table } from '@tanstack/vue-table'
 
 import { X } from 'lucide-vue-next'
 
-import type { IProduct, IProductFilters } from '@/pages/products/models/products'
+import type {
+  IProduct,
+  IProductFilters,
+} from '@/pages/products/models/products'
 
 import DataTableViewOptions from '@/components/data-table/view-options.vue'
 import { Button } from '@/components/ui/button'
@@ -22,8 +25,8 @@ const props = defineProps<DataTableToolbarProps>()
 
 const isFiltered = computed(() => {
   return (
-    props.table.getState().columnFilters.length > 0
-    || Object.keys(props.filters).length > 0
+    props.table.getState().columnFilters.length > 0 ||
+    Object.keys(props.filters).length > 0
   )
 })
 </script>

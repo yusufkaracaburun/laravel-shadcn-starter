@@ -59,7 +59,7 @@ export const columns: ColumnDef<Project>[] = [
       h(DataTableColumnHeader<Project>, { column, title: 'Category' }),
     cell: ({ row }) => {
       const category = categories.find(
-        category => category.value === row.getValue('category'),
+        (category) => category.value === row.getValue('category'),
       )
 
       return h('div', { class: 'flex items-center' }, [
@@ -78,11 +78,10 @@ export const columns: ColumnDef<Project>[] = [
       h(DataTableColumnHeader<Project>, { column, title: 'Status' }),
     cell: ({ row }) => {
       const status = statuses.find(
-        status => status.value === row.getValue('status'),
+        (status) => status.value === row.getValue('status'),
       )
 
-      if (!status)
-        return null
+      if (!status) return null
 
       return h(StatusBadge, {
         status: status.value,

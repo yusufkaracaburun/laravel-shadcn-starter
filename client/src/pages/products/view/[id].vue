@@ -10,10 +10,7 @@ import type { IProduct } from '@/pages/products/models/products'
 
 import Page from '@/components/global-layout/basic-page.vue'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import {
-  LayoutGridIcon,
-  PackageIcon,
-} from '@/composables/use-icons.composable'
+import { LayoutGridIcon, PackageIcon } from '@/composables/use-icons.composable'
 import { useProducts } from '@/pages/products/composables/use-products.composable'
 
 import ProductDetailsCard from './components/product-details-card.vue'

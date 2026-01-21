@@ -1,6 +1,5 @@
 import type { ColumnDef } from '@tanstack/vue-table'
 
-import { Building2Icon, UserIcon } from '@/composables/use-icons.composable'
 import { h } from 'vue'
 import { useRouter } from 'vue-router'
 
@@ -8,6 +7,7 @@ import DataTableColumnHeader from '@/components/data-table/column-header.vue'
 import { SelectColumn } from '@/components/data-table/table-columns'
 import { Copy } from '@/components/sva-ui/copy'
 import { StatusBadge } from '@/components/ui/status-badge'
+import { Building2Icon, UserIcon } from '@/composables/use-icons.composable'
 
 import type { ICustomer } from '../models/customers'
 
@@ -87,13 +87,13 @@ export const columns: ColumnDef<ICustomer>[] = [
       const emailStr = email || ''
       return h('div', { class: 'flex items-center max-w-[200px]' }, [
         h('span', { class: 'truncate text-muted-foreground' }, emailStr || '-'),
-        emailStr
-        && h(Copy, {
-          class: 'ml-2 flex-shrink-0',
-          size: 'sm',
-          variant: 'ghost',
-          content: emailStr,
-        }),
+        emailStr &&
+          h(Copy, {
+            class: 'ml-2 flex-shrink-0',
+            size: 'sm',
+            variant: 'ghost',
+            content: emailStr,
+          }),
       ])
     },
     enableSorting: true,
@@ -114,11 +114,10 @@ export const columns: ColumnDef<ICustomer>[] = [
       h(DataTableColumnHeader<ICustomer>, { column, title: 'Status' }),
     cell: ({ row }) => {
       const status = statuses.find(
-        status => status.value === row.getValue('status'),
+        (status) => status.value === row.getValue('status'),
       )
 
-      if (!status)
-        return null
+      if (!status) return null
 
       return h(StatusBadge, {
         status: status.value,

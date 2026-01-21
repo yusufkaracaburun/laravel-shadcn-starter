@@ -34,8 +34,8 @@ async function handleConfirm() {
 
   const rowsToDelete = selectedRows.value
   const productIds = rowsToDelete
-    .map(row => (row.original as IProduct).id)
-    .filter(id => id != null)
+    .map((row) => (row.original as IProduct).id)
+    .filter((id) => id != null)
 
   if (productIds.length === 0) {
     toast.error('No valid products selected for deletion.')
@@ -46,7 +46,7 @@ async function handleConfirm() {
     isDeleting.value = true
 
     // Delete all selected products
-    await Promise.all(productIds.map(id => deleteProduct(id)))
+    await Promise.all(productIds.map((id) => deleteProduct(id)))
 
     table.resetRowSelection()
     openModel.value = false
@@ -68,11 +68,9 @@ async function handleConfirm() {
     :disabled="confirmValue.trim() !== CONFIRM_WORD || isDeleting"
     @confirm="handleConfirm"
   >
-    <template #title>
-      Delete {{ selectedCount }} products?
-    </template>
+    <template #title> Delete {{ selectedCount }} products? </template>
     <template #description>
-      Are you sure you want to delete the selected products? <br>
+      Are you sure you want to delete the selected products? <br />
       This action cannot be undone.
     </template>
 

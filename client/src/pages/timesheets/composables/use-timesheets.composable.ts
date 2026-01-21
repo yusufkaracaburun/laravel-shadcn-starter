@@ -3,10 +3,10 @@ import { useRoute } from 'vue-router'
 
 import type {
   ICreateTimesheetRequest,
-  IUpdateTimesheetRequest,
   ITimesheet,
   ITimesheetFilters,
   ITimesheetPrerequisites,
+  IUpdateTimesheetRequest,
 } from '@/pages/timesheets/models/timesheets'
 import type { IResponse } from '@/services/types/response.type'
 
@@ -47,9 +47,16 @@ export function useTimesheets() {
     ITimesheetPrerequisites
   >({
     service: {
-      getPrerequisitesQuery: () => timesheetsService.getTimesheetPrerequisitesQuery(),
+      getPrerequisitesQuery: () =>
+        timesheetsService.getTimesheetPrerequisitesQuery(),
       getListQuery: (page, per_page, sort, filter, include) =>
-        timesheetsService.getTimesheetsQuery(page, per_page, sort, filter, include),
+        timesheetsService.getTimesheetsQuery(
+          page,
+          per_page,
+          sort,
+          filter,
+          include,
+        ),
       createMutation: () => timesheetsService.createTimesheetMutation(),
       updateMutation: () => timesheetsService.updateTimesheetMutation(),
       deleteMutation: () => timesheetsService.deleteTimesheetMutation(),
@@ -72,9 +79,9 @@ export function useTimesheets() {
     const params = route.params as { id?: string | string[] }
     const idParam = Array.isArray(params.id) ? params.id[0] : params.id
     if (
-      !idParam
-      || typeof idParam !== 'string'
-      || Number.isNaN(Number(idParam))
+      !idParam ||
+      typeof idParam !== 'string' ||
+      Number.isNaN(Number(idParam))
     ) {
       return undefined
     }
@@ -98,7 +105,9 @@ export function useTimesheets() {
       const response = await refetchTimesheetById()
       return response.data as IResponse<ITimesheet>
     } catch (error: any) {
-      errorStore.setError(error, { context: TimesheetContext.GET_TIMESHEET_BY_ID })
+      errorStore.setError(error, {
+        context: TimesheetContext.GET_TIMESHEET_BY_ID,
+      })
       const message = errorStore.getErrorMessage(error)
       toast.showError(message)
       throw error

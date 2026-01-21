@@ -34,10 +34,8 @@ function handleViewDocument(documentId: number) {
     <div
       v-for="(document, index) in documents"
       :key="document.id"
-      :class="[
-        'flex items-center justify-between',
-        index > 0 && 'pt-2 border-t border-border',
-      ]"
+      class="flex items-center justify-between"
+      :class="[index > 0 && 'pt-2 border-t border-border']"
     >
       <div>
         <div class="font-medium">

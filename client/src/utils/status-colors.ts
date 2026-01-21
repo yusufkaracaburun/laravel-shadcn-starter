@@ -43,8 +43,7 @@ export type EquipmentStatusValue = 'active' | 'inactive' | 'maintenance'
 export function getPriorityColor(
   priority: PriorityValue | string | undefined,
 ): string {
-  if (!priority)
-    return 'text-muted-foreground'
+  if (!priority) return 'text-muted-foreground'
 
   switch (priority.toLowerCase()) {
     case 'low':

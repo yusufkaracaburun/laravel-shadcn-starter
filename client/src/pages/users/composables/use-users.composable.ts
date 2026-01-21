@@ -78,9 +78,9 @@ export function useUsers() {
     const params = route.params as { id?: string | string[] }
     const idParam = Array.isArray(params.id) ? params.id[0] : params.id
     if (
-      !idParam
-      || typeof idParam !== 'string'
-      || Number.isNaN(Number(idParam))
+      !idParam ||
+      typeof idParam !== 'string' ||
+      Number.isNaN(Number(idParam))
     ) {
       return undefined
     }

@@ -25,8 +25,8 @@ import { setFormFieldErrors } from '@/utils/form'
 
 import type {
   ICreateTeamRequest,
-  IUpdateTeamRequest,
   ITeam,
+  IUpdateTeamRequest,
 } from '../models/teams'
 
 import { createTeamFormSchema, editTeamFormSchema } from '../data/schema'
@@ -71,11 +71,7 @@ watch(
   { immediate: true },
 )
 
-const validFields = [
-  'name',
-  'personal_team',
-  'user_id',
-] as const
+const validFields = ['name', 'personal_team', 'user_id'] as const
 
 const users = computed(() => teamPrerequisitesResponse.value?.users || [])
 
@@ -121,11 +117,7 @@ const onSubmit = handleSubmit(async (values) => {
       <FormItem>
         <FormLabel>Name</FormLabel>
         <FormControl>
-          <Input
-            type="text"
-            v-bind="componentField"
-            placeholder="Team Name"
-          />
+          <Input type="text" v-bind="componentField" placeholder="Team Name" />
         </FormControl>
         <FormMessage />
       </FormItem>
@@ -155,7 +147,9 @@ const onSubmit = handleSubmit(async (values) => {
           <Select
             v-bind="componentField"
             :model-value="componentField.modelValue?.toString()"
-            @update:model-value="(val) => componentField.onUpdate(val ? Number(val) : null)"
+            @update:model-value="
+              (val) => componentField.onUpdate(val ? Number(val) : null)
+            "
           >
             <SelectTrigger>
               <SelectValue placeholder="Select an owner" />

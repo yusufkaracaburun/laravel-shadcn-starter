@@ -12,8 +12,8 @@ import {
   FilePenLineIcon,
   Trash2Icon,
 } from '@/composables/use-icons.composable'
-import { useInvoices } from '@/pages/invoices/composables/use-invoices.composable'
 import InvoiceDelete from '@/pages/invoices/components/invoice-delete.vue'
+import { useInvoices } from '@/pages/invoices/composables/use-invoices.composable'
 
 const props = defineProps<{
   invoice: IInvoice

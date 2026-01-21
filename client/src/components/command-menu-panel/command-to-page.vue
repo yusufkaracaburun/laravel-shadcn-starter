@@ -5,9 +5,7 @@ import type { NavGroup, NavItem } from '../app-sidebar/types'
 
 import CommandItemHasIcon from './command-item-has-icon.vue'
 
-const emit = defineEmits<{
-  (e: 'click'): void
-}>()
+const emit = defineEmits<(e: 'click') => void>()
 
 const { navData, otherPages } = useSidebar()
 

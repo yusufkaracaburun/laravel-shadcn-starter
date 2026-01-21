@@ -13,7 +13,9 @@ const emits = defineEmits<{
   close: []
 }>()
 
-const title = computed(() => (props.timesheet ? 'Edit Timesheet' : 'New Timesheet'))
+const title = computed(() =>
+  props.timesheet ? 'Edit Timesheet' : 'New Timesheet',
+)
 const description = computed(() =>
   props.timesheet
     ? `Update timesheet information for ${props.timesheet.date}.`
@@ -31,6 +33,10 @@ const description = computed(() =>
         {{ description }}
       </UiDialogDescription>
     </UiDialogHeader>
-    <TimesheetForm :timesheet="timesheet" class="mt-2" @close="emits('close')" />
+    <TimesheetForm
+      :timesheet="timesheet"
+      class="mt-2"
+      @close="emits('close')"
+    />
   </div>
 </template>

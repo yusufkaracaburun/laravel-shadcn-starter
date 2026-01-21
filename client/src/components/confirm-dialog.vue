@@ -25,9 +25,7 @@ const {
   confirmButtonText = 'Continue',
 } = defineProps<ConfirmDialogProps>()
 
-const emits = defineEmits<{
-  (e: 'confirm'): void
-}>()
+const emits = defineEmits<(e: 'confirm') => void>()
 
 const openModel = defineModel<boolean>('open', {
   default: false,

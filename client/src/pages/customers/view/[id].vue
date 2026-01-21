@@ -82,7 +82,7 @@ function formatDateTime(dateString: string | null): string {
     const [datePart, timePart] = dateString.split(' ')
     const [day, month, year] = datePart.split('-')
     const date = new Date(`${year}-${month}-${day} ${timePart}`)
-    
+
     if (Number.isNaN(date.getTime())) {
       return dateString
     }

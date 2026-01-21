@@ -7,12 +7,12 @@ import { useRouter } from 'vue-router'
 import type { TInvoice } from '@/pages/invoices/data/schema'
 import type { IInvoiceItem } from '@/pages/invoices/models/invoice'
 
-import { useInvoices } from '@/pages/invoices/composables/use-invoices.composable'
 import InvoiceCustomerSection from '@/pages/invoices/components/invoice-customer-section.vue'
 import InvoiceDatesSection from '@/pages/invoices/components/invoice-dates-section.vue'
 import InvoiceDetailsSection from '@/pages/invoices/components/invoice-details-section.vue'
 import InvoiceItemsManagement from '@/pages/invoices/components/invoice-items-management.vue'
 import InvoiceNotesSection from '@/pages/invoices/components/invoice-notes-section.vue'
+import { useInvoices } from '@/pages/invoices/composables/use-invoices.composable'
 import { invoiceFormSchema } from '@/pages/invoices/data/schema'
 import {
   calculateInvoiceTotals,
@@ -136,8 +136,8 @@ const localItems = ref<IInvoiceItem[]>(
     let totalInclVat = 0
 
     if (
-      typeof item.total_excl_vat === 'object'
-      && 'amount' in item.total_excl_vat
+      typeof item.total_excl_vat === 'object' &&
+      'amount' in item.total_excl_vat
     ) {
       totalExclVat = Number.parseFloat(item.total_excl_vat.amount) / 100
     } else if (typeof item.total_excl_vat === 'number') {
@@ -151,8 +151,8 @@ const localItems = ref<IInvoiceItem[]>(
     }
 
     if (
-      typeof item.total_incl_vat === 'object'
-      && 'amount' in item.total_incl_vat
+      typeof item.total_incl_vat === 'object' &&
+      'amount' in item.total_incl_vat
     ) {
       totalInclVat = Number.parseFloat(item.total_incl_vat.amount) / 100
     } else if (typeof item.total_incl_vat === 'number') {
@@ -339,7 +339,7 @@ watch(
 
 // Convert localItems to InvoiceItem format for preview
 const itemsForPreview = computed(() => {
-  return localItems.value.map(item => ({
+  return localItems.value.map((item) => ({
     id: item.id || 0,
     invoice_id: props.invoiceId || null,
     name: item.name,
@@ -361,8 +361,7 @@ const itemsForPreview = computed(() => {
 watch(
   values,
   (newValues) => {
-    if (blockEmits)
-      return
+    if (blockEmits) return
     emits('update:modelValue', {
       ...(newValues as TInvoice),
       subtotal: toMoneyObject(rawInvoiceTotals.value.subtotal),
@@ -372,9 +371,9 @@ watch(
       total: toMoneyObject(rawInvoiceTotals.value.total),
       total_excl_vat: toMoneyObject(rawInvoiceTotals.value.subtotal),
       total_vat: toMoneyObject(
-        rawInvoiceTotals.value.totalVat0
-        + rawInvoiceTotals.value.totalVat9
-        + rawInvoiceTotals.value.totalVat21,
+        rawInvoiceTotals.value.totalVat0 +
+          rawInvoiceTotals.value.totalVat9 +
+          rawInvoiceTotals.value.totalVat21,
       ),
       items: itemsForPreview.value,
     } as TInvoice)
@@ -385,8 +384,7 @@ watch(
 watch(
   localItems,
   (_newItems) => {
-    if (blockEmits)
-      return
+    if (blockEmits) return
     emits('update:formItems', itemsForPreview.value)
   },
   { deep: true },
@@ -412,8 +410,8 @@ watch(
       ).map((item: IInvoiceItem) => {
         let unitPrice = 0
         if (
-          typeof item.unit_price === 'object'
-          && 'amount' in item.unit_price
+          typeof item.unit_price === 'object' &&
+          'amount' in item.unit_price
         ) {
           unitPrice = Number.parseFloat(item.unit_price.amount) / 100
         } else if (typeof item.unit_price === 'number') {
@@ -423,8 +421,8 @@ watch(
         let totalVat = 0
         let totalInclVat = 0
         if (
-          typeof item.total_excl_vat === 'object'
-          && 'amount' in item.total_excl_vat
+          typeof item.total_excl_vat === 'object' &&
+          'amount' in item.total_excl_vat
         ) {
           totalExclVat = Number.parseFloat(item.total_excl_vat.amount) / 100
         } else if (typeof item.total_excl_vat === 'number') {
@@ -436,8 +434,8 @@ watch(
           totalVat = item.total_vat
         }
         if (
-          typeof item.total_incl_vat === 'object'
-          && 'amount' in item.total_incl_vat
+          typeof item.total_incl_vat === 'object' &&
+          'amount' in item.total_incl_vat
         ) {
           totalInclVat = Number.parseFloat(item.total_incl_vat.amount) / 100
         } else if (typeof item.total_incl_vat === 'number') {
@@ -482,7 +480,7 @@ const onSubmit = handleSubmit(async (formValues) => {
     }
 
     // Prepare items data from local state
-    const itemsData = localItems.value.map(item => ({
+    const itemsData = localItems.value.map((item) => ({
       name: item.name,
       description: item.description || null,
       quantity: item.quantity,
@@ -503,8 +501,9 @@ const onSubmit = handleSubmit(async (formValues) => {
     }
 
     // Convert empty strings to null recursively
-    backendData = mapObjectDeep(backendData, value =>
-      value === '' ? null : value)
+    backendData = mapObjectDeep(backendData, (value) =>
+      value === '' ? null : value,
+    )
 
     // Add calculated totals to backendData, ensuring they are numbers or strings as expected by backend
     backendData.subtotal = rawInvoiceTotals.value.subtotal
@@ -514,9 +513,9 @@ const onSubmit = handleSubmit(async (formValues) => {
     backendData.total = rawInvoiceTotals.value.total
     backendData.total_excl_vat = rawInvoiceTotals.value.subtotal
     backendData.total_vat =
-      rawInvoiceTotals.value.totalVat0
-      + rawInvoiceTotals.value.totalVat9
-      + rawInvoiceTotals.value.totalVat21
+      rawInvoiceTotals.value.totalVat0 +
+      rawInvoiceTotals.value.totalVat9 +
+      rawInvoiceTotals.value.totalVat21
 
     // Always include items
     backendData.items = itemsData || []

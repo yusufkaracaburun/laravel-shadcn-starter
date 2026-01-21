@@ -1,9 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 
-import type {
-  IDataTableToolbarProps,
-} from '@/components/data-table/types'
+import type { IDataTableToolbarProps } from '@/components/data-table/types'
 
 import DataTableFacetedFilter from '@/components/data-table/faceted-filter.vue'
 import DataTableViewOptions from '@/components/data-table/view-options.vue'
@@ -11,12 +9,15 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { XIcon } from '@/composables/use-icons.composable'
 
-import { statuses } from '../data/data'
 import type { IVehicle, IVehicleFilters } from '../models/vehicles'
+
+import { statuses } from '../data/data'
 
 const props = defineProps<IDataTableToolbarProps<IVehicle, IVehicleFilters>>()
 
-const licensePlateColumn = computed(() => props.table.getColumn('license_plate'))
+const licensePlateColumn = computed(() =>
+  props.table.getColumn('license_plate'),
+)
 
 const searchValue = computed({
   get: () => (licensePlateColumn.value?.getFilterValue() as string) ?? '',

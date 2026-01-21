@@ -98,7 +98,10 @@ const onSubmit = handleSubmit(async (values) => {
     const requestData = prepareRequestData(values, isEditMode.value)
 
     if (isEditMode.value && props.vehicle) {
-      await updateVehicle(props.vehicle.id, requestData as IUpdateVehicleRequest)
+      await updateVehicle(
+        props.vehicle.id,
+        requestData as IUpdateVehicleRequest,
+      )
     } else {
       await createVehicle(requestData as ICreateVehicleRequest)
     }
@@ -117,11 +120,7 @@ const onSubmit = handleSubmit(async (values) => {
       <FormItem>
         <FormLabel>License Plate</FormLabel>
         <FormControl>
-          <Input
-            type="text"
-            v-bind="componentField"
-            placeholder="ABC-1234"
-          />
+          <Input type="text" v-bind="componentField" placeholder="ABC-1234" />
         </FormControl>
         <FormMessage />
       </FormItem>
@@ -131,11 +130,7 @@ const onSubmit = handleSubmit(async (values) => {
       <FormItem>
         <FormLabel>Make</FormLabel>
         <FormControl>
-          <Input
-            type="text"
-            v-bind="componentField"
-            placeholder="Toyota"
-          />
+          <Input type="text" v-bind="componentField" placeholder="Toyota" />
         </FormControl>
         <FormMessage />
       </FormItem>
@@ -145,11 +140,7 @@ const onSubmit = handleSubmit(async (values) => {
       <FormItem>
         <FormLabel>Model</FormLabel>
         <FormControl>
-          <Input
-            type="text"
-            v-bind="componentField"
-            placeholder="Camry"
-          />
+          <Input type="text" v-bind="componentField" placeholder="Camry" />
         </FormControl>
         <FormMessage />
       </FormItem>
@@ -175,11 +166,7 @@ const onSubmit = handleSubmit(async (values) => {
       <FormItem>
         <FormLabel>Color</FormLabel>
         <FormControl>
-          <Input
-            type="text"
-            v-bind="componentField"
-            placeholder="Red"
-          />
+          <Input type="text" v-bind="componentField" placeholder="Red" />
         </FormControl>
         <FormMessage />
       </FormItem>

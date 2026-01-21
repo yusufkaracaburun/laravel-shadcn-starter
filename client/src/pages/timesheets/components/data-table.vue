@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import type { IDataTableProps } from '@/components/data-table/types'
-import type { ITimesheet, ITimesheetFilters } from '@/pages/timesheets/models/timesheets'
+import type {
+  ITimesheet,
+  ITimesheetFilters,
+} from '@/pages/timesheets/models/timesheets'
 
 import DataTable from '@/components/data-table/data-table.vue'
 import { generateVueTable } from '@/components/data-table/use-generate-vue-table'

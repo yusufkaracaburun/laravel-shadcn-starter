@@ -47,7 +47,7 @@ export function formatMoney(value: any): string {
  */
 export function formatNumber(
   value: number | string | null | undefined,
-  decimals: number = 2,
+  decimals = 2,
 ): string {
   // Convert value to number if it's a string
   let numValue: number
@@ -98,8 +98,7 @@ export function parseDutchNumber(value: string): number {
  * Uses vue-i18n to respect current locale setting
  */
 export function formatDate(dateString: string | null | undefined): string {
-  if (!dateString)
-    return '—'
+  if (!dateString) return '—'
   try {
     const date = new Date(dateString)
     if (!Number.isNaN(date.getTime())) {
@@ -127,8 +126,7 @@ export function formatDate(dateString: string | null | undefined): string {
 export function formatDateForPreview(
   dateString: string | null | undefined,
 ): string {
-  if (!dateString)
-    return '—'
+  if (!dateString) return '—'
   try {
     const date = new Date(dateString)
     if (!Number.isNaN(date.getTime())) {
@@ -155,8 +153,7 @@ export function formatDateForPreview(
 export function formatDateForInput(
   dateString: string | null | undefined,
 ): string {
-  if (!dateString)
-    return ''
+  if (!dateString) return ''
   // Try parsing as "d-m-Y H:i:s" format first
   if (dateString.includes('-') && dateString.includes(' ')) {
     const [datePart] = dateString.split(' ')
@@ -181,8 +178,7 @@ export function formatDateForInput(
  * Uses vue-i18n to respect current locale setting
  */
 export function formatDateTime(dateString: string | null | undefined): string {
-  if (!dateString)
-    return '—'
+  if (!dateString) return '—'
   try {
     // Try parsing as "d-m-Y H:i:s" format first
     if (dateString.includes('-') && dateString.includes(' ')) {

@@ -13,7 +13,9 @@ const emits = defineEmits<{
   close: []
 }>()
 
-const title = computed(() => (props.equipment ? 'Edit Equipment' : 'New Equipment'))
+const title = computed(() =>
+  props.equipment ? 'Edit Equipment' : 'New Equipment',
+)
 const description = computed(() =>
   props.equipment
     ? `Update equipment information for ${props.equipment.name}.`
@@ -31,6 +33,10 @@ const description = computed(() =>
         {{ description }}
       </UiDialogDescription>
     </UiDialogHeader>
-    <EquipmentsForm :equipment="equipment" class="mt-2" @close="emits('close')" />
+    <EquipmentsForm
+      :equipment="equipment"
+      class="mt-2"
+      @close="emits('close')"
+    />
   </div>
 </template>

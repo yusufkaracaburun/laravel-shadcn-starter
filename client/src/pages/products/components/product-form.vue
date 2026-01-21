@@ -93,7 +93,10 @@ const onSubmit = handleSubmit(async (values) => {
     const requestData = prepareRequestData(values, isEditMode.value)
 
     if (isEditMode.value && props.product) {
-      await updateProduct(props.product.id, requestData as IUpdateProductRequest)
+      await updateProduct(
+        props.product.id,
+        requestData as IUpdateProductRequest,
+      )
     } else {
       await createProduct(requestData as ICreateProductRequest)
     }

@@ -93,7 +93,7 @@ export class UserClient extends BaseClient {
    * @param perPage - Number of items per page (default: 15)
    * Returns raw APIResponse
    */
-  async getUsers(page: number = 1, perPage: number = 15): Promise<APIResponse> {
+  async getUsers(page = 1, perPage = 15): Promise<APIResponse> {
     const endpoint = `${ApiEndpoints.USER_LIST}?page=${page}&per_page=${perPage}`
     return this.get(endpoint)
   }
@@ -105,8 +105,8 @@ export class UserClient extends BaseClient {
    * Returns IResponse<PaginatedUsersResponse>
    */
   async getUsersTyped(
-    page: number = 1,
-    perPage: number = 15,
+    page = 1,
+    perPage = 15,
   ): Promise<IResponse<PaginatedUsersResponse>> {
     const response = await this.getUsers(page, perPage)
     return response.json() as Promise<IResponse<PaginatedUsersResponse>>

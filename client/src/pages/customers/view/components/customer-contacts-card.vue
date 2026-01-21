@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { ICustomer } from '@/pages/customers/models/customers'
 
+import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import Badge from '@/components/ui/badge/Badge.vue'
 import {
   Card,
@@ -9,8 +10,11 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { MailIcon, PhoneIcon, UserIcon } from '@/composables/use-icons.composable'
+import {
+  MailIcon,
+  PhoneIcon,
+  UserIcon,
+} from '@/composables/use-icons.composable'
 
 interface Props {
   customer: ICustomer
@@ -51,12 +55,9 @@ const primaryContact = computed(() => {
                     :src="primaryContact.user.profile_photo_url"
                     :alt="primaryContact.name"
                     class="w-full h-full object-cover"
-                  >
+                  />
                 </div>
-                <Avatar
-                  v-else
-                  class="size-10 shrink-0"
-                >
+                <Avatar v-else class="size-10 shrink-0">
                   <AvatarFallback>
                     <UserIcon class="size-5" />
                   </AvatarFallback>
@@ -79,10 +80,7 @@ const primaryContact = computed(() => {
                     <PhoneIcon class="size-3" />
                     {{ primaryContact.phone }}
                   </div>
-                  <div
-                    v-if="primaryContact.user"
-                    class="mt-2 pt-2 border-t"
-                  >
+                  <div v-if="primaryContact.user" class="mt-2 pt-2 border-t">
                     <div class="text-xs text-muted-foreground">
                       Associated User
                     </div>
@@ -95,9 +93,7 @@ const primaryContact = computed(() => {
                   </div>
                 </div>
               </div>
-              <Badge variant="default" class="shrink-0">
-                Primary
-              </Badge>
+              <Badge variant="default" class="shrink-0"> Primary </Badge>
             </div>
           </div>
         </div>
@@ -124,12 +120,9 @@ const primaryContact = computed(() => {
                     :src="contact.user.profile_photo_url"
                     :alt="contact.name"
                     class="w-full h-full object-cover"
-                  >
+                  />
                 </div>
-                <Avatar
-                  v-else
-                  class="size-8 shrink-0"
-                >
+                <Avatar v-else class="size-8 shrink-0">
                   <AvatarFallback>
                     <UserIcon class="size-4" />
                   </AvatarFallback>
@@ -150,10 +143,7 @@ const primaryContact = computed(() => {
                   >
                     {{ contact.phone }}
                   </div>
-                  <div
-                    v-if="contact.user"
-                    class="mt-2 flex items-center gap-2"
-                  >
+                  <div v-if="contact.user" class="mt-2 flex items-center gap-2">
                     <div
                       v-if="contact.user.profile_photo_url"
                       class="size-5 rounded-full overflow-hidden"
@@ -162,7 +152,7 @@ const primaryContact = computed(() => {
                         :src="contact.user.profile_photo_url"
                         :alt="contact.user.name"
                         class="w-full h-full object-cover"
-                      >
+                      />
                     </div>
                     <span class="text-xs text-muted-foreground">
                       {{ contact.user.name }}
@@ -186,9 +176,7 @@ const primaryContact = computed(() => {
         v-if="!primaryContact && contacts.length === 0"
         class="text-center py-8"
       >
-        <p class="text-sm text-muted-foreground">
-          No contacts found.
-        </p>
+        <p class="text-sm text-muted-foreground">No contacts found.</p>
       </div>
     </CardContent>
   </Card>

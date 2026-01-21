@@ -88,16 +88,19 @@ export function useProducts() {
     const params = route.params as { id?: string | string[] }
     const idParam = Array.isArray(params.id) ? params.id[0] : params.id
     if (
-      !idParam
-      || typeof idParam !== 'string'
-      || Number.isNaN(Number(idParam))
+      !idParam ||
+      typeof idParam !== 'string' ||
+      Number.isNaN(Number(idParam))
     ) {
       return undefined
     }
     return Number(idParam)
   })
 
-  const getProductByIdQuery = productService.getProductByIdQuery(productId, ref([]))
+  const getProductByIdQuery = productService.getProductByIdQuery(
+    productId,
+    ref([]),
+  )
   const {
     data: productByIdResponse,
     isLoading: isLoadingProductById,
@@ -130,7 +133,10 @@ export function useProducts() {
         return 0
       }
       // If it's a Money object, extract the decimal value
-      if (typeof product.unit_price === 'object' && 'amount' in product.unit_price) {
+      if (
+        typeof product.unit_price === 'object' &&
+        'amount' in product.unit_price
+      ) {
         // Money object: amount is in cents, convert to decimal
         const amount = Number.parseFloat(product.unit_price.amount)
         return amount / 100

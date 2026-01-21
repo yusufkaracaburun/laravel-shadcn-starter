@@ -3,6 +3,7 @@ import { computed, onMounted } from 'vue'
 
 import type { ICustomer } from '@/pages/customers/models/customers'
 
+import Loading from '@/components/loading.vue'
 import {
   Card,
   CardContent,
@@ -10,7 +11,6 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import Loading from '@/components/loading.vue'
 import { FileTextIcon } from '@/composables/use-icons.composable'
 import { useInvoices } from '@/pages/invoices/composables/use-invoices.composable'
 
@@ -21,13 +21,8 @@ interface Props {
 const props = defineProps<Props>()
 
 // Fetch invoices - backend should filter by customer_id
-const {
-  invoices,
-  loading,
-  filter,
-  onFiltersChange,
-  fetchInvoicesData,
-} = useInvoices()
+const { invoices, loading, filter, onFiltersChange, fetchInvoicesData } =
+  useInvoices()
 
 // Filter invoices for this customer
 const customerInvoices = computed(() => {
@@ -91,9 +86,7 @@ function formatDate(dateString: string | null | undefined): string {
         v-else-if="!customerInvoices || customerInvoices.length === 0"
         class="flex items-center justify-center py-8"
       >
-        <p class="text-sm text-muted-foreground">
-          No invoices found.
-        </p>
+        <p class="text-sm text-muted-foreground">No invoices found.</p>
       </div>
       <div v-else class="space-y-3">
         <div

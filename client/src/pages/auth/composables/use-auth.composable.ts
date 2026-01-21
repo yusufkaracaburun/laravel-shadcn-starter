@@ -1,6 +1,9 @@
 import { storeToRefs } from 'pinia'
 
-import type { LoginRequest, RegisterRequest } from '@/pages/auth/services/auth.service'
+import type {
+  LoginRequest,
+  RegisterRequest,
+} from '@/pages/auth/services/auth.service'
 
 import { useToast } from '@/composables/use-toast.composable'
 import { RouterPath } from '@/constants/route-path'
@@ -40,9 +43,9 @@ export function useAuth() {
 
   const loading = computed(
     () =>
-      loginMutation.isPending.value
-      || logoutMutation.isPending.value
-      || registerMutation.isPending.value,
+      loginMutation.isPending.value ||
+      logoutMutation.isPending.value ||
+      registerMutation.isPending.value,
   )
 
   async function login(credentials: LoginRequest) {

@@ -12,7 +12,6 @@ import { formatDate } from '@/utils/date'
 import type { IVehicle } from '../models/vehicles'
 
 import { statuses } from '../data/data'
-
 import DataTableRowActions from './data-table-row-actions.vue'
 
 // CSS class constants

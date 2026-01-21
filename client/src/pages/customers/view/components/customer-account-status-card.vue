@@ -54,9 +54,7 @@ defineProps<Props>()
         <div class="text-sm font-medium text-muted-foreground mb-1">
           Customer ID
         </div>
-        <div class="text-base">
-          #{{ customer.id }}
-        </div>
+        <div class="text-base">#{{ customer.id }}</div>
       </div>
     </CardContent>
   </Card>

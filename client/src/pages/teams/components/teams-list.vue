@@ -14,6 +14,7 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
+
 import UserDetailsDialog from './user-details-dialog.vue'
 
 interface Props {
@@ -226,8 +227,8 @@ function showUserDetails(userId: number) {
 
     <!-- User Details Dialog -->
     <UserDetailsDialog
-      :user-id="selectedUserId"
       v-model:open="isUserDialogOpen"
+      :user-id="selectedUserId"
     />
   </div>
 </template>

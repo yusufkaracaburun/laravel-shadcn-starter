@@ -24,10 +24,7 @@ const CELL_CLASSES = {
  * Helper function to create name cell with copy functionality
  */
 function createNameCell(nameValue: unknown) {
-  const nameStr =
-    nameValue && typeof nameValue === 'string'
-      ? nameValue
-      : ''
+  const nameStr = nameValue && typeof nameValue === 'string' ? nameValue : ''
 
   return h('div', { class: CELL_CLASSES.NAME_CONTAINER }, [
     h('span', {}, nameStr || '—'),
@@ -111,11 +108,7 @@ function createColumns(): ColumnDef<IEquipment>[] {
         }),
       cell: ({ row }) => {
         const type = row.getValue('type')
-        return h(
-          'div',
-          {},
-          (typeof type === 'string' ? type : null) || '—',
-        )
+        return h('div', {}, (typeof type === 'string' ? type : null) || '—')
       },
       enableSorting: true,
       enableResizing: true,
@@ -129,11 +122,7 @@ function createColumns(): ColumnDef<IEquipment>[] {
         }),
       cell: ({ row }) => {
         const model = row.getValue('model')
-        return h(
-          'div',
-          {},
-          (typeof model === 'string' ? model : null) || '—',
-        )
+        return h('div', {}, (typeof model === 'string' ? model : null) || '—')
       },
       enableSorting: true,
       enableResizing: true,
@@ -161,11 +150,7 @@ function createColumns(): ColumnDef<IEquipment>[] {
         }),
       cell: ({ row }) => {
         const status = row.getValue('status')
-        return h(
-          'div',
-          {},
-          (typeof status === 'string' ? status : null) || '—',
-        )
+        return h('div', {}, (typeof status === 'string' ? status : null) || '—')
       },
       enableSorting: true,
       enableResizing: true,

@@ -20,10 +20,10 @@ export class RequestBuilder {
     const origin = url.origin
 
     return {
-      'Accept': 'application/json',
+      Accept: 'application/json',
       'X-Requested-With': 'XMLHttpRequest',
-      'Origin': origin,
-      'Referer': `${origin}/`,
+      Origin: origin,
+      Referer: `${origin}/`,
     }
   }
 

@@ -9,11 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import {
-  Building2Icon,
-  MailIcon,
-  PhoneIcon,
-} from '@/composables/use-icons.composable'
+import { Building2Icon, PhoneIcon } from '@/composables/use-icons.composable'
 
 interface Props {
   customer: ICustomer
@@ -51,17 +47,13 @@ const formattedAddress = computed(() => {
     </CardHeader>
     <CardContent class="space-y-4">
       <div>
-        <div class="text-sm font-medium text-muted-foreground mb-1">
-          Name
-        </div>
+        <div class="text-sm font-medium text-muted-foreground mb-1">Name</div>
         <div class="text-base">
           {{ customer.name }}
         </div>
       </div>
       <div v-if="customer.email">
-        <div class="text-sm font-medium text-muted-foreground mb-1">
-          Email
-        </div>
+        <div class="text-sm font-medium text-muted-foreground mb-1">Email</div>
         <div class="text-base">
           {{ customer.email }}
         </div>
@@ -78,9 +70,7 @@ const formattedAddress = computed(() => {
         </div>
       </div>
       <div>
-        <div class="text-sm font-medium text-muted-foreground mb-1">
-          Type
-        </div>
+        <div class="text-sm font-medium text-muted-foreground mb-1">Type</div>
         <div class="text-base">
           <Badge
             :variant="customer.type === 'business' ? 'default' : 'secondary'"

@@ -1,4 +1,4 @@
-import { CheckCircle2, XCircle, Wrench } from 'lucide-vue-next'
+import { CheckCircle2, Wrench, XCircle } from 'lucide-vue-next'
 import { h } from 'vue'
 
 import { getVehicleStatusColor } from '@/utils/status-colors'

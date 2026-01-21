@@ -11,21 +11,25 @@ import type {
   IInvoicePrerequisites,
   IUpdateInvoiceRequest,
 } from '@/pages/invoices/models/invoice'
+import type { ISorting } from '@/services/query-utils'
+import type {
+  IPaginatedResponse,
+  IResponse,
+} from '@/services/types/response.type'
 
 import { useAxios } from '@/composables/use-axios.composable'
-
-import type { ISorting } from '@/services/query-utils'
-import type { IPaginatedResponse, IResponse } from '@/services/types/response.type'
-
-import { buildQueryString, defaultAxiosQueryOptions } from '@/services/query-utils'
+import {
+  buildQueryString,
+  defaultAxiosQueryOptions,
+} from '@/services/query-utils'
 
 // Re-export types from models for convenience
 export type {
   IInvoice,
+  IInvoiceActivity,
+  IInvoiceEmail,
   IInvoiceItem,
   IInvoicePayment,
-  IInvoiceEmail,
-  IInvoiceActivity,
 } from '@/pages/invoices/models/invoice'
 
 enum QueryKeys {
@@ -112,13 +116,13 @@ export function useInvoiceService() {
     typeof useMutation<
       IResponse<IInvoice>,
       AxiosError,
-      { id: number, includes?: string[] }
+      { id: number; includes?: string[] }
     >
   > {
     return useMutation<
       IResponse<IInvoice>,
       AxiosError,
-      { id: number, includes?: string[] }
+      { id: number; includes?: string[] }
     >({
       mutationKey: [QueryKeys.GET_INVOICE],
       mutationFn: async ({ id, includes }): Promise<IResponse<IInvoice>> => {
@@ -163,13 +167,13 @@ export function useInvoiceService() {
     typeof useMutation<
       IResponse<IInvoice>,
       AxiosError,
-      { id: number, data: IUpdateInvoiceRequest }
+      { id: number; data: IUpdateInvoiceRequest }
     >
   > {
     return useMutation<
       IResponse<IInvoice>,
       AxiosError,
-      { id: number, data: IUpdateInvoiceRequest }
+      { id: number; data: IUpdateInvoiceRequest }
     >({
       mutationKey: [QueryKeys.UPDATE_INVOICE],
       mutationFn: async ({ id, data }): Promise<IResponse<IInvoice>> => {

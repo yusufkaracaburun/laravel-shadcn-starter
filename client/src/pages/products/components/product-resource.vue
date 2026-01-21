@@ -9,7 +9,9 @@ const props = defineProps<{
 
 defineEmits(['close'])
 
-const title = computed(() => (props.product ? 'Edit Product' : 'Create New Product'))
+const title = computed(() =>
+  props.product ? 'Edit Product' : 'Create New Product',
+)
 const description = computed(() =>
   props.product
     ? `Update product information for ${props.product.name}.`

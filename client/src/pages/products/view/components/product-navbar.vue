@@ -86,7 +86,10 @@ function handleDeleteClose() {
   />
 
   <Dialog v-model:open="isDialogOpen" class="print:hidden">
-    <DialogContent v-if="showComponent && props.product" class="sm:max-w-[425px]">
+    <DialogContent
+      v-if="showComponent && props.product"
+      class="sm:max-w-[425px]"
+    >
       <ProductDelete
         v-if="showComponent === ProductDelete"
         :product="props.product"

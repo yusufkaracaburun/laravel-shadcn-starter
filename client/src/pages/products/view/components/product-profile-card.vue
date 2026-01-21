@@ -19,8 +19,7 @@ defineProps<Props>()
 function formatPrice(
   price: number | { formatted: string } | undefined,
 ): string {
-  if (!price)
-    return '—'
+  if (!price) return '—'
   // Handle Money object from backend
   if (typeof price === 'object' && 'formatted' in price) {
     return price.formatted
@@ -44,9 +43,7 @@ function formatPrice(
     </CardHeader>
     <CardContent class="space-y-4">
       <div>
-        <div class="text-sm font-medium text-muted-foreground mb-1">
-          Name
-        </div>
+        <div class="text-sm font-medium text-muted-foreground mb-1">Name</div>
         <div class="text-base">
           {{ product.name }}
         </div>
@@ -71,14 +68,10 @@ function formatPrice(
         <div class="text-sm font-medium text-muted-foreground mb-1">
           VAT Rate
         </div>
-        <div class="text-base">
-          {{ product.vat_rate }}%
-        </div>
+        <div class="text-base">{{ product.vat_rate }}%</div>
       </div>
       <div v-if="product.unit">
-        <div class="text-sm font-medium text-muted-foreground mb-1">
-          Unit
-        </div>
+        <div class="text-sm font-medium text-muted-foreground mb-1">Unit</div>
         <div class="text-base">
           {{ product.unit }}
         </div>

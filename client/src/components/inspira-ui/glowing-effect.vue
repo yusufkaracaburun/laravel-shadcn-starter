@@ -69,8 +69,7 @@ const containerStyles = computed(() => {
 })
 
 onMounted(() => {
-  if (props.disabled)
-    return
+  if (props.disabled) return
 
   window.addEventListener('scroll', handleScroll, { passive: true })
   document.body.addEventListener('pointermove', handlePointerMove, {
@@ -95,9 +94,8 @@ function handleScroll() {
   handleMove()
 }
 
-function handleMove(e?: MouseEvent | PointerEvent | { x: number, y: number }) {
-  if (!containerRef.value)
-    return
+function handleMove(e?: MouseEvent | PointerEvent | { x: number; y: number }) {
+  if (!containerRef.value) return
 
   if (animationFrame.value) {
     cancelAnimationFrame(animationFrame.value)
@@ -106,8 +104,7 @@ function handleMove(e?: MouseEvent | PointerEvent | { x: number, y: number }) {
   animationFrame.value = requestAnimationFrame(() => {
     const element = containerRef.value
 
-    if (!element)
-      return
+    if (!element) return
 
     const { left, top, width, height } = element.getBoundingClientRect()
 
@@ -131,15 +128,14 @@ function handleMove(e?: MouseEvent | PointerEvent | { x: number, y: number }) {
     }
 
     const isActive =
-      mouseX > left - props.proximity
-      && mouseX < left + width + props.proximity
-      && mouseY > top - props.proximity
-      && mouseY < top + height + props.proximity
+      mouseX > left - props.proximity &&
+      mouseX < left + width + props.proximity &&
+      mouseY > top - props.proximity &&
+      mouseY < top + height + props.proximity
 
     element.style.setProperty('--active', isActive ? '1' : '0')
 
-    if (!isActive)
-      return
+    if (!isActive) return
 
     const currentAngle =
       Number.parseFloat(element.style.getPropertyValue('--start')) || 0

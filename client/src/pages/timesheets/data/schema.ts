@@ -8,7 +8,10 @@ const baseTimesheetFormSchema = z.object({
   project_id: z.number().nullable().optional(),
   task_id: z.number().nullable().optional(),
   date: z.string().min(1, 'Date is required.'),
-  hours: z.number().min(0.1, 'Hours must be greater than 0.').max(24, 'Hours cannot exceed 24.'),
+  hours: z
+    .number()
+    .min(0.1, 'Hours must be greater than 0.')
+    .max(24, 'Hours cannot exceed 24.'),
   description: z.string().nullable().optional(),
   status: z.string().nullable().optional(),
 })
