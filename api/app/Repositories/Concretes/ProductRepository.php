@@ -36,13 +36,13 @@ final class ProductRepository extends QueryableRepository implements ProductRepo
     public function getAllowedSorts(): array
     {
         return [
-            'id', '-id',
-            'name', '-name',
-            'unit_price', '-unit_price',
-            'vat_rate', '-vat_rate',
-            'unit', '-unit',
-            'created_at', '-created_at',
-            'updated_at', '-updated_at',
+            'id',
+            'name',
+            'unit_price',
+            'vat_rate',
+            'unit',
+            'created_at',
+            'updated_at',
         ];
     }
 

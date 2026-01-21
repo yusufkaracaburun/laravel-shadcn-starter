@@ -86,18 +86,18 @@ final class IndexPaymentRequest extends BaseIndexFormRequest
     protected function getAllowedSorts(): array
     {
         return [
-            'id', '-id',
-            'payment_number', '-payment_number',
-            'invoice_id', '-invoice_id',
-            'customer_id', '-customer_id',
-            'status', '-status',
-            'date', '-date',
-            'paid_at', '-paid_at',
-            'amount', '-amount',
-            'method', '-method',
-            'provider', '-provider',
-            'created_at', '-created_at',
-            'updated_at', '-updated_at',
+            'id',
+            'payment_number',
+            'invoice_id',
+            'customer_id',
+            'status',
+            'date',
+            'paid_at',
+            'amount',
+            'method',
+            'provider',
+            'created_at',
+            'updated_at',
         ];
     }
 

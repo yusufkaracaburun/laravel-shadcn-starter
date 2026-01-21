@@ -37,10 +37,10 @@ final class TeamRepository extends QueryableRepository implements TeamRepository
     public function getAllowedSorts(): array
     {
         return [
-            'id', '-id',
-            'name', '-name',
-            'created_at', '-created_at',
-            'updated_at', '-updated_at',
+            'id',
+            'name',
+            'created_at',
+            'updated_at',
         ];
     }
 

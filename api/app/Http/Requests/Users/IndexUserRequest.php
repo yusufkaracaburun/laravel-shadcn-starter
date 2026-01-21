@@ -82,11 +82,11 @@ final class IndexUserRequest extends BaseIndexFormRequest
     protected function getAllowedSorts(): array
     {
         return [
-            'id', '-id',
-            'name', '-name',
-            'status', '-status',
-            'email', '-email',
-            'created_at', '-created_at',
+            'id',
+            'name',
+            'status',
+            'email',
+            'created_at',
         ];
     }
 

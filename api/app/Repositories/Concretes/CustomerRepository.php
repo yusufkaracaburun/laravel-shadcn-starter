@@ -8,6 +8,7 @@ use App\Models\Customer;
 use Spatie\QueryBuilder\QueryBuilder;
 use Spatie\QueryBuilder\AllowedFilter;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\QueryBuilder\AllowedInclude;
 use App\Repositories\QueryableRepository;
 use Spatie\QueryBuilder\QueryBuilderRequest;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -23,20 +24,20 @@ final class CustomerRepository extends QueryableRepository implements CustomerRe
     public function getAllowedSorts(): array
     {
         return [
-            'id', '-id',
-            'type', '-type',
-            'name', '-name',
-            'address', '-address',
-            'zipcode', '-zipcode',
-            'city', '-city',
-            'country', '-country',
-            'email', '-email',
-            'phone', '-phone',
-            'kvk_number', '-kvk_number',
-            'vat_number', '-vat_number',
-            'iban_number', '-iban_number',
-            'created_at', '-created_at',
-            'updated_at', '-updated_at',
+            'id',
+            'type',
+            'name',
+            'address',
+            'zipcode',
+            'city',
+            'country',
+            'email',
+            'phone',
+            'kvk_number',
+            'vat_number',
+            'iban_number',
+            'created_at',
+            'updated_at',
         ];
     }
 
@@ -62,7 +63,7 @@ final class CustomerRepository extends QueryableRepository implements CustomerRe
 
     public function getAllowedIncludes(): array
     {
-        return ['contacts', 'invoices', 'primaryContact'];
+        return ['contacts', 'invoices', 'primaryContact', AllowedInclude::count('invoicesCount'), AllowedInclude::count('contactsCount')];
     }
 
     public function getAllowedFilters(): array

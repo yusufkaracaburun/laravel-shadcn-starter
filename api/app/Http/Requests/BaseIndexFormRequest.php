@@ -23,7 +23,7 @@ use Illuminate\Contracts\Validation\ValidationRule;
  * {
  *     protected function getAllowedSorts(): array
  *     {
- *         return ['id', '-id', 'name', '-name'];
+ *         return ['id', 'name'];
  *     }
  *
  *     protected function getAllowedIncludes(): array
@@ -41,10 +41,10 @@ use Illuminate\Contracts\Validation\ValidationRule;
 abstract class BaseIndexFormRequest extends BaseFormRequest
 {
     /**
-     * Get allowed sort fields (with ascending/descending variants).
+     * Get allowed sort fields.
      *
      * Override in child class to specify allowed sort fields.
-     * Format: ['id', '-id', 'name', '-name'] where '-' prefix indicates descending.
+     * Format: ['id', 'name', 'created_at'] - users can still request descending sorts by prefixing with '-'.
      *
      * @return array<string>
      */

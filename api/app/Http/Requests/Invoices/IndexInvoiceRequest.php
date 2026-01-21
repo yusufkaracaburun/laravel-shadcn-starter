@@ -86,16 +86,16 @@ final class IndexInvoiceRequest extends BaseIndexFormRequest
     protected function getAllowedSorts(): array
     {
         return [
-            'id', '-id',
-            'invoice_number', '-invoice_number',
-            'customer_id', '-customer_id',
-            'status', '-status',
-            'date', '-date',
-            'date_due', '-date_due',
-            'subtotal', '-subtotal',
-            'total', '-total',
-            'created_at', '-created_at',
-            'updated_at', '-updated_at',
+            'id',
+            'invoice_number',
+            'customer_id',
+            'status',
+            'date',
+            'date_due',
+            'subtotal',
+            'total',
+            'created_at',
+            'updated_at',
         ];
     }
 

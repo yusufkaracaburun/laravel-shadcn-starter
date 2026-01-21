@@ -34,8 +34,8 @@ final class PermissionRepository extends QueryableRepository implements Permissi
     public function getAllowedSorts(): array
     {
         return [
-            'id', '-id',
-            'name', '-name'
+            'id',
+            'name',
         ];
     }
 

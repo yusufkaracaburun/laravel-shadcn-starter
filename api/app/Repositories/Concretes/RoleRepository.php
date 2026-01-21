@@ -35,10 +35,10 @@ final class RoleRepository extends QueryableRepository implements RoleRepository
     public function getAllowedSorts(): array
     {
         return [
-            'id', '-id',
-            'name', '-name',
-            'is_system', '-is_system',
-            'created_at', '-created_at'
+            'id',
+            'name',
+            'is_system',
+            'created_at',
         ];
     }
 
