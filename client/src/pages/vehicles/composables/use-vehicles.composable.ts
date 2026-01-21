@@ -62,7 +62,7 @@ export function useVehicles() {
     messages: VehicleMessages,
     defaultSort: { id: 'license_plate', desc: false },
     includes,
-    defaultIncludeKey: 'drivers',
+    defaultIncludeKey: ['drivers'],
     onFetchList: (refetch) => {
       refetch()
     },

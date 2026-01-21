@@ -42,6 +42,8 @@ export function useCustomers() {
     invoices: 'invoices',
     contacts: 'contacts',
     primaryContact: 'primaryContact',
+    contactsCount: 'contactsCount',
+    invoicesCount: 'invoicesCount',
   }
 
   const base = useResourceBase<
@@ -71,7 +73,7 @@ export function useCustomers() {
     messages: CustomerMessages,
     defaultSort: { id: 'created_at', desc: true },
     includes,
-    defaultIncludeKey: 'primaryContact',
+    defaultIncludeKey: ['primaryContact', 'contactsCount', 'invoicesCount'],
     onFetchList: (refetch) => {
       refetch()
     },

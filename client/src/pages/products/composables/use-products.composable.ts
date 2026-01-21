@@ -75,7 +75,7 @@ export function useProducts() {
     messages: ProductMessages,
     defaultSort: { id: 'created_at', desc: true },
     includes,
-    defaultIncludeKey: 'default',
+    defaultIncludeKey: [],
     onFetchList: (refetch) => {
       refetch()
     },

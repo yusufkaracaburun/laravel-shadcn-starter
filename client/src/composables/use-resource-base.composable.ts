@@ -47,7 +47,7 @@ export interface ResourceService<
     typeof import('@tanstack/vue-query').useMutation<
       IResponse<TEntity>,
       import('axios').AxiosError,
-      { id: number; data: TUpdateRequest }
+      { id: number, data: TUpdateRequest }
     >
   >
   deleteMutation: () => ReturnType<
@@ -61,7 +61,7 @@ export interface ResourceService<
     typeof import('@tanstack/vue-query').useMutation<
       IResponse<TEntity>,
       import('axios').AxiosError,
-      { id: number; includes?: string[] }
+      { id: number, includes?: string[] }
     >
   >
 }
@@ -84,7 +84,7 @@ export interface ResourceConfig<
   messages: Record<string, string>
   defaultSort: ISorting
   includes: Record<string, string>
-  defaultIncludeKey?: string
+  defaultIncludeKey?: string[]
   onFetchList?: (refetch: () => Promise<any>) => void
 }
 
@@ -112,8 +112,10 @@ export function useResourceBase<
   const filter = ref<TFilter>({} as TFilter)
   const include = ref<string[]>([])
 
-  if (config.defaultIncludeKey && config.includes[config.defaultIncludeKey]) {
-    include.value = [config.includes[config.defaultIncludeKey]]
+  if (config.defaultIncludeKey && config.defaultIncludeKey.length > 0) {
+    include.value = config.defaultIncludeKey
+      .map(key => config.includes[key])
+      .filter((value): value is string => !!value)
   }
 
   function onSortingChange(newSorting: ISorting): void {

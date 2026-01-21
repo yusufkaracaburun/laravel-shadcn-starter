@@ -69,7 +69,7 @@ export function useInvoices() {
     messages: InvoiceMessages,
     defaultSort: { id: 'created_at', desc: true },
     includes,
-    defaultIncludeKey: 'customer',
+    defaultIncludeKey: ['customer'],
     onFetchList: (refetch) => {
       refetch()
     },

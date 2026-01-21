@@ -65,7 +65,7 @@ export function useUsers() {
     messages: UserMessages,
     defaultSort: { id: 'created_at', desc: true },
     includes,
-    defaultIncludeKey: 'roles',
+    defaultIncludeKey: ['roles'],
     onFetchList: (refetch) => {
       refetch()
     },

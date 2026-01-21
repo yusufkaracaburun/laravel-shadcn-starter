@@ -66,7 +66,7 @@ export function useEquipments() {
     messages: EquipmentMessages,
     defaultSort: { id: 'created_at', desc: true },
     includes,
-    defaultIncludeKey: '',
+    defaultIncludeKey: [],
     onFetchList: (refetch) => {
       refetch()
     },

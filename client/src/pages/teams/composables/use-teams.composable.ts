@@ -66,7 +66,7 @@ export function useTeams() {
     messages: TeamMessages,
     defaultSort: { id: 'created_at', desc: true },
     includes,
-    defaultIncludeKey: 'users',
+    defaultIncludeKey: ['users'],
     onFetchList: (refetch) => {
       refetch()
     },

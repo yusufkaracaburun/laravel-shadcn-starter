@@ -66,7 +66,7 @@ export function useTimesheets() {
     messages: TimesheetMessages,
     defaultSort: { id: 'created_at', desc: true },
     includes: { default: '' },
-    defaultIncludeKey: 'default',
+    defaultIncludeKey: [],
     onFetchList: (refetch) => {
       refetch()
     },
