@@ -84,10 +84,7 @@ final class CustomerRepository extends QueryableRepository implements CustomerRe
 
     public function findOrFail(int $id, array $columns = ['*']): Customer
     {
-        return Customer::query()
-            ->with('primaryContact')
-            ->withCount(['invoices', 'contacts'])
-            ->findOrFail($id, $columns);
+        return $this->query()->findOrFail($id, $columns);
     }
 
     /**

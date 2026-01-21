@@ -32,7 +32,7 @@ final class CustomerService extends BaseService implements CustomerServiceInterf
 
     public function show(Customer $customer): CustomerResource
     {
-        $customer = $this->repo->findForShow($customer);
+        $customer = $this->repo->findOrFail($customer->id);
 
         return new CustomerResource($customer);
     }
