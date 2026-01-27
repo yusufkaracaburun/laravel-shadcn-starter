@@ -4,12 +4,25 @@ import { computed, ref, watch } from 'vue'
 import type { IEquipment } from '@/pages/equipments/models/equipments'
 
 import Badge from '@/components/ui/badge/Badge.vue'
+import { Button } from '@/components/ui/button'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
 import {
   InputGroup,
   InputGroupAddon,
   InputGroupInput,
 } from '@/components/ui/input-group'
-import { SearchIcon } from '@/composables/use-icons.composable'
+import {
+  ChevronsUpDownIcon,
+  FilterIcon,
+  SearchIcon,
+} from '@/composables/use-icons.composable'
 import { statuses } from '@/pages/equipments/data/data'
 
 const props = withDefaults(
@@ -60,6 +73,7 @@ function getStatusVariant(status: string | null | undefined) {
 }
 
 const searchTerm = ref('')
+const selectedSort = ref<string>('name-asc')
 
 const filteredEquipments = computed(() => {
   const items = props.equipments ?? []
@@ -113,7 +127,7 @@ function handleSelectEquipment(equipment: IEquipment) {
 
 <template>
   <div
-    class="flex flex-col gap-4 h-full min-h-0"
+    class="flex flex-col gap-4 h-full min-h-0 px-2"
     data-testid="equipment_page-layout"
   >
     <div class="space-y-3">
@@ -122,15 +136,89 @@ function handleSelectEquipment(equipment: IEquipment) {
       >
         Search
       </UiLabel>
-      <InputGroup>
-        <InputGroupInput
-          v-model="searchTerm"
-          placeholder="Search equipment by name, model, serial number..."
-        />
-        <InputGroupAddon>
-          <SearchIcon />
-        </InputGroupAddon>
-      </InputGroup>
+      <div class="flex items-center gap-2">
+        <InputGroup class="flex-1">
+          <InputGroupInput
+            v-model="searchTerm"
+            placeholder="Search equipment by name, model, serial number..."
+          />
+          <InputGroupAddon>
+            <SearchIcon />
+          </InputGroupAddon>
+        </InputGroup>
+        
+        <DropdownMenu>
+          <DropdownMenuTrigger as-child>
+            <Button variant="outline" size="icon" class="h-9 w-9 shrink-0">
+              <FilterIcon class="size-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" class="w-48">
+            <DropdownMenuLabel>Filter by Status</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem>
+              <div class="flex items-center gap-2">
+                <component :is="statuses[0].icon" class="size-4" />
+                {{ statuses[0].label }}
+              </div>
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <div class="flex items-center gap-2">
+                <component :is="statuses[1].icon" class="size-4" />
+                {{ statuses[1].label }}
+              </div>
+            </DropdownMenuItem>
+            <DropdownMenuItem>
+              <div class="flex items-center gap-2">
+                <component :is="statuses[2].icon" class="size-4" />
+                {{ statuses[2].label }}
+              </div>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+
+        <DropdownMenu>
+          <DropdownMenuTrigger as-child>
+            <Button variant="outline" size="icon" class="h-9 w-9 shrink-0">
+              <ChevronsUpDownIcon class="size-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" class="w-48">
+            <DropdownMenuLabel>Sort by</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              :class="selectedSort === 'name-asc' ? 'bg-muted' : ''"
+              @select="selectedSort = 'name-asc'"
+            >
+              Name: A to Z
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              :class="selectedSort === 'name-desc' ? 'bg-muted' : ''"
+              @select="selectedSort = 'name-desc'"
+            >
+              Name: Z to A
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              :class="selectedSort === 'created-desc' ? 'bg-muted' : ''"
+              @select="selectedSort = 'created-desc'"
+            >
+              Newest first
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              :class="selectedSort === 'created-asc' ? 'bg-muted' : ''"
+              @select="selectedSort = 'created-asc'"
+            >
+              Oldest first
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              :class="selectedSort === 'status' ? 'bg-muted' : ''"
+              @select="selectedSort = 'status'"
+            >
+              Status
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
     </div>
 
     <div
