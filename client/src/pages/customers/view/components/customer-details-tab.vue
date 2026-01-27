@@ -3,6 +3,12 @@ import type { ICustomer } from '@/pages/customers/models/customers'
 
 import Badge from '@/components/ui/badge/Badge.vue'
 import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
+import {
   Building2Icon,
   CalendarIcon,
   MailIcon,
@@ -11,8 +17,6 @@ import {
 
 interface Props {
   customer: ICustomer
-  createdAt: string
-  updatedAt: string
 }
 
 const props = defineProps<Props>()
@@ -31,6 +35,11 @@ const customerStatusLabel = computed(() => {
 })
 
 const formattedAddress = computed(() => {
+  // Use formatted_address if available, otherwise fallback to manual construction
+  if (props.customer.formatted_address?.multiline) {
+    return props.customer.formatted_address.multiline.split('<br/>').filter(Boolean)
+  }
+  // Fallback to manual construction
   const parts: string[] = []
   if (props.customer.address) {
     parts.push(props.customer.address)
@@ -49,140 +58,191 @@ const formattedAddress = computed(() => {
 </script>
 
 <template>
-  <div class="space-y-6">
+  <div class="space-y-2">
     <!-- Basic Information -->
-    <div class="space-y-4">
-      <h3 class="text-lg font-semibold">Basisinformatie</h3>
-      <div class="grid gap-4 md:grid-cols-2">
-        <div>
-          <div class="text-sm font-medium text-muted-foreground mb-1">Naam</div>
-          <div class="text-base">{{ customer.name }}</div>
-        </div>
-        <div>
-          <div class="text-sm font-medium text-muted-foreground mb-1">
-            Klantnummer
+    <Card class="border">
+      <CardHeader class="pb-1.5 pt-2.5 px-4">
+        <CardTitle class="text-sm font-semibold">
+          Basisinformatie
+        </CardTitle>
+      </CardHeader>
+      <CardContent class="px-4 pb-2.5">
+        <div class="grid gap-2.5 md:grid-cols-2">
+          <div>
+            <div class="text-xs font-medium text-muted-foreground mb-0.5">
+              Naam
+            </div>
+            <div class="text-sm">
+              {{ customer.name }}
+            </div>
           </div>
-          <div class="text-base">{{ customer.number }}</div>
-        </div>
-        <div>
-          <div class="text-sm font-medium text-muted-foreground mb-1">Type</div>
-          <div class="text-base">
-            <Badge
-              :variant="customer.type === 'business' ? 'default' : 'secondary'"
-            >
-              {{ customerTypeLabel }}
-            </Badge>
+          <div>
+            <div class="text-xs font-medium text-muted-foreground mb-0.5">
+              Klantnummer
+            </div>
+            <div class="text-sm">
+              {{ customer.number }}
+            </div>
+          </div>
+          <div>
+            <div class="text-xs font-medium text-muted-foreground mb-0.5">
+              Type
+            </div>
+            <div class="text-sm">
+              <Badge
+                :variant="customer.type === 'business' ? 'default' : 'secondary'"
+                class="text-xs"
+              >
+                {{ customerTypeLabel }}
+              </Badge>
+            </div>
+          </div>
+          <div>
+            <div class="text-xs font-medium text-muted-foreground mb-0.5">
+              Status
+            </div>
+            <div class="text-sm">
+              <Badge variant="secondary" class="text-xs">
+                {{ customerStatusLabel }}
+              </Badge>
+            </div>
           </div>
         </div>
-        <div>
-          <div class="text-sm font-medium text-muted-foreground mb-1">
-            Status
-          </div>
-          <div class="text-base">
-            <Badge variant="secondary">{{ customerStatusLabel }}</Badge>
-          </div>
-        </div>
-      </div>
-    </div>
+      </CardContent>
+    </Card>
 
     <!-- Contact Information -->
-    <div class="space-y-4">
-      <h3 class="text-lg font-semibold">Contactgegevens</h3>
-      <div class="grid gap-4 md:grid-cols-2">
-        <div v-if="customer.email">
-          <div
-            class="text-sm font-medium text-muted-foreground mb-1 flex items-center gap-2"
-          >
-            <MailIcon class="size-4" />
-            E-mailadres
+    <Card class="border">
+      <CardHeader class="pb-1.5 pt-2.5 px-4">
+        <CardTitle class="text-sm font-semibold">
+          Contactgegevens
+        </CardTitle>
+      </CardHeader>
+      <CardContent class="px-4 pb-2.5">
+        <div class="grid gap-2.5 md:grid-cols-2">
+          <div v-if="customer.email">
+            <div
+              class="text-xs font-medium text-muted-foreground mb-0.5 flex items-center gap-1.5"
+            >
+              <MailIcon class="size-3" />
+              E-mailadres
+            </div>
+            <div class="text-sm">
+              {{ customer.email }}
+            </div>
           </div>
-          <div class="text-base">{{ customer.email }}</div>
-        </div>
-        <div v-if="customer.phone">
-          <div
-            class="text-sm font-medium text-muted-foreground mb-1 flex items-center gap-2"
-          >
-            <PhoneIcon class="size-4" />
-            Telefoonnummer
+          <div v-if="customer.phone">
+            <div
+              class="text-xs font-medium text-muted-foreground mb-0.5 flex items-center gap-1.5"
+            >
+              <PhoneIcon class="size-3" />
+              Telefoonnummer
+            </div>
+            <div class="text-sm">
+              {{ customer.phone }}
+            </div>
           </div>
-          <div class="text-base">{{ customer.phone }}</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Address -->
-    <div v-if="formattedAddress.length > 0" class="space-y-4">
-      <h3 class="text-lg font-semibold">Adres</h3>
-      <div>
-        <div class="text-sm font-medium text-muted-foreground mb-1">Adres</div>
-        <div class="text-base space-y-0.5">
-          <div v-for="(line, index) in formattedAddress" :key="index">
-            {{ line }}
+          <div v-if="formattedAddress.length > 0" class="md:col-span-2">
+            <div class="text-xs font-medium text-muted-foreground mb-0.5">
+              Adres
+            </div>
+            <div class="text-sm space-y-0.5">
+              <div
+                v-for="(line, index) in formattedAddress"
+                :key="index"
+              >
+                {{ line }}
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-    </div>
+      </CardContent>
+    </Card>
 
     <!-- Business Information -->
-    <div
+    <Card
       v-if="customer.type === 'business'"
-      class="space-y-4"
+      class="border"
     >
-      <h3 class="text-lg font-semibold">Bedrijfsgegevens</h3>
-      <div class="grid gap-4 md:grid-cols-2">
-        <div v-if="customer.kvk_number">
-          <div
-            class="text-sm font-medium text-muted-foreground mb-1 flex items-center gap-2"
-          >
-            <Building2Icon class="size-4" />
-            KVK-nummer
+      <CardHeader class="pb-1.5 pt-2.5 px-4">
+        <CardTitle class="text-sm font-semibold">
+          Bedrijfsgegevens
+        </CardTitle>
+      </CardHeader>
+      <CardContent class="px-4 pb-2.5">
+        <div class="grid gap-2.5 md:grid-cols-2">
+          <div v-if="customer.kvk_number">
+            <div
+              class="text-xs font-medium text-muted-foreground mb-0.5 flex items-center gap-1.5"
+            >
+              <Building2Icon class="size-3" />
+              KVK-nummer
+            </div>
+            <div class="text-sm">
+              {{ customer.kvk_number }}
+            </div>
           </div>
-          <div class="text-base">{{ customer.kvk_number }}</div>
-        </div>
-        <div v-if="customer.vat_number">
-          <div class="text-sm font-medium text-muted-foreground mb-1">
-            Btw-identificatienummer
+          <div v-if="customer.vat_number">
+            <div class="text-xs font-medium text-muted-foreground mb-0.5">
+              Btw-identificatienummer
+            </div>
+            <div class="text-sm">
+              {{ customer.vat_number }}
+            </div>
           </div>
-          <div class="text-base">{{ customer.vat_number }}</div>
-        </div>
-        <div v-if="customer.iban_number">
-          <div class="text-sm font-medium text-muted-foreground mb-1">
-            IBAN-nummer
+          <div v-if="customer.iban_number">
+            <div class="text-xs font-medium text-muted-foreground mb-0.5">
+              IBAN-nummer
+            </div>
+            <div class="text-sm">
+              {{ customer.iban_number }}
+            </div>
           </div>
-          <div class="text-base">{{ customer.iban_number }}</div>
         </div>
-      </div>
-    </div>
+      </CardContent>
+    </Card>
 
     <!-- Timestamps -->
-    <div class="space-y-4">
-      <h3 class="text-lg font-semibold">Systeeminformatie</h3>
-      <div class="grid gap-4 md:grid-cols-2">
-        <div>
-          <div
-            class="text-sm font-medium text-muted-foreground mb-1 flex items-center gap-2"
-          >
-            <CalendarIcon class="size-4" />
-            Aangemaakt op
+    <Card class="border">
+      <CardHeader class="pb-1.5 pt-2.5 px-4">
+        <CardTitle class="text-sm font-semibold">
+          Systeeminformatie
+        </CardTitle>
+      </CardHeader>
+      <CardContent class="px-4 pb-2.5">
+        <div class="grid gap-2.5 md:grid-cols-2">
+          <div>
+            <div
+              class="text-xs font-medium text-muted-foreground mb-0.5 flex items-center gap-1.5"
+            >
+              <CalendarIcon class="size-3" />
+              Aangemaakt op
+            </div>
+            <div class="text-sm">
+              {{ customer.created_at }}
+            </div>
           </div>
-          <div class="text-base">{{ createdAt }}</div>
-        </div>
-        <div>
-          <div
-            class="text-sm font-medium text-muted-foreground mb-1 flex items-center gap-2"
-          >
-            <CalendarIcon class="size-4" />
-            Bijgewerkt op
+          <div>
+            <div
+              class="text-xs font-medium text-muted-foreground mb-0.5 flex items-center gap-1.5"
+            >
+              <CalendarIcon class="size-3" />
+              Bijgewerkt op
+            </div>
+            <div class="text-sm">
+              {{ customer.updated_at }}
+            </div>
           </div>
-          <div class="text-base">{{ updatedAt }}</div>
-        </div>
-        <div>
-          <div class="text-sm font-medium text-muted-foreground mb-1">
-            Klant ID
+          <div>
+            <div class="text-xs font-medium text-muted-foreground mb-0.5">
+              Klant ID
+            </div>
+            <div class="text-sm">
+              #{{ customer.id }}
+            </div>
           </div>
-          <div class="text-base">#{{ customer.id }}</div>
         </div>
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   </div>
 </template>

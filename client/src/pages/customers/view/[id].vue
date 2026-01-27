@@ -44,7 +44,6 @@ onMounted(() => {
 // Computed properties
 const customer = computed<ICustomer | null>(() => {
   const data = customerByIdResponse.value?.data
-  // Handle case where data might be an array (shouldn't happen, but type safety)
   if (Array.isArray(data)) {
     return data[0] ?? null
   }
@@ -58,47 +57,6 @@ const pageDescription = computed(() =>
     `View details for ${customer.value.name}` :
     'Loading customer information...',
 )
-
-// Format date from "d-m-Y H:i:s" format
-function formatDateTime(dateString: string | null): string {
-  if (!dateString) {
-    return '—'
-  }
-  try {
-    // Parse "d-m-Y H:i:s" format (e.g., "31-12-2023 14:30:25")
-    const [datePart, timePart] = dateString.split(' ')
-    const [day, month, year] = datePart.split('-')
-    const date = new Date(`${year}-${month}-${day} ${timePart}`)
-
-    if (Number.isNaN(date.getTime())) {
-      return dateString
-    }
-
-    return date.toLocaleString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-    })
-  } catch {
-    return dateString
-  }
-}
-
-const formattedCreatedAt = computed(() => {
-  if (!customer.value?.created_at) {
-    return '—'
-  }
-  return formatDateTime(customer.value.created_at)
-})
-
-const formattedUpdatedAt = computed(() => {
-  if (!customer.value?.updated_at) {
-    return '—'
-  }
-  return formatDateTime(customer.value.updated_at)
-})
 
 // Tab state
 const activeTab = ref('overview')
@@ -135,59 +93,66 @@ function handleAddContact() {
       :on-retry="() => fetchCustomerByIdData(customerIncludes)"
     >
       <template v-if="customer">
-        <div class="flex h-full">
+        <div class="flex h-full gap-3">
           <!-- Left Sidebar -->
-          <CustomerSidebar
-            :customer="customer"
-            @add-contact="handleAddContact"
-          />
+          <div class="shrink-0">
+            <CustomerSidebar
+              :customer="customer"
+              @add-contact="handleAddContact"
+            />
+          </div>
 
           <!-- Right Main Panel -->
           <div class="flex-1 flex flex-col min-w-0">
             <!-- Tabs and Content -->
-            <div class="flex-1 overflow-auto p-6">
-              <Tabs v-model="activeTab" class="w-full">
-                <TabsList
-                  class="h-auto w-full justify-start gap-1 bg-muted/50 p-1 mb-6"
-                >
-                  <TabsTrigger
-                    value="overview"
-                    class="gap-2 rounded-md px-4 py-2.5 data-[state=active]:bg-background data-[state=active]:shadow-sm"
-                  >
-                    <LayoutGridIcon class="size-4" />
-                    <span>Overzicht</span>
-                  </TabsTrigger>
-                  <TabsTrigger
-                    value="details"
-                    class="gap-2 rounded-md px-4 py-2.5 data-[state=active]:bg-background data-[state=active]:shadow-sm"
-                  >
-                    <FileTextIcon class="size-4" />
-                    <span>Details</span>
-                  </TabsTrigger>
-                  <TabsTrigger
-                    value="tasks"
-                    class="gap-2 rounded-md px-4 py-2.5 data-[state=active]:bg-background data-[state=active]:shadow-sm"
-                  >
-                    <ListTodoIcon class="size-4" />
-                    <span>Taken en notities</span>
-                  </TabsTrigger>
-                </TabsList>
+            <div class="flex-1 overflow-auto">
+              <Tabs v-model="activeTab" default-value="overview" class-name="gap-4">
+                <div class="sticky top-0 z-10 bg-background border-b">
+                  <ScrollArea>
+                    <TabsList
+                      class="bg-background rounded-none border-b p-0"
+                    >
+                      <TabsTrigger
+                        value="overview"
+                        class="bg-background data-[state=active]:border-primary dark:data-[state=active]:border-primary h-full rounded-none border-0 border-b-2 border-transparent data-[state=active]:shadow-none"
+                      >
+                        <LayoutGridIcon class="size-3.5" />
+                        <span>Overzicht</span>
+                      </TabsTrigger>
+                      <TabsTrigger
+                        value="details"
+                        class="bg-background data-[state=active]:border-primary dark:data-[state=active]:border-primary h-full rounded-none border-0 border-b-2 border-transparent data-[state=active]:shadow-none"
+                      >
+                        <FileTextIcon class="size-3.5" />
+                        <span>Details</span>
+                      </TabsTrigger>
+                      <TabsTrigger
+                        value="tasks"
+                        class="bg-background data-[state=active]:border-primary dark:data-[state=active]:border-primary h-full rounded-none border-0 border-b-2 border-transparent data-[state=active]:shadow-none"
+                      >
+                        <ListTodoIcon class="size-3.5" />
+                        <span>Taken en notities</span>
+                      </TabsTrigger>
+                    </TabsList>
+                    <ScrollBar orientation="horizontal" />
+                  </ScrollArea>
+                </div>
 
-                <TabsContent value="overview" class="mt-0">
-                  <CustomerOverviewTab :customer="customer" />
-                </TabsContent>
+                <div class="p-3">
+                  <TabsContent value="overview" class="mt-0">
+                    <CustomerOverviewTab :customer="customer" />
+                  </TabsContent>
 
-                <TabsContent value="details" class="mt-0">
-                  <CustomerDetailsTab
-                    :customer="customer"
-                    :created-at="formattedCreatedAt"
-                    :updated-at="formattedUpdatedAt"
-                  />
-                </TabsContent>
+                  <TabsContent value="details" class="mt-0">
+                    <CustomerDetailsTab
+                      :customer="customer"
+                    />
+                  </TabsContent>
 
-                <TabsContent value="tasks" class="mt-0">
-                  <CustomerTasksTab :customer="customer" />
-                </TabsContent>
+                  <TabsContent value="tasks" class="mt-0">
+                    <CustomerTasksTab :customer="customer" />
+                  </TabsContent>
+                </div>
               </Tabs>
             </div>
           </div>

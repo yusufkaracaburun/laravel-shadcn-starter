@@ -1,12 +1,8 @@
 <script setup lang="ts">
-import { computed, onMounted } from 'vue'
-
 import type { ICustomer } from '@/pages/customers/models/customers'
 
 import Badge from '@/components/ui/badge/Badge.vue'
-import Loading from '@/components/loading.vue'
 import { FileTextIcon } from '@/composables/use-icons.composable'
-import { useInvoices } from '@/pages/invoices/composables/use-invoices.composable'
 
 interface Props {
   customer: ICustomer
@@ -14,20 +10,9 @@ interface Props {
 
 const props = defineProps<Props>()
 
-// Fetch invoices - backend should filter by customer_id
-const { invoices, loading, filter, onFiltersChange, fetchInvoicesData } =
-  useInvoices()
-
-// Filter invoices for this customer
+// Use invoices directly from customer data
 const customerInvoices = computed(() => {
-  return invoices.value ?? []
-})
-
-// Initialize filter when component mounts
-onMounted(() => {
-  // Filter invoices by customer_id
-  onFiltersChange({ ...filter.value, customer_id: props.customer.id })
-  fetchInvoicesData()
+  return props.customer.invoices ?? []
 })
 
 function formatMoney(value: any): string {
@@ -86,42 +71,47 @@ function getStatusLabel(status: string): string {
 
 <template>
   <div>
-    <div v-if="loading" class="flex items-center justify-center py-8">
-      <Loading />
-    </div>
     <div
-      v-else-if="!customerInvoices || customerInvoices.length === 0"
-      class="flex items-center justify-center py-8"
+      v-if="!customerInvoices || customerInvoices.length === 0"
+      class="flex flex-col items-center justify-center py-8 text-center"
     >
-      <p class="text-sm text-muted-foreground">Geen facturen gevonden.</p>
+      <div class="rounded-full bg-muted p-2 mb-3">
+        <FileTextIcon class="size-5 text-muted-foreground" />
+      </div>
+      <p class="text-sm text-muted-foreground">
+        Geen facturen gevonden.
+      </p>
     </div>
-    <div v-else class="space-y-3">
+    <div v-else class="space-y-1.5">
       <div
         v-for="invoice in customerInvoices"
         :key="invoice.id"
-        class="flex items-start gap-4 p-4 rounded-lg border hover:bg-muted/50 transition-colors"
+        class="flex items-start gap-3 p-2.5 rounded border hover:bg-muted/30 transition-colors cursor-pointer"
       >
-        <FileTextIcon class="size-5 text-muted-foreground shrink-0 mt-0.5" />
-        <div class="flex-1 min-w-0 space-y-2">
+        <FileTextIcon class="size-4 text-muted-foreground shrink-0 mt-0.5" />
+        <div class="flex-1 min-w-0 space-y-1">
           <div class="flex items-center gap-2 flex-wrap">
-            <span class="font-medium">
+            <span class="font-medium text-sm">
               {{ customer.name }} • {{ invoice.invoice_number || invoice.id }}
             </span>
             <Badge
               :variant="getStatusBadgeVariant(invoice.status)"
-              class="shrink-0"
+              class="shrink-0 text-xs"
             >
               {{ getStatusLabel(invoice.status) }}
             </Badge>
           </div>
-          <div class="text-sm text-muted-foreground">
-            omschrijving
+          <div v-if="invoice.notes" class="text-xs text-muted-foreground line-clamp-1">
+            {{ invoice.notes }}
           </div>
-          <div class="flex items-center justify-between">
+          <div v-else class="text-xs text-muted-foreground">
+            Geen omschrijving
+          </div>
+          <div class="flex items-center justify-between pt-1 border-t">
             <div class="text-sm font-medium">
               {{ formatMoney(invoice.total) }}
             </div>
-            <div class="text-sm text-muted-foreground">
+            <div class="text-xs text-muted-foreground">
               {{ formatDate(invoice.date) }}
             </div>
           </div>

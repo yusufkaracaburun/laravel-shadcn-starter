@@ -40,7 +40,7 @@ const errorSubtitle = computed(() => {
 
 const errorText = computed(() => {
   if (isNotFound.value) {
-    return "The customer you are looking for might have been removed or doesn't exist."
+    return 'The customer you are looking for might have been removed or doesn\'t exist.'
   }
   return 'An error occurred while loading the customer information. Please try again.'
 })

@@ -47,11 +47,8 @@ export function useCustomersService() {
     return useQuery({
       queryKey: [QueryKeys.CUSTOMER_PREREQUISITES],
       queryFn: async (): Promise<ICustomerPrerequisites> => {
-        // Return empty object if no prerequisites endpoint exists
-        // Uncomment and update if backend provides prerequisites endpoint:
-        // const response = await axiosInstance.get(`${API_URL}/prerequisites`)
-        // return response.data as ICustomerPrerequisites
-        return {} as ICustomerPrerequisites
+        const response = await axiosInstance.get(`${API_URL}/prerequisites`)
+        return response.data as ICustomerPrerequisites
       },
       staleTime: STALE_TIME,
       ...defaultAxiosQueryOptions(),
@@ -116,13 +113,13 @@ export function useCustomersService() {
     typeof useMutation<
       IResponse<ICustomer>,
       AxiosError,
-      { id: number; includes?: string[] }
+      { id: number, includes?: string[] }
     >
   > {
     return useMutation<
       IResponse<ICustomer>,
       AxiosError,
-      { id: number; includes?: string[] }
+      { id: number, includes?: string[] }
     >({
       mutationKey: [QueryKeys.GET_CUSTOMER],
       mutationFn: async ({ id, includes }): Promise<IResponse<ICustomer>> => {
@@ -171,13 +168,13 @@ export function useCustomersService() {
     typeof useMutation<
       IResponse<ICustomer>,
       AxiosError,
-      { id: number; data: IUpdateCustomerRequest }
+      { id: number, data: IUpdateCustomerRequest }
     >
   > {
     return useMutation<
       IResponse<ICustomer>,
       AxiosError,
-      { id: number; data: IUpdateCustomerRequest }
+      { id: number, data: IUpdateCustomerRequest }
     >({
       mutationKey: [QueryKeys.UPDATE_CUSTOMER],
       mutationFn: async ({ id, data }): Promise<IResponse<ICustomer>> => {
@@ -226,10 +223,10 @@ export function useCustomersService() {
 
 // Re-export types from models for convenience
 export type {
-  ICustomer,
-  IContact,
-  ICustomerFilters,
   ECustomerType,
+  IContact,
+  ICustomer,
+  ICustomerFilters,
   TCustomerType,
 } from '@/pages/customers/models/customers'
 

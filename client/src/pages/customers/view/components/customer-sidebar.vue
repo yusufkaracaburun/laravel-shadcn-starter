@@ -1,7 +1,10 @@
 <script setup lang="ts">
-import type { ICustomer } from '@/pages/customers/models/customers'
+import { BadgeCheck } from 'lucide-vue-next'
+
+import type { IContact, ICustomer } from '@/pages/customers/models/customers'
 
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import Badge from '@/components/ui/badge/Badge.vue'
 import { Button } from '@/components/ui/button'
 import {
   Building2Icon,
@@ -25,20 +28,7 @@ const contacts = computed(() => {
 })
 
 const formattedAddress = computed(() => {
-  const parts: string[] = []
-  if (props.customer.address) {
-    parts.push(props.customer.address)
-  }
-  if (props.customer.zipcode) {
-    parts.push(props.customer.zipcode)
-  }
-  if (props.customer.city) {
-    parts.push(props.customer.city)
-  }
-  if (props.customer.country) {
-    parts.push(props.customer.country)
-  }
-  return parts
+  return props.customer.formatted_address?.multiline.split('<br/>').filter(Boolean)
 })
 
 const invoiceCount = computed(() => {
@@ -47,65 +37,67 @@ const invoiceCount = computed(() => {
 </script>
 
 <template>
-  <div class="w-80 border-r bg-muted/30 p-6 space-y-6">
+  <div class="w-80 border-r bg-background p-3 space-y-2.5 h-full overflow-y-auto">
     <!-- Header -->
     <div>
-      <h2 class="text-lg font-semibold mb-2">Contact</h2>
-      <div class="text-xl font-bold">{{ customer.name }}</div>
-      <div class="text-sm text-muted-foreground mt-1">
+      <h2 class="text-sm font-semibold mb-1.5">
+        Customer
+      </h2>
+      <div class="text-lg font-bold">
+        {{ customer.name }}
+      </div>
+      <div class="text-xs text-muted-foreground mt-0.5">
         Klantnummer: {{ customer.number }}
       </div>
     </div>
 
+    <UiSeparator class="my-2" />
+
     <!-- Icon Row -->
-    <div class="flex items-center gap-3">
+    <div class="flex items-center gap-4">
       <div
         v-if="customer.phone"
-        class="flex items-center justify-center size-10 rounded-md bg-muted hover:bg-muted/80 transition-colors cursor-pointer"
+        class="flex items-center justify-center size-8 rounded bg-muted hover:bg-muted/80 transition-colors cursor-pointer w-full"
         title="Telefoonnummer"
       >
-        <PhoneIcon class="size-5 text-muted-foreground" />
+        <PhoneIcon class="size-4 text-muted-foreground" />
       </div>
       <div
         v-if="customer.email"
-        class="flex items-center justify-center size-10 rounded-md bg-muted hover:bg-muted/80 transition-colors cursor-pointer"
+        class="flex items-center justify-center size-8 rounded bg-muted hover:bg-muted/80 transition-colors cursor-pointer w-full"
         title="E-mailadres"
       >
-        <MailIcon class="size-5 text-muted-foreground" />
-      </div>
-      <div
-        class="flex items-center justify-center size-10 rounded-md bg-muted hover:bg-muted/80 transition-colors cursor-pointer"
-        title="Documenten"
-      >
-        <FileTextIcon class="size-5 text-muted-foreground" />
-      </div>
-      <div
-        class="flex items-center justify-center size-10 rounded-md bg-muted hover:bg-muted/80 transition-colors cursor-pointer"
-        title="Bedrijf"
-      >
-        <Building2Icon class="size-5 text-muted-foreground" />
+        <MailIcon class="size-4 text-muted-foreground" />
       </div>
     </div>
 
+    <UiSeparator class="my-2" />
+
     <!-- Contact Fields -->
-    <div class="space-y-4">
+    <div class="space-y-2">
       <div v-if="customer.email">
-        <div class="text-sm font-medium text-muted-foreground mb-1">
+        <div class="text-xs font-medium text-muted-foreground mb-0.5">
           E-mailadres
         </div>
-        <div class="text-base">{{ customer.email }}</div>
+        <div class="text-sm">
+          {{ customer.email }}
+        </div>
       </div>
 
       <div v-if="customer.phone">
-        <div class="text-sm font-medium text-muted-foreground mb-1">
+        <div class="text-xs font-medium text-muted-foreground mb-0.5">
           Telefoonnummer
         </div>
-        <div class="text-base">{{ customer.phone }}</div>
+        <div class="text-sm">
+          {{ customer.phone }}
+        </div>
       </div>
 
       <div v-if="formattedAddress.length > 0">
-        <div class="text-sm font-medium text-muted-foreground mb-1">Adres</div>
-        <div class="text-base space-y-0.5">
+        <div class="text-xs font-medium text-muted-foreground mb-0.5">
+          Adres
+        </div>
+        <div class="text-sm space-y-0.5">
           <div v-for="(line, index) in formattedAddress" :key="index">
             {{ line }}
           </div>
@@ -113,72 +105,82 @@ const invoiceCount = computed(() => {
       </div>
 
       <div v-if="customer.kvk_number">
-        <div class="text-sm font-medium text-muted-foreground mb-1">
+        <div class="text-xs font-medium text-muted-foreground mb-0.5">
           KVK-nummer
         </div>
-        <div class="text-base">{{ customer.kvk_number }}</div>
+        <div class="text-sm">
+          {{ customer.kvk_number }}
+        </div>
       </div>
 
       <div v-if="customer.vat_number">
-        <div class="text-sm font-medium text-muted-foreground mb-1">
+        <div class="text-xs font-medium text-muted-foreground mb-0.5">
           Btw-identificatienummer
         </div>
-        <div class="flex items-center gap-2">
-          <span class="text-base">{{ customer.vat_number }}</span>
-          <CheckCircle2Icon class="size-4 text-green-600" />
+        <div class="flex items-center gap-1.5">
+          <span class="text-sm">{{ customer.vat_number }}</span>
+          <CheckCircle2Icon class="size-3.5 text-green-600 dark:text-green-500" />
         </div>
       </div>
     </div>
+
+    <UiSeparator class="my-2" />
 
     <!-- Related Documents -->
     <div>
-      <div class="text-sm font-medium text-muted-foreground mb-2">
-        Bijbehorende documenten
+      <div class="text-xs font-medium text-muted-foreground mb-1">
+        Aantal facturen
       </div>
-      <div class="text-base text-primary hover:underline cursor-pointer">
-        {{ invoiceCount }} Externe factuur{{ invoiceCount !== 1 ? 'en' : '' }}
+      <div class="text-sm text-primary hover:underline cursor-pointer">
+        {{ invoiceCount }} factu{{ invoiceCount !== 1 ? 'ren' : 'ur' }}
       </div>
     </div>
 
+    <UiSeparator class="my-2" />
+
     <!-- Contact Persons -->
     <div>
-      <div class="text-sm font-medium text-muted-foreground mb-3">
+      <div class="text-xs font-medium text-muted-foreground mb-2">
         Contactpersonen
       </div>
-      <div class="space-y-3">
+      <div class="space-y-1">
         <div
           v-for="contact in contacts"
           :key="contact.id"
-          class="flex items-start justify-between gap-2"
+          class="flex items-center justify-between gap-2 py-1.5 hover:bg-muted/50 rounded transition-colors group"
         >
-          <div class="flex items-start gap-2 flex-1 min-w-0">
-            <Avatar class="size-8 shrink-0">
-              <AvatarFallback>
-                <UserIcon class="size-4" />
+          <div class="flex items-center gap-2 flex-1 min-w-0">
+            <Avatar class="size-6 shrink-0">
+              <AvatarFallback class="bg-muted text-xs">
+                <UserIcon class="size-3" />
               </AvatarFallback>
             </Avatar>
-            <div class="flex-1 min-w-0">
-              <div class="text-sm font-medium truncate">
+            <div class="flex items-center gap-2">
+              <div class="text-sm truncate">
                 {{ contact.name }}
               </div>
+              <template v-if="contact.id === customer.primary_contact?.id">
+                <BadgeCheck class="size-4 text-blue-50090 dark:text-blue-400" title="Primair" />
+              </template>
             </div>
           </div>
           <Button
             variant="ghost"
             size="icon-sm"
-            class="shrink-0"
+            class="shrink-0 opacity-0 group-hover:opacity-100 transition-opacity h-6 w-6"
             title="Bewerken"
           >
-            <PencilIcon class="size-4" />
+            <PencilIcon class="size-3" />
           </Button>
         </div>
       </div>
       <Button
         variant="outline"
-        class="w-full mt-3"
+        size="sm"
+        class="w-full mt-2 border-dashed h-8 text-xs"
         @click="$emit('add-contact')"
       >
-        <PlusIcon class="size-4 mr-2" />
+        <PlusIcon class="size-3 mr-1.5" />
         Contactpersoon toevoegen
       </Button>
     </div>

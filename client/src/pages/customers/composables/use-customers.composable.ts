@@ -114,7 +114,6 @@ export function useCustomers() {
     includes?: string[],
   ): Promise<IResponse<ICustomer>> {
     try {
-      // Update includes if provided
       if (includes) {
         customerByIdIncludes.value = includes
       }

@@ -4,6 +4,7 @@ import { ref, shallowRef } from 'vue'
 import type { ICustomer } from '@/pages/customers/models/customers'
 
 import { Button } from '@/components/ui/button'
+import { Dialog, DialogContent } from '@/components/ui/dialog'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,7 +12,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { Dialog, DialogContent } from '@/components/ui/dialog'
 import {
   ArrowDownIcon,
   DownloadIcon,
@@ -80,30 +80,6 @@ function handleAdd() {
 
 <template>
   <div class="flex items-center gap-2">
-    <Button variant="outline" @click="handleSelect('edit')">
-      <FilePenLineIcon class="mr-2 size-4" />
-      Bewerken
-    </Button>
-
-    <DropdownMenu>
-      <DropdownMenuTrigger as-child>
-        <Button variant="outline">
-          Exporteren
-          <ArrowDownIcon class="ml-2 size-4" />
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent>
-        <DropdownMenuItem @select="handleExport">
-          <DownloadIcon class="mr-2 size-4" />
-          Exporteer als PDF
-        </DropdownMenuItem>
-        <DropdownMenuItem @select="handleExport">
-          <DownloadIcon class="mr-2 size-4" />
-          Exporteer als CSV
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
-
     <DropdownMenu>
       <DropdownMenuTrigger as-child>
         <Button variant="outline">
@@ -117,7 +93,11 @@ function handleAdd() {
           Optie 1
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem @select="handleSelect('delete')" variant="destructive">
+        <DropdownMenuItem @select="handleSelect('edit')">
+          <FilePenLineIcon class="mr-2 size-4" />
+          Bewerken
+        </DropdownMenuItem>
+        <DropdownMenuItem variant="destructive" @select="handleSelect('delete')">
           <Trash2Icon class="mr-2 size-4" />
           Verwijderen
         </DropdownMenuItem>
