@@ -23,6 +23,7 @@ import {
   FilterIcon,
   SearchIcon,
 } from '@/composables/use-icons.composable'
+import { useEquipments } from '@/pages/equipments/composables/use-equipments.composable'
 import { statuses } from '@/pages/equipments/data/data'
 
 const props = withDefaults(
@@ -70,6 +71,33 @@ function getStatusVariant(status: string | null | undefined) {
     default:
       return 'secondary'
   }
+}
+
+const { equipmentsPrerequisitesResponse } = useEquipments()
+
+const prerequisitesStatuses = computed(() => {
+  const response = equipmentsPrerequisitesResponse.value
+  if (!response) {
+    return []
+  }
+  // Handle both direct data and wrapped response
+  const data = (response as any)?.data ?? response
+  return (data as any)?.statuses ?? []
+})
+
+const prerequisitesTypes = computed(() => {
+  const response = equipmentsPrerequisitesResponse.value
+  if (!response) {
+    return []
+  }
+  // Handle both direct data and wrapped response
+  const data = (response as any)?.data ?? response
+  return (data as any)?.types ?? []
+})
+
+// Map backend statuses to our status config for icons
+function getStatusConfig(statusValue: string) {
+  return statuses.find(s => s.value.toLowerCase() === statusValue.toLowerCase())
 }
 
 const searchTerm = ref('')
@@ -153,26 +181,33 @@ function handleSelectEquipment(equipment: IEquipment) {
               <FilterIcon class="size-4" />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" class="w-48">
-            <DropdownMenuLabel>Filter by Status</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>
+          <DropdownMenuContent align="end" class="w-56 max-h-[300px] overflow-y-auto">
+            <DropdownMenuLabel class="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+              Filter by Status
+            </DropdownMenuLabel>
+            <DropdownMenuItem
+              v-for="status in prerequisitesStatuses"
+              :key="status.value"
+            >
               <div class="flex items-center gap-2">
-                <component :is="statuses[0].icon" class="size-4" />
-                {{ statuses[0].label }}
+                <component
+                  :is="getStatusConfig(status.value)?.icon"
+                  class="size-4"
+                />
+                {{ status.label }}
               </div>
             </DropdownMenuItem>
-            <DropdownMenuItem>
-              <div class="flex items-center gap-2">
-                <component :is="statuses[1].icon" class="size-4" />
-                {{ statuses[1].label }}
-              </div>
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <div class="flex items-center gap-2">
-                <component :is="statuses[2].icon" class="size-4" />
-                {{ statuses[2].label }}
-              </div>
+
+            <DropdownMenuSeparator v-if="prerequisitesTypes.length > 0" />
+
+            <DropdownMenuLabel v-if="prerequisitesTypes.length > 0" class="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+              Filter by Type
+            </DropdownMenuLabel>
+            <DropdownMenuItem
+              v-for="type in prerequisitesTypes"
+              :key="type"
+            >
+              {{ type }}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

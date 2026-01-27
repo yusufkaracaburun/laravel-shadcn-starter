@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 
 import type { IEquipment } from '@/pages/equipments/models/equipments'
 
@@ -10,9 +10,13 @@ import EquipmentDetail from './components/equipment-detail.vue'
 import EquipmentList from './components/equipment-list.vue'
 import EquipmentsCreate from './components/equipments-create-dialog.vue'
 
-const { loading, equipments } = useEquipments()
+const { loading, equipments, fetchEquipmentsPrerequisitesData } = useEquipments()
 
 const selectedEquipment = ref<IEquipment | null>(null)
+
+onMounted(() => {
+  fetchEquipmentsPrerequisitesData()
+})
 </script>
 
 <template>
