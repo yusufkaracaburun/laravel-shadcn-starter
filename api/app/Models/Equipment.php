@@ -22,14 +22,18 @@ final class Equipment extends BaseModel
     ];
 
     protected $table = 'equipments';
-
-    protected $fillable = [
-        'name',
-        'serial_number',
-        'type',
-        'status',
-        'image',
-    ];
+    
+    /**
+    * Searchable fields for this model.
+    *
+    * @var list<string>
+    */
+   public static array $searchable = [
+    'name',
+    'serial_number',
+    'type',
+    'status',
+   ];
 
     /**
      * The attributes that should be cast.

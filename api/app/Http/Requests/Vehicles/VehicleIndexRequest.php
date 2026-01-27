@@ -55,13 +55,13 @@ final class VehicleIndexRequest extends BaseIndexFormRequest
     protected function getAllowedSorts(): array
     {
         return [
-            'id',
-            'make',
-            'model',
-            'year',
-            'license_plate',
-            'created_at',
-            'updated_at',
+            'id', '-id',
+            'make', '-make',
+            'model', '-model',
+            'year', '-year',
+            'license_plate', '-license_plate',
+            'created_at', '-created_at',
+            'updated_at', '-updated_at',
         ];
     }
 

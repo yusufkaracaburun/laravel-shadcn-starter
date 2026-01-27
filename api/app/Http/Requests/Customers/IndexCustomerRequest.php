@@ -70,21 +70,21 @@ final class IndexCustomerRequest extends BaseIndexFormRequest
     protected function getAllowedSorts(): array
     {
         return [
-            'id',
-            'type',
-            'name',
-            'address',
-            'zipcode',
-            'city',
-            'country',
-            'email',
-            'phone',
-            'status',
-            'kvk_number',
-            'vat_number',
-            'iban_number',
-            'created_at',
-            'updated_at',
+            'id', '-id',
+            'type', '-type',
+            'name', '-name',
+            'address', '-address',
+            'zipcode', '-zipcode',
+            'city', '-city',
+            'country', '-country',
+            'email', '-email',
+            'phone', '-phone',
+            'status', '-status',
+            'kvk_number', '-kvk_number',
+            'vat_number', '-vat_number',
+            'iban_number', '-iban_number',
+            'created_at', '-created_at',
+            'updated_at', '-updated_at',
         ];
     }
 

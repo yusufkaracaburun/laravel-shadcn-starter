@@ -66,10 +66,10 @@ final class TeamIndexRequest extends BaseIndexFormRequest
     protected function getAllowedSorts(): array
     {
         return [
-            'id',
-            'name',
-            'is_system',
-            'created_at',
+            'id', '-id',
+            'name', '-name',
+            'is_system', '-is_system',
+            'created_at', '-created_at',
         ];
     }
 

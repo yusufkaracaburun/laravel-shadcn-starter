@@ -74,9 +74,9 @@ final class IndexPermissionRequest extends BaseIndexFormRequest
     protected function getAllowedSorts(): array
     {
         return [
-            'id',
-            'name',
-            'guard_name',
+            'id', '-id',
+            'name', '-name',
+            'guard_name', '-guard_name',
         ];
     }
 
