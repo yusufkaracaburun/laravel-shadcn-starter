@@ -29,6 +29,8 @@ import {
 import {
   ChevronsUpDownIcon,
   FilterIcon,
+  HashIcon,
+  PackageIcon,
   SearchIcon,
 } from '@/composables/use-icons.composable'
 import { useEquipments } from '@/pages/equipments/composables/use-equipments.composable'
@@ -406,7 +408,7 @@ function handleSelectEquipment(equipment: IEquipment) {
 
     <div
       v-else
-      class="relative flex-1 min-h-0 rounded-xl border bg-background/80 shadow-sm"
+      class="relative flex-1 min-h-0 rounded-xl bg"
     >
       <div
         v-if="loading"
@@ -416,48 +418,90 @@ function handleSelectEquipment(equipment: IEquipment) {
       </div>
 
       <UiScrollArea class="h-full">
-        <ul class="divide-y">
+        <ul class="space-y-2 pe-2">
           <li v-for="equipment in filteredEquipments" :key="equipment.id">
             <button
               type="button"
-              class="flex w-full items-center gap-3 px-4 py-3 text-left transition hover:bg-muted/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              class="group relative flex w-full items-start gap-4 rounded-xl border bg-card p-4 text-left transition-all duration-200 hover:border-primary/50 hover:bg-accent/50 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
               :class="{
-                'bg-muted/70 border-l-2 border-l-primary':
+                'border-primary shadow-sm':
                   selectedEquipment && selectedEquipment.id === equipment.id,
               }"
               @click="handleSelectEquipment(equipment)"
             >
+              <!-- Avatar/Icon -->
               <div
-                class="flex h-9 w-9 flex-none items-center justify-center rounded-full bg-primary/10 text-sm font-semibold text-primary"
+                class="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-primary/10 to-primary/5 text-base font-semibold text-primary shadow-sm transition-transform duration-200 group-hover:scale-105"
+                :class="{
+                  'ring-2 ring-primary/30': selectedEquipment && selectedEquipment.id === equipment.id,
+                }"
               >
                 {{ equipment.name?.charAt(0)?.toUpperCase() || 'E' }}
               </div>
-              <div class="min-w-0 flex-1 space-y-0.5">
-                <div class="flex items-center gap-2">
-                  <span class="truncate text-sm font-medium">
-                    {{ equipment.name }}
-                  </span>
+
+              <!-- Content -->
+              <div class="min-w-0 flex-1 space-y-2.5">
+                <!-- Header: Name and Status -->
+                <div class="flex items-start justify-between gap-3">
+                  <div class="min-w-0 flex-1">
+                    <h3 class="truncate text-base font-semibold leading-tight text-foreground group-hover:text-primary transition-colors">
+                      {{ equipment.name }}
+                    </h3>
+                  </div>
                   <Badge
                     v-if="equipment.status"
                     :variant="getStatusVariant(equipment.status)"
-                    :class="getStatusInfo(equipment.status)?.color || ''"
+                    class="shrink-0 text-xs font-medium"
+                    :class="[
+                      getStatusInfo(equipment.status)?.color || '',
+                    ]"
                   >
                     {{
                       getStatusInfo(equipment.status)?.label || equipment.status
                     }}
                   </Badge>
                 </div>
-                <p class="truncate text-xs text-muted-foreground">
-                  {{ equipment.type || 'Unspecified type' }}
-                  <span class="mx-1 text-[10px]">•</span>
-                  {{ equipment.model || 'Unknown model' }}
-                </p>
-                <p
-                  v-if="equipment.serial_number"
-                  class="truncate text-xs text-muted-foreground"
-                >
-                  Serial: {{ equipment.serial_number }}
-                </p>
+
+                <!-- Details Grid -->
+                <div class="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
+                  <!-- Type -->
+                  <div class="flex items-center gap-1.5 text-muted-foreground">
+                    <PackageIcon class="size-3.5 shrink-0" />
+                    <span class="truncate font-medium">
+                      {{ equipment.type || 'Unspecified type' }}
+                    </span>
+                  </div>
+
+                  <!-- Model -->
+                  <div
+                    v-if="equipment.model"
+                    class="flex items-center gap-1.5 text-muted-foreground"
+                  >
+                    <span class="text-[10px] opacity-50">•</span>
+                    <span class="truncate">
+                      {{ equipment.model }}
+                    </span>
+                  </div>
+
+                  <!-- Serial Number -->
+                  <div
+                    v-if="equipment.serial_number"
+                    class="flex items-center gap-1.5 text-muted-foreground"
+                  >
+                    <HashIcon class="size-3.5 shrink-0 opacity-60" />
+                    <span class="truncate font-mono text-xs">
+                      {{ equipment.serial_number }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Selection Indicator -->
+              <div
+                v-if="selectedEquipment && selectedEquipment.id === equipment.id"
+                class="absolute right-2 top-2 flex h-2 w-2 items-center justify-center rounded-full bg-primary"
+              >
+                <div class="h-1.5 w-1.5 rounded-full bg-primary-foreground" />
               </div>
             </button>
           </li>
