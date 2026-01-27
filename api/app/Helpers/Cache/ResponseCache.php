@@ -107,6 +107,32 @@ final class ResponseCache
     }
 
     /**
+     * Generate a hash for query parameters.
+     *
+     * Sorts parameters by keys to ensure consistent hashing regardless of parameter order.
+     *
+     * @param  array<string, mixed>  $params
+     */
+    public static function hashQueryParams(array $params): string
+    {
+        if (empty($params)) {
+            return '';
+        }
+
+        // Sort by keys to ensure consistent hashing regardless of parameter order
+        ksort($params);
+
+        // Recursively sort nested arrays
+        array_walk_recursive($params, function (&$value): void {
+            if (is_array($value)) {
+                ksort($value);
+            }
+        });
+
+        return md5(json_encode($params, JSON_THROW_ON_ERROR));
+    }
+
+    /**
      * Check if the cache store supports tagging.
      */
     private static function supportsTags(): bool
