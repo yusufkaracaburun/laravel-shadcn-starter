@@ -4,6 +4,12 @@ import { computed, ref, watch } from 'vue'
 import type { IEquipment } from '@/pages/equipments/models/equipments'
 
 import Badge from '@/components/ui/badge/Badge.vue'
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from '@/components/ui/input-group'
+import { SearchIcon } from '@/composables/use-icons.composable'
 import { statuses } from '@/pages/equipments/data/data'
 
 const props = withDefaults(
@@ -116,11 +122,15 @@ function handleSelectEquipment(equipment: IEquipment) {
       >
         Search
       </UiLabel>
-      <UiInput
-        v-model="searchTerm"
-        placeholder="Search equipment by name, model, serial number..."
-        class="w-full"
-      />
+      <InputGroup>
+        <InputGroupInput
+          v-model="searchTerm"
+          placeholder="Search equipment by name, model, serial number..."
+        />
+        <InputGroupAddon>
+          <SearchIcon />
+        </InputGroupAddon>
+      </InputGroup>
     </div>
 
     <div
