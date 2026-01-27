@@ -10,12 +10,22 @@ import EquipmentDetail from './components/equipment-detail.vue'
 import EquipmentList from './components/equipment-list.vue'
 import EquipmentsCreate from './components/equipments-create-dialog.vue'
 
-const { loading, equipments, fetchEquipmentsPrerequisitesData } = useEquipments()
+const {
+  loading,
+  equipments,
+  filter,
+  sort,
+  onFiltersChange,
+  onSortingChange,
+  fetchEquipmentsPrerequisitesData,
+  fetchEquipmentsData,
+} = useEquipments()
 
 const selectedEquipment = ref<IEquipment | null>(null)
 
 onMounted(() => {
   fetchEquipmentsPrerequisitesData()
+  fetchEquipmentsData()
 })
 </script>
 
@@ -36,7 +46,11 @@ onMounted(() => {
         :loading="loading"
         :selected-equipment="selectedEquipment"
         :open-detail="openDetail"
+        :filter="filter"
+        :sort="sort"
         @update:selected-equipment="selectedEquipment = $event"
+        @filters-change="onFiltersChange"
+        @sort-change="onSortingChange"
       />
     </template>
 

@@ -1,7 +1,11 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 
-import type { IEquipment } from '@/pages/equipments/models/equipments'
+import type {
+  IEquipment,
+  IEquipmentFilters,
+} from '@/pages/equipments/models/equipments'
+import type { ISorting } from '@/services/query-utils'
 
 import Badge from '@/components/ui/badge/Badge.vue'
 import { Button } from '@/components/ui/button'
@@ -32,17 +36,23 @@ const props = withDefaults(
     loading?: boolean
     selectedEquipment?: IEquipment | null
     openDetail?: () => void
+    filter?: IEquipmentFilters
+    sort?: ISorting
   }>(),
   {
     loading: false,
     selectedEquipment: null,
     openDetail: () => {},
+    filter: undefined,
+    sort: undefined,
   },
 )
 
 const emit = defineEmits<{
   'update:selectedEquipment': [equipment: IEquipment | null]
   'select': [equipment: IEquipment]
+  'filtersChange': [filters: IEquipmentFilters]
+  'sortChange': [sort: ISorting]
 }>()
 
 function getStatusInfo(status: string | null | undefined) {
@@ -100,31 +110,98 @@ function getStatusConfig(statusValue: string) {
   return statuses.find(s => s.value.toLowerCase() === statusValue.toLowerCase())
 }
 
-const searchTerm = ref('')
-const selectedSort = ref<string>('name-asc')
+const searchTerm = ref(props.filter?.search || '')
+const selectedStatus = ref<string | null>(props.filter?.status || null)
+const selectedType = ref<string | null>(props.filter?.type || null)
 
-const filteredEquipments = computed(() => {
-  const items = props.equipments ?? []
-  const query = searchTerm.value.trim().toLowerCase()
+function getSortString(sort: ISorting | undefined): string {
+  if (!sort) {
+    return 'created_at-desc'
+  }
+  const direction = sort.desc ? 'desc' : 'asc'
+  return `${sort.id}-${direction}`
+}
 
-  if (!query) {
-    return items
+const selectedSort = ref<string>(getSortString(props.sort))
+
+// Watch for filter changes from parent
+watch(
+  () => props.filter,
+  (newFilter) => {
+    searchTerm.value = newFilter?.search || ''
+    selectedStatus.value = newFilter?.status || null
+    selectedType.value = newFilter?.type || null
+  },
+  { deep: true },
+)
+
+// Watch for sort changes from parent
+watch(
+  () => props.sort,
+  (newSort) => {
+    selectedSort.value = getSortString(newSort)
+  },
+  { deep: true },
+)
+
+// Debounce search updates
+let searchTimeout: ReturnType<typeof setTimeout> | null = null
+watch(searchTerm, () => {
+  if (searchTimeout) {
+    clearTimeout(searchTimeout)
+  }
+  searchTimeout = setTimeout(() => {
+    updateFilters()
+  }, 300)
+})
+
+function updateFilters() {
+  const filters: IEquipmentFilters = {}
+
+  if (searchTerm.value.trim()) {
+    filters.search = searchTerm.value.trim()
   }
 
-  return items.filter((equipment: IEquipment) => {
-    const haystack = [
-      equipment.name,
-      equipment.type,
-      equipment.model,
-      equipment.serial_number,
-      equipment.status,
-    ]
-      .filter(Boolean)
-      .join(' ')
-      .toLowerCase()
+  if (selectedStatus.value) {
+    filters.status = selectedStatus.value
+  }
 
-    return haystack.includes(query)
+  if (selectedType.value) {
+    filters.type = selectedType.value
+  }
+
+  emit('filtersChange', filters)
+}
+
+function handleStatusFilter(statusValue: string) {
+  if (selectedStatus.value === statusValue.toLowerCase()) {
+    selectedStatus.value = null
+  } else {
+    selectedStatus.value = statusValue.toLowerCase()
+  }
+  updateFilters()
+}
+
+function handleTypeFilter(type: string) {
+  if (selectedType.value === type) {
+    selectedType.value = null
+  } else {
+    selectedType.value = type
+  }
+  updateFilters()
+}
+
+function handleSortChange(sortValue: string) {
+  selectedSort.value = sortValue
+  const [id, direction] = sortValue.split('-')
+  emit('sortChange', {
+    id,
+    desc: direction === 'desc',
   })
+}
+
+const filteredEquipments = computed(() => {
+  return props.equipments ?? []
 })
 
 watch(
@@ -188,6 +265,8 @@ function handleSelectEquipment(equipment: IEquipment) {
             <DropdownMenuItem
               v-for="status in prerequisitesStatuses"
               :key="status.value"
+              :class="selectedStatus === status.value.toLowerCase() ? 'bg-muted' : ''"
+              @select="handleStatusFilter(status.value)"
             >
               <div class="flex items-center gap-2">
                 <component
@@ -206,8 +285,18 @@ function handleSelectEquipment(equipment: IEquipment) {
             <DropdownMenuItem
               v-for="type in prerequisitesTypes"
               :key="type"
+              :class="selectedType === type ? 'bg-muted' : ''"
+              @select="handleTypeFilter(type)"
             >
               {{ type }}
+            </DropdownMenuItem>
+
+            <DropdownMenuSeparator v-if="selectedStatus || selectedType" />
+            <DropdownMenuItem
+              v-if="selectedStatus || selectedType"
+              @select="() => { selectedStatus = null; selectedType = null; updateFilters() }"
+            >
+              Clear filters
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
@@ -223,31 +312,31 @@ function handleSelectEquipment(equipment: IEquipment) {
             <DropdownMenuSeparator />
             <DropdownMenuItem
               :class="selectedSort === 'name-asc' ? 'bg-muted' : ''"
-              @select="selectedSort = 'name-asc'"
+              @select="handleSortChange('name-asc')"
             >
               Name: A to Z
             </DropdownMenuItem>
             <DropdownMenuItem
               :class="selectedSort === 'name-desc' ? 'bg-muted' : ''"
-              @select="selectedSort = 'name-desc'"
+              @select="handleSortChange('name-desc')"
             >
               Name: Z to A
             </DropdownMenuItem>
             <DropdownMenuItem
-              :class="selectedSort === 'created-desc' ? 'bg-muted' : ''"
-              @select="selectedSort = 'created-desc'"
+              :class="selectedSort === 'created_at-desc' ? 'bg-muted' : ''"
+              @select="handleSortChange('created_at-desc')"
             >
               Newest first
             </DropdownMenuItem>
             <DropdownMenuItem
-              :class="selectedSort === 'created-asc' ? 'bg-muted' : ''"
-              @select="selectedSort = 'created-asc'"
+              :class="selectedSort === 'created_at-asc' ? 'bg-muted' : ''"
+              @select="handleSortChange('created_at-asc')"
             >
               Oldest first
             </DropdownMenuItem>
             <DropdownMenuItem
-              :class="selectedSort === 'status' ? 'bg-muted' : ''"
-              @select="selectedSort = 'status'"
+              :class="selectedSort === 'status-asc' ? 'bg-muted' : ''"
+              @select="handleSortChange('status-asc')"
             >
               Status
             </DropdownMenuItem>
