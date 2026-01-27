@@ -41,7 +41,7 @@ const props = withDefaults(
 
 const emit = defineEmits<{
   'update:selectedEquipment': [equipment: IEquipment | null]
-  select: [equipment: IEquipment]
+  'select': [equipment: IEquipment]
 }>()
 
 function getStatusInfo(status: string | null | undefined) {
@@ -109,7 +109,7 @@ watch(
 
     const currentId = props.selectedEquipment?.id
     const stillExists =
-      currentId != null && next.some((equipment) => equipment.id === currentId)
+      currentId != null && next.some(equipment => equipment.id === currentId)
 
     if (!stillExists) {
       emit('update:selectedEquipment', next[0])
@@ -146,7 +146,7 @@ function handleSelectEquipment(equipment: IEquipment) {
             <SearchIcon />
           </InputGroupAddon>
         </InputGroup>
-        
+
         <DropdownMenu>
           <DropdownMenuTrigger as-child>
             <Button variant="outline" size="icon" class="h-9 w-9 shrink-0">
@@ -226,7 +226,9 @@ function handleSelectEquipment(equipment: IEquipment) {
       class="flex flex-1 items-center justify-center rounded-xl border border-dashed bg-muted/40 px-6 py-10 text-center text-sm text-muted-foreground"
     >
       <div class="space-y-2">
-        <div class="text-base font-medium">No equipments found</div>
+        <div class="text-base font-medium">
+          No equipments found
+        </div>
         <p class="max-w-xs mx-auto">
           Try adjusting your search or create a new equipment to get started.
         </p>
