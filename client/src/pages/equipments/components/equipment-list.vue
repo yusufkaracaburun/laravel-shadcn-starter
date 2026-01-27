@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
 
+import type { TPageSize } from '@/components/data-table/types'
 import type {
   IEquipment,
   IEquipmentFilters,
@@ -15,6 +16,9 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import {
@@ -38,6 +42,7 @@ const props = withDefaults(
     openDetail?: () => void
     filter?: IEquipmentFilters
     sort?: ISorting
+    pageSize?: TPageSize
   }>(),
   {
     loading: false,
@@ -45,6 +50,7 @@ const props = withDefaults(
     openDetail: () => {},
     filter: undefined,
     sort: undefined,
+    pageSize: 10,
   },
 )
 
@@ -53,6 +59,7 @@ const emit = defineEmits<{
   'select': [equipment: IEquipment]
   'filtersChange': [filters: IEquipmentFilters]
   'sortChange': [sort: ISorting]
+  'pageSizeChange': [pageSize: TPageSize]
 }>()
 
 function getStatusInfo(status: string | null | undefined) {
@@ -123,6 +130,24 @@ function getSortString(sort: ISorting | undefined): string {
 }
 
 const selectedSort = ref<string>(getSortString(props.sort))
+const selectedPageSize = ref<TPageSize>(props.pageSize || 10)
+
+const pageSizeOptions: TPageSize[] = [10, 20, 30, 40, 50, 100]
+
+// Watch for page size changes from parent
+watch(
+  () => props.pageSize,
+  (newPageSize) => {
+    if (newPageSize) {
+      selectedPageSize.value = newPageSize
+    }
+  },
+)
+
+function handlePageSizeChange(pageSize: TPageSize) {
+  selectedPageSize.value = pageSize
+  emit('pageSizeChange', pageSize)
+}
 
 // Watch for filter changes from parent
 watch(
@@ -308,7 +333,9 @@ function handleSelectEquipment(equipment: IEquipment) {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" class="w-48">
-            <DropdownMenuLabel>Sort by</DropdownMenuLabel>
+            <DropdownMenuLabel class="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+              Sort by
+            </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem
               :class="selectedSort === 'name-asc' ? 'bg-muted' : ''"
@@ -340,6 +367,24 @@ function handleSelectEquipment(equipment: IEquipment) {
             >
               Status
             </DropdownMenuItem>
+
+            <DropdownMenuSeparator />
+
+            <DropdownMenuSub>
+              <DropdownMenuSubTrigger>
+                Items per page
+              </DropdownMenuSubTrigger>
+              <DropdownMenuSubContent>
+                <DropdownMenuItem
+                  v-for="size in pageSizeOptions"
+                  :key="size"
+                  :class="selectedPageSize === size ? 'bg-muted' : ''"
+                  @select="handlePageSizeChange(size)"
+                >
+                  {{ size }}
+                </DropdownMenuItem>
+              </DropdownMenuSubContent>
+            </DropdownMenuSub>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>

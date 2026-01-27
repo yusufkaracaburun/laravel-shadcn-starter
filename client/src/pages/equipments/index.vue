@@ -15,8 +15,10 @@ const {
   equipments,
   filter,
   sort,
+  serverPagination,
   onFiltersChange,
   onSortingChange,
+  onPageSizeChange,
   fetchEquipmentsPrerequisitesData,
   fetchEquipmentsData,
 } = useEquipments()
@@ -48,9 +50,11 @@ onMounted(() => {
         :open-detail="openDetail"
         :filter="filter"
         :sort="sort"
+        :page-size="serverPagination.pageSize"
         @update:selected-equipment="selectedEquipment = $event"
         @filters-change="onFiltersChange"
         @sort-change="onSortingChange"
+        @page-size-change="onPageSizeChange"
       />
     </template>
 
