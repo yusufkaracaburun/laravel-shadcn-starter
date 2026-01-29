@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Enums\UserStatus;
+use App\Traits\HasCacheKeys;
 use InvalidArgumentException;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\MediaLibrary\HasMedia;
@@ -16,10 +17,12 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use App\Helpers\Cache\CacheInvalidationService;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\MorphMany; // Added for MailTracker
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+
+// Added for MailTracker
 
 final class User extends Authenticatable implements HasMedia
 {
@@ -31,6 +34,28 @@ final class User extends Authenticatable implements HasMedia
     use InteractsWithMedia;
     use Notifiable;
     use SoftDeletes;
+    use HasCacheKeys;
+
+    /**
+     * Cache keys for vehicle endpoints.
+     *
+     * @var array<string, string>
+     */
+    public const CACHE = [
+        'index' => 'api.users.index',
+        'show'  => 'api.users.show',
+    ];
+
+    /**
+     * Fields that are searchable via the QueryableRepository search filter.
+     *
+     * @var array<int, string>
+     */
+    public static array $searchable = [
+        'name',
+        'email',
+        'status'
+    ];
 
     /**
      * The attributes that are mass assignable.

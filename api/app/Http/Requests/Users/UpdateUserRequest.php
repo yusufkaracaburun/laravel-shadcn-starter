@@ -5,19 +5,11 @@ declare(strict_types=1);
 namespace App\Http\Requests\Users;
 
 use App\Models\User;
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\BaseFormRequest;
 use Illuminate\Contracts\Validation\ValidationRule;
 
-final class UpdateUserRequest extends FormRequest
+final class UpdateUserRequest extends BaseFormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
-    public function authorize(): bool
-    {
-        return true;
-    }
-
     /**
      * Get the validation rules that apply to the request.
      *
@@ -36,5 +28,25 @@ final class UpdateUserRequest extends FormRequest
             'profile_photo' => ['sometimes', 'image', 'max:2048'], // Max 2MB
             'role'          => ['sometimes', 'nullable', 'string', 'exists:roles,name'],
         ];
+    }
+
+    /**
+     * Get custom attribute names for validator errors.
+     *
+     * @return array<string, string>
+     */
+    public function attributes(): array
+    {
+        return array_merge(
+            parent::attributes(),
+            [
+                'name'                  => 'name',
+                'email'                 => 'email address',
+                'password'              => 'password',
+                'password_confirmation' => 'password confirmation',
+                'profile_photo'         => 'profile photo',
+                'role'                  => 'role',
+            ],
+        );
     }
 }

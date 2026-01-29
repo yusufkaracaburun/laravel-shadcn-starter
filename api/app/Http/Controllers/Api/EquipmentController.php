@@ -36,7 +36,7 @@ final class EquipmentController extends Controller
     {
         return ApiResponse::success([
             'statuses' => EquipmentStatus::toArray(),
-            'types' => Equipment::query()->distinct()->pluck('type')->toArray(),
+            'types'    => Equipment::query()->distinct()->pluck('type')->toArray(),
         ]);
     }
 

@@ -21,19 +21,19 @@ final class Equipment extends BaseModel
         'show'  => 'api.equipments.show',
     ];
 
-    protected $table = 'equipments';
-    
     /**
-    * Searchable fields for this model.
-    *
-    * @var list<string>
-    */
-   public static array $searchable = [
-    'name',
-    'serial_number',
-    'type',
-    'status',
-   ];
+     * Searchable fields for this model.
+     *
+     * @var list<string>
+     */
+    public static array $searchable = [
+        'name',
+        'serial_number',
+        'type',
+        'status',
+    ];
+
+    protected $table = 'equipments';
 
     /**
      * The attributes that should be cast.

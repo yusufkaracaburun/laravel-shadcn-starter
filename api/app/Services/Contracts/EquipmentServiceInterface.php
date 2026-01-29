@@ -34,4 +34,9 @@ interface EquipmentServiceInterface extends BaseServiceInterface
      * Delete equipment.
      */
     public function deleteEquipment(Equipment $equipment): bool;
+
+    /**
+     * Get all users.
+     */
+    public function getAll(): EquipmentCollection;
 }

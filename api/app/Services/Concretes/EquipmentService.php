@@ -55,4 +55,11 @@ final class EquipmentService extends BaseService implements EquipmentServiceInte
     {
         return $this->repo->delete($equipment);
     }
+
+    public function getAll(): EquipmentCollection
+    {
+        $equipments = $this->repo->all();
+
+        return new EquipmentCollection($equipments);
+    }
 }

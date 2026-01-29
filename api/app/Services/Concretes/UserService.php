@@ -6,75 +6,68 @@ namespace App\Services\Concretes;
 
 use App\Models\User;
 use App\Enums\UserStatus;
+use Illuminate\Http\Request;
 use App\Services\BaseService;
 use App\Http\Resources\Users\UserResource;
 use App\Http\Resources\Users\UserCollection;
 use App\Services\Contracts\UserServiceInterface;
 use App\Repositories\Contracts\UserRepositoryInterface;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 final class UserService extends BaseService implements UserServiceInterface
 {
-    private readonly UserRepositoryInterface $userRepository;
+    private readonly UserRepositoryInterface $repo;
 
     public function __construct(
-        UserRepositoryInterface $repository,
+        UserRepositoryInterface $repo,
     ) {
-        $this->setRepository($repository);
-        $this->userRepository = $repository;
+        $this->setRepository($repo);
+        $this->repo = $repo;
     }
 
-    /**
-     * Get paginated users with QueryBuilder support.
-     * Supports filtering, sorting, and including relationships via request parameters.
-     */
-    public function getPaginated(int $perPage, ?int $teamId = null): UserCollection
+    public function getPaginated(Request $request): UserCollection
     {
-        $paginated = $this->userRepository->getPaginated($perPage, $teamId);
+        $paginated = $this->repo->paginateFiltered($request);
 
         return new UserCollection($paginated);
+    }
+
+    public function show(User $user): UserResource
+    {
+        $user = $this->repo->findForShow($user);
+
+        return new UserResource($user);
+    }
+
+    public function createUser(array $data): UserResource
+    {
+        $user = $this->repo->createWithRelationships($data);
+
+        if (request()->hasFile('profile_photo')) {
+            $user->resource->addMediaFromRequest('profile_photo')
+                ->toMediaCollection('profile-photos');
+        }
+
+        return new UserResource($user);
+    }
+
+    public function updateUser(User $user, array $data): UserResource
+    {
+        $updated = $this->repo->updateWithRelationships($user, $data);
+
+        return new UserResource($updated);
+    }
+
+    public function deleteUser(User $user): bool
+    {
+        return $this->repo->delete($user);
     }
 
     /**
      * Find a user by ID with relationships loaded.
      */
-    public function findById(int $userId, ?int $teamId = null): UserResource
+    public function findById(int $userId): UserResource
     {
-        $user = $this->userRepository->findById($userId, $teamId);
-
-        return new UserResource($user);
-    }
-
-    /**
-     * Update a user by model instance.
-     *
-     * @param  array<string, mixed>  $data
-     * @param  int|null  $teamId  Team ID for team-scoped role assignment
-     */
-    public function updateUser(User $user, array $data, ?int $teamId = null): UserResource
-    {
-        $user = $this->userRepository->updateUser($user, $data, $teamId);
-
-        return new UserResource($user);
-    }
-
-    /**
-     * Delete a user by model instance.
-     */
-    public function deleteUser(User $user): bool
-    {
-        return $this->userRepository->deleteUser($user);
-    }
-
-    /**
-     * Create a new user with team context.
-     *
-     * @param  array<string, mixed>  $data
-     * @param  int|null  $teamId  Team ID for team-scoped role assignment
-     */
-    public function createUser(array $data, ?int $teamId = null): UserResource
-    {
-        $user = $this->userRepository->create($data, $teamId);
+        $user = $this->repo->findOrFail($userId);
 
         return new UserResource($user);
     }
@@ -84,56 +77,48 @@ final class UserService extends BaseService implements UserServiceInterface
      */
     public function getCurrentUser(User $user): UserResource
     {
-        $user = $this->userRepository->getCurrentUser($user);
+        $user = $this->repo->getCurrentUser($user);
 
         return new UserResource($user);
     }
 
     /**
      * Get all users.
-     *
-     * @return AnonymousResourceCollection<int, UserResource>
      */
-    public function getAll(): AnonymousResourceCollection
+    public function getAll(): UserCollection
     {
-        $users = $this->userRepository->all();
+        $users = $this->repo->all();
 
-        return UserResource::collection($users);
+        return new UserCollection($users);
     }
 
     /**
      * Get all verified users.
-     *
-     * @return AnonymousResourceCollection<int, UserResource>
      */
-    public function getVerifiedUsers(): AnonymousResourceCollection
+    public function getVerifiedUsers(): UserCollection
     {
-        $users = $this->userRepository->getVerifiedUsers();
+        $users = $this->repo->getVerifiedUsers();
 
-        return UserResource::collection($users);
+        return new UserCollection($users);
     }
 
     /**
      * Get all active users.
-     *
-     * @return AnonymousResourceCollection<int, UserResource>
      */
-    public function getActiveUsers(): AnonymousResourceCollection
+    public function getActiveUsers(): UserCollection
     {
-        $users = $this->userRepository->getActiveUsers();
+        $users = $this->repo->getActiveUsers();
 
-        return UserResource::collection($users);
+        return new UserCollection($users);
     }
 
     /**
      * Get users by status.
-     *
-     * @return AnonymousResourceCollection<int, UserResource>
      */
-    public function getUsersByStatus(UserStatus|string $status = UserStatus::ACTIVE): AnonymousResourceCollection
+    public function getUsersByStatus(UserStatus|string $status = UserStatus::ACTIVE): UserCollection
     {
-        $users = $this->userRepository->getUsersByStatus($status);
+        $users = $this->repo->getUsersByStatus($status);
 
-        return UserResource::collection($users);
+        return new UserCollection($users);
     }
 }
