@@ -19,7 +19,7 @@ interface SheetDrawerProps {
 
 const props = withDefaults(defineProps<SheetDrawerProps>(), {
   side: 'right',
-  class: '',
+  class: 'w-full shadow-xl',
 })
 
 const emit = defineEmits<{
@@ -41,26 +41,18 @@ const sheetOpen = computed({
     }
   },
 })
-
-const sheetContentClass = computed(() => {
-  const baseClasses = 'w-full shadow-xl'
-  return props.class ? `${baseClasses} ${props.class}` : baseClasses
-})
 </script>
 
 <template>
   <Sheet v-model:open="sheetOpen">
-    <SheetContent
-      :side="side"
-      :class="sheetContentClass"
-    >
-      <div class="flex flex-col h-full">
+    <SheetContent :side="props.side" :class="props.class">
+      <div class="flex flex-col h-full" data-testid="sheet-drawer">
         <SheetHeader v-if="!slots.header">
           <SheetTitle>
-            {{ title }}
+            {{ props.title }}
           </SheetTitle>
-          <SheetDescription v-if="description">
-            {{ description }}
+          <SheetDescription v-if="props.description">
+            {{ props.description }}
           </SheetDescription>
         </SheetHeader>
         <slot v-else name="header" />
