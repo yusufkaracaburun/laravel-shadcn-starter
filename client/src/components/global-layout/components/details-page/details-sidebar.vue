@@ -1,9 +1,16 @@
 <script setup lang="ts">
 import type { HTMLAttributes } from 'vue'
 
+import InfoItem from '@/components/global-layout/components/info-item.vue'
+import InfoSection
+  from '@/components/global-layout/components/info-section.vue'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import Badge from '@/components/ui/badge/Badge.vue'
-import { UserIcon, UsersIcon } from '@/composables/use-icons.composable'
+import {
+  CalendarIcon,
+  UserIcon,
+  UsersIcon,
+} from '@/composables/use-icons.composable'
 import { cn } from '@/lib/utils'
 
 import type {
@@ -86,11 +93,12 @@ const remainingRelatedItemsCount = computed(() => {
     </div>
 
     <!-- Status -->
-    <div v-if="status || $slots.status">
-      <UiSeparator class="my-2" />
-      <div class="text-xs font-medium text-muted-foreground mb-0.5">
-        Status
-      </div>
+    <InfoSection
+      v-if="status || $slots.status"
+      title="Status"
+      title-spacing="lg"
+      with-border
+    >
       <slot name="status">
         <Badge
           v-if="status"
@@ -101,22 +109,25 @@ const remainingRelatedItemsCount = computed(() => {
         </Badge>
       </slot>
       <slot name="status-extra" />
-    </div>
+    </InfoSection>
 
     <!-- Fields -->
-    <div v-if="fields.length > 0 || $slots.fields" class="space-y-2">
-      <UiSeparator class="my-2" />
-      <template v-for="(field, index) in fields" :key="index">
-        <div v-if="field.value !== null && field.value !== undefined">
-          <div class="text-xs font-medium text-muted-foreground mb-0.5 flex items-center gap-1.5">
-            <component :is="field.icon" v-if="field.icon" class="size-3" />
-            {{ field.label }}
-          </div>
-          <div class="text-sm">
-            {{ field.value }}
-          </div>
-        </div>
-      </template>
+    <div v-if="fields.length > 0 || $slots.fields">
+      <InfoSection
+        v-if="fields.length > 0"
+        title="Information"
+        title-spacing="lg"
+        with-border
+      >
+        <template v-for="(field, index) in fields" :key="index">
+          <InfoItem
+            v-if="field.value !== null && field.value !== undefined"
+            :label="field.label"
+            :value="field.value"
+            :icon="field.icon"
+          />
+        </template>
+      </InfoSection>
       <slot name="fields" />
       <slot name="fields-extra" />
     </div>
@@ -125,12 +136,12 @@ const remainingRelatedItemsCount = computed(() => {
     <slot name="custom-section" />
 
     <!-- Related Items -->
-    <div v-if="relatedItems.length > 0 || $slots.related - items">
-      <UiSeparator class="my-2" />
-      <div class="text-xs font-medium text-muted-foreground mb-2">
-        {{ relatedItemsLabel }}
-      </div>
-      <div v-if="relatedItems.length === 0 && !$slots.related - items" class="text-sm text-muted-foreground py-2">
+    <InfoSection
+      v-if="relatedItems.length > 0 || $slots['related-items']"
+      :title="relatedItemsLabel"
+      with-border
+    >
+      <div v-if="relatedItems.length === 0 && !$slots['related-items']" class="text-sm text-muted-foreground py-2">
         {{ relatedItemsEmptyText }}
       </div>
       <div v-else class="space-y-1">
@@ -160,37 +171,36 @@ const remainingRelatedItemsCount = computed(() => {
           v-if="showViewAll && remainingRelatedItemsCount > 0 && onNavigateToTab"
           type="button"
           class="w-full text-left text-xs font-medium text-primary hover:text-primary/80 transition-colors py-2 px-2 rounded-md hover:bg-primary/5 flex items-center gap-1.5 group"
-          @click="onNavigateToTab"
+          @click="() => onNavigateToTab?.('')"
         >
           <span>+{{ remainingRelatedItemsCount }} {{ viewAllText }}</span>
           <UsersIcon class="size-3 opacity-60 group-hover:opacity-100 transition-opacity" />
         </button>
       </div>
       <slot name="related-items-extra" />
-    </div>
+    </InfoSection>
 
     <!-- Timestamps -->
-    <div v-if="timestamps || $slots.timestamps" class="space-y-2">
-      <UiSeparator class="my-2" />
+    <InfoSection
+      v-if="timestamps || $slots.timestamps"
+      title="Time"
+      with-border
+    >
       <slot name="timestamps">
-        <div v-if="timestamps?.created">
-          <div class="text-xs font-medium text-muted-foreground mb-0.5">
-            Aangemaakt
-          </div>
-          <div class="text-sm">
-            {{ timestamps.created }}
-          </div>
-        </div>
-        <div v-if="timestamps?.updated">
-          <div class="text-xs font-medium text-muted-foreground mb-0.5">
-            Bijgewerkt
-          </div>
-          <div class="text-sm">
-            {{ timestamps.updated }}
-          </div>
-        </div>
+        <InfoItem
+          v-if="timestamps?.created"
+          label="Created"
+          :value="timestamps.created"
+          :icon="CalendarIcon"
+        />
+        <InfoItem
+          v-if="timestamps?.updated"
+          label="Updated"
+          :value="timestamps.updated"
+          :icon="CalendarIcon"
+        />
       </slot>
-    </div>
+    </InfoSection>
 
     <!-- Default slot for any additional content -->
     <slot />

@@ -136,7 +136,7 @@ function handleViewFullDetails() {
       </SheetHeader>
     </template>
     <!-- Time Section -->
-    <InfoSection title="Time" title-spacing="lg">
+    <InfoSection title="Time">
       <InfoItem
         label="Created"
         :value="formattedCreatedAt"
@@ -150,7 +150,7 @@ function handleViewFullDetails() {
     </InfoSection>
 
     <!-- Customer Info Section -->
-    <InfoSection title="Customer Info" with-border>
+    <InfoSection title="Customer Info">
       <InfoItem
         label="Status"
         :value="customer.status"
@@ -200,7 +200,6 @@ function handleViewFullDetails() {
     <InfoSection
       v-if="formattedAddress.length > 0"
       title="Address"
-      with-border
     >
       <div class="space-y-0.5">
         <div
@@ -217,7 +216,6 @@ function handleViewFullDetails() {
     <InfoSection
       v-if="customer.type === 'business' && (customer.kvk_number || customer.vat_number || customer.iban_number)"
       title="Business Information"
-      with-border
     >
       <InfoItem
         v-if="customer.kvk_number"
@@ -243,7 +241,6 @@ function handleViewFullDetails() {
     <InfoSection
       v-if="contacts.length > 0 || invoiceCount > 0"
       title="Contacts & Invoices"
-      with-border
     >
       <div v-if="contacts.length > 0" class="space-y-2">
         <div class="text-xs font-medium text-muted-foreground mb-1">

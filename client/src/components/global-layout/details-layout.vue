@@ -82,7 +82,7 @@ const errorText = computed(() => {
     </div>
 
     <!-- Content -->
-    <div v-else class="flex h-full gap-3 py-4 overflow-hidden">
+    <div v-else class="flex h-full py-4 overflow-hidden">
       <!-- Left Sidebar -->
       <aside class="shrink-0">
         <slot name="sidebar" />

@@ -140,7 +140,7 @@ const relatedItems = computed(() => {
 
     <template #fields>
       <!-- Time Section -->
-      <InfoSection title="Time" title-spacing="lg">
+      <InfoSection title="Time">
         <InfoItem
           label="Created"
           :value="formattedCreatedAt"
@@ -154,7 +154,7 @@ const relatedItems = computed(() => {
       </InfoSection>
 
       <!-- Customer Info Section -->
-      <InfoSection title="Customer Info" with-border>
+      <InfoSection title="Customer Info">
         <InfoItem
           label="Status"
           :value="customer.status"
@@ -204,7 +204,6 @@ const relatedItems = computed(() => {
       <InfoSection
         v-if="formattedAddress.length > 0"
         title="Address"
-        with-border
       >
         <div class="space-y-0.5">
           <div
@@ -221,7 +220,6 @@ const relatedItems = computed(() => {
       <InfoSection
         v-if="customer.type === 'business' && (customer.kvk_number || customer.vat_number || customer.iban_number)"
         title="Business Information"
-        with-border
       >
         <InfoItem
           v-if="customer.kvk_number"

@@ -11,8 +11,8 @@ interface InfoSectionProps {
 }
 
 const props = withDefaults(defineProps<InfoSectionProps>(), {
-  withBorder: false,
-  titleSpacing: 'md',
+  withBorder: true,
+  titleSpacing: 'sm',
   contentSpacing: 'md',
 })
 
@@ -43,7 +43,7 @@ const contentSpacingClass = computed(() => {
 const containerClass = computed(() => {
   return cn(
     titleSpacingClass.value,
-    props.withBorder && 'pt-6 border-t border-border',
+    props.withBorder && 'py-3 border-t border-border',
   )
 })
 </script>
