@@ -9,7 +9,7 @@ import { useVehicles } from '@/pages/vehicles/composables/use-vehicles.composabl
 import { getVehicleColumns } from './components/columns'
 import DataTable from './components/data-table.vue'
 import VehicleCreate from './components/vehicle-create-dialog.vue'
-import VehicleSheet from './components/vehicle-sheet.vue'
+import VehicleDetailsSheet from './components/vehicle-details-sheet.vue'
 
 const columns = getVehicleColumns()
 
@@ -65,7 +65,7 @@ const hasSelectedVehicle = computed(() => selectedVehicle.value !== null)
       />
     </div>
     <template v-if="hasSelectedVehicle && selectedVehicle" #row-details>
-      <VehicleSheet
+      <VehicleDetailsSheet
         :vehicle="selectedVehicle"
         :open="sidebarOpen"
         @close="handleCloseSidebar"
