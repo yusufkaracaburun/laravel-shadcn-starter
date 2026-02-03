@@ -5,123 +5,62 @@ declare(strict_types=1);
 namespace App\Services\Concretes;
 
 use App\Models\Role;
+use Illuminate\Http\Request;
 use App\Services\BaseService;
 use InvalidArgumentException;
 use App\Http\Resources\Roles\RoleResource;
 use App\Http\Resources\Roles\RoleCollection;
 use App\Services\Contracts\RoleServiceInterface;
 use App\Repositories\Contracts\RoleRepositoryInterface;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 final class RoleService extends BaseService implements RoleServiceInterface
 {
-    /**
-     * Create a new class instance.
-     */
+    private readonly RoleRepositoryInterface $repo;
+
     public function __construct(
-        private readonly RoleRepositoryInterface $repo,
+        RoleRepositoryInterface $repo,
     ) {
         $this->setRepository($repo);
+        $this->repo = $repo;
     }
 
-    /**
-     * Get all roles.
-     */
-    public function getRoles(): RoleCollection
+    public function getPaginated(Request $request): RoleCollection
     {
-        $roles = $this->getFiltered();
-
-        return new RoleCollection($roles);
-    }
-
-    /**
-     * Get all roles without pagination.
-     */
-    public function getAllRoles(): RoleCollection
-    {
-        $roles = $this->all();
-
-        return new RoleCollection($roles);
-    }
-
-    /**
-     * Get filtered roles with pagination.
-     */
-    public function getPaginated(int $perPage): RoleCollection
-    {
-        $paginated = $this->paginate($perPage);
+        $paginated = $this->repo->withRequest($request)->paginateFiltered();
 
         return new RoleCollection($paginated);
     }
 
-    /**
-     * Get role by id.
-     */
-    public function getRoleById(int $id): RoleResource
+    public function show(Role $role): RoleResource
     {
-        try {
-            $role = $this->findOrFail($id);
-
-            return new RoleResource($role);
-        } catch (ModelNotFoundException) {
-            throw new ModelNotFoundException('Role not found');
-        }
-    }
-
-    /**
-     * Get role by name.
-     */
-    public function getRoleByName(string $name): ?Role
-    {
-        return $this->repo->findByName($name);
-    }
-
-    /**
-     * Create new role.
-     */
-    public function createRole(array $data): RoleResource
-    {
-        $role = $this->create($data);
+        $role = $this->repo->findForShow($role);
 
         return new RoleResource($role);
     }
 
-    /**
-     * Update role.
-     */
-    public function updateRole(int $id, array $data): RoleResource
+    public function createRole(array $data): RoleResource
     {
-        try {
-            $role = $this->findOrFail($id);
+        $role = $this->repo->createWithRelationships($data);
 
-            // Prevent updating system roles
-            throw_if($role->is_system, InvalidArgumentException::class, 'Cannot update system roles');
-
-            $updated = $this->update($role, $data);
-
-            return new RoleResource($updated);
-        } catch (ModelNotFoundException) {
-            throw new ModelNotFoundException('Role not found');
-        }
+        return new RoleResource($role);
     }
 
-    /**
-     * Delete role.
-     */
-    public function deleteRole(int $id): bool
+    public function updateRole(Role $role, array $data): RoleResource
     {
-        try {
-            $role = $this->findOrFail($id);
+        // Prevent updating system roles
+        throw_if($role->is_system, InvalidArgumentException::class, 'Cannot update system roles');
 
-            // Prevent deleting system roles
-            throw_if($role->is_system, InvalidArgumentException::class, 'Cannot delete system roles');
+        $updated = $this->repo->updateWithRelationships($role, $data);
 
-            $this->delete($role);
+        return new RoleResource($updated);
+    }
 
-            return true;
-        } catch (ModelNotFoundException) {
-            throw new ModelNotFoundException('Role not found');
-        }
+    public function deleteRole(Role $role): bool
+    {
+        // Prevent deleting system roles
+        throw_if($role->is_system, InvalidArgumentException::class, 'Cannot delete system roles');
+
+        return $this->repo->delete($role);
     }
 
     /**
@@ -129,20 +68,11 @@ final class RoleService extends BaseService implements RoleServiceInterface
      */
     public function assignPermissions(int $roleId, array $permissionIds): RoleResource
     {
-        $role = $this->getRoleById($roleId)->resource;
+        $role = $this->repo->findOrFail($roleId);
+        $role = $this->repo->findForShow($role);
 
         $role->syncPermissions($permissionIds);
 
         return new RoleResource($role->fresh(['permissions']));
-    }
-
-    /**
-     * Get non-system roles.
-     */
-    public function getNonSystemRoles(): RoleCollection
-    {
-        $roles = $this->repo->getSystemRoles();
-
-        return new RoleCollection($roles);
     }
 }

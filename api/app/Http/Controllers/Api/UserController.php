@@ -39,9 +39,9 @@ final class UserController extends Controller
      * @authenticated
      */
     public function prerequisites(): JsonResponse
-    {        
+    {
         return ApiResponse::success([
-            'roles' => Role::all(),
+            'roles'    => Role::all(),
             'statuses' => UserStatus::toArray(),
         ]);
     }

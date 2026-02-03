@@ -25,7 +25,7 @@ final class EquipmentService extends BaseService implements EquipmentServiceInte
 
     public function getPaginated(Request $request): EquipmentCollection
     {
-        $paginated = $this->repo->paginateFiltered($request);
+        $paginated = $this->repo->withRequest($request)->paginateFiltered();
 
         return new EquipmentCollection($paginated);
     }

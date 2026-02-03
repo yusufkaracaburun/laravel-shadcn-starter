@@ -26,12 +26,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 final class User extends Authenticatable implements HasMedia
 {
     use HasApiTokens;
+    use HasCacheKeys;
     use HasFactory;
     use HasRoles;
     use InteractsWithMedia;
     use Notifiable;
     use SoftDeletes;
-    use HasCacheKeys;
 
     /**
      * Cache keys for vehicle endpoints.
@@ -51,7 +51,7 @@ final class User extends Authenticatable implements HasMedia
     public static array $searchable = [
         'name',
         'email',
-        'status'
+        'status',
     ];
 
     protected $guarded = [

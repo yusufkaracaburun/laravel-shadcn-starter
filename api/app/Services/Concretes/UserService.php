@@ -26,7 +26,7 @@ final class UserService extends BaseService implements UserServiceInterface
 
     public function getPaginated(Request $request): UserCollection
     {
-        $paginated = $this->repo->paginateFiltered($request);
+        $paginated = $this->repo->withRequest($request)->paginateFiltered();
 
         return new UserCollection($paginated);
     }

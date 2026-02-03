@@ -4,11 +4,10 @@ declare(strict_types=1);
 
 namespace App\Services\Contracts;
 
-use App\Models\Invoice;
 use Illuminate\Http\Request;
-use Illuminate\Database\Eloquent\Model;
 use App\Services\BaseServiceInterface;
 use App\Http\Resources\InvoiceResource;
+use Illuminate\Database\Eloquent\Model;
 use App\Http\Resources\InvoiceCollection;
 
 interface InvoiceServiceInterface extends BaseServiceInterface

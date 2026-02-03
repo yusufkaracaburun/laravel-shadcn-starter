@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace App\Services\Contracts;
 
-use App\Models\Team;
 use Illuminate\Http\Request;
-use Illuminate\Database\Eloquent\Model;
 use App\Services\BaseServiceInterface;
+use Illuminate\Database\Eloquent\Model;
 use App\Http\Resources\Teams\TeamResource;
 use App\Http\Resources\Teams\TeamCollection;
 

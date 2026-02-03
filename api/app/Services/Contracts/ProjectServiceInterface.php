@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace App\Services\Contracts;
 
-use App\Models\Project;
 use Illuminate\Http\Request;
-use Illuminate\Database\Eloquent\Model;
 use App\Services\BaseServiceInterface;
+use Illuminate\Database\Eloquent\Model;
 use App\Http\Resources\Projects\ProjectResource;
 use App\Http\Resources\Projects\ProjectCollection;
 

@@ -7,25 +7,13 @@ namespace App\Repositories\Concretes;
 use App\Models\Role;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\AllowedInclude;
+use Illuminate\Database\Eloquent\Model;
 use App\Repositories\QueryableRepository;
 use Illuminate\Database\Eloquent\Collection;
 use App\Repositories\Contracts\RoleRepositoryInterface;
-use Spatie\QueryBuilder\QueryBuilder;
-use Spatie\QueryBuilder\QueryBuilderRequest;
 
 final class RoleRepository extends QueryableRepository implements RoleRepositoryInterface
 {
-    public function query(): QueryBuilder
-    {
-        $queryRequest = QueryBuilderRequest::fromRequest($this->request ?? request());
-
-        return QueryBuilder::for($this->model(), $queryRequest)
-            ->defaultSorts($this->getDefaultSorts())
-            ->allowedFilters($this->getAllowedFilters())
-            ->allowedSorts($this->getAllowedSorts())
-            ->allowedFields($this->getAllowedFields())
-            ->allowedIncludes($this->getAllowedIncludes());
-    }
 
     public function getDefaultSorts(): array
     {
@@ -77,6 +65,36 @@ final class RoleRepository extends QueryableRepository implements RoleRepository
         return Role::query()->findOrFail($id, $columns);
     }
 
+    /**
+     * Find role for show endpoint with relationships loaded.
+     */
+    public function findForShow(Role $role): Role
+    {
+        return $this->loadRelationships($role);
+    }
+
+    /**
+     * Create a new role and load relationships.
+     */
+    public function createWithRelationships(array $data): Role
+    {
+        /** @var Role $role */
+        $role = parent::create($data);
+
+        return $this->loadRelationships($role);
+    }
+
+    /**
+     * Update role and load relationships.
+     */
+    public function updateWithRelationships(Role $role, array $data): Role
+    {
+        /** @var Role $updated */
+        $updated = parent::update($role, $data);
+
+        return $this->loadRelationships($updated);
+    }
+
     public function findByName(string $name): ?Role
     {
         return $this->findByField('name', $name);
@@ -90,5 +108,14 @@ final class RoleRepository extends QueryableRepository implements RoleRepository
     protected function model(): string
     {
         return Role::class;
+    }
+
+    /**
+     * Standardize relationship loading in one place.
+     */
+    private function loadRelationships(Model $role): Role
+    {
+        /** @var Role $role */
+        return $role->load('permissions');
     }
 }

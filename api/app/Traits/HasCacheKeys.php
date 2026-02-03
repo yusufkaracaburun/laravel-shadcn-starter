@@ -4,10 +4,6 @@ declare(strict_types=1);
 
 namespace App\Traits;
 
-use Cknow\Money\Money;
-use App\Models\Invoice;
-use App\Models\InvoiceItem;
-
 trait HasCacheKeys
 {
     /**

@@ -6,30 +6,37 @@ namespace App\Services\Contracts;
 
 use App\Models\Role;
 use Illuminate\Http\Request;
-use Illuminate\Database\Eloquent\Model;
 use App\Services\BaseServiceInterface;
 use App\Http\Resources\Roles\RoleResource;
 use App\Http\Resources\Roles\RoleCollection;
 
 interface RoleServiceInterface extends BaseServiceInterface
 {
-    public function getPaginatedByRequest(Request $request, array $columns = ['*']): RoleCollection;
+    public function getPaginated(Request $request): RoleCollection;
 
-    public function getAll(array $columns = ['*']): RoleCollection;
+    public function show(Role $role): RoleResource;
 
-    public function getNonSystemRoles(): RoleCollection;
+    /**
+     * Create new role.
+     *
+     * @param  array<string, mixed>  $data
+     */
+    public function createRole(array $data): RoleResource;
 
-    public function findById(int $id): RoleResource;
+    /**
+     * Update role.
+     *
+     * @param  array<string, mixed>  $data
+     */
+    public function updateRole(Role $role, array $data): RoleResource;
 
-    public function findByName(string $name): ?Role;
+    /**
+     * Delete role.
+     */
+    public function deleteRole(Role $role): bool;
 
-    public function create(array $data): RoleResource;
-
-    public function update(Model $model, array $data): RoleResource;
-
-    public function delete(Model $model): bool;
-
+    /**
+     * Assign permissions to role.
+     */
     public function assignPermissions(int $roleId, array $permissionIds): RoleResource;
-
-    public function getWebRolesFiltered(): array;
 }

@@ -25,7 +25,7 @@ final class CustomerService extends BaseService implements CustomerServiceInterf
 
     public function getPaginated(Request $request): CustomerCollection
     {
-        $paginated = $this->repo->paginateFiltered($request);
+        $paginated = $this->repo->withRequest($request)->paginateFiltered();
 
         return new CustomerCollection($paginated);
     }
