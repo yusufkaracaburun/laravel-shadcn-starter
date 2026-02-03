@@ -19,7 +19,7 @@ interface SheetDrawerProps {
 
 const props = withDefaults(defineProps<SheetDrawerProps>(), {
   side: 'right',
-  class: 'w-full shadow-xl',
+  class: 'w-full shadow-xl border-l-0',
 })
 
 const emit = defineEmits<{
