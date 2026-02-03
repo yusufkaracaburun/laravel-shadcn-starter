@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { BadgeCheck } from 'lucide-vue-next'
+import { h } from 'vue'
 
 import type { ICustomer } from '@/pages/customers/models/customers'
 
@@ -10,11 +10,11 @@ import InfoSection
 import Badge from '@/components/ui/badge/Badge.vue'
 import { Button } from '@/components/ui/button'
 import {
+  BadgeCheckIcon,
   Building2Icon,
   CalendarIcon,
   CheckCircle2Icon,
   CircleIcon,
-  FileTextIcon,
   MailIcon,
   PhoneIcon,
   PlusIcon,
@@ -85,10 +85,6 @@ const formattedAddress = computed(() => {
   return parts
 })
 
-const invoiceCount = computed(() => {
-  return props.customer.invoices_count ?? 0
-})
-
 const formattedCreatedAt = computed(() => formatDate(props.customer.created_at))
 const formattedUpdatedAt = computed(() => formatDate(props.customer.updated_at))
 
@@ -101,7 +97,7 @@ const relatedItems = computed(() => {
     id: contact.id,
     name: contact.name,
     icon: UserIcon,
-    badge: contact.id === props.customer.primary_contact?.id ? BadgeCheck : undefined,
+    badge: contact.id === props.customer.primary_contact?.id ? () => h(BadgeCheckIcon, { class: 'size-3.5 text-blue-600' }) : undefined,
   }))
 })
 </script>

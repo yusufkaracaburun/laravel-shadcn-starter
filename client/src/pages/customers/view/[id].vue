@@ -18,7 +18,7 @@ import {
 } from '@/composables/use-icons.composable'
 import { useCustomers } from '@/pages/customers/composables/use-customers.composable'
 
-import CustomerDetailsTab from './components/customer-details-tab.vue'
+import CustomerInvoicesTab from './components/customer-invoices-tab.vue'
 import CustomerNavbar from './components/customer-navbar.vue'
 import CustomerOverviewTab from './components/customer-overview-tab.vue'
 import CustomerSidebar from './components/customer-sidebar.vue'
@@ -118,11 +118,11 @@ function handleAddContact() {
                   <span>Overzicht</span>
                 </TabsTrigger>
                 <TabsTrigger
-                  value="details"
+                  value="invoices"
                   class="bg-background data-[state=active]:border-primary dark:data-[state=active]:border-primary h-full rounded-none border-0 border-b-2 border-transparent data-[state=active]:shadow-none"
                 >
                   <FileTextIcon class="size-3.5" />
-                  <span>Details</span>
+                  <span>Facturen</span>
                 </TabsTrigger>
                 <TabsTrigger
                   value="tasks"
@@ -141,10 +141,8 @@ function handleAddContact() {
               <CustomerOverviewTab :customer="customer" />
             </TabsContent>
 
-            <TabsContent value="details" class="mt-0">
-              <CustomerDetailsTab
-                :customer="customer"
-              />
+            <TabsContent value="invoices" class="mt-0">
+              <CustomerInvoicesTab :customer="customer" />
             </TabsContent>
 
             <TabsContent value="tasks" class="mt-0">
