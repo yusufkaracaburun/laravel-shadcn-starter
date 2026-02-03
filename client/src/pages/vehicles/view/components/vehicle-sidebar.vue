@@ -1,13 +1,10 @@
 <script setup lang="ts">
 import type { IVehicle } from '@/pages/vehicles/models/vehicles'
 
-import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import DetailsSidebar from '@/components/global-layout/components/details-page/details-sidebar.vue'
 import Badge from '@/components/ui/badge/Badge.vue'
 import { Progress } from '@/components/ui/progress'
-import {
-  UserIcon,
-  UsersIcon,
-} from '@/composables/use-icons.composable'
+import { UserIcon } from '@/composables/use-icons.composable'
 import { useVehicleStatus } from '@/pages/vehicles/composables/use-vehicle-status.composable'
 import { formatDate } from '@/utils/date'
 
@@ -18,7 +15,7 @@ interface Props {
 const props = defineProps<Props>()
 
 const emits = defineEmits<{
-  (e: 'navigate-to-tab', tab: 'drivers'): void
+  navigateToTab: [tab: 'drivers']
 }>()
 
 const { getStatusInfo, getStatusVariant } = useVehicleStatus()
@@ -37,8 +34,6 @@ const inspectionProgressValue = computed(() => {
   if (!props.vehicle.days_to_inspection) {
     return 0
   }
-  // Invert: more days = less progress (closer to inspection = more progress)
-  // If days_to_inspection is 365, progress is 0%, if 0, progress is 100%
   return Math.max(
     0,
     Math.min(100, ((365 - props.vehicle.days_to_inspection) / 365) * 100),
@@ -55,66 +50,78 @@ const daysToInspectionText = computed(() => {
   return `${props.vehicle.days_to_inspection} dagen te gaan`
 })
 
-function getInitials(name: string): string {
-  const parts = name.trim().split(/\s+/)
-  if (parts.length >= 2) {
-    return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase()
-  }
-  return name[0]?.toUpperCase() || ''
-}
-
 const drivers = computed(() => {
   return props.vehicle.drivers ?? []
 })
 
-const maxDisplayedDrivers = 3
-
-const displayedDrivers = computed(() => {
-  return drivers.value.slice(0, maxDisplayedDrivers)
+const statusInfo = computed(() => {
+  if (!props.vehicle.status) {
+    return undefined
+  }
+  const info = getStatusInfo(props.vehicle.status)
+  return {
+    label: info?.label || props.vehicle.status,
+    variant: getStatusVariant(props.vehicle.status) as 'default' | 'destructive' | 'secondary' | 'outline',
+    color: info?.color,
+  }
 })
 
-const remainingDriversCount = computed(() => {
-  return Math.max(0, drivers.value.length - maxDisplayedDrivers)
+const fields = computed(() => {
+  const result = []
+  if (props.vehicle.make) {
+    result.push({ label: 'Merk', value: props.vehicle.make })
+  }
+  if (props.vehicle.model) {
+    result.push({ label: 'Model', value: props.vehicle.model })
+  }
+  if (props.vehicle.year) {
+    result.push({ label: 'Jaar', value: props.vehicle.year })
+  }
+  if (props.vehicle.color) {
+    result.push({ label: 'Kleur', value: props.vehicle.color })
+  }
+  if (props.vehicle.vin) {
+    result.push({ label: 'VIN', value: props.vehicle.vin })
+  }
+  return result
 })
 
-function handleViewAllDrivers() {
-  emits('navigate-to-tab', 'drivers')
+const relatedItems = computed(() => {
+  return drivers.value.map(driver => ({
+    id: driver.id,
+    name: driver.name,
+    icon: UserIcon,
+  }))
+})
+
+function handleNavigateToTab() {
+  emits('navigateToTab', 'drivers')
 }
 </script>
 
 <template>
-  <div class="w-80 border-r bg-background p-3 space-y-2.5 h-full overflow-y-auto">
-    <!-- Header -->
-    <div>
-      <h2 class="text-sm font-semibold mb-1.5">
-        Voertuig
-      </h2>
-      <div class="text-lg font-bold">
-        {{ vehicle.license_plate }}
-      </div>
-      <div
-        v-if="vehicle.make || vehicle.model"
-        class="text-xs text-muted-foreground mt-0.5"
-      >
-        {{ vehicle.make }} {{ vehicle.model }}
-      </div>
-    </div>
+  <DetailsSidebar
+    title="Voertuig"
+    :subtitle="vehicle.make || vehicle.model ? `${vehicle.make} ${vehicle.model}` : undefined"
+    :status="statusInfo"
+    :fields="fields"
+    :related-items="relatedItems"
+    related-items-label="Bestuurders"
+    related-items-empty-text="Geen bestuurders toegewezen"
+    :show-view-all="drivers.length > 3"
+    view-all-text="meer"
+    :timestamps="{
+      created: formattedCreatedAt,
+      updated: formattedUpdatedAt,
+    }"
+    :on-navigate-to-tab="handleNavigateToTab"
+  >
+    <template #header-title>
+      {{ vehicle.license_plate }}
+    </template>
 
-    <UiSeparator class="my-2" />
-
-    <!-- Status -->
-    <div>
-      <div class="text-xs font-medium text-muted-foreground mb-0.5">
-        Status
-      </div>
-      <!-- TODO: Implement inline status change
-          - Add click handler to status badge
-          - Open DropdownMenu with status options from statuses data (active, inactive, maintenance)
-          - Call updateVehicle mutation with new status
-          - Show loading state during update
-          - Handle errors appropriately
-          - Refresh vehicle data after successful update
-      -->
+    <template #status>
+      <!-- TODO: Implement inline status change -->
       <Badge
         v-if="vehicle.status"
         :variant="getStatusVariant(vehicle.status)"
@@ -122,139 +129,29 @@ function handleViewAllDrivers() {
       >
         {{ getStatusInfo(vehicle.status)?.label || vehicle.status }}
       </Badge>
-      <span v-else class="text-sm font-medium">Unknown</span>
-    </div>
+      <span v-else class="text-sm font-medium">Onbekend</span>
+    </template>
 
-    <UiSeparator class="my-2" />
-
-    <!-- Vehicle Info -->
-    <div class="space-y-2">
-      <div v-if="vehicle.make">
-        <div class="text-xs font-medium text-muted-foreground mb-0.5">
-          Merk
+    <template #custom-section>
+      <UiSeparator class="my-2" />
+      <!-- Inspection Information -->
+      <div>
+        <div class="text-xs font-medium text-muted-foreground mb-1">
+          APK
         </div>
-        <div class="text-sm">
-          {{ vehicle.make }}
+        <div v-if="formattedInspectionDate" class="text-sm mb-1">
+          {{ formattedInspectionDate }}
         </div>
-      </div>
-
-      <div v-if="vehicle.model">
-        <div class="text-xs font-medium text-muted-foreground mb-0.5">
-          Model
-        </div>
-        <div class="text-sm">
-          {{ vehicle.model }}
-        </div>
-      </div>
-
-      <div v-if="vehicle.year">
-        <div class="text-xs font-medium text-muted-foreground mb-0.5">
-          Jaar
-        </div>
-        <div class="text-sm">
-          {{ vehicle.year }}
-        </div>
-      </div>
-
-      <div v-if="vehicle.color">
-        <div class="text-xs font-medium text-muted-foreground mb-0.5">
-          Kleur
-        </div>
-        <div class="text-sm">
-          {{ vehicle.color }}
-        </div>
-      </div>
-
-      <div v-if="vehicle.vin">
-        <div class="text-xs font-medium text-muted-foreground mb-0.5">
-          VIN
-        </div>
-        <div class="text-sm">
-          {{ vehicle.vin }}
-        </div>
-      </div>
-    </div>
-
-    <UiSeparator class="my-2" />
-
-    <!-- Inspection Information -->
-    <div>
-      <div class="text-xs font-medium text-muted-foreground mb-1">
-        APK
-      </div>
-      <div v-if="formattedInspectionDate" class="text-sm mb-1">
-        {{ formattedInspectionDate }}
-      </div>
-      <div v-if="daysToInspectionText" class="space-y-1">
-        <div class="text-sm">
-          {{ daysToInspectionText }}
-        </div>
-        <Progress :model-value="inspectionProgressValue" class="h-2" />
-      </div>
-      <div v-else class="text-sm text-muted-foreground">
-        Geen APK-datum ingesteld
-      </div>
-    </div>
-
-    <UiSeparator class="my-2" />
-
-    <!-- Drivers -->
-    <div>
-      <div class="text-xs font-medium text-muted-foreground mb-2">
-        Bestuurders
-      </div>
-      <div v-if="drivers.length === 0" class="text-sm text-muted-foreground py-2">
-        Geen bestuurders toegewezen
-      </div>
-      <div v-else class="space-y-1">
-        <div
-          v-for="driver in displayedDrivers"
-          :key="driver.id"
-          class="group flex items-center justify-between gap-2 py-1.5 hover:bg-muted/50 rounded transition-colors"
-        >
-          <div class="flex items-center gap-2 flex-1 min-w-0">
-            <Avatar class="size-6 shrink-0">
-              <AvatarFallback class="bg-muted text-xs">
-                <UserIcon class="size-3" />
-              </AvatarFallback>
-            </Avatar>
-            <div class="text-sm truncate">
-              {{ driver.name }}
-            </div>
+        <div v-if="daysToInspectionText" class="space-y-1">
+          <div class="text-sm">
+            {{ daysToInspectionText }}
           </div>
+          <Progress :model-value="inspectionProgressValue" class="h-2" />
         </div>
-        <button
-          v-if="remainingDriversCount > 0"
-          type="button"
-          class="w-full text-left text-xs font-medium text-primary hover:text-primary/80 transition-colors py-2 px-2 rounded-md hover:bg-primary/5 flex items-center gap-1.5 group"
-          @click="handleViewAllDrivers"
-        >
-          <span>+{{ remainingDriversCount }} meer</span>
-          <UsersIcon class="size-3 opacity-60 group-hover:opacity-100 transition-opacity" />
-        </button>
-      </div>
-    </div>
-
-    <UiSeparator class="my-2" />
-
-    <!-- Timestamps -->
-    <div class="space-y-2">
-      <div>
-        <div class="text-xs font-medium text-muted-foreground mb-0.5">
-          Aangemaakt
-        </div>
-        <div class="text-sm">
-          {{ formattedCreatedAt }}
+        <div v-else class="text-sm text-muted-foreground">
+          Geen APK-datum ingesteld
         </div>
       </div>
-      <div>
-        <div class="text-xs font-medium text-muted-foreground mb-0.5">
-          Bijgewerkt
-        </div>
-        <div class="text-sm">
-          {{ formattedUpdatedAt }}
-        </div>
-      </div>
-    </div>
-  </div>
+    </template>
+  </DetailsSidebar>
 </template>

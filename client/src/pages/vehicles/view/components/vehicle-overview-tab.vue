@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import type { IVehicle } from '@/pages/vehicles/models/vehicles'
 
+import DetailsField from '@/components/global-layout/components/details-page/details-field.vue'
+import DetailsSection from '@/components/global-layout/components/details-page/details-section.vue'
 import Badge from '@/components/ui/badge/Badge.vue'
 import { Progress } from '@/components/ui/progress'
 import {
-  BoxIcon,
   CalendarIcon,
   CircleIcon,
   UsersIcon,
@@ -113,114 +114,73 @@ const driversCount = computed(() => {
     </div>
 
     <!-- Vehicle Summary -->
-    <div class="rounded-lg border bg-card p-4 shadow-sm">
-      <div class="text-sm font-semibold mb-4">
-        Voertuiginformatie
-      </div>
+    <DetailsSection title="Voertuiginformatie">
       <div class="grid gap-3 md:grid-cols-2">
-        <div>
-          <div class="text-xs font-medium text-muted-foreground mb-1">
-            Kenteken
-          </div>
-          <div class="text-sm font-medium">
-            {{ vehicle.license_plate }}
-          </div>
-        </div>
-        <div v-if="vehicle.make">
-          <div class="text-xs font-medium text-muted-foreground mb-1">
-            Merk
-          </div>
-          <div class="text-sm">
-            {{ vehicle.make }}
-          </div>
-        </div>
-        <div v-if="vehicle.model">
-          <div class="text-xs font-medium text-muted-foreground mb-1">
-            Model
-          </div>
-          <div class="text-sm">
-            {{ vehicle.model }}
-          </div>
-        </div>
-        <div v-if="vehicle.year">
-          <div class="text-xs font-medium text-muted-foreground mb-1">
-            Jaar
-          </div>
-          <div class="text-sm">
-            {{ vehicle.year }}
-          </div>
-        </div>
-        <div v-if="vehicle.color">
-          <div class="text-xs font-medium text-muted-foreground mb-1">
-            Kleur
-          </div>
-          <div class="text-sm">
-            {{ vehicle.color }}
-          </div>
-        </div>
-        <div v-if="vehicle.vin">
-          <div class="text-xs font-medium text-muted-foreground mb-1">
-            VIN
-          </div>
-          <div class="text-sm">
-            {{ vehicle.vin }}
-          </div>
-        </div>
+        <DetailsField
+          label="Kenteken"
+          :value="vehicle.license_plate"
+        />
+        <DetailsField
+          v-if="vehicle.make"
+          label="Merk"
+          :value="vehicle.make"
+        />
+        <DetailsField
+          v-if="vehicle.model"
+          label="Model"
+          :value="vehicle.model"
+        />
+        <DetailsField
+          v-if="vehicle.year"
+          label="Jaar"
+          :value="vehicle.year"
+        />
+        <DetailsField
+          v-if="vehicle.color"
+          label="Kleur"
+          :value="vehicle.color"
+        />
+        <DetailsField
+          v-if="vehicle.vin"
+          label="VIN"
+          :value="vehicle.vin"
+        />
       </div>
-    </div>
+    </DetailsSection>
 
     <!-- Inspection Status -->
-    <div class="rounded-lg border bg-card p-4 shadow-sm">
-      <div class="text-sm font-semibold mb-4">
-        APK-status
-      </div>
+    <DetailsSection title="APK-status">
       <div class="space-y-2">
-        <div v-if="formattedInspectionDate">
-          <div class="text-xs font-medium text-muted-foreground mb-1">
-            APK-datum
-          </div>
-          <div class="text-sm">
-            {{ formattedInspectionDate }}
-          </div>
-        </div>
+        <DetailsField
+          v-if="formattedInspectionDate"
+          label="APK-datum"
+          :value="formattedInspectionDate"
+        />
         <div v-if="daysToInspectionText">
-          <div class="text-xs font-medium text-muted-foreground mb-1">
-            Dagen tot APK
-          </div>
-          <div class="text-sm mb-1">
-            {{ daysToInspectionText }}
-          </div>
-          <Progress :model-value="inspectionProgressValue" class="h-2" />
+          <DetailsField
+            label="Dagen tot APK"
+            :value="daysToInspectionText"
+          />
+          <Progress :model-value="inspectionProgressValue" class="h-2 mt-1" />
         </div>
         <div v-else class="text-sm text-muted-foreground">
           Geen APK-datum ingesteld
         </div>
       </div>
-    </div>
+    </DetailsSection>
 
     <!-- Timestamps -->
-    <div class="rounded-lg border bg-card p-4 shadow-sm">
-      <div class="text-sm font-semibold mb-4">
-        Systeeminformatie
-      </div>
+    <DetailsSection title="Systeeminformatie">
       <div class="grid gap-3 md:grid-cols-2">
-        <div>
-          <div class="text-xs font-medium text-muted-foreground mb-1">
-            Aangemaakt
-          </div>
-          <div class="text-sm">
-            {{ formattedCreatedAt }}
-          </div>
-        </div>
-        <div>
-          <div class="text-xs font-medium text-muted-foreground mb-1">
-            Bijgewerkt
-          </div>
-          <div class="text-sm">
-            {{ formattedUpdatedAt }}
-          </div>
-        </div>
+        <DetailsField
+          label="Aangemaakt"
+          :value="formattedCreatedAt"
+        />
+        <DetailsField
+          label="Bijgewerkt"
+          :value="formattedUpdatedAt"
+        />
       </div>
-    </div>
+    </DetailsSection>
   </div>
 </template>

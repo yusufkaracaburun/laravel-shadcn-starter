@@ -1,0 +1,204 @@
+<script setup lang="ts">
+import type { HTMLAttributes } from 'vue'
+
+import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import Badge from '@/components/ui/badge/Badge.vue'
+import { cn } from '@/lib/utils'
+import { UserIcon, UsersIcon } from '@/composables/use-icons.composable'
+
+import type {
+  RelatedItem,
+  SidebarField,
+  SidebarStatus,
+  SidebarTimestamps,
+} from './types'
+
+interface Props {
+  title: string
+  subtitle?: string
+  entityId?: string | number
+  status?: SidebarStatus
+  fields?: SidebarField[]
+  relatedItems?: RelatedItem[]
+  relatedItemsLabel?: string
+  relatedItemsEmptyText?: string
+  relatedItemsMaxDisplay?: number
+  showViewAll?: boolean
+  viewAllText?: string
+  timestamps?: SidebarTimestamps
+  onNavigateToTab?: (tab: string) => void
+  class?: HTMLAttributes['class']
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  subtitle: undefined,
+  entityId: undefined,
+  status: undefined,
+  fields: () => [],
+  relatedItems: () => [],
+  relatedItemsLabel: 'Related Items',
+  relatedItemsEmptyText: 'No items',
+  relatedItemsMaxDisplay: 3,
+  showViewAll: false,
+  viewAllText: 'View all',
+  timestamps: undefined,
+  onNavigateToTab: undefined,
+  class: undefined,
+})
+
+const displayedRelatedItems = computed(() => {
+  if (!props.relatedItems || props.relatedItems.length === 0) {
+    return []
+  }
+  return props.relatedItems.slice(0, props.relatedItemsMaxDisplay)
+})
+
+const remainingRelatedItemsCount = computed(() => {
+  if (!props.relatedItems) {
+    return 0
+  }
+  return Math.max(0, props.relatedItems.length - props.relatedItemsMaxDisplay)
+})
+</script>
+
+<template>
+  <aside
+    data-slot="details-sidebar"
+    :class="cn('w-80 border-r bg-background p-3 space-y-2.5 h-full overflow-y-auto', props.class)"
+  >
+    <!-- Header -->
+    <div>
+      <h2 class="text-sm font-semibold mb-1.5">
+        {{ title }}
+      </h2>
+      <slot name="header-content">
+        <div class="text-lg font-bold">
+          <slot name="header-title" />
+        </div>
+        <div
+          v-if="subtitle"
+          class="text-xs text-muted-foreground mt-0.5"
+        >
+          {{ subtitle }}
+        </div>
+      </slot>
+      <slot name="header-extra" />
+    </div>
+
+    <UiSeparator v-if="status || $slots.status || fields.length > 0 || $slots.fields" class="my-2" />
+
+    <!-- Status -->
+    <div v-if="status || $slots.status">
+      <div class="text-xs font-medium text-muted-foreground mb-0.5">
+        Status
+      </div>
+      <slot name="status">
+        <Badge
+          v-if="status"
+          :variant="status.variant || 'default'"
+          :class="status.color || ''"
+        >
+          {{ status.label }}
+        </Badge>
+      </slot>
+      <slot name="status-extra" />
+    </div>
+
+    <UiSeparator v-if="fields.length > 0 || $slots.fields" class="my-2" />
+
+    <!-- Fields -->
+    <div v-if="fields.length > 0 || $slots.fields" class="space-y-2">
+      <template v-for="(field, index) in fields" :key="index">
+        <div v-if="field.value !== null && field.value !== undefined">
+          <div class="text-xs font-medium text-muted-foreground mb-0.5 flex items-center gap-1.5">
+            <component v-if="field.icon" :is="field.icon" class="size-3" />
+            {{ field.label }}
+          </div>
+          <div class="text-sm">
+            {{ field.value }}
+          </div>
+        </div>
+      </template>
+      <slot name="fields" />
+      <slot name="fields-extra" />
+    </div>
+
+    <UiSeparator v-if="$slots.custom-section || relatedItems.length > 0 || $slots.related-items" class="my-2" />
+
+    <!-- Custom Section -->
+    <slot name="custom-section" />
+
+    <UiSeparator v-if="relatedItems.length > 0 || $slots.related-items" class="my-2" />
+
+    <!-- Related Items -->
+    <div v-if="relatedItems.length > 0 || $slots.related-items">
+      <div class="text-xs font-medium text-muted-foreground mb-2">
+        {{ relatedItemsLabel }}
+      </div>
+      <div v-if="relatedItems.length === 0 && !$slots.related-items" class="text-sm text-muted-foreground py-2">
+        {{ relatedItemsEmptyText }}
+      </div>
+      <div v-else class="space-y-1">
+        <div
+          v-for="item in displayedRelatedItems"
+          :key="item.id"
+          class="group flex items-center justify-between gap-2 py-1.5 hover:bg-muted/50 rounded transition-colors"
+          @click="item.onClick?.()"
+        >
+          <div class="flex items-center gap-2 flex-1 min-w-0">
+            <Avatar class="size-6 shrink-0">
+              <AvatarFallback class="bg-muted text-xs">
+                <component v-if="item.icon" :is="item.icon" class="size-3" />
+                <UserIcon v-else class="size-3" />
+              </AvatarFallback>
+            </Avatar>
+            <div class="flex items-center gap-2">
+              <div class="text-sm truncate">
+                {{ item.name }}
+              </div>
+              <component v-if="item.badge" :is="item.badge" />
+            </div>
+          </div>
+        </div>
+        <slot name="related-items" />
+        <button
+          v-if="showViewAll && remainingRelatedItemsCount > 0 && onNavigateToTab"
+          type="button"
+          class="w-full text-left text-xs font-medium text-primary hover:text-primary/80 transition-colors py-2 px-2 rounded-md hover:bg-primary/5 flex items-center gap-1.5 group"
+          @click="onNavigateToTab"
+        >
+          <span>+{{ remainingRelatedItemsCount }} {{ viewAllText }}</span>
+          <UsersIcon class="size-3 opacity-60 group-hover:opacity-100 transition-opacity" />
+        </button>
+      </div>
+      <slot name="related-items-extra" />
+    </div>
+
+    <UiSeparator v-if="timestamps || $slots.timestamps" class="my-2" />
+
+    <!-- Timestamps -->
+    <div v-if="timestamps || $slots.timestamps" class="space-y-2">
+      <slot name="timestamps">
+        <div v-if="timestamps?.created">
+          <div class="text-xs font-medium text-muted-foreground mb-0.5">
+            Aangemaakt
+          </div>
+          <div class="text-sm">
+            {{ timestamps.created }}
+          </div>
+        </div>
+        <div v-if="timestamps?.updated">
+          <div class="text-xs font-medium text-muted-foreground mb-0.5">
+            Bijgewerkt
+          </div>
+          <div class="text-sm">
+            {{ timestamps.updated }}
+          </div>
+        </div>
+      </slot>
+    </div>
+
+    <!-- Default slot for any additional content -->
+    <slot />
+  </aside>
+</template>

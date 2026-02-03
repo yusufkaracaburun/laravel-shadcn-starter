@@ -95,64 +95,64 @@ function handleAddContact() {
     </template>
 
     <template v-if="customer" #sidebar>
-      <CustomerSidebar
-        :customer="customer"
-        @add-contact="handleAddContact"
-      />
+            <CustomerSidebar
+              :customer="customer"
+              @add-contact="handleAddContact"
+            />
     </template>
 
     <template v-if="customer" #tabs>
-      <!-- Tabs and Content -->
-      <div class="flex-1 overflow-auto">
-        <Tabs v-model="activeTab" default-value="overview" class-name="gap-4">
-          <div class="sticky top-0 z-10 bg-background border-b">
-            <ScrollArea>
-              <TabsList
-                class="bg-background rounded-none border-b p-0"
-              >
-                <TabsTrigger
-                  value="overview"
-                  class="bg-background data-[state=active]:border-primary dark:data-[state=active]:border-primary h-full rounded-none border-0 border-b-2 border-transparent data-[state=active]:shadow-none"
-                >
-                  <LayoutGridIcon class="size-3.5" />
-                  <span>Overzicht</span>
-                </TabsTrigger>
-                <TabsTrigger
-                  value="details"
-                  class="bg-background data-[state=active]:border-primary dark:data-[state=active]:border-primary h-full rounded-none border-0 border-b-2 border-transparent data-[state=active]:shadow-none"
-                >
-                  <FileTextIcon class="size-3.5" />
-                  <span>Details</span>
-                </TabsTrigger>
-                <TabsTrigger
-                  value="tasks"
-                  class="bg-background data-[state=active]:border-primary dark:data-[state=active]:border-primary h-full rounded-none border-0 border-b-2 border-transparent data-[state=active]:shadow-none"
-                >
-                  <ListTodoIcon class="size-3.5" />
-                  <span>Taken en notities</span>
-                </TabsTrigger>
-              </TabsList>
-              <ScrollBar orientation="horizontal" />
-            </ScrollArea>
-          </div>
+            <!-- Tabs and Content -->
+            <div class="flex-1 overflow-auto">
+              <Tabs v-model="activeTab" default-value="overview" class-name="gap-4">
+                <div class="sticky top-0 z-10 bg-background border-b">
+                  <ScrollArea>
+                    <TabsList
+                      class="bg-background rounded-none border-b p-0"
+                    >
+                      <TabsTrigger
+                        value="overview"
+                        class="bg-background data-[state=active]:border-primary dark:data-[state=active]:border-primary h-full rounded-none border-0 border-b-2 border-transparent data-[state=active]:shadow-none"
+                      >
+                        <LayoutGridIcon class="size-3.5" />
+                        <span>Overzicht</span>
+                      </TabsTrigger>
+                      <TabsTrigger
+                        value="details"
+                        class="bg-background data-[state=active]:border-primary dark:data-[state=active]:border-primary h-full rounded-none border-0 border-b-2 border-transparent data-[state=active]:shadow-none"
+                      >
+                        <FileTextIcon class="size-3.5" />
+                        <span>Details</span>
+                      </TabsTrigger>
+                      <TabsTrigger
+                        value="tasks"
+                        class="bg-background data-[state=active]:border-primary dark:data-[state=active]:border-primary h-full rounded-none border-0 border-b-2 border-transparent data-[state=active]:shadow-none"
+                      >
+                        <ListTodoIcon class="size-3.5" />
+                        <span>Taken en notities</span>
+                      </TabsTrigger>
+                    </TabsList>
+                    <ScrollBar orientation="horizontal" />
+                  </ScrollArea>
+                </div>
 
-          <div class="p-3">
-            <TabsContent value="overview" class="mt-0">
-              <CustomerOverviewTab :customer="customer" />
-            </TabsContent>
+                <div class="p-3">
+                  <TabsContent value="overview" class="mt-0">
+                    <CustomerOverviewTab :customer="customer" />
+                  </TabsContent>
 
-            <TabsContent value="details" class="mt-0">
-              <CustomerDetailsTab
-                :customer="customer"
-              />
-            </TabsContent>
+                  <TabsContent value="details" class="mt-0">
+                    <CustomerDetailsTab
+                      :customer="customer"
+                    />
+                  </TabsContent>
 
-            <TabsContent value="tasks" class="mt-0">
-              <CustomerTasksTab :customer="customer" />
-            </TabsContent>
-          </div>
-        </Tabs>
-      </div>
-    </template>
+                  <TabsContent value="tasks" class="mt-0">
+                    <CustomerTasksTab :customer="customer" />
+                  </TabsContent>
+                </div>
+              </Tabs>
+        </div>
+      </template>
   </DetailsLayout>
 </template>

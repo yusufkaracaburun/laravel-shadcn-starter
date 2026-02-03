@@ -1,20 +1,11 @@
 <script setup lang="ts">
-import { ref, shallowRef } from 'vue'
+import { ref } from 'vue'
 
 import type { ICustomer } from '@/pages/customers/models/customers'
 
-import { Button } from '@/components/ui/button'
+import DetailsNavbar from '@/components/global-layout/components/details-page/details-navbar.vue'
 import { Dialog, DialogContent } from '@/components/ui/dialog'
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
-import {
-  ArrowDownIcon,
-  DownloadIcon,
   FilePenLineIcon,
   MoreVerticalIcon,
   PlusIcon,
@@ -32,26 +23,59 @@ const emits = defineEmits<{
   (e: 'delete-closed'): void
 }>()
 
-const showComponent = shallowRef<typeof CustomerDelete | null>(null)
-const isDialogOpen = ref(false)
 const isEditDialogOpen = ref(false)
+const isDeleteDialogOpen = ref(false)
 
-type TCommand = 'edit' | 'delete' | 'close'
+const extraMenuItems = [
+  {
+    label: 'Optie 1',
+    icon: MoreVerticalIcon,
+    action: 'extra',
+  },
+  {
+    label: 'Bewerken',
+    icon: FilePenLineIcon,
+    action: 'edit',
+  },
+  {
+    label: 'Verwijderen',
+    icon: Trash2Icon,
+    action: 'delete',
+    variant: 'destructive' as const,
+  },
+]
 
-function handleSelect(command: TCommand) {
-  switch (command) {
-    case 'edit':
-      isEditDialogOpen.value = true
-      break
-    case 'delete':
-      showComponent.value = CustomerDelete
-      isDialogOpen.value = true
-      break
-    case 'close':
-      isDialogOpen.value = false
-      showComponent.value = null
-      break
+const addMenuItems = [
+  {
+    label: 'Nieuwe factuur',
+    icon: PlusIcon,
+    action: 'add-invoice',
+  },
+  {
+    label: 'Nieuwe contactpersoon',
+    icon: PlusIcon,
+    action: 'add-contact',
+  },
+]
+
+function handleAction(action: string) {
+  if (action === 'edit') {
+    isEditDialogOpen.value = true
+  } else if (action === 'delete') {
+    isDeleteDialogOpen.value = true
   }
+}
+
+function handleAdd(action: string) {
+  // Placeholder
+}
+
+function handleEdit() {
+  isEditDialogOpen.value = true
+}
+
+function handleDelete() {
+  isDeleteDialogOpen.value = true
 }
 
 function handleEditClose() {
@@ -60,88 +84,43 @@ function handleEditClose() {
 }
 
 function handleDeleteClose() {
-  handleSelect('close')
+  isDeleteDialogOpen.value = false
   emits('delete-closed')
-}
-
-// Placeholder handlers for dropdown actions
-function handleExport() {
-  // Placeholder
-}
-
-function handleExtra() {
-  // Placeholder
-}
-
-function handleAdd() {
-  // Placeholder
 }
 </script>
 
 <template>
-  <div class="flex items-center gap-2">
-    <DropdownMenu>
-      <DropdownMenuTrigger as-child>
-        <Button variant="outline">
-          Extra
-          <ArrowDownIcon class="ml-2 size-4" />
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent>
-        <DropdownMenuItem @select="handleExtra">
-          <MoreVerticalIcon class="mr-2 size-4" />
-          Optie 1
-        </DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem @select="handleSelect('edit')">
-          <FilePenLineIcon class="mr-2 size-4" />
-          Bewerken
-        </DropdownMenuItem>
-        <DropdownMenuItem variant="destructive" @select="handleSelect('delete')">
-          <Trash2Icon class="mr-2 size-4" />
-          Verwijderen
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
-
-    <DropdownMenu>
-      <DropdownMenuTrigger as-child>
-        <Button variant="default" class="bg-green-600 hover:bg-green-700">
-          Toevoegen
-          <ArrowDownIcon class="ml-2 size-4" />
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent>
-        <DropdownMenuItem @select="handleAdd">
-          <PlusIcon class="mr-2 size-4" />
-          Nieuwe factuur
-        </DropdownMenuItem>
-        <DropdownMenuItem @select="handleAdd">
-          <PlusIcon class="mr-2 size-4" />
-          Nieuwe contactpersoon
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
-  </div>
-
-  <CustomerEditDialog
-    v-if="props.customer"
-    :customer="props.customer"
-    :open="isEditDialogOpen"
-    @update:open="isEditDialogOpen = $event"
-    @close="handleEditClose"
-  />
-
-  <Dialog v-model:open="isDialogOpen" class="print:hidden">
-    <DialogContent
-      v-if="showComponent && props.customer"
-      class="sm:max-w-[425px]"
-    >
-      <CustomerDelete
-        v-if="showComponent === CustomerDelete"
-        :customer="props.customer"
-        @close="handleDeleteClose"
+  <DetailsNavbar
+    :extra-menu-items="extraMenuItems"
+    :add-menu-items="addMenuItems"
+    :entity="customer"
+    @edit="handleEdit"
+    @delete="handleDelete"
+    @action="handleAction"
+    @add="handleAdd"
+  >
+    <template #edit-dialog="{ entity }">
+      <CustomerEditDialog
+        v-if="entity"
+        :customer="entity"
+        :open="isEditDialogOpen"
+        @update:open="isEditDialogOpen = $event"
+        @close="handleEditClose"
       />
-    </DialogContent>
-  </Dialog>
+    </template>
+
+    <template #delete-dialog="{ entity }">
+      <Dialog v-model:open="isDeleteDialogOpen" class="print:hidden">
+        <DialogContent
+          v-if="entity"
+          class="sm:max-w-[425px]"
+        >
+          <CustomerDelete
+            :customer="entity"
+            @close="handleDeleteClose"
+          />
+        </DialogContent>
+      </Dialog>
+    </template>
+  </DetailsNavbar>
 </template>

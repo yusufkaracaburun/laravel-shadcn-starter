@@ -1,13 +1,9 @@
 <script setup lang="ts">
 import type { ICustomer } from '@/pages/customers/models/customers'
 
+import DetailsField from '@/components/global-layout/components/details-page/details-field.vue'
+import DetailsSection from '@/components/global-layout/components/details-page/details-section.vue'
 import Badge from '@/components/ui/badge/Badge.vue'
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
 import {
   Building2Icon,
   CalendarIcon,
@@ -60,189 +56,97 @@ const formattedAddress = computed(() => {
 <template>
   <div class="space-y-2">
     <!-- Basic Information -->
-    <Card class="border">
-      <CardHeader class="pb-1.5 pt-2.5 px-4">
-        <CardTitle class="text-sm font-semibold">
-          Basisinformatie
-        </CardTitle>
-      </CardHeader>
-      <CardContent class="px-4 pb-2.5">
-        <div class="grid gap-2.5 md:grid-cols-2">
-          <div>
-            <div class="text-xs font-medium text-muted-foreground mb-0.5">
-              Naam
-            </div>
-            <div class="text-sm">
-              {{ customer.name }}
-            </div>
-          </div>
-          <div>
-            <div class="text-xs font-medium text-muted-foreground mb-0.5">
-              Klantnummer
-            </div>
-            <div class="text-sm">
-              {{ customer.number }}
-            </div>
-          </div>
-          <div>
-            <div class="text-xs font-medium text-muted-foreground mb-0.5">
-              Type
-            </div>
-            <div class="text-sm">
-              <Badge
-                :variant="customer.type === 'business' ? 'default' : 'secondary'"
-                class="text-xs"
-              >
-                {{ customerTypeLabel }}
-              </Badge>
-            </div>
-          </div>
-          <div>
-            <div class="text-xs font-medium text-muted-foreground mb-0.5">
-              Status
-            </div>
-            <div class="text-sm">
-              <Badge variant="secondary" class="text-xs">
-                {{ customerStatusLabel }}
-              </Badge>
-            </div>
-          </div>
-        </div>
-      </CardContent>
-    </Card>
+    <DetailsSection title="Basisinformatie">
+      <div class="grid gap-2.5 md:grid-cols-2">
+        <DetailsField label="Naam" :value="customer.name" />
+        <DetailsField label="Klantnummer" :value="customer.number" />
+        <DetailsField label="Type">
+          <Badge
+            :variant="customer.type === 'business' ? 'default' : 'secondary'"
+            class="text-xs"
+          >
+            {{ customerTypeLabel }}
+          </Badge>
+        </DetailsField>
+        <DetailsField label="Status">
+          <Badge variant="secondary" class="text-xs">
+            {{ customerStatusLabel }}
+          </Badge>
+        </DetailsField>
+      </div>
+    </DetailsSection>
 
     <!-- Contact Information -->
-    <Card class="border">
-      <CardHeader class="pb-1.5 pt-2.5 px-4">
-        <CardTitle class="text-sm font-semibold">
-          Contactgegevens
-        </CardTitle>
-      </CardHeader>
-      <CardContent class="px-4 pb-2.5">
-        <div class="grid gap-2.5 md:grid-cols-2">
-          <div v-if="customer.email">
-            <div
-              class="text-xs font-medium text-muted-foreground mb-0.5 flex items-center gap-1.5"
-            >
-              <MailIcon class="size-3" />
-              E-mailadres
-            </div>
-            <div class="text-sm">
-              {{ customer.email }}
-            </div>
+    <DetailsSection title="Contactgegevens">
+      <div class="grid gap-2.5 md:grid-cols-2">
+        <DetailsField
+          v-if="customer.email"
+          label="E-mailadres"
+          :value="customer.email"
+          :icon="MailIcon"
+        />
+        <DetailsField
+          v-if="customer.phone"
+          label="Telefoonnummer"
+          :value="customer.phone"
+          :icon="PhoneIcon"
+        />
+        <div v-if="formattedAddress.length > 0" class="md:col-span-2">
+          <div class="text-xs font-medium text-muted-foreground mb-0.5">
+            Adres
           </div>
-          <div v-if="customer.phone">
+          <div class="text-sm space-y-0.5">
             <div
-              class="text-xs font-medium text-muted-foreground mb-0.5 flex items-center gap-1.5"
+              v-for="(line, index) in formattedAddress"
+              :key="index"
             >
-              <PhoneIcon class="size-3" />
-              Telefoonnummer
-            </div>
-            <div class="text-sm">
-              {{ customer.phone }}
-            </div>
-          </div>
-          <div v-if="formattedAddress.length > 0" class="md:col-span-2">
-            <div class="text-xs font-medium text-muted-foreground mb-0.5">
-              Adres
-            </div>
-            <div class="text-sm space-y-0.5">
-              <div
-                v-for="(line, index) in formattedAddress"
-                :key="index"
-              >
-                {{ line }}
-              </div>
+              {{ line }}
             </div>
           </div>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </DetailsSection>
 
     <!-- Business Information -->
-    <Card
+    <DetailsSection
       v-if="customer.type === 'business'"
-      class="border"
+      title="Bedrijfsgegevens"
     >
-      <CardHeader class="pb-1.5 pt-2.5 px-4">
-        <CardTitle class="text-sm font-semibold">
-          Bedrijfsgegevens
-        </CardTitle>
-      </CardHeader>
-      <CardContent class="px-4 pb-2.5">
-        <div class="grid gap-2.5 md:grid-cols-2">
-          <div v-if="customer.kvk_number">
-            <div
-              class="text-xs font-medium text-muted-foreground mb-0.5 flex items-center gap-1.5"
-            >
-              <Building2Icon class="size-3" />
-              KVK-nummer
-            </div>
-            <div class="text-sm">
-              {{ customer.kvk_number }}
-            </div>
-          </div>
-          <div v-if="customer.vat_number">
-            <div class="text-xs font-medium text-muted-foreground mb-0.5">
-              Btw-identificatienummer
-            </div>
-            <div class="text-sm">
-              {{ customer.vat_number }}
-            </div>
-          </div>
-          <div v-if="customer.iban_number">
-            <div class="text-xs font-medium text-muted-foreground mb-0.5">
-              IBAN-nummer
-            </div>
-            <div class="text-sm">
-              {{ customer.iban_number }}
-            </div>
-          </div>
-        </div>
-      </CardContent>
-    </Card>
+      <div class="grid gap-2.5 md:grid-cols-2">
+        <DetailsField
+          v-if="customer.kvk_number"
+          label="KVK-nummer"
+          :value="customer.kvk_number"
+          :icon="Building2Icon"
+        />
+        <DetailsField
+          v-if="customer.vat_number"
+          label="Btw-identificatienummer"
+          :value="customer.vat_number"
+        />
+        <DetailsField
+          v-if="customer.iban_number"
+          label="IBAN-nummer"
+          :value="customer.iban_number"
+        />
+      </div>
+    </DetailsSection>
 
     <!-- Timestamps -->
-    <Card class="border">
-      <CardHeader class="pb-1.5 pt-2.5 px-4">
-        <CardTitle class="text-sm font-semibold">
-          Systeeminformatie
-        </CardTitle>
-      </CardHeader>
-      <CardContent class="px-4 pb-2.5">
-        <div class="grid gap-2.5 md:grid-cols-2">
-          <div>
-            <div
-              class="text-xs font-medium text-muted-foreground mb-0.5 flex items-center gap-1.5"
-            >
-              <CalendarIcon class="size-3" />
-              Aangemaakt op
-            </div>
-            <div class="text-sm">
-              {{ customer.created_at }}
-            </div>
-          </div>
-          <div>
-            <div
-              class="text-xs font-medium text-muted-foreground mb-0.5 flex items-center gap-1.5"
-            >
-              <CalendarIcon class="size-3" />
-              Bijgewerkt op
-            </div>
-            <div class="text-sm">
-              {{ customer.updated_at }}
-            </div>
-          </div>
-          <div>
-            <div class="text-xs font-medium text-muted-foreground mb-0.5">
-              Klant ID
-            </div>
-            <div class="text-sm">
-              #{{ customer.id }}
-            </div>
-          </div>
-        </div>
-      </CardContent>
-    </Card>
+    <DetailsSection title="Systeeminformatie">
+      <div class="grid gap-2.5 md:grid-cols-2">
+        <DetailsField
+          label="Aangemaakt op"
+          :value="customer.created_at"
+          :icon="CalendarIcon"
+        />
+        <DetailsField
+          label="Bijgewerkt op"
+          :value="customer.updated_at"
+          :icon="CalendarIcon"
+        />
+        <DetailsField label="Klant ID" :value="`#${customer.id}`" />
+      </div>
+    </DetailsSection>
   </div>
 </template>

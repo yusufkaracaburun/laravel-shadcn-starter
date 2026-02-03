@@ -1,13 +1,9 @@
 <script setup lang="ts">
 import type { IVehicle } from '@/pages/vehicles/models/vehicles'
 
+import DetailsField from '@/components/global-layout/components/details-page/details-field.vue'
+import DetailsSection from '@/components/global-layout/components/details-page/details-section.vue'
 import Badge from '@/components/ui/badge/Badge.vue'
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
 import { Progress } from '@/components/ui/progress'
 import {
   CalendarIcon,
@@ -57,169 +53,89 @@ const daysToInspectionText = computed(() => {
 <template>
   <div class="space-y-2">
     <!-- Basic Information -->
-    <Card class="border">
-      <CardHeader class="pb-1.5 pt-2.5 px-4">
-        <CardTitle class="text-sm font-semibold">
-          Basisinformatie
-        </CardTitle>
-      </CardHeader>
-      <CardContent class="px-4 pb-2.5">
-        <div class="grid gap-2.5 md:grid-cols-2">
-          <div>
-            <div class="text-xs font-medium text-muted-foreground mb-0.5">
-              Kenteken
-            </div>
-            <div class="text-sm">
-              {{ vehicle.license_plate }}
-            </div>
-          </div>
-          <div>
-            <div class="text-xs font-medium text-muted-foreground mb-0.5">
-              Status
-            </div>
-            <div class="text-sm">
-              <!-- TODO: Implement inline status change
-                  - Add click handler to status badge
-                  - Open DropdownMenu with status options from statuses data (active, inactive, maintenance)
-                  - Call updateVehicle mutation with new status
-                  - Show loading state during update
-                  - Handle errors appropriately
-                  - Refresh vehicle data after successful update
-              -->
-              <Badge
-                v-if="vehicle.status"
-                :variant="getStatusVariant(vehicle.status)"
-                :class="getStatusInfo(vehicle.status)?.color || ''"
-              >
-                {{ getStatusInfo(vehicle.status)?.label || vehicle.status }}
-              </Badge>
-              <span v-else class="text-sm font-medium">Onbekend</span>
-            </div>
-          </div>
-          <div v-if="vehicle.make">
-            <div class="text-xs font-medium text-muted-foreground mb-0.5">
-              Merk
-            </div>
-            <div class="text-sm">
-              {{ vehicle.make }}
-            </div>
-          </div>
-          <div v-if="vehicle.model">
-            <div class="text-xs font-medium text-muted-foreground mb-0.5">
-              Model
-            </div>
-            <div class="text-sm">
-              {{ vehicle.model }}
-            </div>
-          </div>
-          <div v-if="vehicle.year">
-            <div class="text-xs font-medium text-muted-foreground mb-0.5">
-              Jaar
-            </div>
-            <div class="text-sm">
-              {{ vehicle.year }}
-            </div>
-          </div>
-          <div v-if="vehicle.color">
-            <div class="text-xs font-medium text-muted-foreground mb-0.5">
-              Kleur
-            </div>
-            <div class="text-sm">
-              {{ vehicle.color }}
-            </div>
-          </div>
-          <div v-if="vehicle.vin" class="md:col-span-2">
-            <div class="text-xs font-medium text-muted-foreground mb-0.5">
-              VIN
-            </div>
-            <div class="text-sm">
-              {{ vehicle.vin }}
-            </div>
-          </div>
-        </div>
-      </CardContent>
-    </Card>
+    <DetailsSection title="Basisinformatie">
+      <div class="grid gap-2.5 md:grid-cols-2">
+        <DetailsField label="Kenteken" :value="vehicle.license_plate" />
+        <DetailsField label="Status">
+          <!-- TODO: Implement inline status change -->
+          <Badge
+            v-if="vehicle.status"
+            :variant="getStatusVariant(vehicle.status)"
+            :class="getStatusInfo(vehicle.status)?.color || ''"
+          >
+            {{ getStatusInfo(vehicle.status)?.label || vehicle.status }}
+          </Badge>
+          <span v-else class="text-sm font-medium">Onbekend</span>
+        </DetailsField>
+        <DetailsField
+          v-if="vehicle.make"
+          label="Merk"
+          :value="vehicle.make"
+        />
+        <DetailsField
+          v-if="vehicle.model"
+          label="Model"
+          :value="vehicle.model"
+        />
+        <DetailsField
+          v-if="vehicle.year"
+          label="Jaar"
+          :value="vehicle.year"
+        />
+        <DetailsField
+          v-if="vehicle.color"
+          label="Kleur"
+          :value="vehicle.color"
+        />
+        <DetailsField
+          v-if="vehicle.vin"
+          label="VIN"
+          :value="vehicle.vin"
+          :span="2"
+        />
+      </div>
+    </DetailsSection>
 
     <!-- Inspection Information -->
-    <Card class="border">
-      <CardHeader class="pb-1.5 pt-2.5 px-4">
-        <CardTitle class="text-sm font-semibold">
-          APK-informatie
-        </CardTitle>
-      </CardHeader>
-      <CardContent class="px-4 pb-2.5">
-        <div class="grid gap-2.5 md:grid-cols-2">
-          <div v-if="formattedInspectionDate">
-            <div
-              class="text-xs font-medium text-muted-foreground mb-0.5 flex items-center gap-1.5"
-            >
-              <CalendarIcon class="size-3" />
-              APK-datum
-            </div>
-            <div class="text-sm">
-              {{ formattedInspectionDate }}
-            </div>
-          </div>
-          <div v-if="daysToInspectionText">
-            <div class="text-xs font-medium text-muted-foreground mb-0.5">
-              Dagen tot APK
-            </div>
-            <div class="text-sm mb-1">
-              {{ daysToInspectionText }}
-            </div>
-            <Progress :model-value="inspectionProgressValue" class="h-2" />
-          </div>
-          <div
-            v-if="!formattedInspectionDate && !daysToInspectionText"
-            class="md:col-span-2 text-sm text-muted-foreground"
-          >
-            Geen APK-datum ingesteld
-          </div>
+    <DetailsSection title="APK-informatie">
+      <div class="grid gap-2.5 md:grid-cols-2">
+        <DetailsField
+          v-if="formattedInspectionDate"
+          label="APK-datum"
+          :value="formattedInspectionDate"
+          :icon="CalendarIcon"
+        />
+        <div v-if="daysToInspectionText">
+          <DetailsField
+            label="Dagen tot APK"
+            :value="daysToInspectionText"
+          />
+          <Progress :model-value="inspectionProgressValue" class="h-2 mt-1" />
         </div>
-      </CardContent>
-    </Card>
+        <div
+          v-if="!formattedInspectionDate && !daysToInspectionText"
+          class="md:col-span-2 text-sm text-muted-foreground"
+        >
+          Geen APK-datum ingesteld
+        </div>
+      </div>
+    </DetailsSection>
 
     <!-- System Information -->
-    <Card class="border">
-      <CardHeader class="pb-1.5 pt-2.5 px-4">
-        <CardTitle class="text-sm font-semibold">
-          Systeeminformatie
-        </CardTitle>
-      </CardHeader>
-      <CardContent class="px-4 pb-2.5">
-        <div class="grid gap-2.5 md:grid-cols-2">
-          <div>
-            <div
-              class="text-xs font-medium text-muted-foreground mb-0.5 flex items-center gap-1.5"
-            >
-              <CalendarIcon class="size-3" />
-              Aangemaakt op
-            </div>
-            <div class="text-sm">
-              {{ formattedCreatedAt }}
-            </div>
-          </div>
-          <div>
-            <div
-              class="text-xs font-medium text-muted-foreground mb-0.5 flex items-center gap-1.5"
-            >
-              <CalendarIcon class="size-3" />
-              Bijgewerkt op
-            </div>
-            <div class="text-sm">
-              {{ formattedUpdatedAt }}
-            </div>
-          </div>
-          <div>
-            <div class="text-xs font-medium text-muted-foreground mb-0.5">
-              Voertuig ID
-            </div>
-            <div class="text-sm">
-              #{{ vehicle.id }}
-            </div>
-          </div>
-        </div>
-      </CardContent>
-    </Card>
+    <DetailsSection title="Systeeminformatie">
+      <div class="grid gap-2.5 md:grid-cols-2">
+        <DetailsField
+          label="Aangemaakt op"
+          :value="formattedCreatedAt"
+          :icon="CalendarIcon"
+        />
+        <DetailsField
+          label="Bijgewerkt op"
+          :value="formattedUpdatedAt"
+          :icon="CalendarIcon"
+        />
+        <DetailsField label="Voertuig ID" :value="`#${vehicle.id}`" />
+      </div>
+    </DetailsSection>
   </div>
 </template>
