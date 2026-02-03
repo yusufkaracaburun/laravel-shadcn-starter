@@ -3,7 +3,7 @@ import { computed, ref } from 'vue'
 
 import type { IVehicle } from '@/pages/vehicles/models/vehicles'
 
-import Page from '@/components/global-layout/basic-page-with-sidebar.vue'
+import Page from '@/components/global-layout/index-layout.vue'
 import { useVehicles } from '@/pages/vehicles/composables/use-vehicles.composable'
 
 import { getVehicleColumns } from './components/columns'
@@ -43,6 +43,7 @@ const hasSelectedVehicle = computed(() => selectedVehicle.value !== null)
     description="Manage your fleet of vehicles"
     sticky
     data-testid="vehicles_page"
+    @close-sidebar="handleCloseSidebar"
   >
     <template #actions>
       <VehicleCreate />
