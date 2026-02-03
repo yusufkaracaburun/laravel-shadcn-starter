@@ -5,6 +5,7 @@ import {
   Sheet,
   SheetContent,
   SheetDescription,
+  SheetFooter,
   SheetHeader,
   SheetTitle,
 } from '@/components/ui/sheet'
@@ -30,6 +31,7 @@ const emit = defineEmits<{
 const slots = defineSlots<{
   default?: () => any
   header?: () => any
+  footer?: () => any
 }>()
 
 const sheetOpen = computed({
@@ -61,6 +63,9 @@ const sheetOpen = computed({
           <slot />
         </div>
       </div>
+      <SheetFooter v-if="slots.footer">
+        <slot name="footer" />
+      </SheetFooter>
     </SheetContent>
   </Sheet>
 </template>
