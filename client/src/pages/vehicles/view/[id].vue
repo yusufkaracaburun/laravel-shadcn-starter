@@ -8,7 +8,7 @@ import { computed, onMounted, ref } from 'vue'
 
 import type { IVehicle } from '@/pages/vehicles/models/vehicles'
 
-import Page from '@/components/global-layout/basic-page.vue'
+import DetailsLayout from '@/components/global-layout/details-layout.vue'
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import {
@@ -24,7 +24,6 @@ import VehicleDriversTab from './components/vehicle-drivers-tab.vue'
 import VehicleNavbar from './components/vehicle-navbar.vue'
 import VehicleOverviewTab from './components/vehicle-overview-tab.vue'
 import VehicleSidebar from './components/vehicle-sidebar.vue'
-import VehicleViewLayout from './components/vehicle-view-layout.vue'
 
 // Composables
 const {
@@ -74,7 +73,15 @@ function handleDeleteClosed() {
 </script>
 
 <template>
-  <Page :title="pageTitle" :description="pageDescription">
+  <DetailsLayout
+    :title="pageTitle"
+    :description="pageDescription"
+    :is-loading="isLoadingVehicleById"
+    :is-error="isErrorVehicleById"
+    :error-object="errorVehicleById"
+    :on-retry="() => fetchVehicleByIdData(vehicleIncludes)"
+    error-entity-name="Vehicle"
+  >
     <template #actions>
       <VehicleNavbar
         v-if="vehicle"
@@ -85,84 +92,74 @@ function handleDeleteClosed() {
       />
     </template>
 
-    <VehicleViewLayout
-      :is-loading="isLoadingVehicleById"
-      :is-error="isErrorVehicleById"
-      :error-object="errorVehicleById"
-      :on-retry="() => fetchVehicleByIdData(vehicleIncludes)"
-    >
-      <template v-if="vehicle">
-        <div class="flex h-full gap-3">
-          <!-- Left Sidebar -->
-          <div class="shrink-0">
-            <VehicleSidebar :vehicle="vehicle" />
+    <template v-if="vehicle" #sidebar>
+      <VehicleSidebar
+        :vehicle="vehicle"
+        @navigate-to-tab="activeTab = $event"
+      />
+    </template>
+
+    <template v-if="vehicle" #tabs>
+      <!-- Tabs and Content -->
+      <div class="flex-1 overflow-auto">
+        <Tabs v-model="activeTab" default-value="overview" class-name="gap-4">
+          <div class="sticky top-0 z-10 bg-background border-b">
+            <ScrollArea>
+              <TabsList
+                class="bg-background rounded-none border-b p-0"
+              >
+                <TabsTrigger
+                  value="overview"
+                  class="bg-background data-[state=active]:border-primary dark:data-[state=active]:border-primary h-full rounded-none border-0 border-b-2 border-transparent data-[state=active]:shadow-none"
+                >
+                  <LayoutGridIcon class="size-3.5" />
+                  <span>Overzicht</span>
+                </TabsTrigger>
+                <TabsTrigger
+                  value="details"
+                  class="bg-background data-[state=active]:border-primary dark:data-[state=active]:border-primary h-full rounded-none border-0 border-b-2 border-transparent data-[state=active]:shadow-none"
+                >
+                  <FileTextIcon class="size-3.5" />
+                  <span>Details</span>
+                </TabsTrigger>
+                <TabsTrigger
+                  value="drivers"
+                  class="bg-background data-[state=active]:border-primary dark:data-[state=active]:border-primary h-full rounded-none border-0 border-b-2 border-transparent data-[state=active]:shadow-none"
+                >
+                  <UsersIcon class="size-3.5" />
+                  <span>Drivers</span>
+                </TabsTrigger>
+                <TabsTrigger
+                  value="documents"
+                  class="bg-background data-[state=active]:border-primary dark:data-[state=active]:border-primary h-full rounded-none border-0 border-b-2 border-transparent data-[state=active]:shadow-none"
+                >
+                  <FileTextIcon class="size-3.5" />
+                  <span>Documents</span>
+                </TabsTrigger>
+              </TabsList>
+              <ScrollBar orientation="horizontal" />
+            </ScrollArea>
           </div>
 
-          <!-- Right Main Panel -->
-          <div class="flex-1 flex flex-col min-w-0">
-            <!-- Tabs and Content -->
-            <div class="flex-1 overflow-auto">
-              <Tabs v-model="activeTab" default-value="overview" class-name="gap-4">
-                <div class="sticky top-0 z-10 bg-background border-b">
-                  <ScrollArea>
-                    <TabsList
-                      class="bg-background rounded-none border-b p-0"
-                    >
-                      <TabsTrigger
-                        value="overview"
-                        class="bg-background data-[state=active]:border-primary dark:data-[state=active]:border-primary h-full rounded-none border-0 border-b-2 border-transparent data-[state=active]:shadow-none"
-                      >
-                        <LayoutGridIcon class="size-3.5" />
-                        <span>Overzicht</span>
-                      </TabsTrigger>
-                      <TabsTrigger
-                        value="details"
-                        class="bg-background data-[state=active]:border-primary dark:data-[state=active]:border-primary h-full rounded-none border-0 border-b-2 border-transparent data-[state=active]:shadow-none"
-                      >
-                        <FileTextIcon class="size-3.5" />
-                        <span>Details</span>
-                      </TabsTrigger>
-                      <TabsTrigger
-                        value="drivers"
-                        class="bg-background data-[state=active]:border-primary dark:data-[state=active]:border-primary h-full rounded-none border-0 border-b-2 border-transparent data-[state=active]:shadow-none"
-                      >
-                        <UsersIcon class="size-3.5" />
-                        <span>Drivers</span>
-                      </TabsTrigger>
-                      <TabsTrigger
-                        value="documents"
-                        class="bg-background data-[state=active]:border-primary dark:data-[state=active]:border-primary h-full rounded-none border-0 border-b-2 border-transparent data-[state=active]:shadow-none"
-                      >
-                        <FileTextIcon class="size-3.5" />
-                        <span>Documents</span>
-                      </TabsTrigger>
-                    </TabsList>
-                    <ScrollBar orientation="horizontal" />
-                  </ScrollArea>
-                </div>
+          <div class="p-3">
+            <TabsContent value="overview" class="mt-0">
+              <VehicleOverviewTab :vehicle="vehicle" />
+            </TabsContent>
 
-                <div class="p-3">
-                  <TabsContent value="overview" class="mt-0">
-                    <VehicleOverviewTab :vehicle="vehicle" />
-                  </TabsContent>
+            <TabsContent value="details" class="mt-0">
+              <VehicleDetailsTab :vehicle="vehicle" />
+            </TabsContent>
 
-                  <TabsContent value="details" class="mt-0">
-                    <VehicleDetailsTab :vehicle="vehicle" />
-                  </TabsContent>
+            <TabsContent value="drivers" class="mt-0">
+              <VehicleDriversTab :vehicle="vehicle" />
+            </TabsContent>
 
-                  <TabsContent value="drivers" class="mt-0">
-                    <VehicleDriversTab :vehicle="vehicle" />
-                  </TabsContent>
-
-                  <TabsContent value="documents" class="mt-0">
-                    <VehicleDocumentsTab :vehicle="vehicle" />
-                  </TabsContent>
-                </div>
-              </Tabs>
-            </div>
+            <TabsContent value="documents" class="mt-0">
+              <VehicleDocumentsTab :vehicle="vehicle" />
+            </TabsContent>
           </div>
-        </div>
-      </template>
-    </VehicleViewLayout>
-  </Page>
+        </Tabs>
+      </div>
+    </template>
+  </DetailsLayout>
 </template>

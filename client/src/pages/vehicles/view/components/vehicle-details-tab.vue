@@ -10,13 +10,10 @@ import {
 } from '@/components/ui/card'
 import { Progress } from '@/components/ui/progress'
 import {
-  BoxIcon,
   CalendarIcon,
-  CircleIcon,
 } from '@/composables/use-icons.composable'
-import { formatDate } from '@/utils/date'
-
 import { useVehicleStatus } from '@/pages/vehicles/composables/use-vehicle-status.composable'
+import { formatDate } from '@/utils/date'
 
 interface Props {
   vehicle: IVehicle
@@ -53,7 +50,7 @@ const daysToInspectionText = computed(() => {
   ) {
     return null
   }
-  return `${props.vehicle.days_to_inspection} Days to go`
+  return `${props.vehicle.days_to_inspection} dagen te gaan`
 })
 </script>
 
@@ -70,7 +67,7 @@ const daysToInspectionText = computed(() => {
         <div class="grid gap-2.5 md:grid-cols-2">
           <div>
             <div class="text-xs font-medium text-muted-foreground mb-0.5">
-              License Plate
+              Kenteken
             </div>
             <div class="text-sm">
               {{ vehicle.license_plate }}
@@ -96,12 +93,12 @@ const daysToInspectionText = computed(() => {
               >
                 {{ getStatusInfo(vehicle.status)?.label || vehicle.status }}
               </Badge>
-              <span v-else class="text-sm font-medium">Unknown</span>
+              <span v-else class="text-sm font-medium">Onbekend</span>
             </div>
           </div>
           <div v-if="vehicle.make">
             <div class="text-xs font-medium text-muted-foreground mb-0.5">
-              Make
+              Merk
             </div>
             <div class="text-sm">
               {{ vehicle.make }}
@@ -117,7 +114,7 @@ const daysToInspectionText = computed(() => {
           </div>
           <div v-if="vehicle.year">
             <div class="text-xs font-medium text-muted-foreground mb-0.5">
-              Year
+              Jaar
             </div>
             <div class="text-sm">
               {{ vehicle.year }}
@@ -125,7 +122,7 @@ const daysToInspectionText = computed(() => {
           </div>
           <div v-if="vehicle.color">
             <div class="text-xs font-medium text-muted-foreground mb-0.5">
-              Color
+              Kleur
             </div>
             <div class="text-sm">
               {{ vehicle.color }}
@@ -147,7 +144,7 @@ const daysToInspectionText = computed(() => {
     <Card class="border">
       <CardHeader class="pb-1.5 pt-2.5 px-4">
         <CardTitle class="text-sm font-semibold">
-          Inspection Information
+          APK-informatie
         </CardTitle>
       </CardHeader>
       <CardContent class="px-4 pb-2.5">
@@ -157,7 +154,7 @@ const daysToInspectionText = computed(() => {
               class="text-xs font-medium text-muted-foreground mb-0.5 flex items-center gap-1.5"
             >
               <CalendarIcon class="size-3" />
-              Inspection Date
+              APK-datum
             </div>
             <div class="text-sm">
               {{ formattedInspectionDate }}
@@ -165,7 +162,7 @@ const daysToInspectionText = computed(() => {
           </div>
           <div v-if="daysToInspectionText">
             <div class="text-xs font-medium text-muted-foreground mb-0.5">
-              Days to Inspection
+              Dagen tot APK
             </div>
             <div class="text-sm mb-1">
               {{ daysToInspectionText }}
@@ -176,7 +173,7 @@ const daysToInspectionText = computed(() => {
             v-if="!formattedInspectionDate && !daysToInspectionText"
             class="md:col-span-2 text-sm text-muted-foreground"
           >
-            No inspection date set
+            Geen APK-datum ingesteld
           </div>
         </div>
       </CardContent>
@@ -215,7 +212,7 @@ const daysToInspectionText = computed(() => {
           </div>
           <div>
             <div class="text-xs font-medium text-muted-foreground mb-0.5">
-              Vehicle ID
+              Voertuig ID
             </div>
             <div class="text-sm">
               #{{ vehicle.id }}

@@ -48,7 +48,7 @@ const daysToInspectionText = computed(() => {
   ) {
     return null
   }
-  return `${props.vehicle.days_to_inspection} Days to go`
+  return `${props.vehicle.days_to_inspection} dagen te gaan`
 })
 
 const driversCount = computed(() => {
@@ -60,55 +60,67 @@ const driversCount = computed(() => {
   <div class="space-y-3">
     <!-- Quick Stats -->
     <div class="grid gap-3 md:grid-cols-2">
-      <div class="rounded-lg border p-3">
-        <div class="flex items-center gap-2 mb-2">
-          <UsersIcon class="size-4 text-muted-foreground" />
-          <div class="text-xs font-medium text-muted-foreground">
-            Assigned Drivers
+      <div class="group relative overflow-hidden rounded-lg border bg-card p-4 shadow-sm transition-all hover:shadow-md">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2.5">
+            <div class="rounded-md bg-primary/10 p-2">
+              <CircleIcon class="size-4 text-primary" />
+            </div>
+            <div>
+              <div class="text-xs font-medium text-muted-foreground">
+                Status
+              </div>
+              <div class="mt-0.5">
+                <!-- TODO: Implement inline status change
+                    - Add click handler to status badge
+                    - Open DropdownMenu with status options from statuses data (active, inactive, maintenance)
+                    - Call updateVehicle mutation with new status
+                    - Show loading state during update
+                    - Handle errors appropriately
+                    - Refresh vehicle data after successful update
+                -->
+                <Badge
+                  v-if="vehicle.status"
+                  :variant="getStatusVariant(vehicle.status)"
+                  :class="getStatusInfo(vehicle.status)?.color || ''"
+                >
+                  {{ getStatusInfo(vehicle.status)?.label || vehicle.status }}
+                </Badge>
+                <span v-else class="text-sm font-medium">Onbekend</span>
+              </div>
+            </div>
           </div>
-        </div>
-        <div class="text-2xl font-bold">
-          {{ driversCount }}
         </div>
       </div>
 
-      <div class="rounded-lg border p-3">
-        <div class="flex items-center gap-2 mb-2">
-          <CircleIcon class="size-4 text-muted-foreground" />
-          <div class="text-xs font-medium text-muted-foreground">
-            Status
+      <div class="group relative overflow-hidden rounded-lg border bg-card p-4 shadow-sm transition-all hover:shadow-md">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2.5">
+            <div class="rounded-md bg-blue-500/10 p-2">
+              <UsersIcon class="size-4 text-blue-600 dark:text-blue-400" />
+            </div>
+            <div>
+              <div class="text-xs font-medium text-muted-foreground">
+                Bestuurders
+              </div>
+              <div class="mt-0.5 text-2xl font-bold tracking-tight">
+                {{ driversCount }}
+              </div>
+            </div>
           </div>
-        </div>
-        <div>
-          <!-- TODO: Implement inline status change
-              - Add click handler to status badge
-              - Open DropdownMenu with status options from statuses data (active, inactive, maintenance)
-              - Call updateVehicle mutation with new status
-              - Show loading state during update
-              - Handle errors appropriately
-              - Refresh vehicle data after successful update
-          -->
-          <Badge
-            v-if="vehicle.status"
-            :variant="getStatusVariant(vehicle.status)"
-            :class="getStatusInfo(vehicle.status)?.color || ''"
-          >
-            {{ getStatusInfo(vehicle.status)?.label || vehicle.status }}
-          </Badge>
-          <span v-else class="text-sm font-medium">Unknown</span>
         </div>
       </div>
     </div>
 
     <!-- Vehicle Summary -->
-    <div class="rounded-lg border p-3">
-      <div class="text-sm font-semibold mb-3">
-        Vehicle Information
+    <div class="rounded-lg border bg-card p-4 shadow-sm">
+      <div class="text-sm font-semibold mb-4">
+        Voertuiginformatie
       </div>
       <div class="grid gap-3 md:grid-cols-2">
         <div>
           <div class="text-xs font-medium text-muted-foreground mb-1">
-            License Plate
+            Kenteken
           </div>
           <div class="text-sm font-medium">
             {{ vehicle.license_plate }}
@@ -116,7 +128,7 @@ const driversCount = computed(() => {
         </div>
         <div v-if="vehicle.make">
           <div class="text-xs font-medium text-muted-foreground mb-1">
-            Make
+            Merk
           </div>
           <div class="text-sm">
             {{ vehicle.make }}
@@ -132,7 +144,7 @@ const driversCount = computed(() => {
         </div>
         <div v-if="vehicle.year">
           <div class="text-xs font-medium text-muted-foreground mb-1">
-            Year
+            Jaar
           </div>
           <div class="text-sm">
             {{ vehicle.year }}
@@ -140,7 +152,7 @@ const driversCount = computed(() => {
         </div>
         <div v-if="vehicle.color">
           <div class="text-xs font-medium text-muted-foreground mb-1">
-            Color
+            Kleur
           </div>
           <div class="text-sm">
             {{ vehicle.color }}
@@ -158,14 +170,14 @@ const driversCount = computed(() => {
     </div>
 
     <!-- Inspection Status -->
-    <div class="rounded-lg border p-3">
-      <div class="text-sm font-semibold mb-3">
-        Inspection Status
+    <div class="rounded-lg border bg-card p-4 shadow-sm">
+      <div class="text-sm font-semibold mb-4">
+        APK-status
       </div>
       <div class="space-y-2">
         <div v-if="formattedInspectionDate">
           <div class="text-xs font-medium text-muted-foreground mb-1">
-            Inspection Date
+            APK-datum
           </div>
           <div class="text-sm">
             {{ formattedInspectionDate }}
@@ -173,7 +185,7 @@ const driversCount = computed(() => {
         </div>
         <div v-if="daysToInspectionText">
           <div class="text-xs font-medium text-muted-foreground mb-1">
-            Days to Inspection
+            Dagen tot APK
           </div>
           <div class="text-sm mb-1">
             {{ daysToInspectionText }}
@@ -181,20 +193,20 @@ const driversCount = computed(() => {
           <Progress :model-value="inspectionProgressValue" class="h-2" />
         </div>
         <div v-else class="text-sm text-muted-foreground">
-          No inspection date set
+          Geen APK-datum ingesteld
         </div>
       </div>
     </div>
 
     <!-- Timestamps -->
-    <div class="rounded-lg border p-3">
-      <div class="text-sm font-semibold mb-3">
-        System Information
+    <div class="rounded-lg border bg-card p-4 shadow-sm">
+      <div class="text-sm font-semibold mb-4">
+        Systeeminformatie
       </div>
       <div class="grid gap-3 md:grid-cols-2">
         <div>
           <div class="text-xs font-medium text-muted-foreground mb-1">
-            Created
+            Aangemaakt
           </div>
           <div class="text-sm">
             {{ formattedCreatedAt }}
@@ -202,7 +214,7 @@ const driversCount = computed(() => {
         </div>
         <div>
           <div class="text-xs font-medium text-muted-foreground mb-1">
-            Updated
+            Bijgewerkt
           </div>
           <div class="text-sm">
             {{ formattedUpdatedAt }}

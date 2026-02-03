@@ -5,20 +5,21 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import Badge from '@/components/ui/badge/Badge.vue'
 import { Progress } from '@/components/ui/progress'
 import {
-  BoxIcon,
-  CalendarIcon,
-  CircleIcon,
   UserIcon,
+  UsersIcon,
 } from '@/composables/use-icons.composable'
-import { formatDate } from '@/utils/date'
-
 import { useVehicleStatus } from '@/pages/vehicles/composables/use-vehicle-status.composable'
+import { formatDate } from '@/utils/date'
 
 interface Props {
   vehicle: IVehicle
 }
 
 const props = defineProps<Props>()
+
+const emits = defineEmits<{
+  (e: 'navigate-to-tab', tab: 'drivers'): void
+}>()
 
 const { getStatusInfo, getStatusVariant } = useVehicleStatus()
 
@@ -51,7 +52,7 @@ const daysToInspectionText = computed(() => {
   ) {
     return null
   }
-  return `${props.vehicle.days_to_inspection} Days to go`
+  return `${props.vehicle.days_to_inspection} dagen te gaan`
 })
 
 function getInitials(name: string): string {
@@ -65,6 +66,20 @@ function getInitials(name: string): string {
 const drivers = computed(() => {
   return props.vehicle.drivers ?? []
 })
+
+const maxDisplayedDrivers = 3
+
+const displayedDrivers = computed(() => {
+  return drivers.value.slice(0, maxDisplayedDrivers)
+})
+
+const remainingDriversCount = computed(() => {
+  return Math.max(0, drivers.value.length - maxDisplayedDrivers)
+})
+
+function handleViewAllDrivers() {
+  emits('navigate-to-tab', 'drivers')
+}
 </script>
 
 <template>
@@ -72,12 +87,15 @@ const drivers = computed(() => {
     <!-- Header -->
     <div>
       <h2 class="text-sm font-semibold mb-1.5">
-        Vehicle
+        Voertuig
       </h2>
       <div class="text-lg font-bold">
         {{ vehicle.license_plate }}
       </div>
-      <div v-if="vehicle.make || vehicle.model" class="text-xs text-muted-foreground mt-0.5">
+      <div
+        v-if="vehicle.make || vehicle.model"
+        class="text-xs text-muted-foreground mt-0.5"
+      >
         {{ vehicle.make }} {{ vehicle.model }}
       </div>
     </div>
@@ -86,7 +104,7 @@ const drivers = computed(() => {
 
     <!-- Status -->
     <div>
-      <div class="text-xs font-medium text-muted-foreground mb-1.5">
+      <div class="text-xs font-medium text-muted-foreground mb-0.5">
         Status
       </div>
       <!-- TODO: Implement inline status change
@@ -113,7 +131,7 @@ const drivers = computed(() => {
     <div class="space-y-2">
       <div v-if="vehicle.make">
         <div class="text-xs font-medium text-muted-foreground mb-0.5">
-          Make
+          Merk
         </div>
         <div class="text-sm">
           {{ vehicle.make }}
@@ -131,7 +149,7 @@ const drivers = computed(() => {
 
       <div v-if="vehicle.year">
         <div class="text-xs font-medium text-muted-foreground mb-0.5">
-          Year
+          Jaar
         </div>
         <div class="text-sm">
           {{ vehicle.year }}
@@ -140,7 +158,7 @@ const drivers = computed(() => {
 
       <div v-if="vehicle.color">
         <div class="text-xs font-medium text-muted-foreground mb-0.5">
-          Color
+          Kleur
         </div>
         <div class="text-sm">
           {{ vehicle.color }}
@@ -161,8 +179,8 @@ const drivers = computed(() => {
 
     <!-- Inspection Information -->
     <div>
-      <div class="text-xs font-medium text-muted-foreground mb-1.5">
-        Inspection
+      <div class="text-xs font-medium text-muted-foreground mb-1">
+        APK
       </div>
       <div v-if="formattedInspectionDate" class="text-sm mb-1">
         {{ formattedInspectionDate }}
@@ -174,7 +192,7 @@ const drivers = computed(() => {
         <Progress :model-value="inspectionProgressValue" class="h-2" />
       </div>
       <div v-else class="text-sm text-muted-foreground">
-        No inspection date set
+        Geen APK-datum ingesteld
       </div>
     </div>
 
@@ -183,31 +201,37 @@ const drivers = computed(() => {
     <!-- Drivers -->
     <div>
       <div class="text-xs font-medium text-muted-foreground mb-2">
-        Drivers
+        Bestuurders
       </div>
-      <div v-if="drivers.length === 0" class="text-sm text-muted-foreground">
-        No drivers assigned
+      <div v-if="drivers.length === 0" class="text-sm text-muted-foreground py-2">
+        Geen bestuurders toegewezen
       </div>
       <div v-else class="space-y-1">
         <div
-          v-for="driver in drivers"
+          v-for="driver in displayedDrivers"
           :key="driver.id"
-          class="flex items-center gap-2 py-1.5 hover:bg-muted/50 rounded transition-colors"
+          class="group flex items-center justify-between gap-2 py-1.5 hover:bg-muted/50 rounded transition-colors"
         >
-          <Avatar class="size-6 shrink-0">
-            <AvatarFallback class="bg-muted text-xs">
-              <UserIcon class="size-3" />
-            </AvatarFallback>
-          </Avatar>
-          <div class="flex-1 min-w-0">
+          <div class="flex items-center gap-2 flex-1 min-w-0">
+            <Avatar class="size-6 shrink-0">
+              <AvatarFallback class="bg-muted text-xs">
+                <UserIcon class="size-3" />
+              </AvatarFallback>
+            </Avatar>
             <div class="text-sm truncate">
               {{ driver.name }}
             </div>
-            <div class="text-xs text-muted-foreground truncate">
-              {{ driver.email }}
-            </div>
           </div>
         </div>
+        <button
+          v-if="remainingDriversCount > 0"
+          type="button"
+          class="w-full text-left text-xs font-medium text-primary hover:text-primary/80 transition-colors py-2 px-2 rounded-md hover:bg-primary/5 flex items-center gap-1.5 group"
+          @click="handleViewAllDrivers"
+        >
+          <span>+{{ remainingDriversCount }} meer</span>
+          <UsersIcon class="size-3 opacity-60 group-hover:opacity-100 transition-opacity" />
+        </button>
       </div>
     </div>
 
@@ -217,7 +241,7 @@ const drivers = computed(() => {
     <div class="space-y-2">
       <div>
         <div class="text-xs font-medium text-muted-foreground mb-0.5">
-          Created
+          Aangemaakt
         </div>
         <div class="text-sm">
           {{ formattedCreatedAt }}
@@ -225,7 +249,7 @@ const drivers = computed(() => {
       </div>
       <div>
         <div class="text-xs font-medium text-muted-foreground mb-0.5">
-          Updated
+          Bijgewerkt
         </div>
         <div class="text-sm">
           {{ formattedUpdatedAt }}
