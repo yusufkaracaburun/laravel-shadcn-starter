@@ -80,6 +80,14 @@ const driversCount = computed(() => {
           </div>
         </div>
         <div>
+          <!-- TODO: Implement inline status change
+              - Add click handler to status badge
+              - Open DropdownMenu with status options from statuses data (active, inactive, maintenance)
+              - Call updateVehicle mutation with new status
+              - Show loading state during update
+              - Handle errors appropriately
+              - Refresh vehicle data after successful update
+          -->
           <Badge
             v-if="vehicle.status"
             :variant="getStatusVariant(vehicle.status)"

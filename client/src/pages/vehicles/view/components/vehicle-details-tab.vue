@@ -13,14 +13,10 @@ import {
   BoxIcon,
   CalendarIcon,
   CircleIcon,
-  FileTextIcon,
-  UsersIcon,
 } from '@/composables/use-icons.composable'
 import { formatDate } from '@/utils/date'
 
 import { useVehicleStatus } from '@/pages/vehicles/composables/use-vehicle-status.composable'
-import VehicleDocumentsSection from '@/pages/vehicles/components/vehicle-documents-section.vue'
-import VehicleDriversSection from '@/pages/vehicles/components/vehicle-drivers-section.vue'
 
 interface Props {
   vehicle: IVehicle
@@ -85,6 +81,14 @@ const daysToInspectionText = computed(() => {
               Status
             </div>
             <div class="text-sm">
+              <!-- TODO: Implement inline status change
+                  - Add click handler to status badge
+                  - Open DropdownMenu with status options from statuses data (active, inactive, maintenance)
+                  - Call updateVehicle mutation with new status
+                  - Show loading state during update
+                  - Handle errors appropriately
+                  - Refresh vehicle data after successful update
+              -->
               <Badge
                 v-if="vehicle.status"
                 :variant="getStatusVariant(vehicle.status)"
@@ -175,45 +179,6 @@ const daysToInspectionText = computed(() => {
             No inspection date set
           </div>
         </div>
-      </CardContent>
-    </Card>
-
-    <!-- Drivers & Documents -->
-    <Card class="border">
-      <CardHeader class="pb-1.5 pt-2.5 px-4">
-        <CardTitle class="text-sm font-semibold">
-          Drivers & Documents
-        </CardTitle>
-      </CardHeader>
-      <CardContent class="px-4 pb-2.5">
-        <UiTabs default-value="drivers" class="w-full space-y-3">
-          <UiTabsList
-            class="inline-flex items-center gap-2 rounded-full bg-muted px-1.5 py-1"
-          >
-            <UiTabsTrigger
-              value="drivers"
-              class="flex-none rounded-full border border-transparent bg-transparent px-3 py-1.5 text-xs font-medium text-muted-foreground data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:border-border data-[state=active]:shadow-sm"
-            >
-              <UsersIcon class="mr-1 h-3.5 w-3.5" />
-              Drivers
-            </UiTabsTrigger>
-            <UiTabsTrigger
-              value="documents"
-              class="flex-none rounded-full border border-transparent bg-transparent px-3 py-1.5 text-xs font-medium text-muted-foreground data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:border-border data-[state=active]:shadow-sm"
-            >
-              <FileTextIcon class="mr-1 h-3.5 w-3.5" />
-              Documents
-            </UiTabsTrigger>
-          </UiTabsList>
-
-          <UiTabsContent value="drivers" class="space-y-3">
-            <VehicleDriversSection :vehicle="vehicle" />
-          </UiTabsContent>
-
-          <UiTabsContent value="documents" class="space-y-3">
-            <VehicleDocumentsSection />
-          </UiTabsContent>
-        </UiTabs>
       </CardContent>
     </Card>
 

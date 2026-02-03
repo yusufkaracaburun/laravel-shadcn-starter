@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, shallowRef } from 'vue'
+import { computed, ref, shallowRef } from 'vue'
 
 import type { IVehicle } from '@/pages/vehicles/models/vehicles'
 
@@ -15,16 +15,24 @@ import {
 import {
   ArrowDownIcon,
   FilePenLineIcon,
-  MoreVerticalIcon,
+  FileTextIcon,
   PlusIcon,
   Trash2Icon,
+  UsersIcon,
+  XCircleIcon,
 } from '@/composables/use-icons.composable'
 import VehicleDelete from '@/pages/vehicles/components/vehicle-delete.vue'
 import VehicleEditDialog from '@/pages/vehicles/components/vehicle-edit-dialog.vue'
 
-const props = defineProps<{
-  vehicle: IVehicle
-}>()
+const props = withDefaults(
+  defineProps<{
+    vehicle: IVehicle
+    activeTab?: 'overview' | 'details' | 'drivers' | 'documents'
+  }>(),
+  {
+    activeTab: 'overview',
+  },
+)
 
 const emits = defineEmits<{
   (e: 'edit-closed'): void
@@ -35,7 +43,7 @@ const showComponent = shallowRef<typeof VehicleDelete | null>(null)
 const isDialogOpen = ref(false)
 const isEditDialogOpen = ref(false)
 
-type TCommand = 'edit' | 'delete' | 'close'
+type TCommand = 'edit' | 'delete' | 'deactivate' | 'archive' | 'duplicate' | 'close'
 
 function handleSelect(command: TCommand) {
   switch (command) {
@@ -45,6 +53,27 @@ function handleSelect(command: TCommand) {
     case 'delete':
       showComponent.value = VehicleDelete
       isDialogOpen.value = true
+      break
+    case 'deactivate':
+      // TODO: Implement vehicle deactivation
+      // - Call updateVehicle mutation with status 'inactive'
+      // - Show loading state
+      // - Handle errors
+      // - Refresh vehicle data after success
+      break
+    case 'archive':
+      // TODO: Implement vehicle archiving
+      // - Call archiveVehicle mutation/endpoint
+      // - Show loading state
+      // - Handle errors
+      // - Redirect to vehicles list after success
+      break
+    case 'duplicate':
+      // TODO: Implement vehicle duplication
+      // - Open duplicate dialog/form
+      // - Pre-fill form with vehicle data
+      // - Allow user to modify before creating
+      // - Call createVehicle mutation
       break
     case 'close':
       isDialogOpen.value = false
@@ -63,42 +92,108 @@ function handleDeleteClose() {
   emits('delete-closed')
 }
 
-// Placeholder handlers for dropdown actions
-function handleExtra() {
-  // Placeholder
-}
+// Context-aware add menu items based on active tab
+const addMenuItems = computed(() => {
+  if (props.activeTab === 'drivers') {
+    return [
+      {
+        label: 'Bestuurder koppelen',
+        icon: UsersIcon,
+        action: 'assign-driver',
+      },
+    ]
+  }
+  if (props.activeTab === 'documents') {
+    return [
+      {
+        label: 'Document uploaden',
+        icon: FileTextIcon,
+        action: 'upload-document',
+      },
+    ]
+  }
+  if (props.activeTab === 'details') {
+    return [
+      {
+        label: 'Bestuurder koppelen',
+        icon: UsersIcon,
+        action: 'assign-driver',
+      },
+      {
+        label: 'Document uploaden',
+        icon: FileTextIcon,
+        action: 'upload-document',
+      },
+    ]
+  }
+  // Default for 'overview' or undefined
+  return [
+    {
+      label: 'Nieuwe bestuurder',
+      icon: PlusIcon,
+      action: 'add-driver',
+    },
+    {
+      label: 'Nieuw document',
+      icon: PlusIcon,
+      action: 'add-document',
+    },
+  ]
+})
 
-function handleAdd() {
-  // Placeholder
+// Handlers for add menu actions
+function handleAddAction(action: string) {
+  // TODO: Implement actual handlers for each action
+  // - assign-driver: Open driver assignment dialog
+  // - upload-document: Open document upload dialog
+  // - add-driver: Open add driver dialog
+  // - add-document: Open add document dialog
+  // eslint-disable-next-line no-console
+  console.log('Add action:', action)
 }
 </script>
 
 <template>
   <div class="flex items-center gap-2">
+    <!-- Optional "Bewerken" button for quick access -->
+    <Button variant="outline" @click="handleSelect('edit')">
+      <FilePenLineIcon class="mr-2 size-4" />
+      Bewerken
+    </Button>
+
+    <!-- "Meer" dropdown with actions -->
     <DropdownMenu>
       <DropdownMenuTrigger as-child>
         <Button variant="outline">
-          Extra
+          Meer
           <ArrowDownIcon class="ml-2 size-4" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        <DropdownMenuItem @select="handleExtra">
-          <MoreVerticalIcon class="mr-2 size-4" />
-          Optie 1
+        <DropdownMenuItem @select="handleSelect('deactivate')">
+          <XCircleIcon class="mr-2 size-4" />
+          Deactiveren
+        </DropdownMenuItem>
+        <DropdownMenuItem @select="handleSelect('archive')">
+          <FileTextIcon class="mr-2 size-4" />
+          Archiveren
+        </DropdownMenuItem>
+        <DropdownMenuItem @select="handleSelect('duplicate')">
+          <PlusIcon class="mr-2 size-4" />
+          Dupliceren
         </DropdownMenuItem>
         <DropdownMenuSeparator />
-        <DropdownMenuItem @select="handleSelect('edit')">
-          <FilePenLineIcon class="mr-2 size-4" />
-          Bewerken
-        </DropdownMenuItem>
-        <DropdownMenuItem variant="destructive" @select="handleSelect('delete')">
+        <DropdownMenuItem
+          variant="destructive"
+          @select="handleSelect('delete')"
+        >
           <Trash2Icon class="mr-2 size-4" />
           Verwijderen
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
 
+    <!-- "Toevoegen" dropdown - context-aware -->
     <DropdownMenu>
       <DropdownMenuTrigger as-child>
         <Button variant="default" class="bg-green-600 hover:bg-green-700">
@@ -107,13 +202,13 @@ function handleAdd() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        <DropdownMenuItem @select="handleAdd">
-          <PlusIcon class="mr-2 size-4" />
-          Nieuwe bestuurder
-        </DropdownMenuItem>
-        <DropdownMenuItem @select="handleAdd">
-          <PlusIcon class="mr-2 size-4" />
-          Nieuw document
+        <DropdownMenuItem
+          v-for="item in addMenuItems"
+          :key="item.action"
+          @select="handleAddAction(item.action)"
+        >
+          <component :is="item.icon" class="mr-2 size-4" />
+          {{ item.label }}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

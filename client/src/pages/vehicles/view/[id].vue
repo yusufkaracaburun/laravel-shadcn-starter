@@ -9,14 +9,18 @@ import { computed, onMounted, ref } from 'vue'
 import type { IVehicle } from '@/pages/vehicles/models/vehicles'
 
 import Page from '@/components/global-layout/basic-page.vue'
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import {
   FileTextIcon,
   LayoutGridIcon,
+  UsersIcon,
 } from '@/composables/use-icons.composable'
 import { useVehicles } from '@/pages/vehicles/composables/use-vehicles.composable'
 
 import VehicleDetailsTab from './components/vehicle-details-tab.vue'
+import VehicleDocumentsTab from './components/vehicle-documents-tab.vue'
+import VehicleDriversTab from './components/vehicle-drivers-tab.vue'
 import VehicleNavbar from './components/vehicle-navbar.vue'
 import VehicleOverviewTab from './components/vehicle-overview-tab.vue'
 import VehicleSidebar from './components/vehicle-sidebar.vue'
@@ -57,7 +61,7 @@ const pageDescription = computed(() =>
 )
 
 // Tab state
-const activeTab = ref('overview')
+const activeTab = ref<'overview' | 'details' | 'drivers' | 'documents'>('overview')
 
 // Event handlers
 function handleEditClosed() {
@@ -75,6 +79,7 @@ function handleDeleteClosed() {
       <VehicleNavbar
         v-if="vehicle"
         :vehicle="vehicle"
+        :active-tab="activeTab"
         @edit-closed="handleEditClosed"
         @delete-closed="handleDeleteClosed"
       />
@@ -117,6 +122,20 @@ function handleDeleteClosed() {
                         <FileTextIcon class="size-3.5" />
                         <span>Details</span>
                       </TabsTrigger>
+                      <TabsTrigger
+                        value="drivers"
+                        class="bg-background data-[state=active]:border-primary dark:data-[state=active]:border-primary h-full rounded-none border-0 border-b-2 border-transparent data-[state=active]:shadow-none"
+                      >
+                        <UsersIcon class="size-3.5" />
+                        <span>Drivers</span>
+                      </TabsTrigger>
+                      <TabsTrigger
+                        value="documents"
+                        class="bg-background data-[state=active]:border-primary dark:data-[state=active]:border-primary h-full rounded-none border-0 border-b-2 border-transparent data-[state=active]:shadow-none"
+                      >
+                        <FileTextIcon class="size-3.5" />
+                        <span>Documents</span>
+                      </TabsTrigger>
                     </TabsList>
                     <ScrollBar orientation="horizontal" />
                   </ScrollArea>
@@ -129,6 +148,14 @@ function handleDeleteClosed() {
 
                   <TabsContent value="details" class="mt-0">
                     <VehicleDetailsTab :vehicle="vehicle" />
+                  </TabsContent>
+
+                  <TabsContent value="drivers" class="mt-0">
+                    <VehicleDriversTab :vehicle="vehicle" />
+                  </TabsContent>
+
+                  <TabsContent value="documents" class="mt-0">
+                    <VehicleDocumentsTab :vehicle="vehicle" />
                   </TabsContent>
                 </div>
               </Tabs>
