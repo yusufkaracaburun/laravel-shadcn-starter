@@ -63,7 +63,7 @@ const hasSelectedVehicle = computed(() => selectedVehicle.value !== null)
       />
     </div>
     <template v-if="hasSelectedVehicle && selectedVehicle" #sidebar>
-      <VehicleSidebar :vehicle="selectedVehicle" @close="handleCloseSidebar" />
+      <VehicleSidebar :vehicle="selectedVehicle" />
     </template>
   </Page>
 </template>
