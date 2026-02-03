@@ -1,32 +1,41 @@
 <script setup lang="ts">
-import Page from '@/components/global-layout/basic-page.vue'
-import { Button } from '@/components/ui/button'
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from '@/components/ui/tooltip'
-import { Grid3x3Icon, ListIcon } from '@/composables/use-icons.composable'
+import { computed, ref } from 'vue'
+
+import type { ICustomer } from '@/pages/customers/models/customers'
+
+import Page from '@/components/global-layout/index-layout.vue'
 import { useCustomers } from '@/pages/customers/composables/use-customers.composable'
 
 import { columns } from './components/columns'
 import CustomerCreate from './components/customer-create.vue'
-import CustomersCardGrid from './components/customers-card-grid.vue'
+import CustomerDetailsSheet from './components/customer-details-sheet.vue'
 import DataTable from './components/data-table.vue'
 
-type ViewMode = 'table' | 'card'
-
-const viewMode = ref<ViewMode>('table')
 const {
   loading,
   customers,
   serverPagination,
-  sorting,
+  sort,
   onSortingChange,
-  filters,
+  filter,
   onFiltersChange,
   clearFilters,
 } = useCustomers()
+
+const selectedCustomer = ref<ICustomer | null>(null)
+const sidebarOpen = ref(false)
+
+function handleRowClick(customer: ICustomer) {
+  selectedCustomer.value = customer
+  sidebarOpen.value = true
+}
+
+function handleCloseSidebar() {
+  selectedCustomer.value = null
+  sidebarOpen.value = false
+}
+
+const hasSelectedCustomer = computed(() => selectedCustomer.value !== null)
 </script>
 
 <template>
@@ -37,59 +46,28 @@ const {
     data-testid="customers_page"
   >
     <template #actions>
-      <div class="flex items-center gap-2">
-        <Tooltip>
-          <TooltipTrigger as-child>
-            <Button
-              :variant="viewMode === 'table' ? 'default' : 'outline'"
-              size="icon"
-              class="size-8"
-              data-testid="customers_table-view_button"
-              @click="viewMode = 'table'"
-            >
-              <ListIcon class="size-4" />
-              <span class="sr-only">Table view</span>
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>
-            <p>Table view</p>
-          </TooltipContent>
-        </Tooltip>
-        <Tooltip>
-          <TooltipTrigger as-child>
-            <Button
-              :variant="viewMode === 'card' ? 'default' : 'outline'"
-              size="icon"
-              class="size-8"
-              data-testid="customers_card-view_button"
-              @click="viewMode = 'card'"
-            >
-              <Grid3x3Icon class="size-4" />
-              <span class="sr-only">Card view</span>
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent>
-            <p>Card view</p>
-          </TooltipContent>
-        </Tooltip>
-        <CustomerCreate />
-      </div>
+      <CustomerCreate />
     </template>
-    <div v-if="viewMode === 'table'" class="overflow-x-auto">
+    <div class="overflow-x-auto" data-testid="customers_table">
       <DataTable
         :loading="loading"
         :data="customers"
         :columns="columns"
         :server-pagination="serverPagination"
-        :sorting="sorting"
+        :sorting="sort"
         :on-sorting-change="onSortingChange"
-        :filters="filters"
+        :filters="filter"
         :on-filters-change="onFiltersChange"
         :on-clear-filters="clearFilters"
+        @row-click="handleRowClick"
       />
     </div>
-    <div v-else-if="viewMode === 'card'">
-      <CustomersCardGrid :customers="customers" :loading="loading" />
-    </div>
+    <template v-if="hasSelectedCustomer && selectedCustomer" #row-details>
+      <CustomerDetailsSheet
+        :customer="selectedCustomer"
+        :open="sidebarOpen"
+        @close="handleCloseSidebar"
+      />
+    </template>
   </Page>
 </template>

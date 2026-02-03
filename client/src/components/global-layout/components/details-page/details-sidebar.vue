@@ -3,8 +3,8 @@ import type { HTMLAttributes } from 'vue'
 
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import Badge from '@/components/ui/badge/Badge.vue'
-import { cn } from '@/lib/utils'
 import { UserIcon, UsersIcon } from '@/composables/use-icons.composable'
+import { cn } from '@/lib/utils'
 
 import type {
   RelatedItem,
@@ -64,7 +64,7 @@ const remainingRelatedItemsCount = computed(() => {
 <template>
   <aside
     data-slot="details-sidebar"
-    :class="cn('w-80 border-r bg-background p-3 space-y-2.5 h-full overflow-y-auto', props.class)"
+    :class="cn('w-80 bg-background p-3 space-y-2.5 h-full overflow-y-auto', props.class)"
   >
     <!-- Header -->
     <div>
@@ -85,10 +85,9 @@ const remainingRelatedItemsCount = computed(() => {
       <slot name="header-extra" />
     </div>
 
-    <UiSeparator v-if="status || $slots.status || fields.length > 0 || $slots.fields" class="my-2" />
-
     <!-- Status -->
     <div v-if="status || $slots.status">
+      <UiSeparator class="my-2" />
       <div class="text-xs font-medium text-muted-foreground mb-0.5">
         Status
       </div>
@@ -104,14 +103,13 @@ const remainingRelatedItemsCount = computed(() => {
       <slot name="status-extra" />
     </div>
 
-    <UiSeparator v-if="fields.length > 0 || $slots.fields" class="my-2" />
-
     <!-- Fields -->
     <div v-if="fields.length > 0 || $slots.fields" class="space-y-2">
+      <UiSeparator class="my-2" />
       <template v-for="(field, index) in fields" :key="index">
         <div v-if="field.value !== null && field.value !== undefined">
           <div class="text-xs font-medium text-muted-foreground mb-0.5 flex items-center gap-1.5">
-            <component v-if="field.icon" :is="field.icon" class="size-3" />
+            <component :is="field.icon" v-if="field.icon" class="size-3" />
             {{ field.label }}
           </div>
           <div class="text-sm">
@@ -123,19 +121,16 @@ const remainingRelatedItemsCount = computed(() => {
       <slot name="fields-extra" />
     </div>
 
-    <UiSeparator v-if="$slots.custom-section || relatedItems.length > 0 || $slots.related-items" class="my-2" />
-
     <!-- Custom Section -->
     <slot name="custom-section" />
 
-    <UiSeparator v-if="relatedItems.length > 0 || $slots.related-items" class="my-2" />
-
     <!-- Related Items -->
-    <div v-if="relatedItems.length > 0 || $slots.related-items">
+    <div v-if="relatedItems.length > 0 || $slots.related - items">
+      <UiSeparator class="my-2" />
       <div class="text-xs font-medium text-muted-foreground mb-2">
         {{ relatedItemsLabel }}
       </div>
-      <div v-if="relatedItems.length === 0 && !$slots.related-items" class="text-sm text-muted-foreground py-2">
+      <div v-if="relatedItems.length === 0 && !$slots.related - items" class="text-sm text-muted-foreground py-2">
         {{ relatedItemsEmptyText }}
       </div>
       <div v-else class="space-y-1">
@@ -148,7 +143,7 @@ const remainingRelatedItemsCount = computed(() => {
           <div class="flex items-center gap-2 flex-1 min-w-0">
             <Avatar class="size-6 shrink-0">
               <AvatarFallback class="bg-muted text-xs">
-                <component v-if="item.icon" :is="item.icon" class="size-3" />
+                <component :is="item.icon" v-if="item.icon" class="size-3" />
                 <UserIcon v-else class="size-3" />
               </AvatarFallback>
             </Avatar>
@@ -156,7 +151,7 @@ const remainingRelatedItemsCount = computed(() => {
               <div class="text-sm truncate">
                 {{ item.name }}
               </div>
-              <component v-if="item.badge" :is="item.badge" />
+              <component :is="item.badge" v-if="item.badge" />
             </div>
           </div>
         </div>
@@ -174,10 +169,9 @@ const remainingRelatedItemsCount = computed(() => {
       <slot name="related-items-extra" />
     </div>
 
-    <UiSeparator v-if="timestamps || $slots.timestamps" class="my-2" />
-
     <!-- Timestamps -->
     <div v-if="timestamps || $slots.timestamps" class="space-y-2">
+      <UiSeparator class="my-2" />
       <slot name="timestamps">
         <div v-if="timestamps?.created">
           <div class="text-xs font-medium text-muted-foreground mb-0.5">

@@ -14,9 +14,17 @@ import CustomerDeleteBatch from './customer-delete-batch.vue'
 import DataTableToolbar from './data-table-toolbar.vue'
 
 const props = defineProps<IDataTableProps<ICustomer, ICustomerFilters>>()
+const emit = defineEmits<{
+  rowClick: [customer: ICustomer]
+}>()
+
 const { table } = generateVueTable<ICustomer, ICustomerFilters>(props)
 
 const customerDeleteBatchOpen = ref(false)
+
+function handleRowClick(customer: ICustomer) {
+  emit('rowClick', customer)
+}
 </script>
 
 <template>
@@ -48,6 +56,7 @@ const customerDeleteBatchOpen = ref(false)
     :columns="columns"
     :loading="loading"
     :server-pagination="serverPagination"
+    @row-click="handleRowClick"
   >
     <template #toolbar>
       <DataTableToolbar
