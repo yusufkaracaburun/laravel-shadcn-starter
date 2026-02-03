@@ -1,19 +1,9 @@
 <script lang="ts" setup>
-import { ref } from 'vue'
-
-import { Sheet, SheetContent } from '@/components/ui/sheet'
-
 import type { LayoutHeaderProps } from './types'
 
 import BasicHeader from './basic-header.vue'
 
 defineProps<LayoutHeaderProps>()
-
-const emit = defineEmits<{
-  closeSidebar: []
-}>()
-
-const sidebarOpen = ref(false)
 </script>
 
 <template>
@@ -29,24 +19,6 @@ const sidebarOpen = ref(false)
       </main>
     </main>
 
-    <!-- Sheet component for both mobile and desktop - always rendered -->
-    <Sheet
-      :open="$slots.sidebar ? true : sidebarOpen"
-      @update:open="(value) => {
-        sidebarOpen = value
-        if (!value) {
-          // Emit close event when Sheet is closed
-          emit('closeSidebar')
-        }
-      }"
-    >
-      <SheetContent
-        v-if="$slots.sidebar"
-        side="right"
-        class="w-full shadow-xl"
-      >
-        <slot name="sidebar" />
-      </SheetContent>
-    </Sheet>
+    <slot name="row-details" />
   </div>
 </template>

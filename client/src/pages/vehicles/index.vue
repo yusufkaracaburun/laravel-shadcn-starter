@@ -9,7 +9,7 @@ import { useVehicles } from '@/pages/vehicles/composables/use-vehicles.composabl
 import { getVehicleColumns } from './components/columns'
 import DataTable from './components/data-table.vue'
 import VehicleCreate from './components/vehicle-create-dialog.vue'
-import VehicleSidebar from './components/vehicle-sidebar.vue'
+import VehicleSheet from './components/vehicle-sheet.vue'
 
 const columns = getVehicleColumns()
 
@@ -25,13 +25,16 @@ const {
 } = useVehicles()
 
 const selectedVehicle = ref<IVehicle | null>(null)
+const sidebarOpen = ref(false)
 
 function handleRowClick(vehicle: IVehicle) {
   selectedVehicle.value = vehicle
+  sidebarOpen.value = true
 }
 
 function handleCloseSidebar() {
   selectedVehicle.value = null
+  sidebarOpen.value = false
 }
 
 const hasSelectedVehicle = computed(() => selectedVehicle.value !== null)
@@ -43,7 +46,6 @@ const hasSelectedVehicle = computed(() => selectedVehicle.value !== null)
     description="Manage your fleet of vehicles"
     sticky
     data-testid="vehicles_page"
-    @close-sidebar="handleCloseSidebar"
   >
     <template #actions>
       <VehicleCreate />
@@ -62,8 +64,12 @@ const hasSelectedVehicle = computed(() => selectedVehicle.value !== null)
         @row-click="handleRowClick"
       />
     </div>
-    <template v-if="hasSelectedVehicle && selectedVehicle" #sidebar>
-      <VehicleSidebar :vehicle="selectedVehicle" />
+    <template v-if="hasSelectedVehicle && selectedVehicle" #row-details>
+      <VehicleSheet
+        :vehicle="selectedVehicle"
+        :open="sidebarOpen"
+        @close="handleCloseSidebar"
+      />
     </template>
   </Page>
 </template>
