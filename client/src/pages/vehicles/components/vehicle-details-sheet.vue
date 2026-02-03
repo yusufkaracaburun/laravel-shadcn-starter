@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import { useRouter } from 'vue-router'
 
 import type { IVehicle } from '@/pages/vehicles/models/vehicles'
 
@@ -9,8 +10,16 @@ import InfoSection
 import SheetDrawer
   from '@/components/global-layout/components/sheet-drawer.vue'
 import Badge from '@/components/ui/badge/Badge.vue'
+import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
 import {
+  SheetDescription,
+  SheetFooter,
+  SheetHeader,
+  SheetTitle,
+} from '@/components/ui/sheet'
+import {
+  ArrowRightIcon,
   BoxIcon,
   CalendarIcon,
   CircleIcon,
@@ -32,6 +41,8 @@ const emit = defineEmits<{
   'close': []
   'update:open': [value: boolean]
 }>()
+
+const router = useRouter()
 
 const { getStatusInfo, getStatusVariant } = useVehicleStatus()
 
@@ -66,6 +77,14 @@ const daysToInspectionText = computed(() => {
   }
   return `${props.vehicle.days_to_inspection} Days to go`
 })
+
+function handleViewFullDetails() {
+  router.push({
+    name: '/vehicles/view/[id]',
+    params: { id: props.vehicle.id.toString() },
+  })
+  emit('close')
+}
 </script>
 
 <template>
@@ -77,6 +96,16 @@ const daysToInspectionText = computed(() => {
     @close="emit('close')"
     @update:open="(value) => emit('update:open', value)"
   >
+    <template #header>
+      <SheetHeader>
+        <SheetTitle>
+          {{ vehicle.license_plate }}
+        </SheetTitle>
+        <SheetDescription>
+          Vehicle details
+        </SheetDescription>
+      </SheetHeader>
+    </template>
     <!-- Time Section -->
     <InfoSection title="Time" title-spacing="lg">
       <InfoItem
@@ -184,5 +213,19 @@ const daysToInspectionText = computed(() => {
         </UiTabsContent>
       </UiTabs>
     </InfoSection>
+
+    <template #footer>
+      <SheetFooter>
+        <Button
+          variant="outline"
+          size="sm"
+          class="gap-2"
+          @click="handleViewFullDetails"
+        >
+          <ArrowRightIcon class="size-4" />
+          View Full Details
+        </Button>
+      </SheetFooter>
+    </template>
   </SheetDrawer>
 </template>

@@ -21,11 +21,10 @@ type TCommand = 'view' | 'edit' | 'delete'
 function handleSelect(command: TCommand) {
   switch (command) {
     case 'view':
-      // Navigate to view page if it exists
-      // router.push({
-      //   name: '/vehicles/view/[id]',
-      //   params: { id: vehicle.value.id.toString() },
-      // })
+      router.push({
+        name: '/vehicles/view/[id]',
+        params: { id: vehicle.value.id.toString() },
+      })
       break
     case 'edit':
       isEditDialogOpen.value = true
@@ -52,13 +51,6 @@ const isOpen = ref(false)
         </UiButton>
       </UiDropdownMenuTrigger>
       <UiDropdownMenuContent align="end" class="w-[160px]">
-        <UiDropdownMenuItem @select.stop="handleSelect('view')">
-          <span>View</span>
-          <UiDropdownMenuShortcut>
-            <Eye class="size-4" />
-          </UiDropdownMenuShortcut>
-        </UiDropdownMenuItem>
-
         <UiDropdownMenuItem @select.stop="handleSelect('edit')">
           <span>Edit</span>
           <UiDropdownMenuShortcut>

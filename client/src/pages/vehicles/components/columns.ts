@@ -1,6 +1,7 @@
 import type { ColumnDef } from '@tanstack/vue-table'
 
 import { h } from 'vue'
+import { useRouter } from 'vue-router'
 
 import DataTableColumnHeader from '@/components/data-table/column-header.vue'
 import { SelectColumn } from '@/components/data-table/table-columns'
@@ -22,23 +23,47 @@ const CELL_CLASSES = {
 } as const
 
 /**
- * Helper function to create license plate cell with copy functionality
+ * Helper function to create license plate cell with copy functionality and navigation
  */
-function createLicensePlateCell(licensePlateValue: unknown) {
+function createLicensePlateCell(
+  licensePlateValue: unknown,
+  vehicle: IVehicle,
+) {
   const licensePlateStr =
-    licensePlateValue && typeof licensePlateValue === 'string'
-      ? licensePlateValue
-      : ''
+    licensePlateValue && typeof licensePlateValue === 'string' ?
+      licensePlateValue :
+      ''
+  const router = useRouter()
 
-  return h('div', { class: CELL_CLASSES.LICENSE_PLATE_CONTAINER }, [
-    h('span', {}, licensePlateStr || '—'),
-    h(Copy, {
-      class: 'ml-2',
-      size: 'sm',
-      variant: 'ghost',
-      content: licensePlateStr,
-    }),
-  ])
+  return h(
+    'button',
+    {
+      class:
+        'flex items-center gap-2 max-w-[500px] truncate font-medium text-left hover:underline cursor-pointer focus:outline-none focus:underline',
+      onClick: () => {
+        router.push({
+          name: '/vehicles/view/[id]',
+          params: { id: vehicle.id.toString() },
+        })
+      },
+    },
+    [
+      h('span', { class: 'truncate' }, licensePlateStr || '—'),
+      ...(licensePlateStr ?
+          [
+            h(Copy, {
+              class: 'ml-2 flex-shrink-0',
+              size: 'sm',
+              variant: 'ghost',
+              content: licensePlateStr,
+              onClick: (e: Event) => {
+                e.stopPropagation()
+              },
+            }),
+          ] :
+          []),
+    ],
+  )
 }
 
 /**
@@ -127,8 +152,9 @@ function createColumns(): ColumnDef<IVehicle>[] {
           title: t('vehicles.columns.licensePlate') || 'License Plate',
         }),
       cell: ({ row }) => {
+        const vehicle = row.original
         const licensePlate = row.getValue('license_plate')
-        return createLicensePlateCell(licensePlate)
+        return createLicensePlateCell(licensePlate, vehicle)
       },
       enableSorting: true,
       enableHiding: false,

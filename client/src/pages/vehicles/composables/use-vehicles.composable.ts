@@ -84,9 +84,12 @@ export function useVehicles() {
     return Number(idParam)
   })
 
+  // Default includes for vehicle by id query
+  const vehicleByIdIncludes = ref<string[]>(['drivers'])
+
   const getVehicleByIdQuery = vehicleService.getVehicleByIdQuery(
     vehicleId,
-    ref([]),
+    vehicleByIdIncludes,
   )
   const {
     data: vehicleByIdResponse,
@@ -96,8 +99,13 @@ export function useVehicles() {
     refetch: refetchVehicleById,
   } = getVehicleByIdQuery
 
-  async function fetchVehicleByIdData(): Promise<IResponse<IVehicle>> {
+  async function fetchVehicleByIdData(
+    includes?: string[],
+  ): Promise<IResponse<IVehicle>> {
     try {
+      if (includes) {
+        vehicleByIdIncludes.value = includes
+      }
       const response = await refetchVehicleById()
       return response.data as IResponse<IVehicle>
     } catch (error: any) {
