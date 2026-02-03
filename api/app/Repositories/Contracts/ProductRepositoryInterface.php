@@ -9,5 +9,4 @@ use App\Repositories\QueryableRepositoryInterface;
 
 interface ProductRepositoryInterface extends QueryableRepositoryInterface
 {
-    public function findOrFail(int $id, array $columns = ['*']): Product;
 }

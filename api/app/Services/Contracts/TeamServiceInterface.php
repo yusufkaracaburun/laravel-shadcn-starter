@@ -5,41 +5,23 @@ declare(strict_types=1);
 namespace App\Services\Contracts;
 
 use App\Models\Team;
+use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\Model;
 use App\Services\BaseServiceInterface;
 use App\Http\Resources\Teams\TeamResource;
 use App\Http\Resources\Teams\TeamCollection;
 
 interface TeamServiceInterface extends BaseServiceInterface
 {
-    /**
-     * Get paginated teams with QueryBuilder support.
-     * Supports filtering, sorting, and including relationships via request parameters.
-     * Teams are scoped to the authenticated user (teams they own or belong to).
-     */
-    public function getPaginated(int $perPage, ?int $userId = null): TeamCollection;
+    public function getPaginatedByRequest(Request $request, array $columns = ['*']): TeamCollection;
 
-    /**
-     * Find a team by ID with user access check.
-     */
-    public function findById(int $teamId, ?int $userId = null): TeamResource;
+    public function getAll(array $columns = ['*']): TeamCollection;
 
-    /**
-     * Create a new team for a user.
-     *
-     * @param  array<string, mixed>  $data
-     * @param  int  $userId  User ID for team creation
-     */
-    public function createTeam(array $data, int $userId): TeamResource;
+    public function findById(int $id): TeamResource;
 
-    /**
-     * Update a team by model instance.
-     *
-     * @param  array<string, mixed>  $data
-     */
-    public function updateTeam(Team $team, array $data): TeamResource;
+    public function create(array $data): TeamResource;
 
-    /**
-     * Delete a team by model instance.
-     */
-    public function deleteTeam(Team $team): bool;
+    public function update(Model $model, array $data): TeamResource;
+
+    public function delete(Model $model): bool;
 }

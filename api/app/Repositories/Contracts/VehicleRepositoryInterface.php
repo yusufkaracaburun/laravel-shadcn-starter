@@ -10,7 +10,6 @@ use App\Repositories\QueryableRepositoryInterface;
 
 interface VehicleRepositoryInterface extends QueryableRepositoryInterface
 {
-    public function findOrFail(int $id, array $columns = ['*']): Vehicle;
 
     public function findForShow(Vehicle $vehicle): Vehicle;
 

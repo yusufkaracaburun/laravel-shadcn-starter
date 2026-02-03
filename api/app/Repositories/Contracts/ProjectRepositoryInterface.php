@@ -11,5 +11,4 @@ use App\Repositories\QueryableRepositoryInterface;
 
 interface ProjectRepositoryInterface extends QueryableRepositoryInterface
 {
-    public function findOrFail(int $id, array $columns = ['*']): Project;
 }

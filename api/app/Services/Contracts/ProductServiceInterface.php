@@ -5,45 +5,23 @@ declare(strict_types=1);
 namespace App\Services\Contracts;
 
 use App\Models\Product;
+use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\Model;
 use App\Services\BaseServiceInterface;
 use App\Http\Resources\Products\ProductResource;
 use App\Http\Resources\Products\ProductCollection;
 
 interface ProductServiceInterface extends BaseServiceInterface
 {
-    /**
-     * Get paginated products with QueryBuilder support.
-     * Supports filtering, sorting, and including relationships via request parameters.
-     */
-    public function getPaginated(int $perPage, ?int $teamId = null): ProductCollection;
+    public function getPaginatedByRequest(Request $request, array $columns = ['*']): ProductCollection;
 
-    /**
-     * Find an product by ID with relationships loaded.
-     */
-    public function findById(int $productId, ?int $teamId = null): ProductResource;
+    public function getAll(array $columns = ['*']): ProductCollection;
 
-    /**
-     * Create a new product with optional team context.
-     *
-     * @param  array<string, mixed>  $data
-     */
-    public function createProduct(array $data, ?int $teamId = null): ProductResource;
+    public function findById(int $id): ProductResource;
 
-    /**
-     * Update an product by model instance.
-     *
-     * @param  array<string, mixed>  $data
-     */
-    public function updateProduct(Product $product, array $data, ?int $teamId = null): ProductResource;
+    public function create(array $data): ProductResource;
 
-    /**
-     * Delete an product by model instance.
-     */
-    public function deleteProduct(Product $product): bool;
+    public function update(Model $model, array $data): ProductResource;
 
-    /**
-     * Get all products without pagination.
-     * Returns a collection of all products.
-     */
-    public function getAll(): ProductCollection;
+    public function delete(Model $model): bool;
 }

@@ -5,75 +5,78 @@ declare(strict_types=1);
 namespace App\Services\Concretes;
 
 use App\Models\Team;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
 use App\Services\BaseService;
 use App\Http\Resources\Teams\TeamResource;
 use App\Http\Resources\Teams\TeamCollection;
+use App\Services\Concerns\TransformsResources;
 use App\Services\Contracts\TeamServiceInterface;
 use App\Repositories\Contracts\TeamRepositoryInterface;
 
 final class TeamService extends BaseService implements TeamServiceInterface
 {
-    private readonly TeamRepositoryInterface $teamRepository;
+    use TransformsResources;
 
     public function __construct(
         TeamRepositoryInterface $repository,
     ) {
         $this->setRepository($repository);
-        $this->teamRepository = $repository;
+    }
+
+    public function getPaginatedByRequest(Request $request, array $columns = ['*']): TeamCollection
+    {
+        return $this->toCollection(
+            $this->repository->paginateFiltered($request, $columns),
+        );
+    }
+
+    public function getAll(array $columns = ['*']): TeamCollection
+    {
+        return $this->toCollection(
+            $this->repository->all($columns),
+        );
+    }
+
+    public function findById(int $id): TeamResource
+    {
+        return $this->toResource(
+            $this->repository->find($id),
+        );
+    }
+
+    public function create(array $data): TeamResource
+    {
+        return $this->toResource(
+            $this->repository->create($data),
+        );
     }
 
     /**
-     * Get paginated teams with QueryBuilder support.
-     * Supports filtering, sorting, and including relationships via request parameters.
-     * Teams are scoped to the authenticated user (teams they own or belong to).
+     * @param Team $model
      */
-    public function getPaginated(int $perPage, ?int $userId = null): TeamCollection
+    public function update(Model $model, array $data): TeamResource
     {
-        $paginated = $this->teamRepository->getPaginated($perPage, $userId);
-
-        return new TeamCollection($paginated);
+        return $this->toResource(
+            $this->repository->update($model->id, $data),
+        );
     }
 
     /**
-     * Find a team by ID with user access check.
+     * @param Team $model
      */
-    public function findById(int $teamId, ?int $userId = null): TeamResource
+    public function delete(Model $model): bool
     {
-        $team = $this->teamRepository->findById($teamId, $userId);
-
-        return new TeamResource($team);
+        return $this->repository->delete($model->id);
     }
 
-    /**
-     * Create a new team for a user.
-     *
-     * @param  array<string, mixed>  $data
-     * @param  int  $userId  User ID for team creation
-     */
-    public function createTeam(array $data, int $userId): TeamResource
+    protected function getResourceClass(): string
     {
-        $team = $this->teamRepository->createTeam($data, $userId);
-
-        return new TeamResource($team);
+        return TeamResource::class;
     }
 
-    /**
-     * Update a team by model instance.
-     *
-     * @param  array<string, mixed>  $data
-     */
-    public function updateTeam(Team $team, array $data): TeamResource
+    protected function getCollectionClass(): string
     {
-        $team = $this->teamRepository->updateTeam($team, $data);
-
-        return new TeamResource($team);
-    }
-
-    /**
-     * Delete a team by model instance.
-     */
-    public function deleteTeam(Team $team): bool
-    {
-        return $this->teamRepository->deleteTeam($team);
+        return TeamCollection::class;
     }
 }

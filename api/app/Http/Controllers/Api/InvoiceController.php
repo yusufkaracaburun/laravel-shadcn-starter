@@ -8,28 +8,17 @@ use App\Models\Invoice;
 use Illuminate\Http\Response;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\JsonResponse;
-use App\Http\Responses\ApiResponse;
 use Illuminate\Contracts\View\View;
-use App\Http\Controllers\Controller;
 use Illuminate\Contracts\View\Factory;
-use App\Http\Controllers\Concerns\UsesQueryBuilder;
 use App\Http\Requests\Invoices\IndexInvoiceRequest;
 use App\Http\Requests\Invoices\StoreInvoiceRequest;
 use App\Services\Contracts\InvoiceServiceInterface;
 use App\Services\Contracts\ProductServiceInterface;
 use App\Http\Requests\Invoices\UpdateInvoiceRequest;
 use App\Services\Contracts\CustomerServiceInterface;
-use App\Http\Controllers\Concerns\UsesCachedResponses;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use App\Http\Controllers\Concerns\InvalidatesCachedModels;
 
-final class InvoiceController extends Controller
+final class InvoiceController extends BaseApiController
 {
-    use AuthorizesRequests;
-    use InvalidatesCachedModels;
-    use UsesCachedResponses;
-    use UsesQueryBuilder;
-
     public function __construct(
         private readonly InvoiceServiceInterface $invoiceService,
         private readonly ProductServiceInterface $itemService,
@@ -48,12 +37,9 @@ final class InvoiceController extends Controller
     {
         $this->authorize('viewAny', Invoice::class);
 
-        $validated = $request->validated();
-        $perPage = (int) $validated['per_page'];
-
-        $invoices = $this->invoiceService->getPaginated($perPage);
-
-        return ApiResponse::success($invoices);
+        return $this->respondWithCollection(
+            $this->invoiceService->getPaginatedByRequest($request),
+        );
     }
 
     /**
@@ -65,9 +51,9 @@ final class InvoiceController extends Controller
     {
         $this->authorize('create', Invoice::class);
 
-        $invoice = $this->invoiceService->createInvoice($request->validated());
-
-        return ApiResponse::created($invoice);
+        return $this->respondCreated(
+            $this->invoiceService->create($request->validated()),
+        );
     }
 
     /**
@@ -79,9 +65,9 @@ final class InvoiceController extends Controller
     {
         $this->authorize('view', $invoice);
 
-        $invoiceResource = $this->invoiceService->findById($invoice->id);
-
-        return ApiResponse::success($invoiceResource);
+        return $this->respondWithResource(
+            $this->invoiceService->findById($invoice->id),
+        );
     }
 
     /**
@@ -93,9 +79,9 @@ final class InvoiceController extends Controller
     {
         $this->authorize('update', $invoice);
 
-        $invoiceResource = $this->invoiceService->updateInvoice($invoice, $request->validated());
-
-        return ApiResponse::success($invoiceResource);
+        return $this->respondWithResource(
+            $this->invoiceService->update($invoice, $request->validated()),
+        );
     }
 
     /**
@@ -107,9 +93,9 @@ final class InvoiceController extends Controller
     {
         $this->authorize('delete', $invoice);
 
-        $this->invoiceService->deleteInvoice($invoice);
+        $this->invoiceService->delete($invoice);
 
-        return ApiResponse::noContent('Invoice deleted successfully');
+        return $this->respondNoContent('Invoice deleted successfully');
     }
 
     /**
@@ -131,7 +117,7 @@ final class InvoiceController extends Controller
         // Get next invoice number from InvoiceService
         $nextInvoiceNumber = $this->invoiceService->getNextInvoiceNumber();
 
-        return ApiResponse::success([
+        return $this->respondWithPrerequisites([
             'items'               => $items,
             'customers'           => $customers,
             'next_invoice_number' => $nextInvoiceNumber,

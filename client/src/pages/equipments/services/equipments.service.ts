@@ -77,7 +77,10 @@ export function useEquipmentsService() {
           per_page: per_page.value,
           sort: sort.value,
           filter: filter.value,
-          include: include.value,
+        }
+
+        if (include.value && include.value.length > 0) {
+          params.include = include.value.join(',')
         }
 
         const response = await axiosInstance.get(

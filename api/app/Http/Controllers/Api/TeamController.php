@@ -10,27 +10,14 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use InvalidArgumentException;
 use Illuminate\Http\JsonResponse;
-use App\Http\Responses\ApiResponse;
-use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
-use Spatie\Permission\PermissionRegistrar;
 use App\Http\Requests\Teams\StoreTeamRequest;
 use App\Http\Requests\Teams\TeamIndexRequest;
 use App\Http\Requests\Teams\UpdateTeamRequest;
 use App\Helpers\Cache\CacheInvalidationService;
 use App\Services\Contracts\TeamServiceInterface;
-use App\Http\Controllers\Concerns\UsesQueryBuilder;
-use App\Http\Controllers\Concerns\UsesCachedResponses;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use App\Http\Controllers\Concerns\InvalidatesCachedModels;
 
-final class TeamController extends Controller
+final class TeamController extends BaseApiController
 {
-    use AuthorizesRequests;
-    use InvalidatesCachedModels;
-    use UsesCachedResponses;
-    use UsesQueryBuilder;
-
     public function __construct(
         private readonly TeamServiceInterface $service,
     ) {}
@@ -42,17 +29,9 @@ final class TeamController extends Controller
      */
     public function index(TeamIndexRequest $request): JsonResponse
     {
-        /** @var User $user */
-        $user = Auth::user();
-
-        $validated = $request->validated();
-
-        $user->refresh();
-
-        $perPage = (int) $validated['per_page'];
-        $collection = $this->service->getPaginated($perPage);
-
-        return ApiResponse::success($collection);
+        return $this->respondWithCollection(
+            $this->service->getPaginatedByRequest($request),
+        );
     }
 
     /**
@@ -62,26 +41,21 @@ final class TeamController extends Controller
      */
     public function show(Team $team): JsonResponse
     {
-        /** @var User $currentUser */
-        $currentUser = Auth::user();
-
-        $currentUser->refresh();
+        $currentUser = $this->getAuthenticatedUser();
 
         // Check if user is super admin
         $isSuperAdmin = $this->isSuperAdmin($currentUser);
 
         if ($isSuperAdmin) {
-            // Super admin can access any team - pass null to skip user filtering
+            // Super admin can access any team
             $teamResource = $this->service->findById($team->id);
         } else {
-            // For regular users, findById will throw 404 if team doesn't belong to user
-            // This matches the expected behavior where teams not belonging to user return 404
-            $teamResource = $this->service->findById($team->id, $currentUser->id);
-            // After finding, check if user has permission to view (for teams they belong to)
+            // For regular users, check authorization first
             $this->authorize('view', $team);
+            $teamResource = $this->service->findById($team->id);
         }
 
-        return ApiResponse::success($teamResource);
+        return $this->respondWithResource($teamResource);
     }
 
     /**
@@ -91,11 +65,9 @@ final class TeamController extends Controller
      */
     public function store(StoreTeamRequest $request): JsonResponse
     {
-        /** @var User $currentUser */
-        $currentUser = Auth::user();
-        $currentUser->refresh();
+        $currentUser = $this->getAuthenticatedUser();
 
-        $teamResource = $this->service->createTeam($request->validated(), $currentUser->id);
+        $teamResource = $this->service->create($request->validated());
 
         // Add user to team as owner (if not already attached)
         $team = $teamResource->resource;
@@ -111,7 +83,7 @@ final class TeamController extends Controller
         // Invalidate caches
         CacheInvalidationService::invalidateUser($currentUser->id);
 
-        return ApiResponse::created($teamResource);
+        return $this->respondCreated($teamResource);
     }
 
     /**
@@ -121,31 +93,23 @@ final class TeamController extends Controller
      */
     public function update(UpdateTeamRequest $request, Team $team): JsonResponse
     {
-        /** @var User $currentUser */
-        $currentUser = Auth::user();
-        $currentUser->refresh();
+        $currentUser = $this->getAuthenticatedUser();
 
         // Check if user is super admin
         $isSuperAdmin = $this->isSuperAdmin($currentUser);
 
-        if ($isSuperAdmin) {
-            // Super admin can update any team - skip authorization and user filtering
-        } else {
+        if (!$isSuperAdmin) {
             // For regular users, check authorization first
             $this->authorize('update', $team);
-            // Then verify team belongs to user (this will throw 404 if not found)
-            $this->service->findById($team->id, $currentUser->id);
         }
 
-        $validated = $request->validated();
-
-        $teamResource = $this->service->updateTeam($team, $validated);
+        $teamResource = $this->service->update($team, $request->validated());
 
         // Invalidate team and user caches
         CacheInvalidationService::invalidateTeam($team->id);
         CacheInvalidationService::invalidateUser($currentUser->id);
 
-        return ApiResponse::success($teamResource);
+        return $this->respondWithResource($teamResource);
     }
 
     /**
@@ -155,20 +119,14 @@ final class TeamController extends Controller
      */
     public function destroy(Team $team): JsonResponse
     {
-        /** @var User $currentUser */
-        $currentUser = Auth::user();
-        $currentUser->refresh();
+        $currentUser = $this->getAuthenticatedUser();
 
         // Check if user is super admin
         $isSuperAdmin = $this->isSuperAdmin($currentUser);
 
-        if ($isSuperAdmin) {
-            // Super admin can delete any team - skip authorization and user filtering
-        } else {
+        if (!$isSuperAdmin) {
             // For regular users, check authorization first
             $this->authorize('delete', $team);
-            // Then verify team belongs to user (this will throw 404 if not found)
-            $this->service->findById($team->id, $currentUser->id);
         }
 
         // If this was the current team for any user, clear it
@@ -177,13 +135,13 @@ final class TeamController extends Controller
         }
 
         $teamId = $team->id;
-        $this->service->deleteTeam($team);
+        $this->service->delete($team);
 
         // Invalidate caches
         CacheInvalidationService::invalidateTeam($teamId);
         CacheInvalidationService::invalidateUser($currentUser->id);
 
-        return ApiResponse::noContent('Team deleted successfully');
+        return $this->respondNoContent('Team deleted successfully');
     }
 
     /**
@@ -197,10 +155,7 @@ final class TeamController extends Controller
             'team_id' => ['required', 'integer', 'exists:teams,id'],
         ]);
 
-        /** @var User $user */
-        $user = Auth::user();
-        $user->refresh();
-
+        $user = $this->getAuthenticatedUser();
         $oldTeamId = $user->current_team_id;
 
         try {
@@ -221,40 +176,14 @@ final class TeamController extends Controller
         $user->load('currentTeam', 'teams');
         $user->makeVisible(['current_team_id']);
 
-        return ApiResponse::success([
+        return $this->respondWithResource([
             'user'         => $user,
             'current_team' => $user->currentTeam,
         ]);
     }
 
-    public function prerequisites()
+    public function prerequisites(): JsonResponse
     {
-        return [];
-    }
-
-    /**
-     * Check if user is a super admin.
-     */
-    private function isSuperAdmin(User $user): bool
-    {
-        // Use the exact same logic as BasePolicy::before() to ensure consistency
-        $permissionRegistrar = resolve(PermissionRegistrar::class);
-        $originalTeamId = $permissionRegistrar->getPermissionsTeamId();
-        $permissionRegistrar->setPermissionsTeamId(null); // Check global roles
-
-        // Clear permission cache and roles relation to ensure fresh check
-        $permissionRegistrar->forgetCachedPermissions();
-
-        if (!$user->relationLoaded('roles')) {
-            $user->load('roles');
-        }
-
-        $user->unsetRelation('roles');
-        $isSuperAdmin = $user->hasRole('super-admin');
-
-        // Restore original team context
-        $permissionRegistrar->setPermissionsTeamId($originalTeamId);
-
-        return $isSuperAdmin;
+        return $this->respondWithPrerequisites([]);
     }
 }

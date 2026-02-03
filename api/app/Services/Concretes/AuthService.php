@@ -16,19 +16,11 @@ use App\Repositories\Contracts\UserRepositoryInterface;
 
 final class AuthService extends BaseService implements AuthServiceInterface
 {
-    /**
-     * AuthService constructor.
-     */
     public function __construct(UserRepositoryInterface $userRepository)
     {
         $this->setRepository($userRepository);
     }
 
-    /**
-     * Register a new user.
-     *
-     * @param  array<string, mixed>  $data
-     */
     public function register(array $data): array
     {
         /** @var User $user */
@@ -52,13 +44,6 @@ final class AuthService extends BaseService implements AuthServiceInterface
         ];
     }
 
-    /**
-     * Refresh the token.
-     *
-     * @return string New token
-     *
-     * @throws AuthenticationException If token refresh fails
-     */
     public function refresh(): string
     {
         // Note: JWT functionality removed - using Sanctum instead
@@ -66,13 +51,6 @@ final class AuthService extends BaseService implements AuthServiceInterface
         throw new AuthenticationException('Token refresh not implemented. Using Sanctum for authentication.');
     }
 
-    /**
-     * Authenticate a user.
-     *
-     * @param  array<string, mixed>  $credentials
-     *
-     * @throws AuthenticationException If authentication fails
-     */
     public function login(array $credentials): array
     {
         throw_unless(Auth::attempt($credentials), AuthenticationException::class, 'Invalid credentials');
@@ -83,13 +61,6 @@ final class AuthService extends BaseService implements AuthServiceInterface
         return $this->prepareUserWithToken($user);
     }
 
-    /**
-     * Get the authenticated user.
-     *
-     * @return Authenticatable The authenticated user
-     *
-     * @throws AuthenticationException If user is not authenticated
-     */
     public function me(): Authenticatable
     {
         $user = Auth::user();
@@ -99,9 +70,6 @@ final class AuthService extends BaseService implements AuthServiceInterface
         return $user;
     }
 
-    /**
-     * Invalidate the token.
-     */
     public function logout(): bool
     {
         Auth::logout();

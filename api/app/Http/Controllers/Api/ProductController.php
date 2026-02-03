@@ -6,24 +6,13 @@ namespace App\Http\Controllers\Api;
 
 use App\Models\Product;
 use Illuminate\Http\JsonResponse;
-use App\Http\Responses\ApiResponse;
-use App\Http\Controllers\Controller;
-use App\Http\Controllers\Concerns\UsesQueryBuilder;
 use App\Http\Requests\Products\IndexProductRequest;
 use App\Http\Requests\Products\StoreProductRequest;
 use App\Services\Contracts\ProductServiceInterface;
 use App\Http\Requests\Products\UpdateProductRequest;
-use App\Http\Controllers\Concerns\UsesCachedResponses;
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use App\Http\Controllers\Concerns\InvalidatesCachedModels;
 
-final class ProductController extends Controller
+final class ProductController extends BaseApiController
 {
-    use AuthorizesRequests;
-    use InvalidatesCachedModels;
-    use UsesCachedResponses;
-    use UsesQueryBuilder;
-
     public function __construct(
         private readonly ProductServiceInterface $service,
     ) {}
@@ -40,12 +29,9 @@ final class ProductController extends Controller
     {
         $this->authorize('viewAny', Product::class);
 
-        $validated = $request->validated();
-        $perPage = (int) $validated['per_page'];
-
-        $products = $this->service->getPaginated($perPage);
-
-        return ApiResponse::success($products);
+        return $this->respondWithCollection(
+            $this->service->getPaginatedByRequest($request),
+        );
     }
 
     /**
@@ -57,9 +43,9 @@ final class ProductController extends Controller
     {
         $this->authorize('create', Product::class);
 
-        $product = $this->service->createProduct($request->validated());
-
-        return ApiResponse::created($product);
+        return $this->respondCreated(
+            $this->service->create($request->validated()),
+        );
     }
 
     /**
@@ -71,9 +57,9 @@ final class ProductController extends Controller
     {
         $this->authorize('view', $product);
 
-        $productResource = $this->service->findById($product->id);
-
-        return ApiResponse::success($productResource);
+        return $this->respondWithResource(
+            $this->service->findById($product->id),
+        );
     }
 
     /**
@@ -85,9 +71,9 @@ final class ProductController extends Controller
     {
         $this->authorize('update', $product);
 
-        $productResource = $this->service->updateProduct($product, $request->validated());
-
-        return ApiResponse::success($productResource);
+        return $this->respondWithResource(
+            $this->service->update($product, $request->validated()),
+        );
     }
 
     /**
@@ -99,8 +85,8 @@ final class ProductController extends Controller
     {
         $this->authorize('delete', $product);
 
-        $this->service->deleteProduct($product);
+        $this->service->delete($product);
 
-        return ApiResponse::noContent('product deleted successfully');
+        return $this->respondNoContent('Product deleted successfully');
     }
 }

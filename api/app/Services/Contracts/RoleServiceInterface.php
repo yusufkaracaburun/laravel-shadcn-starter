@@ -5,60 +5,31 @@ declare(strict_types=1);
 namespace App\Services\Contracts;
 
 use App\Models\Role;
+use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\Model;
 use App\Services\BaseServiceInterface;
 use App\Http\Resources\Roles\RoleResource;
 use App\Http\Resources\Roles\RoleCollection;
-use Illuminate\Database\Eloquent\Collection;
 
 interface RoleServiceInterface extends BaseServiceInterface
 {
-    /**
-     * Get all roles.
-     */
-    public function getRoles(): Collection|RoleCollection;
+    public function getPaginatedByRequest(Request $request, array $columns = ['*']): RoleCollection;
 
-    /**
-     * Get all roles without pagination.
-     */
-    public function getAllRoles(): Collection|RoleCollection;
+    public function getAll(array $columns = ['*']): RoleCollection;
 
-    /**
-     * Get filtered roles with pagination.
-     */
-    public function getPaginated(int $perPage): RoleCollection;
+    public function getNonSystemRoles(): RoleCollection;
 
-    /**
-     * Get role by id.
-     */
-    public function getRoleById(int $id): RoleResource;
+    public function findById(int $id): RoleResource;
 
-    /**
-     * Get role by name.
-     */
-    public function getRoleByName(string $name): ?Role;
+    public function findByName(string $name): ?Role;
 
-    /**
-     * Create new role.
-     */
-    public function createRole(array $data): RoleResource;
+    public function create(array $data): RoleResource;
 
-    /**
-     * Update role.
-     */
-    public function updateRole(int $id, array $data): RoleResource;
+    public function update(Model $model, array $data): RoleResource;
 
-    /**
-     * Delete role.
-     */
-    public function deleteRole(int $id): bool;
+    public function delete(Model $model): bool;
 
-    /**
-     * Assign permissions to role.
-     */
     public function assignPermissions(int $roleId, array $permissionIds): RoleResource;
 
-    /**
-     * Get non-system roles.
-     */
-    public function getNonSystemRoles(): Collection|RoleCollection;
+    public function getWebRolesFiltered(): array;
 }

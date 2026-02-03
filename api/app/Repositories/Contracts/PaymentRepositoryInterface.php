@@ -9,5 +9,4 @@ use App\Repositories\QueryableRepositoryInterface;
 
 interface PaymentRepositoryInterface extends QueryableRepositoryInterface
 {
-    public function findOrFail(int $id, array $columns = ['*']): Payment;
 }

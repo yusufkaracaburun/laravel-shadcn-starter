@@ -5,7 +5,10 @@ declare(strict_types=1);
 namespace App\Services\Concretes;
 
 use App\Models\Project;
+use Illuminate\Http\Request;
 use App\Services\BaseService;
+use Illuminate\Database\Eloquent\Model;
+use App\Services\Concerns\TransformsResources;
 use App\Http\Resources\Projects\ProjectResource;
 use App\Http\Resources\Projects\ProjectCollection;
 use App\Services\Contracts\ProjectServiceInterface;
@@ -13,67 +16,67 @@ use App\Repositories\Contracts\ProjectRepositoryInterface;
 
 final class ProjectService extends BaseService implements ProjectServiceInterface
 {
-    private readonly ProjectRepositoryInterface $projectRepository;
+    use TransformsResources;
 
     public function __construct(
         ProjectRepositoryInterface $repository,
     ) {
         $this->setRepository($repository);
-        $this->projectRepository = $repository;
+    }
+
+    public function getPaginatedByRequest(Request $request, array $columns = ['*']): ProjectCollection
+    {
+        return $this->toCollection(
+            $this->repository->paginateFiltered($request, $columns),
+        );
+    }
+
+    public function getAll(array $columns = ['*']): ProjectCollection
+    {
+        return $this->toCollection(
+            $this->repository->all($columns),
+        );
+    }
+
+    public function findById(int $id): ProjectResource
+    {
+        return $this->toResource(
+            $this->repository->find($id),
+        );
+    }
+
+    public function create(array $data): ProjectResource
+    {
+        return $this->toResource(
+            $this->repository->create($data),
+        );
     }
 
     /**
-     * Get paginated projects with QueryBuilder support.
-     * Supports filtering, sorting, and including relationships via request parameters.
+     * @param Project $model
      */
-    public function getPaginated(int $perPage, ?int $teamId = null): ProjectCollection
+    public function update(Model $model, array $data): ProjectResource
     {
-        $paginated = $this->projectRepository->getPaginated($perPage, $teamId);
-
-        return new ProjectCollection($paginated);
+        return $this->toResource(
+            $this->repository->update($model->id, $data),
+        );
     }
 
     /**
-     * Find a project by ID with relationships loaded.
+     * @param Project $model
      */
-    public function findById(int $projectId, ?int $teamId = null): ProjectResource
+    public function delete(Model $model): bool
     {
-        $project = $this->projectRepository->findById($projectId, $teamId);
-
-        return new ProjectResource($project);
+        return $this->repository->delete($model->id);
     }
 
-    /**
-     * Create a new project with team context.
-     *
-     * @param  array<string, mixed>  $data
-     * @param  int|null  $teamId  Team ID for team-scoped project creation
-     */
-    public function createProject(array $data, ?int $teamId = null): ProjectResource
+    protected function getResourceClass(): string
     {
-        $project = $this->projectRepository->createProject($data, $teamId);
-
-        return new ProjectResource($project);
+        return ProjectResource::class;
     }
 
-    /**
-     * Update a project by model instance.
-     *
-     * @param  array<string, mixed>  $data
-     * @param  int|null  $teamId  Team ID for team-scoped updates
-     */
-    public function updateProject(Project $project, array $data, ?int $teamId = null): ProjectResource
+    protected function getCollectionClass(): string
     {
-        $project = $this->projectRepository->updateProject($project, $data, $teamId);
-
-        return new ProjectResource($project);
-    }
-
-    /**
-     * Delete a project by model instance.
-     */
-    public function deleteProject(Project $project): bool
-    {
-        return $this->projectRepository->deleteProject($project);
+        return ProjectCollection::class;
     }
 }

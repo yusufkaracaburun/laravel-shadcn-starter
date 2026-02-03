@@ -11,5 +11,4 @@ use App\Repositories\QueryableRepositoryInterface;
 
 interface TeamRepositoryInterface extends QueryableRepositoryInterface
 {
-    public function findOrFail(int $id, array $columns = ['*']): Team;
 }

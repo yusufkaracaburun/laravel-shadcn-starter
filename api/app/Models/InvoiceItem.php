@@ -12,29 +12,16 @@ use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 
-/**
- * InvoiceItem model.
- *
- * Represents a line item on an invoice.
- */
 #[ObservedBy([InvoiceItemObserver::class])]
 final class InvoiceItem extends BaseModel
 {
     use HasMoneyTrait;
 
-    /**
-     * Get the invoice this item belongs to.
-     *
-     * @return BelongsTo<Invoice, covariant $this>
-     */
     public function invoice(): BelongsTo
     {
         return $this->belongsTo(Invoice::class, 'invoice_id');
     }
 
-    /**
-     * Boot the model.
-     */
     protected static function booted(): void
     {
         self::saving(function (InvoiceItem $item): void {
@@ -42,23 +29,12 @@ final class InvoiceItem extends BaseModel
         });
     }
 
-    /**
-     * Scope a query to order items by sort_order.
-     *
-     * @param  Builder<InvoiceItem>  $query
-     * @return Builder<InvoiceItem>
-     */
     #[Scope]
     protected function scopeOrdered(Builder $query): Builder
     {
         return $query->orderBy('sort_order')->orderBy('id');
     }
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
     protected function casts(): array
     {
         return [

@@ -21,11 +21,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 
-/**
- * Invoice model.
- *
- * Represents an invoice sent to a customer.
- */
 #[ObservedBy([InvoiceObserver::class])]
 final class Invoice extends BaseModel
 {
@@ -34,11 +29,6 @@ final class Invoice extends BaseModel
     use HasMoneyTrait;
     use LogsActivity;
 
-    /**
-     * Searchable fields for this model.
-     *
-     * @var list<string>
-     */
     public static array $searchable = [
         'invoice_number',
         'notes',
@@ -56,69 +46,36 @@ final class Invoice extends BaseModel
             ->dontSubmitEmptyLogs();
     }
 
-    /**
-     * Get the customer this invoice belongs to.
-     *
-     * @return BelongsTo<Customer, covariant $this>
-     */
     public function customer(): BelongsTo
     {
         return $this->belongsTo(Customer::class, 'customer_id');
     }
 
-    /**
-     * Get all items for this invoice.
-     *
-     * @return HasMany<InvoiceItem>
-     */
     public function items(): HasMany
     {
         return $this->hasMany(InvoiceItem::class);
     }
 
-    /**
-     * Get all payments for this invoice.
-     *
-     * @return HasMany<Payment>
-     */
     public function payments(): HasMany
     {
         return $this->hasMany(Payment::class);
     }
 
-    /**
-     * Get all emails sent for this invoice.
-     *
-     * @return HasMany<SentEmail>
-     */
     public function emails(): MorphMany
     {
         return $this->morphMany(SentEmail::class, 'emailable')->orderBy('created_at', 'desc');
     }
 
-    /**
-     * Get all activity logs for this invoice.
-     *
-     * @return MorphMany
-     */
     public function activities()
     {
         return $this->morphMany(Activity::class, 'subject')->orderBy('created_at', 'desc');
     }
 
-    /**
-     * Generate a PDF for this invoice.
-     *
-     * @return \Barryvdh\DomPDF\PDF
-     */
     public function generatePdf()
     {
         return Pdf::loadView('pdf.invoice', ['invoice' => $this]);
     }
 
-    /**
-     * Boot the model.
-     */
     protected static function booted(): void
     {
         self::creating(function (Invoice $invoice): void {
@@ -130,11 +87,6 @@ final class Invoice extends BaseModel
         });
     }
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
     protected function casts(): array
     {
         return [
@@ -149,18 +101,12 @@ final class Invoice extends BaseModel
         ];
     }
 
-    /**
-     * Scope a query to only include draft invoices.
-     */
     #[Scope]
     protected function draft(Builder $query): Builder
     {
         return $query->where('status', InvoiceStatus::DRAFT);
     }
 
-    /**
-     * Scope a query to only include paid invoices.
-     */
     #[Scope]
     protected function paid(Builder $query): Builder
     {

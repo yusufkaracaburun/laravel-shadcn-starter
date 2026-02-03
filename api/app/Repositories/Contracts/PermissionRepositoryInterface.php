@@ -10,5 +10,4 @@ use App\Repositories\QueryableRepositoryInterface;
 
 interface PermissionRepositoryInterface extends QueryableRepositoryInterface
 {
-    public function findOrFail(int $id, array $columns = ['*']): Permission;
 }

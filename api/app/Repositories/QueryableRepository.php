@@ -6,96 +6,19 @@ namespace App\Repositories;
 
 use Illuminate\Http\Request;
 use App\Filters\SearchFilter;
-use Spatie\QueryBuilder\QueryBuilder;
 use Spatie\QueryBuilder\AllowedFilter;
+use Spatie\QueryBuilder\QueryBuilder;
 use Illuminate\Database\Eloquent\Collection;
 use Spatie\QueryBuilder\QueryBuilderRequest;
 use Illuminate\Pagination\LengthAwarePaginator;
+use App\Repositories\Concerns\ConfiguresQueryBuilder;
 
 abstract class QueryableRepository extends BaseRepository implements QueryableRepositoryInterface
 {
+    use ConfiguresQueryBuilder;
+
     protected ?Request $request = null;
 
-    /**
-     * Get filtered, sorted, and included resources.
-     */
-    final public function getFiltered(array $columns = ['*']): Collection
-    {
-        return $this->query()->get($columns);
-    }
-
-    /**
-     * Get a query builder instance with filters, sorts, and includes applied.
-     */
-    public function query(): QueryBuilder
-    {
-        $queryRequest = QueryBuilderRequest::fromRequest($this->request ?? request());
-
-        return QueryBuilder::for($this->model(), $queryRequest)
-            ->defaultSorts($this->getDefaultSorts())
-            ->allowedFilters($this->getMergedAllowedFilters())
-            ->allowedSorts($this->getAllowedSorts())
-            ->allowedFields($this->getAllowedFields())
-            ->allowedIncludes($this->getAllowedIncludes());
-    }
-
-    /**
-     * Get default sorts for this repository.
-     */
-    public function getDefaultSorts(): array
-    {
-        return [];
-    }
-
-    /**
-     * Get allowed sorts for this repository.
-     */
-    public function getAllowedSorts(): array
-    {
-        return [];
-    }
-
-    /**
-     * Get allowed fields for this repository.
-     */
-    public function getAllowedFields(): array
-    {
-        return [];
-    }
-
-    /**
-     * Get allowed includes for this repository.
-     */
-    public function getAllowedIncludes(): array
-    {
-        return [];
-    }
-
-    /**
-     * Get allowed filters for this repository.
-     */
-    public function getAllowedFilters(): array
-    {
-        return [
-            AllowedFilter::exact('id'),
-            AllowedFilter::scope('created_at'),
-        ];
-    }
-
-    /**
-     * Get paginated, filtered, sorted, and included resources.
-     */
-    final public function paginateFiltered(Request $request, array $columns = ['*']): LengthAwarePaginator
-    {
-        $this->withRequest($request);
-        $perPage = $request->input('per_page', 10);
-
-        return $this->query()->paginate($perPage, $columns);
-    }
-
-    /**
-     * Set the request instance for query building
-     */
     final public function withRequest(Request $request): static
     {
         $this->request = $request;
@@ -103,9 +26,30 @@ abstract class QueryableRepository extends BaseRepository implements QueryableRe
         return $this;
     }
 
-    /**
-     * Merge allowed filters with an automatic search filter if the model has $searchable fields.
-     */
+    public function query(): QueryBuilder
+    {
+        $queryRequest = QueryBuilderRequest::fromRequest($this->request ?? request());
+
+        return QueryBuilder::for($this->model->newQuery(), $queryRequest)
+            ->defaultSorts($this->getDefaultSorts())
+            ->allowedFilters($this->getMergedAllowedFilters())
+            ->allowedSorts($this->getAllowedSorts())
+            ->allowedFields($this->getAllowedFields())
+            ->allowedIncludes($this->getAllowedIncludes());
+    }
+
+    final public function getFiltered(array $columns = ['*']): Collection
+    {
+        return $this->query()->get($columns);
+    }
+
+    final public function paginateFiltered(array $columns = ['*']): LengthAwarePaginator
+    {
+        $perPage = ($this->request ?? request())->input('per_page', $this->DEFAULT_PER_PAGE);
+
+        return $this->query()->paginate((int) $perPage, $columns);
+    }
+
     protected function getMergedAllowedFilters(): array
     {
         $filters = $this->getAllowedFilters();
