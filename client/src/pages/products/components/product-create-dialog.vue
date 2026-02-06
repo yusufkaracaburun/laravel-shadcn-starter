@@ -1,7 +1,8 @@
 <script lang="ts" setup>
+import { PackagePlus } from 'lucide-vue-next'
+
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/dialog'
-import { PackagePlus } from 'lucide-vue-next'
 
 import ProductResourceDialog from './product-resource-dialog.vue'
 

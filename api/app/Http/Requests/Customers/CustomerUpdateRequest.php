@@ -10,11 +10,6 @@ use Illuminate\Validation\Rule;
 use App\Http\Requests\BaseFormRequest;
 use Illuminate\Contracts\Validation\ValidationRule;
 
-/**
- * Customer update request validation.
- *
- * Validates customer update data, including unique email validation that ignores the current customer.
- */
 final class CustomerUpdateRequest extends BaseFormRequest
 {
     /**
@@ -39,5 +34,15 @@ final class CustomerUpdateRequest extends BaseFormRequest
             'phone'  => ['nullable', new ValidPhoneNumber()],
             'status' => ['sometimes', 'nullable', 'string', 'in:active,inactive,pending'],
         ];
+    }
+
+    public function attributes(): array
+    {
+        return array_merge(parent::attributes(), [
+            'name'   => 'name',
+            'email'  => 'email address',
+            'phone'  => 'phone number',
+            'status' => 'status',
+        ]);
     }
 }

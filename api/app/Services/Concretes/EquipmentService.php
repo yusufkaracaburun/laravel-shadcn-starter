@@ -5,10 +5,8 @@ declare(strict_types=1);
 namespace App\Services\Concretes;
 
 use App\Models\Equipment;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use App\Services\BaseService;
-use App\Services\Concerns\TransformsResources;
 use App\Http\Resources\Equipments\EquipmentResource;
 use App\Services\Contracts\EquipmentServiceInterface;
 use App\Http\Resources\Equipments\EquipmentCollection;
@@ -16,67 +14,52 @@ use App\Repositories\Contracts\EquipmentRepositoryInterface;
 
 final class EquipmentService extends BaseService implements EquipmentServiceInterface
 {
-    use TransformsResources;
+    private readonly EquipmentRepositoryInterface $repo;
 
     public function __construct(
-        EquipmentRepositoryInterface $repository,
+        EquipmentRepositoryInterface $repo,
     ) {
-        $this->setRepository($repository);
+        $this->setRepository($repo);
+        $this->repo = $repo;
     }
 
-    public function getPaginatedByRequest(Request $request, array $columns = ['*']): EquipmentCollection
+    public function getPaginated(Request $request): EquipmentCollection
     {
-        return $this->toCollection(
-            $this->repository->paginateFiltered($request, $columns),
-        );
+        $paginated = $this->repo->withRequest($request)->paginateFiltered();
+
+        return new EquipmentCollection($paginated);
     }
 
-    public function getAll(array $columns = ['*']): EquipmentCollection
+    public function show(Equipment $equipment): EquipmentResource
     {
-        return $this->toCollection(
-            $this->repository->all($columns),
-        );
+        $equipment = $this->repo->findForShow($equipment);
+
+        return new EquipmentResource($equipment);
     }
 
-    public function findById(int $id): EquipmentResource
+    public function createEquipment(array $data): EquipmentResource
     {
-        return $this->toResource(
-            $this->repository->find($id),
-        );
+        $equipment = $this->repo->createWithRelationships($data);
+
+        return new EquipmentResource($equipment);
     }
 
-    public function create(array $data): EquipmentResource
+    public function updateEquipment(Equipment $equipment, array $data): EquipmentResource
     {
-        return $this->toResource(
-            $this->repository->create($data),
-        );
+        $updated = $this->repo->updateWithRelationships($equipment, $data);
+
+        return new EquipmentResource($updated);
     }
 
-    /**
-     * @param Equipment $model
-     */
-    public function update(Model $model, array $data): EquipmentResource
+    public function deleteEquipment(Equipment $equipment): bool
     {
-        return $this->toResource(
-            $this->repository->update($model->id, $data),
-        );
+        return $this->repo->delete($equipment);
     }
 
-    /**
-     * @param Equipment $model
-     */
-    public function delete(Model $model): bool
+    public function getAll(): EquipmentCollection
     {
-        return $this->repository->delete($model->id);
-    }
+        $equipments = $this->repo->all();
 
-    protected function getResourceClass(): string
-    {
-        return EquipmentResource::class;
-    }
-
-    protected function getCollectionClass(): string
-    {
-        return EquipmentCollection::class;
+        return new EquipmentCollection($equipments);
     }
 }

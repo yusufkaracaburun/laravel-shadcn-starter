@@ -58,9 +58,7 @@ function onSubmit() {
         <UiButton variant="secondary" @click="isOpen = false">
           Cancel
         </UiButton>
-        <UiButton @click="onSubmit">
-          Import
-        </UiButton>
+        <UiButton @click="onSubmit"> Import </UiButton>
       </UiDialogFooter>
     </UiDialogContent>
   </UiDialog>

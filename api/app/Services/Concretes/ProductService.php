@@ -5,78 +5,73 @@ declare(strict_types=1);
 namespace App\Services\Concretes;
 
 use App\Models\Product;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Http\Request;
 use App\Services\BaseService;
-use App\Services\Concerns\TransformsResources;
 use App\Http\Resources\Products\ProductResource;
 use App\Http\Resources\Products\ProductCollection;
 use App\Services\Contracts\ProductServiceInterface;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Repositories\Contracts\ProductRepositoryInterface;
 
 final class ProductService extends BaseService implements ProductServiceInterface
 {
-    use TransformsResources;
+    private readonly ProductRepositoryInterface $repo;
 
+    /**
+     * Create a new class instance.
+     */
     public function __construct(
-        ProductRepositoryInterface $repository,
+        ProductRepositoryInterface $repo,
     ) {
-        $this->setRepository($repository);
+        $this->setRepository($repo);
+        $this->repo = $repo;
     }
 
-    public function getPaginatedByRequest(Request $request, array $columns = ['*']): ProductCollection
+    public function getPaginated(int $perPage, ?int $teamId = null): ProductCollection
     {
-        return $this->toCollection(
-            $this->repository->paginateFiltered($request, $columns),
-        );
+        $request = request();
+        $request->query->set('per_page', (string) $perPage);
+
+        $this->repo->withRequest($request);
+
+        $paginated = $this->repo->query()->paginate($perPage);
+
+        return new ProductCollection($paginated);
     }
 
-    public function getAll(array $columns = ['*']): ProductCollection
+    public function findById(int $productId, ?int $teamId = null): ProductResource
     {
-        return $this->toCollection(
-            $this->repository->all($columns),
-        );
+        try {
+            $product = $this->repo->findOrFail($productId);
+
+            return new ProductResource($product);
+        } catch (ModelNotFoundException) {
+            throw new ModelNotFoundException('Product not found');
+        }
     }
 
-    public function findById(int $id): ProductResource
+    public function createProduct(array $data, ?int $teamId = null): ProductResource
     {
-        return $this->toResource(
-            $this->repository->find($id),
-        );
+        $product = $this->repo->create($data);
+
+        return new ProductResource($product);
     }
 
-    public function create(array $data): ProductResource
+    public function updateProduct(Product $product, array $data, ?int $teamId = null): ProductResource
     {
-        return $this->toResource(
-            $this->repository->create($data),
-        );
+        $updated = $this->repo->update($product, $data);
+
+        return new ProductResource($updated);
     }
 
-    /**
-     * @param Product $model
-     */
-    public function update(Model $model, array $data): ProductResource
+    public function deleteProduct(Product $product): bool
     {
-        return $this->toResource(
-            $this->repository->update($model->id, $data),
-        );
+        return $this->repo->delete($product);
     }
 
-    /**
-     * @param Product $model
-     */
-    public function delete(Model $model): bool
+    public function getAll(): ProductCollection
     {
-        return $this->repository->delete($model->id);
-    }
+        $products = $this->repo->all();
 
-    protected function getResourceClass(): string
-    {
-        return ProductResource::class;
-    }
-
-    protected function getCollectionClass(): string
-    {
-        return ProductCollection::class;
+        return new ProductCollection($products);
     }
 }

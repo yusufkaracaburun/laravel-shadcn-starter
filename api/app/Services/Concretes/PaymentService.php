@@ -5,78 +5,66 @@ declare(strict_types=1);
 namespace App\Services\Concretes;
 
 use App\Models\Payment;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Http\Request;
 use App\Services\BaseService;
-use App\Services\Concerns\TransformsResources;
 use App\Http\Resources\Payments\PaymentResource;
 use App\Http\Resources\Payments\PaymentCollection;
 use App\Services\Contracts\PaymentServiceInterface;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Repositories\Contracts\PaymentRepositoryInterface;
 
 final class PaymentService extends BaseService implements PaymentServiceInterface
 {
-    use TransformsResources;
+    private readonly PaymentRepositoryInterface $paymentRepository;
 
+    /**
+     * Create a new class instance.
+     */
     public function __construct(
-        PaymentRepositoryInterface $repository,
+        PaymentRepositoryInterface $repo,
     ) {
-        $this->setRepository($repository);
+        $this->setRepository($repo);
+        $this->paymentRepository = $repo;
     }
 
-    public function getPaginatedByRequest(Request $request, array $columns = ['*']): PaymentCollection
+    public function getPaginated(int $perPage, ?int $teamId = null): PaymentCollection
     {
-        return $this->toCollection(
-            $this->repository->paginateFiltered($request, $columns),
-        );
+        $request = request();
+        $request->query->set('per_page', (string) $perPage);
+
+        $this->paymentRepository->withRequest($request);
+
+        $paginated = $this->paymentRepository->query()->paginate($perPage);
+
+        return new PaymentCollection($paginated);
     }
 
-    public function getAll(array $columns = ['*']): PaymentCollection
+    public function findById(int $paymentId, ?int $teamId = null): PaymentResource
     {
-        return $this->toCollection(
-            $this->repository->all($columns),
-        );
+        try {
+            $payment = $this->paymentRepository->findOrFail($paymentId);
+
+            return new PaymentResource($payment);
+        } catch (ModelNotFoundException) {
+            throw new ModelNotFoundException('Payment not found');
+        }
     }
 
-    public function findById(int $id): PaymentResource
+    public function createPayment(array $data, ?int $teamId = null): PaymentResource
     {
-        $payment = $this->repository->find($id);
+        $payment = $this->paymentRepository->create($data);
 
-        return $this->toResource($payment->load(['invoice', 'customer']));
+        return new PaymentResource($payment);
     }
 
-    public function create(array $data): PaymentResource
+    public function updatePayment(Payment $payment, array $data, ?int $teamId = null): PaymentResource
     {
-        return $this->toResource(
-            $this->repository->create($data),
-        );
+        $updated = $this->paymentRepository->update($payment, $data);
+
+        return new PaymentResource($updated);
     }
 
-    /**
-     * @param Payment $model
-     */
-    public function update(Model $model, array $data): PaymentResource
+    public function deletePayment(Payment $payment): bool
     {
-        return $this->toResource(
-            $this->repository->update($model->id, $data),
-        );
-    }
-
-    /**
-     * @param Payment $model
-     */
-    public function delete(Model $model): bool
-    {
-        return $this->repository->delete($model->id);
-    }
-
-    protected function getResourceClass(): string
-    {
-        return PaymentResource::class;
-    }
-
-    protected function getCollectionClass(): string
-    {
-        return PaymentCollection::class;
+        return $this->paymentRepository->delete($payment);
     }
 }

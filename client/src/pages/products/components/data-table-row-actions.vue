@@ -77,7 +77,11 @@ const isOpen = ref(false)
     </UiDropdownMenu>
 
     <UiDialogContent class="sm:max-w-[425px]">
-      <component :is="showComponent" :product="product" @close="isOpen = false" />
+      <component
+        :is="showComponent"
+        :product="product"
+        @close="isOpen = false"
+      />
     </UiDialogContent>
   </UiDialog>
 

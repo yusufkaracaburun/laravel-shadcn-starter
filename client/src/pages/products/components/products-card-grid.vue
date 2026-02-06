@@ -24,15 +24,17 @@ const props = withDefaults(defineProps<Props>(), {
     class="flex items-center justify-center min-h-[400px]"
   >
     <div class="text-center">
-      <p class="text-muted-foreground">
-        No products found.
-      </p>
+      <p class="text-muted-foreground">No products found.</p>
     </div>
   </div>
   <div
     v-else
     class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
   >
-    <ProductCard v-for="product in products" :key="product.id" :product="product" />
+    <ProductCard
+      v-for="product in products"
+      :key="product.id"
+      :product="product"
+    />
   </div>
 </template>

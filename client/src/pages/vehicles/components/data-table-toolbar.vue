@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 
-import type {
-  IDataTableToolbarProps,
-} from '@/components/data-table/types'
+import type { IDataTableToolbarProps } from '@/components/data-table/types'
 
+import DataTableFacetedFilter from '@/components/data-table/faceted-filter.vue'
 import DataTableViewOptions from '@/components/data-table/view-options.vue'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -12,9 +11,13 @@ import { XIcon } from '@/composables/use-icons.composable'
 
 import type { IVehicle, IVehicleFilters } from '../models/vehicles'
 
+import { statuses } from '../data/data'
+
 const props = defineProps<IDataTableToolbarProps<IVehicle, IVehicleFilters>>()
 
-const licensePlateColumn = computed(() => props.table.getColumn('license_plate'))
+const licensePlateColumn = computed(() =>
+  props.table.getColumn('license_plate'),
+)
 
 const searchValue = computed({
   get: () => (licensePlateColumn.value?.getFilterValue() as string) ?? '',
@@ -40,6 +43,13 @@ function handleResetFilters() {
         v-model="searchValue"
         placeholder="Filter vehicles by license plate..."
         class="h-8 w-[150px] lg:w-[250px] focus-visible:border-input focus-visible:ring-0"
+      />
+
+      <DataTableFacetedFilter
+        v-if="table.getColumn('status')"
+        :column="table.getColumn('status')"
+        title="Status"
+        :options="statuses"
       />
 
       <Button

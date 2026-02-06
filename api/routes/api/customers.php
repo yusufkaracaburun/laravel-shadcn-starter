@@ -15,6 +15,6 @@ use App\Http\Controllers\Api\CustomerController;
 */
 
 Route::middleware('auth:sanctum')->name('api.customers.')->group(function (): void {
-    // Customer resource routes
+    Route::get('customers/prerequisites', action: [CustomerController::class, 'prerequisites'])->name('prerequisites');
     Route::apiResource('customers', CustomerController::class);
 });

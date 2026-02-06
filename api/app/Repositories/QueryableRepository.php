@@ -6,8 +6,8 @@ namespace App\Repositories;
 
 use Illuminate\Http\Request;
 use App\Filters\SearchFilter;
-use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
+use Spatie\QueryBuilder\AllowedFilter;
 use Illuminate\Database\Eloquent\Collection;
 use Spatie\QueryBuilder\QueryBuilderRequest;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -16,6 +16,8 @@ use App\Repositories\Concerns\ConfiguresQueryBuilder;
 abstract class QueryableRepository extends BaseRepository implements QueryableRepositoryInterface
 {
     use ConfiguresQueryBuilder;
+
+    protected const DEFAULT_PER_PAGE = 10;
 
     protected ?Request $request = null;
 
@@ -45,7 +47,7 @@ abstract class QueryableRepository extends BaseRepository implements QueryableRe
 
     final public function paginateFiltered(array $columns = ['*']): LengthAwarePaginator
     {
-        $perPage = ($this->request ?? request())->input('per_page', $this->DEFAULT_PER_PAGE);
+        $perPage = ($this->request ?? request())->input('per_page', self::DEFAULT_PER_PAGE);
 
         return $this->query()->paginate((int) $perPage, $columns);
     }
@@ -55,7 +57,7 @@ abstract class QueryableRepository extends BaseRepository implements QueryableRe
         $filters = $this->getAllowedFilters();
         $modelClass = $this->model();
 
-        if (property_exists($modelClass, 'searchable') && ! empty($modelClass::$searchable)) {
+        if (property_exists($modelClass, 'searchable') && !empty($modelClass::$searchable)) {
             $filters[] = AllowedFilter::custom('search', new SearchFilter($modelClass::$searchable));
         }
 

@@ -17,12 +17,9 @@ function getLabelVariant(
   label: string,
 ): 'default' | 'secondary' | 'destructive' | 'outline' {
   const normalizedLabel = label.toLowerCase()
-  if (normalizedLabel === 'bug')
-    return 'destructive'
-  if (normalizedLabel === 'feature')
-    return 'default'
-  if (normalizedLabel === 'documentation')
-    return 'secondary'
+  if (normalizedLabel === 'bug') return 'destructive'
+  if (normalizedLabel === 'feature') return 'default'
+  if (normalizedLabel === 'documentation') return 'secondary'
   return 'outline'
 }
 
@@ -94,11 +91,10 @@ export const columns: ColumnDef<Task>[] = [
 
     cell: ({ row }) => {
       const status = statuses.find(
-        status => status.value === row.getValue('status'),
+        (status) => status.value === row.getValue('status'),
       )
 
-      if (!status)
-        return null
+      if (!status) return null
 
       return h(StatusBadge, {
         status: status.value,
@@ -117,15 +113,14 @@ export const columns: ColumnDef<Task>[] = [
       h(DataTableColumnHeader<Task>, { column, title: 'Priority' }),
     cell: ({ row }) => {
       const priority = priorities.find(
-        priority => priority.value === row.getValue('priority'),
+        (priority) => priority.value === row.getValue('priority'),
       )
 
-      if (!priority)
-        return null
+      if (!priority) return null
 
       return h('div', { class: 'flex items-center gap-2' }, [
-        priority.icon
-        && h(priority.icon, { class: `h-4 w-4 ${priority.color}` }),
+        priority.icon &&
+          h(priority.icon, { class: `h-4 w-4 ${priority.color}` }),
         h('span', { class: priority.color }, priority.label),
       ])
     },
@@ -139,8 +134,7 @@ export const columns: ColumnDef<Task>[] = [
       h(DataTableColumnHeader<Task>, { column, title: 'Due Date' }),
     cell: ({ row }) => {
       const dueDate = row.original.dueDate
-      if (!dueDate)
-        return h('span', { class: 'text-muted-foreground' }, '—')
+      if (!dueDate) return h('span', { class: 'text-muted-foreground' }, '—')
       const date = typeof dueDate === 'string' ? dayjs(dueDate) : dayjs(dueDate)
       return h('span', { class: 'text-sm' }, date.format('MMM D, YYYY'))
     },

@@ -1,0 +1,18 @@
+{
+  "recommendations": [
+    "vitest.explorer",
+    "formulahendry.auto-close-tag",
+    "steoates.autoimport",
+    "pkief.material-icon-theme",
+    "formulahendry.auto-rename-tag",
+    "aaron-bond.better-comments",
+    "ecmel.vscode-html-css",
+    "github.vscode-github-actions",
+    "eamodio.gitlens",
+    "ms-playwright.playwright",
+    "selemondev.shadcn-vue",
+    "bradlc.vscode-tailwindcss",
+    "pmneo.tsimporter",
+    "vue.volar"
+  ]
+}

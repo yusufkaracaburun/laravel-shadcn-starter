@@ -17,10 +17,7 @@ export class ProjectClient extends BaseClient {
    * @param perPage - Number of items per page (default: 15)
    * Returns raw APIResponse
    */
-  async getProjects(
-    page: number = 1,
-    perPage: number = 15,
-  ): Promise<APIResponse> {
+  async getProjects(page = 1, perPage = 15): Promise<APIResponse> {
     const endpoint = `/api/project?page=${page}&per_page=${perPage}`
     return this.get(endpoint)
   }
@@ -32,8 +29,8 @@ export class ProjectClient extends BaseClient {
    * Returns IResponse<PaginatedProjectsResponse>
    */
   async getProjectsTyped(
-    page: number = 1,
-    perPage: number = 15,
+    page = 1,
+    perPage = 15,
   ): Promise<IResponse<PaginatedProjectsResponse>> {
     const response = await this.getProjects(page, perPage)
     return response.json() as Promise<IResponse<PaginatedProjectsResponse>>

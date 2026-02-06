@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import type { IDataTableProps } from '@/components/data-table/types'
-import type { IProduct, IProductFilters } from '@/pages/products/models/products'
+import type {
+  IProduct,
+  IProductFilters,
+} from '@/pages/products/models/products'
 
 import DataTable from '@/components/data-table/data-table.vue'
 import { generateVueTable } from '@/components/data-table/use-generate-vue-table'

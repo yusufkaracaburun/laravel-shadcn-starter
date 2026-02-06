@@ -1,6 +1,7 @@
 import type { ColumnDef } from '@tanstack/vue-table'
 
 import { h } from 'vue'
+import { useRouter } from 'vue-router'
 
 import DataTableColumnHeader from '@/components/data-table/column-header.vue'
 import { SelectColumn } from '@/components/data-table/table-columns'
@@ -11,33 +12,58 @@ import { formatDate } from '@/utils/date'
 
 import type { IVehicle } from '../models/vehicles'
 
+import { statuses } from '../data/data'
 import DataTableRowActions from './data-table-row-actions.vue'
 
 // CSS class constants
 const CELL_CLASSES = {
   LICENSE_PLATE_CONTAINER: 'flex items-center gap-2',
-  CREATED_AT_CELL: 'w-[100px] text-muted-foreground',
+  DATE_CELL: 'w-[100px] text-muted-foreground',
   EMPTY_STATE: 'text-muted-foreground',
 } as const
 
 /**
- * Helper function to create license plate cell with copy functionality
+ * Helper function to create license plate cell with copy functionality and navigation
  */
-function createLicensePlateCell(licensePlateValue: unknown) {
+function createLicensePlateCell(
+  licensePlateValue: unknown,
+  vehicle: IVehicle,
+) {
   const licensePlateStr =
-    licensePlateValue && typeof licensePlateValue === 'string'
-      ? licensePlateValue
-      : ''
+    licensePlateValue && typeof licensePlateValue === 'string' ?
+      licensePlateValue :
+      ''
+  const router = useRouter()
 
-  return h('div', { class: CELL_CLASSES.LICENSE_PLATE_CONTAINER }, [
-    h('span', {}, licensePlateStr || '—'),
-    h(Copy, {
-      class: 'ml-2',
-      size: 'sm',
-      variant: 'ghost',
-      content: licensePlateStr,
-    }),
-  ])
+  return h(
+    'button',
+    {
+      class:
+        'flex items-center gap-2 max-w-[500px] truncate font-medium text-left hover:underline cursor-pointer focus:outline-none focus:underline',
+      onClick: () => {
+        router.push({
+          name: '/vehicles/view/[id]',
+          params: { id: vehicle.id.toString() },
+        })
+      },
+    },
+    [
+      h('span', { class: 'truncate' }, licensePlateStr || '—'),
+      ...(licensePlateStr ?
+          [
+            h(Copy, {
+              class: 'ml-2 flex-shrink-0',
+              size: 'sm',
+              variant: 'ghost',
+              content: licensePlateStr,
+              onClick: (e: Event) => {
+                e.stopPropagation()
+              },
+            }),
+          ] :
+          []),
+    ],
+  )
 }
 
 /**
@@ -47,37 +73,63 @@ function createDateCell(dateValue: unknown) {
   const dateValueString = dateValue as string | null | undefined
   return h(
     'div',
-    { class: CELL_CLASSES.CREATED_AT_CELL },
-    formatDate(dateValueString ?? ''),
+    { class: CELL_CLASSES.DATE_CELL },
+    dateValueString ? formatDate(dateValueString) : '—',
   )
+}
+
+/**
+ * Helper function to get status info from statuses data
+ */
+function getStatusInfo(status: string | null | undefined) {
+  if (!status) {
+    return null
+  }
+
+  return statuses.find((statusItem) => {
+    return statusItem.value.toLowerCase() === status.toLowerCase()
+  })
+}
+
+/**
+ * Helper function to get status variant for Badge
+ */
+function getStatusVariant(status: string | null | undefined) {
+  const statusInfo = getStatusInfo(status)
+  if (!statusInfo) {
+    return 'secondary'
+  }
+
+  switch (statusInfo.value) {
+    case 'active':
+      return 'default'
+    case 'inactive':
+      return 'destructive'
+    case 'maintenance':
+      return 'secondary'
+    default:
+      return 'secondary'
+  }
 }
 
 /**
  * Helper function to create status badge cell
  */
 function createStatusCell(vehicle: IVehicle) {
-  const statusFormatted = vehicle.status_formatted
-  if (!statusFormatted) {
+  if (!vehicle.status) {
     return h('div', { class: CELL_CLASSES.EMPTY_STATE }, '—')
   }
 
-  // Map color to variant
-  let variant: 'default' | 'secondary' | 'destructive' | 'outline' = 'secondary'
-  if (statusFormatted.color === 'danger') {
-    variant = 'destructive'
-  } else if (statusFormatted.color === 'success') {
-    variant = 'default'
-  }
+  const statusInfo = getStatusInfo(vehicle.status)
+  const variant = getStatusVariant(vehicle.status)
 
-  // Use Badge with status_formatted styling
-  // status_formatted.style contains the full CSS classes from backend
   return h(
     Badge,
     {
       variant,
-      class: statusFormatted.style || '',
+      class: statusInfo?.color || '',
     },
-    [statusFormatted.label || vehicle.status],
+    [statusInfo?.label || vehicle.status],
   )
 }
 
@@ -100,8 +152,9 @@ function createColumns(): ColumnDef<IVehicle>[] {
           title: t('vehicles.columns.licensePlate') || 'License Plate',
         }),
       cell: ({ row }) => {
+        const vehicle = row.original
         const licensePlate = row.getValue('license_plate')
-        return createLicensePlateCell(licensePlate)
+        return createLicensePlateCell(licensePlate, vehicle)
       },
       enableSorting: true,
       enableHiding: false,
@@ -117,6 +170,9 @@ function createColumns(): ColumnDef<IVehicle>[] {
       cell: ({ row }) => {
         const vehicle = row.original
         return createStatusCell(vehicle)
+      },
+      filterFn: (row, id, value) => {
+        return value.includes(row.getValue(id))
       },
       enableSorting: true,
       enableResizing: true,
@@ -168,28 +224,14 @@ function createColumns(): ColumnDef<IVehicle>[] {
       enableResizing: true,
     },
     {
-      accessorKey: 'color',
+      accessorKey: 'inspection_date',
       header: ({ column }) =>
         h(DataTableColumnHeader<IVehicle>, {
           column,
-          title: t('vehicles.columns.color') || 'Color',
+          title: t('vehicles.columns.inspectionDate') || 'Inspection Date',
         }),
       cell: ({ row }) => {
-        const color = row.getValue('color')
-        return h('div', {}, (typeof color === 'string' ? color : null) || '—')
-      },
-      enableSorting: true,
-      enableResizing: true,
-    },
-    {
-      accessorKey: 'created_at',
-      header: ({ column }) =>
-        h(DataTableColumnHeader<IVehicle>, {
-          column,
-          title: t('vehicles.columns.createdAt') || 'Created At',
-        }),
-      cell: ({ row }) => {
-        const dateValue = row.getValue('created_at')
+        const dateValue = row.getValue('inspection_date')
         return createDateCell(dateValue)
       },
       enableSorting: true,

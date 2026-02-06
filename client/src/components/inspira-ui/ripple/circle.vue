@@ -23,7 +23,8 @@ const props = withDefaults(defineProps<Props>(), {
 
 <style scoped>
 .animate-ripple-circle {
-  animation: ripple-effect var(--duration, 2s) ease-in-out calc(var(--i, 0) * 0.2s) infinite;
+  animation: ripple-effect var(--duration, 2s) ease-in-out
+    calc(var(--i, 0) * 0.2s) infinite;
   border-width: 1px;
   top: 50%;
   left: 50%;

@@ -69,7 +69,7 @@ const toastConfig = {
   },
   loading: {
     ...defaultToastOptions,
-    duration: Infinity, // Loading toasts don't auto-dismiss
+    duration: Number.POSITIVE_INFINITY, // Loading toasts don't auto-dismiss
   },
   default: {
     ...defaultToastOptions,

@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { GalleryVerticalEnd } from 'lucide-vue-next'
 
-import { useAuth } from '@/pages/auth/composables/use-auth.composable'
 import LoginForm2 from '@/pages/auth/components/LoginForm2.vue'
+import { useAuth } from '@/pages/auth/composables/use-auth.composable'
 import env from '@/utils/env'
 
 import { testusers } from '../../../tests/.data/users.data'
@@ -56,7 +56,7 @@ async function quickLogin(userKey: keyof typeof testusers) {
         src="/placeholder.png"
         alt=""
         class="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
-      >
+      />
     </div>
   </div>
 </template>

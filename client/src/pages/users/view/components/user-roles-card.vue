@@ -29,11 +29,7 @@ defineProps<Props>()
     </CardHeader>
     <CardContent>
       <div class="flex flex-wrap gap-2">
-        <Badge
-          v-for="role in user.roles"
-          :key="role.id"
-          variant="outline"
-        >
+        <Badge v-for="role in user.roles" :key="role.id" variant="outline">
           {{ role.name }}
         </Badge>
       </div>

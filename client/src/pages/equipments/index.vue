@@ -1,23 +1,34 @@
 <script setup lang="ts">
-import Page from '@/components/global-layout/basic-page.vue'
+import { onMounted, ref } from 'vue'
+
+import type { IEquipment } from '@/pages/equipments/models/equipments'
+
+import Page from '@/components/global-layout/basic-page-with-list.vue'
 import { useEquipments } from '@/pages/equipments/composables/use-equipments.composable'
 
-import { getEquipmentsColumns } from './components/columns'
-import DataTable from './components/data-table.vue'
+import EquipmentDetail from './components/equipment-detail.vue'
+import EquipmentList from './components/equipment-list.vue'
 import EquipmentsCreate from './components/equipments-create-dialog.vue'
-
-const columns = getEquipmentsColumns()
 
 const {
   loading,
   equipments,
-  serverPagination,
-  sort,
-  onSortingChange,
   filter,
+  sort,
+  serverPagination,
   onFiltersChange,
-  clearFilters,
+  onSortingChange,
+  onPageSizeChange,
+  fetchEquipmentsPrerequisitesData,
+  fetchEquipmentsData,
 } = useEquipments()
+
+const selectedEquipment = ref<IEquipment | null>(null)
+
+onMounted(() => {
+  fetchEquipmentsPrerequisitesData()
+  fetchEquipmentsData()
+})
 </script>
 
 <template>
@@ -30,18 +41,51 @@ const {
     <template #actions>
       <EquipmentsCreate />
     </template>
-    <div class="overflow-x-auto">
-      <DataTable
+
+    <template #default="{ openDetail }">
+      <EquipmentList
+        :equipments="equipments ?? []"
         :loading="loading"
-        :data="equipments"
-        :columns="columns"
-        :server-pagination="serverPagination"
-        :sorting="sort"
-        :on-sorting-change="onSortingChange"
-        :filters="filter"
-        :on-filters-change="onFiltersChange"
-        :on-clear-filters="clearFilters"
+        :selected-equipment="selectedEquipment"
+        :open-detail="openDetail"
+        :filter="filter"
+        :sort="sort"
+        :page-size="serverPagination.pageSize"
+        @update:selected-equipment="selectedEquipment = $event"
+        @filters-change="onFiltersChange"
+        @sort-change="onSortingChange"
+        @page-size-change="onPageSizeChange"
       />
-    </div>
+    </template>
+
+    <template #detail>
+      <Transition name="fade-slide" mode="out-in">
+        <EquipmentDetail
+          :key="selectedEquipment?.id || 'no-equipment'"
+          :equipment="selectedEquipment"
+        />
+      </Transition>
+    </template>
   </Page>
 </template>
+
+<style scoped>
+.fade-slide-enter-active,
+.fade-slide-leave-active {
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
+}
+
+.fade-slide-enter-from,
+.fade-slide-leave-to {
+  opacity: 0;
+  transform: translateX(4px);
+}
+
+.fade-slide-enter-to,
+.fade-slide-leave-from {
+  opacity: 1;
+  transform: translateX(0);
+}
+</style>

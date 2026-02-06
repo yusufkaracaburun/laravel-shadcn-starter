@@ -6,15 +6,26 @@ namespace App\Repositories\Concretes;
 
 use App\Models\Invoice;
 use App\Filters\YearFilter;
+use Spatie\QueryBuilder\QueryBuilder;
 use Spatie\QueryBuilder\AllowedFilter;
 use App\Repositories\QueryableRepository;
+use Spatie\QueryBuilder\QueryBuilderRequest;
+use Illuminate\Pagination\LengthAwarePaginator;
 use App\Repositories\Contracts\InvoiceRepositoryInterface;
 
 final class InvoiceRepository extends QueryableRepository implements InvoiceRepositoryInterface
 {
-    protected function model(): string
+    public function query(): QueryBuilder
     {
-        return Invoice::class;
+        $queryRequest = QueryBuilderRequest::fromRequest($this->request ?? request());
+
+        return QueryBuilder::for($this->model(), $queryRequest)
+            ->with(['customer'])
+            ->defaultSorts($this->getDefaultSorts())
+            ->allowedFilters($this->getMergedAllowedFilters())
+            ->allowedSorts($this->getAllowedSorts())
+            ->allowedFields($this->getAllowedFields())
+            ->allowedIncludes($this->getAllowedIncludes());
     }
 
     public function getDefaultSorts(): array
@@ -24,18 +35,18 @@ final class InvoiceRepository extends QueryableRepository implements InvoiceRepo
 
     public function getAllowedSorts(): array
     {
-        return array_merge(
-            parent::getAllowedSorts(),
-            [
-                'invoice_number',
-                'customer_id',
-                'status',
-                'date',
-                'date_due',
-                'subtotal',
-                'total',
-            ]
-        );
+        return [
+            'id',
+            'invoice_number',
+            'customer_id',
+            'status',
+            'date',
+            'date_due',
+            'subtotal',
+            'total',
+            'created_at',
+            'updated_at',
+        ];
     }
 
     public function getAllowedFields(): array
@@ -65,20 +76,29 @@ final class InvoiceRepository extends QueryableRepository implements InvoiceRepo
 
     public function getAllowedFilters(): array
     {
-        return array_merge(
-            parent::getAllowedFilters(),
-            [
-                AllowedFilter::partial('invoice_number'),
-                AllowedFilter::exact('customer_id'),
-                AllowedFilter::exact('status'),
-                AllowedFilter::partial('notes'),
-                AllowedFilter::custom('date.year', new YearFilter()),
-                AllowedFilter::custom('date_due.year', new YearFilter()),
-                AllowedFilter::scope('date_due'),
-                AllowedFilter::scope('between'),
-                AllowedFilter::exact('subtotal'),
-                AllowedFilter::exact('total'),
-            ]
-        );
+        return [
+            AllowedFilter::partial('invoice_number'),
+            AllowedFilter::exact('customer_id'),
+            AllowedFilter::exact('status'),
+            AllowedFilter::partial('notes'),
+            AllowedFilter::custom('date.year', new YearFilter()),
+            AllowedFilter::custom('date_due.year', new YearFilter()),
+            AllowedFilter::scope('date_due'),
+            AllowedFilter::scope('between'),
+            AllowedFilter::exact('subtotal'),
+            AllowedFilter::exact('total'),
+        ];
+    }
+
+    public function findOrFail(int $id, array $columns = ['*']): Invoice
+    {
+        return Invoice::query()
+            ->with(['customer', 'items', 'payments', 'emails', 'activities.causer'])
+            ->findOrFail($id, $columns);
+    }
+
+    protected function model(): string
+    {
+        return Invoice::class;
     }
 }

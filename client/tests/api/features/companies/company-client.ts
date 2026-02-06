@@ -17,10 +17,7 @@ export class CompanyClient extends BaseClient {
    * @param perPage - Number of items per page (default: 15)
    * Returns raw APIResponse
    */
-  async getCompanies(
-    page: number = 1,
-    perPage: number = 15,
-  ): Promise<APIResponse> {
+  async getCompanies(page = 1, perPage = 15): Promise<APIResponse> {
     const endpoint = `/api/company?page=${page}&per_page=${perPage}`
     return this.get(endpoint)
   }
@@ -32,8 +29,8 @@ export class CompanyClient extends BaseClient {
    * Returns IResponse<PaginatedCompaniesResponse>
    */
   async getCompaniesTyped(
-    page: number = 1,
-    perPage: number = 15,
+    page = 1,
+    perPage = 15,
   ): Promise<IResponse<PaginatedCompaniesResponse>> {
     const response = await this.getCompanies(page, perPage)
     return response.json() as Promise<IResponse<PaginatedCompaniesResponse>>

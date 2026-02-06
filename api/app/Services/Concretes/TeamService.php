@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Services\Concretes;
 
 use App\Models\Team;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use App\Services\BaseService;
+use Illuminate\Database\Eloquent\Model;
 use App\Http\Resources\Teams\TeamResource;
 use App\Http\Resources\Teams\TeamCollection;
 use App\Services\Concerns\TransformsResources;
@@ -53,7 +53,7 @@ final class TeamService extends BaseService implements TeamServiceInterface
     }
 
     /**
-     * @param Team $model
+     * @param  Team  $model
      */
     public function update(Model $model, array $data): TeamResource
     {
@@ -63,7 +63,7 @@ final class TeamService extends BaseService implements TeamServiceInterface
     }
 
     /**
-     * @param Team $model
+     * @param  Team  $model
      */
     public function delete(Model $model): bool
     {

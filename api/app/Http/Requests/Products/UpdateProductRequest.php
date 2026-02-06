@@ -60,18 +60,4 @@ final class UpdateProductRequest extends BaseFormRequest
             'unit'        => 'unit',
         ]);
     }
-
-    /**
-     * Custom validation messages.
-     *
-     * @return array<string, string>
-     */
-    public function messages(): array
-    {
-        return array_merge(parent::messages(), [
-            'name.unique'    => 'An product with this name already exists.',
-            'unit_price.min' => 'The unit price must be zero or greater.',
-            'vat_rate.max'   => 'The VAT rate may not be greater than 100%.',
-        ]);
-    }
 }

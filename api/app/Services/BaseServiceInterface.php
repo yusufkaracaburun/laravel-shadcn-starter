@@ -4,36 +4,65 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Pagination\LengthAwarePaginator;
 use App\Repositories\QueryableRepositoryInterface;
 
 interface BaseServiceInterface
 {
-    public function getPaginatedByRequest(array $columns = ['*']): mixed;
-
-    public function getAll(array $columns = ['*']): mixed;
-
-    public function find(int|string $id): mixed;
-
-    public function create(array $data): mixed;
+    /**
+     * Get filtered, sorted, and included resources.
+     */
+    public function getFiltered(array $columns = ['*']): Collection;
 
     /**
-     * @param mixed $model
-     * @param array $data
-     * @return mixed
+     * Get all resources
      */
-    public function update($model, array $data): mixed;
+    public function all(array $columns = ['*']): Collection;
 
     /**
-     * @param mixed $model
-     * @return bool
+     * Get paginated resources
      */
-    public function delete($model): bool;
+    public function paginate(int $perPage = 25, array $columns = ['*']): LengthAwarePaginator;
 
-    public function exists(int|string $id): bool;
+    /**
+     * Find resource by id
+     */
+    public function find(int $id, array $columns = ['*']): ?Model;
 
+    /**
+     * Find resource or fail
+     */
+    public function findOrFail(int $id, array $columns = ['*']): Model;
+
+    /**
+     * Create new resource
+     */
+    public function create(array $data): Model;
+
+    /**
+     * Update resource
+     */
+    public function update(Model $model, array $data): Model;
+
+    /**
+     * Delete resource
+     */
+    public function delete(Model $model): bool;
+
+    /**
+     * Check if resource exists
+     */
+    public function exists(int $id): bool;
+
+    /**
+     * Set repository instance
+     */
     public function setRepository(QueryableRepositoryInterface $repository): QueryableRepositoryInterface;
 
+    /**
+     * Get repository instance
+     */
     public function getRepository(): QueryableRepositoryInterface;
 }

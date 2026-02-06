@@ -32,9 +32,7 @@ defineProps<Props>()
         <div class="text-sm font-medium text-muted-foreground mb-1">
           Product ID
         </div>
-        <div class="text-base">
-          #{{ product.id }}
-        </div>
+        <div class="text-base">#{{ product.id }}</div>
       </div>
       <div>
         <div

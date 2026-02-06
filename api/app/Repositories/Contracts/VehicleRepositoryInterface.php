@@ -11,4 +11,9 @@ use App\Repositories\QueryableRepositoryInterface;
 interface VehicleRepositoryInterface extends QueryableRepositoryInterface
 {
 
+    public function findForShow(Vehicle $vehicle): Vehicle;
+
+    public function createWithRelationships(array $data): Vehicle;
+
+    public function updateWithRelationships(Vehicle $vehicle, array $data): Vehicle;
 }

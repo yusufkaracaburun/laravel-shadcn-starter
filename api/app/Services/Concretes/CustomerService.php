@@ -5,78 +5,75 @@ declare(strict_types=1);
 namespace App\Services\Concretes;
 
 use App\Models\Customer;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use App\Services\BaseService;
-use App\Http\Resources\CustomerResource;
-use App\Http\Resources\CustomerCollection;
-use App\Services\Concerns\TransformsResources;
+use App\Http\Resources\Customers\CustomerResource;
+use App\Http\Resources\Customers\CustomerCollection;
 use App\Services\Contracts\CustomerServiceInterface;
 use App\Repositories\Contracts\CustomerRepositoryInterface;
 
 final class CustomerService extends BaseService implements CustomerServiceInterface
 {
-    use TransformsResources;
+    private readonly CustomerRepositoryInterface $repo;
 
     public function __construct(
-        CustomerRepositoryInterface $repository,
+        CustomerRepositoryInterface $repo,
     ) {
-        $this->setRepository($repository);
+        $this->setRepository($repo);
+        $this->repo = $repo;
     }
 
-    public function getPaginatedByRequest(Request $request, array $columns = ['*']): CustomerCollection
+    public function getPaginated(Request $request): CustomerCollection
     {
-        return $this->toCollection(
-            $this->repository->paginateFiltered($request, $columns),
-        );
+        $paginated = $this->repo->withRequest($request)->paginateFiltered();
+
+        return new CustomerCollection($paginated);
     }
 
-    public function getAll(array $columns = ['*']): CustomerCollection
+    public function show(Customer $customer): CustomerResource
     {
-        return $this->toCollection(
-            $this->repository->all($columns),
-        );
+        $customer = $this->repo->findOrFail($customer->id);
+
+        return new CustomerResource($customer);
     }
 
-    public function findById(int $id): CustomerResource
+    public function createCustomer(array $data): CustomerResource
     {
-        return $this->toResource(
-            $this->repository->find($id),
-        );
+        $customer = $this->repo->createWithRelationships($data);
+
+        return new CustomerResource($customer);
     }
 
-    public function create(array $data): CustomerResource
+    public function updateCustomer(Customer $customer, array $data): CustomerResource
     {
-        return $this->toResource(
-            $this->repository->create($data),
-        );
+        $updated = $this->repo->updateWithRelationships($customer, $data);
+
+        return new CustomerResource($updated);
     }
 
-    /**
-     * @param Customer $model
-     */
-    public function update(Model $model, array $data): CustomerResource
+    public function deleteCustomer(Customer $customer): bool
     {
-        return $this->toResource(
-            $this->repository->update($model->id, $data),
-        );
+        return $this->repo->delete($customer);
     }
 
-    /**
-     * @param Customer $model
-     */
-    public function delete(Model $model): bool
+    public function getAll(): CustomerCollection
     {
-        return $this->repository->delete($model->id);
+        $customers = $this->repo->all();
+
+        return new CustomerCollection($customers);
     }
 
-    protected function getResourceClass(): string
+    public function getBusinessCustomers(): CustomerCollection
     {
-        return CustomerResource::class;
+        $customers = $this->repo->getBusinessCustomers();
+
+        return new CustomerCollection($customers);
     }
 
-    protected function getCollectionClass(): string
+    public function getPrivateCustomers(): CustomerCollection
     {
-        return CustomerCollection::class;
+        $customers = $this->repo->getPrivateCustomers();
+
+        return new CustomerCollection($customers);
     }
 }

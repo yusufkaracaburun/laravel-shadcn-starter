@@ -15,29 +15,6 @@ use Illuminate\Contracts\Validation\ValidationRule;
 final class IndexCustomerRequest extends BaseIndexFormRequest
 {
     /**
-     * Custom validation messages specific to customers.
-     *
-     * @return array<string, string>
-     */
-    public function messages(): array
-    {
-        return array_merge(
-            parent::messages(),
-            [
-                'filter.id.exists'       => 'The selected customer does not exist.',
-                'filter.name.string'     => 'The name filter must be a valid string.',
-                'filter.email.email'     => 'The email filter must be a valid email address.',
-                'filter.phone.string'    => 'The phone filter must be a valid string.',
-                'filter.city.string'     => 'The city filter must be a valid string.',
-                'filter.country.string'  => 'The country filter must be a valid string.',
-                'filter.type.in'         => 'The customer type must be either "private" or "business".',
-                'filter.status.in'       => 'The status must be either "active", "inactive", or "pending".',
-                'filter.created_at.date' => 'The created_at filter must be a valid date.',
-            ],
-        );
-    }
-
-    /**
      * Custom attribute names for better error messages.
      *
      * @return array<string, string>
@@ -57,7 +34,6 @@ final class IndexCustomerRequest extends BaseIndexFormRequest
                 'filter.vat_number'  => 'VAT number',
                 'filter.iban_number' => 'IBAN number',
                 'filter.status'      => 'status',
-                'filter.created_at'  => 'creation date',
             ],
         );
     }
@@ -82,7 +58,6 @@ final class IndexCustomerRequest extends BaseIndexFormRequest
                 'filter.kvk_number'  => 'sometimes|string|max:50',
                 'filter.vat_number'  => 'sometimes|string|max:50',
                 'filter.iban_number' => 'sometimes|string|max:50',
-                'filter.created_at'  => 'sometimes|date',
             ],
         );
     }
@@ -120,7 +95,7 @@ final class IndexCustomerRequest extends BaseIndexFormRequest
      */
     protected function getAllowedIncludes(): array
     {
-        return ['contacts', 'primaryContact', 'invoices'];
+        return ['invoices', 'contacts', 'primaryContact', 'contactsCount', 'invoicesCount'];
     }
 
     /**
@@ -147,15 +122,5 @@ final class IndexCustomerRequest extends BaseIndexFormRequest
             'created_at',
             'updated_at',
         ];
-    }
-
-    /**
-     * Get fields that should be treated as booleans in filters.
-     *
-     * @return array<string>
-     */
-    protected function getBooleanFilterFields(): array
-    {
-        return [];
     }
 }

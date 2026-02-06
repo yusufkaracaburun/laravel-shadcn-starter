@@ -4,8 +4,8 @@ import { h } from 'vue'
 
 import DataTableColumnHeader from '@/components/data-table/column-header.vue'
 import { SelectColumn } from '@/components/data-table/table-columns'
-import Badge from '@/components/ui/badge/Badge.vue'
 import { Copy } from '@/components/sva-ui/copy'
+import Badge from '@/components/ui/badge/Badge.vue'
 import { getT } from '@/plugins/i18n/setup'
 import { formatDate } from '@/utils/date'
 
@@ -24,10 +24,7 @@ const CELL_CLASSES = {
  * Helper function to create name cell with copy functionality
  */
 function createNameCell(nameValue: unknown) {
-  const nameStr =
-    nameValue && typeof nameValue === 'string'
-      ? nameValue
-      : ''
+  const nameStr = nameValue && typeof nameValue === 'string' ? nameValue : ''
 
   return h('div', { class: CELL_CLASSES.NAME_CONTAINER }, [
     h('span', {}, nameStr || '—'),
@@ -50,11 +47,7 @@ function createPersonalTeamBadge(personalTeamValue: unknown) {
     return h('div', { class: CELL_CLASSES.EMPTY_STATE }, '—')
   }
 
-  return h(
-    Badge,
-    { variant: 'secondary' },
-    () => 'Personal',
-  )
+  return h(Badge, { variant: 'secondary' }, () => 'Personal')
 }
 
 /**

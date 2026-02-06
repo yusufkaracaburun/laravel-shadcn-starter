@@ -6,22 +6,44 @@ namespace App\Services\Contracts;
 
 use App\Models\Customer;
 use Illuminate\Http\Request;
-use Illuminate\Database\Eloquent\Model;
 use App\Services\BaseServiceInterface;
-use App\Http\Resources\CustomerResource;
-use App\Http\Resources\CustomerCollection;
+use App\Http\Resources\Customers\CustomerResource;
+use App\Http\Resources\Customers\CustomerCollection;
 
 interface CustomerServiceInterface extends BaseServiceInterface
 {
-    public function getPaginatedByRequest(Request $request, array $columns = ['*']): CustomerCollection;
+    /**
+     * Get paginated customers with QueryBuilder support.
+     * Supports filtering, sorting, and including relationships via request parameters.
+     */
+    public function getPaginated(Request $request): CustomerCollection;
 
-    public function getAll(array $columns = ['*']): CustomerCollection;
+    /**
+     * Show a customer with relationships loaded.
+     */
+    public function show(Customer $customer): CustomerResource;
 
-    public function findById(int $id): CustomerResource;
+    /**
+     * Create a new customer.
+     *
+     * @param  array<string, mixed>  $data
+     */
+    public function createCustomer(array $data): CustomerResource;
 
-    public function create(array $data): CustomerResource;
+    /**
+     * Update a customer by model instance.
+     *
+     * @param  array<string, mixed>  $data
+     */
+    public function updateCustomer(Customer $customer, array $data): CustomerResource;
 
-    public function update(Model $model, array $data): CustomerResource;
+    /**
+     * Delete a customer by model instance.
+     */
+    public function deleteCustomer(Customer $customer): bool;
 
-    public function delete(Model $model): bool;
+    /**
+     * Get all customers without pagination.
+     */
+    public function getAll(): CustomerCollection;
 }

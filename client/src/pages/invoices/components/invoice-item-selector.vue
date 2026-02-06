@@ -14,7 +14,11 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
-import { CheckIcon, PlusIcon, SearchIcon } from '@/composables/use-icons.composable'
+import {
+  CheckIcon,
+  PlusIcon,
+  SearchIcon,
+} from '@/composables/use-icons.composable'
 import { formatMoney } from '@/pages/invoices/utils/formatters'
 
 interface IProps {
@@ -66,7 +70,7 @@ function isItemSelected(itemId: number): boolean {
 
 function handleAddSelected() {
   const selectedItemsData = filteredItems.value
-    .filter(item => selectedItems.value.has(item.id))
+    .filter((item) => selectedItems.value.has(item.id))
     .map((item) => {
       const unitPrice = Number.parseFloat(item.unit_price.amount) / 100
 
@@ -180,9 +184,7 @@ function handleClose() {
       </div>
 
       <DialogFooter>
-        <Button variant="outline" @click="handleClose">
-          Cancel
-        </Button>
+        <Button variant="outline" @click="handleClose"> Cancel </Button>
         <Button :disabled="selectedCount === 0" @click="handleAddSelected">
           <PlusIcon class="mr-2 size-4" />
           Add

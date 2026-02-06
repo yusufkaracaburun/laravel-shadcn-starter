@@ -33,11 +33,21 @@ export type Product = z.infer<typeof productSchema>
  * Base schema for product form (shared between create and edit modes)
  */
 const baseProductFormSchema = z.object({
-  name: z.string().min(1, 'Name is required.').max(255, 'Name must not exceed 255 characters.'),
+  name: z
+    .string()
+    .min(1, 'Name is required.')
+    .max(255, 'Name must not exceed 255 characters.'),
   description: z.string().nullable().optional(),
   unit_price: z.number().min(0, 'Unit price must be zero or greater.'),
-  vat_rate: z.number().min(0, 'VAT rate must be zero or greater.').max(100, 'VAT rate may not be greater than 100%.'),
-  unit: z.string().max(50, 'Unit must not exceed 50 characters.').nullable().optional(),
+  vat_rate: z
+    .number()
+    .min(0, 'VAT rate must be zero or greater.')
+    .max(100, 'VAT rate may not be greater than 100%.'),
+  unit: z
+    .string()
+    .max(50, 'Unit must not exceed 50 characters.')
+    .nullable()
+    .optional(),
 })
 
 /**

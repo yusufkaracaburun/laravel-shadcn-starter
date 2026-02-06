@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import type { Table } from '@tanstack/vue-table'
 
-import { XIcon } from '@/composables/use-icons.composable'
-
 import type {
   ICustomer,
   ICustomerFilters,
@@ -11,6 +9,7 @@ import type {
 import DataTableViewOptions from '@/components/data-table/view-options.vue'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { XIcon } from '@/composables/use-icons.composable'
 
 import CustomersFilter from './customers-filter.vue'
 
@@ -25,8 +24,8 @@ const props = defineProps<DataTableToolbarProps>()
 
 const isFiltered = computed(() => {
   return (
-    props.table.getState().columnFilters.length > 0
-    || Object.keys(props.filters).length > 0
+    props.table.getState().columnFilters.length > 0 ||
+    Object.keys(props.filters).length > 0
   )
 })
 </script>

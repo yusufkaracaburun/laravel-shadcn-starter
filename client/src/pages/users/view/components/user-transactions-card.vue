@@ -1,11 +1,6 @@
 <script setup lang="ts">
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
 import Badge from '@/components/ui/badge/Badge.vue'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
 // Mock data - in real app, this would come from API
 const transactions = [

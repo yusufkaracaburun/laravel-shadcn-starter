@@ -66,6 +66,7 @@ declare global {
   const MoreVerticalIcon: typeof import('./src/composables/use-icons.composable').MoreVerticalIcon
   const PackageIcon: typeof import('./src/composables/use-icons.composable').PackageIcon
   const PaletteIcon: typeof import('./src/composables/use-icons.composable').PaletteIcon
+  const PanelRightCloseIcon: typeof import('./src/composables/use-icons.composable').PanelRightCloseIcon
   const PencilIcon: typeof import('./src/composables/use-icons.composable').PencilIcon
   const PhoneIcon: typeof import('./src/composables/use-icons.composable').PhoneIcon
   const PictureInPicture2Icon: typeof import('./src/composables/use-icons.composable').PictureInPicture2Icon

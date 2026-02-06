@@ -17,7 +17,7 @@ export class ItemClient extends BaseClient {
    * @param perPage - Number of items per page (default: 15)
    * Returns raw APIResponse
    */
-  async getItems(page: number = 1, perPage: number = 15): Promise<APIResponse> {
+  async getItems(page = 1, perPage = 15): Promise<APIResponse> {
     const endpoint = `/api/items?page=${page}&per_page=${perPage}`
     return this.get(endpoint)
   }
@@ -29,8 +29,8 @@ export class ItemClient extends BaseClient {
    * Returns IResponse<PaginatedItemsResponse>
    */
   async getItemsTyped(
-    page: number = 1,
-    perPage: number = 15,
+    page = 1,
+    perPage = 15,
   ): Promise<IResponse<PaginatedItemsResponse>> {
     const response = await this.getItems(page, perPage)
     return response.json() as Promise<IResponse<PaginatedItemsResponse>>

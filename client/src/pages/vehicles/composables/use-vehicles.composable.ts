@@ -62,7 +62,7 @@ export function useVehicles() {
     messages: VehicleMessages,
     defaultSort: { id: 'license_plate', desc: false },
     includes,
-    defaultIncludeKey: 'drivers',
+    defaultIncludeKey: ['drivers'],
     onFetchList: (refetch) => {
       refetch()
     },
@@ -84,9 +84,12 @@ export function useVehicles() {
     return Number(idParam)
   })
 
+  // Default includes for vehicle by id query
+  const vehicleByIdIncludes = ref<string[]>(['drivers'])
+
   const getVehicleByIdQuery = vehicleService.getVehicleByIdQuery(
     vehicleId,
-    ref([]),
+    vehicleByIdIncludes,
   )
   const {
     data: vehicleByIdResponse,
@@ -96,8 +99,13 @@ export function useVehicles() {
     refetch: refetchVehicleById,
   } = getVehicleByIdQuery
 
-  async function fetchVehicleByIdData(): Promise<IResponse<IVehicle>> {
+  async function fetchVehicleByIdData(
+    includes?: string[],
+  ): Promise<IResponse<IVehicle>> {
     try {
+      if (includes) {
+        vehicleByIdIncludes.value = includes
+      }
       const response = await refetchVehicleById()
       return response.data as IResponse<IVehicle>
     } catch (error: any) {
@@ -121,6 +129,32 @@ export function useVehicles() {
       year: vehicle?.year || null,
       color: vehicle?.color || null,
       vin: vehicle?.vin || null,
+    }
+  }
+
+  const assignDriversMutation = vehicleService.assignDriversMutation()
+  const {
+    mutateAsync: assignDriversMutationFn,
+    isPending: isAssigningDrivers,
+  } = assignDriversMutation
+
+  /**
+   * Assign drivers to a vehicle
+   * @param vehicleId - The ID of the vehicle
+   * @param driverIds - Array of driver IDs to assign
+   */
+  async function assignDriversToVehicle(
+    vehicleId: number,
+    driverIds: number[],
+  ): Promise<void> {
+    try {
+      await assignDriversMutationFn({ vehicleId, driverIds })
+      toast.showSuccess('Drivers assigned successfully')
+    } catch (error: any) {
+      errorStore.setError(error, { context: VehicleContext.UPDATE })
+      const message = errorStore.getErrorMessage(error)
+      toast.showError(message)
+      throw error
     }
   }
 
@@ -156,5 +190,7 @@ export function useVehicles() {
     errorVehicleById,
     fetchVehicleByIdData,
     getVehicleFormInitialValues,
+    assignDriversToVehicle,
+    isAssigningDrivers,
   }
 }

@@ -15,9 +15,29 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
+/**
+ * Customer model.
+ *
+ * Represents a customer (business or private) in the system.
+ */
 #[ObservedBy([CustomerObserver::class])]
 final class Customer extends BaseModel
 {
+    /**
+     * Cache keys for customer endpoints.
+     *
+     * @var array<string, string>
+     */
+    public const CACHE = [
+        'index' => 'api.customers.index',
+        'show'  => 'api.customers.show',
+    ];
+
+    /**
+     * Searchable fields for this model.
+     *
+     * @var list<string>
+     */
     public static array $searchable = [
         'name',
         'email',
@@ -26,18 +46,31 @@ final class Customer extends BaseModel
         'primary_contact.email',
     ];
 
-    protected $with = ['primaryContact'];
-
+    /**
+     * Get all payments for this customer.
+     *
+     * @return HasMany<Payment>
+     */
     public function payments(): HasMany
     {
         return $this->hasMany(Payment::class);
     }
 
+    /**
+     * Get all invoices for this customer.
+     *
+     * @return HasMany<Invoice>
+     */
     public function invoices(): HasMany
     {
         return $this->hasMany(Invoice::class);
     }
 
+    /**
+     * Get all contacts associated with this customer.
+     *
+     * @return BelongsToMany<Contact>
+     */
     public function contacts(): BelongsToMany
     {
         return $this->belongsToMany(Contact::class, 'contact_customer')
@@ -45,24 +78,39 @@ final class Customer extends BaseModel
             ->withTimestamps();
     }
 
+    /**
+     * Get the primary contact relationship.
+     *
+     * @return BelongsToMany<Contact>
+     */
+    public function primaryContact(): BelongsToMany
+    {
+        return $this->belongsToMany(Contact::class, 'contact_customer')
+            ->wherePivot('is_primary', true)
+            ->withPivot(['role', 'is_primary']);
+    }
+
+    /**
+     * Check if the customer is a business.
+     */
     public function isBusiness(): bool
     {
         return $this->type === CustomerType::BUSINESS;
     }
 
+    /**
+     * Check if the customer is private.
+     */
     public function isPrivate(): bool
     {
         return $this->type === CustomerType::PRIVATE;
     }
 
-    public function primaryContact(): BelongsToMany
-    {
-        return $this->belongsToMany(Contact::class, 'contact_customer')
-            ->wherePivot('is_primary', true)
-            ->withPivot(['role', 'is_primary'])
-            ->limit(1);
-    }
-
+    /**
+     * Get the attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
     protected function casts(): array
     {
         return [
@@ -71,14 +119,17 @@ final class Customer extends BaseModel
         ];
     }
 
+    /**
+     * Get the primary contact attribute.
+     */
     protected function getPrimaryContactAttribute(): ?Contact
     {
-        /** @var Contact|null $contact */
-        $contact = $this->primaryContact()->first();
-
-        return $contact;
+        return $this->primaryContact()->first();
     }
 
+    /**
+     * Get the formatted address attribute.
+     */
     protected function formattedAddress(): Attribute
     {
         return Attribute::make(
@@ -90,18 +141,30 @@ final class Customer extends BaseModel
         );
     }
 
+    /**
+     * Scope a query to only include business customers.
+     */
     #[Scope]
     protected function business(Builder $query): Builder
     {
         return $query->where('type', CustomerType::BUSINESS);
     }
 
+    /**
+     * Scope a query to only include private customers.
+     */
     #[Scope]
     protected function private(Builder $query): Builder
     {
         return $query->where('type', CustomerType::PRIVATE);
     }
 
+    /**
+     * Scope a query to filter by status.
+     *
+     * @param  Builder<Customer>  $query
+     * @return Builder<Customer>
+     */
     #[Scope]
     protected function withStatus(Builder $query, string $status): Builder
     {

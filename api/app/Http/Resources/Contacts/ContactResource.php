@@ -2,10 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\Contacts;
 
 use App\Models\Contact;
 use Illuminate\Http\Request;
+use App\Http\Resources\BaseResource;
 use App\Http\Resources\Users\UserResource;
 
 /**
@@ -34,7 +35,11 @@ final class ContactResource extends BaseResource
             'created_at' => $this->formatTimestamp($this->created_at),
             'updated_at' => $this->formatTimestamp($this->updated_at),
 
-            'user' => new UserResource($this->whenLoaded('user')),
+            'user' => $this->when(
+                $this->relationLoaded('user') && $this->user !== null,
+                fn () => new UserResource($this->user),
+                null,
+            ),
         ];
     }
 }

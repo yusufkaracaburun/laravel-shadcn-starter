@@ -34,6 +34,8 @@ export type PaymentStatusValue =
   | 'failed'
   | 'refunded'
   | 'cancelled'
+export type VehicleStatusValue = 'active' | 'inactive' | 'maintenance'
+export type EquipmentStatusValue = 'active' | 'inactive' | 'maintenance'
 /**
  * Get priority color class
  * Matches the kanban view color scheme
@@ -41,8 +43,7 @@ export type PaymentStatusValue =
 export function getPriorityColor(
   priority: PriorityValue | string | undefined,
 ): string {
-  if (!priority)
-    return 'text-muted-foreground'
+  if (!priority) return 'text-muted-foreground'
 
   switch (priority.toLowerCase()) {
     case 'low':
@@ -203,6 +204,50 @@ export function getPaymentStatusColor(
       return 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300'
     case 'cancelled':
       return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300'
+    default:
+      return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300'
+  }
+}
+
+/**
+ * Get vehicle status color class
+ * Returns badge-style background colors for vehicle statuses
+ */
+export function getVehicleStatusColor(
+  status: VehicleStatusValue | string | undefined,
+): string {
+  if (!status)
+    return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300'
+
+  switch (status.toLowerCase()) {
+    case 'active':
+      return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300'
+    case 'inactive':
+      return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300'
+    case 'maintenance':
+      return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300'
+    default:
+      return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300'
+  }
+}
+
+/**
+ * Get equipment status color class
+ * Returns badge-style background colors for equipment statuses
+ */
+export function getEquipmentStatusColor(
+  status: EquipmentStatusValue | string | undefined,
+): string {
+  if (!status)
+    return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300'
+
+  switch (status.toLowerCase()) {
+    case 'active':
+      return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300'
+    case 'inactive':
+      return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300'
+    case 'maintenance':
+      return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300'
     default:
       return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300'
   }

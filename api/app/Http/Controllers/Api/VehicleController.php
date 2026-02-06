@@ -7,15 +7,27 @@ namespace App\Http\Controllers\Api;
 use App\Models\Vehicle;
 use App\Enums\VehicleStatus;
 use Illuminate\Http\JsonResponse;
+use App\Http\Responses\ApiResponse;
+use App\Http\Controllers\Controller;
+use App\Services\Contracts\UserServiceInterface;
 use App\Http\Requests\Vehicles\StoreVehicleRequest;
 use App\Http\Requests\Vehicles\VehicleIndexRequest;
 use App\Services\Contracts\VehicleServiceInterface;
+use App\Http\Requests\Vehicles\AssignDriversRequest;
 use App\Http\Requests\Vehicles\UpdateVehicleRequest;
+use App\Http\Controllers\Concerns\UsesCachedResponses;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use App\Http\Controllers\Concerns\InvalidatesCachedModels;
 
-final class VehicleController extends BaseApiController
+final class VehicleController extends Controller
 {
+    use AuthorizesRequests;
+    use InvalidatesCachedModels;
+    use UsesCachedResponses;
+
     public function __construct(
         private readonly VehicleServiceInterface $service,
+        private readonly UserServiceInterface $userService,
     ) {}
 
     /**
@@ -25,7 +37,8 @@ final class VehicleController extends BaseApiController
      */
     public function prerequisites(): JsonResponse
     {
-        return $this->respondWithPrerequisites([
+        return ApiResponse::success([
+            'drivers'  => $this->userService->getAll(),
             'statuses' => VehicleStatus::toArray(),
         ]);
     }
@@ -39,9 +52,10 @@ final class VehicleController extends BaseApiController
     {
         // $this->authorize('viewAny', Vehicle::class); // Uncomment when Policy is created
 
-        return $this->respondWithCollection(
-            $this->service->getPaginatedByRequest(),
-        );
+        $cache = Vehicle::getCacheKeys();
+        $collection = $this->cachedResponse($cache['index'], fn () => $this->service->getPaginated($request));
+
+        return ApiResponse::success($collection);
     }
 
     /**
@@ -53,9 +67,9 @@ final class VehicleController extends BaseApiController
     {
         // $this->authorize('create', Vehicle::class);
 
-        return $this->respondCreated(
-            $this->service->create($request->validated()),
-        );
+        $vehicleResource = $this->service->createVehicle($request->validated());
+
+        return ApiResponse::created($vehicleResource);
     }
 
     /**
@@ -67,9 +81,13 @@ final class VehicleController extends BaseApiController
     {
         // $this->authorize('view', $vehicle);
 
-        return $this->respondWithResource(
-            $this->service->find($vehicle->id),
+        $cache = Vehicle::getCacheKeys();
+        $vehicleResource = $this->cachedResponse(
+            $cache['show'] . ".{$vehicle->id}",
+            fn () => $this->service->show($vehicle),
         );
+
+        return ApiResponse::success($vehicleResource);
     }
 
     /**
@@ -81,9 +99,9 @@ final class VehicleController extends BaseApiController
     {
         // $this->authorize('update', $vehicle);
 
-        return $this->respondWithResource(
-            $this->service->update($vehicle, $request->validated()),
-        );
+        $vehicleResource = $this->service->updateVehicle($vehicle, $request->validated());
+
+        return ApiResponse::success($vehicleResource);
     }
 
     /**
@@ -95,8 +113,15 @@ final class VehicleController extends BaseApiController
     {
         // $this->authorize('delete', $vehicle);
 
-        $this->service->delete($vehicle);
+        $this->service->deleteVehicle($vehicle);
 
-        return $this->respondNoContent('Vehicle deleted successfully');
+        return ApiResponse::noContent('Vehicle deleted successfully');
+    }
+
+    public function assignDrivers(AssignDriversRequest $request, Vehicle $vehicle)
+    {
+        $vehicleResource = $this->service->syncDrivers($vehicle, $request->drivers);
+
+        return ApiResponse::success($vehicleResource);
     }
 }

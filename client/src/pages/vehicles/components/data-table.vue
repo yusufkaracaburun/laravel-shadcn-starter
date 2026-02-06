@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import type { IDataTableProps } from '@/components/data-table/types'
-import type { IVehicle, IVehicleFilters } from '@/pages/vehicles/models/vehicles'
+import type {
+  IVehicle,
+  IVehicleFilters,
+} from '@/pages/vehicles/models/vehicles'
 
 import DataTable from '@/components/data-table/data-table.vue'
 import { generateVueTable } from '@/components/data-table/use-generate-vue-table'
@@ -8,7 +11,15 @@ import { generateVueTable } from '@/components/data-table/use-generate-vue-table
 import DataTableToolbar from './data-table-toolbar.vue'
 
 const props = defineProps<IDataTableProps<IVehicle, IVehicleFilters>>()
+const emit = defineEmits<{
+  rowClick: [vehicle: IVehicle]
+}>()
+
 const { table } = generateVueTable<IVehicle, IVehicleFilters>(props)
+
+function handleRowClick(vehicle: IVehicle) {
+  emit('rowClick', vehicle)
+}
 </script>
 
 <template>
@@ -17,6 +28,7 @@ const { table } = generateVueTable<IVehicle, IVehicleFilters>(props)
     :columns="columns"
     :loading="loading"
     :server-pagination="serverPagination"
+    @row-click="handleRowClick"
   >
     <template #toolbar>
       <DataTableToolbar

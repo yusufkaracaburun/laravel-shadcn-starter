@@ -1,9 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 
-import type {
-  IDataTableToolbarProps,
-} from '@/components/data-table/types'
+import type { IDataTableToolbarProps } from '@/components/data-table/types'
 
 import DataTableViewOptions from '@/components/data-table/view-options.vue'
 import { Button } from '@/components/ui/button'
@@ -12,7 +10,8 @@ import { XIcon } from '@/composables/use-icons.composable'
 
 import type { ITimesheet, ITimesheetFilters } from '../models/timesheets'
 
-const props = defineProps<IDataTableToolbarProps<ITimesheet, ITimesheetFilters>>()
+const props =
+  defineProps<IDataTableToolbarProps<ITimesheet, ITimesheetFilters>>()
 
 const dateColumn = computed(() => props.table.getColumn('date'))
 

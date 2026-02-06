@@ -4,9 +4,7 @@ import { Moon, Sun, SunMoon } from 'lucide-vue-next'
 
 import CommandItemHasIcon from './command-item-has-icon.vue'
 
-defineEmits<{
-  (e: 'click'): void
-}>()
+defineEmits<(e: 'click') => void>()
 
 const mode = useColorMode()
 </script>

@@ -5,15 +5,25 @@ declare(strict_types=1);
 namespace App\Repositories\Concretes;
 
 use App\Models\Payment;
+use Spatie\QueryBuilder\QueryBuilder;
 use Spatie\QueryBuilder\AllowedFilter;
 use App\Repositories\QueryableRepository;
+use Spatie\QueryBuilder\QueryBuilderRequest;
 use App\Repositories\Contracts\PaymentRepositoryInterface;
 
 final class PaymentRepository extends QueryableRepository implements PaymentRepositoryInterface
 {
-    protected function model(): string
+    public function query(): QueryBuilder
     {
-        return Payment::class;
+        $queryRequest = QueryBuilderRequest::fromRequest($this->request ?? request());
+
+        return QueryBuilder::for($this->model(), $queryRequest)
+            ->with(['customer', 'invoice'])
+            ->defaultSorts($this->getDefaultSorts())
+            ->allowedFilters($this->getMergedAllowedFilters())
+            ->allowedSorts($this->getAllowedSorts())
+            ->allowedFields($this->getAllowedFields())
+            ->allowedIncludes($this->getAllowedIncludes());
     }
 
     public function getDefaultSorts(): array
@@ -23,20 +33,20 @@ final class PaymentRepository extends QueryableRepository implements PaymentRepo
 
     public function getAllowedSorts(): array
     {
-        return array_merge(
-            parent::getAllowedSorts(),
-            [
-                'payment_number',
-                'invoice_id',
-                'customer_id',
-                'status',
-                'date',
-                'paid_at',
-                'amount',
-                'method',
-                'provider',
-            ]
-        );
+        return [
+            'id',
+            'payment_number',
+            'invoice_id',
+            'customer_id',
+            'status',
+            'date',
+            'paid_at',
+            'amount',
+            'method',
+            'provider',
+            'created_at',
+            'updated_at',
+        ];
     }
 
     public function getAllowedFields(): array
@@ -66,21 +76,31 @@ final class PaymentRepository extends QueryableRepository implements PaymentRepo
 
     public function getAllowedFilters(): array
     {
-        return array_merge(
-            parent::getAllowedFilters(),
-            [
-                AllowedFilter::exact('invoice_id'),
-                AllowedFilter::exact('customer_id'),
-                AllowedFilter::exact('status'),
-                AllowedFilter::partial('payment_number'),
-                AllowedFilter::partial('method'),
-                AllowedFilter::partial('provider'),
-                AllowedFilter::partial('provider_reference'),
-                AllowedFilter::scope('date'),
-                AllowedFilter::scope('paid_at'),
-                AllowedFilter::scope('refunded_at'),
-                AllowedFilter::exact('amount'),
-            ]
-        );
+        return [
+            AllowedFilter::exact('id'),
+            AllowedFilter::exact('invoice_id'),
+            AllowedFilter::exact('customer_id'),
+            AllowedFilter::exact('status'),
+            AllowedFilter::partial('payment_number'),
+            AllowedFilter::partial('method'),
+            AllowedFilter::partial('provider'),
+            AllowedFilter::partial('provider_reference'),
+            AllowedFilter::scope('date'),
+            AllowedFilter::scope('paid_at'),
+            AllowedFilter::scope('refunded_at'),
+            AllowedFilter::exact('amount'),
+        ];
+    }
+
+    public function findOrFail(int $id, array $columns = ['*']): Payment
+    {
+        return Payment::query()
+            ->with(['invoice', 'customer'])
+            ->findOrFail($id, $columns);
+    }
+
+    protected function model(): string
+    {
+        return Payment::class;
     }
 }

@@ -63,9 +63,7 @@ function onSubmit() {
       <div class="space-y-4">
         <div class="flex items-center justify-between rounded-lg border p-3">
           <div class="space-y-0.5">
-            <UiLabel class="text-base font-medium">
-              Example CSV File
-            </UiLabel>
+            <UiLabel class="text-base font-medium"> Example CSV File </UiLabel>
             <p class="text-sm text-muted-foreground">
               Download a template with the correct format and example data
             </p>
@@ -90,9 +88,7 @@ function onSubmit() {
         <UiButton variant="secondary" @click="isOpen = false">
           Cancel
         </UiButton>
-        <UiButton @click="onSubmit">
-          Import
-        </UiButton>
+        <UiButton @click="onSubmit"> Import </UiButton>
       </UiDialogFooter>
     </UiDialogContent>
   </UiDialog>

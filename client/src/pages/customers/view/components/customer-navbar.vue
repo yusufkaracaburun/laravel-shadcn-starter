@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import { ref, shallowRef } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref } from 'vue'
 
 import type { ICustomer } from '@/pages/customers/models/customers'
 
-import { Button } from '@/components/ui/button'
+import DetailsNavbar from '@/components/global-layout/components/details-page/details-navbar.vue'
 import { Dialog, DialogContent } from '@/components/ui/dialog'
 import {
-  ArrowLeftIcon,
   FilePenLineIcon,
+  MoreVerticalIcon,
+  PlusIcon,
   Trash2Icon,
 } from '@/composables/use-icons.composable'
 import CustomerDelete from '@/pages/customers/components/customer-delete.vue'
@@ -23,31 +23,59 @@ const emits = defineEmits<{
   (e: 'delete-closed'): void
 }>()
 
-const router = useRouter()
-
-const showComponent = shallowRef<typeof CustomerDelete | null>(null)
-const isDialogOpen = ref(false)
 const isEditDialogOpen = ref(false)
+const isDeleteDialogOpen = ref(false)
 
-type TCommand = 'edit' | 'delete' | 'close' | 'back'
+const extraMenuItems = [
+  {
+    label: 'Optie 1',
+    icon: MoreVerticalIcon,
+    action: 'extra',
+  },
+  {
+    label: 'Bewerken',
+    icon: FilePenLineIcon,
+    action: 'edit',
+  },
+  {
+    label: 'Verwijderen',
+    icon: Trash2Icon,
+    action: 'delete',
+    variant: 'destructive' as const,
+  },
+]
 
-function handleSelect(command: TCommand) {
-  switch (command) {
-    case 'edit':
-      isEditDialogOpen.value = true
-      break
-    case 'delete':
-      showComponent.value = CustomerDelete
-      isDialogOpen.value = true
-      break
-    case 'close':
-      isDialogOpen.value = false
-      showComponent.value = null
-      break
-    case 'back':
-      router.push('/customers')
-      break
+const addMenuItems = [
+  {
+    label: 'Nieuwe factuur',
+    icon: PlusIcon,
+    action: 'add-invoice',
+  },
+  {
+    label: 'Nieuwe contactpersoon',
+    icon: PlusIcon,
+    action: 'add-contact',
+  },
+]
+
+function handleAction(action: string) {
+  if (action === 'edit') {
+    isEditDialogOpen.value = true
+  } else if (action === 'delete') {
+    isDeleteDialogOpen.value = true
   }
+}
+
+function handleAdd(action: string) {
+  // Placeholder
+}
+
+function handleEdit() {
+  isEditDialogOpen.value = true
+}
+
+function handleDelete() {
+  isDeleteDialogOpen.value = true
 }
 
 function handleEditClose() {
@@ -56,45 +84,43 @@ function handleEditClose() {
 }
 
 function handleDeleteClose() {
-  handleSelect('close')
+  isDeleteDialogOpen.value = false
   emits('delete-closed')
 }
 </script>
 
 <template>
-  <div class="flex items-center gap-2">
-    <Button variant="outline" @click="handleSelect('back')">
-      <ArrowLeftIcon class="mr-2 size-4" />
-      Back
-    </Button>
-    <Button variant="outline" @click="handleSelect('edit')">
-      <FilePenLineIcon class="mr-2 size-4" />
-      Edit
-    </Button>
-    <Button variant="destructive" @click="handleSelect('delete')">
-      <Trash2Icon class="mr-2 size-4" />
-      Delete
-    </Button>
-  </div>
-
-  <CustomerEditDialog
-    v-if="props.customer"
-    :customer="props.customer"
-    :open="isEditDialogOpen"
-    @update:open="isEditDialogOpen = $event"
-    @close="handleEditClose"
-  />
-
-  <Dialog v-model:open="isDialogOpen" class="print:hidden">
-    <DialogContent
-      v-if="showComponent && props.customer"
-      class="sm:max-w-[425px]"
-    >
-      <CustomerDelete
-        v-if="showComponent === CustomerDelete"
-        :customer="props.customer"
-        @close="handleDeleteClose"
+  <DetailsNavbar
+    :extra-menu-items="extraMenuItems"
+    :add-menu-items="addMenuItems"
+    :entity="customer"
+    @edit="handleEdit"
+    @delete="handleDelete"
+    @action="handleAction"
+    @add="handleAdd"
+  >
+    <template #edit-dialog="{ entity }">
+      <CustomerEditDialog
+        v-if="entity"
+        :customer="entity"
+        :open="isEditDialogOpen"
+        @update:open="isEditDialogOpen = $event"
+        @close="handleEditClose"
       />
-    </DialogContent>
-  </Dialog>
+    </template>
+
+    <template #delete-dialog="{ entity }">
+      <Dialog v-model:open="isDeleteDialogOpen" class="print:hidden">
+        <DialogContent
+          v-if="entity"
+          class="sm:max-w-[425px]"
+        >
+          <CustomerDelete
+            :customer="entity"
+            @close="handleDeleteClose"
+          />
+        </DialogContent>
+      </Dialog>
+    </template>
+  </DetailsNavbar>
 </template>

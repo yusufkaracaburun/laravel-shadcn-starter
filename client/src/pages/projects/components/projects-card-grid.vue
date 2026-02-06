@@ -24,9 +24,7 @@ const props = withDefaults(defineProps<Props>(), {
     class="flex items-center justify-center min-h-[400px]"
   >
     <div class="text-center">
-      <p class="text-muted-foreground">
-        No projects found.
-      </p>
+      <p class="text-muted-foreground">No projects found.</p>
     </div>
   </div>
   <div

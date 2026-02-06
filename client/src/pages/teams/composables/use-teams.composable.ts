@@ -1,7 +1,6 @@
 import { computed, ref } from 'vue'
 import { useRoute } from 'vue-router'
 
-import type { TPageSize } from '@/components/data-table/types'
 import type {
   IAddUsersToTeamRequest,
   ICreateTeamRequest,
@@ -10,7 +9,6 @@ import type {
   ITeamPrerequisites,
   IUpdateTeamRequest,
 } from '@/pages/teams/models/teams'
-import type { ISorting } from '@/services/query-utils'
 import type { IResponse } from '@/services/types/response.type'
 
 import { useResourceBase } from '@/composables/use-resource-base.composable'
@@ -68,7 +66,7 @@ export function useTeams() {
     messages: TeamMessages,
     defaultSort: { id: 'created_at', desc: true },
     includes,
-    defaultIncludeKey: 'users',
+    defaultIncludeKey: ['users'],
     onFetchList: (refetch) => {
       refetch()
     },

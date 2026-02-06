@@ -1,0 +1,512 @@
+<script setup lang="ts">
+import { computed, ref, watch } from 'vue'
+
+import type { TPageSize } from '@/components/data-table/types'
+import type {
+  IEquipment,
+  IEquipmentFilters,
+} from '@/pages/equipments/models/equipments'
+import type { ISorting } from '@/services/query-utils'
+
+import Badge from '@/components/ui/badge/Badge.vue'
+import { Button } from '@/components/ui/button'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from '@/components/ui/input-group'
+import {
+  ChevronsUpDownIcon,
+  FilterIcon,
+  HashIcon,
+  PackageIcon,
+  SearchIcon,
+} from '@/composables/use-icons.composable'
+import { useEquipments } from '@/pages/equipments/composables/use-equipments.composable'
+import { statuses } from '@/pages/equipments/data/data'
+
+const props = withDefaults(
+  defineProps<{
+    equipments: IEquipment[]
+    loading?: boolean
+    selectedEquipment?: IEquipment | null
+    openDetail?: () => void
+    filter?: IEquipmentFilters
+    sort?: ISorting
+    pageSize?: TPageSize
+  }>(),
+  {
+    loading: false,
+    selectedEquipment: null,
+    openDetail: () => {},
+    filter: undefined,
+    sort: undefined,
+    pageSize: 10,
+  },
+)
+
+const emit = defineEmits<{
+  'update:selectedEquipment': [equipment: IEquipment | null]
+  'select': [equipment: IEquipment]
+  'filtersChange': [filters: IEquipmentFilters]
+  'sortChange': [sort: ISorting]
+  'pageSizeChange': [pageSize: TPageSize]
+}>()
+
+function getStatusInfo(status: string | null | undefined) {
+  if (!status) {
+    return null
+  }
+
+  return statuses.find((statusItem) => {
+    return statusItem.value.toLowerCase() === status.toLowerCase()
+  })
+}
+
+function getStatusVariant(status: string | null | undefined) {
+  const statusInfo = getStatusInfo(status)
+  if (!statusInfo) {
+    return 'secondary'
+  }
+
+  switch (statusInfo.value) {
+    case 'active':
+      return 'default'
+    case 'inactive':
+      return 'destructive'
+    case 'maintenance':
+      return 'secondary'
+    default:
+      return 'secondary'
+  }
+}
+
+const { equipmentsPrerequisitesResponse } = useEquipments()
+
+const prerequisitesStatuses = computed(() => {
+  const response = equipmentsPrerequisitesResponse.value
+  if (!response) {
+    return []
+  }
+  // Handle both direct data and wrapped response
+  const data = (response as any)?.data ?? response
+  return (data as any)?.statuses ?? []
+})
+
+const prerequisitesTypes = computed(() => {
+  const response = equipmentsPrerequisitesResponse.value
+  if (!response) {
+    return []
+  }
+  // Handle both direct data and wrapped response
+  const data = (response as any)?.data ?? response
+  return (data as any)?.types ?? []
+})
+
+// Map backend statuses to our status config for icons
+function getStatusConfig(statusValue: string) {
+  return statuses.find(s => s.value.toLowerCase() === statusValue.toLowerCase())
+}
+
+const searchTerm = ref(props.filter?.search || '')
+const selectedStatus = ref<string | null>(props.filter?.status || null)
+const selectedType = ref<string | null>(props.filter?.type || null)
+
+function getSortString(sort: ISorting | undefined): string {
+  if (!sort) {
+    return 'created_at-desc'
+  }
+  const direction = sort.desc ? 'desc' : 'asc'
+  return `${sort.id}-${direction}`
+}
+
+const selectedSort = ref<string>(getSortString(props.sort))
+const selectedPageSize = ref<TPageSize>(props.pageSize || 10)
+
+const pageSizeOptions: TPageSize[] = [10, 20, 30, 40, 50, 100]
+
+// Watch for page size changes from parent
+watch(
+  () => props.pageSize,
+  (newPageSize) => {
+    if (newPageSize) {
+      selectedPageSize.value = newPageSize
+    }
+  },
+)
+
+function handlePageSizeChange(pageSize: TPageSize) {
+  selectedPageSize.value = pageSize
+  emit('pageSizeChange', pageSize)
+}
+
+// Watch for filter changes from parent
+watch(
+  () => props.filter,
+  (newFilter) => {
+    searchTerm.value = newFilter?.search || ''
+    selectedStatus.value = newFilter?.status || null
+    selectedType.value = newFilter?.type || null
+  },
+  { deep: true },
+)
+
+// Watch for sort changes from parent
+watch(
+  () => props.sort,
+  (newSort) => {
+    selectedSort.value = getSortString(newSort)
+  },
+  { deep: true },
+)
+
+// Debounce search updates
+let searchTimeout: ReturnType<typeof setTimeout> | null = null
+watch(searchTerm, () => {
+  if (searchTimeout) {
+    clearTimeout(searchTimeout)
+  }
+  searchTimeout = setTimeout(() => {
+    updateFilters()
+  }, 300)
+})
+
+function updateFilters() {
+  const filters: IEquipmentFilters = {}
+
+  if (searchTerm.value.trim()) {
+    filters.search = searchTerm.value.trim()
+  }
+
+  if (selectedStatus.value) {
+    filters.status = selectedStatus.value
+  }
+
+  if (selectedType.value) {
+    filters.type = selectedType.value
+  }
+
+  emit('filtersChange', filters)
+}
+
+function handleStatusFilter(statusValue: string) {
+  if (selectedStatus.value === statusValue.toLowerCase()) {
+    selectedStatus.value = null
+  } else {
+    selectedStatus.value = statusValue.toLowerCase()
+  }
+  updateFilters()
+}
+
+function handleTypeFilter(type: string) {
+  if (selectedType.value === type) {
+    selectedType.value = null
+  } else {
+    selectedType.value = type
+  }
+  updateFilters()
+}
+
+function handleSortChange(sortValue: string) {
+  selectedSort.value = sortValue
+  const [id, direction] = sortValue.split('-')
+  emit('sortChange', {
+    id,
+    desc: direction === 'desc',
+  })
+}
+
+const filteredEquipments = computed(() => {
+  return props.equipments ?? []
+})
+
+watch(
+  filteredEquipments,
+  (next) => {
+    if (!next.length) {
+      emit('update:selectedEquipment', null)
+      return
+    }
+
+    const currentId = props.selectedEquipment?.id
+    const stillExists =
+      currentId != null && next.some(equipment => equipment.id === currentId)
+
+    if (!stillExists) {
+      emit('update:selectedEquipment', next[0])
+    }
+  },
+  { immediate: true },
+)
+
+function handleSelectEquipment(equipment: IEquipment) {
+  emit('update:selectedEquipment', equipment)
+  emit('select', equipment)
+  props.openDetail()
+}
+</script>
+
+<template>
+  <div
+    class="flex flex-col gap-4 h-full min-h-0 px-2"
+    data-testid="equipment_page-layout"
+  >
+    <div class="space-y-3">
+      <UiLabel
+        class="text-xs font-medium uppercase tracking-wide text-muted-foreground"
+      >
+        Search
+      </UiLabel>
+      <div class="flex items-center gap-2">
+        <InputGroup class="flex-1">
+          <InputGroupInput
+            v-model="searchTerm"
+            placeholder="Search equipment by name, model, serial number..."
+          />
+          <InputGroupAddon>
+            <SearchIcon />
+          </InputGroupAddon>
+        </InputGroup>
+
+        <DropdownMenu>
+          <DropdownMenuTrigger as-child>
+            <Button variant="outline" size="icon" class="h-9 w-9 shrink-0">
+              <FilterIcon class="size-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" class="w-56 max-h-[300px] overflow-y-auto">
+            <DropdownMenuLabel class="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+              Filter by Status
+            </DropdownMenuLabel>
+            <DropdownMenuItem
+              v-for="status in prerequisitesStatuses"
+              :key="status.value"
+              :class="selectedStatus === status.value.toLowerCase() ? 'bg-muted' : ''"
+              @select="handleStatusFilter(status.value)"
+            >
+              <div class="flex items-center gap-2">
+                <component
+                  :is="getStatusConfig(status.value)?.icon"
+                  class="size-4"
+                />
+                {{ status.label }}
+              </div>
+            </DropdownMenuItem>
+
+            <DropdownMenuSeparator v-if="prerequisitesTypes.length > 0" />
+
+            <DropdownMenuLabel v-if="prerequisitesTypes.length > 0" class="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+              Filter by Type
+            </DropdownMenuLabel>
+            <DropdownMenuItem
+              v-for="type in prerequisitesTypes"
+              :key="type"
+              :class="selectedType === type ? 'bg-muted' : ''"
+              @select="handleTypeFilter(type)"
+            >
+              {{ type }}
+            </DropdownMenuItem>
+
+            <DropdownMenuSeparator v-if="selectedStatus || selectedType" />
+            <DropdownMenuItem
+              v-if="selectedStatus || selectedType"
+              @select="() => { selectedStatus = null; selectedType = null; updateFilters() }"
+            >
+              Clear filters
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+
+        <DropdownMenu>
+          <DropdownMenuTrigger as-child>
+            <Button variant="outline" size="icon" class="h-9 w-9 shrink-0">
+              <ChevronsUpDownIcon class="size-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" class="w-48">
+            <DropdownMenuLabel class="text-xs font-medium uppercase tracking-wide text-muted-foreground">
+              Sort by
+            </DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              :class="selectedSort === 'name-asc' ? 'bg-muted' : ''"
+              @select="handleSortChange('name-asc')"
+            >
+              Name: A to Z
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              :class="selectedSort === 'name-desc' ? 'bg-muted' : ''"
+              @select="handleSortChange('name-desc')"
+            >
+              Name: Z to A
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              :class="selectedSort === 'created_at-desc' ? 'bg-muted' : ''"
+              @select="handleSortChange('created_at-desc')"
+            >
+              Newest first
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              :class="selectedSort === 'created_at-asc' ? 'bg-muted' : ''"
+              @select="handleSortChange('created_at-asc')"
+            >
+              Oldest first
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              :class="selectedSort === 'status-asc' ? 'bg-muted' : ''"
+              @select="handleSortChange('status-asc')"
+            >
+              Status
+            </DropdownMenuItem>
+
+            <DropdownMenuSeparator />
+
+            <DropdownMenuSub>
+              <DropdownMenuSubTrigger>
+                Items per page
+              </DropdownMenuSubTrigger>
+              <DropdownMenuSubContent>
+                <DropdownMenuItem
+                  v-for="size in pageSizeOptions"
+                  :key="size"
+                  :class="selectedPageSize === size ? 'bg-muted' : ''"
+                  @select="handlePageSizeChange(size)"
+                >
+                  {{ size }}
+                </DropdownMenuItem>
+              </DropdownMenuSubContent>
+            </DropdownMenuSub>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+    </div>
+
+    <div
+      v-if="!loading && !filteredEquipments.length"
+      class="flex flex-1 items-center justify-center rounded-xl border border-dashed bg-muted/40 px-6 py-10 text-center text-sm text-muted-foreground"
+    >
+      <div class="space-y-2">
+        <div class="text-base font-medium">
+          No equipments found
+        </div>
+        <p class="max-w-xs mx-auto">
+          Try adjusting your search or create a new equipment to get started.
+        </p>
+      </div>
+    </div>
+
+    <div
+      v-else
+      class="relative flex-1 min-h-0 rounded-xl bg"
+    >
+      <div
+        v-if="loading"
+        class="absolute inset-0 z-10 flex items-center justify-center bg-background/60 backdrop-blur-sm"
+      >
+        <UiSpinner class="h-5 w-5 text-muted-foreground" />
+      </div>
+
+      <UiScrollArea class="h-full">
+        <ul class="space-y-2 pe-2">
+          <li v-for="equipment in filteredEquipments" :key="equipment.id">
+            <button
+              type="button"
+              class="group relative flex w-full items-start gap-4 rounded-xl border bg-card p-4 text-left transition-all duration-200 hover:border-primary/50 hover:bg-accent/50 hover:shadow-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+              :class="{
+                'border-primary shadow-sm':
+                  selectedEquipment && selectedEquipment.id === equipment.id,
+              }"
+              @click="handleSelectEquipment(equipment)"
+            >
+              <!-- Avatar/Icon -->
+              <div
+                class="relative flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-primary/10 to-primary/5 text-base font-semibold text-primary shadow-sm transition-transform duration-200 group-hover:scale-105"
+                :class="{
+                  'ring-2 ring-primary/30': selectedEquipment && selectedEquipment.id === equipment.id,
+                }"
+              >
+                {{ equipment.name?.charAt(0)?.toUpperCase() || 'E' }}
+              </div>
+
+              <!-- Content -->
+              <div class="min-w-0 flex-1 space-y-2.5">
+                <!-- Header: Name and Status -->
+                <div class="flex items-start justify-between gap-3">
+                  <div class="min-w-0 flex-1">
+                    <h3 class="truncate text-base font-semibold leading-tight text-foreground group-hover:text-primary transition-colors">
+                      {{ equipment.name }}
+                    </h3>
+                  </div>
+                  <Badge
+                    v-if="equipment.status"
+                    :variant="getStatusVariant(equipment.status)"
+                    class="shrink-0 text-xs font-medium"
+                    :class="[
+                      getStatusInfo(equipment.status)?.color || '',
+                    ]"
+                  >
+                    {{
+                      getStatusInfo(equipment.status)?.label || equipment.status
+                    }}
+                  </Badge>
+                </div>
+
+                <!-- Details Grid -->
+                <div class="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm">
+                  <!-- Type -->
+                  <div class="flex items-center gap-1.5 text-muted-foreground">
+                    <PackageIcon class="size-3.5 shrink-0" />
+                    <span class="truncate font-medium">
+                      {{ equipment.type || 'Unspecified type' }}
+                    </span>
+                  </div>
+
+                  <!-- Model -->
+                  <div
+                    v-if="equipment.model"
+                    class="flex items-center gap-1.5 text-muted-foreground"
+                  >
+                    <span class="text-[10px] opacity-50">•</span>
+                    <span class="truncate">
+                      {{ equipment.model }}
+                    </span>
+                  </div>
+
+                  <!-- Serial Number -->
+                  <div
+                    v-if="equipment.serial_number"
+                    class="flex items-center gap-1.5 text-muted-foreground"
+                  >
+                    <HashIcon class="size-3.5 shrink-0 opacity-60" />
+                    <span class="truncate font-mono text-xs">
+                      {{ equipment.serial_number }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Selection Indicator -->
+              <div
+                v-if="selectedEquipment && selectedEquipment.id === equipment.id"
+                class="absolute right-2 top-2 flex h-2 w-2 items-center justify-center rounded-full bg-primary"
+              >
+                <div class="h-1.5 w-1.5 rounded-full bg-primary-foreground" />
+              </div>
+            </button>
+          </li>
+        </ul>
+      </UiScrollArea>
+    </div>
+  </div>
+</template>

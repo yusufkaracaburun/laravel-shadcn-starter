@@ -47,7 +47,7 @@ export interface ResourceService<
     typeof import('@tanstack/vue-query').useMutation<
       IResponse<TEntity>,
       import('axios').AxiosError,
-      { id: number; data: TUpdateRequest }
+      { id: number, data: TUpdateRequest }
     >
   >
   deleteMutation: () => ReturnType<
@@ -61,7 +61,7 @@ export interface ResourceService<
     typeof import('@tanstack/vue-query').useMutation<
       IResponse<TEntity>,
       import('axios').AxiosError,
-      { id: number; includes?: string[] }
+      { id: number, includes?: string[] }
     >
   >
 }
@@ -84,7 +84,7 @@ export interface ResourceConfig<
   messages: Record<string, string>
   defaultSort: ISorting
   includes: Record<string, string>
-  defaultIncludeKey?: string
+  defaultIncludeKey?: string[]
   onFetchList?: (refetch: () => Promise<any>) => void
 }
 
@@ -110,7 +110,13 @@ export function useResourceBase<
   const pageSize = ref<TPageSize>(DEFAULT_PAGE_SIZE)
   const sort = ref<ISorting>(config.defaultSort)
   const filter = ref<TFilter>({} as TFilter)
-  const include = ref<string[]>([config.includes[config.defaultIncludeKey]])
+  const include = ref<string[]>([])
+
+  if (config.defaultIncludeKey && config.defaultIncludeKey.length > 0) {
+    include.value = config.defaultIncludeKey
+      .map(key => config.includes[key])
+      .filter((value): value is string => !!value)
+  }
 
   function onSortingChange(newSorting: ISorting): void {
     sort.value = newSorting
@@ -180,7 +186,9 @@ export function useResourceBase<
 
   const items = computed(() => {
     const responseData = listData.value?.data
-    if (!responseData) return []
+    if (!responseData) {
+      return []
+    }
     // Handle both array and object with data property
     if (Array.isArray(responseData)) {
       return responseData

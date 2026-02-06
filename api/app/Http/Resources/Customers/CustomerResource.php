@@ -2,10 +2,14 @@
 
 declare(strict_types=1);
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\Customers;
 
 use App\Models\Customer;
 use Illuminate\Http\Request;
+use App\Enums\CustomerStatus;
+use App\Http\Resources\BaseResource;
+use App\Http\Resources\InvoiceResource;
+use App\Http\Resources\Contacts\ContactResource;
 
 /**
  * @mixin Customer
@@ -27,25 +31,28 @@ final class CustomerResource extends BaseResource
 
             // Address fields
             'address'           => $this->address,
-            'formatted_address' => $this->formatted_address, // accessor
-            'zipcode'           => $this->zipcode,
-            'city'              => $this->city,
-            'country'           => $this->country,
+            'formatted_address' => $this->when(
+                $this->address && $this->zipcode && $this->city,
+                fn () => $this->formatted_address,
+            ),
+            'zipcode' => $this->zipcode,
+            'city'    => $this->city,
+            'country' => $this->country,
 
             // Contact / business info
-            'email'       => $this->email,
-            'phone'       => $this->phone,
-            'status'      => $this->status,
-            'kvk_number'  => $this->kvk_number,
-            'vat_number'  => $this->vat_number,
-            'iban_number' => $this->iban_number,
+            'email'            => $this->email,
+            'phone'            => $this->phone,
+            'status'           => $this->status,
+            'status_formatted' => CustomerStatus::toArrayItem($this->status),
+            'kvk_number'       => $this->kvk_number,
+            'vat_number'       => $this->vat_number,
+            'iban_number'      => $this->iban_number,
 
             // Timestamps
-            'created_at' => $this->formatDate($this->created_at, 'd-m-Y H:i:s'),
-            'updated_at' => $this->formatDate($this->updated_at, 'd-m-Y H:i:s'),
+            'created_at' => $this->formatTimestamp($this->created_at),
+            'updated_at' => $this->formatTimestamp($this->updated_at),
 
-            // Primary contact (single model)
-            'primary_contact' => new ContactResource($this->primary_contact),
+            'primary_contact' => ContactResource::make($this->primary_contact),
 
             // Collections
             'contacts' => ContactResource::collection($this->whenLoaded('contacts')),

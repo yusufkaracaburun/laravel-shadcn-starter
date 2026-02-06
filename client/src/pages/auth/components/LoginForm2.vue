@@ -14,8 +14,8 @@ import {
   FieldSeparator,
 } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
-import { useAuth } from '@/pages/auth/composables/use-auth.composable'
 import { cn } from '@/lib/utils'
+import { useAuth } from '@/pages/auth/composables/use-auth.composable'
 
 import GitHubButton from './github-button.vue'
 import GoogleButton from './google-button.vue'
@@ -76,18 +76,14 @@ const onSubmit = handleSubmit(async (values) => {
   >
     <FieldGroup>
       <div class="flex flex-col items-center gap-1 text-center">
-        <h1 class="text-2xl font-bold">
-          Login to your account
-        </h1>
+        <h1 class="text-2xl font-bold">Login to your account</h1>
         <p class="text-muted-foreground text-sm text-balance">
           Enter your email below to login to your account
         </p>
       </div>
       <Field>
         <VeeField v-slot="{ field, errors }" name="email">
-          <FieldLabel for="login-form-2-email">
-            Email
-          </FieldLabel>
+          <FieldLabel for="login-form-2-email"> Email </FieldLabel>
           <Input
             id="login-form-2-email"
             v-bind="field"
@@ -102,9 +98,7 @@ const onSubmit = handleSubmit(async (values) => {
       <Field>
         <VeeField v-slot="{ field, errors }" name="password">
           <div class="flex items-center justify-between">
-            <FieldLabel for="login-form-2-password">
-              Password
-            </FieldLabel>
+            <FieldLabel for="login-form-2-password"> Password </FieldLabel>
             <ToForgotPasswordLink />
           </div>
           <Input

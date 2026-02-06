@@ -11,6 +11,7 @@ export interface IEquipment {
   model: string | null
   serial_number: string | null
   status: string | null
+  status_formatted: IStatus
   created_at: string
   updated_at: string
 }

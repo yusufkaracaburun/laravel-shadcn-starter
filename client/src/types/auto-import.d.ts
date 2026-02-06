@@ -86,6 +86,7 @@ declare global {
   const HandshakeIcon: typeof import('../composables/use-icons.composable').HandshakeIcon
   const Hash: typeof import('../composables/use-icons.composable').Hash
   const HashIcon: typeof import('../composables/use-icons.composable').HashIcon
+  const HeartIcon: typeof import('../composables/use-icons.composable').HeartIcon
   const HistoryIcon: typeof import('../composables/use-icons.composable').HistoryIcon
   const LayoutDashboard: typeof import('../composables/use-icons.composable').LayoutDashboard
   const LayoutDashboardIcon: typeof import('../composables/use-icons.composable').LayoutDashboardIcon
@@ -100,6 +101,7 @@ declare global {
   const MailIcon: typeof import('../composables/use-icons.composable').MailIcon
   const MailPlus: typeof import('../composables/use-icons.composable').MailPlus
   const MailPlusIcon: typeof import('../composables/use-icons.composable').MailPlusIcon
+  const MapPinIcon: typeof import('../composables/use-icons.composable').MapPinIcon
   const Megaphone: typeof import('../composables/use-icons.composable').Megaphone
   const MegaphoneIcon: typeof import('../composables/use-icons.composable').MegaphoneIcon
   const Milestone: typeof import('../composables/use-icons.composable').Milestone
@@ -110,6 +112,7 @@ declare global {
   const PackageIcon: typeof import('../composables/use-icons.composable').PackageIcon
   const Palette: typeof import('../composables/use-icons.composable').Palette
   const PaletteIcon: typeof import('../composables/use-icons.composable').PaletteIcon
+  const PanelRightCloseIcon: typeof import('../composables/use-icons.composable').PanelRightCloseIcon
   const Pencil: typeof import('../composables/use-icons.composable').Pencil
   const PencilIcon: typeof import('../composables/use-icons.composable').PencilIcon
   const PhoneIcon: typeof import('../composables/use-icons.composable').PhoneIcon
@@ -136,6 +139,7 @@ declare global {
   const ShoppingCartIcon: typeof import('../composables/use-icons.composable').ShoppingCartIcon
   const SquareUserRound: typeof import('../composables/use-icons.composable').SquareUserRound
   const SquareUserRoundIcon: typeof import('../composables/use-icons.composable').SquareUserRoundIcon
+  const StarIcon: typeof import('../composables/use-icons.composable').StarIcon
   const THEMES: typeof import('../constants/themes').THEMES
   const THEMES_COLOR: typeof import('../constants/themes')['THEMES_COLOR']
   const THEME_PRIMARY_COLORS: typeof import('../constants/themes').THEME_PRIMARY_COLORS

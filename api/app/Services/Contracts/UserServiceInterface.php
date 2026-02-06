@@ -7,35 +7,57 @@ namespace App\Services\Contracts;
 use App\Models\User;
 use App\Enums\UserStatus;
 use Illuminate\Http\Request;
-use Illuminate\Database\Eloquent\Model;
 use App\Services\BaseServiceInterface;
 use App\Http\Resources\Users\UserResource;
 use App\Http\Resources\Users\UserCollection;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 interface UserServiceInterface extends BaseServiceInterface
 {
-    public function getPaginatedByRequest(Request $request, array $columns = ['*']): UserCollection;
+    public function getPaginated(Request $request): UserCollection;
 
-    public function getAll(array $columns = ['*']): UserCollection;
+    public function show(User $user): UserResource;
 
-    public function findById(int $id): UserResource;
+    /**
+     * Create new user.
+     *
+     * @param  array<string, mixed>  $data
+     */
+    public function createUser(array $data): UserResource;
 
-    public function create(array $data): UserResource;
+    /**
+     * Update user.
+     *
+     * @param  array<string, mixed>  $data
+     */
+    public function updateUser(User $user, array $data): UserResource;
 
-    public function update(Model $model, array $data): UserResource;
+    /**
+     * Delete user.
+     */
+    public function deleteUser(User $user): bool;
 
-    public function delete(Model $model): bool;
-
+    /**
+     * Get the current authenticated user with relationships loaded.
+     */
     public function getCurrentUser(User $user): UserResource;
 
-    public function getVerifiedUsers(): AnonymousResourceCollection;
+    /**
+     * Get all users.
+     */
+    public function getAll(): UserCollection;
 
-    public function getActiveUsers(): AnonymousResourceCollection;
+    /**
+     * Get all verified users.
+     */
+    public function getVerifiedUsers(): UserCollection;
 
-    public function getUsersByStatus(UserStatus|string $status = UserStatus::ACTIVE): AnonymousResourceCollection;
+    /**
+     * Get all active users.
+     */
+    public function getActiveUsers(): UserCollection;
 
-    public function getAllFiltered(): AnonymousResourceCollection;
-
-    public function getVerifiedFiltered(): AnonymousResourceCollection;
+    /**
+     * Get users by status.
+     */
+    public function getUsersByStatus(UserStatus|string $status = UserStatus::ACTIVE): UserCollection;
 }

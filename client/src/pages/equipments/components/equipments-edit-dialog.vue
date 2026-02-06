@@ -28,7 +28,10 @@ function handleClose() {
     <DialogContent
       class="top-5 right-5 bottom-5 left-auto translate-x-0 translate-y-0 sm:max-w-[425px]"
     >
-      <EquipmentsResourceDialog :equipment="props.equipment" @close="handleClose" />
+      <EquipmentsResourceDialog
+        :equipment="props.equipment"
+        @close="handleClose"
+      />
     </DialogContent>
   </Dialog>
 </template>

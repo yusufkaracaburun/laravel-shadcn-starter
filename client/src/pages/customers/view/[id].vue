@@ -4,26 +4,25 @@ meta:
 </route>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 
 import type { ICustomer } from '@/pages/customers/models/customers'
 
-import Page from '@/components/global-layout/basic-page.vue'
+import DetailsLayout from '@/components/global-layout/details-layout.vue'
+import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import {
   FileTextIcon,
   LayoutGridIcon,
-  UsersIcon,
+  ListTodoIcon,
 } from '@/composables/use-icons.composable'
 import { useCustomers } from '@/pages/customers/composables/use-customers.composable'
 
-import CustomerAccountStatusCard from './components/customer-account-status-card.vue'
-import CustomerContactsCard from './components/customer-contacts-card.vue'
-import CustomerHeader from './components/customer-header.vue'
-import CustomerInvoicesCard from './components/customer-invoices-card.vue'
+import CustomerInvoicesTab from './components/customer-invoices-tab.vue'
 import CustomerNavbar from './components/customer-navbar.vue'
-import CustomerProfileCard from './components/customer-profile-card.vue'
-import CustomerViewLayout from './components/customer-view-layout.vue'
+import CustomerOverviewTab from './components/customer-overview-tab.vue'
+import CustomerSidebar from './components/customer-sidebar.vue'
+import CustomerTasksTab from './components/customer-tasks-tab.vue'
 
 // Composables
 const {
@@ -34,10 +33,17 @@ const {
   fetchCustomerByIdData,
 } = useCustomers()
 
+// Define which relations to include when fetching customer data
+const customerIncludes = ['primaryContact', 'contacts', 'invoices', 'contactsCount', 'invoicesCount']
+
+// Fetch customer data with includes on mount
+onMounted(() => {
+  fetchCustomerByIdData(customerIncludes)
+})
+
 // Computed properties
 const customer = computed<ICustomer | null>(() => {
   const data = customerByIdResponse.value?.data
-  // Handle case where data might be an array (shouldn't happen, but type safety)
   if (Array.isArray(data)) {
     return data[0] ?? null
   }
@@ -47,87 +53,38 @@ const customer = computed<ICustomer | null>(() => {
 const pageTitle = computed(() => customer.value?.name ?? 'Customer Details')
 
 const pageDescription = computed(() =>
-  customer.value
-    ? `View details for ${customer.value.name}`
-    : 'Loading customer information...',
+  customer.value ?
+    `View details for ${customer.value.name}` :
+    'Loading customer information...',
 )
-
-// Computed values for components
-const customerInitials = computed(() => {
-  if (!customer.value) {
-    return '?'
-  }
-
-  const name = customer.value.name
-  if (!name || name === '—') {
-    return '?'
-  }
-
-  const parts = name.trim().split(/\s+/)
-
-  if (parts.length >= 2) {
-    return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase()
-  }
-
-  return name[0].toUpperCase()
-})
-
-// Format date from "d-m-Y H:i:s" format
-function formatDateTime(dateString: string | null): string {
-  if (!dateString) {
-    return '—'
-  }
-  try {
-    // Parse "d-m-Y H:i:s" format (e.g., "31-12-2023 14:30:25")
-    const [datePart, timePart] = dateString.split(' ')
-    const [day, month, year] = datePart.split('-')
-    const date = new Date(`${year}-${month}-${day} ${timePart}`)
-    
-    if (Number.isNaN(date.getTime())) {
-      return dateString
-    }
-
-    return date.toLocaleString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-    })
-  } catch {
-    return dateString
-  }
-}
-
-const formattedCreatedAt = computed(() => {
-  if (!customer.value?.created_at) {
-    return '—'
-  }
-  return formatDateTime(customer.value.created_at)
-})
-
-const formattedUpdatedAt = computed(() => {
-  if (!customer.value?.updated_at) {
-    return '—'
-  }
-  return formatDateTime(customer.value.updated_at)
-})
 
 // Tab state
 const activeTab = ref('overview')
 
 // Event handlers
 function handleEditClosed() {
-  fetchCustomerByIdData()
+  fetchCustomerByIdData(customerIncludes)
 }
 
 function handleDeleteClosed() {
   // Customer will be redirected by the navbar component
 }
+
+function handleAddContact() {
+  // Placeholder for add contact functionality
+}
 </script>
 
 <template>
-  <Page :title="pageTitle" :description="pageDescription">
+  <DetailsLayout
+    :title="pageTitle"
+    :description="pageDescription"
+    :is-loading="isLoadingCustomerById"
+    :is-error="isErrorCustomerById"
+    :error-object="errorCustomerById"
+    :on-retry="() => fetchCustomerByIdData(customerIncludes)"
+    error-entity-name="Customer"
+  >
     <template #actions>
       <CustomerNavbar
         v-if="customer"
@@ -137,82 +94,63 @@ function handleDeleteClosed() {
       />
     </template>
 
-    <CustomerViewLayout
-      :is-loading="isLoadingCustomerById"
-      :is-error="isErrorCustomerById"
-      :error-object="errorCustomerById"
-      :on-retry="fetchCustomerByIdData"
-    >
-      <template v-if="customer">
-        <div class="space-y-8">
-          <!-- Enhanced Header Section -->
-          <div
-            class="relative overflow-hidden rounded-xl border bg-gradient-to-br from-background to-muted/20 p-8 shadow-sm"
-          >
-            <div class="relative z-10">
-              <CustomerHeader
-                :customer="customer"
-                :initials="customerInitials"
-              />
-            </div>
-          </div>
+    <template v-if="customer" #sidebar>
+      <CustomerSidebar
+        :customer="customer"
+        @add-contact="handleAddContact"
+      />
+    </template>
 
-          <!-- Modern Tabs Section -->
-          <div class="space-y-6">
-            <Tabs v-model="activeTab" class="w-full">
+    <template v-if="customer" #tabs>
+      <!-- Tabs and Content -->
+      <div class="flex-1 overflow-auto">
+        <Tabs v-model="activeTab" default-value="overview" class-name="gap-4">
+          <div class="sticky top-0 z-10 bg-background border-b">
+            <ScrollArea>
               <TabsList
-                class="h-auto w-full justify-start gap-1 bg-muted/50 p-1"
+                class="bg-background rounded-none border-b p-0"
               >
                 <TabsTrigger
                   value="overview"
-                  class="gap-2 rounded-md px-4 py-2.5 data-[state=active]:bg-background data-[state=active]:shadow-sm"
+                  class="bg-background data-[state=active]:border-primary dark:data-[state=active]:border-primary h-full rounded-none border-0 border-b-2 border-transparent data-[state=active]:shadow-none"
                 >
-                  <LayoutGridIcon class="size-4" />
-                  <span>Overview</span>
-                </TabsTrigger>
-                <TabsTrigger
-                  value="contacts"
-                  class="gap-2 rounded-md px-4 py-2.5 data-[state=active]:bg-background data-[state=active]:shadow-sm"
-                >
-                  <UsersIcon class="size-4" />
-                  <span>Contacts</span>
+                  <LayoutGridIcon class="size-3.5" />
+                  <span>Overzicht</span>
                 </TabsTrigger>
                 <TabsTrigger
                   value="invoices"
-                  class="gap-2 rounded-md px-4 py-2.5 data-[state=active]:bg-background data-[state=active]:shadow-sm"
+                  class="bg-background data-[state=active]:border-primary dark:data-[state=active]:border-primary h-full rounded-none border-0 border-b-2 border-transparent data-[state=active]:shadow-none"
                 >
-                  <FileTextIcon class="size-4" />
-                  <span>Invoices</span>
+                  <FileTextIcon class="size-3.5" />
+                  <span>Facturen</span>
+                </TabsTrigger>
+                <TabsTrigger
+                  value="tasks"
+                  class="bg-background data-[state=active]:border-primary dark:data-[state=active]:border-primary h-full rounded-none border-0 border-b-2 border-transparent data-[state=active]:shadow-none"
+                >
+                  <ListTodoIcon class="size-3.5" />
+                  <span>Taken en notities</span>
                 </TabsTrigger>
               </TabsList>
-
-              <TabsContent value="overview" class="mt-8">
-                <div class="grid gap-6 lg:grid-cols-2">
-                  <CustomerProfileCard :customer="customer" />
-
-                  <CustomerAccountStatusCard
-                    :customer="customer"
-                    :created-at="formattedCreatedAt"
-                    :updated-at="formattedUpdatedAt"
-                  />
-                </div>
-              </TabsContent>
-
-              <TabsContent value="contacts" class="mt-8">
-                <div class="max-w-2xl">
-                  <CustomerContactsCard :customer="customer" />
-                </div>
-              </TabsContent>
-
-              <TabsContent value="invoices" class="mt-8">
-                <div class="max-w-2xl">
-                  <CustomerInvoicesCard :customer="customer" />
-                </div>
-              </TabsContent>
-            </Tabs>
+              <ScrollBar orientation="horizontal" />
+            </ScrollArea>
           </div>
-        </div>
-      </template>
-    </CustomerViewLayout>
-  </Page>
+
+          <div class="p-3">
+            <TabsContent value="overview" class="mt-0">
+              <CustomerOverviewTab :customer="customer" />
+            </TabsContent>
+
+            <TabsContent value="invoices" class="mt-0">
+              <CustomerInvoicesTab :customer="customer" />
+            </TabsContent>
+
+            <TabsContent value="tasks" class="mt-0">
+              <CustomerTasksTab :customer="customer" />
+            </TabsContent>
+          </div>
+        </Tabs>
+      </div>
+    </template>
+  </DetailsLayout>
 </template>

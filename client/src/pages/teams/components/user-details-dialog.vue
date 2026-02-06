@@ -124,9 +124,7 @@ function getInitials(name: string): string {
             >
               {{ selectedUser.status }}
             </Badge>
-            <div v-else class="font-medium text-muted-foreground">
-              Not set
-            </div>
+            <div v-else class="font-medium text-muted-foreground">Not set</div>
           </div>
           <div v-if="selectedUser.email_verified_at">
             <div class="text-muted-foreground">Email Verified</div>

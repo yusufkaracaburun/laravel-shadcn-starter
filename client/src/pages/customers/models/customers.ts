@@ -61,7 +61,12 @@ export interface ICustomer {
 
   // Address fields
   address: string | null
-  formatted_address: string[] // accessor - always returns array from AddressHelper
+  formatted_address?: {
+    short: string
+    inline: string
+    multiline: string
+    full: string
+  }
   zipcode: string | null
   city: string | null
   country: string | null
@@ -82,7 +87,20 @@ export interface ICustomer {
 
   // Collections (when loaded)
   contacts?: IContact[]
-  invoices?: unknown[] // Invoice type can be defined later if needed
+  invoices?: Array<{
+    id: number
+    invoice_number: string | null
+    date: string
+    status: string
+    total: {
+      amount: string
+      currency: string
+      formatted: string
+    }
+    notes: string | null
+    created_at: string
+    updated_at: string
+  }>
 
   // Counts (when counted)
   contacts_count?: number
@@ -134,3 +152,5 @@ export interface ICustomerFilters {
   between?: string // Format: "YYYY-MM-DD,YYYY-MM-DD"
   search?: string
 }
+
+export interface ICustomerPrerequisites {}

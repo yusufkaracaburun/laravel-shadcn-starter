@@ -1,23 +1,28 @@
 import type { AxiosError } from 'axios'
+import type { Ref } from 'vue'
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/vue-query'
-import { computed, type Ref } from 'vue'
+import { computed } from 'vue'
 
 import type { TPageSize } from '@/components/data-table/types'
 import type {
   ICreateTimesheetRequest,
-  IUpdateTimesheetRequest,
   ITimesheet,
   ITimesheetFilters,
   ITimesheetPrerequisites,
+  IUpdateTimesheetRequest,
 } from '@/pages/timesheets/models/timesheets'
+import type { ISorting } from '@/services/query-utils'
+import type {
+  IPaginatedResponse,
+  IResponse,
+} from '@/services/types/response.type'
 
 import { useAxios } from '@/composables/use-axios.composable'
-
-import type { ISorting } from '@/services/query-utils'
-import type { IPaginatedResponse, IResponse } from '@/services/types/response.type'
-
-import { buildQueryString, defaultAxiosQueryOptions } from '@/services/query-utils'
+import {
+  buildQueryString,
+  defaultAxiosQueryOptions,
+} from '@/services/query-utils'
 
 enum QueryKeys {
   TIMESHEET_PREREQUISITES = 'timesheetPrerequisites',
@@ -59,7 +64,14 @@ export function useTimesheetsService() {
     include: Ref<string[]>,
   ): ReturnType<typeof useQuery<IPaginatedResponse<ITimesheet>, AxiosError>> {
     return useQuery({
-      queryKey: [QueryKeys.TIMESHEET_LIST, page, per_page, sort, filter, include],
+      queryKey: [
+        QueryKeys.TIMESHEET_LIST,
+        page,
+        per_page,
+        sort,
+        filter,
+        include,
+      ],
       queryFn: async (): Promise<IPaginatedResponse<ITimesheet>> => {
         const params: Record<string, any> = {
           page: page.value,
@@ -70,10 +82,12 @@ export function useTimesheetsService() {
 
         // Only add include if it's a valid non-empty array
         if (
-          include.value
-          && Array.isArray(include.value)
-          && include.value.length > 0
-          && include.value.every((item) => item !== undefined && item !== null && item !== '')
+          include.value &&
+          Array.isArray(include.value) &&
+          include.value.length > 0 &&
+          include.value.every(
+            (item) => item !== undefined && item !== null && item !== '',
+          )
         ) {
           params.include = include.value.filter((item) => item && item !== '')
         }
@@ -139,9 +153,17 @@ export function useTimesheetsService() {
   }
 
   function createTimesheetMutation(): ReturnType<
-    typeof useMutation<IResponse<ITimesheet>, AxiosError, ICreateTimesheetRequest>
+    typeof useMutation<
+      IResponse<ITimesheet>,
+      AxiosError,
+      ICreateTimesheetRequest
+    >
   > {
-    return useMutation<IResponse<ITimesheet>, AxiosError, ICreateTimesheetRequest>({
+    return useMutation<
+      IResponse<ITimesheet>,
+      AxiosError,
+      ICreateTimesheetRequest
+    >({
       mutationKey: [QueryKeys.CREATE_TIMESHEET],
       mutationFn: async (
         data: ICreateTimesheetRequest,

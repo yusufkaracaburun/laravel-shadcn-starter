@@ -23,12 +23,10 @@ async function handleRemove() {
 
 <template>
   <div>
-    <UiDialogTitle>
-      Delete this team: {{ team.name }}?
-    </UiDialogTitle>
+    <UiDialogTitle> Delete this team: {{ team.name }}? </UiDialogTitle>
     <UiDialogDescription class="mt-2 font-medium">
-      You are about to delete a team with the ID {{ team.id }}. This
-      action cannot be undone.
+      You are about to delete a team with the ID {{ team.id }}. This action
+      cannot be undone.
     </UiDialogDescription>
     <UiDialogFooter>
       <UiDialogClose as-child>

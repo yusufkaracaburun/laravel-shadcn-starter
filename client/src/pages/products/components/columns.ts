@@ -29,9 +29,9 @@ function createPriceCell(product: IProduct) {
   const priceValue = product.unit_price
   // Handle Money object from backend
   if (
-    priceValue
-    && typeof priceValue === 'object'
-    && 'formatted' in priceValue
+    priceValue &&
+    typeof priceValue === 'object' &&
+    'formatted' in priceValue
   ) {
     const money = priceValue as { formatted: string }
     return h('div', { class: CELL_CLASSES.PRICE_CELL }, money.formatted)
@@ -54,11 +54,7 @@ function createPriceCell(product: IProduct) {
  * Helper function to create description cell
  */
 function createDescriptionCell(description: string | null | undefined) {
-  return h(
-    'div',
-    { class: CELL_CLASSES.DESCRIPTION_CELL },
-    description || '—',
-  )
+  return h('div', { class: CELL_CLASSES.DESCRIPTION_CELL }, description || '—')
 }
 
 /**

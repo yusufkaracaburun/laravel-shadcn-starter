@@ -28,12 +28,13 @@ final class VehicleFactory extends Factory
     public function definition(): array
     {
         return [
-            'make'          => $this->faker->randomElement(['Toyota', 'Ford', 'Honda', 'BMW', 'Mercedes']),
-            'model'         => $this->faker->word(),
-            'year'          => $this->faker->year(),
-            'license_plate' => mb_strtoupper($this->faker->bothify('??-###-??')),
-            'vin'           => mb_strtoupper($this->faker->bothify('VIN#########')),
-            'status'        => $this->faker->randomElement(VehicleStatus::cases()),
+            'make'            => $this->faker->randomElement(['Toyota', 'Ford', 'Honda', 'BMW', 'Mercedes']),
+            'model'           => $this->faker->word(),
+            'year'            => $this->faker->year(),
+            'license_plate'   => mb_strtoupper($this->faker->bothify('??-###-??')),
+            'vin'             => mb_strtoupper($this->faker->bothify('VIN#########')),
+            'status'          => $this->faker->randomElement(VehicleStatus::cases()),
+            'inspection_date' => now()->addWeeks(rand(1, 52)),
         ];
     }
 }

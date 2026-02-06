@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { Trash2Icon } from '@/composables/use-icons.composable'
-
 import type { IDataTableProps } from '@/components/data-table/types'
 import type {
   ICustomer,
@@ -10,14 +8,23 @@ import type {
 import BulkActions from '@/components/data-table/bulk-actions.vue'
 import DataTable from '@/components/data-table/data-table.vue'
 import { generateVueTable } from '@/components/data-table/use-generate-vue-table'
+import { Trash2Icon } from '@/composables/use-icons.composable'
 
 import CustomerDeleteBatch from './customer-delete-batch.vue'
 import DataTableToolbar from './data-table-toolbar.vue'
 
 const props = defineProps<IDataTableProps<ICustomer, ICustomerFilters>>()
+const emit = defineEmits<{
+  rowClick: [customer: ICustomer]
+}>()
+
 const { table } = generateVueTable<ICustomer, ICustomerFilters>(props)
 
 const customerDeleteBatchOpen = ref(false)
+
+function handleRowClick(customer: ICustomer) {
+  emit('rowClick', customer)
+}
 </script>
 
 <template>
@@ -49,6 +56,7 @@ const customerDeleteBatchOpen = ref(false)
     :columns="columns"
     :loading="loading"
     :server-pagination="serverPagination"
+    @row-click="handleRowClick"
   >
     <template #toolbar>
       <DataTableToolbar

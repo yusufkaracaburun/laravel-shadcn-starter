@@ -12,15 +12,7 @@ import { computed } from 'vue'
 
 import type { User as SidebarUser } from '@/components/app-sidebar/types'
 
-import {
-  AppWindowIcon,
-  BellDotIcon,
-  PaletteIcon,
-  PictureInPicture2Icon,
-  SettingsIcon,
-  UserIcon,
-  WrenchIcon,
-} from '@/composables/use-icons.composable'
+import { SettingsIcon } from '@/composables/use-icons.composable'
 import { useAuth } from '@/pages/auth/composables/use-auth.composable'
 import { useAuthStore } from '@/stores/auth.store'
 

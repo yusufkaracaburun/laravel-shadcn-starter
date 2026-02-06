@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { FilterIcon } from '@/composables/use-icons.composable'
-
 import type { ICustomerFilters } from '@/pages/customers/models/customers'
 
 import { Button } from '@/components/ui/button'
@@ -16,6 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { FilterIcon } from '@/composables/use-icons.composable'
 
 interface CustomersFilterProps {
   filters: ICustomerFilters
@@ -79,15 +78,9 @@ const hasActiveFilters = computed(() => {
               <SelectValue placeholder="All types" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">
-                All types
-              </SelectItem>
-              <SelectItem value="business">
-                Business
-              </SelectItem>
-              <SelectItem value="private">
-                Private
-              </SelectItem>
+              <SelectItem value="all"> All types </SelectItem>
+              <SelectItem value="business"> Business </SelectItem>
+              <SelectItem value="private"> Private </SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -102,7 +95,7 @@ const hasActiveFilters = computed(() => {
             @input="
               updateFilter('city', ($event.target as HTMLInputElement).value)
             "
-          >
+          />
         </div>
 
         <div class="space-y-2">
@@ -115,7 +108,7 @@ const hasActiveFilters = computed(() => {
             @input="
               updateFilter('country', ($event.target as HTMLInputElement).value)
             "
-          >
+          />
         </div>
 
         <Button

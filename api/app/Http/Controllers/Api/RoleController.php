@@ -6,22 +6,28 @@ namespace App\Http\Controllers\Api;
 
 use App\Models\Role;
 use Illuminate\Http\JsonResponse;
+use App\Http\Responses\ApiResponse;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\Roles\IndexRoleRequest;
 use App\Http\Requests\Roles\StoreRoleRequest;
 use App\Http\Requests\Roles\UpdateRoleRequest;
 use App\Services\Contracts\RoleServiceInterface;
+use App\Http\Controllers\Concerns\UsesCachedResponses;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use App\Http\Controllers\Concerns\InvalidatesCachedModels;
 
-final class RoleController extends BaseApiController
+final class RoleController extends Controller
 {
+    use AuthorizesRequests;
+    use InvalidatesCachedModels;
+    use UsesCachedResponses;
+
     public function __construct(
-        private readonly RoleServiceInterface $roleService,
+        private readonly RoleServiceInterface $service,
     ) {}
 
     /**
-     * Display a listing of roles with QueryBuilder support.
-     *
-     * Supports filtering, sorting, and including relationships via request parameters.
-     * Example: /api/roles?filter[name]=admin&sort=-created_at&include=users,permissions
+     * Display a listing of roles.
      *
      * @authenticated
      */
@@ -29,9 +35,9 @@ final class RoleController extends BaseApiController
     {
         $this->authorize('viewAny', Role::class);
 
-        return $this->respondWithCollection(
-            $this->roleService->getPaginatedByRequest($request),
-        );
+        $collection = $this->service->getPaginated($request);
+
+        return ApiResponse::success($collection);
     }
 
     /**
@@ -47,13 +53,13 @@ final class RoleController extends BaseApiController
         $permissionIds = $data['permission_ids'] ?? [];
         unset($data['permission_ids']);
 
-        $role = $this->roleService->create($data);
+        $roleResource = $this->service->createRole($data);
 
         if (!empty($permissionIds)) {
-            $role = $this->roleService->assignPermissions($role->resource->id, $permissionIds);
+            $roleResource = $this->service->assignPermissions($roleResource->resource->id, $permissionIds);
         }
 
-        return $this->respondCreated($role);
+        return ApiResponse::created($roleResource);
     }
 
     /**
@@ -65,9 +71,9 @@ final class RoleController extends BaseApiController
     {
         $this->authorize('view', $role);
 
-        return $this->respondWithResource(
-            $this->roleService->findById($role->id),
-        );
+        $roleResource = $this->service->show($role);
+
+        return ApiResponse::success($roleResource);
     }
 
     /**
@@ -83,13 +89,13 @@ final class RoleController extends BaseApiController
         $permissionIds = $data['permission_ids'] ?? null;
         unset($data['permission_ids']);
 
-        $roleResource = $this->roleService->update($role, $data);
+        $roleResource = $this->service->updateRole($role, $data);
 
         if ($permissionIds !== null) {
-            $roleResource = $this->roleService->assignPermissions($role->id, $permissionIds);
+            $roleResource = $this->service->assignPermissions($role->id, $permissionIds);
         }
 
-        return $this->respondWithResource($roleResource);
+        return ApiResponse::success($roleResource);
     }
 
     /**
@@ -101,8 +107,8 @@ final class RoleController extends BaseApiController
     {
         $this->authorize('delete', $role);
 
-        $this->roleService->delete($role);
+        $this->service->deleteRole($role);
 
-        return $this->respondNoContent('Role deleted successfully');
+        return ApiResponse::noContent('Role deleted successfully');
     }
 }

@@ -7,14 +7,14 @@ meta:
 import { computed, nextTick, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
+import type InvoiceForm from '@/pages/invoices/components/invoice-form.vue'
 import type { TInvoiceForm, TInvoiceItem } from '@/pages/invoices/data/schema'
 
 import Page from '@/components/global-layout/basic-page.vue'
 import { Button } from '@/components/ui/button'
 import { ArrowLeftIcon, SendIcon } from '@/composables/use-icons.composable'
-import { useInvoices } from '@/pages/invoices/composables/use-invoices.composable'
 import { useToast } from '@/composables/use-toast.composable'
-import InvoiceForm from '@/pages/invoices/components/invoice-form.vue'
+import { useInvoices } from '@/pages/invoices/composables/use-invoices.composable'
 import InvoiceEditorLayout from '@/pages/invoices/edit/components/invoice-editor-layout.vue'
 
 const {
@@ -59,8 +59,7 @@ function handleClose() {
 }
 
 async function handleUpdate() {
-  if (!formRef.value)
-    return
+  if (!formRef.value) return
   isSubmitting.value = true
   try {
     await formRef.value.handleSubmit()
@@ -78,8 +77,7 @@ async function handleUpdate() {
 }
 
 async function handleUpdateAndSend() {
-  if (!formRef.value)
-    return
+  if (!formRef.value) return
   isSubmitting.value = true
   try {
     formRef.value.setFieldValue('status', 'sent')

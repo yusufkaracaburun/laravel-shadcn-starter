@@ -4,37 +4,119 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\Users;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Http\Requests\BaseIndexFormRequest;
 use Illuminate\Contracts\Validation\ValidationRule;
 
-final class UserIndexRequest extends FormRequest
+/**
+ * Index user request validation.
+ *
+ * Validates pagination, filtering, sorting, includes, and fields for user listing.
+ */
+final class UserIndexRequest extends BaseIndexFormRequest
 {
     /**
-     * Determine if the user is authorized to make this request.
+     * Get custom messages specific to users.
+     *
+     * @return array<string, string>
      */
-    public function authorize(): bool
+    public function messages(): array
     {
-        return true;
+        return array_merge(
+            parent::messages(),
+            [
+                'filter.id.integer'             => 'Filter ID must be a number.',
+                'filter.id.exists'              => 'The selected user does not exist.',
+                'filter.name.string'            => 'Filter name must be a string.',
+                'filter.email.email'            => 'The email filter must be a valid email address.',
+                'filter.email_verified_at.date' => 'The email verified at filter must be a valid date.',
+                'filter.created_at.date'        => 'The created at filter must be a valid date.',
+            ],
+        );
     }
 
     /**
-     * Get the validation rules that apply to the request.
+     * Get custom attributes specific to users.
+     *
+     * @return array<string, string>
+     */
+    public function attributes(): array
+    {
+        return array_merge(
+            parent::attributes(),
+            [
+                'filter.id'                => 'user ID filter',
+                'filter.name'              => 'name filter',
+                'filter.email'             => 'email filter',
+                'filter.status'            => 'status filter',
+                'filter.email_verified_at' => 'email verified filter',
+                'filter.created_at'        => 'created at filter',
+            ],
+        );
+    }
+
+    /**
+     * Get filter validation rules specific to users.
      *
      * @return array<string, ValidationRule|array<mixed>|string>
      */
-    public function rules(): array
+    protected function filterRules(): array
+    {
+        return array_merge(
+            parent::filterRules(),
+            [
+                'filter.id'                => 'sometimes|integer|exists:users,id',
+                'filter.name'              => 'sometimes|string|max:255',
+                'filter.email'             => 'sometimes|email|max:255',
+                'filter.status'            => 'sometimes',
+                'filter.email_verified_at' => 'sometimes|date',
+                'filter.created_at'        => 'sometimes|date',
+            ],
+        );
+    }
+
+    /**
+     * Get allowed sort fields.
+     *
+     * @return array<string>
+     */
+    protected function getAllowedSorts(): array
     {
         return [
-            'page'     => ['sometimes', 'integer', 'min:1'],
-            'per_page' => ['sometimes', 'integer', 'min:1'],
+            'id', '-id',
+            'name', '-name',
+            'status', '-status',
+            'email', '-email',
+            'created_at', '-created_at',
+            'updated_at', '-updated_at',
         ];
     }
 
-    protected function prepareForValidation(): void
+    /**
+     * Get allowed includes.
+     *
+     * @return array<string>
+     */
+    protected function getAllowedIncludes(): array
     {
-        $this->merge([
-            'page'     => $this->integer('page', 1),
-            'per_page' => $this->integer('per_page', 10),
-        ]);
+        return ['teams', 'currentTeam', 'ownedTeams', 'roles'];
+    }
+
+    /**
+     * Get allowed fields for sparse fieldsets.
+     *
+     * @return array<string>
+     */
+    protected function getAllowedFields(): array
+    {
+        return [
+            'id',
+            'name',
+            'email',
+            'status',
+            'email_verified_at',
+            'current_team_id',
+            'created_at',
+            'updated_at',
+        ];
     }
 }

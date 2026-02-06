@@ -4,19 +4,13 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\Equipments;
 
-use Illuminate\Foundation\Http\FormRequest;
+use App\Enums\EquipmentStatus;
+use Illuminate\Validation\Rule;
+use App\Http\Requests\BaseFormRequest;
 use Illuminate\Contracts\Validation\ValidationRule;
 
-final class StoreEquipmentRequest extends FormRequest
+final class StoreEquipmentRequest extends BaseFormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
-    public function authorize(): bool
-    {
-        return true;
-    }
-
     /**
      * Get the validation rules that apply to the request.
      *
@@ -28,7 +22,7 @@ final class StoreEquipmentRequest extends FormRequest
             'name'          => ['required', 'string', 'max:255'],
             'serial_number' => ['required', 'string', 'max:255', 'unique:equipments,serial_number'],
             'type'          => ['required', 'string', 'max:255'],
-            'status'        => ['sometimes', 'string', 'in:active,maintenance,inactive'],
+            'status'        => ['sometimes', Rule::enum(EquipmentStatus::class)],
             'image'         => ['nullable', 'string'],
         ];
     }

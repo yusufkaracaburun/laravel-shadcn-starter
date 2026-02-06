@@ -19,9 +19,7 @@ withDefaults(defineProps<IProps>(), {
 
 <template>
   <div class="space-y-4">
-    <h3 class="text-sm font-semibold text-muted-foreground uppercase">
-      Notes
-    </h3>
+    <h3 class="text-sm font-semibold text-muted-foreground uppercase">Notes</h3>
 
     <FormField
       v-slot="{ componentField }"

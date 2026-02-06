@@ -25,17 +25,13 @@ const props = defineProps<{
         <form class="p-6 md:p-8">
           <FieldGroup>
             <div class="flex flex-col items-center gap-2 text-center">
-              <h1 class="text-2xl font-bold">
-                Create your account
-              </h1>
+              <h1 class="text-2xl font-bold">Create your account</h1>
               <p class="text-muted-foreground text-sm text-balance">
                 Enter your email below to create your account
               </p>
             </div>
             <Field>
-              <FieldLabel for="email">
-                Email
-              </FieldLabel>
+              <FieldLabel for="email"> Email </FieldLabel>
               <Input
                 id="email"
                 type="email"
@@ -50,9 +46,7 @@ const props = defineProps<{
             <Field>
               <Field class="grid grid-cols-2 gap-4">
                 <Field>
-                  <FieldLabel for="password">
-                    Password
-                  </FieldLabel>
+                  <FieldLabel for="password"> Password </FieldLabel>
                   <Input id="password" type="password" required />
                 </Field>
                 <Field>
@@ -67,9 +61,7 @@ const props = defineProps<{
               </FieldDescription>
             </Field>
             <Field>
-              <Button type="submit">
-                Create Account
-              </Button>
+              <Button type="submit"> Create Account </Button>
             </Field>
             <FieldSeparator
               class="*:data-[slot=field-separator-content]:bg-card"
@@ -115,7 +107,7 @@ const props = defineProps<{
             src="/placeholder.png"
             alt=""
             class="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
-          >
+          />
         </div>
       </CardContent>
     </Card>

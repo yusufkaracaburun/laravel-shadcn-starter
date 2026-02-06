@@ -24,11 +24,14 @@ import { setFormFieldErrors } from '@/utils/form'
 
 import type {
   ICreateTimesheetRequest,
-  IUpdateTimesheetRequest,
   ITimesheet,
+  IUpdateTimesheetRequest,
 } from '../models/timesheets'
 
-import { createTimesheetFormSchema, editTimesheetFormSchema } from '../data/schema'
+import {
+  createTimesheetFormSchema,
+  editTimesheetFormSchema,
+} from '../data/schema'
 
 const props = defineProps<{
   timesheet?: ITimesheet | null
@@ -53,7 +56,9 @@ const formSchema = computed(() =>
   isEditMode.value ? editTimesheetFormSchema : createTimesheetFormSchema,
 )
 
-const initialValues = computed(() => getTimesheetFormInitialValues(props.timesheet))
+const initialValues = computed(() =>
+  getTimesheetFormInitialValues(props.timesheet),
+)
 
 const form = useForm({
   validationSchema: computed(() => toTypedSchema(formSchema.value)),
@@ -81,9 +86,13 @@ const validFields = [
 ] as const
 
 const users = computed(() => timesheetPrerequisitesResponse.value?.users || [])
-const projects = computed(() => timesheetPrerequisitesResponse.value?.projects || [])
+const projects = computed(
+  () => timesheetPrerequisitesResponse.value?.projects || [],
+)
 const tasks = computed(() => timesheetPrerequisitesResponse.value?.tasks || [])
-const statuses = computed(() => timesheetPrerequisitesResponse.value?.statuses || [])
+const statuses = computed(
+  () => timesheetPrerequisitesResponse.value?.statuses || [],
+)
 
 function prepareRequestData(
   values: any,
@@ -112,7 +121,10 @@ const onSubmit = handleSubmit(async (values) => {
     const requestData = prepareRequestData(values, isEditMode.value)
 
     if (isEditMode.value && props.timesheet) {
-      await updateTimesheet(props.timesheet.id, requestData as IUpdateTimesheetRequest)
+      await updateTimesheet(
+        props.timesheet.id,
+        requestData as IUpdateTimesheetRequest,
+      )
     } else {
       await createTimesheet(requestData as ICreateTimesheetRequest)
     }
@@ -134,7 +146,9 @@ const onSubmit = handleSubmit(async (values) => {
           <Select
             v-bind="componentField"
             :model-value="componentField.modelValue?.toString()"
-            @update:model-value="(val) => componentField.onUpdate(val ? Number(val) : null)"
+            @update:model-value="
+              (val) => componentField.onUpdate(val ? Number(val) : null)
+            "
           >
             <SelectTrigger>
               <SelectValue placeholder="Select a user" />
@@ -161,7 +175,9 @@ const onSubmit = handleSubmit(async (values) => {
           <Select
             v-bind="componentField"
             :model-value="componentField.modelValue?.toString()"
-            @update:model-value="(val) => componentField.onUpdate(val ? Number(val) : null)"
+            @update:model-value="
+              (val) => componentField.onUpdate(val ? Number(val) : null)
+            "
           >
             <SelectTrigger>
               <SelectValue placeholder="Select a project (optional)" />
@@ -188,7 +204,9 @@ const onSubmit = handleSubmit(async (values) => {
           <Select
             v-bind="componentField"
             :model-value="componentField.modelValue?.toString()"
-            @update:model-value="(val) => componentField.onUpdate(val ? Number(val) : null)"
+            @update:model-value="
+              (val) => componentField.onUpdate(val ? Number(val) : null)
+            "
           >
             <SelectTrigger>
               <SelectValue placeholder="Select a task (optional)" />
@@ -212,11 +230,7 @@ const onSubmit = handleSubmit(async (values) => {
       <FormItem>
         <FormLabel>Date</FormLabel>
         <FormControl>
-          <Input
-            type="date"
-            v-bind="componentField"
-            placeholder="Date"
-          />
+          <Input type="date" v-bind="componentField" placeholder="Date" />
         </FormControl>
         <FormMessage />
       </FormItem>

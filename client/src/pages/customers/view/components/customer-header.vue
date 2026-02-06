@@ -2,7 +2,12 @@
 import type { ICustomer } from '@/pages/customers/models/customers'
 
 import Badge from '@/components/ui/badge/Badge.vue'
-import { Building2Icon, MailIcon, PhoneIcon, UserIcon } from '@/composables/use-icons.composable'
+import {
+  Building2Icon,
+  MailIcon,
+  PhoneIcon,
+  UserIcon,
+} from '@/composables/use-icons.composable'
 
 interface Props {
   customer: ICustomer

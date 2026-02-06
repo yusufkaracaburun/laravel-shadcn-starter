@@ -53,7 +53,7 @@ final class ProjectService extends BaseService implements ProjectServiceInterfac
     }
 
     /**
-     * @param Project $model
+     * @param  Project  $model
      */
     public function update(Model $model, array $data): ProjectResource
     {
@@ -63,7 +63,7 @@ final class ProjectService extends BaseService implements ProjectServiceInterfac
     }
 
     /**
-     * @param Project $model
+     * @param  Project  $model
      */
     public function delete(Model $model): bool
     {

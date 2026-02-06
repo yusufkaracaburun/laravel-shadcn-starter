@@ -28,7 +28,10 @@ function handleClose() {
     <DialogContent
       class="top-5 right-5 bottom-5 left-auto translate-x-0 translate-y-0 sm:max-w-[425px]"
     >
-      <TimesheetResourceDialog :timesheet="props.timesheet" @close="handleClose" />
+      <TimesheetResourceDialog
+        :timesheet="props.timesheet"
+        @close="handleClose"
+      />
     </DialogContent>
   </Dialog>
 </template>

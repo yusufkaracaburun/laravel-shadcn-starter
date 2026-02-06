@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Observers;
 
 use App\Models\Customer;
+use App\Helpers\Cache\ResponseCache;
 
 /**
  * Observer for Customer model events.
@@ -38,6 +39,8 @@ final class CustomerObserver extends BaseObserver
     public function created(Customer $customer): void
     {
         $this->log('created', $customer);
+        $cache = Customer::getCacheKeys();
+        ResponseCache::flushTags($cache['index']);
     }
 
     /**
@@ -56,6 +59,9 @@ final class CustomerObserver extends BaseObserver
     public function updated(Customer $customer): void
     {
         $this->log('updated', $customer);
+        $cache = Customer::getCacheKeys();
+        ResponseCache::flushTags($cache['index']);
+        ResponseCache::flushTags($cache['show'] . ".{$customer->id}");
     }
 
     /**
@@ -92,6 +98,9 @@ final class CustomerObserver extends BaseObserver
     public function deleted(Customer $customer): void
     {
         $this->log('deleted', $customer);
+        $cache = Customer::getCacheKeys();
+        ResponseCache::flushTags($cache['index']);
+        ResponseCache::flushTags($cache['show'] . ".{$customer->id}");
     }
 
     /**

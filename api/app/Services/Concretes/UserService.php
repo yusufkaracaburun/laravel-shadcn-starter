@@ -5,120 +5,120 @@ declare(strict_types=1);
 namespace App\Services\Concretes;
 
 use App\Models\User;
-use Illuminate\Database\Eloquent\Model;
 use App\Enums\UserStatus;
 use Illuminate\Http\Request;
 use App\Services\BaseService;
 use App\Http\Resources\Users\UserResource;
 use App\Http\Resources\Users\UserCollection;
-use App\Services\Concerns\TransformsResources;
 use App\Services\Contracts\UserServiceInterface;
 use App\Repositories\Contracts\UserRepositoryInterface;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-
- // Added this import
 
 final class UserService extends BaseService implements UserServiceInterface
 {
-    use TransformsResources;
+    private readonly UserRepositoryInterface $repo;
 
     public function __construct(
-        UserRepositoryInterface $repository,
+        UserRepositoryInterface $repo,
     ) {
-        $this->setRepository($repository);
+        $this->setRepository($repo);
+        $this->repo = $repo;
     }
 
-    public function getPaginatedByRequest(Request $request, array $columns = ['*']): UserCollection
+    public function getPaginated(Request $request): UserCollection
     {
-        return $this->toCollection(
-            $this->repository->paginateFiltered($request, $columns),
-        );
+        $paginated = $this->repo->withRequest($request)->paginateFiltered();
+
+        return new UserCollection($paginated);
     }
 
-    public function getAll(array $columns = ['*']): UserCollection
+    public function show(User $user): UserResource
     {
-        return $this->toCollection(
-            $this->repository->all($columns),
-        );
+        $user = $this->repo->findForShow($user);
+
+        return new UserResource($user);
     }
 
-    public function findById(int $id): UserResource
+    public function createUser(array $data): UserResource
     {
-        $user = $this->repository->find($id);
+        $user = $this->repo->createWithRelationships($data);
 
-        return $this->toResource($user->load(['teams', 'currentTeam', 'ownedTeams', 'roles']));
+        if (request()->hasFile('profile_photo')) {
+            $user->resource->addMediaFromRequest('profile_photo')
+                ->toMediaCollection('profile-photos');
+        }
+
+        return new UserResource($user);
     }
 
-    public function create(array $data): UserResource
+    public function updateUser(User $user, array $data): UserResource
     {
-        return $this->toResource(
-            $this->repository->create($data),
-        );
+        $updated = $this->repo->updateWithRelationships($user, $data);
+
+        return new UserResource($updated);
+    }
+
+    public function deleteUser(User $user): bool
+    {
+        return $this->repo->delete($user);
     }
 
     /**
-     * @param User $model
+     * Find a user by ID with relationships loaded.
      */
-    public function update(Model $model, array $data): UserResource
+    public function findById(int $userId): UserResource
     {
-        return $this->toResource(
-            $this->repository->update($model->id, $data),
-        );
+        $user = $this->repo->findOrFail($userId);
+
+        return new UserResource($user);
     }
 
     /**
-     * @param User $model
+     * Get the current authenticated user with relationships loaded.
      */
-    public function delete(Model $model): bool
-    {
-        return $this->repository->delete($model->id);
-    }
-
     public function getCurrentUser(User $user): UserResource
     {
-        $response = $this->repository->getCurrentUser($user);
+        $user = $this->repo->getCurrentUser($user);
 
-        return $this->toResource($response);
+        return new UserResource($user);
     }
 
-    public function getVerifiedUsers(): AnonymousResourceCollection
+    /**
+     * Get all users.
+     */
+    public function getAll(): UserCollection
     {
-        $response = $this->repository->getVerifiedUsers();
+        $users = $this->repo->all();
 
-        return UserResource::collection($response);
+        return new UserCollection($users);
     }
 
-    public function getActiveUsers(): AnonymousResourceCollection
+    /**
+     * Get all verified users.
+     */
+    public function getVerifiedUsers(): UserCollection
     {
-        $response = $this->repository->getActiveUsers();
+        $users = $this->repo->getVerifiedUsers();
 
-        return UserResource::collection($response);
+        return new UserCollection($users);
     }
 
-    public function getUsersByStatus(UserStatus|string $status = UserStatus::ACTIVE): AnonymousResourceCollection
+    /**
+     * Get all active users.
+     */
+    public function getActiveUsers(): UserCollection
     {
-        $response = $this->repository->getUsersByStatus($status);
+        $users = $this->repo->getActiveUsers();
 
-        return UserResource::collection($response);
+        return new UserCollection($users);
     }
 
-    public function getAllFiltered(): AnonymousResourceCollection
+    /**
+     * Get users by status.
+     */
+    public function getUsersByStatus(UserStatus|string $status = UserStatus::ACTIVE): UserCollection
     {
-        return UserResource::collection($this->repository->getAllFiltered());
-    }
+        $users = $this->repo->getUsersByStatus($status);
 
-    public function getVerifiedFiltered(): AnonymousResourceCollection
-    {
-        return UserResource::collection($this->repository->getVerifiedFiltered());
-    }
-
-    protected function getResourceClass(): string
-    {
-        return UserResource::class;
-    }
-
-    protected function getCollectionClass(): string
-    {
-        return UserCollection::class;
+        return new UserCollection($users);
     }
 }

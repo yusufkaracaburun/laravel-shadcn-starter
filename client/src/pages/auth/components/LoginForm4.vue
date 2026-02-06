@@ -15,8 +15,8 @@ import {
   FieldSeparator,
 } from '@/components/ui/field'
 import { Input } from '@/components/ui/input'
-import { useAuth } from '@/pages/auth/composables/use-auth.composable'
 import { cn } from '@/lib/utils'
+import { useAuth } from '@/pages/auth/composables/use-auth.composable'
 
 import ToForgotPasswordLink from './to-forgot-password-link.vue'
 
@@ -74,18 +74,14 @@ const onSubmit = handleSubmit(async (values) => {
         <form id="login-form-4" class="p-6 md:p-8" @submit="onSubmit">
           <FieldGroup>
             <div class="flex flex-col items-center gap-2 text-center">
-              <h1 class="text-2xl font-bold">
-                Welcome back
-              </h1>
+              <h1 class="text-2xl font-bold">Welcome back</h1>
               <p class="text-muted-foreground text-balance">
                 Login to your Acme Inc account
               </p>
             </div>
             <Field>
               <VeeField v-slot="{ field, errors }" name="email">
-                <FieldLabel for="login-form-4-email">
-                  Email
-                </FieldLabel>
+                <FieldLabel for="login-form-4-email"> Email </FieldLabel>
                 <Input
                   id="login-form-4-email"
                   v-bind="field"
@@ -178,7 +174,7 @@ const onSubmit = handleSubmit(async (values) => {
             src="/placeholder.png"
             alt=""
             class="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
-          >
+          />
         </div>
       </CardContent>
     </Card>

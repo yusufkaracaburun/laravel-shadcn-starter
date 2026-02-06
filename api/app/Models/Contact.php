@@ -16,8 +16,11 @@ use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 #[ObservedBy([ContactObserver::class])]
 final class Contact extends BaseModel
 {
-    protected $with = ['user'];
-
+    /**
+     * Get all customers associated with this contact.
+     *
+     * @return BelongsToMany<Customer>
+     */
     public function customers(): BelongsToMany
     {
         return $this->belongsToMany(Customer::class, 'contact_customer')
@@ -25,11 +28,21 @@ final class Contact extends BaseModel
             ->withTimestamps();
     }
 
+    /**
+     * Get the user associated with this contact.
+     *
+     * @return HasOne<User>
+     */
     public function user(): HasOne
     {
         return $this->hasOne(User::class);
     }
 
+    /**
+     * Get all invoices through customers.
+     *
+     * @return HasManyThrough<Invoice>
+     */
     public function invoices(): HasManyThrough
     {
         return $this->hasManyThrough(
@@ -42,6 +55,9 @@ final class Contact extends BaseModel
         );
     }
 
+    /**
+     * Get the full name attribute.
+     */
     protected function fullName(): Attribute
     {
         return Attribute::make(
@@ -49,6 +65,9 @@ final class Contact extends BaseModel
         );
     }
 
+    /**
+     * Scope a query to only include primary contacts.
+     */
     #[Scope]
     protected function primary(Builder $query): Builder
     {

@@ -5,24 +5,45 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Enums\EquipmentStatus;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Observers\EquipmentObserver;
+use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 
-final class Equipment extends Model
+#[ObservedBy([EquipmentObserver::class])]
+final class Equipment extends BaseModel
 {
-    use HasFactory;
+    /**
+     * Cache keys for equipment endpoints.
+     *
+     * @var array<string, string>
+     */
+    public const CACHE = [
+        'index' => 'api.equipments.index',
+        'show'  => 'api.equipments.show',
+    ];
 
-    protected $table = 'equipments';
-
-    protected $fillable = [
+    /**
+     * Searchable fields for this model.
+     *
+     * @var list<string>
+     */
+    public static array $searchable = [
         'name',
         'serial_number',
         'type',
         'status',
-        'image',
     ];
 
-    protected $casts = [
-        'status' => EquipmentStatus::class,
-    ];
+    protected $table = 'equipments';
+
+    /**
+     * The attributes that should be cast.
+     *
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'status' => EquipmentStatus::class,
+        ];
+    }
 }

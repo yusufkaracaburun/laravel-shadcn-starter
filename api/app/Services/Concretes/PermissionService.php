@@ -4,87 +4,84 @@ declare(strict_types=1);
 
 namespace App\Services\Concretes;
 
-use App\Models\Permission;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Http\Request;
 use App\Services\BaseService;
-use App\Services\Concerns\TransformsResources;
 use App\Http\Resources\Permissions\PermissionResource;
 use App\Services\Contracts\PermissionServiceInterface;
 use App\Http\Resources\Permissions\PermissionCollection;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Repositories\Contracts\PermissionRepositoryInterface;
 
 final class PermissionService extends BaseService implements PermissionServiceInterface
 {
-    use TransformsResources;
-
+    /**
+     * Create a new class instance.
+     */
     public function __construct(
-        PermissionRepositoryInterface $repository,
+        PermissionRepositoryInterface $repo,
     ) {
-        $this->setRepository($repository);
+        $this->setRepository($repo);
     }
 
-    public function getPaginatedByRequest(Request $request, array $columns = ['*']): PermissionCollection
+    public function getPermissions(): PermissionCollection
     {
-        return $this->toCollection(
-            $this->repository->paginateFiltered($request, $columns),
-        );
+        $permissions = $this->getFiltered();
+
+        return new PermissionCollection($permissions);
     }
 
-    public function getAll(array $columns = ['*']): PermissionCollection
+    public function getAllPermissions(): PermissionCollection
     {
-        return $this->toCollection(
-            $this->repository->all($columns),
-        );
+        $permissions = $this->all();
+
+        return new PermissionCollection($permissions);
     }
 
-    public function findById(int $id): PermissionResource
+    public function getPaginated(int $perPage): PermissionCollection
     {
-        return $this->toResource(
-            $this->repository->find($id),
-        );
+        $paginated = $this->paginate($perPage);
+
+        return new PermissionCollection($paginated);
     }
 
-    public function create(array $data): PermissionResource
+    public function findById(int $permissionId): PermissionResource
     {
-        return $this->toResource(
-            $this->repository->create($data),
-        );
+        try {
+            $permission = $this->findOrFail($permissionId);
+
+            return new PermissionResource($permission);
+        } catch (ModelNotFoundException) {
+            throw new ModelNotFoundException('Permission not found');
+        }
     }
 
-    /**
-     * @param Permission $model
-     */
-    public function update(Model $model, array $data): PermissionResource
+    public function createPermission(array $data): PermissionResource
     {
-        return $this->toResource(
-            $this->repository->update($model->id, $data),
-        );
+        $permission = $this->create($data);
+
+        return new PermissionResource($permission);
     }
 
-    /**
-     * @param Permission $model
-     */
-    public function delete(Model $model): bool
+    public function updatePermission(int $id, array $data): PermissionResource
     {
-        return $this->repository->delete($model->id);
+        $permission = $this->findOrFail($id);
+        $updated = $this->update($permission, $data);
+
+        return new PermissionResource($updated);
+    }
+
+    public function deletePermission(int $id): bool
+    {
+        $permission = $this->findOrFail($id);
+
+        return $this->delete($permission);
     }
 
     public function assignRoles(int $permissionId, array $roleIds): PermissionResource
     {
-        $permission = $this->repository->find($permissionId);
+        $permission = $this->findById($permissionId)->resource;
+
         $permission->syncRoles($roleIds);
 
-        return $this->toResource($permission->fresh(['roles']));
-    }
-
-    protected function getResourceClass(): string
-    {
-        return PermissionResource::class;
-    }
-
-    protected function getCollectionClass(): string
-    {
-        return PermissionCollection::class;
+        return new PermissionResource($permission->fresh(['roles']));
     }
 }

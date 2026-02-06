@@ -6,22 +6,37 @@ namespace App\Services\Contracts;
 
 use App\Models\Equipment;
 use Illuminate\Http\Request;
-use Illuminate\Database\Eloquent\Model;
 use App\Services\BaseServiceInterface;
 use App\Http\Resources\Equipments\EquipmentResource;
 use App\Http\Resources\Equipments\EquipmentCollection;
 
 interface EquipmentServiceInterface extends BaseServiceInterface
 {
-    public function getPaginatedByRequest(Request $request, array $columns = ['*']): EquipmentCollection;
+    public function getPaginated(Request $request): EquipmentCollection;
 
-    public function getAll(array $columns = ['*']): EquipmentCollection;
+    public function show(Equipment $equipment): EquipmentResource;
 
-    public function findById(int $id): EquipmentResource;
+    /**
+     * Create new equipment.
+     *
+     * @param  array<string, mixed>  $data
+     */
+    public function createEquipment(array $data): EquipmentResource;
 
-    public function create(array $data): EquipmentResource;
+    /**
+     * Update equipment.
+     *
+     * @param  array<string, mixed>  $data
+     */
+    public function updateEquipment(Equipment $equipment, array $data): EquipmentResource;
 
-    public function update(Model $model, array $data): EquipmentResource;
+    /**
+     * Delete equipment.
+     */
+    public function deleteEquipment(Equipment $equipment): bool;
 
-    public function delete(Model $model): bool;
+    /**
+     * Get all users.
+     */
+    public function getAll(): EquipmentCollection;
 }

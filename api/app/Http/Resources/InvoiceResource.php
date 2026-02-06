@@ -9,6 +9,7 @@ use App\Enums\InvoiceStatus;
 use Illuminate\Http\Request;
 use App\Http\Resources\Emails\SentEmailResource;
 use App\Http\Resources\Payments\PaymentResource;
+use App\Http\Resources\Customers\CustomerResource;
 use App\Http\Resources\Activities\ActivityResource;
 
 /**

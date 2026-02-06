@@ -4,77 +4,99 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Pagination\LengthAwarePaginator;
 use App\Repositories\QueryableRepositoryInterface;
-use App\Services\Concerns\TransformsResources;
 
 abstract class BaseService implements BaseServiceInterface
 {
-    use TransformsResources;
-
     protected QueryableRepositoryInterface $repository;
 
-    public function getPaginatedByRequest(array $columns = ['*']): mixed
-    {
-        return $this->toCollection(
-            $this->repository->paginateFiltered($columns),
-        );
-    }
-
-    public function getAll(array $columns = ['*']): mixed
-    {
-        return $this->toCollection(
-            $this->repository->getFiltered($columns),
-        );
-    }
-
-    public function find(int|string $id): mixed
-    {
-        return $this->toResource(
-            $this->repository->findOrFail($id),
-        );
-    }
-
-    public function create(array $data): mixed
-    {
-        return $this->toResource(
-            $this->repository->create($data),
-        );
-    }
-
     /**
-     * @param Model $model
-     * @param array $data
-     * @return mixed
+     * Set repository instance
      */
-    public function update($model, array $data): mixed
-    {
-        return $this->toResource(
-            $this->repository->update($model, $data),
-        );
-    }
-
-    /**
-     * @param Model $model
-     * @return bool
-     */
-    public function delete($model): bool
-    {
-        return $this->repository->delete($model);
-    }
-
     final public function setRepository(QueryableRepositoryInterface $repository): QueryableRepositoryInterface
     {
         return $this->repository = $repository;
     }
 
+    /**
+     * Get repository instance
+     */
     final public function getRepository(): QueryableRepositoryInterface
     {
         return $this->repository;
     }
 
-    public function exists(int|string $id): bool
+    /**
+     * Get filtered, sorted, and included resources.
+     */
+    final public function getFiltered(array $columns = ['*']): Collection
+    {
+        return $this->repository->getFiltered($columns);
+    }
+
+    /**
+     * Get all resources
+     */
+    final public function all(array $columns = ['*']): Collection
+    {
+        return $this->repository->all($columns);
+    }
+
+    /**
+     * Get paginated resources
+     */
+    final public function paginate(int $perPage = 25, array $columns = ['*']): LengthAwarePaginator
+    {
+        return $this->repository->paginate($perPage, $columns);
+    }
+
+    /**
+     * Find resource by id
+     */
+    final public function find(int $id, array $columns = ['*']): ?Model
+    {
+        return $this->repository->find($id, $columns);
+    }
+
+    /**
+     * Find resource or fail
+     */
+    final public function findOrFail(int $id, array $columns = ['*']): Model
+    {
+        return $this->repository->findOrFail($id, $columns);
+    }
+
+    /**
+     * Create new resource
+     */
+    final public function create(array $data): Model
+    {
+        return $this->repository->create($data);
+    }
+
+    /**
+     * Update resource
+     */
+    final public function update(Model $model, array $data): Model
+    {
+        return $this->repository->update($model, $data);
+    }
+
+    /**
+     * Delete resource
+     */
+    final public function delete(Model $model): bool
+    {
+        return $this->repository->delete($model);
+    }
+
+    /**
+     * Check if resource exists
+     */
+    final public function exists(int $id): bool
     {
         return $this->repository->exists($id);
     }

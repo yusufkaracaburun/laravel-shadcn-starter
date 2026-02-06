@@ -1,8 +1,4 @@
 <script setup lang="ts">
-import {
-  MoreVerticalIcon,
-  UserIcon,
-} from '@/composables/use-icons.composable'
 import { useRouter } from 'vue-router'
 
 import type { ICustomer } from '@/pages/customers/models/customers'
@@ -15,6 +11,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import { MoreVerticalIcon, UserIcon } from '@/composables/use-icons.composable'
 
 import CustomerDelete from './customer-delete.vue'
 import CustomerResourceDialog from './customer-resource-dialog.vue'

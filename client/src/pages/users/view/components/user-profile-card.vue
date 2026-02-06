@@ -27,17 +27,13 @@ defineProps<Props>()
     </CardHeader>
     <CardContent class="space-y-4">
       <div>
-        <div class="text-sm font-medium text-muted-foreground mb-1">
-          Name
-        </div>
+        <div class="text-sm font-medium text-muted-foreground mb-1">Name</div>
         <div class="text-base">
           {{ user.name }}
         </div>
       </div>
       <div>
-        <div class="text-sm font-medium text-muted-foreground mb-1">
-          Email
-        </div>
+        <div class="text-sm font-medium text-muted-foreground mb-1">Email</div>
         <div class="text-base">
           {{ user.email }}
         </div>

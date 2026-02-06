@@ -23,6 +23,24 @@ const props = defineProps<
     table: VueTable<T>
   }
 >()
+
+const emit = defineEmits<{
+  rowClick: [row: T]
+}>()
+
+function handleRowClick(event: MouseEvent, row: T) {
+  // Don't trigger row click if clicking on a button, link, or checkbox
+  const target = event.target as HTMLElement
+  if (
+    target.closest('button') ||
+    target.closest('a') ||
+    target.closest('input[type="checkbox"]') ||
+    target.closest('[role="button"]')
+  ) {
+    return
+  }
+  emit('rowClick', row)
+}
 </script>
 
 <template>
@@ -51,6 +69,8 @@ const props = defineProps<
               v-for="row in table.getRowModel().rows"
               :key="row.id"
               :data-state="row.getIsSelected() && 'selected'"
+              class="cursor-pointer"
+              @click="(event) => handleRowClick(event, row.original)"
             >
               <TableCell v-for="cell in row.getVisibleCells()" :key="cell.id">
                 <FlexRender

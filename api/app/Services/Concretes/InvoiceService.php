@@ -5,54 +5,58 @@ declare(strict_types=1);
 namespace App\Services\Concretes;
 
 use App\Models\Invoice;
-use Illuminate\Http\Request;
 use App\Services\BaseService;
-use Illuminate\Database\Eloquent\Model;
 use App\Http\Resources\InvoiceResource;
 use App\Http\Resources\InvoiceCollection;
-use App\Services\Concerns\TransformsResources;
 use App\Services\Contracts\InvoiceServiceInterface;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Repositories\Contracts\InvoiceRepositoryInterface;
 
 final class InvoiceService extends BaseService implements InvoiceServiceInterface
 {
-    use TransformsResources;
+    private readonly InvoiceRepositoryInterface $invoiceRepository;
 
+    /**
+     * Create a new class instance.
+     */
     public function __construct(
-        InvoiceRepositoryInterface $repository,
+        InvoiceRepositoryInterface $repo,
     ) {
-        $this->setRepository($repository);
+        $this->setRepository($repo);
+        $this->invoiceRepository = $repo;
     }
 
-    public function getPaginatedByRequest(Request $request, array $columns = ['*']): InvoiceCollection
+    public function getPaginated(int $perPage, ?int $teamId = null): InvoiceCollection
     {
-        return $this->toCollection(
-            $this->repository->paginateFiltered($request, $columns),
-        );
+        $request = request();
+        $request->query->set('per_page', (string) $perPage);
+
+        $this->invoiceRepository->withRequest($request);
+
+        $paginated = $this->invoiceRepository->query()->paginate($perPage);
+
+        return new InvoiceCollection($paginated);
     }
 
-    public function getAll(array $columns = ['*']): InvoiceCollection
+    public function findById(int $invoiceId, ?int $teamId = null): InvoiceResource
     {
-        return $this->toCollection(
-            $this->repository->all($columns),
-        );
+        try {
+            $invoice = $this->invoiceRepository->findOrFail($invoiceId);
+
+            return new InvoiceResource($invoice);
+        } catch (ModelNotFoundException) {
+            throw new ModelNotFoundException('Invoice not found');
+        }
     }
 
-    public function findById(int $id): InvoiceResource
-    {
-        $invoice = $this->repository->find($id);
-
-        return $this->toResource($invoice->load(['customer', 'items', 'payments', 'emails', 'activities.causer']));
-    }
-
-    public function create(array $data): InvoiceResource
+    public function createInvoice(array $data, ?int $teamId = null): InvoiceResource
     {
         // Extract items from data
         $items = $data['items'] ?? [];
         unset($data['items']);
 
         // Create invoice
-        $invoice = $this->repository->create($data);
+        $invoice = $this->invoiceRepository->create($data);
 
         // Create invoice items if provided
         foreach ($items as $index => $itemData) {
@@ -69,51 +73,51 @@ final class InvoiceService extends BaseService implements InvoiceServiceInterfac
         $invoice->calculateInvoiceTotals();
         $invoice->save();
 
-        return $this->toResource($invoice->load('items'));
+        return new InvoiceResource($invoice);
     }
 
-    /**
-     * @param Invoice $model
-     */
-    public function update(Model $model, array $data): InvoiceResource
+    public function updateInvoice(Invoice $invoice, array $data, ?int $teamId = null): InvoiceResource
     {
-        // Extract items from data
-        $items = $data['items'] ?? null;
-        unset($data['items']);
+        try {
+            // Extract items from data
+            $items = $data['items'] ?? null;
+            unset($data['items']);
 
-        // Update invoice via repository
-        $updated = $this->repository->update($model->id, $data);
+            // Update invoice
+            $updated = $this->invoiceRepository->update($invoice, $data);
 
-        // Update items if provided
-        if ($items !== null) {
-            // Delete existing items
-            $updated->items()->delete();
+            // Update items if provided
+            if ($items !== null) {
+                // Delete existing items
+                $updated->items()->delete();
 
-            // Create new items
-            foreach ($items as $index => $itemData) {
-                // Set default sort_order if not provided
-                if (!isset($itemData['sort_order'])) {
-                    $itemData['sort_order'] = $index;
+                // Create new items
+                if (!empty($items)) {
+                    foreach ($items as $index => $itemData) {
+                        // Set default sort_order if not provided
+                        if (!isset($itemData['sort_order'])) {
+                            $itemData['sort_order'] = $index;
+                        }
+
+                        $updated->items()->create($itemData);
+                    }
                 }
 
-                $updated->items()->create($itemData);
+                // Recalculate invoice totals
+                $updated->refresh();
+                $updated->calculateInvoiceTotals();
+                $updated->save();
             }
 
-            // Recalculate invoice totals
-            $updated->refresh();
-            $updated->calculateInvoiceTotals();
-            $updated->save();
+            return new InvoiceResource($updated);
+        } catch (ModelNotFoundException) {
+            throw new ModelNotFoundException('Invoice not found');
         }
-
-        return $this->toResource($updated->load('items'));
     }
 
-    /**
-     * @param Invoice $model
-     */
-    public function delete(Model $model): bool
+    public function deleteInvoice(Invoice $invoice): bool
     {
-        return $this->repository->delete($model->id);
+        return $this->invoiceRepository->delete($invoice);
     }
 
     public function getNextInvoiceNumber(string $prefix = 'INV', ?int $year = null): string
@@ -131,15 +135,5 @@ final class InvoiceService extends BaseService implements InvoiceServiceInterfac
         }
 
         return sprintf('%s-%d-%06d', $prefix, $year, $next);
-    }
-
-    protected function getResourceClass(): string
-    {
-        return InvoiceResource::class;
-    }
-
-    protected function getCollectionClass(): string
-    {
-        return InvoiceCollection::class;
     }
 }

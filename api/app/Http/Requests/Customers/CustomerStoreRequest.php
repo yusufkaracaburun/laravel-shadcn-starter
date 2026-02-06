@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Http\Requests\Customers;
 
+use App\Enums\CustomerStatus;
 use App\Rules\ValidPhoneNumber;
+use Illuminate\Validation\Rule;
 use App\Http\Requests\BaseFormRequest;
 use Illuminate\Contracts\Validation\ValidationRule;
 
@@ -26,7 +28,17 @@ final class CustomerStoreRequest extends BaseFormRequest
             'name'   => ['required', 'string', 'max:255'],
             'email'  => ['nullable', 'string', 'email', 'max:255', 'unique:customers'],
             'phone'  => ['nullable', new ValidPhoneNumber()],
-            'status' => ['nullable', 'string', 'in:active,inactive,pending'],
+            'status' => ['required', Rule::enum(CustomerStatus::class)],
         ];
+    }
+
+    public function attributes(): array
+    {
+        return array_merge(parent::attributes(), [
+            'name'   => 'name',
+            'email'  => 'email address',
+            'phone'  => 'phone number',
+            'status' => 'status',
+        ]);
     }
 }

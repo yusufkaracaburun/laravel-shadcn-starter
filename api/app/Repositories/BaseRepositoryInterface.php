@@ -6,19 +6,57 @@ namespace App\Repositories;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 interface BaseRepositoryInterface
 {
+    /**
+     * Get all resources
+     */
     public function all(array $columns = ['*']): Collection;
+
+    /**
+     * Get paginated resources
+     */
     public function paginate(int $perPage = 10, array $columns = ['*']): LengthAwarePaginator;
-    public function find(int|string $id, array $columns = ['*']): ?Model;
+
+    /**
+     * Find resource by id
+     */
+    public function find(int $id, array $columns = ['*']): ?Model;
+
+    /**
+     * Find resource by field
+     */
     public function findByField(string $field, mixed $value, array $columns = ['*']): ?Model;
-    public function findOrFail(int|string $id, array $columns = ['*']): Model;
+
+    /**
+     * Find resource or fail
+     */
+    public function findOrFail(int $id, array $columns = ['*']): Model;
+
+    /**
+     * Create new resource
+     */
     public function create(array $data): Model;
+
+    /**
+     * Update resource
+     */
     public function update(Model $model, array $data): Model;
+
+    /**
+     * Delete resource
+     */
     public function delete(Model $model): bool;
-    public function exists(int|string $id): bool;
+
+    /**
+     * Check if resource exists
+     */
+    public function exists(int $id): bool;
+
+    /**
+     * Get model instance
+     */
     public function getModel(): Model;
 }

@@ -17,11 +17,14 @@ import { setFormFieldErrors } from '@/utils/form'
 
 import type {
   ICreateEquipmentRequest,
-  IUpdateEquipmentRequest,
   IEquipment,
+  IUpdateEquipmentRequest,
 } from '../models/equipments'
 
-import { createEquipmentsFormSchema, editEquipmentsFormSchema } from '../data/schema'
+import {
+  createEquipmentsFormSchema,
+  editEquipmentsFormSchema,
+} from '../data/schema'
 
 const props = defineProps<{
   equipment?: IEquipment | null
@@ -46,7 +49,9 @@ const formSchema = computed(() =>
   isEditMode.value ? editEquipmentsFormSchema : createEquipmentsFormSchema,
 )
 
-const initialValues = computed(() => getEquipmentsFormInitialValues(props.equipment))
+const initialValues = computed(() =>
+  getEquipmentsFormInitialValues(props.equipment),
+)
 
 const form = useForm({
   validationSchema: computed(() => toTypedSchema(formSchema.value)),
@@ -96,7 +101,10 @@ const onSubmit = handleSubmit(async (values) => {
     const requestData = prepareRequestData(values, isEditMode.value)
 
     if (isEditMode.value && props.equipment) {
-      await updateEquipments(props.equipment.id, requestData as IUpdateEquipmentRequest)
+      await updateEquipments(
+        props.equipment.id,
+        requestData as IUpdateEquipmentRequest,
+      )
     } else {
       await createEquipments(requestData as ICreateEquipmentRequest)
     }
@@ -143,11 +151,7 @@ const onSubmit = handleSubmit(async (values) => {
       <FormItem>
         <FormLabel>Model</FormLabel>
         <FormControl>
-          <Input
-            type="text"
-            v-bind="componentField"
-            placeholder="Model"
-          />
+          <Input type="text" v-bind="componentField" placeholder="Model" />
         </FormControl>
         <FormMessage />
       </FormItem>
@@ -157,11 +161,7 @@ const onSubmit = handleSubmit(async (values) => {
       <FormItem>
         <FormLabel>Serial Number</FormLabel>
         <FormControl>
-          <Input
-            type="text"
-            v-bind="componentField"
-            placeholder="SN-123456"
-          />
+          <Input type="text" v-bind="componentField" placeholder="SN-123456" />
         </FormControl>
         <FormMessage />
       </FormItem>
@@ -171,11 +171,7 @@ const onSubmit = handleSubmit(async (values) => {
       <FormItem>
         <FormLabel>Status</FormLabel>
         <FormControl>
-          <Input
-            type="text"
-            v-bind="componentField"
-            placeholder="Active"
-          />
+          <Input type="text" v-bind="componentField" placeholder="Active" />
         </FormControl>
         <FormMessage />
       </FormItem>

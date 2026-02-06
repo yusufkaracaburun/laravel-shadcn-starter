@@ -6,28 +6,14 @@ namespace App\Repositories\Concretes;
 
 use App\Models\User;
 use App\Enums\UserStatus;
-use Illuminate\Http\Request;
-use App\Helpers\Cache\TeamCache;
-use Spatie\Permission\Models\Role;
-use App\Models\Team;
-use App\Filters\UserTeamFilter;
-use Spatie\QueryBuilder\QueryBuilder;
 use Spatie\QueryBuilder\AllowedFilter;
+use Illuminate\Database\Eloquent\Model;
 use App\Repositories\QueryableRepository;
-use Spatie\Permission\PermissionRegistrar;
 use Illuminate\Database\Eloquent\Collection;
-use Spatie\QueryBuilder\QueryBuilderRequest;
-use Illuminate\Pagination\LengthAwarePaginator;
 use App\Repositories\Contracts\UserRepositoryInterface;
 
 final class UserRepository extends QueryableRepository implements UserRepositoryInterface
 {
-    public function query(): QueryBuilder
-    {
-        return parent::query();
-    }
-
-
     public function getDefaultSorts(): array
     {
         return ['name'];
@@ -35,36 +21,84 @@ final class UserRepository extends QueryableRepository implements UserRepository
 
     public function getAllowedSorts(): array
     {
-        return array_merge(
-            parent::getAllowedSorts(),
-            ['name', 'email', 'status']
-        );
+        return [
+            'id',
+            'name',
+            'email',
+            'status',
+            'created_at',
+            'updated_at',
+        ];
     }
 
-    public function getAllowedFilters(): array
+    public function getAllowedFields(): array
     {
-        return array_merge(
-            parent::getAllowedFilters(),
-            [
-                AllowedFilter::exact('name'),
-                AllowedFilter::exact('email'),
-                AllowedFilter::exact('status'),
-                AllowedFilter::custom('team_id', new UserTeamFilter()),
-            ]
-        );
+        return [
+            'id',
+            'name',
+            'email',
+            'status',
+            'email_verified_at',
+            'current_team_id',
+            'created_at',
+            'updated_at',
+        ];
     }
 
     public function getAllowedIncludes(): array
     {
-        return ['teams', 'currentTeam', 'ownedTeams', 'roles'];
+        return ['roles'];
+    }
+
+    public function getAllowedFilters(): array
+    {
+        return [
+            AllowedFilter::exact('id'),
+            AllowedFilter::partial('name'),
+            AllowedFilter::partial('email'),
+            AllowedFilter::exact('status'),
+            AllowedFilter::scope('created_at'),
+        ];
+    }
+
+    public function findOrFail(int $id, array $columns = ['*']): User
+    {
+        return User::query()->findOrFail($id, $columns);
+    }
+
+    /**
+     * Find user for show endpoint with relationships loaded.
+     */
+    public function findForShow(User $user): User
+    {
+        return $this->loadRelationships($user);
+    }
+
+    /**
+     * Create a new user and load relationships.
+     */
+    public function createWithRelationships(array $data): User
+    {
+        /** @var User $user */
+        $user = parent::create($data);
+
+        return $this->loadRelationships($user);
+    }
+
+    /**
+     * Update user and load relationships.
+     */
+    public function updateWithRelationships(User $user, array $data): User
+    {
+        /** @var User $updated */
+        $updated = parent::update($user, $data);
+
+        return $this->loadRelationships($updated);
     }
 
     public function getCurrentUser(User $user): User
     {
-        $user->refresh();
-        $this->loadUserRelationships($user);
-
-        return $user;
+        return $this->findForShow($user);
     }
 
     public function getVerifiedUsers(): Collection
@@ -88,67 +122,17 @@ final class UserRepository extends QueryableRepository implements UserRepository
             ->get();
     }
 
-    public function getAllFiltered(): Collection
-    {
-        return $this->getFiltered();
-    }
-
-    public function getVerifiedFiltered(): Collection
-    {
-        return $this->query()
-            ->whereNotNull('email_verified_at')
-            ->get();
-    }
-
     protected function model(): string
     {
         return User::class;
     }
 
-    private function loadUserRelationships(User $user): User
+    /**
+     * Standardize relationship loading in one place.
+     */
+    private function loadRelationships(Model $user): User
     {
-        $permissionRegistrar = resolve(PermissionRegistrar::class);
-        $originalTeamId = $permissionRegistrar->getPermissionsTeamId();
-
-        // Load non-role relationships first
-        $user->load(['teams', 'currentTeam', 'ownedTeams']);
-
-        // Clear permission cache to ensure fresh role queries
-        $permissionRegistrar->forgetCachedPermissions();
-        $user->unsetRelation('roles');
-
-        // Load roles with proper team context
-        // First, load global roles (team_id = null) for users like super-admin
-        $permissionRegistrar->setPermissionsTeamId(null);
-        $globalRoles = $user->roles()->get();
-
-        // Then, load team-scoped roles from all teams the user belongs to
-        $teamScopedRoles = collect();
-
-        // Get all unique team IDs the user belongs to (from teams and ownedTeams)
-        $allTeamIds = $user->teams->pluck('id')
-            ->merge($user->ownedTeams->pluck('id'))
-            ->unique()
-            ->filter()
-            ->values();
-
-        // Load roles for each team the user belongs to
-        foreach ($allTeamIds as $teamId) {
-            $permissionRegistrar->setPermissionsTeamId($teamId);
-            $permissionRegistrar->forgetCachedPermissions();
-            $user->unsetRelation('roles');
-            $teamRoles = $user->roles()->get();
-            $teamScopedRoles = $teamScopedRoles->merge($teamRoles);
-        }
-
-        // Merge global and team-scoped roles, removing duplicates
-        $allRoles = $globalRoles->merge($teamScopedRoles)->unique('id')->values();
-        $user->setRelation('roles', $allRoles);
-
-        // Restore original team context
-        $permissionRegistrar->setPermissionsTeamId($originalTeamId);
-        $permissionRegistrar->forgetCachedPermissions();
-
-        return $user;
+        /** @var User $user */
+        return $user->load('roles');
     }
 }

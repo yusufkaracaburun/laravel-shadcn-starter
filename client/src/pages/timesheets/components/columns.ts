@@ -154,11 +154,7 @@ function createColumns(): ColumnDef<ITimesheet>[] {
         }),
       cell: ({ row }) => {
         const status = row.getValue('status')
-        return h(
-          'div',
-          {},
-          (typeof status === 'string' ? status : null) || '—',
-        )
+        return h('div', {}, (typeof status === 'string' ? status : null) || '—')
       },
       enableSorting: true,
       enableResizing: true,
